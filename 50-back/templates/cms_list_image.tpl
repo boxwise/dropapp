@@ -1,0 +1,1 @@
+<img class="list-image" src="{$row[$column['field']]}" />

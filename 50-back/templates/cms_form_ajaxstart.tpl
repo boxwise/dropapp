@@ -1,0 +1,1 @@
+<div class="ajax-container" {if $element['id']}id="{$element['id']}"{/if}>
