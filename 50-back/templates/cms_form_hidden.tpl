@@ -1,0 +1,1 @@
+<input type="hidden" name="{$element['field']}" value="{$data[$element['field']]}" />

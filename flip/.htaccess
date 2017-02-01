@@ -1,0 +1,30 @@
+php_value include_path ".:/home/drapeton/market/50-back"
+
+#ReWriteEngine On
+
+#Turn off magic quotes
+#php_flag magic_quotes_gpc Off
+
+#Activate display of errors (E_ALL^E_NOTICE) instead of red screen which posts ticket
+#php_value display_errors 1
+#php_value error_reporting 6135
+
+#php_value post_max_size 100M
+#php_value upload_max_filesize 100M
+#php_value memory_limit 1024M
+
+ErrorDocument 404 /error404
+
+#Rewrite file downloads to downloader.php
+RewriteRule ^(.+)\.(zip|ppt|pptx|doc|docx|xls|xlsx|pdf)$ downloader.php?file=$0 [L,NC,QSA]
+
+#Set PHP value "Local"
+SetEnv FLIPDIR "/flip"
+SetEnv Local "1"
+
+#block access from the libwww-perl user-agent
+RewriteCond %{HTTP_USER_AGENT} libwww-perl.*
+RewriteRule .* – [F,L]
+
+
+
