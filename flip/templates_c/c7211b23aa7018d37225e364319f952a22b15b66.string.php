@@ -1,0 +1,73 @@
+<?php /* Smarty version Smarty-3.1.18, created on 2015-09-29 12:06:20
+         compiled from "c7211b23aa7018d37225e364319f952a22b15b66" */ ?>
+<?php /*%%SmartyHeaderCode:1299661152560a629cc018f3-24448609%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+$_valid = $_smarty_tpl->decodeProperties(array (
+  'file_dependency' => 
+  array (
+    'c7211b23aa7018d37225e364319f952a22b15b66' => 
+    array (
+      0 => 'c7211b23aa7018d37225e364319f952a22b15b66',
+      1 => 0,
+      2 => 'string',
+    ),
+  ),
+  'nocache_hash' => '1299661152560a629cc018f3-24448609',
+  'function' => 
+  array (
+  ),
+  'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.18',
+  'unifunc' => 'content_560a629cc4ae89_89571665',
+),false); /*/%%SmartyHeaderCode%%*/?>
+<?php if ($_valid && !is_callable('content_560a629cc4ae89_89571665')) {function content_560a629cc4ae89_89571665($_smarty_tpl) {?><p>Subsidie aanvragen kost veel tijd en moeite. Dus ben je van plan subsidie aan te vragen? Heb je behoefte aan een frisse blik? Hoe onderscheid je je van andere aanvragers? We helpen je graag door het aanvraagproces heen: maak gebruik van het gevarieerde aanbod van Cultuur+Ondernemen.</p>
+<h4>Ons aanbod in &#233;&#233;n oogopslag:</h4>
+<p>&lt;Afbeelding Reality Check&gt;</p>
+<h4>Advies op maat</h4>
+<p>Je kunt bij ons verschillende thematische modules volgen:</p>
+<table>
+<tbody>
+<tr>
+<td><strong>Module</strong></td>
+<td><strong>Doelstelling</strong></td>
+</tr>
+<tr>
+<td>Prestaties in kaart</td>
+<td>Breng jouw prestaties in kaart en bepaal hoe je deze kunt gebruiken in een nieuwe aanvraag.</td>
+</tr>
+<tr>
+<td>Maatschappelijke waarde</td>
+<td>Krijg inzicht in de ambities en bouwstenen van jouw organisatie en hoe je stakeholders betrekt in de werkpraktijk; doe kennis over de waarden en effecten van jouw organisatie en nieuwe idee&#235;n op om stakeholders in te zetten.</td>
+</tr>
+<tr>
+<td>Een gezonde financieringsmix</td>
+<td>Een realistisch integraal financieringsbeleid en inzicht in het verdienpotentieel van jouw organisatie.</td>
+</tr>
+<tr>
+<td>Verscherp de organisatieprofilering: nieuw en ander publiek</td>
+<td>M&#233;&#233;r resultaat uit het marketingbeleid: van marketingstrategie tot de dagelijkse marketingpraktijk. De marketing van jouw organisatie wordt langs de lat gelegd van een beproefde marketingscan.</td>
+</tr>
+<tr>
+<td>Samenwerken als tweede natuur</td>
+<td>Waarde toevoegen door goede samenwerking en het initi&#235;ren van co-creatie met ruimte voor kwetsbaar en experimenteel aanbod; versterking van de propositie van jouw instelling.</td>
+</tr>
+<tr>
+<td>Governance: goed bestuur en toezicht</td>
+<td>Vertaling van actuele ontwikkelingen op het terrein van bestuur en toezicht in de cultuursector naar jouw organisatie.</td>
+</tr>
+<tr>
+<td>Goed werkgeverschap</td>
+<td>Bewustwording en vertaling van de noodzaak van een goed personeels- en vrijwilligersbeleid en de inzet van concrete tools in loopbaanbeleid voor medewerkers.</td>
+</tr>
+<tr>
+<td>Business-innovatie</td>
+<td>Krijg inzicht in hoe je nieuwe wegen kunt inslaan en welke resultaten je daarmee kunt bereiken.</td>
+</tr>
+<tr>
+<td>Verbeter jouw aanvraag</td>
+<td>Laat ons jouw interne sessies modereren, je sparringspartner, tegenlezer of eindredacteur zijn van je subsidieverzoek en een transparant en realistisch plan cre&#235;ren.</td>
+</tr>
+</tbody>
+</table>
+<p>Om je op maat te kunnen ondersteunen, gaan we eerst met elkaar in gesprek om de behoeften en wensen van jouw organisatie te verkennen. Vervolgens leveren we binnen drie werkdagen een offerte aan. Bij afname van twee of meer modules geldt een staffelkorting.</p>
+<h4>De eerste stap</h4>
+<p>Interesse? Neem contact op met&#160;<a href="/medewerkers/erika-happe">Erika Happe</a> of <a href="/medewerkers/karen-de-meester">Karen de Meester</a>.</p><?php }} ?>

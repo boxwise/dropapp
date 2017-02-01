@@ -1,0 +1,1 @@
+{if $element['tooltip']}<span class="fa fa-info tooltip-this form-control-info{$valign}" title="{$element['tooltip']|escape:'html'}"></span>{/if}
