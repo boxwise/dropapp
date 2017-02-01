@@ -1,0 +1,186 @@
+@page :left {
+  margin-left: 1cm;
+}
+.nav-aside, .header-top, .level0 {
+	display:none;
+}
+
+.content {
+	margin-left:0px;	
+	padding:0;
+	border:none;
+}
+.printed_list td {
+	font-size:12px;
+	padding:0.3mm 2mm 0.3mm 0.5mm;
+}
+.printed_list .square {
+	font-size:13px;
+	padding:0 2mm 0 0 ;
+}
+.printed_list table {
+	margin-right:15mm;
+}
+
+.printed_list_people table {
+	display: block;
+	page-break-inside: avoid;
+}
+.printed_list_people td {
+	font-size:10px;
+	padding:0.3mm 6mm 0.3mm 0.5mm;
+}
+.printed_list_people .square {
+	font-size:11px;
+	padding:0 2mm 0 0 ;
+}
+.printed_list_people table {
+	margin-right:15mm;
+}
+
+.market_schedule table {
+	display: block;
+	page-break-inside: avoid;
+}
+.market_schedule td {
+	font-size:15px;
+	padding:0.3mm 6mm 0.3mm 0.5mm;
+}
+.market_schedule table {
+	margin-right:15mm;
+}
+.market_schedule h1 {
+	font-size:24px;
+	line-height: 27px;
+}
+
+.toys table {
+	float: left;
+	display: block;
+	page-break-inside: avoid;
+}
+.toys td {
+	font-size:10px;
+	padding:0.3mm 6mm 0.3mm 0.5mm;
+}
+.toys .square {
+	font-size:11px;
+	padding:0 2mm 0 0 ;
+}
+.toys table {
+	margin-right:15mm;
+}
+
+.food-distribution table {
+	display: block;
+	page-break-inside: avoid;
+}
+.food-distribution td {
+	font-size:11px;
+	padding:0.3mm 6mm 0.3mm 0.5mm;
+}
+.food-distribution .square {
+	font-size:11px;
+	padding:0 2mm 0 0 ;
+}
+.food-distribution table {
+	margin-right:15mm;
+}
+.food-distribution-detail {
+	font-size:10px;
+	padding:2px 5px 1px 5px;	
+	float:left;
+	margin-right:8px;
+}
+
+.newpage {
+	page-break-after: always;	
+}
+.noprint {
+	display:none;
+}
+.sticky-header-container{
+	height: auto!important;
+	overflow: auto;
+}
+body.qr {
+	margin: 0 !important;
+	padding:0 !important;
+	height:100%;
+}
+.qr .container-fluid {
+	margin: 0 !important;
+	padding:0 !important;
+}
+.boxlabel {
+	border-right:1px solid #eee;
+	border-bottom:1px solid #eee;
+	width:50%;
+	float:left;
+	height:99mm;
+	padding:8mm;
+	position: relative;
+}
+.boxlabel-title {
+	font-weight: bold;
+	font-size:6mm;
+	padding-bottom:14mm;
+}
+.boxlabel-qr {
+	position: absolute;
+	top:8mm;
+	right:8mm;
+	width:3cm;
+	height: 3cm;
+}
+.boxlabel-qr img {
+	width:100%;
+}
+.boxlabel-data {
+	font-weight: bold;
+	font-size:6mm;
+}
+.boxlabel-contents {
+	text-align: center;
+	height:24mm;
+	margin-top:10mm;
+	line-height: 8mm;
+	font-size:7.5mm;
+}
+
+.boxlabel-field {
+	font-size:8pt;
+	width:100%;
+	border-bottom:0.5pt solid #000; 
+	margin-bottom: 2mm;
+}
+.boxlabel-field-short {
+	width:51mm;
+}
+.boxlabel-field-contents {
+	padding-bottom:5px;
+}
+.boxlabel-field-left {
+	clear:both;
+	float:left;
+	width:45%;
+}
+.boxlabel-field-right {
+	float:right;
+	width:45%;
+}
+.boxlabel-small {
+	border-right:1px solid #eee;
+	border-bottom:1px solid #eee;
+	width:25%;
+	float:left;
+	text-align: center;
+	height:49.5mm;
+	padding:7mm;
+	position: relative;
+}
+.boxlabel-small img {
+	height:35mm;
+	width:35mm;
+}
+
