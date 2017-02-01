@@ -1,0 +1,464 @@
+.list-orders .list-level-0,
+.list-signups .list-level-0 {
+	font-weight: normal;
+}
+
+html{
+	height: 100%;
+}
+
+body{
+	height: 100%;
+}
+
+a{
+	color: #61c4ef;
+}
+
+hr{
+	display: block;
+	clear: both;
+	border-bottom: 0;
+	border-left: 0;
+	border-right: 0;
+}
+
+.hide{
+	display: none;
+}
+.login-reset-template{
+	top: 0;
+	padding-top: 40px;
+	background: #61c4ef;
+	min-height: 100%;
+	position: absolute;
+	width: 100%;
+}
+
+.login-reset-template h1{
+	color: #fff;
+}
+
+.header-top{
+	background: #61c4ef;
+}
+
+.nav-aside ul li.active > a{
+	color: #61c4ef;
+}
+
+.aside-form-top{
+	margin-top: 0;
+}
+.info-aside{
+	padding: 0 0 20px 0;
+}
+#people_id_selected{
+	font-size: 1.3em;
+	color: #aaa;
+}
+#people_id_selected p{
+	margin-bottom: 0;
+}
+#familyname{
+	font-size: 1.2em;
+}
+p#familyname{
+	color: #000;
+}
+.familycredit{
+	display: block;
+	color: #333;
+	margin-top: 10px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #ddd;
+}
+.familycredit #dropcredit{
+	font-weight: bold;
+}
+.familycredit .btn{
+	float: right;
+	border: 1px solid;
+	padding: 2px 6px;
+}
+#product_id_selected{
+	font-size: 1.2em;
+	padding-top: 10px;
+	color: #000;
+}
+#productvalue{
+	font-weight: bold;
+}
+#not_enough_coins{
+	color: red;
+	margin-top: 10px;
+	font-size: 0.8em;
+}
+.not_enough_coins #not_enough_coins.hidden{
+	display: block !important;
+}
+
+.people-list{
+	color: #000;
+	font-size: 0.8em;
+	margin: 10px 0 0;
+	padding: 0;
+}
+.people-list li{
+	margin: 0;
+	list-style: none;
+}
+.people-list li.parent{
+	font-weight: bold;
+}
+.people-comment {
+	font-weight: normal;
+}
+/* status */
+body.status .nav-aside, body.status .header-top-inner .menu-btn, body.status nav.pushy{
+	display: none !important;
+}
+body.status .content{
+	border-left: none;
+	margin: 0 auto;
+	padding-left: 0;
+	max-width: 700px;
+}
+body.status .content-form{
+	margin-right: 0;
+}
+body.status .row-title{
+	text-align: center;
+	margin-left: 0;
+}
+body.status .row-title h1{
+	font-size: 3em;
+}
+.title-details{
+	color: #999;
+}
+body.status .dropcoins{
+	font-size: 1.4em;
+	margin: 30px auto;
+	text-align: left;
+	max-width: 200px;
+}
+body.status .dropcoins-text{
+	display: block;
+	margin: 20px 0 0 20px;
+	float: left;
+}
+body.status .dropcoins i{
+	font-size: 8em;
+	color: #61c4ef;
+	float: left;
+}
+body.status .dropcoins b{
+	font-size: 2em;
+}
+body.status #div_purch, body.status #div_trans{
+	margin-bottom: 50px;
+}
+body.status #div_purch label, body.status #div_trans label{
+	width: 100%;
+	max-width: 100%;
+	text-align: center;
+	font-size: 1.3em;
+	margin-bottom: 10px;
+}
+body.status #div_purch .col-sm-10, body.status #div_trans .col-sm-10{
+	width: 100%;
+}
+body.status #div_purch .table-nav, body.status #div_trans .table-nav{
+	display: none;
+}
+.familymembertable{
+	width: 100%;
+}
+.familymembertable td {
+	padding:5px 15px 5px 5px;
+	border-bottom: 1px solid #ccc;
+}
+.printed_list table {
+	float:left;
+	border:none;
+	margin-right:20px;
+}
+.printed_list td {
+	font-size:14px;
+	padding:5px 5px 5px 5px;
+	border-bottom: 1px solid #ccc;
+}
+.printed_list .square {
+	font-size:16px;
+	padding:0 5px 0 0;
+}
+.printed_list_people table {
+	float:left;
+	border:none;
+	margin-right:20px;
+	margin-bottom:20px;
+}
+.printed_list_people td {
+	font-size:14px;
+	padding:5px 5px 5px 5px;
+	border-bottom: 1px solid #ccc;
+}
+.printed_list_people .square {
+	font-size:16px;
+	padding:0 5px 0 0;
+}
+.food-distribution table {
+	float:left;
+	border:none;
+	margin-right:20px;
+	margin-bottom:20px;
+}
+.food-distribution td {
+	font-size:14px;
+	padding:5px 5px 5px 5px;
+	border-bottom: 1px solid #ccc;
+}
+.food-distribution .square {
+	font-size:16px;
+	padding:0 5px 0 0;
+}
+
+.market_schedule table {
+	border:none;
+	margin-right:20px;
+	margin-bottom:20px;
+}
+.market_schedule td {
+	font-size:14px;
+	padding:5px 15px 5px 15px;
+	border-bottom: 1px solid #ccc;
+}
+
+
+
+.btn-coins-inline{
+	margin: -4px 0 0 10px;
+}
+#loading{
+	display: none;
+	opacity: 0;
+}
+.loading #loading{
+	display: block;
+	opacity: 1;
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	top:0;
+	left: 0;
+	background: rgba(0,0,0,0.2);
+	text-align: center;
+	
+}
+@media screen and (min-width: 767px){
+	.fixed.nav-aside {
+		position:fixed;
+		top:40px;
+		left:15px;
+	}
+}
+.chartdiv {
+	width	: 45%;
+	height	: 500px;
+	float: left;
+}
+
+a[href="http://www.amcharts.com/javascript-charts/"] {
+	display: none!important;
+}
+																
+@media screen and (max-width: 767px){
+	.chartdiv {
+		width	: 100%;
+		height	: 300px;
+	}
+	.sticky-header-container{
+		height: auto!important;
+		overflow: auto;
+	}																	
+}
+
+.food-distribution-detail {
+	border:1px solid #ccc;
+	font-size:12px;
+	padding:2px 3px 1px 3px;	
+	float:left;
+	margin-right:5px;
+}
+.light .number {
+	color: #000;
+}
+.light .men {
+	color: #34aad1;
+}
+.light .women {
+	color: #db57bd;
+}
+.table tfoot th {
+	border-top: 1px solid #999 !important;
+	border-bottom: none !important;
+	background-color: #f8f8f8 !important;
+}
+.cp-spinner{width:48px;height:48px;display:inline-block;box-sizing:border-box;position:relative;top: 50%;transform: translateY(-50%);}
+.cp-round:before{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #fff;border-right:solid 6px #fff;border-bottom:solid 6px #fff;border-left:solid 6px #fff;position:absolute;top:0;left:0}.cp-round:after{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #61c4ef;border-right:solid 6px transparent;border-bottom:solid 6px transparent;border-left:solid 6px transparent;position:absolute;top:0;left:0;animation:cp-round-animate 1s ease-in-out infinite}@keyframes cp-round-animate{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+.input-element-small {
+	float: left;
+	max-width: 700px;
+	min-width: 0px;
+	padding-right: 0;
+}
+.bar {
+	border:1px solid #999;
+	width:100px;
+	padding:2px;
+	text-align: center;
+	font-size:10px;
+	overflow: hidden;
+	position: relative;
+}
+.bar-value {
+	height:0;
+	color:#000;
+	z-index: 2;
+	position: absolute;
+	top: 2px;
+	text-align: center;
+	width: 100%;
+}
+.bar-inside {
+	background-color:#48cf32;
+	position:relative;
+	height:15px;
+	max-width:100%;
+	opacity: 0.85;
+	z-index: 1;
+}
+.bar-inside-red {
+	background-color:#ff2400;
+}
+.bar-inside-orange {
+	background-color:#ff7200;
+}
+.bar-inside-yellow {
+	background-color:#f0dc00;
+}
+.bar-inside-blue {
+	background-color:#07bcff;
+}
+.bar-inside.from-left, .different-view .bar-inside{
+	display: none;
+}
+.different-view .bar-inside.from-left{
+	display: block;
+}
+
+.label-two-layers small{
+	display: block;
+	font-weight: normal;
+}
+
+.start .aside-content{
+	background: none;
+	padding: 0;
+}
+.tipofday {
+	padding:20px 20px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 6px;
+	background-color:rgb(235, 247, 253);
+	margin:25px 0;
+	max-width: 400px;
+}
+.tipofday h3 {
+	margin-top:0;
+	margin-bottom: 7px;
+	font-size:120%;
+}
+.tipofday p {
+	margin-bottom:0;
+	font-size:105%;
+}
+
+.select2-results .select2-disabled{
+	color: #ccc;
+}
+
+.boxlabel {
+	border-right:1px solid #eee;
+	border-bottom:1px solid #eee;
+	width:300px;
+	float:left;
+	height:250px;
+	padding:15px;
+	position: relative;
+}
+.boxlabel-title {
+	font-weight: bold;
+	font-size:16px;
+	padding-bottom:55px;
+}
+.boxlabel-qr {
+	position: absolute;
+	top:15px;
+	right:15px;
+	width:100px;
+	height: 100px;
+}
+.boxlabel-qr img {
+	width:100%;
+}
+.boxlabel-data {
+	font-weight: bold;
+	font-size:16px;
+}
+.boxlabel-contents {
+	text-align: center;
+	height:43px;
+	margin-top:20px;
+	font-size:20px;
+}
+.boxlabel-field {
+	font-size:6pt;
+	width:100%;
+	border-bottom:0.5px solid #000; 
+	margin-bottom: 4px;
+}
+.boxlabel-field-short {
+	width:55%;
+}
+.boxlabel-field-contents {
+	padding-bottom:5px;
+}
+.boxlabel-field-left {
+	clear:both;
+	float:left;
+	width:45%;
+}
+.boxlabel-field-right {
+	float:right;
+	width:45%;
+}
+
+.boxlabel-small {
+	border-right:1px solid #eee;
+	border-bottom:1px solid #eee;
+	width:150px;
+	float:left;
+	text-align: center;
+	height:150px;
+	padding:10px;
+	position: relative;
+}
+.boxlabel-small img {
+	height:130px;
+	width:130px;
+}
+
