@@ -1,0 +1,77 @@
+body {
+	font-family: Arial, sans-serif;
+	font-size:2em;
+	margin:10px;
+	padding:0;
+}
+button, .btn {
+	font-family: Arial, sans-serif;
+	font-size:24px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	border:none;
+	background-color: #61c4ef;
+	width:100%;
+	padding:10px;
+	color: #fff;
+	margin-top:15px;
+}
+.btn.disabled{
+	border: 2px solid #61c4ef;
+	background: #fff;
+	color: #61c4ef;
+}
+.page-header{
+	margin-top: 25px;
+}
+.form-control{
+	font-size: 16px;
+}
+.form-control.error{
+	border-color: #ffc2c2;
+}
+.select2-container{
+	font-size: 16px;
+}
+.select2-container .select2-selection--single{
+	height: 34px;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+	line-height: 32px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow{
+	height: 32px;
+}
+.select2-container--default .select2-search--dropdown .select2-search__field{
+	font-size: 16px;
+}
+.select2-container--default .select2-results>.select2-results__options, .select2-search--dropdown{
+	background: #eee;
+}
+label.error{
+	font-size: 12px;
+	color: #ff6262;
+}
+a {
+	text-decoration: none;
+	color:#61c4ef;
+}
+#loading{
+	display: none;
+	opacity: 0;
+}
+.loading #loading{
+	display: block;
+	opacity: 1;
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	top:0;
+	left: 0;
+	background: rgba(0,0,0,0.2);
+	text-align: center;	
+}
+
+.cp-spinner{width:48px;height:48px;display:inline-block;box-sizing:border-box;position:relative;top: 50%;transform: translateY(-50%);}
+.cp-round:before{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #fff;border-right:solid 6px #fff;border-bottom:solid 6px #fff;border-left:solid 6px #fff;position:absolute;top:0;left:0}.cp-round:after{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #61c4ef;border-right:solid 6px transparent;border-bottom:solid 6px transparent;border-left:solid 6px transparent;position:absolute;top:0;left:0;animation:cp-round-animate 1s ease-in-out infinite}@keyframes cp-round-animate{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
