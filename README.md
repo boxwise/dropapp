@@ -1,6 +1,8 @@
 # README #
 
-Disclaimer: This is build on top of Flip, the custom cms of Zinnebeeld. Which is why the structure might seem a little odd at first having a 'global' folder, etc... This was because it was serving multiple installations on one server. This may all be rebuild.
+This app is just amazing, just wanted to say that. And it will become even more amazing, because in the parts where it might not be so amazing yet, it will change into amazingness...
+
+This is build on top of Flip, the custom cms of Zinnebeeld. Which is why the structure might seem a little odd at first having a 'global' folder, etc... This was because it was serving multiple installations on one server. This may all be rebuild.
 
 ### What is this repository for? ###
 
