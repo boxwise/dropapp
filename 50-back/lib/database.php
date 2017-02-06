@@ -9,7 +9,7 @@
 			$defaultdbid->setAttribute(PDO::ATTR_EMULATE_PREPARES,true); 
 		}
 		catch(PDOException $e) {
-			trigger_error('db_connect(): '.$e->getMessage());
+			echo "db_connect() niet gelukt: ".$e->getMessage();
 			die();
 		}
 

@@ -38,7 +38,7 @@
 	addfield('select', 'Unit', 'unit_id', array('width'=>2, 'multiple'=>false, 'query'=>'SELECT longlabel AS label, id AS value FROM units ORDER BY seq'));
 	
 	addfield('number','Price per package','price',array('width'=>2));
-	addfield('number','In stock','stock',array('width'=>2));
+	addfield('number','Units in stock','stock',array('width'=>2));
 	
 	addfield('line','','',array('aside'=>true));
 	addfield('created','Created','created',array('aside'=>true));
