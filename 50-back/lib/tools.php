@@ -78,7 +78,7 @@ function CMSmenu() {
 	$result1 = db_query('SELECT * FROM cms_functions WHERE parent_id = 0 ORDER BY seq');
 	while($row1 = db_fetch($result1)) {
 
-		$submenu = '';
+		$submenu = array();
 
 		if($_SESSION['user']['is_admin']) {
 			$result2 = db_query('SELECT *, title_'.$lan.' AS title FROM cms_functions WHERE parent_id = :parent_id ORDER BY seq',array('parent_id'=>$row1['id']));
