@@ -19,7 +19,7 @@
 			$i=$row['number'];
 		}
 		$row['type'] = 'familyhead';
-		$result2 = db_query('SELECT id, name FROM food WHERE visible AND (peradult > 0 OR perchild > 0) ORDER BY name');
+		$result2 = db_query('SELECT id, name FROM food WHERE visible AND NOT deleted AND (peradult > 0 OR perchild > 0) ORDER BY name');
 		while($row2 = db_fetch($result2)) {
 			$row['food'][$row2['name']] = db_value('SELECT CEIL(((SELECT count(id) FROM people AS p2 WHERE visible AND NOT deleted AND p2.container = p.container AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= '.$settings['adult-age'].')*f.peradult + ((SELECT count(id) FROM people AS p2 WHERE visible AND NOT deleted AND p2.container = p.container AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < '.$settings['adult-age'].')*f.perchild))/f.package) AS rounded FROM people AS p LEFT OUTER JOIN food AS f ON f.id = '.$row2['id'].' WHERE p.visible AND container = "'.$row['container'].'" AND NOT p.deleted GROUP BY container ');
 		}
