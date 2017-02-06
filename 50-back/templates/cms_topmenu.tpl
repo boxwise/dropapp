@@ -9,6 +9,15 @@
 			{/if}
  		</div>
  		<div class="camp-menu">
+	 		{if $camps|count>1}
+		 		<select id="camp_id" name="camp_id" onchange="window.location.href='?camp='+this.value">
+			 		{foreach $camps as $c}<option value="{$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>{/foreach}
+		 		</select>
+	 		{elseif $camps|count==1}
+	 			{$camps[0]['name']}
+	 		{else}
+	 			No camps available for this user
+	 		{/if}
  		</div>
 		<ul class="nav pull-right">
 			<li class="dropdown">
