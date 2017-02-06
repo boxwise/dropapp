@@ -43,6 +43,24 @@
 
 	$cmsmain = new Zmarty;
 	$cmsmain->assign('menu',CMSmenu());
+	
+	# fill the camp selection menu
+	if($_GET['camp']) {
+		if($_SESSION['user']['is_admin']) {
+			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c WHERE c.id = :camp',array('camp'=>$_GET['camp']));
+		} else {
+			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE c.id = x.camps_id AND c.id = :camp AND x.cms_users_id = :id',array('camp'=>$_GET['camp'], 'id'=>$_SESSION['user']['id']));
+		}
+	}
+	if($_SESSION['user']['is_admin']) {
+		$camplist = db_array('SELECT c.* FROM camps AS c');
+	} else {
+		$camplist = db_array('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE x.camps_id = c.id AND x.cms_users_id = :id',array('id'=>$_SESSION['user']['id']));
+	}
+	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0]['id'];
+	$cmsmain->assign('camps',$camplist);
+	$cmsmain->assign('currentcamp',$_SESSION['camp']);
+	
 
 	$allowedfunctions = array('cms_profile','exitloginas');
 
