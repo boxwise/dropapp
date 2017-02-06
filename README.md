@@ -10,7 +10,7 @@ To enable us to continue to develop this application into something even more be
 
 ### How do I get set up? ###
 
-Je moet in flip/.htaccess dit als eerste regel hebben:
+Om lokaal te draaien moet je in flip/.htaccess dit als eerste regel hebben:
 
 
 ```
