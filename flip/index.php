@@ -42,7 +42,6 @@
 
 
 	$cmsmain = new Zmarty;
-	$cmsmain->assign('menu',CMSmenu());
 	
 	# fill the camp selection menu
 	if($_GET['camp']) {
@@ -61,6 +60,7 @@
 	$cmsmain->assign('camps',$camplist);
 	$cmsmain->assign('currentcamp',$_SESSION['camp']);
 	
+	$cmsmain->assign('menu',CMSmenu());
 
 	$allowedfunctions = array('cms_profile','exitloginas');
 
