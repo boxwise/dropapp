@@ -14,11 +14,12 @@
 		$cmsmain->assign('title','Locations');
 		listsetting('search', array('sizes.label'));
 
-		$data = getlistdata('SELECT * FROM locations');
+		$data = getlistdata('SELECT locations.*, c.name AS camp FROM locations LEFT OUTER JOIN camps AS c ON locations.camp_id = c.id');
 
 		addcolumn('text','Locations','label');
+		addcolumn('text','Camp','camp');
 
-		listsetting('allowsort',false);
+		#listsetting('allowsort',false);
 		listsetting('allowcopy',true);
 		listsetting('add', 'Add a location');
 

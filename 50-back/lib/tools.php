@@ -70,20 +70,24 @@ function redirect($url, $status = 301) {
 function CMSmenu() {
 	global $action, $lan;
 
+/* 
+	# deprecated
 	if($_SESSION['user']['usertype']=='family') {
 		$menu = array(0 => 
 			array('id' => '35', 'parent_id' => '0', 'title' => ($lan=='en'?'Drops':($lan=='ar'?'قطرات':'dilopên')), 'include' => '', 'seq' => '1', 'alert' => '0', 'sub' => array(0 => array('id' => '87', 'parent_id' => '35', 'title' => ($lan=='en'?'Status':($lan=='ar'?'الحالة':'Cî')), 'include' => 'status', 'seq' => '1', 'alert' => '0'))));
 		return $menu;
 	}
-	$result1 = db_query('SELECT * FROM cms_functions WHERE parent_id = 0 ORDER BY seq');
+*/
+
+	$result1 = db_query('SELECT f.* FROM cms_functions AS f WHERE f.parent_id = 0 ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id']));
 	while($row1 = db_fetch($result1)) {
 
 		$submenu = array();
 
 		if($_SESSION['user']['is_admin']) {
-			$result2 = db_query('SELECT *, title_'.$lan.' AS title FROM cms_functions WHERE parent_id = :parent_id ORDER BY seq',array('parent_id'=>$row1['id']));
+			$result2 = db_query('SELECT f.*, title_'.$lan.' AS title FROM cms_functions AS f LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id WHERE x2.camps_id = :camp AND f.parent_id = :parent_id ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id']));
 		} else {
-			$result2 = db_query('SELECT *, title_'.$lan.' AS title FROM cms_functions AS f, cms_access AS x, cms_users AS u WHERE u.id = x.cms_users_id AND f.id = x.cms_functions_id AND u.id = :user_id AND (f.parent_id = :parent_id) ORDER BY seq',array('parent_id'=>$row1['id'],'user_id'=>$_SESSION['user']['id']));
+			$result2 = db_query('SELECT *, title_'.$lan.' AS title FROM (cms_functions AS f, cms_access AS x, cms_users AS u) LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id WHERE x2.camps_id = :camp AND u.id = x.cms_users_id AND f.id = x.cms_functions_id AND u.id = :user_id AND (f.parent_id = :parent_id) ORDER BY seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id'],'user_id'=>$_SESSION['user']['id']));
 		}
 
 		while($row2 = db_fetch($result2)) {
