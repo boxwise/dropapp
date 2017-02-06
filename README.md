@@ -18,4 +18,4 @@ You gotta be awesome and kind
 
 ### Who do I talk to? ###
 
-Right now to Maarten, Bart or Martijn
+Right now to Maarten, Bart or Martijn.
