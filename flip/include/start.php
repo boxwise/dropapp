@@ -2,6 +2,16 @@
 
 	include($_SERVER['DOCUMENT_ROOT'].'/flip/lib/functions.php');
 
+	/* Run the update script */
+	
+	$update = filemtime($_SERVER['DOCUMENT_ROOT'].'/flip/update.php');
+	
+	if($update > $settings['last_update']) {
+		include('update.php');
+		db_query('UPDATE settings SET value = UNIX_TIMESTAMP() WHERE code = "last_update"');
+	}
+	
+	/* */
 
 	$data = db_row('SELECT * FROM tipofday ORDER BY RAND()');
 	$data['families'] = db_value('SELECT COUNT(id) FROM people AS p WHERE visible AND parent_id = 0 AND NOT deleted');
