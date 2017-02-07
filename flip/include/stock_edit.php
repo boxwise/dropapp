@@ -38,7 +38,7 @@
 
 	addfield('number','Items','items');
 
-	addfield('select', 'Location', 'location_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM locations ORDER BY seq'));
+	addfield('select', 'Location', 'location_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq'));
 	
 	if($data['qr_id']){
 		$qr = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$data['qr_id']));
