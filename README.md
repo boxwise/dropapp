@@ -10,7 +10,18 @@ To enable us to continue to develop this application into something even more be
 
 ### How do I get set up? ###
 
-I'm not sure at the moment what the difficulties will be to get this running on a new system. But it for sure needs php and mysql!
+Om lokaal te draaien moet je in flip/.htaccess dit als eerste regel hebben:
+
+
+```
+#!
+
+php_value include_path "/Users/_username_/_websitefolder_/_market_folder_/50-back"
+SetEnv BRANCH "username"
+```
+
+En in de config.php moet je even het 'username'-stukje aanpassen.
+
 
 ### Contribution guidelines ###
 
