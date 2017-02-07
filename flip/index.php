@@ -43,7 +43,7 @@
 
 	$cmsmain = new Zmarty;
 	
-	# fill the camp selection menu
+	/* new: fill the camp selection menu -------------------------------------------- */
 	if($_GET['camp']) {
 		if($_SESSION['user']['is_admin']) {
 			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c WHERE c.id = :camp',array('camp'=>$_GET['camp']));
@@ -59,6 +59,9 @@
 	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
 	$cmsmain->assign('camps',$camplist);
 	$cmsmain->assign('currentcamp',$_SESSION['camp']);
+	$cmsmain->assign('campaction',strpos($action,'_edit')?substr($action,0,-5):$action);
+	/* end of the camp menu addition -------------------------------------------- */
+	
 	
 	$cmsmain->assign('menu',CMSmenu());
 
@@ -66,8 +69,10 @@
 
 	$allowed = db_numrows('SELECT id FROM cms_functions AS f, cms_access AS x WHERE x.cms_functions_id = f.id AND x.cms_users_id = :user_id AND (f.include = :action OR CONCAT(f.include,"_edit") = :action)',array('user_id'=>$_SESSION['user']['id'], 'action'=>$action));
 	$allowed = true;
+	
+	$allowedincamp = db_numrows('SELECT id FROM cms_functions AS f, cms_functions_camps AS x WHERE x.cms_functions_id = f.id AND x.camps_id = :camp_id AND (f.include = :action OR CONCAT(f.include,"_edit") = :action)',array('camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));
 
-	if  ($allowed || $_SESSION['user']['is_admin'] || ($_SESSION['user']['usertype']=='family' && $action == 'status') || in_array($action,$allowedfunctions)) {
+	if  (($allowed&&$allowedincamp) || $_SESSION['user']['is_admin'] || ($_SESSION['user']['usertype']=='family' && $action == 'status') || in_array($action,$allowedfunctions)) {
 		@include('include/'.$action.'.php');
 	}
 
