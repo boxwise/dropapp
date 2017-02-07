@@ -10,7 +10,7 @@
  		</div>
  		<div class="camp-menu">
 	 		{if $camps|count>1}
-		 		<select id="camp_id" name="camp_id" onchange="window.location.href='?camp='+this.value">
+		 		<select id="camp_id" name="camp_id" onchange="window.location.href='?action={$campaction}&camp='+this.value">
 			 		{foreach $camps as $c}<option value="{$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>{/foreach}
 		 		</select>
 	 		{elseif $camps|count==1}
