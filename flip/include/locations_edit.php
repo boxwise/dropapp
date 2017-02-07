@@ -20,6 +20,7 @@
 
 	if (!$id) {
 		$data['visible'] = 1;
+		$data['camp_id'] = $_SESSION['camp']['id'];
 	}
 
 	// open the template
@@ -29,10 +30,12 @@
 	$cmsmain->assign('title','Location');
 
 	addfield('hidden','','id');
+	addfield('hidden','','camp_id');
 	addfield('text','Label','label');
-	addfield('select', 'Camp', 'camp_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT id AS value, name AS label FROM camps ORDER BY name'));
 
 	addfield('checkbox','Visible','visible',array('aside'=>true));
+	addfield('line','','',array('aside'=>true));
+	addfield('created','Created','created',array('aside'=>true));
 	
 
 	// place the form elements and data in the template
