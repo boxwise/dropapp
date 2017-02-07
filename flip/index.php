@@ -1,6 +1,6 @@
 <?
 	//die('Please use the online CMS!');
-	include('flip.php');
+	require('flip.php');
 
 	error_reporting(E_ALL);
 	ini_set('display_errors',true);
@@ -56,7 +56,7 @@
 	} else {
 		$camplist = db_array('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE x.camps_id = c.id AND x.cms_users_id = :id',array('id'=>$_SESSION['user']['id']));
 	}
-	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0]['id'];
+	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
 	$cmsmain->assign('camps',$camplist);
 	$cmsmain->assign('currentcamp',$_SESSION['camp']);
 	
