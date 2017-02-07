@@ -12,7 +12,7 @@
 		listsetting('search', array('box_id', 'l.label', 's.label', 'g.label', 'p.name','comments'));
 
 
- 		listfilter(array('label'=>'By location','query'=>'SELECT id, label FROM locations ORDER BY seq','filter'=>'l.id'));
+ 		listfilter(array('label'=>'By location','query'=>'SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq','filter'=>'l.id'));
 		$statusarray = array('show'=>'All boxes');
 		listfilter2(array('label'=>'Only active boxes','options'=>$statusarray,'filter'=>'"show"'));
 
@@ -20,7 +20,7 @@
 			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
 			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
-			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id '.(!$_SESSION['filter2']['stock']?' WHERE l.visible':''));
+			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id '.(!$_SESSION['filter2']['stock']?' WHERE l.visible AND l.camp_id = '.$_SESSION['camp']['id'].'':''));
 
 		addcolumn('text','Box ID','box_id');
 		addcolumn('text','Product','product');
@@ -34,7 +34,7 @@
 		listsetting('allowcopy',false);
 		listsetting('add', 'Add');
 
-		$locations = db_simplearray('SELECT id, label FROM locations ORDER BY seq');
+		$locations = db_simplearray('SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
 		addbutton('movebox','Move',array('icon'=>'fa-arrows', 'options'=>$locations));
 		addbutton('qr','Make label',array('icon'=>'fa-print'));
 
