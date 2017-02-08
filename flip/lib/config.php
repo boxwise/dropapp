@@ -1,7 +1,6 @@
 <?
 	
 	// cms settings	
-	$settings['rootdir'] = '/themarket';
 	$settings['cmsdir'] = (isset($cmsdir)?$cmsdir:'/flip');
 	
 	if($_SERVER['BRANCH']=='bart') {
@@ -23,5 +22,3 @@
 		$settings['db_database'] = 'drapeton_market17';		
 		$settings['globaldir'] = '/home/drapeton/market/50-back/';
 	}
-
-

@@ -1,9 +1,9 @@
 <?
 	//die('Please use the online CMS!');
-	require('flip.php');
-
 	error_reporting(E_ALL);
+
 	ini_set('display_errors',true);
+	require('flip.php');
 
 	if(!defined('FLIP')) {
 		trigger_error('FLIP is niet beschikbaar');
