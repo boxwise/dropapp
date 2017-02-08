@@ -6,25 +6,28 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Drop Market Stock tool</title>
 		
-		<link href="/flip/lib/bootstrap.min.css" rel="stylesheet">    
+		<link href="{$settings['rootdir']}/flip/lib/bootstrap.min.css" rel="stylesheet">    
 		
-		<script src="/flip/lib/jquery-3.1.1.min.js"></script>
-		<script src="/flip/lib/jquery.validate.min.js"></script>
-		<script src="/flip/lib/bootstrap.min.js"></script>
+		<script src="{$settings['rootdir']}/flip/lib/jquery-3.1.1.min.js"></script>
+		<script src="{$settings['rootdir']}/flip/lib/jquery.validate.min.js"></script>
+		<script src="{$settings['rootdir']}/flip/lib/bootstrap.min.js"></script>
 
-		<link href="/flip/lib/select2.min.css" rel="stylesheet" />
-		<script src="/flip/lib/select2.min.js"></script>
+		<link href="{$settings['rootdir']}/flip/lib/select2.min.css" rel="stylesheet" />
+		<script src="{$settings['rootdir']}/flip/lib/select2.min.js"></script>
 		
-		<script src="/flip/lib/mobile.js"></script>
+		<script src="{$settings['rootdir']}/flip/lib/mobile.js"></script>
 
-		<link href="/flip/lib/mobile.css" rel="stylesheet">    
+		<link href="{$settings['rootdir']}/flip/lib/mobile.css" rel="stylesheet">    
 
 	</head>
 	<body class="mobile">
 		{if $include}{include file="{$include}"}{/if}
 		<div id="loading"><div class="cp-spinner cp-round"></div></div>
 		<hr />
-		<strong>{$settings['site_name']}</strong> | <a href="?logout=1">{$translate['cms_menu_logout']}</a> | 
+		
+		<strong>{$settings['site_name']}</strong>
+		{if $smarty.session.user}
+		 	| <a href="?logout=1">{$translate['cms_menu_logout']}</a> | 
 		
 	 		{if $camps|count>1}
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user visible-xs"></i><span class="hidden-xs">{$currentcamp['name']} </span><b class="caret"></b></a>
@@ -42,6 +45,6 @@
 	 		{else}
 	 			No camps available for this user
 	 		{/if}
-		
+		{/if}
 	</body>
 </html>

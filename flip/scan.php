@@ -73,7 +73,7 @@
 			require('scan/saveamount.php');
 	
 		} elseif($_GET['logout']!='') {
-			logout('/flip/scan.php');
+			logout($settings['rootdir'].'/flip/scan.php');
 	
 		} else {
 			$data['message'] = 'Scan a QR code to start using this system';
