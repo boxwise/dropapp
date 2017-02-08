@@ -7,9 +7,9 @@
     <title>{if $title}{$title} - {/if}{$translate['site_name']}</title>
 
     <!-- Bootstrap -->
-    <link href="/global/css/css.php" rel="stylesheet">
-    <link href="/flip/lib/custom.css" rel="stylesheet">    
-	<link href="/flip/lib/print.css" rel="stylesheet" media="print">
+    <link href="{$settings['rootdir']}/global/css/css.php" rel="stylesheet">
+    <link href="{$settings['rootdir']}/flip/lib/custom.css" rel="stylesheet">    
+	<link href="{$settings['rootdir']}/flip/lib/print.css" rel="stylesheet" media="print">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -17,9 +17,9 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-	<link rel="apple-touch-icon" sizes="180x180" href="/flip/assets/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" href="/flip/assets/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/flip/assets/images/favicon-16x16.png" sizes="16x16">
+	<link rel="apple-touch-icon" sizes="180x180" href="{$settings['rootdir']}/flip/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="{$settings['rootdir']}/flip/assets/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="{$settings['rootdir']}/flip/assets/images/favicon-16x16.png" sizes="16x16">
     
   </head>
 
