@@ -14,7 +14,7 @@
 				<input class="form-control" type="password" name="pass2" id="pass2" equalTo="#pass" placeholder="{$translate['cms_login_repeatpassword']}" required />	
 			</div>
 			<input class="btn btn-success" type="submit" value="{$translate['cms_reset2_submit']}" />
-			<a class="forgot-password" href="/flip/login.php">{$translate['cms_login_pagetitle']}</a>
+			<a class="forgot-password" href="{$settings['rootdir']}/flip/login.php">{$translate['cms_login_pagetitle']}</a>
 		</form>
 	</div>
 {include file="cms_footer.tpl"}

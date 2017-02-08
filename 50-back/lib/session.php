@@ -13,7 +13,7 @@ function checksession() {
 				db_query('UPDATE '.$settings['cms_usertable'].' SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
 			}
 		} else {
-			redirect($settings['cmsdir'].'/login.php?destination='.urlencode($_SERVER['REQUEST_URI']));
+			redirect($settings['rootdir'] . $settings['cmsdir'].'/login.php?destination='.urlencode($_SERVER['REQUEST_URI']));
 		}
 	}
 }
