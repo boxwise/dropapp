@@ -4,24 +4,8 @@
 	$settings['rootdir'] = '/themarket';
 	$settings['cmsdir'] = (isset($cmsdir)?$cmsdir:'/flip');
 	
-	if($_SERVER['BRANCH']=='_username_') {
-		$settings['db_host'] = 'localhost';
-		$settings['db_user'] = '';
-		$settings['db_pass'] = '';
-		$settings['db_database'] = '';		
-		$settings['globaldir'] = '/Users/_username_/themarket/50-back/';
-	} elseif($_SERVER['BRANCH']=='test') {
-		$settings['db_host'] = 'localhost';
-		$settings['db_user'] = '';
-		$settings['db_pass'] = '';
-		$settings['db_database'] = '';		
-		$settings['globaldir'] = '';
-	} elseif($_SERVER['BRANCH']=='live') {
-		$settings['db_host'] = 'localhost';
-		$settings['db_user'] = '';
-		$settings['db_pass'] = '';
-		$settings['db_database'] = '';		
-		$settings['globaldir'] = '';
-	}
-
-
+	$settings['db_host'] = 'localhost';
+	$settings['db_user'] = '';
+	$settings['db_pass'] = '';
+	$settings['db_database'] = '';		
+	$settings['globaldir'] = '/Users/_username_/themarket/50-back/';
