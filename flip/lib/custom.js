@@ -49,7 +49,8 @@ function selectFamily(field){
 			},
 			dataType: 'json',
 			success: function(result){
-				window.history.pushState("purchase", "Purchase", "/flip/?action=purchase&people_id="+value);
+				url = window.location;
+				window.history.pushState("purchase", "Purchase", url.toString().split("?")[0] + "?action=purchase&people_id="+value);
 				if(result.success){
 					$('#ajax-content').html(result.htmlcontent);												
 					initiateList();
@@ -142,48 +143,6 @@ function calcCosts(field){
 	} else {
 		$('#form-submit').prop('disabled', true);
 		$('.aside-form').addClass('not_enough_coins');
-	}
-}
-
-function selectContainer(field){
-	value = $('#field_'+field).val();
-	if(value){
-		$('#form-submit').prop('disabled', true);
-		$('#field_'+field).prop('disabled', true);
-		$('body').addClass('loading');
-		$.ajax({
-			type: 'post',
-			url: 'include/purchase-food.php',
-			data:
-			{
-				people_id: value,
-			},
-			dataType: 'json',
-			success: function(result){
-				window.history.pushState("purchase food", "Purchase", "/flip/?action=purchase-food&people_id="+value);
-				if(result.success){
-					$('#ajax-content').html(result.htmlcontent);												
-					$('#ajax-aside').html(result.htmlaside);												
-					initiateList();
-					$('#field_'+field).prop('disabled', false);
-					$('#form-submit').prop('disabled', false);
-					$('body').removeClass('loading');
-				}
-				if(result.message){
-					var n = noty({
-						text: result.message,
-						type: (result.success ? 'success' : 'error')
-					});
-				}
-			},
-			error: function(result){
-				var n = noty({
-					text: 'Something went wrong, maybe the internet connection is a bit choppy',
-					type: 'error'
-				});
-			}
-		});
-	} else {
 	}
 }
 
