@@ -2,4 +2,5 @@
 .htaccess
 .DS_Store
 flip/error_log
+flip/lib/config.php
 flip/templates_c/*.php
