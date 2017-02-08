@@ -23,5 +23,25 @@
 	<body class="mobile">
 		{if $include}{include file="{$include}"}{/if}
 		<div id="loading"><div class="cp-spinner cp-round"></div></div>
+		<hr />
+		<strong>{$settings['site_name']}</strong> | <a href="?logout=1">{$translate['cms_menu_logout']}</a> | 
+		
+	 		{if $camps|count>1}
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user visible-xs"></i><span class="hidden-xs">{$currentcamp['name']} </span><b class="caret"></b></a>
+					<ul class="dropdown-menu dropdown-menu-right">
+				 		{foreach $camps as $c}
+				 			{if $c['id']!=$currentcamp['id']}
+				 				<li><a href="?barcode={$smarty.get.barcode}&camp={$c['id']}" value="{$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</a></li>
+				 			{/if}
+				 		{/foreach}
+					</ul>
+	 		{elseif $camps|count==1}
+	 			<li>
+	 				{$camps[0]['name']}
+	 			</li>
+	 		{else}
+	 			No camps available for this user
+	 		{/if}
+		
 	</body>
 </html>

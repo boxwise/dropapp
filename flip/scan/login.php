@@ -9,22 +9,19 @@
 			$success = false;
 			$message = translate('cms_login_error_adminonly').$settings['local_adminonly'];					
 			$redirect = false;
-			logfile('Login on the local-website is blocked for '.$_POST['email']);
+			logfile('Mobile login on the local-website is blocked for '.$_POST['email']);
 		} elseif($row['pass']==$_POST['pass']) { # password is correct
 			$success = true;
 			$message = '';
 			
 			if($_POST['destination']) {
 				$redirect = $_POST['destination'];
-			} else {
-				$firstpage = db_value('SELECT f.include FROM cms_functions AS f, cms_functions AS f2, cms_access AS a WHERE f.parent_id = f2.id AND a.cms_functions_id = f.id AND (a.cms_users_id = :id OR '.intval($row['is_admin']).'=1) GROUP BY f.id ORDER BY f2.seq, f.seq LIMIT 1',array('id'=>$row['id']));
-				$redirect = $flipdir.'/?action='.$firstpage;	
 			}
 			
 			$_SESSION['user'] = $row;
 			
 			db_query('UPDATE '.$settings['cms_usertable'].' SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
-			logfile('User logged in with '.$_SERVER['HTTP_USER_AGENT']);
+			logfile('Mobile user logged in with '.$_SERVER['HTTP_USER_AGENT']);
 			
 			if(isset($_POST['autologin'])) {
 				setcookie("autologin_user", $_POST['email'], time()+(3600*24*90), '/');
@@ -38,15 +35,20 @@
 			$success = false;
 			$message = translate('cms_login_error_wrongpassword');					
 			$redirect = false;
-			logfile('Attempt to login with wrong passford for '.$_POST['email']);
+			logfile('Attempt to login with mobile and wrong passford for '.$_POST['email']);
 		}
 	} else { # user not found
 		$success = false;
 		$message = translate('cms_login_error_usernotfound');		
 		$redirect = false;
-		logfile('Attempt to login as unknown user '.$_POST['email']);
+		logfile('Attempt to login with mobile and unknown user '.$_POST['email']);
 	}
 
-	$return = array("success" => $success, 'message'=> $message, 'redirect'=> $redirect);
+	if($success) {
+		if($redirect) redirect($redirect);
+	} else {
+		echo($message);
+		var_export($_SERVER);
+	}
 	
-	echo json_encode($return);
+	die('x');

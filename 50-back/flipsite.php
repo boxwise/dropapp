@@ -6,7 +6,7 @@ if(isset($_SERVER['FLIPDIR'])) $flipdir = $_SERVER['FLIPDIR']; else $flipdir = '
 
 define('FLIPSITE',true);
 
-session_name('flip');
+session_name('flipsite');
 session_start();
 
 # load configuration file

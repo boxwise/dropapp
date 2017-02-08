@@ -28,5 +28,5 @@ function logout($redirect = false) {
 
 	session_unset();
 	session_destroy();
-	redirect('index.php');
+	redirect($redirect);
 }
