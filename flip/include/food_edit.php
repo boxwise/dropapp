@@ -9,7 +9,7 @@
 		
 		$handler = new formHandler($table);
 
-		$savekeys = array('name', 'package', 'unit_id', 'peradult', 'perchild','price');
+		$savekeys = array('name', 'package', 'unit_id', 'peradult', 'perchild','price', 'stock');
 		$id = $handler->savePost($savekeys);
 
 		redirect('?action='.$_POST['_origin']);
