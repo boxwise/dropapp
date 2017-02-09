@@ -20,7 +20,7 @@
 </div>
 {else}
 <div class="boxlabel-small">
-	<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://{$smarty.server.HTTP_HOST}/flip/scan.php?barcode={$d['hash']}" />
+	<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://{$smarty.server.HTTP_HOST}{$settings['rootdir']}/flip/scan.php?barcode={$d['hash']}" />
 </div>
 {/if}
 {/foreach}
