@@ -11,7 +11,7 @@
 		$cmsmain->assign('title','Food products');
 		listsetting('search', array('name', 'g.label'));
 
-		$data = getlistdata('SELECT food.*, u.label, CONCAT(food.package," ",u.label) AS packagesize, CONCAT(food.peradult," ",u.label) AS peradultsize, CONCAT(food.perchild," ",u.label) AS perchildsize FROM food LEFT OUTER JOIN units AS u ON u.id = food.unit_id');
+		$data = getlistdata('SELECT food.*, CONCAT(food.stock, " units") AS stock, u.label, CONCAT(food.package," ",u.label) AS packagesize, CONCAT(food.peradult," ",u.label) AS peradultsize, CONCAT(food.perchild," ",u.label) AS perchildsize FROM food LEFT OUTER JOIN units AS u ON u.id = food.unit_id');
 		foreach($data as $key=>$d) {
 			$units = 0;
 			$unitsrounded = 0;
