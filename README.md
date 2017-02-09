@@ -10,18 +10,9 @@ To enable us to continue to develop this application into something even more be
 
 ### How do I get set up? ###
 
-Om lokaal te draaien moet je in flip/.htaccess dit als eerste regel hebben:
+Copy .htaccess.default and /flip/lib/config.php.default and remove the .default in the filename.
 
-
-```
-#!
-
-php_value include_path "/Users/_username_/_websitefolder_/_market_folder_/50-back"
-SetEnv BRANCH "username"
-```
-
-En in de config.php moet je even het 'username'-stukje aanpassen.
-
+Then change the necesary usernames, folders and database settings.
 
 ### Contribution guidelines ###
 
