@@ -7,11 +7,11 @@
     <title>{$settings['site_name']}{if $pagetitle} - {$pagetitle}{/if}</title>
 
     <!-- Bootstrap -->
-    <link href="/global/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/global/css/bootstrap-datetimepicker.min.css" rel="stylesheet">    
-    <link href="/global/css/font-awesome.min.css" rel="stylesheet">    
-    <link href="/global/css/style.css" rel="stylesheet">    
-    <link href="/global/css/linkmanager.css" rel="stylesheet">        
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet">    
+    <link href="/assets/css/font-awesome.min.css" rel="stylesheet">    
+    <link href="/assets/css/style.css" rel="stylesheet">    
+    <link href="/assets/css/linkmanager.css" rel="stylesheet">        
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,7 +27,7 @@
 		}		
 	</script>    
 
-    <link rel="shortcut icon" href="/global/img/favicon.ico">
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
 
   </head>
   <body>

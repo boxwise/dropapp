@@ -787,7 +787,7 @@ tr.level-10 td:first-child{
 	display: none;
 	margin: -3px 0 -7px -7px;
 	cursor: move;
-	cursor: url(/global/img/openhand.cur) 7 5, default;
+	cursor: url(../img/openhand.cur) 7 5, default;
 	padding: 2px 2px 0;
 	float: left;
 	opacity: 0.4;
@@ -826,11 +826,11 @@ tr.level-10 td:first-child{
 }
 
 .table tbody tr.item-hidden td, .table tbody tr.item-hidden th{
-	background: url(/global/img/stripe-hidden.png) repeat;
+	background: url(../img/stripe-hidden.png) repeat;
 }
 
 .table tbody tr.item-hidden.selected td{
-	background: url(/global/img/stripe-hidden-selected.png) repeat;
+	background: url(../img/stripe-hidden-selected.png) repeat;
 }
 
 .table tbody tr.item-clickable.item-hidden:hover{
@@ -838,10 +838,10 @@ tr.level-10 td:first-child{
 }
 
 .table tbody tr.item-clickable.item-hidden:hover td{
-	background: url(/global/img/stripe-hidden.png) repeat;
+	background: url(../img/stripe-hidden.png) repeat;
 }
 .table tbody tr.item-clickable.item-hidden.selected:hover td{
-	background: url(/global/img/stripe-hidden-selected.png) repeat;
+	background: url(../img/stripe-hidden-selected.png) repeat;
 }
 
 .td-content .list-image{

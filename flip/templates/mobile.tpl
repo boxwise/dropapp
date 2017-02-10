@@ -6,18 +6,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Drop Market Stock tool</title>
 		
-		<link href="{$settings['rootdir']}/flip/lib/bootstrap.min.css" rel="stylesheet">    
-		
-		<script src="{$settings['rootdir']}/flip/lib/jquery-3.1.1.min.js"></script>
-		<script src="{$settings['rootdir']}/flip/lib/jquery.validate.min.js"></script>
-		<script src="{$settings['rootdir']}/flip/lib/bootstrap.min.js"></script>
-
-		<link href="{$settings['rootdir']}/flip/lib/select2.min.css" rel="stylesheet" />
-		<script src="{$settings['rootdir']}/flip/lib/select2.min.js"></script>
-		
-		<script src="{$settings['rootdir']}/flip/lib/mobile.js"></script>
-
-		<link href="{$settings['rootdir']}/flip/lib/mobile.css" rel="stylesheet">    
+		<link href="{$settings['rootdir']}/assets/css/bootstrap.min.css" rel="stylesheet">    
+		<link href="{$settings['rootdir']}/assets/css/select2.min.css" rel="stylesheet" />
+		<link href="{$settings['rootdir']}/assets/css/mobile.css" rel="stylesheet">    
 
 	</head>
 	<body class="mobile">
@@ -46,5 +37,10 @@
 	 			No camps available for this user
 	 		{/if}
 		{/if}
+		<script src="{$settings['rootdir']}/assets/js/jquery-3.1.1.min.js"></script>
+		<script src="{$settings['rootdir']}/assets/js/jquery.validate.min.js"></script>
+		<script src="{$settings['rootdir']}/assets/js/bootstrap.min.js"></script>
+		<script src="{$settings['rootdir']}/assets/js/select2.min.js"></script>
+		<script src="{$settings['rootdir']}/assets/js/mobile.js"></script>
 	</body>
 </html>

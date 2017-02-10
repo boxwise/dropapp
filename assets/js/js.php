@@ -16,6 +16,7 @@
 	$date = @filectime('minified.js');
 
 	$files = array(
+		'jquery-3.1.1.min.js',
 		'bootstrap.min.js',
 		'bootstrap-confirmation.js',
 		'modernizr.custom.86620.js',
@@ -33,7 +34,7 @@
 		'mousetrap-global-bind.min.js',
 		'select2.min.js',
 		'pushy.min.js',
-		'/global/js/cms_form_format.js'
+		'cms_form_format.js'
 	);
 
 	foreach($files as $file) {

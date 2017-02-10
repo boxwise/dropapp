@@ -1,1 +1,4 @@
-<? header('Location: /flip');
+<? 
+require('flip.php');
+
+header('Location: '.$settings['rootdir'].'/flip');
