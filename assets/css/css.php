@@ -2,6 +2,9 @@
 	
 	header('Content-type: text/css');
 
+	error_reporting(0);
+	ini_set('display_errors',false);
+	
 // 	added for cache
     header("Cache-Control: must-revalidate");
     $offset = 60 * 60 * 24 * 30;
