@@ -60,6 +60,13 @@ label.error{
 	font-size: 12px;
 	color: #ff6262;
 }
+.message{
+	padding: 10px;
+	background: #daffe3;
+}
+.warning{
+	background: #ffdada;
+}
 #autologin{
 	float: left;
 	margin-right: 7px;
@@ -79,6 +86,7 @@ a {
 	cursor: pointer;
 	margin-left: -5px;
 	-webkit-appearance: none;
+	-moz-appearance: none;
 	padding-right: 20px;
 	text-align: right;
 }
