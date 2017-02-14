@@ -31,10 +31,15 @@
 	$tpl->assign('camps',$camplist);
 	$tpl->assign('currentcamp',$_SESSION['camp']);
 	/* end of the camp menu addition -------------------------------------------- */
+
+	if($_GET['message']) $data['message'] = $_GET['message'];
 	
 	if(!$_SESSION['user']) {
 		$data['destination'] = $_SERVER['REQUEST_URI'];
 		$tpl->assign('include','mobile_login.tpl');
+	} elseif(!$_SESSION['camp']['id']) { 
+		$data['message'] = 'You don\'t have access to this camp. Ask your coordinator to correct this!';
+		$tpl->assign('include','mobile_message.tpl');
 	} else {
 		# Boxlabel is scanned 
 		if($_GET['barcode']!='') {
