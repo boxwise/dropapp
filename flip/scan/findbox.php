@@ -5,6 +5,6 @@
 	if($barcode['code']) {
 		redirect('?barcode='.$barcode['code']);
 	} else {
-		redirect('?barcode=&message=You first need to assign a QR-code to this box.');
+		redirect('?barcode=&warning=1&message=You first need to assign a QR-code to this box.');
 	}
 	die();

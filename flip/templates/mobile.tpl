@@ -34,7 +34,7 @@
 	 		{/if}
 		{/if}
 		<hr>
-		{if $data['message']}<div class="warning">{$data['message']}</div>{/if}
+		{if $data['message']}<div class="message {if $data['warning']}warning{/if}">{$data['message']}</div>{/if}
 		{if $include}{include file="{$include}"}{/if}
 		{if $smarty.session.user}
 			<footer>
