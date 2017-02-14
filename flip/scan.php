@@ -72,12 +72,15 @@
 		} elseif($_GET['saveamount']!='') {
 			require('scan/saveamount.php');
 	
+		# Find a box by manually entered number
+		} elseif($_GET['findbox']!='') {
+			require('scan/findbox.php');
+	
 		} elseif($_GET['logout']!='') {
 			logout($settings['rootdir'].'/flip/scan.php');
 	
 		} else {
-			$data['message'] = 'Scan a QR code to start using this system';
-			$tpl->assign('include','mobile_message.tpl');
+			require('scan/start.php');
 		}	
 	}
 

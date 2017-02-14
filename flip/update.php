@@ -27,6 +27,7 @@ VALUES (99, 1), (99, 2), (91, 1), (87, 1), (106, 1), (90, 1), (90, 2), (67, 1), 
 	# dedicate warehouse locations to camps (2017-02-06 BD)
 	if(!db_fieldexists('locations','camp_id')) {
 		db_query("ALTER TABLE `locations` ADD `camp_id` INT  NULL  DEFAULT NULL  AFTER `label`");
+		db_query("UPDATE locations SET camp_id = 1");
 	}
 
 	# add the last_update setting and set it to current timestamp (2017-02-06 BD)
