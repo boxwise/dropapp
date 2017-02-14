@@ -11,6 +11,6 @@
 	
 	$data['message'] = 'QR-code is succesfully linked to box '.$box['product'].' ('.$box['items'].'x) in '.$box['location'];
 	$data['barcode'] = $_GET['saveassignbox'];
-	$tpl->assign('include','mobile_message.tpl');
+
 	
 	

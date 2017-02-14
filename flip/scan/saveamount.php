@@ -6,4 +6,4 @@
 
 	$data['barcode'] = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$box['qr_id']));
 	$data['message'] = 'Box <strong>'.$box['box_id'].'</strong> contains now '.intval($_GET['items']).'x <strong>'.$box['product'].'</strong>';
-	$tpl->assign('include','mobile_message.tpl');
+

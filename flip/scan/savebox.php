@@ -21,4 +21,4 @@
 		$data['message'] = 'New box created with id: <strong>'.$box['box_id'].'</strong> created with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'];			
 	}
 	$data['barcode'] = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$box['qr_id']));
-	$tpl->assign('include','mobile_message.tpl');
+

@@ -3,5 +3,5 @@
 		<div class="form-group">
 			<input class="form-control" type="number" name="findbox" pattern="\d*" placeholder="Box Number" value="" required>
 		</div>
-		<input type="submit" class="btn" value="Save">
+		<input type="submit" class="btn" value="Zoeken">
 	</form>
