@@ -22,6 +22,10 @@ button, .btn {
 	background: #fff;
 	color: #61c4ef;
 }
+.btn-light{
+	background: #ddd;
+	color: #999;
+}
 .page-header{
 	margin-top: 25px;
 }
@@ -49,13 +53,27 @@ button, .btn {
 .select2-container--default .select2-results>.select2-results__options, .select2-search--dropdown{
 	background: #eee;
 }
+label{
+	font-size: 0.8em;
+}
 label.error{
 	font-size: 12px;
 	color: #ff6262;
 }
+#autologin{
+	float: left;
+	margin-right: 7px;
+}
 a {
 	text-decoration: none;
 	color:#61c4ef;
+}
+#campselect{
+	color: #61c4ef;
+	background: #fff;
+	border:none;
+	cursor: pointer;
+	margin-left: -5px;
 }
 #loading{
 	display: none;

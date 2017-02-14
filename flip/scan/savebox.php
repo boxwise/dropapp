@@ -1,4 +1,10 @@
 <?
+
+	$i=1;
+	while(db_value('SELECT box_id FROM stock WHERE box_id = :id',array('id'=>str_pad($i,2,'0',STR_PAD_LEFT).strftime('%d%m')))) {
+		$i++;
+	}
+	if(!$_POST['id']) $_POST['box_id'] = str_pad($i,2,'0',STR_PAD_LEFT).strftime('%d%m');
 	
 	$handler = new formHandler('stock');
 
@@ -12,7 +18,7 @@
 	if($_POST['id']) {
 		$data['message'] = 'Box '.$box['box_id'].' modified with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'];
 	} else {
-		$data['message'] = 'New box '.$box['box_id'].' created with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'];			
+		$data['message'] = 'New box created with id: <strong>'.$box['box_id'].'</strong> created with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'];			
 	}
 	$data['barcode'] = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$box['qr_id']));
 	$tpl->assign('include','mobile_message.tpl');

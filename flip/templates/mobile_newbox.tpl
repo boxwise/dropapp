@@ -2,9 +2,11 @@
 	<form method="post" action="?savebox={$box['qr_id']}">
 		<input type="hidden" name="id" value="{$box['id']}">
 		<input type="hidden" name="qr_id" value="{$box['qr_id']}">
-		<div class="form-group">
-			<input class="form-control" type="number" name="box_id" pattern="\d*" placeholder="Box Number" value="{$box['box_id']}" required>
-		</div>
+		{if $box['id']}
+			<div class="form-group">
+				<input class="form-control" type="number" name="box_id" pattern="\d*" placeholder="Box Number" value="{$box['box_id']}" required>
+			</div>
+		{/if}
 		<div class="form-group">
 			<select name="product_id" id="field_product_id" onchange="getSizes(0)" class="form-control selectsearch" required>
 				<option value="">Select a product</option>
