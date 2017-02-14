@@ -6,7 +6,7 @@ $(function(){
 	    form.submit();
 	  }
 	 });
-	$('#campselect').on('change', function(){
+	$('#campselect select').on('change', function(){
 		window.location = $(this).val();
 		return false;
 	})

@@ -22,11 +22,13 @@
 		<strong><a href="{$settings['rootdir']}/flip/scan.php">{$settings['site_name']}</a></strong>
 		{if $smarty.session.user}
 	 		{if $camps|count>1}
-				<select name="campselect" id="campselect">
-				 		{foreach $camps as $c}
-			 				<option value="?barcode={$smarty.get.barcode}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
-				 		{/foreach}
-				</select>
+	 			<div id="campselect">
+					<select name="campselect" dir="rtl">
+					 		{foreach $camps as $c}
+				 				<option value="?barcode={$smarty.get.barcode}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
+					 		{/foreach}
+					</select>
+	 			</div>
 	 		{elseif $camps|count==1}
 	 				{$camps[0]['name']}
 	 		{/if}

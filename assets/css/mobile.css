@@ -69,14 +69,32 @@ a {
 	color:#61c4ef;
 }
 #campselect{
+	float: right;
+	position: relative;
+}
+#campselect select{
 	color: #61c4ef;
 	background: #fff;
 	border:none;
 	cursor: pointer;
 	margin-left: -5px;
-	float: right;
+	-webkit-appearance: none;
+	padding-right: 20px;
+	text-align: right;
 }
-
+#campselect select option{
+	text-align: right;
+}
+#campselect:after{
+	content: '';
+	height: 100%;
+	width: 18px;
+	display: block;
+	position: absolute;
+	background: url('../img/select2.png') no-repeat 0 1px;
+	top: 0;
+	right: 0;
+}
 footer{
 	border-top: 1px solid #eee;
 	padding: 10px 0;
