@@ -37,3 +37,9 @@ VALUES
 	(1, 'text', 'last_update', 'Datum dat update script voor het laatst is gedraaid', 'Last time that the update script did run', '', UNIX_TIMESTAMP(), 0);");
 
 	}
+	
+	if(db_tableexists('containers')) { db_query('DROP TABLE containers'); }
+	if(db_tableexists('foodcycles')) { db_query('DROP TABLE foodcycles'); }
+	if(db_tableexists('foodtransactions')) { db_query('DROP TABLE foodtransactions'); }
+	if(db_tableexists('ration')) { db_query('DROP TABLE ration'); }
+	
