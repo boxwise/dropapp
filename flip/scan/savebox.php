@@ -8,7 +8,7 @@
 	
 	$handler = new formHandler('stock');
 
-	$savekeys = array('box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments' ,'qr_id');
+	$savekeys = array('box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments' ,'qr_id', 'camp_id');
 	if($_POST['id']) $savekeys[] = 'id';
 	$id = $handler->savePost($savekeys);
 	
