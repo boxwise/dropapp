@@ -6,6 +6,10 @@ $(function(){
 	    form.submit();
 	  }
 	 });
+	$('#campselect').on('change', function(){
+		window.location = $(this).val();
+		return false;
+	})
 })
 
 function getSizes(size){

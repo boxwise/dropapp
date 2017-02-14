@@ -19,9 +19,8 @@
 
 	</head>
 	<body class="mobile">		
-		<strong>{$settings['site_name']}</strong>
+		<strong><a href="{$settings['rootdir']}/flip/scan.php">{$settings['site_name']}</a></strong>
 		{if $smarty.session.user}
-		- 
 	 		{if $camps|count>1}
 				<select name="campselect" id="campselect">
 				 		{foreach $camps as $c}
@@ -31,11 +30,14 @@
 	 		{elseif $camps|count==1}
 	 				{$camps[0]['name']}
 	 		{/if}
-	 		| <a href="?logout=1">{$translate['cms_menu_logout']}</a>
-
 		{/if}
 		<hr>
 		{if $include}{include file="{$include}"}{/if}
+		{if $smarty.session.user}
+			<footer>
+				<a href="?logout=1">{$translate['cms_menu_logout']}</a>
+			</footer>
+		{/if}
 		<div id="loading"><div class="cp-spinner cp-round"></div></div>
 	</body>
 </html>

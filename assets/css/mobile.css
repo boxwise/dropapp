@@ -74,6 +74,13 @@ a {
 	border:none;
 	cursor: pointer;
 	margin-left: -5px;
+	float: right;
+}
+
+footer{
+	border-top: 1px solid #eee;
+	padding: 10px 0;
+	margin-top: 30px;
 }
 #loading{
 	display: none;
