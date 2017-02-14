@@ -33,6 +33,7 @@
 	/* end of the camp menu addition -------------------------------------------- */
 
 	if($_GET['message']) $data['message'] = $_GET['message'];
+	if($_GET['warning']) $data['warning'] = true;
 	
 	if(!$_SESSION['user']) {
 		$data['destination'] = $_SERVER['REQUEST_URI'];
