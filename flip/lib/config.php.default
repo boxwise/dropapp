@@ -8,4 +8,4 @@
 	$settings['db_user'] = '';
 	$settings['db_pass'] = '';
 	$settings['db_database'] = '';		
-	$settings['globaldir'] = '/Users/_username_/themarket/50-back/';
+	$settings['globaldir'] = '/Users/_username_/themarket/library/';
