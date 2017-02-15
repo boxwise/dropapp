@@ -7,3 +7,7 @@
 	$settings['db_user'] = '';
 	$settings['db_pass'] = '';
 	$settings['db_database'] = '';		
+<<<<<<< HEAD:flip/lib/config.php.default
+	$settings['globaldir'] = '/Users/_username_/themarket/library/';
+=======
+>>>>>>> 2d886b22d83d552f9f20af14e73a3675fea1a702:library/config.php.default
