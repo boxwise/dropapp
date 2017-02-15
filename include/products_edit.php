@@ -1,15 +1,15 @@
-<?
+<?php
 
 	$table = 'products';
 	$action = 'products_edit';
 
 	if($_POST) {
-		
+
 		$handler = new formHandler($table);
 
 		$savekeys = array('name','gender_id', 'value','visible','maxperadult','maxperchild','amountneeded','sizegroup_id');
 		$id = $handler->savePost($savekeys);
-		
+
 		db_query('DELETE FROM products_prices WHERE product_id = :product_id AND camp_id = :camp_id', array('product_id'=>$id, 'camp_id'=>$_SESSION['camp']['id']));
 		db_query('INSERT INTO products_prices (product_id,camp_id,price) VALUES ('.intval($id).','.$_SESSION['camp']['id'].','.intval($_POST['price']).')');
 
@@ -17,7 +17,7 @@
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
-	
+
 	# Get the price for this product for the current camp
 	if($id) $data['price'] = db_value('SELECT price FROM products_prices WHERE product_id = :product_id AND camp_id = :camp_id', array('product_id'=>$id, 'camp_id'=>$_SESSION['camp']['id']));
 
@@ -43,8 +43,8 @@
 	addfield('line','','');
 	$table = 'stock';
 	addfield('list','In Stock','stock', array('width'=>10,'query'=>'
-	SELECT stock.id AS id, stock.box_id, stock.items, stock.comments, g.label AS gender, p.name AS product, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.' 
-	LEFT OUTER JOIN products AS p ON p.id = stock.product_id 
+	SELECT stock.id AS id, stock.box_id, stock.items, stock.comments, g.label AS gender, p.name AS product, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'
+	LEFT OUTER JOIN products AS p ON p.id = stock.product_id
 	LEFT OUTER JOIN locations AS l ON l.id = stock.location_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id WHERE stock.product_id = '.$id, 'columns'=>array('box_id'=>'Box ID', 'product'=>'Product', 'gender'=>'Gender', 'size'=>'Size','items'=>'Items', 'location'=>'Location', 'comments'=>'Comments'),
 'allowedit'=>true,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>false, 'allowshowhide'=>false, 'action'=>'stock', 'redirect'=>true, 'allowsort'=>true));
 
@@ -62,4 +62,3 @@
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
-

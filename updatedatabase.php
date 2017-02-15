@@ -1,4 +1,4 @@
-<?
+<?php
 	require('core.php');
 	
 	if(!$_SESSION['user']['is_admin']) die('Go away!');

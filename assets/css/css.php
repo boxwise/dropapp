@@ -1,10 +1,10 @@
-<?
-	
+<?php
+
 	header('Content-type: text/css');
 
 	error_reporting(0);
 	ini_set('display_errors',false);
-	
+
 // 	added for cache
     header("Cache-Control: must-revalidate");
     $offset = 60 * 60 * 24 * 30;
@@ -17,7 +17,7 @@
 	@$date = filectime('minified.css');
 
 	$debug = ($_GET['debug']==true) ? true : false;
-	$rewrite = ($_GET['rewrite']==true) ? true : false;	
+	$rewrite = ($_GET['rewrite']==true) ? true : false;
 
 	$macro = array();
 
@@ -34,16 +34,16 @@
 		'animate.css',
 		'style.css'
 	);
-	
+
 	foreach($files as $file) {
 		if(filectime((substr($file,0,1)=='_'?substr($file,1):$file))>$date) {
 			$rewrite = true;
 		}
 	}
-		
+
 	if($rewrite) {
 		$css = '';
-		echo "/* Rewrite */\n\n";			
+		echo "/* Rewrite */\n\n";
 		foreach($files as $file) {
 			$c = file_get_contents($file);
 			/* remove comments */
@@ -53,7 +53,7 @@
 			$css .= "/* ".$file." */\n\n".$c."\n\n\n";
 		}
 
-		$css = str_replace(array_keys($macro), array_values($macro), $css);	
+		$css = str_replace(array_keys($macro), array_values($macro), $css);
 
 		echo $css;
 		file_put_contents('minified.css',$css);
@@ -61,6 +61,5 @@
 	} else {
 		echo "/* Cached ".strftime('%c',$date)." */\n\n";
 		echo file_get_contents('minified.css');
-		
+
 	}
-	

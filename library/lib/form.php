@@ -1,4 +1,4 @@
-<?
+<?php
 
 	function addfield($type,$label = false,$field = false,$array=array()) {
 		if(!$field) $field = uniqid();
@@ -186,7 +186,7 @@
 
 function formatdate($output,$date) {
 	global $translate;
-	
+
 	$output = str_replace('%A',$translate[strftime('%A',$date)], $output);
 	$output = str_replace('%B',$translate[strftime('%B',$date)], $output);
 	$output = strftime($output,$date);

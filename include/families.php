@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$table = $action;
 	$ajax = checkajax();
@@ -12,8 +12,8 @@
 		listsetting('search', array('families.name', 'c.name'));
 
 		$data = getlistdata('SELECT families.*, CONCAT(IF(adults,n1.label,"No")," adults and ",IF(children,n2.label,"no")," children") AS contains, CONCAT(SUM(drops)," coins") AS dropcount, c.name AS container
-		FROM '.$table.' 
-		LEFT OUTER JOIN numbers AS n1 ON n1.value = families.adults 
+		FROM '.$table.'
+		LEFT OUTER JOIN numbers AS n1 ON n1.value = families.adults
 		LEFT OUTER JOIN numbers AS n2 ON n2.value = families.children
 		LEFT OUTER JOIN transactions AS t ON t.people_id = families.id
 		LEFT OUTER JOIN containers AS c ON c.id = families.container_id
@@ -51,7 +51,7 @@
 				$success = true;
 				$redirect = '?action=give&ids='.$ids;
 		        break;
-		        
+
 		    case 'move':
 				$ids = json_decode($_POST['ids']);
 		    	list($success, $message, $redirect) = listMove($table, $ids);

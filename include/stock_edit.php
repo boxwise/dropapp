@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$table = 'stock';
 	$action = 'stock_edit';
@@ -8,9 +8,9 @@
 		if(!$_POST['box_id']) {
 			$newbox = true;
 			do {
-				$_POST['box_id'] = generateBoxID();			
+				$_POST['box_id'] = generateBoxID();
 			} while(db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id',array('box_id'=>$_POST['box_id'])));
-			
+
 		}
 		$handler = new formHandler($table);
 
@@ -18,7 +18,7 @@
 		$id = $handler->savePost($savekeys);
 
 		if($_POST['__action']=='submitandnew') redirect('?action='.$action);
-		
+
 		if($newbox) {
 			redirect('?action=stock_confirm&id='.$id);
 		} else {
@@ -52,18 +52,18 @@
 	addfield('number','Items','items');
 
 	addfield('select', 'Location', 'location_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq'));
-	
+
 	if($data['qr_id']){
 		$qr = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$data['qr_id']));
-		
+
 		addfield('html', '', '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://'.$_SERVER['HTTP_HOST'].$settings['rootdir'].'/mobile.php?barcode='.$qr.'" /><br /><br />', array('aside'=>true, 'asidetop'=>true));
 	}
-	
+
 	addfield('line');
 	addfield('textarea','Comments','comments');
 
-/* 
-	#these where added for the conversion from the google sheet 
+/*
+	#these where added for the conversion from the google sheet
 	addfield('line');
 	addfield('text','Old type','_type',array('readonly'=>true));
 	addfield('text','Old gender','_gender',array('readonly'=>true));
@@ -82,14 +82,13 @@
 
 	function generateBoxID($length = 6, $possible = '0123456789') {
 		$password = "";
-	 	$i = 0; 
-		while ($i < $length) { 
+	 	$i = 0;
+		while ($i < $length) {
 			$char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
-			if (!strstr($password, $char)) { 
+			if (!strstr($password, $char)) {
 				$password .= $char;
 				$i++;
 			}
 		}
 		return $password;
 	}
-

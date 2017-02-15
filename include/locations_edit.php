@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$table = 'locations';
 	$action = 'locations_edit';
@@ -34,10 +34,9 @@
 	addfield('checkbox','Visible','visible',array('aside'=>true));
 	addfield('line','','',array('aside'=>true));
 	addfield('created','Created','created',array('aside'=>true));
-	
+
 
 	// place the form elements and data in the template
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
-

@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$table = 'stock';
 	$action = 'stock';
@@ -8,7 +8,7 @@
 	if(!$ajax) {
 
 		initlist();
-		
+
 		list($product,$gender,$size) = explode('-',$_GET['id']);
 
 		$listconfig['origin'] = $action.'&id='.$_GET['id'];

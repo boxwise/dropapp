@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$cmsmain->assign('include','price_list.tpl');
 
@@ -10,4 +10,3 @@
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
-

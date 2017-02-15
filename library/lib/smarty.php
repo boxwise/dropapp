@@ -1,10 +1,10 @@
-<?
+<?php
 class Zmarty extends Smarty {
 	public function __construct() {
 		global $settings, $translate, $lan;
-		
+
 		parent::__construct();
-		$this->use_include_path = true; 
+		$this->use_include_path = true;
 		$this->debugging = false;
 		$this->caching = false;
 		$this->cache_lifetime = 120;
@@ -14,9 +14,9 @@ class Zmarty extends Smarty {
 		$this->assign('modal',isset($_GET['modal']));
 		$this->assign('settings',$settings);
 		$this->assign('translate',$translate);
-		if(!$_SERVER['Local']) $this->registerFilter("output", "minify_html");	
+		if(!$_SERVER['Local']) $this->registerFilter("output", "minify_html");
 	}
-	
+
 }
 
 function minify_html($tpl_output, Smarty_Internal_Template $template) {

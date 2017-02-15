@@ -1,4 +1,4 @@
-<?
+<?php
 
 function getDirsRecursive($dir, &$results = array()){
     $files = scandir($dir);
@@ -70,10 +70,10 @@ function redirect($url, $status = 301) {
 function CMSmenu() {
 	global $action, $lan;
 
-/* 
+/*
 	# deprecated
 	if($_SESSION['user']['usertype']=='family') {
-		$menu = array(0 => 
+		$menu = array(0 =>
 			array('id' => '35', 'parent_id' => '0', 'title' => ($lan=='en'?'Drops':($lan=='ar'?'قطرات':'dilopên')), 'include' => '', 'seq' => '1', 'alert' => '0', 'sub' => array(0 => array('id' => '87', 'parent_id' => '35', 'title' => ($lan=='en'?'Status':($lan=='ar'?'الحالة':'Cî')), 'include' => 'status', 'seq' => '1', 'alert' => '0'))));
 		return $menu;
 	}
@@ -158,4 +158,3 @@ function utf8_decode_array($array) {
 	}
 	return $array;
 }
-

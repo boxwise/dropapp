@@ -1,7 +1,7 @@
-<?
+<?php
 	
 	//die('Please use the online CMS!');
-	require('core.php');
+	require_once('core.php');
 
 	error_reporting(E_ALL);
 	ini_set('display_errors',true);

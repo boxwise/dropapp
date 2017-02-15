@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$table = 'transactions';
 	$action = 'give';
@@ -6,13 +6,13 @@
 	if($_POST) {
 
 		$people = explode(',',$_POST['people']);
-		
+
 /*
 		if($_POST['startration']) {
 			db_query('INSERT INTO ration (startration) VALUES (NOW())');
 		}
 */
-		
+
 		foreach($people as $person) {
 			$f = db_row('SELECT * FROM people WHERE id = :id',array('id'=>$person));
 			if($f['parent_id']==0) {
@@ -23,11 +23,11 @@
 				$drops = intval($_POST['dropsadult'])*$adults;
 				$drops += intval($_POST['dropschild'])*$children;
 				db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>$_POST['description'],'drops'=>$drops,'user_id'=>$_SESSION['user']['id']));
-				
+
 			}
 		}
-		
-		
+
+
 		redirect('?action=people');
 	}
 
@@ -36,7 +36,7 @@
 		$ids[] = $row['id'];
 	}
 	$data['people'] = join(',',$ids);
-	
+
 	$data['names'] = 'All families';
 	$data['description'] = 'New cycle started '.strftime('%A %e %B %Y');
 	$translate['cms_form_submit'] = 'Give drops';
@@ -49,9 +49,9 @@
 	$cmsmain->assign('title','Give drops to all families');
 
 	addfield('hidden','people','people');
-	
+
 	addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give drops" button on the right, you can\'t turn back anymore!</p></div>');
-	
+
 	addfield('text','Families','names',array('readonly'=>true));
 	addfield('line','','');
 	$data['dropsadult'] = $settings['drops_per_adult'];
@@ -72,4 +72,3 @@
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
-

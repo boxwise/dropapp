@@ -1,20 +1,20 @@
-<?
+<?php
 	$table = 'settings';
 
 	if($_POST) {
-	
+
 		$hasBilanguage = db_fieldexists($table,'description_nl');
 		$hasCategory = db_fieldexists($table,'category_id');
-		
+
 		//echo $_POST['value'];
 
 		$handler = new formHandler($table);
 		//$handler->debug = true;
-		
+
 		if($hasBilanguage) {
 			$keys = array('description_nl','description_en','code','value','hidden','type','options');
 		} else {
-			$keys = array('description','code','value','hidden','type','options');		
+			$keys = array('description','code','value','hidden','type','options');
 		}
 		if($hasCategory) $keys[] = 'category_id';
 		$handler->savePost($keys);
@@ -22,36 +22,36 @@
 		if($_POST['__action']=='submitandedit') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$id);
 		redirect('?action='.$_POST['_origin']);
 	}
-		
-	// collect data for the form 	
+
+	// collect data for the form
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 	$data['descriptionlabel'] = $data['description'];
-	
+
 	// open the template
 	$cmsmain->assign('include','cms_form.tpl');
 
 	// put a title above the form
 	$cmsmain->assign('title',$translate['cms_setting']);
-		
+
 	// define tabs
 
-	$hasBilanguage = db_fieldexists($table,'description_nl');	
-	$hasCategory = db_fieldexists($table,'category_id');	
+	$hasBilanguage = db_fieldexists($table,'description_nl');
+	$hasCategory = db_fieldexists($table,'category_id');
 
 	if($_SESSION['user']['is_admin']) {
-		
+
 		if($hasCategory) {
 			addfield('select',$translate['cms_settings_category'], 'category_id', array('query'=>'SELECT id AS value, name AS label FROM settings_categories'));
 		}
 
 		if($hasBilanguage) {
-			addfield('textarea',$translate['cms_settings_description'].' NL','description_nl');			
-			addfield('textarea',$translate['cms_settings_description'].' EN','description_en');			
+			addfield('textarea',$translate['cms_settings_description'].' NL','description_nl');
+			addfield('textarea',$translate['cms_settings_description'].' EN','description_en');
 		} else {
-			addfield('textarea',$translate['cms_settings_description'],'description');			
+			addfield('textarea',$translate['cms_settings_description'],'description');
 		}
 		addfield('text',$translate['cms_settings_code'],'code',array('required'=>true));
-		addfield('select',$translate['cms_settings_type'], 'type', 
+		addfield('select',$translate['cms_settings_type'], 'type',
 			array('options'=>array(
 				array('value'=>'text', 'label'=>$translate['cms_field_text']),
 				array('value'=>'textarea', 'label'=>$translate['cms_field_textarea']),
@@ -63,10 +63,10 @@
 		);
 		// alleen voor type = select
 		addfield('text',$translate['cms_settings_options'],'options',array('tooltip'=>'Vul de mogelijke keuzes in als volgt: waarde=Label,waarde2=Label2,waarde3=Label3','hidden'=>$data['type']!='select'));
-				
+
 		addfield('checkbox',$translate['cms_settings_hidden'],'hidden');
 		addfield('line');
-		
+
 	} else {
 		if($hasBilanguage) {
 			if($lan=='nl') {
@@ -108,10 +108,10 @@
 			addfield('textarea',$translate['cms_settings_value'],'value',array('rows'=>10));
 			break;
 	}
-	
-	
+
+
 	addfield('created','','',array('aside'=>true));
-	
+
 	if ($id) {
 		addformbutton('submitandedit',$translate['cms_form_save']);
 	}
@@ -119,4 +119,3 @@
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
-	
