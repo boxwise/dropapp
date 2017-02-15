@@ -1,7 +1,12 @@
 <?
 	require('core.php');
-	echo "<strong>Database update script</strong><br />";
 	
+	if(!$_SESSION['user']['is_admin']) die('Go away!');
+	
+	echo "<strong>Database update script</strong><br />";
+
+	db_query('UPDATE cms_functions SET include = "fancygraphs" WHERE include = "demography"');
+		
 	if(!db_tableexists('cms_functions_camps')) {
 		echo "Create table cms_functions_camps<br />";
 		

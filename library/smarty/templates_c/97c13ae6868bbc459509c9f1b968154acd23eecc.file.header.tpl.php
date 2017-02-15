@@ -25,7 +25,6 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'unifunc' => 'content_53bbe065aecfa6_45436465',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_53bbe065aecfa6_45436465')) {function content_53bbe065aecfa6_45436465($_smarty_tpl) {?><!DOCTYPE html>
-<!-- Website by zinnebeeld (www.zinnebeeld.nl) -->
 <html lang="nl">
 <head>
 

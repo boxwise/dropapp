@@ -34,8 +34,7 @@
 		addfield('select',$translate['cms_translate_type'], 'type', 
 			array('width'=>5, 'required'=>true,'options'=>array(
 				array('value'=>'text', 'label'=>$translate['cms_field_text']),
-				array('value'=>'textarea', 'label'=>$translate['cms_field_textarea']),
-				array('value'=>'tinymce', 'label'=>$translate['cms_field_wysiwyg']),
+				array('value'=>'textarea', 'label'=>$translate['cms_field_textarea'])
 			))
 		);
 		addfield('select',$translate['cms_settings_category'],'category_id',array('required'=>true, 'width'=>5,'query'=>'SELECT id AS value, name AS label FROM translate_categories ORDER BY id'));
@@ -55,9 +54,6 @@
 		switch($data['type']) {
 			case 'text':
 				addfield('text',$language['name'],$language['code']);
-				break;
-			case 'tinymce':
-				addfield('tinymce',$language['name'],$language['code']);
 				break;
 			default:
 				addfield('textarea',$language['name'],$language['code']);

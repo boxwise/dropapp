@@ -33,11 +33,9 @@ require('lib/smarty.php');
 require('lib/errorhandling.php');
 require('lib/session.php');
 require('lib/tools.php');
-require('lib/mandrill.php');
+require('lib/mail.php');
 
 # load CMS specific libraries
-require('lib/fixpermissions.php');
 require('lib/form.php');
 require('lib/list.php');
 require('lib/formhandler.php');
-require('lib/imageresize.php');

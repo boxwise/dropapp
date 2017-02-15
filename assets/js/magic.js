@@ -121,57 +121,6 @@ $(function() {
 		}
 	}
 
-	$('.file-remove').on('click',function(e) {
-		var el = $(this);
-		var elp = el.closest('div');
-		var curVal = elp.children('.file_name').val();
-		var prevVal = elp.find('.file_prev').val();
-		var resize = elp.parent().find('input[name$=resize]').val();
-
-		if(el.is('.confirm') && !el.data('confirmed')){
-			el.confirmation('show');
-		} else {
-			//Removing the saved image from the server. If resize, then an image.
-			//For files no delete, emptying the value is enough there.
-			if (prevVal == curVal && resize) {
-				$.ajax({
-					type: 'post',
-					url: 'ajax.php?file=deletefile',
-					data:
-					{
-						file: prevVal,
-						paths: elp.parent().find('input[name$=resize]').val()
-					},
-					dataType: 'json',
-					success: function(result){
-						if(result.success){
-							elp.find('.file_prev').val('');
-							elp.children('.file_name').val('');
-						}
-						if(result.message){
-							var n = noty({
-								text: result.message,
-								type: (result.success ? 'success' : 'error')
-							});
-						}
-					},
-					error: function(result){
-						var n = noty({
-							text: 'This file cannot be found or what\'s being returned is not json.',
-							type: 'error'
-						});
-					}
-				});
-			} else {
-				if (prevVal == curVal && !resize) {
-					elp.find('.file_prev').val('');
-				}
-				elp.children('.file_name').val('');
-			}
-		}
-		e.preventDefault();
-	});
-
 	$('.zortable tbody').zortable()
 
 	// group select
@@ -554,19 +503,6 @@ $(function() {
 			closeEffect	: 'none'
 		});
 	}
-
-	// Mousetrap, for more info: http://craig.is/killing/mice
-	// this code can also be found in tinymce-config
-	function handleSaveKeyboardShortcut(e) {
-	    if (e.preventDefault) {
-	        e.preventDefault();
-	    } else {
-	        e.returnValue = false;
-	    }
-		$('.form').find('.btn-submit').trigger('click');
-	}
-
-	Mousetrap.bindGlobal(['mod+s', 'mod+enter'], handleSaveKeyboardShortcut);
 
 	initiateList();
 

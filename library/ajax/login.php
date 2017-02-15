@@ -34,7 +34,7 @@
 				setcookie("autologin_pass", null, time()-3600, '/');
 			}
 			#include('update.php');
-						
+			$redirect = '/?action=start';						
 		} else { # password is not correct
 			$success = false;
 			$message = translate('cms_login_error_wrongpassword');					

@@ -101,9 +101,6 @@
 		case 'text':
 			addfield('text',$translate['cms_settings_value'],'value');
 			break;
-		case 'tinymce':
-			addfield('tinymce',$translate['cms_settings_value'],'value');
-			break;
 		case 'textarea':
 		default:
 			$data['value'] = str_replace("\n","&#10;",$data['value']);

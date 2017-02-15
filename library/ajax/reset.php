@@ -21,7 +21,7 @@
 			$message = str_ireplace('{link}','http://'.$_SERVER['HTTP_HOST'].$settings['cmsdir'].'/reset.php?userid='.$row['id'].'&hash='.$hash,$message);		
 		}
 		
-		$result = mandrillmail($row['email'], $row['naam'], $translate['cms_reset_mailsubject'], $message);
+		$result = sendmail($row['email'], $row['naam'], $translate['cms_reset_mailsubject'], $message);
 		if($result) {
 			$message = $result;
 			$succes = false;
