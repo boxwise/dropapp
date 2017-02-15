@@ -17,7 +17,7 @@
 	if($_POST['id']) {
 		$message = 'Box '.$box['box_id'].' modified with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'];
 	} else {
-		$message = 'New box created created with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'].'<br />The Box Number is '.$box['box_id'].'. Write this number in top right of the box label.';			
+		$message = 'New box created with box ID <strong>'.$box['box_id'].'</strong> (write this number in the top right of the box label). This box contains '.$box['items'].' '.$box['product'].' and is located in '.$box['location'].'.';			
 	}
 	
 	$data['barcode'] = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$box['qr_id']));

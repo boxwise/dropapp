@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Drop Market Stock tool</title>
+		<title>Drop Market - Mobile</title>
 		
 		<link href="{$settings['rootdir']}/assets/css/bootstrap.min.css" rel="stylesheet">    
 		<link href="{$settings['rootdir']}/assets/css/select2.css" rel="stylesheet" />
@@ -16,6 +16,10 @@
 		<script src="{$settings['rootdir']}/assets/js/bootstrap.min.js"></script>
 		<script src="{$settings['rootdir']}/assets/js/select2.min.js"></script>
 		<script src="{$settings['rootdir']}/assets/js/mobile.js"></script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{$settings['rootdir']}/assets/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="{$settings['rootdir']}/assets/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="{$settings['rootdir']}/assets/img/favicon-16x16.png" sizes="16x16">
 
 	</head>
 	<body class="mobile">		
