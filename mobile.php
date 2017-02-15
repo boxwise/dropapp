@@ -10,12 +10,12 @@
 	$tpl = new Zmarty;
 
 	if($_GET['logout']!='') {
-		logout($settings['rootdir'].'/scan.php');
+		logout($settings['rootdir'].'/mobile.php');
 	}
 	
 	checkmobilesession();
 	if($_POST && $_POST['action']=='login') {
-		require('scan/login.php');
+		require('mobile/login.php');
 	}
 
 	/* new: fill the camp selection menu -------------------------------------------- */
@@ -49,46 +49,46 @@
 	} else {
 		# Boxlabel is scanned 
 		if($_GET['barcode']!='' || $_GET['boxid']!='') {
-			require('scan/barcode.php');
+			require('mobile/barcode.php');
 			
 		# Assign a QR code to existing box
 		} elseif($_GET['assignbox']!='') {
-			require('scan/assignbox.php');
+			require('mobile/assignbox.php');
 			
 		# Save assignbox selection
 		} elseif($_GET['saveassignbox']!='') {
-			require('scan/saveassignbox.php');
+			require('mobile/saveassignbox.php');
 			
 		# Make a new box with this QR code
 		} elseif($_GET['newbox']!='') {
-			require('scan/newbox.php');
+			require('mobile/newbox.php');
 			
 		# Edit the info for existing box
 		} elseif($_GET['editbox']!='') {
-			require('scan/editbox.php');
+			require('mobile/editbox.php');
 			
 		# Save a new box with this QR code
 		} elseif($_GET['savebox']!='') {
-			require('scan/savebox.php');
+			require('mobile/savebox.php');
 		
 		# Move this box to a new location
 		} elseif($_GET['move']!='') {
-			require('scan/move.php');
+			require('mobile/move.php');
 	
 		# Change the amount of items in this box
 		} elseif($_GET['changeamount']!='') {
-			require('scan/changeamount.php');
+			require('mobile/changeamount.php');
 	
 		# Save the new amount of items in this box
 		} elseif($_GET['saveamount']!='') {
-			require('scan/saveamount.php');
+			require('mobile/saveamount.php');
 	
 		# Find a box by manually entered number
 		} elseif($_GET['findbox']!='') {
-			require('scan/findbox.php');
+			require('mobile/findbox.php');
 	
 		} else {
-			require('scan/start.php');
+			require('mobile/start.php');
 		}	
 	}
 
