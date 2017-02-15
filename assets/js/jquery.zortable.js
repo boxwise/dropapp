@@ -1,6 +1,6 @@
 // Zortable 0.2
 // last edit 25-05-2012
-// @zinnebeeld by @maartenhunink
+// by @maartenhunink
 
 // dependend on 
 // - jquery ui

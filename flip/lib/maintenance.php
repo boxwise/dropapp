@@ -1,4 +1,0 @@
-<?
-	require('flip.php');
-	
-	checkbrokenlinks();

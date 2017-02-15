@@ -1,7 +1,6 @@
 # Add any directories, files, or patterns you don't want to be tracked by version control
 .htaccess
-flip/lib/config.php
+config.php
 .DS_Store
-flip/error_log
-flip/lib/config.php
-flip/templates_c/*.php
+error_log
+library/templates_c/*.php

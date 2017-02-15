@@ -2,11 +2,7 @@
 	<div class="header-top-inner container-fluid">
  		<div class="pull-left">
 			<a href="#" class="menu-btn visible-xs">&#9776;</a>
-			{if $smarty.session.user.usertype=='family'}
-				<a href="/flip/?action=status" class="brand">{$translate['site_name']}</a>
-			{else}
-				<a href="/flip" class="brand">{$translate['site_name']}</a>
-			{/if}
+			<a href="{$settings['rootdir']}/" class="brand">{$translate['site_name']}</a>
  		</div>
 		<ul class="nav navbar-nav pull-right">
 	 		{if $camps|count>1}
