@@ -3,7 +3,7 @@
 	if(!$_POST['box_id']) {
 		do {
 			$_POST['box_id'] = generateBoxID();			
-		} while(!db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id',array('box_id'=>$_POST['box_id'])));
+		} while(db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id',array('box_id'=>$_POST['box_id'])));
 	}
 	$handler = new formHandler('stock');
 

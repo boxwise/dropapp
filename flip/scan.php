@@ -48,7 +48,7 @@
 #		$tpl->assign('include','mobile_message.tpl');
 	} else {
 		# Boxlabel is scanned 
-		if($_GET['barcode']!='') {
+		if($_GET['barcode']!='' || $_GET['boxid']!='') {
 			require('scan/barcode.php');
 			
 		# Assign a QR code to existing box

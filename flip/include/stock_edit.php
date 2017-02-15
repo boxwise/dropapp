@@ -8,9 +8,10 @@
 	if($_POST) {
 
 		if(!$_POST['box_id']) {
+			$newbox = true;
 			do {
 				$_POST['box_id'] = generateBoxID();			
-			} while(!db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id',array('box_id'=>$_POST['box_id'])));
+			} while(db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id',array('box_id'=>$_POST['box_id'])));
 			
 		}
 		$handler = new formHandler($table);
@@ -19,7 +20,12 @@
 		$id = $handler->savePost($savekeys);
 
 		if($_POST['__action']=='submitandnew') redirect('?action='.$action);
-		redirect('?action='.$_POST['_origin']);
+		
+		if($newbox) {
+			redirect('?action=stock_confirm&id='.$id);
+		} else {
+			redirect('?action='.$_POST['_origin']);
+		}
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
