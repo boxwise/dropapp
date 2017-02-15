@@ -1,11 +1,11 @@
 	<h2 class="page-header">{if $box['id']}Edit box{else}Make a new box{/if}</h2>
-	<form method="post" action="?savebox={$box['qr_id']}">
+	<form method="post" action="?savebox=1">
 		<input type="hidden" name="id" value="{$box['id']}">
 		<input type="hidden" name="qr_id" value="{$box['qr_id']}">
 		<input type="hidden" name="camp_id" value="{$smarty.session.camp['id']}">
-		{if $box['id']}
+		{if $box['box_id']}
 			<div class="form-group">
-				<input class="form-control" type="number" name="box_id" pattern="\d*" placeholder="Box Number" value="{$box['box_id']}" required>
+				<input class="form-control" type="number" name="box_id" pattern="\d*" placeholder="Box Number" value="{$box['box_id']}" required readonly>
 			</div>
 		{/if}
 		<div class="form-group">

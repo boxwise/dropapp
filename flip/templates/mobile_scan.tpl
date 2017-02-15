@@ -20,7 +20,7 @@
 		<a class="btn" href="?editbox={$box['id']}">Edit the box</a>
 		{/if}
 	{else}
-		<p>This box is not found in the Drop Market.<br />
+		<div class="message warning">This box is not found in the Drop Market.</div>
 		<a class="btn" href="?newbox={$data['barcode']}">Create a new box</a><br />
 		<a class="btn btn-light" href="?assignbox={$data['barcode']}">Link QR-code to a box</a><br />
 		</p>

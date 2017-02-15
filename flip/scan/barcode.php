@@ -2,6 +2,7 @@
 	$data['barcode'] = $_GET['barcode'];
 	
 	if(!db_value('SELECT id FROM qr WHERE code = :code',array('code'=>$_GET['barcode']))) {
+		$data['warning'] = true;
 		$data['message'] = 'This is not a valid QR-code for Drop In The Ocean';
 		$data['barcode'] = '';
 		$tpl->assign('include','mobile_message.tpl');
@@ -15,7 +16,7 @@
 	LEFT OUTER JOIN camps AS c ON c.id = l.camp_id 
 	WHERE NOT s.deleted AND q.code = :barcode',array('barcode'=>$data['barcode']));
 		
-		if($box['camp_id']!=$_SESSION['camp']['id']) {
+		if($box['camp_id']!=$_SESSION['camp']['id'] && $box['campname']) {
 			$data['othercamp'] = true;
 			$data['warning'] = true;
 			$data['message'] = 'This box is registered in '.$box['campname'].', please choose a new location to transfer it to '.$_SESSION['camp']['name'];

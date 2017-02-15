@@ -7,6 +7,12 @@
 
 	if($_POST) {
 
+		if(!$_POST['box_id']) {
+			do {
+				$_POST['box_id'] = generateBoxID();			
+			} while(!db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id',array('box_id'=>$_POST['box_id'])));
+			
+		}
 		$handler = new formHandler($table);
 
 		$savekeys = array('box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments');
@@ -29,7 +35,10 @@
 	// put a title above the form
 	$cmsmain->assign('title','Box');
 
-	addfield('text','Box ID','box_id');
+	if($id) {
+		addfield('text','Box ID','box_id',array('readonly'=>true,'width'=>2));
+		addfield('line');
+	}
 
 	addfield('select','Product','product_id',array('required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE NOT p.deleted ORDER BY name', 'onchange'=>'getSizes()'));
 
@@ -66,4 +75,17 @@
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
+
+	function generateBoxID($length = 6, $possible = '0123456789') {
+		$password = "";
+	 	$i = 0; 
+		while ($i < $length) { 
+			$char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
+			if (!strstr($password, $char)) { 
+				$password .= $char;
+				$i++;
+			}
+		}
+		return $password;
+	}
 

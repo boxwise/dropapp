@@ -5,3 +5,6 @@
 		</div>
 		<input type="submit" class="btn" value="Search">
 	</form>
+<hr />
+	<h2 class="page-header">Or create a new box</h2>
+<a class="btn" href="?newbox=1">New box</a>

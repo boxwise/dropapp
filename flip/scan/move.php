@@ -9,6 +9,4 @@
 	db_query('UPDATE stock SET location_id = :location_id, modified = NOW() WHERE id = :id',array('location_id'=>$newlocation['id'],'id'=>$box['id']));
 	db_query('INSERT INTO history (tablename,record_id,changes,ip,changedate) VALUES ("stock",'.$box['id'].',"Box moved to '.$newlocation['label'].'","'.$_SERVER['REMOTE_ADDR'].'",NOW())');
 	
-	$data['message'] = 'Box <strong>'.$box['box_id'].'</strong> contains '.$box['items'].'x <strong>'.$box['product'].'</strong> is moved from <strong>'.$box['location'].'</strong> to <strong>'.$newlocation['label'];
-	$data['barcode'] = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$box['qr_id']));
-
+	redirect('?message='.'Box <strong>'.$box['box_id'].'</strong> contains '.$box['items'].'x <strong>'.$box['product'].'</strong> is moved from <strong>'.$box['location'].'</strong> to <strong>'.$newlocation['label']);
