@@ -64,7 +64,7 @@ label.error{
 	padding: 10px;
 	background: #daffe3;
 }
-.warning{
+.message.warning{
 	background: #ffdada;
 }
 #autologin{
