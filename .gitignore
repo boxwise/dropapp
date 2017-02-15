@@ -3,4 +3,4 @@
 config.php
 .DS_Store
 error_log
-library/templates_c/*.php
+library/templates_c/*
