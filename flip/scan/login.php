@@ -45,10 +45,8 @@
 	}
 
 	if($success) {
-		if($redirect) redirect($redirect);
+		if($redirect) redirect('?');
 	} else {
-		echo($message);
-		var_export($_SERVER);
+		redirect('?warning=true&message='.$message);
 	}
 	
-	die('x');

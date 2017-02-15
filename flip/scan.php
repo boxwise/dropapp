@@ -9,6 +9,10 @@
 
 	$tpl = new Zmarty;
 
+	if($_GET['logout']!='') {
+		logout($settings['rootdir'].'/flip/scan.php');
+	}
+	
 	checkmobilesession();
 	if($_POST && $_POST['action']=='login') {
 		require('scan/login.php');
@@ -40,7 +44,8 @@
 		$tpl->assign('include','mobile_login.tpl');
 	} elseif(!$_SESSION['camp']['id']) { 
 		$data['message'] = 'You don\'t have access to this camp. Ask your coordinator to correct this!';
-		$tpl->assign('include','mobile_message.tpl');
+
+#		$tpl->assign('include','mobile_message.tpl');
 	} else {
 		# Boxlabel is scanned 
 		if($_GET['barcode']!='') {
@@ -81,9 +86,6 @@
 		# Find a box by manually entered number
 		} elseif($_GET['findbox']!='') {
 			require('scan/findbox.php');
-	
-		} elseif($_GET['logout']!='') {
-			logout($settings['rootdir'].'/flip/scan.php');
 	
 		} else {
 			require('scan/start.php');
