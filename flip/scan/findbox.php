@@ -4,7 +4,9 @@
 	
 	if($barcode['code']) {
 		redirect('?barcode='.$barcode['code']);
+	} elseif($barcode['id']) {
+		redirect('?boxid='.$barcode['id']);
 	} else {
-		redirect('?barcode=&warning=1&message=You first need to assign a QR-code to this box.');
+		redirect('?barcode=&warning=1&message=This box number does not exist.');
 	}
 	die();
