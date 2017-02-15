@@ -43,3 +43,6 @@ VALUES
 	if(db_tableexists('foodtransactions')) { db_query('DROP TABLE foodtransactions'); }
 	if(db_tableexists('ration')) { db_query('DROP TABLE ration'); }
 	
+	if(!db_fieldexists('camps','require_qr')) {
+		db_query("ALTER TABLE `camps` ADD `require_qr` INT NULL DEFAULT NULL ");
+	}	
