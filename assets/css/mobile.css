@@ -35,24 +35,17 @@ button, .btn {
 .form-control.error{
 	border-color: #ffc2c2;
 }
-.select2-container{
-	font-size: 16px;
-}
-.select2-container .select2-selection--single{
-	height: 34px;
-}
-.select2-container--default .select2-selection--single .select2-selection__rendered{
-	line-height: 32px;
-}
-.select2-container--default .select2-selection--single .select2-selection__arrow{
-	height: 32px;
-}
-.select2-container--default .select2-search--dropdown .select2-search__field{
-	font-size: 16px;
-}
-.select2-container--default .select2-results>.select2-results__options, .select2-search--dropdown{
+.select2-results{
+	font-size: 0.9em;
 	background: #eee;
 }
+.select2-search input{
+	font-size: 0.8em;
+}
+.select2-chosen, .select2-choice > span:first-child, .select2-container .select2-choices .select2-search-field input{
+	padding: 5px 7px;
+}
+
 label{
 	font-size: 0.8em;
 }
