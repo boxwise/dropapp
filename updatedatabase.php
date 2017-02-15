@@ -6,7 +6,19 @@
 	echo "<strong>Database update script</strong><br />";
 
 	db_query('UPDATE cms_functions SET include = "fancygraphs" WHERE include = "demography"');
+
+	if(!db_tableexists('products_prices')) {
+		echo "Create table products_prices<br />";
 		
+		db_query('CREATE TABLE `products_prices` (`product_id` int(11) DEFAULT NULL, `camp_id` int(11) DEFAULT NULL, `price` int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;');
+		$result = db_query('SELECT * FROM products AS p');
+		while($row = db_fetch($result)) {
+			db_query('INSERT INTO products_prices (product_id, camp_id, price) VALUES ('.$row['id'].',1,'.$row['value'].')');
+		}
+
+	} else {
+		echo "Table products_prices already exists<br />";
+	}		
 	if(!db_tableexists('cms_functions_camps')) {
 		echo "Create table cms_functions_camps<br />";
 		
