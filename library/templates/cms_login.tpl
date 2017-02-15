@@ -12,7 +12,7 @@
 			<input class="btn btn-success" type="submit" value="{$translate['cms_login_submit']}" />
 			<input type="hidden" name="destination" value="{$smarty.get.destination}" />
 			<label for="autologin"><input type='checkbox' name='autologin' id='autologin' value="1"> {$translate['cms_login_autologin']}</label>
-			<a class="forgot-password" href="{$settings['rootdir']}/flip/reset.php">{$translate['cms_login_forgotpassword']}</a>
+			<a class="forgot-password" href="{$settings['rootdir']}/reset.php">{$translate['cms_login_forgotpassword']}</a>
 		</form>
 	</div>
 {include file="cms_footer.tpl"}

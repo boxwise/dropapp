@@ -1,5 +1,4 @@
 php_value include_path "/Users/_username_/themarket/50-back"
-SetEnv FLIPDIR '/themarket/flip'
 
 #BEGIN SSL and NON-WWW force
 #<IfModule mod_headers.c>

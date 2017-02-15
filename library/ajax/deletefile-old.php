@@ -1,6 +1,6 @@
 <?php
 	
-	require('flip.php');
+	require('core.php');
 	
 	$filename = basename($_POST['file']);
 	$resizeProperties = unserialize(str_replace("'",'"',stripslashes($_POST['paths'])));

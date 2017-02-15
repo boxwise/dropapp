@@ -1,6 +1,6 @@
 <?
 
-if(defined('FLIP')) {
+if(defined('CORE')) {
 	$lan = $settings['cms_language'];
 	
 	//load global language array
@@ -9,16 +9,12 @@ if(defined('FLIP')) {
 	if(!$lan) $lan = $settings['cms_language'];
 }
 
-if(defined('FLIPSITE')) {
+if(defined('COREMOBILE')) {
 	$lan = $settings['site_language'];
 	$lanid = db_value('SELECT id FROM languages WHERE code = :code',array('code'=>$lan));
 }
 
 $translate = db_simplearray('SELECT code, '.$lan.' FROM translate WHERE NOT deleted');
-if(isset($flipglobal)) {
-	$translate2 = db_simplearray('SELECT code, '.$lan.' FROM translate WHERE NOT deleted',array(),$flipglobal);
-	$translate = array_merge($translate,$translate2);
-}
 	
 $settings['languages'] = db_array('SELECT id,code,name,locale FROM languages WHERE visible ORDER BY seq');
 

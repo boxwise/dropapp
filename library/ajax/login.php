@@ -18,7 +18,7 @@
 				$redirect = $_POST['destination'];
 			} else {
 				$firstpage = db_value('SELECT f.include FROM cms_functions AS f, cms_functions AS f2, cms_access AS a WHERE f.parent_id = f2.id AND a.cms_functions_id = f.id AND (a.cms_users_id = :id OR '.intval($row['is_admin']).'=1) GROUP BY f.id ORDER BY f2.seq, f.seq LIMIT 1',array('id'=>$row['id']));
-				$redirect = $flipdir.'/?action='.$firstpage;	
+				$redirect = $settings['rootdir'].'/?action='.$firstpage;	
 			}
 			
 			$_SESSION['user'] = $row;
