@@ -29,7 +29,7 @@
 	 			<div id="campselect">
 					<select name="campselect" dir="rtl">
 					 		{foreach $camps as $c}
-				 				<option value="?barcode={$smarty.get.barcode}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
+				 				<option value="?barcode={$smarty.get.barcode|escape:'html'}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
 					 		{/foreach}
 					</select>
 	 			</div>
