@@ -1,9 +1,9 @@
-<?
+<?php
 
 	$table = $action;
 	$ajax = checkajax();
 	if(!DEFINED('CORE')) include('core.php');
-	
+
 
 	if(!$ajax) {
 
@@ -11,13 +11,13 @@
 		$i=0;
 		while($row = db_fetch($result)) {
 			if($row['sizegroup_id']!=$oldgroup) $i+=10; else $i++;
-			
+
 			db_query('UPDATE sizes SET seq = :seq WHERE id = :id',array('seq'=>$i,'id'=>$row['id']));
-			
+
 			$oldgroup = $row['sizegroup_id'];
 		}
-		
-		
+
+
 		initlist();
 
 		$cmsmain->assign('title','Sizes');

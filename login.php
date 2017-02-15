@@ -1,4 +1,3 @@
-<?
-	$login = true;
-
-	require('include/cms_login.php');
+<?php
+$login = true;
+require('include/cms_login.php');

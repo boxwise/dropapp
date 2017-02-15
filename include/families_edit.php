@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$table = 'families';
 	$action = 'families_edit';
@@ -6,7 +6,7 @@
 	if($_POST) {
 
 		if($_POST['pass']) $_POST['pass'] = md5($_POST['pass']);
-		
+
 		$handler = new formHandler($table);
 
 		$savekeys = array('name','adults','children','visible','email', 'container_id');
@@ -42,21 +42,21 @@
 		$table = 'people';
 		addfield('list','Family members','people', array('width'=>10,'query'=>'SELECT people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+1 AS age FROM people WHERE parent_id = '.$id, 'columns'=>array('lastname'=>'Lastname', 'firstname'=>'Firstname', 'gender'=>'Gender', 'age'=>'Age'),
 	'allowedit'=>true,'allowadd'=>false,'allowselect'=>false,'allowselectall'=>false, 'action'=>'people', 'redirect'=>true, 'allowsort'=>true));
-	
-			
+
+
 		$table = 'transactions';
 		addfield('list','Purchases','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%Y-%m-%d %H:%i") AS tdate, s.label AS size, p.name AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN sizes AS s ON s.id = t.size_id WHERE people_id = '.$id. ' AND t.product_id != 0', 'columns'=>array('product'=>'Product', 'size'=>'Size', 'count'=>'Amount', 'drops2'=>'Drop Coins', 'description'=>'Note','user'=>'Purchase made by', 'tdate'=>'Date'),
 	'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'allowsort'=>true));
-	
+
 		addfield('html', '', '<a class="btn btn-success btn-xs" href="?action=purchase&family_id='.intval($id).'">New Purchase</a>');
-	
+
 		$table = 'transactions';
 		addfield('list','Transactions','trans', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%Y-%m-%d %H:%i") AS tdate FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id WHERE people_id = '.$id. ' AND t.product_id = 0', 'columns'=>array('drops2'=>'Drop Coins', 'description'=>'Note','user'=>'Transaction made by', 'tdate'=>'Date'),
 	'allowedit'=>false,'allowadd'=>false,'allowsort'=>true,'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true));
-	
+
 		addfield('html', '', '<a class="btn btn-success btn-xs" href="?action=give&ids='.intval($id).'"><i class="fa fa-tint"></i> Give Coins</a>');
 	}
-	
+
 	addfield('line','','');
 	addfield('text','Email address','email', array('disableautocomplete'=>true));
 	addfield('password','Password','pass', array('disableautocomplete'=>true));
@@ -72,4 +72,3 @@
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
-

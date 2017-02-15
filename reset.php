@@ -1,4 +1,4 @@
-<?
+<?php
 	$login = true;
 
 	if($_GET['hash']&&($_GET['userid']||$_GET['peopleid'])) {

@@ -1,4 +1,4 @@
-<?
+<?php
 
 	function listMove($table, $ids, $regardparent=true, $hook = '') {
 

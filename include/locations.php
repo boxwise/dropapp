@@ -1,9 +1,9 @@
-<?
+<?php
 
 	$table = $action;
 	$ajax = checkajax();
 	if(!DEFINED('CORE')) include('core.php');
-	
+
 
 	if(!$ajax) {
 

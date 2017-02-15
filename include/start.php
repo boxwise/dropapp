@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$data = db_row('SELECT * FROM tipofday ORDER BY RAND()');
 	$data['families'] = db_value('SELECT COUNT(id) FROM people AS p WHERE visible AND parent_id = 0 AND NOT deleted');
@@ -9,7 +9,7 @@
 	$data['womenperc'] = $data['totalwomen']/$data['residents']*100;
 
 	$data['containers'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible');
-	
+
 	$data['adults'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= '.$settings['adult-age']);
 	$data['children'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < '.$settings['adult-age']);
 	$data['under18'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < 18');
@@ -21,7 +21,7 @@
 	$popular = db_row('SELECT SUM(count) AS count, CONCAT(p.name," ", g.label) AS product FROM transactions AS t, products AS p, genders AS g WHERE g.id = p.gender_id AND p.id = t.product_id GROUP BY product_id ORDER BY SUM(count) DESC LIMIT 1');
 	$data['popularcount'] = $popular['count'];
 	$data['popularname'] = $popular['product'];
-	
+
 	$date = strftime('%Y-%m-%d',strtotime('-14 days'));
 	$end = strftime('%Y-%m-%d');
 
@@ -30,18 +30,16 @@
 
 		if($sales) {
 			$data['sales'][strftime("%e %b",strtotime($date))] = db_value('SELECT SUM(t.count) AS aantal FROM transactions AS t
-LEFT OUTER JOIN products AS p ON t.product_id = p.id 
+LEFT OUTER JOIN products AS p ON t.product_id = p.id
 WHERE t.product_id > 0 AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59"');
 		}
         $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
-	}	
-	
+	}
+
 	// open the template
 	$cmsmain->assign('include','start.tpl');
-			
+
 	// place the form elements and data in the template
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
-	
-		

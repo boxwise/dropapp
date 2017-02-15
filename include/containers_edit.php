@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$table = 'containers';
 	$action = 'containers_edit';
@@ -28,7 +28,7 @@
 	$cmsmain->assign('title','Container');
 
 	addfield('text','Name','name');
-	
+
 	$table = 'families';
 	addfield('list','Families','families', array('width'=>10,'query'=>'SELECT *, families.name AS familyname, families.id AS id FROM families LEFT OUTER JOIN containers AS c ON c.id = families.container_id WHERE families.container_id = '.$id, 'columns'=>array('familyname'=>'Family Name'),
 'allowedit'=>true,'allowadd'=>false,'allowselect'=>false,'allowselectall'=>false, 'action'=>'families', 'redirect'=>true, 'allowsort'=>true));
@@ -38,4 +38,3 @@
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
-

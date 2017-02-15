@@ -1,8 +1,8 @@
-<?
+<?php
 	$table = 'cms_functions';
 
 	if($_POST) {
-	
+
 		$handler = new formHandler($table);
 		#$handler->debug = true;
 		$keys = array();
@@ -18,8 +18,8 @@
 
 		redirect('?action='.$_POST['_origin']);
 	}
-		
-	// collect data for the form 	
+
+	// collect data for the form
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 
 	// open the template
@@ -27,12 +27,12 @@
 
 	// put a title above the form
 	$cmsmain->assign('title',$translate['cms_function']);
-	
+
 	// define tabs
 	$title = (db_fieldexists('cms_functions','title_'.$lan)?'title_'.$lan:'title');
 
- 	addfield('select','Onderdeel van','parent_id',array('required'=>true,'formatlist'=>'formatparent','multiple'=>false, 'placeholder'=>'Maak een keuze', 'options'=>getParentarray($table, 0, 1, $title))); 
- 
+ 	addfield('select','Onderdeel van','parent_id',array('required'=>true,'formatlist'=>'formatparent','multiple'=>false, 'placeholder'=>'Maak een keuze', 'options'=>getParentarray($table, 0, 1, $title)));
+
 	if(db_fieldexists($table,'title_'.$lan)) {
 	 	$result = db_query('SELECT * FROM languages WHERE visible ORDER BY seq');
 	 	while($row = db_fetch($result)) {
@@ -50,4 +50,3 @@
 
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
-	

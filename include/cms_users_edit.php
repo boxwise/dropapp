@@ -1,4 +1,4 @@
-<?
+<?php
 	$table = 'cms_users';
 
 	if($_POST) {
@@ -59,4 +59,3 @@
 
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
-

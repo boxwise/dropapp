@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$table = $action;
 	$ajax = checkajax();
@@ -15,7 +15,7 @@
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
 			LEFT OUTER JOIN stock AS s ON s.product_id = products.id AND NOT s.deleted AND NOT s.location_id = 4
-			WHERE NOT products.deleted 
+			WHERE NOT products.deleted
 			GROUP BY products.id
 		');
 

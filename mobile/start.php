@@ -1,4 +1,3 @@
-<?
-	
-	$tpl->assign('include','mobile_start.tpl');
+<?php
 
+	$tpl->assign('include','mobile_start.tpl');

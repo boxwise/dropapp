@@ -1,20 +1,20 @@
-<?
+<?php
 
 	$table = 'translate';
 	$ajax = checkajax();
-	if(!DEFINED('CORE')) include('core.php');			
+	if(!DEFINED('CORE')) include('core.php');
 
 	if(!$ajax) {
-		
+
 		initlist();
-				
+
 		$cmsmain->assign('title',$translate['cms_translates']);
 
 		listsetting('search', array('nl','en','code','description'));
 		listfilter(array('label'=>'Filter op categorie','query'=>'SELECT c.id AS value, c.name AS label FROM translate_categories AS c, translate AS t WHERE t.category_id = c.id GROUP BY c.id ORDER BY c.id','filter'=>'category_id'));
 
 		$hasdescription = db_fieldexists($table,'description');
-		
+
 		$data = getlistdata('SELECT * FROM '.$table.(!$_SESSION['user']['is_admin']?' WHERE NOT hidden':''));
 
 		$width = intval(100/(count($settings['languages'])+($hasdescription?1:0)+($_SESSION['user']['is_admin']?1:0))).'%';
@@ -25,24 +25,24 @@
 		if($hasdescription) addcolumn('text',$translate['cms_translate_description'],'description',array('width'=>$width));
 
 		if($_SESSION['user']['is_admin']) addcolumn('text',$translate['cms_translate_code'],'code',array('width'=>$width));
-		
+
 		listsetting('add', $translate['cms_translate_new']);
-		listsetting('allowdelete', $_SESSION['user']['is_admin']);		
-		listsetting('allowadd', $_SESSION['user']['is_admin']);		
-		listsetting('allowcopy', true);		
+		listsetting('allowdelete', $_SESSION['user']['is_admin']);
+		listsetting('allowadd', $_SESSION['user']['is_admin']);
+		listsetting('allowcopy', true);
 		listsetting('maxheight', 'window');
-		
+
 		$options = db_simplearray('SELECT id, name FROM translate_categories');
 		addbutton('changecategory','Verplaatsen',array('icon'=>'fa-arrow-circle-right','options'=>$options));
-		
-		$cmsmain->assign('data',$data);					
+
+		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
 		$cmsmain->assign('include','cms_list.tpl');
-		
-	
+
+
 	} else {
-		
+
 		switch ($_POST['do']) {
 			case 'changecategory':
 				$ids = explode(',',$_POST['ids']);
@@ -57,12 +57,12 @@
 				$ids = json_decode($_POST['ids']);
 		    	list($success, $message, $redirect) = listMove($table, $ids);
 		        break;
-		        
+
 		    case 'delete':
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listDelete($table, $ids);
 		        break;
-		        
+
 		    case 'copy':
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listCopy($table, $ids, 'code');
@@ -72,21 +72,21 @@
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 		        break;
-		        
+
 		    case 'show':
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 		        break;
-		        
+
 		    default:
 		    	$success = false;
 		    	$message = $translate['cms_list_notexistingdo'];
 		    	$redirect = false;
 		        break;
 		}
-	
+
 		$return = array("success" => $success, 'message'=> $message, 'redirect'=>$redirect);
-				
+
 		echo json_encode($return);
 		die();
-	}	
+	}

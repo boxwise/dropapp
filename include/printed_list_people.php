@@ -1,4 +1,4 @@
-<?
+<?php
 
 	$i = 0;
 	$col = 40;
@@ -7,7 +7,7 @@
 	$result = db_query('SELECT id, people.container, COUNT(*) AS number, FLOOR(COUNT(*)/3) AS green, COUNT(*)%3 AS red FROM people WHERE visible AND NOT deleted GROUP BY container ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
 	while($row = db_fetch($result)) {
 		if($begin) {
-			$row['begin'] = true; 
+			$row['begin'] = true;
 			$begin = false;
 		} else {
 			$row['begin'] = false;
@@ -19,7 +19,7 @@
 		}
 		$row['type'] = 'familyhead';
 		$list[] = $row;
-		
+
 		$result2 = db_query('SELECT CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender FROM people AS p WHERE visible AND NOT deleted AND container = "'.$row['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
 		while($row2 = db_fetch($result2)) {
 			$row2['type'] = 'member';
@@ -27,9 +27,9 @@
 			$list[] = $row2;
 		}
 	}
-	
 
-	
+
+
 	if($_GET['export']) {
 		header('Content-Type: application/csv;charset=UTF-8');
 		header('Content-Disposition: attachment; filename=vegetable-list.csv');
@@ -46,10 +46,9 @@
 	} else {
 		$cmsmain->assign('include','printed_list_people.tpl');
 		$cmsmain->assign('list',$list);
-	
+
 		// place the form elements and data in the template
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('formelements',$formdata);
 		$cmsmain->assign('formbuttons',$formbuttons);
-	}	
-
+	}
