@@ -33,7 +33,7 @@
 				setcookie("autologin_user", null, time()-3600, '/');
 				setcookie("autologin_pass", null, time()-3600, '/');
 			}
-			include('update.php');
+			#include('update.php');
 						
 		} else { # password is not correct
 			$success = false;

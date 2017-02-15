@@ -45,4 +45,6 @@ VALUES
 	
 	if(!db_fieldexists('camps','require_qr')) {
 		db_query("ALTER TABLE `camps` ADD `require_qr` INT NULL DEFAULT NULL ");
+		db_query("UPDATE camps SET require_qr = 1 WHERE id = 1");
+		db_query("UPDATE camps SET require_qr = 0 WHERE id = 2");
 	}	
