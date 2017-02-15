@@ -7,7 +7,7 @@
 #
 # Host: localhost (MySQL 5.5.42)
 # Database: market_clean
-# Generation Time: 2017-02-10 12:47:29 +0000
+# Generation Time: 2017-02-15 17:53:03 +0000
 # ************************************************************
 
 
@@ -29,6 +29,7 @@ CREATE TABLE `camps` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `seq` int(11) NOT NULL,
+  `require_qr` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -163,23 +164,6 @@ CREATE TABLE `cms_users_camps` (
 
 
 
-# Dump of table containers
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `containers`;
-
-CREATE TABLE `containers` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `modified` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-
 # Dump of table food
 # ------------------------------------------------------------
 
@@ -203,71 +187,6 @@ CREATE TABLE `food` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
-
-# Dump of table foodcycles
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `foodcycles`;
-
-CREATE TABLE `foodcycles` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `cycle` date NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-
-# Dump of table foodtransactions
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `foodtransactions`;
-
-CREATE TABLE `foodtransactions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `container_id` varchar(255) NOT NULL DEFAULT '',
-  `food_id` int(11) NOT NULL,
-  `amount` float NOT NULL,
-  `transaction_date` datetime NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `created` datetime DEFAULT NULL,
-  `created_by` int(11) DEFAULT NULL,
-  `modified` datetime DEFAULT NULL,
-  `modified_by` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `people_id` (`container_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-LOCK TABLES `foodtransactions` WRITE;
-/*!40000 ALTER TABLE `foodtransactions` DISABLE KEYS */;
-
-INSERT INTO `foodtransactions` (`id`, `container_id`, `food_id`, `amount`, `transaction_date`, `user_id`, `created`, `created_by`, `modified`, `modified_by`)
-VALUES
-	(1001,'C12',12,1,'2017-01-03 11:53:15',97,NULL,NULL,NULL,NULL),
-	(1002,'C12',13,1,'2017-01-03 11:53:15',97,NULL,NULL,NULL,NULL),
-	(1003,'C12',14,2,'2017-01-03 11:53:15',97,NULL,NULL,NULL,NULL),
-	(1004,'C12',15,1,'2017-01-03 11:53:15',97,NULL,NULL,NULL,NULL),
-	(1005,'A6',1,6,'2017-01-03 11:59:01',97,NULL,NULL,NULL,NULL),
-	(1006,'A6',2,3,'2017-01-03 11:59:01',97,NULL,NULL,NULL,NULL),
-	(1007,'A6',3,3,'2017-01-03 11:59:01',97,NULL,NULL,NULL,NULL),
-	(1008,'A6',4,6,'2017-01-03 11:59:01',97,NULL,NULL,NULL,NULL),
-	(1009,'A6',5,6,'2017-01-03 11:59:01',97,NULL,NULL,NULL,NULL),
-	(1010,'A6',12,3,'2017-01-03 11:59:01',97,NULL,NULL,NULL,NULL),
-	(1011,'A6',13,2,'2017-01-03 11:59:01',97,NULL,NULL,NULL,NULL),
-	(1012,'A6',14,6,'2017-01-03 11:59:01',97,NULL,NULL,NULL,NULL),
-	(1013,'A6',15,2,'2017-01-03 11:59:01',97,NULL,NULL,NULL,NULL),
-	(1014,'C29',1,3,'2017-01-03 11:59:38',97,NULL,NULL,NULL,NULL),
-	(1015,'C29',2,2,'2017-01-03 11:59:38',97,NULL,NULL,NULL,NULL),
-	(1016,'C29',3,2,'2017-01-03 11:59:38',97,NULL,NULL,NULL,NULL),
-	(1017,'C29',4,3,'2017-01-03 11:59:38',97,NULL,NULL,NULL,NULL),
-	(1018,'C29',5,3,'2017-01-03 11:59:38',97,NULL,NULL,NULL,NULL),
-	(1019,'C29',12,2,'2017-01-03 11:59:38',97,NULL,NULL,NULL,NULL),
-	(1020,'C29',13,1,'2017-01-03 11:59:38',97,NULL,NULL,NULL,NULL),
-	(1021,'C29',14,3,'2017-01-03 11:59:38',97,NULL,NULL,NULL,NULL),
-	(1022,'C29',15,1,'2017-01-03 11:59:38',97,NULL,NULL,NULL,NULL);
-
-/*!40000 ALTER TABLE `foodtransactions` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 # Dump of table genders
@@ -3831,7 +3750,7 @@ LOCK TABLES `people` WRITE;
 
 INSERT INTO `people` (`id`, `parent_id`, `seq`, `firstname`, `lastname`, `date_of_birth`, `gender`, `family_id`, `visible`, `deleted`, `created`, `created_by`, `modified`, `modified_by`, `url`, `container`, `tent`, `email`, `pass`, `language`, `resetpassword`, `comments`)
 VALUES
-	(815,0,0,'David','Hasselhoff','1984-04-27','M',0,1,0,'2017-02-08 13:40:15',57,NULL,NULL,NULL,'Lyon','','','',5,NULL,'');
+	(815,0,1,'David','Hasselhoff','1984-04-27','M',0,1,0,'2017-02-08 13:40:15',57,NULL,NULL,NULL,'Lyon','','','',5,NULL,'');
 
 /*!40000 ALTER TABLE `people` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -4938,19 +4857,6 @@ VALUES
 UNLOCK TABLES;
 
 
-# Dump of table ration
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `ration`;
-
-CREATE TABLE `ration` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `startration` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
-
-
-
 # Dump of table redirect
 # ------------------------------------------------------------
 
@@ -5000,8 +4906,8 @@ VALUES
 	(82,1,'text','cms_usertable','Table used for CMS user administration','Table used for CMS user administration',NULL,'cms_users',1,NULL,NULL,'2014-06-08 10:00:56',1),
 	(83,1,'select','cms_language','Language used for CMS interface','Language used for CMS interface','nl=Nederlands,en=English,fr=Français','en',0,NULL,NULL,'2015-02-19 15:03:17',2),
 	(84,1,'text','site_name','Title for the website','Title for the website','','Drop Market - NK',0,NULL,NULL,'2016-11-07 11:25:57',57),
-	(86,1,'text','mail_sender','Afzenderadres van e-mailberichten uit systeem','Afzenderadres van e-mailberichten uit systeem','','love@maartenhunink.com',1,'2014-06-08 21:33:54',1,'2016-10-30 11:04:53',57),
-	(87,1,'text','mail_sender_name','Afzendernaam van e-mailberichten uit systeem','Afzendernaam van e-mailberichten uit systeem','','Drop Market - Nea Kavala',1,'2014-06-08 21:35:36',1,'2016-11-04 11:23:31',57),
+	(86,1,'text','mail_sender','Afzenderadres van e-mailberichten uit FLIP','Afzenderadres van e-mailberichten uit FLIP','','love@maartenhunink.com',1,'2014-06-08 21:33:54',1,'2016-10-30 11:04:53',57),
+	(87,1,'text','mail_sender_name','Afzendernaam van e-mailberichten uit FLIP','Afzendernaam van e-mailberichten uit FLIP','','Drop Market - Nea Kavala',1,'2014-06-08 21:35:36',1,'2016-11-04 11:23:31',57),
 	(92,1,'text','apple-mobile-web-app-title','Titel for Apple Mobile Web App','Titel for Apple Mobile Web App','','Drop Market - Nea Kavala',0,'2014-06-12 23:36:58',1,'2016-11-04 11:23:41',57),
 	(91,2,'text','google_analytics_domain','Google Analytics domeinnaam','Google Analytics domeinnaam','','',0,'2014-06-12 23:18:38',1,'2016-10-26 16:48:10',1),
 	(90,2,'text','google_analytics','Google analytics account code','Google analytics account code','','',0,'2014-06-12 23:16:00',1,'2016-10-26 16:48:14',1),
@@ -5010,7 +4916,7 @@ VALUES
 	(93,0,'text','contact_sender_email','Sender of contactform: email','Sender of contactform: email','','',1,'2014-06-08 21:33:54',1,'2016-10-26 16:49:47',1),
 	(94,1,'','amount','Number of newsitems','Number of newsitems',NULL,'4',1,NULL,NULL,'2014-11-13 10:11:36',2),
 	(96,1,'text','typekit_id','Typekit kit ID','Typekit kit ID',NULL,'fpa7ifp',0,'2014-06-12 23:16:00',1,'2015-02-19 15:03:30',2),
-	(129,6,'select','local_adminonly','Alleen admin\'s toestaan op lokale versie?','Alleen admin\'s toestaan op de lokale versie?','0=Nee;1=Ja','0',0,NULL,NULL,'2016-11-01 15:31:03',1),
+	(129,6,'select','local_adminonly','Alleen admin\'s toestaan op de local FLIP?','Alleen admin\'s toestaan op de local FLIP?','0=Nee;1=Ja','0',0,NULL,NULL,'2016-11-01 15:31:03',1),
 	(131,7,'text','shopping-period-start','Start week number to determine when new periods start','Start week number to determine when new periods start','','47',0,'2016-11-22 08:07:05',1,'2016-11-22 08:24:40',1),
 	(132,7,'text','drops_per_adult','Default drops per adult','Default drops per adult','','150',0,'2016-11-22 18:03:18',1,NULL,NULL),
 	(133,7,'text','drops_per_child','Default drops per child','Default drops per child','','130',0,'2016-11-22 18:03:18',1,'2016-11-22 18:04:05',1),
@@ -14449,6 +14355,7 @@ VALUES
 	(566,13,'text','cms_list_confirm_title','','Weet je het zeker?','Are you sure?','',0,NULL,NULL,'2016-11-07 18:53:31',1,0,'هل أنت واثق؟','Piştrastin?'),
 	(549,13,'text','cms_settings_category',NULL,'Categorie','Category','',0,NULL,NULL,NULL,NULL,0,'Category','Category'),
 	(551,13,'text','cms_reset_description',NULL,'Als je je wachtwoord niet meer weet, vul dan hier je e-mailadres in. Je krijgt dan direct een mail toegestuurd met daarin de mogelijkheid een nieuw wachtwoord aan te maken.','If you can\'t remember your password, please fill in your e-mail address. You will receive an email with a link to create a new password.','',0,'2014-06-08 22:48:33',57,NULL,NULL,0,'If you can\'t remember your password, please fill in your e-mail address. You will receive an email with a link to create a new password.','If you can\'t remember your password, please fill in your e-mail address. You will receive an email with a link to create a new password.'),
+	(557,13,'text','cms_field_wysiwyg',NULL,'TinyMCE','TinyMCE','',0,NULL,NULL,NULL,NULL,0,'TinyMCE','TinyMCE'),
 	(556,13,'text','cms_form_selectplaceholder',NULL,'Maak een keuze','Please select','Faire un choix',1,'2014-06-09 08:25:55',1,NULL,NULL,0,'Please select','Please select'),
 	(558,13,'text','cms_settings_enabled',NULL,'Ingeschakeld','Enabled','',0,NULL,NULL,NULL,NULL,0,'Enabled','Enabled'),
 	(559,13,'text','cms_field_select',NULL,'Menu','Menu','',0,NULL,NULL,NULL,NULL,0,'Menu','Menu'),
@@ -14474,15 +14381,15 @@ VALUES
 	(641,13,'text','cms_form_choosefile',NULL,'Kies bestand','Choose file','',0,NULL,NULL,NULL,NULL,0,'Choose file','Choose file'),
 	(642,13,'text','cms_form_chooseimage',NULL,'Kies afbeelding','Choose image','',0,NULL,NULL,NULL,NULL,0,'Choose image','Choose image'),
 	(643,13,'text','cms_form_viewfile',NULL,'Bekijk bestand','View file','',0,NULL,NULL,NULL,NULL,0,'View file','View file'),
-	(649,13,'text','tooltip_url',NULL,'Als je de URL leeg laat, maakt het systeem automatisch een goeie url voor je pagina. Je kan de URL veranderen door dit veld te ontgrendelen. Realiseer je wel dat door het veranderen van een URL bestaande verwijzingen naar deze pagina kunnen verdwijnen.','If you leave this field empty, the system will fill it in for you. If you want to change a value, you can unlock this field and do so. But realise that this can result in broken links.','',0,NULL,NULL,NULL,NULL,0,'If you leave this field empty, the system will fill it in for you. If you want to change a value, you can unlock this field and do so. But realise that this can result in broken links.','If you leave this field empty, the system will fill it in for you. If you want to change a value, you can unlock this field and do so. But realise that this can result in broken links.'),
+	(649,13,'text','tooltip_url',NULL,'Als je de URL leeg laat, maakt FLIP automatisch een goeie url voor je pagina. Je kan de URL veranderen door dit veld te ontgrendelen. Realiseer je wel dat door het veranderen van een URL bestaande verwijzingen naar deze pagina kunnen verdwijnen.','If you leave this field empty, FLIP will fill it in for you. If you want to change a value, you can unlock this field and do so. But realise that this can result in broken links.','',0,NULL,NULL,NULL,NULL,0,'If you leave this field empty, FLIP will fill it in for you. If you want to change a value, you can unlock this field and do so. But realise that this can result in broken links.','If you leave this field empty, FLIP will fill it in for you. If you want to change a value, you can unlock this field and do so. But realise that this can result in broken links.'),
 	(654,13,'text','cms_list_showhidesuccess',NULL,'Tonen/verbergen succesvol','','',0,'2014-06-12 22:42:38',1,NULL,NULL,0,'',''),
 	(655,13,'text','cms_reset_mailsubject',NULL,'Nieuw wachtwoord','New password','',0,NULL,NULL,'2014-06-13 20:44:09',1,0,'New password','New password'),
 	(681,13,'text','cms_list_copyfailure',NULL,'Kopie kon niet worden gemaakt','A copy could not been made','',0,NULL,NULL,NULL,NULL,0,'A copy could not been made','A copy could not been made'),
 	(682,13,'text','cms_list_copy_suffix',NULL,'(kopie)','(copy)','',0,NULL,NULL,NULL,NULL,0,'(copy)','(copy)'),
-	(656,13,'textarea','cms_sendlogin_mail','','Hierbij ontvang je een wachtwoord om in te loggen op het systeem van {sitename}.<br /><br />\r\nJe nieuwe wachtwoord is <strong>{password}</strong><br /><br />\r\nLet op: Het systeem maakt onderscheid tussen hoofd- en kleine letters.<br /><br />\r\nAls je bent ingelogd kan je het wachtwoord zelf wijzigen, door op je naam te klikken in de rechterbovenhoek en dan voor \'Instellingen\' te kiezen. Kies dan wel voor een niet al te makkelijk te raden password van minimaal acht tekens.','Hereby your password to login to {sitename}.<br /><br />\r\nYour password is <strong>{password}</strong><br /><br />\r\nAfter logging in you can change your password by clicking on your name in the upper right corner and choose \'settings\'.','',0,NULL,NULL,'2016-11-05 13:37:50',57,0,'Hereby your password to login to {sitename}.<br /><br />\r\nYour password is <strong>{password}</strong><br /><br />\r\nAfter logging in you can change your password by clicking on your name in the upper right corner and choose \'settings\'.','Hereby your password to login to {sitename}.<br /><br />\r\nYour password is <strong>{password}</strong><br /><br />\r\nAfter logging in you can change your password by clicking on your name in the upper right corner and choose \'settings\'.'),
+	(656,13,'textarea','cms_sendlogin_mail','','Hierbij ontvang je een wachtwoord om in te loggen op het FLIP CMS van {sitename}.<br /><br />\r\nJe nieuwe wachtwoord is <strong>{password}</strong><br /><br />\r\nLet op: FLIP CMS maakt onderscheid tussen hoofd- en kleine letters.<br /><br />\r\nAls je bent ingelogd kan je het wachtwoord zelf wijzigen, door op je naam te klikken in de rechterbovenhoek en dan voor \'Instellingen\' te kiezen. Kies dan wel voor een niet al te makkelijk te raden password van minimaal acht tekens.','Hereby your password to login to {sitename}.<br /><br />\r\nYour password is <strong>{password}</strong><br /><br />\r\nAfter logging in you can change your password by clicking on your name in the upper right corner and choose \'settings\'.','',0,NULL,NULL,'2016-11-05 13:37:50',57,0,'Hereby your password to login to {sitename}.<br /><br />\r\nYour password is <strong>{password}</strong><br /><br />\r\nAfter logging in you can change your password by clicking on your name in the upper right corner and choose \'settings\'.','Hereby your password to login to {sitename}.<br /><br />\r\nYour password is <strong>{password}</strong><br /><br />\r\nAfter logging in you can change your password by clicking on your name in the upper right corner and choose \'settings\'.'),
 	(657,13,'text','cms_sendlogin_mailsubject','','Nieuw wachtwoord','New password','',0,NULL,NULL,'2016-10-26 17:02:31',1,0,'New password','New password'),
 	(658,13,'text','cms_sendlogin_confirm',NULL,'De logingegevens zijn verstuurd.','Within a few minutes you will receive an e-mail with further instructions to reset your password.','',0,NULL,NULL,'2014-06-13 20:52:21',1,0,'Within a few minutes you will receive an e-mail with further instructions to reset your password.','Within a few minutes you will receive an e-mail with further instructions to reset your password.'),
-	(660,13,'text','cms_email_signature','','Met de hartelijke groeten van het systeem','Much love...','',0,'2014-06-13 20:59:10',1,'2016-11-05 13:34:35',57,0,'Much love...','Much love...'),
+	(660,13,'text','cms_email_signature','','Met de hartelijke groeten van FLIP (het CMS van Zinnebeeld)','Much love...','',0,'2014-06-13 20:59:10',1,'2016-11-05 13:34:35',57,0,'Much love...','Much love...'),
 	(661,13,'text','buytickets',NULL,'Koop kaarten voor deze voorstelling','','',0,NULL,NULL,'2014-06-24 20:52:03',1,0,'',''),
 	(662,13,'text','cms_form_changefile',NULL,'Wijzig bestand','Change file','',0,NULL,NULL,NULL,NULL,0,'Change file','Change file'),
 	(663,13,'text','cms_form_changeimage',NULL,'Wijzig afbeelding','Change image','',0,NULL,NULL,NULL,NULL,0,'Change image','Change image'),
