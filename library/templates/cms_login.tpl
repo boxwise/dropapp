@@ -10,7 +10,7 @@
 				<input class="form-control" type="password" name="pass" id="pass" placeholder="{$translate['cms_login_password']}" required />	
 			</div>
 			<input class="btn btn-success" type="submit" value="{$translate['cms_login_submit']}" />
-			<input type="hidden" name="destination" value="{$smarty.get.destination}" />
+			<input type="hidden" name="destination" value="{$smarty.get.destination|escape}" />
 			<label for="autologin"><input type='checkbox' name='autologin' id='autologin' value="1"> {$translate['cms_login_autologin']}</label>
 			<a class="forgot-password" href="{$settings['rootdir']}/reset.php">{$translate['cms_login_forgotpassword']}</a>
 		</form>
