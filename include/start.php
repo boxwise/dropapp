@@ -1,7 +1,10 @@
 <?php
 
+	$data['items'] = db_value('SELECT SUM(items) FROM (stock AS s, products AS p) LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE s.product_id = p.id AND NOT p.deleted AND NOT s.deleted AND l.visible AND l.camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
+	$data['boxes'] = db_value('SELECT COUNT(s.id) FROM (stock AS s, products AS p) LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE s.product_id = p.id AND NOT p.deleted AND NOT s.deleted AND l.visible AND l.camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
+
 	if($_SESSION['camp']['id']==1) {
-		$data = db_row('SELECT * FROM tipofday ORDER BY RAND()');
+		$data['tip'] = db_row('SELECT * FROM tipofday ORDER BY RAND()');
 		$data['families'] = db_value('SELECT COUNT(id) FROM people AS p WHERE visible AND parent_id = 0 AND NOT deleted');
 		$data['residents'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted');
 		$data['totalmen'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND gender = "M"');
@@ -15,8 +18,6 @@
 		$data['children'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < '.$settings['adult-age']);
 		$data['under18'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < 18');
 	
-		$data['items'] = db_value('SELECT SUM(items) FROM (stock AS s, products AS p) LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE s.product_id = p.id AND NOT p.deleted AND NOT s.deleted AND l.visible');
-		$data['boxes'] = db_value('SELECT COUNT(s.id) FROM (stock AS s, products AS p) LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE s.product_id = p.id AND NOT p.deleted AND NOT s.deleted AND l.visible');
 		$data['sold'] = db_value('SELECT SUM(count) FROM transactions');
 		$data['marketdays'] = db_value('SELECT COUNT(DISTINCT(DATE_FORMAT(transaction_date,"%d-%m-%Y"))) FROM transactions');
 		$popular = db_row('SELECT SUM(count) AS count, CONCAT(p.name," ", g.label) AS product FROM transactions AS t, products AS p, genders AS g WHERE g.id = p.gender_id AND p.id = t.product_id GROUP BY product_id ORDER BY SUM(count) DESC LIMIT 1');
@@ -41,7 +42,8 @@
 		$cmsmain->assign('include','start-neakavala.tpl');
 	
 		// place the form elements and data in the template
-		$cmsmain->assign('data',$data);
-		$cmsmain->assign('formelements',$formdata);
-		$cmsmain->assign('formbuttons',$formbuttons);
+	} elseif($_SESSION['camp']['id']==2) {
+		$cmsmain->assign('include','start-chios.tpl');
 	}
+
+	$cmsmain->assign('data',$data);
