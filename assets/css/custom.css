@@ -47,7 +47,9 @@ hr{
 .header-top{
 	background: #61c4ef;
 }
-
+.pushy{
+	left: -200px;
+}
 .nav-aside ul li.active > a{
 	color: #61c4ef;
 }
