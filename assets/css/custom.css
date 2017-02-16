@@ -33,7 +33,7 @@ hr{
 	min-height: 100%;
 	position: absolute;
 	width: 100%;
-	background: url("../img/background-1.jpg") no-repeat center center fixed;
+	background: #61c4ef no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -47,7 +47,9 @@ hr{
 .header-top{
 	background: #61c4ef;
 }
-
+.pushy{
+	left: -200px;
+}
 .nav-aside ul li.active > a{
 	color: #61c4ef;
 }
@@ -287,6 +289,13 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 		height: auto!important;
 		overflow: auto;
 	}																	
+}
+
+.header-top .navbar-nav > li{
+	float: left;
+}
+.navbar-nav li.text-only{
+	padding: 10px 10px 8px;
 }
 
 .food-distribution-detail {

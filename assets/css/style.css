@@ -75,7 +75,7 @@ p{
 	color: #fff;
 }
 .header-top-inner .menu-btn{
-    font-size: 1.6em;
+    font-size: 1.5em;
     float: left;
     margin-top: -7px;
 }
@@ -103,13 +103,20 @@ p{
 	border-top-right-radius: 0;
 	border-top-left-radius: 0;
 }
-.header-top-inner .dropdown-toggle i.fa-user{
+.header-top-inner .dropdown-toggle i.fa{
 	float: left;
 	margin-right: 5px;
 }
 .navbar-nav>li>a{
 	padding-top: 9px;
 	padding-bottom: 7px;
+}
+.navbar-nav .open .dropdown-menu{
+	position: absolute;
+	background-color: #fff;
+	border: 1px solid rgba(0,0,0,0.15);
+	float: left;
+	box-shadow: 0 6px 12px rgba(0,0,0,0.175);
 }
 ul#usersonline {
 	list-style: none;

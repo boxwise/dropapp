@@ -7,7 +7,7 @@
 		<ul class="nav navbar-nav pull-right">
 	 		{if $camps|count>1}
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user visible-xs"></i><span class="hidden-xs">{$currentcamp['name']} </span><b class="caret"></b></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe visible-xs"></i><span class="hidden-xs">{$currentcamp['name']} </span><b class="caret"></b></a>
 					<ul class="dropdown-menu dropdown-menu-right">
 				 		{foreach $camps as $c}
 				 			{if $c['id']!=$currentcamp['id']}
@@ -17,11 +17,11 @@
 					</ul>
 				</li>
 	 		{elseif $camps|count==1}
-	 			<li>
+	 			<li class="text-only">
 	 				{$camps[0]['name']}
 	 			</li>
 	 		{else}
-	 			No camps available for this user
+	 			<li class="text-only">No camps available for this user</li>
 	 		{/if}
 			
 			<li class="dropdown">

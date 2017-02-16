@@ -9,4 +9,4 @@
 	db_query('UPDATE stock SET location_id = :location_id, modified = NOW(), modified_by = :user WHERE id = :id',array('location_id'=>$newlocation['id'],'id'=>$box['id'],'user'=>$_SESSION['user']['id']));
 	db_query('INSERT INTO history (tablename,record_id,changes,ip,changedate,user_id) VALUES ("stock",'.$box['id'].',"Box moved to '.$newlocation['label'].'","'.$_SERVER['REMOTE_ADDR'].'",NOW(),'.$_SESSION['user']['id'].')');
 
-	redirect('?message='.'Box <strong>'.$box['box_id'].'</strong> contains '.$box['items'].'x <strong>'.$box['product'].'</strong> is moved from <strong>'.$box['location'].'</strong> to <strong>'.$newlocation['label']);
+	redirect('?message='.'Box <strong>'.$box['box_id'].'</strong> contains '.$box['items'].'x <strong>'.$box['product'].'</strong> is moved from <strong>'.$box['location'].'</strong> to <strong>'.$newlocation['label'].'</strong>. <a href="?boxid='.$box['id'].'">Go back to this box.</a>');
