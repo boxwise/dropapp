@@ -12,7 +12,7 @@
 
 		$cmsmain->assign('title',$translate['cms_functions']);
 
-		$data = getlistdata('SELECT *, IF(parent_id=0,0,1) AS editable FROM '.$table);
+		$data = getlistdata('SELECT cms_functions.*, IF(parent_id=0,0,1) AS editable, IFNULL(GROUP_CONCAT(c.name ORDER BY c.seq SEPARATOR ", "),"") AS camps FROM cms_functions LEFT OUTER JOIN cms_functions_camps AS x ON x.cms_functions_id = cms_functions.id LEFT OUTER JOIN camps AS c ON c.id = x.camps_id GROUP BY cms_functions.id');
 
 		if(db_fieldexists($table,'title_'.$lan)) {
 			addcolumn('text','Functie','title_'.$lan);
@@ -20,6 +20,7 @@
 			addcolumn('text','Functie','title');
 		}
 		addcolumn('text','Include','include');
+		addcolumn('text','Camps','camps');
 
 		listsetting('allowselect',array(0=>true,1=>true));
 		listsetting('allowmovefrom',0);
