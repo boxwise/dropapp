@@ -945,11 +945,6 @@ tr.level-10 td:first-child{
 	text-align: center;
 	color: #D71920;
 	margin-bottom: 35px;
-	background: url(/assets/img/background-1.jpg) no-repeat center center fixed;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
 }
 .login-reset-form {
 	max-width: 300px;
