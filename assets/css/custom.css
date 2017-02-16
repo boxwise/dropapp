@@ -33,7 +33,7 @@ hr{
 	min-height: 100%;
 	position: absolute;
 	width: 100%;
-	background: url("../img/background-1.jpg") no-repeat center center fixed;
+	background: #61c4ef no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
