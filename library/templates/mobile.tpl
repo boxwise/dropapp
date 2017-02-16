@@ -22,22 +22,23 @@
     <link rel="icon" type="image/png" href="{$settings['rootdir']}/assets/img/favicon-16x16.png" sizes="16x16">
 
 	</head>
-	<body class="mobile">		
-		<strong><a href="{$settings['rootdir']}/mobile.php">{$settings['site_name']}</a></strong>
-		{if $smarty.session.user}
-	 		{if $camps|count>1}
-	 			<div id="campselect">
-					<select name="campselect" dir="rtl">
-					 		{foreach $camps as $c}
-				 				<option value="?barcode={$smarty.get.barcode|escape:'html'}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
-					 		{/foreach}
-					</select>
-	 			</div>
-	 		{elseif $camps|count==1}
-	 				{$camps[0]['name']}
-	 		{/if}
-		{/if}
-		<hr>
+	<body class="mobile">
+		<header>
+			<strong><a href="{$settings['rootdir']}/mobile.php">{$settings['site_name']}</a></strong>
+			{if $smarty.session.user}
+		 		{if $camps|count>1}
+		 			<div id="campselect">
+						<select name="campselect" dir="rtl">
+						 		{foreach $camps as $c}
+					 				<option value="?barcode={$smarty.get.barcode|escape:'html'}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
+						 		{/foreach}
+						</select>
+		 			</div>
+		 		{elseif $camps|count==1}
+		 				{$camps[0]['name']}
+		 		{/if}
+			{/if}		
+		</header>
 		{if $data['message']}<div class="message {if $data['warning']}warning{/if}">{$data['message']}</div>{/if}
 		{if $include}{include file="{$include}"}{/if}
 		{if $smarty.session.user}

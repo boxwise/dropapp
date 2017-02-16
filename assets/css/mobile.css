@@ -26,6 +26,11 @@ button, .btn {
 	background: #ddd;
 	color: #999;
 }
+header{
+	background: #eee;
+	margin: -10px -10px 5px -10px;
+	padding: 10px;
+}
 .page-header{
 	margin-top: 25px;
 }
@@ -74,7 +79,7 @@ a {
 }
 #campselect select{
 	color: #61c4ef;
-	background: #fff;
+	background: none;
 	border:none;
 	cursor: pointer;
 	margin-left: -5px;
@@ -97,9 +102,9 @@ a {
 	right: 0;
 }
 footer{
-	border-top: 1px solid #eee;
-	padding: 10px 0;
-	margin-top: 30px;
+	background: #eee;
+	padding: 10px;
+	margin: 30px -10px -10px -10px;
 }
 #loading{
 	display: none;
