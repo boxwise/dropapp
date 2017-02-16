@@ -289,6 +289,13 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 	}																	
 }
 
+.header-top .navbar-nav > li{
+	float: left;
+}
+.navbar-nav li.text-only{
+	padding: 10px 10px 8px;
+}
+
 .food-distribution-detail {
 	border:1px solid #ccc;
 	font-size:12px;

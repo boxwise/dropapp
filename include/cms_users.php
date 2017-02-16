@@ -86,10 +86,10 @@
 			$_SESSION['user2'] = $_SESSION['user'];
 			$_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id=:id',array('id'=>$id));
 			$success = true;
-			#$message = 'Nu ingelogd als '.$_SESSION['user']['naam'];
+			$message = 'Nu ingelogd als '.$_SESSION['user']['naam'];
 		}
 
-		return array($success,$message,$settings['rootdir']);
+		return array($success,$message,true);
 	}
 
 	function sendlogindata($table, $ids) {
