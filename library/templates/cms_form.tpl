@@ -13,7 +13,7 @@
 
 		<input type="hidden" name="id" value="{$data['id']}" />
 		<input type="hidden" name="seq" value="{$data['seq']}" />
-		<input type="hidden" name="_origin" value="{$smarty.get.origin}" />
+		<input type="hidden" name="_origin" value="{$smarty.get.origin|escape:'html'}" />
 		{foreach $formelements as $element}
 			{if !$element['tab'] and !$element['aside']}{include file="cms_form_{$element['type']}.tpl"}{/if}
 		{/foreach}	
@@ -53,7 +53,7 @@
 					<button name="__action" value="{$button['action']}" class="btn btn-submit btn-success">{$button['label']}</button>
 				{/foreach}
 
-				<a href="{$settings['cmsdir']}/?action={$smarty.get.origin}" class="btn btn-cancel btn-default">{$translate['cms_form_cancel']}</a>
+				<a href="{$settings['cmsdir']}/?action={$smarty.get.origin|escape:'html'}" class="btn btn-cancel btn-default">{$translate['cms_form_cancel']}</a>
 				
 				<div class="aside-form">
 					{foreach $formelements as $element}		
