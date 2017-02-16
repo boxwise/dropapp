@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'comments');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'comments','camp_id');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$handler->savePost($savekeys);
 
@@ -32,6 +32,7 @@
 
 	if (!$id) {
 		$data['visible'] = 1;
+		$data['camp_id'] = $_SESSION['camp']['id'];
 	}
 
 	$cmsmain->assign('include','cms_form.tpl');
@@ -70,6 +71,7 @@
 
 	}
 
+	addfield('hidden','camp_id','camp_id');
 	addfield('hidden','parent_id','parent_id');
 	addfield('text','Lastname','lastname');
 	addfield('text','Firstname','firstname',array('required'=>true));
