@@ -1,15 +1,16 @@
 body {
 	font-family: Arial, sans-serif;
 	font-size:2em;
-	margin:10px;
+	margin:0 10px;
 	padding:0;
+	color: #395c6b;
 }
 button, .btn {
 	font-family: Arial, sans-serif;
 	font-size:24px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border-radius: 10px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	border:none;
 	background-color: #61c4ef;
 	width:100%;
@@ -27,9 +28,13 @@ button, .btn {
 	color: #999;
 }
 header{
-	background: #eee;
-	margin: -10px -10px 5px -10px;
+	background: #395c6b;
+	margin: 0 -10px 10px -10px;
 	padding: 10px;
+	color: #fff;
+}
+header a{
+	color: #fff;
 }
 .page-header{
 	margin-top: 25px;
@@ -60,7 +65,8 @@ label.error{
 }
 .message{
 	padding: 10px;
-	background: #daffe3;
+	background: rgb(228, 245, 253);
+	font-size: 0.8em;
 }
 .message.warning{
 	background: #ffdada;
@@ -78,7 +84,7 @@ a {
 	position: relative;
 }
 #campselect select{
-	color: #61c4ef;
+	color: #fff;
 	background: none;
 	border:none;
 	cursor: pointer;
@@ -102,9 +108,10 @@ a {
 	right: 0;
 }
 footer{
-	background: #eee;
 	padding: 10px;
-	margin: 30px -10px -10px -10px;
+	background: #f5f5f5;
+	border-top: 1px solid #eee;
+	margin: 30px -10px 0 -10px;
 }
 #loading{
 	display: none;
