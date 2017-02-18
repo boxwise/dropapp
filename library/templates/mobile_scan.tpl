@@ -1,9 +1,11 @@
 	{if $box['id']}
 		<h2 class="page-header">Box {$box['box_id']}</h2>
 		Contains <strong>{$box['items']} {$box['product']}</strong><br />Move this box from <strong>{$box['location']}</strong> to:</p>
-		{foreach $locations as $value=>$location}
-			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a><br />
-		{/foreach}
+		<div class="btn-list">
+			{foreach $locations as $value=>$location}
+				<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>
+			{/foreach}
+		</div>
 		{if !$data['othercamp']}
 		<hr></hr>
 		<p>Change the amount of items in the box:</p>
