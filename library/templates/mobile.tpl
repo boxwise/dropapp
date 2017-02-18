@@ -43,7 +43,7 @@
 		{if $include}{include file="{$include}"}{/if}
 		{if $smarty.session.user}
 			<footer>
-				<a href="{$settings['rootdir']}?action=start">Full App</a> - 
+				<a href="{$settings['rootdir']}/?action=start&camp={$currentcamp['id']}">Full App</a> - 
 				<a href="?logout=1">{$translate['cms_menu_logout']}</a>
 			</footer>
 		{/if}
