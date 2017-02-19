@@ -33,5 +33,5 @@
 
 
 	} else {
-		echo "Field 'camp_id' in table 'people' already exists<br />";
+		echo "Field 'camp_id' in table 'products' already exists<br />";
 	}

@@ -7,7 +7,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('name','gender_id', 'value','visible','maxperadult','maxperchild','amountneeded','sizegroup_id');
+		$savekeys = array('name','gender_id', 'value','visible','maxperadult','maxperchild','amountneeded','sizegroup_id','camp_id');
 		$id = $handler->savePost($savekeys);
 
 		db_query('DELETE FROM products_prices WHERE product_id = :product_id AND camp_id = :camp_id', array('product_id'=>$id, 'camp_id'=>$_SESSION['camp']['id']));
@@ -23,11 +23,13 @@
 
 	if (!$id) {
 		$data['visible'] = 1;
+		$data['camp_id'] = $_SESSION['camp']['id'];
 	}
 
 	// open the template
 	$cmsmain->assign('include','cms_form.tpl');
 	addfield('hidden','','id');
+	addfield('hidden','','camp_id');
 
 	// put a title above the form
 	$cmsmain->assign('title','Product');
