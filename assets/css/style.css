@@ -606,7 +606,7 @@ textarea.select2{
 }
 .form-inline.search-group a.form-control-feedback{
 	top:-1px;
-	z-index: 2;
+	z-index: 3;
 	right: -1px;
 	color: #000;
 	position: absolute;
@@ -992,9 +992,32 @@ tr.level-10 td:first-child{
 		border-left: none;
 	}
 	.navbar-nav>li>a{
-		padding-left: 8px;
-		padding-right: 8px;
+		padding: 9px 8px 8px 8px;
 	}
+	.header-top .navbar-nav.pull-right li:first-child a{
+		padding-bottom: 3px;
+	}
+	.header-top-inner .dropdown-toggle i.fa{
+		float: none;
+	}
+	.header-top .navbar-nav{
+		margin-right: 0;
+	}
+	.header-top .navbar-nav.pull-right .caret{
+		display: none;
+	}
+	.header-top .navbar-nav.pull-right .fa.fa-mobile{
+		font-size: 2em;
+		margin-top: -3px;
+		margin-right: 3px;
+		margin-left: 3px;
+	}
+	.header-top .navbar-nav.pull-right .fa{
+		font-size: 1.5em;
+		margin-right: 2px;
+		margin-left: 2px;
+	}
+
 }
 
 /* putting the right sidebar below the form */
