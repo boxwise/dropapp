@@ -5,6 +5,7 @@
 			<a href="{$settings['rootdir']}/" class="brand">{$translate['site_name']}</a>
  		</div>
 		<ul class="nav navbar-nav pull-right">
+			<li><a href="{$settings['rootdir']}/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
 	 		{if $camps|count>1}
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe visible-xs"></i><span class="hidden-xs">{$currentcamp['name']} </span><b class="caret"></b></a>
