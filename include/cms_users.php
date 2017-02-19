@@ -85,6 +85,7 @@
 		} else {
 			$_SESSION['user2'] = $_SESSION['user'];
 			$_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id=:id',array('id'=>$id));
+			unset($_SESSION['camp']);
 			$success = true;
 			$message = 'Nu ingelogd als '.$_SESSION['user']['naam'];
 		}

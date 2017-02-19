@@ -10,12 +10,14 @@
 
 		$cmsmain->assign('title','Products');
 		listsetting('search', array('name', 'g.label'));
+		
+		$locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
 
 		$data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," drop coins") AS drops, COALESCE(SUM(s.items),0) AS items FROM '.$table.'
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
-			LEFT OUTER JOIN stock AS s ON s.product_id = products.id AND NOT s.deleted AND NOT s.location_id = 4
-			WHERE NOT products.deleted
+			LEFT OUTER JOIN stock AS s ON s.product_id = products.id AND NOT s.deleted AND s.location_id IN ('.$locations.') 
+			WHERE NOT products.deleted AND camp_id = '.$_SESSION['camp']['id'].'
 			GROUP BY products.id
 		');
 
