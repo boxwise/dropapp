@@ -108,9 +108,11 @@ label.error{
 	padding: 10px;
 	background: rgb(228, 245, 253);
 	font-size: 0.8em;
+	margin-bottom: 20px;
 }
 .message.warning{
-	background: #ffdada;
+	background: #f95b47;
+	color: #fff;
 }
 #autologin{
 	float: left;
