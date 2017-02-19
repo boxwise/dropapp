@@ -349,13 +349,20 @@
 
 	// inserts a where element into a new query or adds a new  element to an existing where-chain
 	function insertwhere($query, $where) {
-		$pos_group = stripos($query,'GROUP BY');
-		$pos_where = stripos($query,'WHERE');
+		$pos_order = strripos($query,'ORDER BY');
+		$pos_group = strripos($query,'GROUP BY');
+		$pos_where = strripos($query,'WHERE');
 		if($pos_group) { #voor het groupstatement
 			if($pos_where) {
 				$query = query_insert($query,$pos_group,'AND '.$where);
 			} else {
 				$query = query_insert($query,$pos_group,'WHERE '.$where);
+			}
+		} elseif($pos_order) { #gewoon erachter
+			if($pos_where) {
+				$query = query_insert($query,$pos_order,'AND '.$where);
+			} else {
+				$query = query_insert($query,$pos_order,'WHERE '.$where);
 			}
 		} else { #gewoon erachter
 			if($pos_where) {
