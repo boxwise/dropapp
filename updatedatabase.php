@@ -1,5 +1,5 @@
 <?php
-	require('core.php');
+	require_once('core.php');
 	
 	if(!$_SESSION['user']['is_admin']) die('Go away!');
 	
