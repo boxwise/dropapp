@@ -1,5 +1,5 @@
 <?php
-	require('jsmin-1.1.1.php');
+	require_once('jsmin-1.1.1.php');
 	header('Content-type: text/javascript; charset: UTF-8');
 
 	error_reporting(0);

@@ -2,7 +2,8 @@
 	error_reporting(E_ALL);
 	ini_set('display_errors',true);
 
-	require('core-mobile.php');
+	$login = true; #tell core not to check login, because we use an alternate version
+	require_once('core.php');
 
 	date_default_timezone_set('Europe/Athens');
 	db_query('SET time_zone = "+02:00"');
@@ -15,7 +16,7 @@
 	
 	checkmobilesession();
 	if($_POST && $_POST['action']=='login') {
-		require('mobile/login.php');
+		require_once('mobile/login.php');
 	}
 
 	/* new: fill the camp selection menu -------------------------------------------- */
@@ -49,46 +50,46 @@
 	} else {
 		# Boxlabel is scanned 
 		if($_GET['barcode']!='' || $_GET['boxid']!='') {
-			require('mobile/barcode.php');
+			require_once('mobile/barcode.php');
 			
 		# Assign a QR code to existing box
 		} elseif($_GET['assignbox']!='') {
-			require('mobile/assignbox.php');
+			require_once('mobile/assignbox.php');
 			
 		# Save assignbox selection
 		} elseif($_GET['saveassignbox']!='') {
-			require('mobile/saveassignbox.php');
+			require_once('mobile/saveassignbox.php');
 			
 		# Make a new box with this QR code
 		} elseif($_GET['newbox']!='') {
-			require('mobile/newbox.php');
+			require_once('mobile/newbox.php');
 			
 		# Edit the info for existing box
 		} elseif($_GET['editbox']!='') {
-			require('mobile/editbox.php');
+			require_once('mobile/editbox.php');
 			
 		# Save a new box with this QR code
 		} elseif($_GET['savebox']!='') {
-			require('mobile/savebox.php');
+			require_once('mobile/savebox.php');
 		
 		# Move this box to a new location
 		} elseif($_GET['move']!='') {
-			require('mobile/move.php');
+			require_once('mobile/move.php');
 	
 		# Change the amount of items in this box
 		} elseif($_GET['changeamount']!='') {
-			require('mobile/changeamount.php');
+			require_once('mobile/changeamount.php');
 	
 		# Save the new amount of items in this box
 		} elseif($_GET['saveamount']!='') {
-			require('mobile/saveamount.php');
+			require_once('mobile/saveamount.php');
 	
 		# Find a box by manually entered number
 		} elseif($_GET['findbox']!='') {
-			require('mobile/findbox.php');
+			require_once('mobile/findbox.php');
 	
 		} else {
-			require('mobile/start.php');
+			require_once('mobile/start.php');
 		}	
 	}
 

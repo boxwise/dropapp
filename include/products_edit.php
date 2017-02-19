@@ -10,16 +10,10 @@
 		$savekeys = array('name','gender_id', 'value','visible','maxperadult','maxperchild','amountneeded','sizegroup_id','camp_id');
 		$id = $handler->savePost($savekeys);
 
-		db_query('DELETE FROM products_prices WHERE product_id = :product_id AND camp_id = :camp_id', array('product_id'=>$id, 'camp_id'=>$_SESSION['camp']['id']));
-		db_query('INSERT INTO products_prices (product_id,camp_id,price) VALUES ('.intval($id).','.$_SESSION['camp']['id'].','.intval($_POST['price']).')');
-
 		redirect('?action='.$_POST['_origin']);
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
-
-	# Get the price for this product for the current camp
-	if($id) $data['price'] = db_value('SELECT price FROM products_prices WHERE product_id = :product_id AND camp_id = :camp_id', array('product_id'=>$id, 'camp_id'=>$_SESSION['camp']['id']));
 
 	if (!$id) {
 		$data['visible'] = 1;
@@ -36,12 +30,11 @@
 
 	addfield('text','Name','name');
 	addfield('select', 'Gender', 'gender_id', array('width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM genders ORDER BY seq'));
-	addfield('text','Value in drop coins','value');
-	#addfield('text','New value in drop coins','price');
+	if($_SESSION['camp']['market']) addfield('text','Value in drop coins','value');
 
 	addfield('line','','');
 	addfield('select', 'Sizegroup', 'sizegroup_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM sizegroup ORDER BY seq'));
-	addfield('number','Estimated annual need per person','amountneeded',array('width'=>3));
+	if($_SESSION['camp']['market']) addfield('number','Estimated annual need per person','amountneeded',array('width'=>3));
 	addfield('line','','');
 	$table = 'stock';
 	addfield('list','In Stock','stock', array('width'=>10,'query'=>'

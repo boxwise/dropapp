@@ -17,7 +17,6 @@ db_connect($settings['db_host'],$settings['db_user'],$settings['db_pass'],$setti
 # get settings from settings table
 $result = db_query('SELECT code, value FROM settings');
 while($row = db_fetch($result)) $settings[$row['code']] = $row['value'];
-$settings['showhistory'] = db_tableexists('history');
 
 $locale = db_row('SELECT locale FROM languages WHERE code = :lan',array('lan'=>$settings['cms_language']));
 setlocale(LC_ALL, $locale);

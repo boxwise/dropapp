@@ -1,6 +1,6 @@
 <?php
 	setlocale(LC_ALL, 'nl_NL');
-	require('core.php');
+	require_once('core.php');
 	$email = (isset($_COOKIE['saveemail'])?$_COOKIE['saveemail']:'');
 	$smarty = new Zmarty;
 	$smarty->display('cms_login.tpl');
