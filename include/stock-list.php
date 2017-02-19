@@ -3,6 +3,8 @@
 	$table = 'stock';
 	$action = 'stock-list';
 
+	
+	die('The stock list is temporarily not available due to work in progress.');
 	initlist();
 
 	$cmsmain->assign('title','General stock');
