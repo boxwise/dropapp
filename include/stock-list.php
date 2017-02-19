@@ -12,6 +12,7 @@
 
 	$data = getlistdata('
 SELECT
+	CONCAT(p.id,"-",g.id,"-",IFNULL(s.id,"")) AS id,
 	p.name AS product,
 	g.label AS gender,
 	s.label AS size,
@@ -64,19 +65,3 @@ ORDER BY
 	$cmsmain->assign('listdata',$listdata);
 	$cmsmain->assign('include','cms_list.tpl');
 
-function array_orderby()
-{
-    $args = func_get_args();
-    $data = array_shift($args);
-    foreach ($args as $n => $field) {
-        if (is_string($field)) {
-            $tmp = array();
-            foreach ($data as $key => $row)
-                $tmp[$key] = $row[$field];
-            $args[$n] = $tmp;
-            }
-    }
-    $args[] = &$data;
-    call_user_func_array('array_multisort', $args);
-    return array_pop($args);
-}
