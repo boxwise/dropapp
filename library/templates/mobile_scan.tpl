@@ -23,7 +23,9 @@
 		{/if}
 	{else}
 		<div class="message warning">This box is not found in the Drop Market.</div>
-		<a class="btn" href="?newbox={$data['barcode']}">Create a new box</a><br />
-		<a class="btn btn-light" href="?assignbox={$data['barcode']}">Link QR-code to a box</a><br />
+		<div class="btn-list">
+			<a class="btn" href="?newbox={$data['barcode']}">Create a new box</a><br />
+			<a class="btn btn-light" href="?assignbox={$data['barcode']}">Link QR-code to a box</a><br />
+		</div>
 		</p>
 	{/if}
