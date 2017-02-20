@@ -25,7 +25,7 @@
 		addcolumn('text','Firstname','firstname');
 		addcolumn('text','Gender','gender2');
 		addcolumn('text','Age','age');
-		addcolumn('text','Container','container');
+		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
 		addcolumn('text','Drops','drops');
 
 		addbutton('give','Give drops',array('icon'=>'fa-tint','oneitemonly'=>false));

@@ -75,7 +75,7 @@
 	addfield('hidden','parent_id','parent_id');
 	addfield('text','Lastname','lastname');
 	addfield('text','Firstname','firstname',array('required'=>true));
-	addfield('text','Container','container',array('required'=>true));
+	addfield('text',$_SESSION['camp']['familyidentifier'],'container',array('required'=>true));
 	addfield('select','Gender','gender',array(
 	'options'=>array(array('value'=>'M', 'label'=>'Male'),array('value'=>'F', 'label'=>'Female'))));
 
