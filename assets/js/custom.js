@@ -55,13 +55,8 @@ function selectFamily(field){
 					$('#ajax-content').html(result.htmlcontent);												
 					initiateList();
 					$('#ajax-aside').html(result.htmlaside);
-/*
-					$('#dropcredit').text(result.drops).data({'dropCredit': result.drops});
-					$('#familyname').text(result.people.firstname + ' ' + result.people.lastname).attr('href', '?action=people_edit&id='+value);
-					$('#adults').text(result.adults);
-					$('#children').text(result.children);
-*/
-					if($('#product_id_selected').is(':visible')){
+					$('.not_enough_coins').removeClass('not_enough_coins');
+					if($('#field_product_id').val()){
 						calcCosts('count');
 					}
 					$('#field_'+field).prop('disabled', false);
@@ -106,7 +101,7 @@ function getProductValue(field){
 			dataType: 'json',
 			success: function(result){
 				if(result.success){
-					$('#productvalue').data({'productValue': result.drops});
+					$('#ajax-aside').data({'productValue': result.drops});
 					calcCosts('count');
 					$('#field_'+field).prop('disabled', false);
 					$('body').removeClass('loading');
@@ -131,7 +126,7 @@ function getProductValue(field){
 }
 function calcCosts(field){
 	amount = ($('#field_'+field).val() ? $('#field_'+field).val() : 1);
-	productvalue = $('#productvalue').data('productValue');
+	productvalue = $('#ajax-aside').data('productValue');
 	dropcredit = $('#dropcredit').data('dropCredit');
 	totalprice = amount * productvalue;
 	$('#productvalue').text(totalprice);

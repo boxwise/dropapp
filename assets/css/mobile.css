@@ -86,6 +86,7 @@ input[type="text"].form-control.error, input[type="password"].form-control.error
 .select2-results{
 	font-size: 0.9em;
 	background: #eee;
+	margin: 4px 0 0 0;
 }
 .select2-search input{
 	font-size: 0.8em;
@@ -95,6 +96,19 @@ input[type="text"].form-control.error, input[type="password"].form-control.error
 }
 .select2-container .select2-choices .select2-search-field input, .select2-container .select2-choice, .select2-container .select2-choices{
 	border-radius: 0;
+}
+.select2-drop{
+	margin-top: -5px;
+	padding-top: 4px;
+}
+.select2-drop ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+.select2-drop ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 label{
 	font-size: 0.8em;
