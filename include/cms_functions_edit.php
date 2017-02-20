@@ -12,7 +12,7 @@
 		} else {
 			$keys[] = 'title';
 		}
-		$handler->savePost(array_merge($keys,array('include','parent_id')));
+		$handler->savePost(array_merge($keys,array('include','parent_id','adminonly')));
 		$handler->saveMultiple('modules','cms_access','cms_functions_id','cms_users_id');
 		$handler->saveMultiple('camps','cms_functions_camps','cms_functions_id','camps_id');
 
@@ -43,6 +43,7 @@
 	}
 	addfield('text',$translate['cms_function_include'],'include');
 
+	addfield('checkbox','Only available for admin users','adminonly');
 	addfield('select',$translate['cms_function_users'],'modules',array('multiple'=>true,'query'=>'SELECT u.id AS value, u.naam AS label, IF(x.cms_users_id IS NOT NULL,1,0) AS selected FROM cms_users AS u LEFT OUTER JOIN cms_access AS x ON x.cms_users_id = u.id AND x.cms_functions_id = '.intval($id).' WHERE NOT u.deleted AND NOT u.is_admin ORDER BY u.naam'));
 	addfield('select','Available for these camps','camps',array('multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.cms_functions_id IS NOT NULL, 1,0) AS selected FROM camps AS a LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.camps_id AND x.cms_functions_id = '.intval($id).' ORDER BY seq'));
 
