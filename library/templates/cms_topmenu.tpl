@@ -3,6 +3,11 @@
  		<div class="pull-left">
 			<a href="#" class="menu-btn visible-xs">&#9776;</a>
 			<a href="{$settings['rootdir']}/" class="brand">{$translate['site_name']}</a>
+			{if $camps|count==1}
+	 			{$camps[0]['name']}
+	 		{elseif $camps|count<1}
+	 			No camps available for this user
+			{/if}
  		</div>
 		<ul class="nav navbar-nav pull-right">
 			<li><a href="{$settings['rootdir']}/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
@@ -17,12 +22,6 @@
 				 		{/foreach}
 					</ul>
 				</li>
-	 		{elseif $camps|count==1}
-	 			<li class="text-only">
-	 				{$camps[0]['name']}
-	 			</li>
-	 		{else}
-	 			<li class="text-only">No camps available for this user</li>
 	 		{/if}
 			
 			<li class="dropdown">
