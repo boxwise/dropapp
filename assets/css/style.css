@@ -85,6 +85,7 @@ p{
 	color: #fff;
 	display: inline-block;
 	transition: all 500ms;
+	padding-right: 5px;
 }
 .header-top-inner .brand:hover{
 	text-decoration: none;
