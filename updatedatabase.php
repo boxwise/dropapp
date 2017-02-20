@@ -5,7 +5,7 @@
 	
 	echo "<strong>Database update script</strong><br />";
 
-	if(!db_fieldexists('adminonly','cms_functions')) {
+	if(!db_fieldexists('cms_functions','adminonly')) {
 		echo "Created field 'adminonly' in table 'cms_functions'<br />";
 		db_query('ALTER TABLE `cms_functions` ADD `adminonly` TINYINT  NOT NULL  DEFAULT "0"  AFTER `title_ar`');
 	} else {
