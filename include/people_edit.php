@@ -40,12 +40,11 @@
 
 	$data['allowdrops'] = $_SESSION['user']['is_admin']||db_value('SELECT id FROM cms_functions AS f, cms_access AS a WHERE a.cms_functions_id = f.id AND f.include = "give2all" AND a.cms_users_id = :user_id',array('user_id'=>$_SESSION['user']['id']));
 
-/*
 	if($data['parent_id'] == 0){
 		if($id){
 			$ajaxaside = new Zmarty;
 
-			$formdata = $formbuttons = '';
+			#$formdata = $formbuttons = '';
 
 			$data['name'] = db_row('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = '. $id);
 
@@ -71,7 +70,6 @@
 		addfield('created','Created','created',array('aside'=>true));
 
 	}
-*/
 
 	addfield('hidden','camp_id','camp_id');
 	addfield('hidden','parent_id','parent_id');
