@@ -237,7 +237,7 @@
 		$listconfig['tree'] = $hasTree;
 
 		if($_GET['resetsearch']) unset($_SESSION['search'][$action]);
-		if($_POST['search']) {
+		if(isset($_POST['search'])) {
 			$listconfig['searchvalue'] = $_POST['search'];
 			$_SESSION['search'][$action] = $listconfig['searchvalue'];
 		} elseif($_SESSION['search'][$action]) {
