@@ -31,9 +31,9 @@
 	        $sales = db_value('SELECT COUNT(t.id) FROM transactions AS t, people AS p WHERE t.people_id = p.id AND p.camp_id = :camp_id AND t.product_id > 0 AND DATE_FORMAT(t.transaction_date,"%Y-%m-%d") = :date',array('date'=>$date,'camp_id'=>$_SESSION['camp']['id']));
 	
 			if($sales) {
-				$data['sales'][strftime("%e %b",strtotime($date))] = db_value('SELECT SUM(t.count) AS aantal FROM transactions AS t
+				$data['sales'][strftime("%e %b",strtotime($date))] = db_value('SELECT SUM(t.count) AS aantal FROM (transactions AS t, people AS pp)
 	LEFT OUTER JOIN products AS p ON t.product_id = p.id
-	WHERE t.product_id > 0 AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59"');
+	WHERE t.people_id = pp.id AND pp.camp_id = :camp_id AND t.product_id > 0 AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59"',array('camp_id'=>$_SESSION['camp']['id']));
 			}
 	        $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
 		}
