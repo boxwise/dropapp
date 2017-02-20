@@ -14,7 +14,7 @@
 */
 
 		foreach($people as $person) {
-			$f = db_row('SELECT * FROM people WHERE id = :id',array('id'=>$person));
+			$f = db_row('SELECT * FROM people WHERE camp_id = :camp_id AND id = :id',array('id'=>$person,'camp_id'=>$_SESSION['camp']['id']));
 			if($f['parent_id']==0) {
 				$children = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE visible AND NOT deleted AND parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) < '.$settings['adult-age'],array('id'=>$person));
 				$children += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE visible AND NOT deleted AND id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) < '.$settings['adult-age'],array('id'=>$person));
@@ -31,7 +31,7 @@
 		redirect('?action=people');
 	}
 
-	$result = db_query('SELECT * FROM people WHERE visible AND parent_id = 0 AND NOT deleted');
+	$result = db_query('SELECT * FROM people WHERE camp_id = :camp_id AND visible AND parent_id = 0 AND NOT deleted',array('camp_id'=>$_SESSION['camp']['id']));
 	while($row = db_fetch($result)) {
 		$ids[] = $row['id'];
 	}
