@@ -26,12 +26,12 @@
 		WHERE NOT s.deleted AND q.code = :barcode',array('barcode'=>$data['barcode']));
 		}
 		if($box['camp_id']!=$_SESSION['camp']['id'] && $box['campname']) {
-			$data['othercamp'] = true;
-			$data['warning'] = true;
-			$data['message'] = 'This box is registered in '.$box['campname'].', please choose a new location to transfer it to '.$_SESSION['camp']['name'];
+			$tpl->assign('include','mobile_newbox.tpl');
+			redirect('?editbox='.$box['id'].'&warning=true&message=This box is registered in '.$box['campname'].', please edit this form to transfer it to '.$_SESSION['camp']['name']);
+		} else {
+			$locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE camp_id = :camp_id ORDER BY seq',array('camp_id'=>$_SESSION['camp']['id'],'location'=>$box['location_id']));
+			$tpl->assign('box',$box);
+			$tpl->assign('locations',$locations);
+			$tpl->assign('include','mobile_scan.tpl');
 		}
-		$locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE camp_id = :camp_id ORDER BY seq',array('camp_id'=>$_SESSION['camp']['id'],'location'=>$box['location_id']));
-		$tpl->assign('box',$box);
-		$tpl->assign('locations',$locations);
-		$tpl->assign('include','mobile_scan.tpl');
 	}
