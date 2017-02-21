@@ -16,6 +16,7 @@
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 
 	if (!$id) {
+		$data['amountneeded'] = 3;
 		$data['visible'] = 1;
 		$data['camp_id'] = $_SESSION['camp']['id'];
 	}
@@ -34,7 +35,7 @@
 
 	addfield('line','','');
 	addfield('select', 'Sizegroup', 'sizegroup_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM sizegroup ORDER BY seq'));
-	if($_SESSION['camp']['market']) addfield('number','Estimated annual need per person','amountneeded',array('width'=>3));
+	if($_SESSION['camp']['market']) addfield('number','Estimated annual need per person','amountneeded',array('width'=>3,'required'=>true));
 	addfield('line','','');
 	$table = 'stock';
 	if($id) addfield('list','In Stock','stock', array('width'=>10,'query'=>'
