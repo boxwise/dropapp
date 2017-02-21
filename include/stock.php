@@ -9,14 +9,14 @@
 		initlist();
 
 		$cmsmain->assign('title','Boxes');
-		listsetting('search', array('box_id', 'l.label', 's.label', 'g.label', 'p.name','comments'));
+		listsetting('search', array('box_id', 'l.label', 's.label', 'g.label', 'p.name','stock.comments'));
 
 
  		listfilter(array('label'=>'By location','query'=>'SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq','filter'=>'l.id'));
 		$statusarray = array('show'=>'All boxes');
 		listfilter2(array('label'=>'Only active boxes','options'=>$statusarray,'filter'=>'"show"'));
 
-		$data = getlistdata('SELECT stock.*, SUBSTRING(comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location FROM '.$table.'
+		$data = getlistdata('SELECT stock.*, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location FROM '.$table.'
 			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
 			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
