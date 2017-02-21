@@ -9,7 +9,6 @@
 	while($row = db_fetch($result)) {
 		$html .= '<option value="'.$row['id'].'" '.($size_id==$row['id']?'selected':'').'>'.$row['label'].'</option>';
 	}
-	$html .= 'test';
 
 	$return = array("success" => $success, 'html' => $html, 'message'=> $message);
 	echo json_encode($return);

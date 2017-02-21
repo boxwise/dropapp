@@ -503,6 +503,7 @@ $(function() {
 		});
 	}
 
+	initiateList();
 	
 	$(window).trigger('resize');
 
@@ -517,6 +518,7 @@ $(window).resize(function(){
 })
 
 function initiateList(){
+	console.l
 	if($('.table:not(.initialized)').length){
 		$('.table').addClass('initialized');
 		$('.table-parent.sortable:not(.zortable) table').each(function(){

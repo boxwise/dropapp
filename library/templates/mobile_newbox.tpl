@@ -9,16 +9,28 @@
 			</div>
 		{/if}
 		<div class="form-group">
-			<select name="product_id" id="field_product_id" onchange="getSizes(0)" class="form-control selectsearch" required>
+			<select name="product_id" id="field_product_id" onchange="updateSizes(0)" class="form-control selectsearch" required>
 				<option value="">Select a product</option>
-				{foreach $data['products'] as $p}<option value="{$p['value']}" {if $p['value']==$box['product_id']}selected{/if}>{$p['label']}</option>
+				{foreach $data['products'] as $p}<option value="{$p['value']}" data-sizegroup="{$p['sizegroup_id']}" {if $p['value']==$box['product_id']}selected{/if}>{$p['label']}</option>
 				{/foreach}
 			</select>
 		</div>
 		<div class="form-group">
 			<select name="size_id" id="field_size_id" class="form-control" required>
-				<option value="">Select a size</option>
+				{if $data['sizes']}
+					<option value="">Select a size</option>
+					{foreach $data['sizes'] as $s}
+						<option value="{$s['id']}" {if $s['id']==$box['size_id']}selected{/if}>{$s['label']}</option>
+					{/foreach}
+				{else}
+					<option value="">First select a product</option>
+				{/if}
 			</select>
+		</div>
+		<div class="all-sizes hide">
+			{foreach $data['allsizes'] as $as}
+				<option value="{$as['id']}" class="sizegroup-{$as['sizegroup_id']}">{$as['label']}</option>
+			{/foreach}
 		</div>
 		<div class="form-group">
 			<select name="location_id" class="form-control" required>
