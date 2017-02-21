@@ -343,10 +343,10 @@ p{
 	margin-right: 5px;
 	pointer-events: visible;
 }
-.btn-group .btn{
+.btn-group .btn, .actions .btn-group .btn{
 	margin-right: 0;
 }
-.btn-group{
+.btn-group .btn:last-child, .actions.btn-group .btn:last-child{
 	margin-right: 7px;
 }
 .btn:hover{
@@ -597,6 +597,7 @@ textarea.select2{
 .actions > li{
 	display: inline-block;
 	list-style: none;
+	float: left;
 }
 .actions li label.btn-sm input[type="checkbox"]{
 	margin-top: 3px;
@@ -606,6 +607,12 @@ textarea.select2{
 }
 .actions.items-selected li.items-selected-dependent{
 	display: inline-block;
+}
+.actions.no-delete .action-delete{
+	display: none;
+}
+.actions .btn{
+	margin-right: 7px;
 }
 
 .navigations > li{
@@ -686,6 +693,7 @@ textarea.select2{
 .table .td-content .breakall{
 	word-break: break-all;
 }
+
 
 /* table zortable */
 .zortable .table{

@@ -532,11 +532,12 @@ function initiateList(){
 		el.tablesorter(options)
 	})
 	$('.table').on('change', '.item-select', function(){
-		var el = $(this)
-		var parent = el.closest('.table-parent')
+		var el = $(this);
+		var parent = el.closest('.table-parent');
 
 		// toggle parent class
 		el.closest('tr').toggleClass('selected')
+		var selected = parent.find('.selected');
 
 		// uncheck group-select when item within the group is becoming unchecked
 		if(!el.is(':checked') && $('.group-select:checked').length){
@@ -544,15 +545,22 @@ function initiateList(){
 		}
 
 		// toggle the action panel
-		if(parent.find('.selected').length && !parent.find('.actions').is('.items-selected')){
+		if(selected.length && !parent.find('.actions').is('.items-selected')){
 			parent.find('.actions').addClass('items-selected')
-		} else if(!parent.find('.selected').length && parent.find('.actions').is('.items-selected')){
+		} else if(!selected.length && parent.find('.actions').is('.items-selected')){
 			parent.find('.actions').removeClass('items-selected')
-		} else if(parent.find('.selected').length > 1){
+		} else if(selected.length > 1){
 			parent.find('.actions').find('.one-item-only').attr('disabled', 'disabled')
-		} else if(parent.find('.selected').length < 2){
+		} else if(selected.length < 2){
 			parent.find('.actions').find('.one-item-only').removeAttr('disabled')
 		}
+
+		if(selected.is('.item-nondeletable')){
+			parent.find('.action-delete').prop('disabled', true);
+		} else {
+			parent.find('.action-delete').prop('disabled', false);
+		}
+
 	})
 	// list operations
 	$('.start-operation').on('click', function(e){

@@ -31,7 +31,8 @@
 		if($_SESSION['camp']['id']==1) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
 
 		listsetting('allowsort',true);
-		listsetting('allowcopy',true);
+		listsetting('allowcopy',false);
+		listsetting('allowshowhide',false);
 		listsetting('add', 'Add a product');
 		listsetting('delete', 'Delete');
 

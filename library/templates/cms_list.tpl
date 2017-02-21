@@ -15,12 +15,12 @@
 					<li class="items-selected-dependent">
 						<div class="btn-group">
 
-							{if $listconfig['allowshowhide']}<button data-operation="show" class="start-operation btn btn-default btn-sm" href="#"><i class="fa glyphicon fa-eye"></i> {$listconfig['show']}</button>
+							{if $listconfig['allowshowhide']}<button data-operation="show" class="action-show start-operation btn btn-default btn-sm" href="#"><i class="fa glyphicon fa-eye"></i> {$listconfig['show']}</button>
 							<button data-operation="hide" class="start-operation btn btn-default btn-sm" href="#"><i class="fa fa-eye-slash"></i> {$listconfig['hide']}</button>{/if}
 
-							{if $listconfig['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_delete']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm confirm btn-danger" href="#"><i class="fa fa-trash-o"></i> {$listconfig['delete']}</button>{/if}
+							{if $listconfig['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_delete']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="action-delete start-operation btn btn-sm confirm btn-danger" href="#"><i class="fa fa-trash-o"></i> {$listconfig['delete']}</button>{/if}
 
-							{if $listconfig['allowcopy']}<button data-operation="copy" data-placement="top" class="start-operation btn btn-sm btn-default" href="#"><i class="fa fa-copy"></i> {$listconfig['copy']}</button>{/if}
+							{if $listconfig['allowcopy']}<button data-operation="copy" data-placement="top" class="action-copy start-operation btn btn-sm btn-default" href="#"><i class="fa fa-copy"></i> {$listconfig['copy']}</button>{/if}
 
 							{foreach $listconfig['button'] as $code=>$button}
 								{if $button['options']}
@@ -76,7 +76,7 @@
 					<tbody>
 				      {foreach $data as $row}
 						<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}" class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
-							{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit']))}item-clickable {else}item-nonclickable{/if}
+							{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit']))}item-clickable{/if}
 							{if $row['preventdelete']}item-nondeletable{/if}
 							{if $listconfig['allowmove'] && $row['level']>=$listconfig['allowmovefrom'] && $row['level']<=$listconfig['allowmoveto']}item-zortable{/if}
 							{if ($listconfig['allowselect']|is_array && $listconfig['allowselect'][$row['level']]) or (!$listconfig['allowselect']|is_array && $listconfig['allowselect'])}item-selectable{/if}">

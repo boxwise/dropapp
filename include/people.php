@@ -10,7 +10,7 @@
 
 		$cmsmain->assign('title','People');
 
-		listsetting('allowcopy', true);
+		listsetting('allowcopy', false);
 		listsetting('allowmove', true);
 		listsetting('allowmoveto', 1);
  		listsetting('allowsort',false);
