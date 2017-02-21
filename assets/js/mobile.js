@@ -14,7 +14,7 @@ $(function(){
 
 function updateSizes(size){
 	var sizegroup = $('#field_product_id :selected').data('sizegroup');
-	$('#field_size_id').html($('.sizegroup-'+sizegroup).clone());
+	$('#field_size_id').html($('.all-sizes .sizegroup-'+sizegroup).clone());
 	if($('.all-sizes .sizegroup-'+sizegroup).length > 1){
 		$('#field_size_id').prepend('<option selected value="">Select a size</option>');
 	}
