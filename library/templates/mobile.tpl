@@ -9,13 +9,13 @@
 		<link href="{$settings['rootdir']}/assets/css/bootstrap.min.css" rel="stylesheet">    
 		<link href="{$settings['rootdir']}/assets/css/select2.css" rel="stylesheet" />
 		<link href="{$settings['rootdir']}/assets/css/select2-bootstrap.css" rel="stylesheet" />
-		<link href="{$settings['rootdir']}/assets/css/mobile.css" rel="stylesheet">    
+		<link href="{$settings['rootdir']}/assets/css/mobile.css?v=2" rel="stylesheet">    
 
 		<script src="{$settings['rootdir']}/assets/js/jquery-3.1.1.min.js"></script>
 		<script src="{$settings['rootdir']}/assets/js/jquery.validate.min.js"></script>
 		<script src="{$settings['rootdir']}/assets/js/bootstrap.min.js"></script>
 		<script src="{$settings['rootdir']}/assets/js/select2.min.js"></script>
-		<script src="{$settings['rootdir']}/assets/js/mobile.js"></script>
+		<script src="{$settings['rootdir']}/assets/js/mobile.js?v=2"></script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="{$settings['rootdir']}/assets/img/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="{$settings['rootdir']}/assets/img/favicon-32x32.png" sizes="32x32">

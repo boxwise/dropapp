@@ -6,7 +6,7 @@
     <script src="{$settings['rootdir']}/assets/js/jquery.tablesorter.min.js"></script>
     <script src="{$settings['rootdir']}/assets/js/jquery.tablesorter.widgets.js"></script>
 
-    <script src="{$settings['rootdir']}/assets/js/magic.js"></script>
-    <script src="{$settings['rootdir']}/assets/js/custom.js"></script>    
+    <script src="{$settings['rootdir']}/assets/js/magic.js?v=2"></script>
+    <script src="{$settings['rootdir']}/assets/js/custom.js?v=2"></script>    
   </body>
 </html>
