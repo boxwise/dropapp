@@ -1,4 +1,3 @@
-	{if $box['id']}
 		<h2 class="page-header">Box {$box['box_id']}</h2>
 		Contains <strong>{$box['items']} {$box['product']}</strong><br />Move this box from <strong>{$box['location']}</strong> to:</p>
 		<div class="btn-list">
@@ -20,12 +19,3 @@
 	
 		<p>Or change the contents of the box</p>
 		<a class="btn" href="?editbox={$box['id']}">Edit the box</a>
-		{/if}
-	{else}
-		<div class="message warning">This box is not found in the Drop Market.</div>
-		<div class="btn-list">
-			<a class="btn" href="?newbox={$data['barcode']}">Create a new box</a><br />
-			<a class="btn btn-light" href="?assignbox={$data['barcode']}">Link QR-code to a box</a><br />
-		</div>
-		</p>
-	{/if}
