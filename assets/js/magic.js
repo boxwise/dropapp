@@ -503,8 +503,7 @@ $(function() {
 		});
 	}
 
-	initiateList();
-
+	
 	$(window).trigger('resize');
 
 })
@@ -518,204 +517,207 @@ $(window).resize(function(){
 })
 
 function initiateList(){
-	$('.table-parent.sortable:not(.zortable) table').each(function(){
-		var el = $(this);
-		var options = $.extend( {
-    		widgets: ['stickyHeaders', 'saveSort'],
-			widgetOptions: {
-				stickyHeaders_attachTo : el.closest('.sticky-header-container')
-			},
-			initialized: function(){
-				el.closest('.table-parent').addClass('sortable-initialized');
+	if($('.table:not(.initialized)').length){
+		$('.table').addClass('initialized');
+		$('.table-parent.sortable:not(.zortable) table').each(function(){
+			var el = $(this);
+			var options = $.extend( {
+	    		widgets: ['stickyHeaders', 'saveSort'],
+				widgetOptions: {
+					stickyHeaders_attachTo : el.closest('.sticky-header-container')
+				},
+				initialized: function(){
+					el.closest('.table-parent').addClass('sortable-initialized');
+				}
+			}, el.data());
+			el.tablesorter(options)
+		})
+		$('.table').on('change', '.item-select', function(e){
+			var el = $(this)
+			var parent = el.closest('.table-parent')
+
+			// toggle parent class
+			el.closest('tr').toggleClass('selected')
+
+			var selected = parent.find('.selected');
+
+			// uncheck group-select when item within the group is becoming unchecked
+			if(!el.is(':checked') && $('.group-select:checked').length){
+				$('.group-select').prop('checked', false);
 			}
-		}, el.data());
-		el.tablesorter(options)
-	})
-	$('.table').on('change', '.item-select', function(){
-		var el = $(this);
-		var parent = el.closest('.table-parent');
 
-		// toggle parent class
-		el.closest('tr').toggleClass('selected')
-		var selected = parent.find('.selected');
+			// toggle the action panel
+			if(selected.length && !parent.find('.actions').is('.items-selected')){
+				parent.find('.actions').addClass('items-selected')
+			} else if(!selected.length && parent.find('.actions').is('.items-selected')){
+				parent.find('.actions').removeClass('items-selected')
+			} else if(selected.length > 1){
+				parent.find('.actions').find('.one-item-only').attr('disabled', 'disabled')
+			} else if(selected.length < 2){
+				parent.find('.actions').find('.one-item-only').removeAttr('disabled')
+			}
 
-		// uncheck group-select when item within the group is becoming unchecked
-		if(!el.is(':checked') && $('.group-select:checked').length){
-			$('.group-select').prop('checked', false);
-		}
+			if(selected.is('.item-nondeletable')){
+				parent.find('.action-delete').prop('disabled', true);
+			} else {
+				parent.find('.action-delete').prop('disabled', false);
+			}
 
-		// toggle the action panel
-		if(selected.length && !parent.find('.actions').is('.items-selected')){
-			parent.find('.actions').addClass('items-selected')
-		} else if(!selected.length && parent.find('.actions').is('.items-selected')){
-			parent.find('.actions').removeClass('items-selected')
-		} else if(selected.length > 1){
-			parent.find('.actions').find('.one-item-only').attr('disabled', 'disabled')
-		} else if(selected.length < 2){
-			parent.find('.actions').find('.one-item-only').removeAttr('disabled')
-		}
+		})
+		// list operations
+		$('.start-operation').on('click', function(e){
+			var el = $(this);
+			e.preventDefault();
 
-		if(selected.is('.item-nondeletable')){
-			parent.find('.action-delete').prop('disabled', true);
-		} else {
-			parent.find('.action-delete').prop('disabled', false);
-		}
+			var parent = el.closest('.table-parent')
 
-	})
-	// list operations
-	$('.start-operation').on('click', function(e){
-		var el = $(this);
-		e.preventDefault();
+			if(el.is('.confirm') && !el.data('confirmed')){
+				el.confirmation('show')
+			} else if(el.data('operation')!='none') {
+				el.data('confirmed', false);
+				if(parent.find('.table .item-select:checked').length){
+					// define the target
+					selectedTargets = parent.find('.item-select:checked').closest('tr');
 
-		var parent = el.closest('.table-parent')
-
-		if(el.is('.confirm') && !el.data('confirmed')){
-			el.confirmation('show')
-		} else if(el.data('operation')!='none') {
-			el.data('confirmed', false);
-			if(parent.find('.table .item-select:checked').length){
-				// define the target
-				selectedTargets = parent.find('.item-select:checked').closest('tr');
-
-				$.ajax({
-					type: 'post',
-					url: parent.data('action'),
-					// option is the selected option in a button with pulldown
-					data: 'do='+ el.data('operation') + '&option=' + el.data('option') + '&ids=' + selectedTargets.map(function(){return $(this).data('id')}).get().join(),
-					dataType: 'json',
-					success: function(result){
-						if(result.success){
-							var allTargets = $();
-							selectedTargets.each(function(){
-								target = $(this)
-								allTargets = allTargets.add(target)
-									.add(target.prev('.inbetween'))
-									.add(target.nextUntil('.level-' + target.data('level')))
-							})
-							switch(el.data('operation')) {
-							    case 'delete':
-									allTargets.fadeOut(200, function(){
-										$(this).remove();
-									});
-							        break;
-							    case 'hide':
-							    	if(parent.data('inheritvisibility')){
-										allTargets.addClass('item-hidden')								    	
-							    	} else {
-										selectedTargets.addClass('item-hidden');								    	
-							    	}
-							        break;
-							    case 'show':
-							    	if(parent.data('inheritvisibility')){
-										allTargets.removeClass('item-hidden');
-									} else {
-										selectedTargets.removeClass('item-hidden');										
-									}
-							        break;
-							    default:
-							    	// nothing
+					$.ajax({
+						type: 'post',
+						url: parent.data('action'),
+						// option is the selected option in a button with pulldown
+						data: 'do='+ el.data('operation') + '&option=' + el.data('option') + '&ids=' + selectedTargets.map(function(){return $(this).data('id')}).get().join(),
+						dataType: 'json',
+						success: function(result){
+							if(result.success){
+								var allTargets = $();
+								selectedTargets.each(function(){
+									target = $(this)
+									allTargets = allTargets.add(target)
+										.add(target.prev('.inbetween'))
+										.add(target.nextUntil('.level-' + target.data('level')))
+								})
+								switch(el.data('operation')) {
+								    case 'delete':
+										allTargets.fadeOut(200, function(){
+											$(this).remove();
+										});
+								        break;
+								    case 'hide':
+								    	if(parent.data('inheritvisibility')){
+											allTargets.addClass('item-hidden')								    	
+								    	} else {
+											selectedTargets.addClass('item-hidden');								    	
+								    	}
+								        break;
+								    case 'show':
+								    	if(parent.data('inheritvisibility')){
+											allTargets.removeClass('item-hidden');
+										} else {
+											selectedTargets.removeClass('item-hidden');										
+										}
+								        break;
+								    default:
+								    	// nothing
+								}
+								// deselect items
+								selectedTargets.find('.item-select:visible:checked').prop('checked', false).trigger('change')
 							}
-							// deselect items
-							selectedTargets.find('.item-select:visible:checked').prop('checked', false).trigger('change')
-						}
-						if(result.message){
+							if(result.message){
+								var n = noty({
+									text: result.message,
+									type: (result.success ? 'success' : 'error')
+								});
+							}
+							if(result.redirect){
+								if(result.message){
+									setTimeout( function() { execReload(result.redirect); }, 1500);
+								} else {
+									execReload(result.redirect)
+								}
+							}
+							if(result.action){
+								eval(result.action);
+							}
+						},
+						error: function(result){
 							var n = noty({
-								text: result.message,
-								type: (result.success ? 'success' : 'error')
+								text: 'This file cannot be found or what\'s being returned is not json.',
+								type: 'error'
 							});
 						}
-						if(result.redirect){
-							if(result.message){
-								setTimeout( function() { execReload(result.redirect); }, 1500);
-							} else {
-								execReload(result.redirect)
-							}
-						}
-						if(result.action){
-							eval(result.action);
-						}
-					},
-					error: function(result){
-						var n = noty({
-							text: 'This file cannot be found or what\'s being returned is not json.',
-							type: 'error'
-						});
-					}
-				})
+					})
 
-			} else {
-				var n = noty({
-					text: 'No item selected',
-					type: 'error'
-				});
-			}
-		} else {
-			selectedTargets = parent.find('.item-select:checked').closest('tr');
-			window.location = el.attr('href')+'?ids='+selectedTargets.map(function(){return $(this).data('id')}).get().join();
-		}
-
-	});
-
-	$('.inside-list-start-operation').click(function(e){
-		var el = $(this);
-		var parent = el.closest('.table-parent')
-		var target = el.closest('tr');
-
-		$.ajax({
-			type: 'post',
-			url: parent.data('action'),
-			data: 'do='+ el.data('operation') + '&id=' + target.data('id'),
-			dataType: 'json',
-			success: function(result){
-				if(result.success){
-					if(result.newvalue == 1){
-						el.addClass('active')
-					} else {
-						el.removeClass('active')
-					}
-					el.prev('.list-toggle-value').text(result.newvalue)
-				}
-				if(result.message){
+				} else {
 					var n = noty({
-						text: result.message,
-						type: (result.success ? 'success' : 'error')
+						text: 'No item selected',
+						type: 'error'
 					});
 				}
-				if(result.redirect){
-					if(result.message){
-						setTimeout( function() { execReload(result.redirect); }, 1500);
-					} else {
-						execReload(result.redirect)
+			} else {
+				selectedTargets = parent.find('.item-select:checked').closest('tr');
+				window.location = el.attr('href')+'?ids='+selectedTargets.map(function(){return $(this).data('id')}).get().join();
+			}
+
+		});
+
+		$('.inside-list-start-operation').click(function(e){
+			var el = $(this);
+			var parent = el.closest('.table-parent')
+			var target = el.closest('tr');
+
+			$.ajax({
+				type: 'post',
+				url: parent.data('action'),
+				data: 'do='+ el.data('operation') + '&id=' + target.data('id'),
+				dataType: 'json',
+				success: function(result){
+					if(result.success){
+						if(result.newvalue == 1){
+							el.addClass('active')
+						} else {
+							el.removeClass('active')
+						}
+						el.prev('.list-toggle-value').text(result.newvalue)
 					}
+					if(result.message){
+						var n = noty({
+							text: result.message,
+							type: (result.success ? 'success' : 'error')
+						});
+					}
+					if(result.redirect){
+						if(result.message){
+							setTimeout( function() { execReload(result.redirect); }, 1500);
+						} else {
+							execReload(result.redirect)
+						}
+					}
+				},
+				error: function(result){
+					var n = noty({
+						text: 'This file cannot be found or what\'s being returned is not json.',
+						type: 'error'
+					});
 				}
-			},
-			error: function(result){
-				var n = noty({
-					text: 'This file cannot be found or what\'s being returned is not json.',
-					type: 'error'
-				});
-			}
+			})
+			e.preventDefault();
 		})
-		e.preventDefault();
-	})
 
-	// Bootstrap Confirmation, more info: https://github.com/tavicu/bs-confirmation
-	$('.confirm').each(function(e){
-		var el = $(this);
-		var options = $.extend( {
-			container: 'body',
-			singleton: true,
-			popout: true,
-			btnOkLabel: 'OK',
-			trigger: 'manual',
-			onConfirm: function(e, element){
-				element.data('confirmed', true).trigger('click')
-				e.preventDefault();
-			}
-    	}, el.data());
-    	el.confirmation(options);
-	})
-
+		// Bootstrap Confirmation, more info: https://github.com/tavicu/bs-confirmation
+		$('.confirm').each(function(e){
+			var el = $(this);
+			var options = $.extend( {
+				container: 'body',
+				singleton: true,
+				popout: true,
+				btnOkLabel: 'OK',
+				trigger: 'manual',
+				onConfirm: function(e, element){
+					element.data('confirmed', true).trigger('click')
+					e.preventDefault();
+				}
+	    	}, el.data());
+	    	el.confirmation(options);
+		})
+	}
 }
 
 // format select2 for the parent select
