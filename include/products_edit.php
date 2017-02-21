@@ -7,7 +7,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('name','gender_id', 'value','visible','maxperadult','maxperchild','amountneeded','sizegroup_id','camp_id');
+		$savekeys = array('name','gender_id', 'value', 'visible', 'maxperadult', 'maxperchild', 'amountneeded', 'sizegroup_id', 'camp_id', 'comments');
 		$id = $handler->savePost($savekeys);
 
 		redirect('?action='.$_POST['_origin']);
@@ -36,7 +36,9 @@
 	addfield('line','','');
 	addfield('select', 'Sizegroup', 'sizegroup_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM sizegroup ORDER BY seq'));
 	if($_SESSION['camp']['market']) addfield('number','Estimated annual need per person','amountneeded',array('width'=>3,'required'=>true));
-	addfield('line','','');
+	addfield('line');
+	addfield('textarea','Comments','comments');
+	addfield('line');
 	$table = 'stock';
 	if($id) addfield('list','In Stock','stock', array('width'=>10,'query'=>'
 	SELECT stock.id AS id, stock.box_id, stock.items, stock.comments, g.label AS gender, p.name AS product, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'

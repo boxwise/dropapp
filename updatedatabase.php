@@ -5,6 +5,13 @@
 	
 	echo "<strong>Database update script</strong><br />";
 
+	if(!db_fieldexists('products','comments')) {
+		echo "Created field 'comments' in table 'products'<br />";
+		db_query('ALTER TABLE `products` ADD `comments` VARCHAR(255)');
+	} else {
+		echo "Field 'comments' in table 'products' already exists<br />";
+	}
+
 	if(!db_fieldexists('cms_functions','adminonly')) {
 		echo "Created field 'adminonly' in table 'cms_functions'<br />";
 		db_query('ALTER TABLE `cms_functions` ADD `adminonly` TINYINT  NOT NULL  DEFAULT "0"  AFTER `title_ar`');

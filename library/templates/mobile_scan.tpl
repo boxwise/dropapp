@@ -19,3 +19,4 @@
 	
 		<p>Or change the contents of the box</p>
 		<a class="btn" href="?editbox={$box['id']}">Edit the box</a>
+{/if}
