@@ -20,7 +20,7 @@
 		$statusarray = array('show'=>'Boxes in market are visible');
 		listfilter2(array('label'=>'Boxes in market are hidden','options'=>$statusarray,'filter'=>'"show"'));
 
-		$data = getlistdata('SELECT stock.*, SUBSTRING(comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'
+		$data = getlistdata('SELECT stock.*, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'
 			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
 			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
