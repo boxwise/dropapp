@@ -27,7 +27,7 @@
 		}
 		if($box['camp_id']!=$_SESSION['camp']['id'] && $box['campname']) {
 			$tpl->assign('include','mobile_newbox.tpl');
-			redirect('?editbox='.$box['id'].'&warning=true&message=Oeps!! This box is registered in '.$box['campname'].', are you sure this is what you are looking for?<br /><br /> No? <a href="'.$settings['rootdir'].'">Search again!</a><br /><br /> Yes? Edit and save this box to transfer it to '.$_SESSION['camp']['name'].'.');
+			redirect('?editbox='.$box['id'].'&warning=true&message=Oops!! This box is registered in '.$box['campname'].', are you sure this is what you were looking for?<br /><br /> No? <a href="'.$settings['rootdir'].'/mobile.php">Search again!</a><br /><br /> Yes? Edit and save this box to transfer it to '.$_SESSION['camp']['name'].'.');
 		} else {
 			if($box['id']) {
 				$locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE camp_id = :camp_id ORDER BY seq',array('camp_id'=>$_SESSION['camp']['id'],'location'=>$box['location_id']));
