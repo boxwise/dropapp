@@ -68,17 +68,29 @@ header a, header a:hover, header a:active{
 }
 input[type="text"].form-control, input[type="password"].form-control, input[type="number"].form-control, input[type="email"].form-control{
 	border: none;
-	border-bottom: 1px solid #eee;
 	padding-left: 5px;
 	font-size: 17px;
+	background: linear-gradient(#61c4ef, #61c4ef), linear-gradient(#eee, #eee);
+  background-size: 60% 1px, 40% 1px;
+  background-position: bottom left, bottom right;
+  background-repeat: no-repeat;
 }
 input[type="text"].form-control:focus, input[type="password"].form-control:focus, input[type="number"].form-control:focus, input[type="email"].form-control:focus{
-	border-color: #61c4ef;
+	border-bottom: 1px solid #61c4ef;
 	box-shadow: none;
 	-webkit-box-shadow: none;
+	background: none;
+	padding-bottom: 5px;
 }
 input[type="text"].form-control.error, input[type="password"].form-control.error, input[type="number"].form-control.error, input[type="email"].form-control.error{
-	border-color: red;
+	border-bottom: 1px solid red;
+	background: none;
+}
+input{
+	background: linear-gradient(#000, #000), linear-gradient(#000, #000), linear-gradient(#000, #000);
+  background-size: 1px 20%, 100% 1px, 1px 20%;
+  background-position: bottom left, bottom center, bottom right;
+  background-repeat: no-repeat;
 }
 .form-control.error{
 	border-color: #ffc2c2;
