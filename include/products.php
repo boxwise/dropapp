@@ -9,7 +9,7 @@
 		initlist();
 
 		$cmsmain->assign('title','Products');
-		listsetting('search', array('name', 'g.label','comments'));
+		listsetting('search', array('name', 'g.label','products.comments'));
 		
 		$locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
 

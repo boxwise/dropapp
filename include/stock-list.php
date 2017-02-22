@@ -10,7 +10,9 @@
 
 	$locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
 
-	$data = getlistdata('
+	$camps = db_simplearray('SELECT id, name FROM camps WHERE id != :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
+
+	$query = '
 SELECT
 	CONCAT(p.id,"-",g.id,"-",IFNULL(s.id,"")) AS id,
 	p.name AS product,
@@ -19,11 +21,18 @@ SELECT
 	(SELECT SUM(items) FROM stock AS st, locations AS l WHERE st.size_id = s.id AND st.location_id = l.id AND NOT st.deleted AND l.visible AND st.product_id = p.id) AS stock,
 	COALESCE( NULLIF( (SELECT COUNT(st.id) FROM stock AS st, locations AS l WHERE st.size_id = s.id AND st.location_id = l.id AND NOT st.deleted AND l.visible AND st.product_id = p.id),0),"") AS boxes, 
 
-ROUND((SELECT COUNT(id) FROM people AS p2 WHERE p2.visible AND NOT p2.deleted AND p2.camp_id = p.camp_id AND  
-(IF(g.male,p2.gender="M",0) OR IF(g.female,p2.gender="F",0)) AND 
-(IF(g.adult,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0>=13,0) OR IF(g.baby,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0<2,0) OR IF(g.child,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 BETWEEN 2 AND 13,0)))*IFNULL(s.portion,100)/100) AS target,
-	p.amountneeded
+	ROUND((SELECT COUNT(id) FROM people AS p2 WHERE p2.visible AND NOT p2.deleted AND p2.camp_id = p.camp_id AND  
+	(IF(g.male,p2.gender="M",0) OR IF(g.female,p2.gender="F",0)) AND 
+	(IF(g.adult,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0>=13,0) OR IF(g.baby,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0<2,0) OR IF(g.child,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 BETWEEN 2 AND 13,0)))*IFNULL(s.portion,100)/100) AS target,
+	p.amountneeded,';	
 
+	foreach($camps as $key=>$camp) {
+		$insert[] = '
+	(SELECT SUM(items) FROM stock AS st, locations AS l, products AS p2 WHERE st.product_id = p2.id AND st.location_id = l.id AND l.visible AND NOT st.deleted AND p.name = p2.name AND st.size_id = s.id AND l.camp_id = '.$key.') AS "camp'.$key.'"';
+	} 
+	$query .= join(',',$insert);
+
+	$query .= '
 FROM
 	sizegroup AS sg,
 	sizes AS s,
@@ -35,7 +44,9 @@ WHERE
 	s.sizegroup_id = sg.id AND
 	p.camp_id = '.$_SESSION['camp']['id'].'
 ORDER BY 
-	p.name, g.label, s.label');
+	p.name, g.label, s.label';
+	
+	$data = getlistdata($query);
 
 	foreach($data as $key=>$d) {
 		$data[$key]['result'] = ($d['stock']/$d['target']*$d['amountneeded']/10);
@@ -58,6 +69,9 @@ ORDER BY
 		addcolumn('text','People','target');
 #		addcolumn('text','','result');
 		addcolumn('bar','Score','result2');
+	}
+	foreach($camps as $key=>$camp) {
+		addcolumn('text',$camp,'camp'.$key);
 	}
 	
 	$cmsmain->assign('data',$data);
