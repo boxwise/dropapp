@@ -18,7 +18,7 @@
 
  		#listfilter(array('label'=>'Filter by location','query'=>'SELECT id, label FROM locations ORDER BY seq','filter'=>'l.id'));
 		$statusarray = array('show'=>'Boxes in market are visible');
-		listfilter2(array('label'=>'Boxes in market are hidden','options'=>$statusarray,'filter'=>'"show"'));
+		if($_SESSION['filter']['stock-list']==$_SESSION['camp']['id']) listfilter2(array('label'=>'Boxes in market are hidden','options'=>$statusarray,'filter'=>'"show"'));
 
 		$data = getlistdata('SELECT stock.*, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'
 			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
@@ -36,8 +36,10 @@
 		addcolumn('text','Location','location');
 
 		listsetting('allowsort',true);
-		listsetting('allowcopy',true);
-		listsetting('allowcopy',true);
+		listsetting('allowadd',$_SESSION['filter']['stock-list']==$_SESSION['camp']['id']);
+		listsetting('allowselectall',$_SESSION['filter']['stock-list']==$_SESSION['camp']['id']);
+		listsetting('allowselect',$_SESSION['filter']['stock-list']==$_SESSION['camp']['id']);
+		listsetting('allowedit',$_SESSION['filter']['stock-list']==$_SESSION['camp']['id']);
 		listsetting('add', 'Add a box');
 
 		$locations = db_simplearray('SELECT id, label FROM locations ORDER BY seq');

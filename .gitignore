@@ -3,6 +3,6 @@
 config.php
 .DS_Store
 error_log
-library/templates_c/*
+templates/templates_c/*
 minified.css
 minified.js
