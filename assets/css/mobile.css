@@ -68,29 +68,24 @@ header a, header a:hover, header a:active{
 }
 input[type="text"].form-control, input[type="password"].form-control, input[type="number"].form-control, input[type="email"].form-control{
 	border: none;
+	border-bottom: 1px solid #aaa;
 	padding-left: 5px;
 	font-size: 17px;
-	background: linear-gradient(#61c4ef, #61c4ef), linear-gradient(#eee, #eee);
-  background-size: 60% 1px, 40% 1px;
-  background-position: bottom left, bottom right;
-  background-repeat: no-repeat;
 }
 input[type="text"].form-control:focus, input[type="password"].form-control:focus, input[type="number"].form-control:focus, input[type="email"].form-control:focus{
-	border-bottom: 1px solid #61c4ef;
+	border-color: #61c4ef;
 	box-shadow: none;
 	-webkit-box-shadow: none;
-	background: none;
-	padding-bottom: 5px;
 }
 input[type="text"].form-control.error, input[type="password"].form-control.error, input[type="number"].form-control.error, input[type="email"].form-control.error{
-	border-bottom: 1px solid red;
-	background: none;
+	border-color: red;
 }
-input{
-	background: linear-gradient(#000, #000), linear-gradient(#000, #000), linear-gradient(#000, #000);
-  background-size: 1px 20%, 100% 1px, 1px 20%;
-  background-position: bottom left, bottom center, bottom right;
-  background-repeat: no-repeat;
+input[readonly].form-control{
+	border: none;
+	color: #888;
+	background: #f4f4f4;
+	padding: 5px 10px;
+	height: 35px;
 }
 .form-control.error{
 	border-color: #ffc2c2;
@@ -139,6 +134,10 @@ label.error{
 .message.warning{
 	background: #f95b47;
 	color: #fff;
+}
+.message.warning a{
+	color: #fff;
+	text-decoration: underline;
 }
 .message .bigger{
 	font-size: 1.2em;
