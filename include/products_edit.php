@@ -52,7 +52,6 @@
 	addfield('number','Maximum per child per two weeks','maxperchild',array('width'=>3));
 */
 
-	addfield('checkbox','Visible','visible',array('aside'=>true));
 	addfield('line','','',array('aside'=>true));
 	addfield('created','Created','created',array('aside'=>true));
 
