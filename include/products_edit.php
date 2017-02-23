@@ -7,7 +7,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('name','gender_id', 'value', 'visible', 'maxperadult', 'maxperchild', 'amountneeded', 'sizegroup_id', 'camp_id', 'comments');
+		$savekeys = array('name','gender_id', 'value', 'maxperadult', 'maxperchild', 'amountneeded', 'sizegroup_id', 'camp_id', 'comments');
 		$id = $handler->savePost($savekeys);
 
 		redirect('?action='.$_POST['_origin']);
@@ -17,7 +17,6 @@
 
 	if (!$id) {
 		$data['amountneeded'] = 3;
-		$data['visible'] = 1;
 		$data['camp_id'] = $_SESSION['camp']['id'];
 	}
 
