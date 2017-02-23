@@ -184,6 +184,10 @@ body.status #div_purch .table-nav, body.status #div_trans .table-nav{
 	display: none;
 }
 
+body.stock-list .table-parent{
+	max-width: none;
+}
+
 .familymembertable{
 	width: 100%;
 }
