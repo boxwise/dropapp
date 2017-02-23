@@ -1,21 +1,33 @@
 body {
 	font-family: Arial, sans-serif;
 	font-size:2em;
-	margin:10px;
+	margin:0 10px;
 	padding:0;
+	color: #395c6b;
+}
+hr{
+	border-color: #fff;
+	margin-bottom: 40px;
 }
 button, .btn {
 	font-family: Arial, sans-serif;
 	font-size:24px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border-radius: 10px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	border:none;
 	background-color: #61c4ef;
 	width:100%;
 	padding:10px;
 	color: #fff;
-	margin-top:15px;
+}
+button:hover, .btn:hover{
+	background: rgba(97, 196, 239, 0.74);
+	color: #fff;
+}
+button:active, .btn:active{
+	background: #49b5e4;
+	color: #fff;
 }
 .btn.disabled{
 	border: 2px solid #61c4ef;
@@ -26,11 +38,54 @@ button, .btn {
 	background: #ddd;
 	color: #999;
 }
+.btn-list .btn{
+	margin-bottom: 15px;
+}
+.btn-list .btn:last-child{
+	margin-bottom: 0;
+}
+header{
+	background: #395c6b;
+	margin: 0 -10px 10px -10px;
+	padding: 10px;
+	color: #fff;
+}
+header a, header a:hover, header a:active{
+	color: #fff;
+	text-decoration: none;
+}
 .page-header{
 	margin-top: 25px;
 }
 .form-control{
 	font-size: 16px;
+	border-radius: 0;
+	height: 38px;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	transition: none;
+	-webkit-transition: none;
+}
+input[type="text"].form-control, input[type="password"].form-control, input[type="number"].form-control, input[type="email"].form-control{
+	border: none;
+	border-bottom: 1px solid #aaa;
+	padding-left: 5px;
+	font-size: 17px;
+}
+input[type="text"].form-control:focus, input[type="password"].form-control:focus, input[type="number"].form-control:focus, input[type="email"].form-control:focus{
+	border-color: #61c4ef;
+	box-shadow: none;
+	-webkit-box-shadow: none;
+}
+input[type="text"].form-control.error, input[type="password"].form-control.error, input[type="number"].form-control.error, input[type="email"].form-control.error{
+	border-color: red;
+}
+input[readonly].form-control{
+	border: none;
+	color: #888;
+	background: #f4f4f4;
+	padding: 5px 10px;
+	height: 35px;
 }
 .form-control.error{
 	border-color: #ffc2c2;
@@ -38,6 +93,7 @@ button, .btn {
 .select2-results{
 	font-size: 0.9em;
 	background: #eee;
+	margin: 4px 0 0 0;
 }
 .select2-search input{
 	font-size: 0.8em;
@@ -45,20 +101,46 @@ button, .btn {
 .select2-chosen, .select2-choice > span:first-child, .select2-container .select2-choices .select2-search-field input{
 	padding: 5px 7px;
 }
-
+.select2-container .select2-choices .select2-search-field input, .select2-container .select2-choice, .select2-container .select2-choices{
+	border-radius: 0;
+}
+.select2-drop{
+	margin-top: -5px;
+	padding-top: 4px;
+}
+.select2-drop ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+.select2-drop ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
 label{
 	font-size: 0.8em;
 }
 label.error{
 	font-size: 12px;
 	color: #ff6262;
+	font-weight: normal;
 }
 .message{
 	padding: 10px;
-	background: #daffe3;
+	background: rgb(228, 245, 253);
+	font-size: 0.9em;
+	margin-bottom: 20px;
 }
 .message.warning{
-	background: #ffdada;
+	background: #f95b47;
+	color: #fff;
+}
+.message.warning a{
+	color: #fff;
+	text-decoration: underline;
+}
+.message .bigger{
+	font-size: 1.2em;
 }
 #autologin{
 	float: left;
@@ -73,8 +155,8 @@ a {
 	position: relative;
 }
 #campselect select{
-	color: #61c4ef;
-	background: #fff;
+	color: #fff;
+	background: none;
 	border:none;
 	cursor: pointer;
 	margin-left: -5px;
@@ -97,9 +179,13 @@ a {
 	right: 0;
 }
 footer{
+	padding: 10px;
 	border-top: 1px solid #eee;
-	padding: 10px 0;
-	margin-top: 30px;
+	margin: 30px -10px 0 -10px;
+	font-size: 0.8em;
+}
+footer a{
+	color: #aaa;
 }
 #loading{
 	display: none;

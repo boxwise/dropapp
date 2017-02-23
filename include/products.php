@@ -9,13 +9,15 @@
 		initlist();
 
 		$cmsmain->assign('title','Products');
-		listsetting('search', array('name', 'g.label'));
+		listsetting('search', array('name', 'g.label','products.comments'));
+		
+		$locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
 
-		$data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," drop coins") AS drops, COALESCE(SUM(s.items),0) AS items FROM '.$table.'
+		$data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," drops") AS drops, COALESCE(SUM(s.items),0) AS items, IF(SUM(s.items),1,0) AS preventdelete FROM '.$table.'
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
-			LEFT OUTER JOIN stock AS s ON s.product_id = products.id AND NOT s.deleted AND NOT s.location_id = 4
-			WHERE NOT products.deleted
+			LEFT OUTER JOIN stock AS s ON s.product_id = products.id AND NOT s.deleted AND s.location_id IN ('.$locations.') 
+			WHERE NOT products.deleted AND camp_id = '.$_SESSION['camp']['id'].'
 			GROUP BY products.id
 		');
 
@@ -24,12 +26,15 @@
 		addcolumn('text','Gender','gender');
 		addcolumn('text','Sizegroup','sizegroup');
 		addcolumn('text','Items','items');
-		addcolumn('text','Price','drops');
-		addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
+		if($_SESSION['camp']['market']) addcolumn('text','Price','drops');
+		addcolumn('text','Comments','comments');
+		if($_SESSION['camp']['id']==1) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
 
 		listsetting('allowsort',true);
-		listsetting('allowcopy',true);
+		listsetting('allowcopy',false);
+		listsetting('allowshowhide',false);
 		listsetting('add', 'Add a product');
+		listsetting('delete', 'Delete');
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);

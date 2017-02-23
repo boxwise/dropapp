@@ -6,6 +6,8 @@
 	$cmsmain->assign('title','Container stock');
 	listsetting('search', array('p.name'));
 
+	$locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
+
 	$data = getlistdata('
 SELECT
 	CONCAT(p.id,"-",g.id,"-",s.id) AS id,
@@ -15,8 +17,8 @@ SELECT
 	IFNULL(COUNT(s2.id),0) AS boxes,
 	(SELECT COUNT(s3.id) FROM stock AS s3
 	 LEFT OUTER JOIN locations AS l2 ON l2.id = s3.location_id
-	 WHERE NOT s3.deleted AND s3.product_id = p.id AND p.gender_id = g.id AND s3.size_id = s.id AND l2.visible)-IFNULL(COUNT(s2.id),0) AS totalboxes,
-	IFNULL(SUM(s2.items),0) AS stock
+	 WHERE 
+NOT s3.deleted AND s3.product_id = p.id AND p.gender_id = g.id AND s3.size_id = s.id AND l2.visible)-IFNULL(COUNT(s2.id),0) AS totalboxes, IFNULL(SUM(s2.items),0) AS stock
 FROM
 	(products AS p,
 	sizes AS s)

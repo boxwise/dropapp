@@ -14,10 +14,6 @@
 			$success = true;
 			$message = '';
 
-			if($_POST['destination']) {
-				$redirect = $_POST['destination'];
-			}
-
 			$_SESSION['user'] = $row;
 
 			db_query('UPDATE '.$settings['cms_usertable'].' SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
@@ -45,7 +41,9 @@
 	}
 
 	if($success) {
-		if($redirect) redirect('?');
+		if($_GET['barcode']) $uri = 'barcode='.$_GET['barcode'];
+		
+		redirect('?'.$uri);
 	} else {
 		redirect('?warning=true&message='.$message);
 	}

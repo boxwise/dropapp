@@ -10,7 +10,7 @@
 
 		$cmsmain->assign('title','People');
 
-		listsetting('allowcopy', true);
+		listsetting('allowcopy', false);
 		listsetting('allowmove', true);
 		listsetting('allowmoveto', 1);
  		listsetting('allowsort',false);
@@ -19,13 +19,13 @@
 		listsetting('add', 'New person');
 
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
-		$data = getlistdata('SELECT people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops FROM people LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id WHERE NOT people.deleted GROUP BY people.id');
+		$data = getlistdata('SELECT people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops FROM people LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id WHERE NOT people.deleted AND people.camp_id = '.$_SESSION['camp']['id'].' GROUP BY people.id');
 
 		addcolumn('text','Lastname','lastname');
 		addcolumn('text','Firstname','firstname');
 		addcolumn('text','Gender','gender2');
 		addcolumn('text','Age','age');
-		addcolumn('text','Container','container');
+		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
 		addcolumn('text','Drops','drops');
 
 		addbutton('give','Give drops',array('icon'=>'fa-tint','oneitemonly'=>false));

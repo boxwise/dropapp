@@ -1,17 +1,17 @@
 <?php
-	require('jsmin-1.1.1.php');
+	require_once('jsmin-1.1.1.php');
 	header('Content-type: text/javascript; charset: UTF-8');
 
 	error_reporting(0);
 	ini_set('display_errors',false);
 
-// 	added for cache
-    header("Cache-Control: must-revalidate");
-    $offset = 60 * 60 * 24 * 30;
-    $ExpStr = "Expires: " .
-    gmdate("D, d M Y H:i:s",
-    time() + $offset) . " GMT";
-    header($ExpStr);
+	// 	added for cache
+	header("Cache-Control: must-revalidate");
+	$offset = 60 * 60 * 24 * 30;
+	$ExpStr = "Expires: " .
+	gmdate("D, d M Y H:i:s",
+	time() + $offset) . " GMT";
+	header($ExpStr);
 
 	$debug = ($_GET['debug']==true) ? true : false;
 	$rewrite = ($_GET['rewrite']==true) ? true : false;

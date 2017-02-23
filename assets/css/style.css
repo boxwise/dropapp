@@ -75,7 +75,7 @@ p{
 	color: #fff;
 }
 .header-top-inner .menu-btn{
-    font-size: 1.6em;
+    font-size: 1.5em;
     float: left;
     margin-top: -7px;
 }
@@ -85,6 +85,7 @@ p{
 	color: #fff;
 	display: inline-block;
 	transition: all 500ms;
+	padding-right: 5px;
 }
 .header-top-inner .brand:hover{
 	text-decoration: none;
@@ -103,33 +104,26 @@ p{
 	border-top-right-radius: 0;
 	border-top-left-radius: 0;
 }
-.header-top-inner .dropdown-toggle i.fa-user{
+.header-top-inner .dropdown-toggle i.fa{
 	float: left;
 	margin-right: 5px;
+}
+.header-top .fa-mobile{
+	margin-right: 5px;
+	font-size: 1.3em;
 }
 .navbar-nav>li>a{
 	padding-top: 9px;
 	padding-bottom: 7px;
 }
-ul#usersonline {
-	list-style: none;
-	margin: 0 15px 0;
-	padding: 0;
-}
-#usersonline li {
-	background-color: rgba(255,255,255,0.5);
-	margin-left: 7px;
-	width:28px;
-	height: 28px;
-	float: left;
-	text-align: center;
-	-moz-border-radius: 15px;
-	border-radius: 15px;
-	font-size:11px;
-	color:#fff;
-	padding-top:7px;
-}
 
+.navbar-nav .open .dropdown-menu{
+	position: absolute;
+	background-color: #fff;
+	border: 1px solid rgba(0,0,0,0.15);
+	float: left;
+	box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+}
 .nav-aside{
 	float: left;
 	width: 205px;
@@ -349,10 +343,10 @@ ul#usersonline {
 	margin-right: 5px;
 	pointer-events: visible;
 }
-.btn-group .btn{
+.btn-group .btn, .actions .btn-group .btn{
 	margin-right: 0;
 }
-.btn-group{
+.btn-group .btn:last-child, .actions.btn-group .btn:last-child{
 	margin-right: 7px;
 }
 .btn:hover{
@@ -532,6 +526,17 @@ textarea.select2{
 	height: 34px;
 }
 
+.select2-drop ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+.select2-drop ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
 /* confirmation */
 
 .popover{
@@ -592,6 +597,7 @@ textarea.select2{
 .actions > li{
 	display: inline-block;
 	list-style: none;
+	float: left;
 }
 .actions li label.btn-sm input[type="checkbox"]{
 	margin-top: 3px;
@@ -601,6 +607,12 @@ textarea.select2{
 }
 .actions.items-selected li.items-selected-dependent{
 	display: inline-block;
+}
+.actions.no-delete .action-delete{
+	display: none;
+}
+.actions .btn{
+	margin-right: 7px;
 }
 
 .navigations > li{
@@ -613,7 +625,7 @@ textarea.select2{
 }
 .form-inline.search-group a.form-control-feedback{
 	top:-1px;
-	z-index: 2;
+	z-index: 3;
 	right: -1px;
 	color: #000;
 	position: absolute;
@@ -681,6 +693,7 @@ textarea.select2{
 .table .td-content .breakall{
 	word-break: break-all;
 }
+
 
 /* table zortable */
 .zortable .table{
@@ -998,6 +1011,33 @@ tr.level-10 td:first-child{
 		padding-left: 0;
 		border-left: none;
 	}
+	.navbar-nav>li>a{
+		padding: 9px 8px 8px 8px;
+	}
+	.header-top .navbar-nav.pull-right li:first-child a{
+		padding-bottom: 3px;
+	}
+	.header-top-inner .dropdown-toggle i.fa{
+		float: none;
+	}
+	.header-top .navbar-nav{
+		margin-right: 0;
+	}
+	.header-top .navbar-nav.pull-right .caret{
+		display: none;
+	}
+	.header-top .navbar-nav.pull-right .fa.fa-mobile{
+		font-size: 2em;
+		margin-top: -3px;
+		margin-right: 3px;
+		margin-left: 3px;
+	}
+	.header-top .navbar-nav.pull-right .fa{
+		font-size: 1.5em;
+		margin-right: 2px;
+		margin-left: 2px;
+	}
+
 }
 
 /* putting the right sidebar below the form */

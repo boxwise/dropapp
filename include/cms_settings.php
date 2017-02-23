@@ -25,7 +25,7 @@
 			$data = getlistdata('SELECT t.* FROM '.$table.' AS t LEFT OUTER JOIN settings_categories AS c ON t.category_id = c.id '.(!$_SESSION['user']['is_admin']?' WHERE NOT t.hidden AND (c.admin_only IS NULL OR NOT c.admin_only)':''));
 
 		} else {
-			$data = getlistdata('SELECT t.* FROM '.$table.' AS t'.($_SESSION['user']['is_admin']?'':' WHERE NOT t.hidden'));
+			$data = getlistdata('SELECT u.*, GROUP_CONCAT(c.name ORDER BY c.seq SEPARATOR ', ') AS camps FROM cms_users AS u INNER JOIN cms_users_camps AS x ON x.cms_users_id = u.id LEFT OUTER JOIN camps AS c ON c.id = x.camps_id '.($_SESSION['user']['is_admin']?'':' WHERE NOT t.hidden').' GROUP BY u.id');
 		}
 
 		if($hasBilanguage) {

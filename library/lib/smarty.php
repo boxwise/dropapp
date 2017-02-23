@@ -8,8 +8,8 @@ class Zmarty extends Smarty {
 		$this->debugging = false;
 		$this->caching = false;
 		$this->cache_lifetime = 120;
-		$this->compile_dir = $_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/library/templates_c';
-		$this->addTemplateDir($_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/library/templates');
+		$this->compile_dir = $_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/templates/templates_c';
+		$this->addTemplateDir($_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/templates');
 		$this->assign('lan',$lan);
 		$this->assign('modal',isset($_GET['modal']));
 		$this->assign('settings',$settings);

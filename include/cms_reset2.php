@@ -1,5 +1,5 @@
 <?php
 setlocale(LC_ALL, 'nl_NL');
-require('core.php');
+require_once('core.php');
 $smarty = new Zmarty;
 $smarty->display('cms_reset2.tpl');
