@@ -49,6 +49,7 @@ ORDER BY
 
 	foreach($data as $key=>$d) {
 		$data[$key]['result'] = ($d['stock']/$d['target']*$d['amountneeded']/10);
+		if(!$data[$key]['target']) $data[$key]['target'] = '';
 	}
 
 	listsetting('allowcopy', false);
