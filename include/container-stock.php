@@ -25,7 +25,7 @@ FROM
 LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
 LEFT OUTER JOIN stock AS s2 ON s2.product_id = p.id AND s2.size_id = s.id AND NOT s2.deleted AND s2.location_id IN (2,3)
 WHERE
-	p.visible AND NOT p.deleted AND
+	NOT p.deleted AND
 	s.sizegroup_id = p.sizegroup_id AND
 	p.stockincontainer
 GROUP BY
@@ -49,7 +49,7 @@ FROM
 LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
 LEFT OUTER JOIN stock AS s2 ON s2.product_id = p.id AND s2.size_id = s.id AND NOT s2.deleted AND s2.location_id IN (2,3)
 WHERE
-	p.visible AND NOT p.deleted AND
+	NOT p.deleted AND
 	s.sizegroup_id = p.sizegroup_id AND
 	s2.location_id IN (2,3) AND
 	NOT p.stockincontainer
