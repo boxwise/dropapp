@@ -63,7 +63,6 @@ ORDER BY
 	addcolumn('text','Gender','gender');
 	addcolumn('text','Size','size');
 	addcolumn('text','Items','stock');
-	addcolumn('text','Boxes','boxes');
 	if(db_value('SELECT market FROM camps WHERE id = :camp', array('camp'=>$_SESSION['camp']['id']))) {
 		addcolumn('text','People','target');
 #		addcolumn('text','','result');

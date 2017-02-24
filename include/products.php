@@ -27,7 +27,7 @@
 		addcolumn('text','Sizegroup','sizegroup');
 		addcolumn('text','Items','items');
 		if($_SESSION['camp']['market']) addcolumn('text','Price','drops');
-		addcolumn('text','Comments','comments');
+		addcolumn('text','Description','comments');
 		if($_SESSION['camp']['id']==1) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
 
 		listsetting('allowsort',true);
