@@ -40,7 +40,8 @@ FROM
 WHERE
 	p.gender_id = g.id AND
 	p.sizegroup_id = sg.id AND
-	s.sizegroup_id = sg.id
+	s.sizegroup_id = sg.id AND
+	NOT p.deleted
 GROUP BY p.name, g.id, s.label
 ORDER BY 
 	p.name, g.seq, s.seq';
