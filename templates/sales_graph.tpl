@@ -39,6 +39,7 @@ var chart = AmCharts.makeChart("chartdiv", {
 	{/foreach}
 	],
     "valueAxes": [{
+		"minimum": 0,
         "stackType": "regular",
         "axisAlpha": 0,
         "position": "left",

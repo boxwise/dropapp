@@ -29,6 +29,7 @@ var chart = AmCharts.makeChart( "chartdiv", {
 	],
   "valueAxes": [ {
     "gridColor": "#FFFFFF",
+	"minimum": 0,
     "gridAlpha": 0.2,
     "dashLength": 0
   } ],
