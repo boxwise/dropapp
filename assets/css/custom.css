@@ -195,17 +195,17 @@ body.stock-list .table-parent{
 	padding:5px 15px 5px 5px;
 	border-bottom: 1px solid #ccc;
 }
-.printed_list table {
+.printed_list_containers table {
 	float:left;
 	border:none;
 	margin-right:20px;
 }
-.printed_list td {
+.printed_list_containers td {
 	font-size:14px;
 	padding:5px 5px 5px 5px;
 	border-bottom: 1px solid #ccc;
 }
-.printed_list .square {
+.printed_list_containers .square {
 	font-size:16px;
 	padding:0 5px 0 0;
 }
