@@ -7,8 +7,8 @@
     <title>{if $title}{$title} - {/if}{$translate['site_name']}</title>
 
     <!-- Bootstrap -->
-    <link href="{$settings['rootdir']}/assets/css/css.php?v=2" rel="stylesheet">
-    <link href="{$settings['rootdir']}/assets/css/custom.css" rel="stylesheet">    
+    <link href="{$settings['rootdir']}/assets/css/css.php?v=3" rel="stylesheet">
+    <link href="{$settings['rootdir']}/assets/css/custom.css?v=3" rel="stylesheet">    
     <link href="{$settings['rootdir']}/assets/css/print.css" rel="stylesheet" media="print">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
