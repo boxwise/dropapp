@@ -15,8 +15,11 @@
 				</div>
 				<input class="btn" type="submit" value="Save new amount">
 			</form>
-		<hr></hr>
-	
+		<hr></hr>	
 		<p>Or change the contents of the box</p>
 		<a class="btn" href="?editbox={$box['id']}">Edit the box</a>
+		<p><a href="#" class="toggle-do">View Edit History</a></p>
+		<div class="toggle-me hide" id="history">
+			{$history}	
+		</div>
 {/if}

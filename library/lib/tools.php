@@ -28,7 +28,7 @@ function showHistory($table,$id) {
 	$smarty = new Zmarty;
 	$history = array();
 
-	$result = db_query('SELECT h.*, u.naam FROM history AS h LEFT OUTER JOIN cms_users AS u ON h.user_id = u.id WHERE tablename = :table AND record_id = :id ORDER BY changedate',array('table'=>$table,'id'=>$id));
+	$result = db_query('SELECT h.*, u.naam FROM history AS h LEFT OUTER JOIN cms_users AS u ON h.user_id = u.id WHERE tablename = :table AND record_id = :id ORDER BY changedate DESC',array('table'=>$table,'id'=>$id));
 	while($row = db_fetch($result)) {
 		$row['changedate'] = strftime('%A %d %B %Y, %H:%M',strtotime($row['changedate']));
 		$row['changes'] = strip_tags($row['changes']);
@@ -36,9 +36,9 @@ function showHistory($table,$id) {
 		$history[] = $row;
 	}
 	$smarty->assign('row',$history);
-	echo $smarty->display('cms_form_history.tpl',true);
+	return $smarty->fetch('cms_form_history.tpl', true);
 
-	if(!$result->rowCount()) { echo $translate['cms_form_history_nodata']; }
+	if(!$result->rowCount()) { return $translate['cms_form_history_nodata']; }
 }
 
 function ConvertURL(){

@@ -27,6 +27,7 @@ LEFT OUTER JOIN stock AS s2 ON s2.product_id = p.id AND s2.size_id = s.id AND NO
 WHERE
 	NOT p.deleted AND
 	s.sizegroup_id = p.sizegroup_id AND
+	p.camp_id = '.$_SESSION['camp']['id'].' AND
 	p.stockincontainer
 GROUP BY
 	p.name, g.label, s.id
@@ -79,7 +80,7 @@ GROUP BY
 	addcolumn('text','Items','stock');
 	addcolumn('text','Boxes elsewhere','totalboxes');
 
-	$cmsmain->assign('listfooter',array('Total boxes/items','','',$totalboxes,$totalitems));
+	$cmsmain->assign('listfooter',array('Total boxes/items','','',$totalboxes,$totalitems, ''));
 
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('listconfig',$listconfig);

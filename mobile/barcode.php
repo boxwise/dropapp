@@ -31,7 +31,9 @@
 		} else {
 			if($box['id']) {
 				$locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE camp_id = :camp_id ORDER BY seq',array('camp_id'=>$_SESSION['camp']['id'],'location'=>$box['location_id']));
+				$history = showHistory('stock',$box['id']);
 				$tpl->assign('box',$box);
+				$tpl->assign('history', $history);
 				$tpl->assign('locations',$locations);
 				$tpl->assign('include','mobile_scan.tpl');
 			} else {

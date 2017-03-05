@@ -10,6 +10,11 @@ $(function(){
 		window.location = $(this).val();
 		return false;
 	})
+
+	$('.toggle-do').click(function(e){
+		$(this).parent().next().toggleClass('hide');
+		e.preventDefault();
+	})
 })
 
 function updateSizes(size){
