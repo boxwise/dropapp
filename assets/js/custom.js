@@ -2,6 +2,7 @@ $(function() {
 	$('.bar').click(function(e){
 		$('body').toggleClass('different-view');
 	})
+
 })
 function cms_form_valutaCO(field) {
 	value = $('#field_'+field).val();

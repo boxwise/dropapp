@@ -518,7 +518,6 @@ $(window).resize(function(){
 })
 
 function initiateList(){
-	console.l
 	if($('.table:not(.initialized)').length){
 		$('.table').addClass('initialized');
 		$('.table-parent.sortable:not(.zortable) table').each(function(){
@@ -719,6 +718,51 @@ function initiateList(){
 	    	}, el.data());
 	    	el.confirmation(options);
 		})
+		// change the count of list items
+		$('.change-count').click(function(){
+			row = $(this).closest('tr');
+			value = $('#field_people_id').val();
+			$('#form-submit').prop('disabled', true);
+			$('#field_people_id').prop('disabled', true);
+			$('body').addClass('loading');
+			$.ajax({
+				type: 'post',
+				url: 'include/purchase_quick_edit.php',
+				data:
+				{
+					people_id: value,
+					updown: $(this).data('val'),
+					transaction_id: row.data('id')
+				},
+				dataType: 'json',
+				success: function(result){
+					if(result.success){
+						$('#ajax-aside').html(result.htmlaside);
+						$('.not_enough_coins').removeClass('not_enough_coins');
+						if($('#field_product_id').val()){
+							calcCosts('count');
+						}
+						row.find('.data-field-countupdown-value').html(result.amount);
+						row.find('.data-field-drops2').html(result.drops);
+					}
+					$('#field_people_id').prop('disabled', false);
+					$('body').removeClass('loading');
+					if(result.message){
+						var n = noty({
+							text: result.message,
+							type: (result.success ? 'success' : 'error')
+						});
+					}
+				},
+				error: function(result){
+					var n = noty({
+						text: 'Something went wrong, maybe the internet connection is a bit choppy',
+						type: 'error'
+					});
+				}
+			});
+		})
+
 	}
 }
 

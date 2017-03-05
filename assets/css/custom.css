@@ -485,3 +485,24 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 	width:130px;
 }
 
+.change-count-btns{
+	position: relative;
+	margin-left: 10px;
+	font-weight: bold;
+	cursor: pointer;
+	top: -5px;
+}
+.change-count{
+	position: absolute;
+	font-size: 1.8em;
+	height: 10px;
+	overflow: hidden;
+	color: #61c4ef;
+}
+.count-down{
+	line-height: 0;
+	top: 12px;
+}
+.change-count:hover{
+	color: #000;
+}

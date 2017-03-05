@@ -112,6 +112,10 @@
 										<div class="parent-indent"></div>
 									</div>
 								</td>
+							{elseif $key=='countupdown'}
+								<td class="list-level-0">
+									<div class="td-content data-field-{$key}" data-sort=""><span class="data-field-{$key}-value">{$row[$key]|strip_tags:false|truncate}</span><span class="change-count-btns"><i class="change-count count-up fa fa-sort-asc" aria-hidden="true" data-val="1"></i><i class="change-count count-down fa fa-sort-desc" aria-hidden="true"data-val="-1"></i></span></div>
+								</td>
 							{else}
 								<td class="list-level-0">
 									<div class="td-content data-field-{$key}" data-sort="">{$row[$key]|strip_tags:false|truncate}</div>
