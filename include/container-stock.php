@@ -29,6 +29,7 @@ WHERE
 	s.sizegroup_id = p.sizegroup_id AND
 	p.camp_id = '.$_SESSION['camp']['id'].' AND
 	p.stockincontainer
+	'.($_SESSION['search']['container-stock']?'AND p.name LIKE "%'.$_SESSION['search']['container-stock'].'%"':'').'
 GROUP BY
 	p.name, g.label, s.id
 
@@ -54,6 +55,7 @@ WHERE
 	s.sizegroup_id = p.sizegroup_id AND
 	s2.location_id IN (2,3) AND
 	NOT p.stockincontainer
+	'.($_SESSION['search']['container-stock']?'AND p.name LIKE "%'.$_SESSION['search']['container-stock'].'%"':'').'
 GROUP BY
 	p.name, g.label, s.id
 
