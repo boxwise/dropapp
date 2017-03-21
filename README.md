@@ -1,6 +1,6 @@
 # README #
 
-This app is just amazing, just wanted to say that. And it will become even more amazing, because in the parts where it might not be so amazing yet, it will change into amazingness...
+You just found the Drop App - the revolutionary app to manage warehouses that supply clothing and other stuff to refugees in camps. As we developed it for Drop In The Ocean (http://www.drapenihavet.no/en/) and not primarily for other organizations, you will not find a lot of documentation. Installing, running and customizing it will be pretty much straight forward for a developer with knowledge of PHP and Mysql. However, you are pretty much on your own, at this moment we don't actively support or develop the application for others. 
 
 ### What is this repository for? ###
 
@@ -21,3 +21,6 @@ You gotta be awesome and kind
 Right now to Maarten, Bart or Martijn
 
 The Wishing Tree team (wishingtree.eu)
+Maarten
+Martijn
+Bart – post@bartdriessen.eu
