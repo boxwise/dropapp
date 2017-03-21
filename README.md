@@ -23,4 +23,8 @@ Right now to Maarten, Bart or Martijn
 The Wishing Tree team (wishingtree.eu)
 Maarten
 Martijn
-Bart â€“ post@bartdriessen.eu
+Bart – post@bartdriessen.eu
+
+### License ###
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
