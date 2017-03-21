@@ -8,9 +8,11 @@ To enable us to continue to develop this application into something even more be
 
 ### How do I get set up? ###
 
-Copy .htaccess.default and /lib/config.php.default and remove the .default in the filename.
+Create a new database and import market_clean.sql
 
-Then change the necesary usernames, folders and database settings.
+Then copy .htaccess.default and /lib/config.php.default and remove the .default in the filename. Then change the necesary usernames, folders and database settings.
+
+After this you should be able to login to the app using emailaddress: demo@example.com with password: demo
 
 ### Contribution guidelines ###
 
@@ -23,7 +25,7 @@ Right now to Maarten, Bart or Martijn
 The Wishing Tree team (wishingtree.eu)
 Maarten
 Martijn
-Bart – post@bartdriessen.eu
+Bart: post@bartdriessen.eu
 
 ### License ###
 
