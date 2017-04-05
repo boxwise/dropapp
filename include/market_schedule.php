@@ -91,7 +91,13 @@
 		addfield('line');
 		addfield('date','Daily start time','starttime',array('date'=>false,'time'=>true));
 		addfield('date','Daily end time','endtime',array('date'=>false,'time'=>true));
-		addfield('select','Length of timeslots','timeslot',array('multiple'=>false,'options'=>array(array('value'=> '0.5', 'label'=>'30 minutes'), array('value'=> '0.25', 'label'=>'15 minutes')), 'required'=> true));
+		addfield('select','Length of timeslots','timeslot',array('multiple'=>false,'options'=>array(
+			array('value'=> '3', 'label'=>'3 hours'),
+			array('value'=> '2', 'label'=>'2 hours'),
+			array('value'=> '1', 'label'=>'1 hour'),
+			array('value'=> '0.5', 'label'=>'30 minutes'), 
+			array('value'=> '0.25', 'label'=>'15 minutes')
+			), 'required'=> true));
 
 		// place the form elements and data in the template
 		$cmsmain->assign('data',$data);
