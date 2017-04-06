@@ -19,7 +19,7 @@
 		listsetting('add', 'New person');
 
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
-		$data = getlistdata('SELECT people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops FROM people LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id WHERE NOT people.deleted AND people.camp_id = '.$_SESSION['camp']['id'].' GROUP BY people.id');
+		$data = getlistdata('SELECT (SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1) AS lastactive, people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops FROM people LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id WHERE NOT people.deleted AND people.camp_id = '.$_SESSION['camp']['id'].' GROUP BY people.id');
 
 		addcolumn('text','Lastname','lastname');
 		addcolumn('text','Firstname','firstname');
@@ -27,6 +27,7 @@
 		addcolumn('text','Age','age');
 		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
 		addcolumn('text','Drops','drops');
+		addcolumn('datetime','Last active','lastactive');
 
 		addbutton('give','Give drops',array('icon'=>'fa-tint','oneitemonly'=>false));
 
