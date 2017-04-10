@@ -51,7 +51,7 @@
 	if(db_tableexists('history')) {
 		$changelog = array_keys(db_simplearray('SELECT CONCAT(changedate,", ",tablename,", ",record_id,": ",changes) FROM history WHERE user_id = :id ORDER BY changedate DESC',array('id'=>$data['id'])));
 		foreach($changelog as $key=>$value) $changelog[$key] = str_replace(array("\n","\r"),"",strip_tags($changelog[$key]));
-		$data['changelog'] = join("\n",$changelog);
+		$data['changelog'] = join("\r\n",$changelog);
 		addfield('textarea','Acties','changelog',array('readonly'=>true,'rows'=>12));
 	}
 
