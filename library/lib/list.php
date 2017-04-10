@@ -61,7 +61,7 @@
 	function listDeleteAction($table, $id, $count = 0, $recursive = false) {
 		$hasPrevent = db_fieldexists($table,'preventdelete');
 
-        $result = db_query('UPDATE '.$table.' SET deleted = 1 WHERE id = :id'.($hasPrevent?' AND NOT preventdelete':''),array('id'=>$id));
+        $result = db_query('UPDATE '.$table.' SET deleted = NOW() WHERE id = :id'.($hasPrevent?' AND NOT preventdelete':''),array('id'=>$id));
 		$count += $result->rowCount();
 		if($result->rowCount()) saveDeleteHistory($table,$id);
 
