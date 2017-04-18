@@ -36,7 +36,7 @@ define('MINIFY_HTML_ENT', '&(?:[a-zA-Z\d]+|\#\d+|\#x[a-fA-F\d]+);');
 define('MINIFY_HTML_KEEP', '<pre(?:\s[^<>]*?)?>[\s\S]*?</pre>|<code(?:\s[^<>]*?)?>[\s\S]*?</code>|<script(?:\s[^<>]*?)?>[\s\S]*?</script>|<style(?:\s[^<>]*?)?>[\s\S]*?</style>|<textarea(?:\s[^<>]*?)?>[\s\S]*?</textarea>');
 // by default we minify URLs
 if ( ! defined("HTML_MINIFY_URL_ENABLED")) {
-	define("HTML_MINIFY_URL_ENABLED", true);
+	define("HTML_MINIFY_URL_ENABLED", false);
 }
 // by default we minify inline CSS
 if ( ! defined("HTML_MINIFY_INLINE_CSS_ENABLED")) {
