@@ -4,13 +4,15 @@
 	$months = array('كانون الثاني','فبراير','مارس','أبريل','قد','يونيو','يوليو','أغسطس','سبتمبر','شهر اكتوبر','تشرين الثاني','ديسمبر');
 
 	$action = 'market_schedule';
-
+	
 	if($_POST) {
 
 		$starttime = intval(substr($_POST['starttime'],0,strpos($_POST['starttime'],':')));
 		$starttime += floatval(substr($_POST['starttime'],strpos($_POST['starttime'],':')+1)/60);
 		$endtime = intval(substr($_POST['endtime'],0,strpos($_POST['endtime'],':')));
 		$endtime += floatval(substr($_POST['endtime'],strpos($_POST['endtime'],':')+1)/60);
+		$lunchtime = intval(substr($_POST['lunchtime'],0,strpos($_POST['lunchtime'],':')));
+		$lunchtime += floatval(substr($_POST['lunchtime'],strpos($_POST['lunchtime'],':')+1)/60);
 
 		$data['startdate'] = strftime('%A %e %B %Y',strtotime('+'.min($_POST['dates']).' Days'));
 		$data['enddate'] = strftime('%A %e %B %Y',strtotime('+'.max($_POST['dates']).' Days'));
@@ -20,27 +22,29 @@
 			$date = strftime('%A %e %B %Y',strtotime('+'.$day.' Days'));
 
             for($time=$starttime;$time<$endtime;$time+=$_POST['timeslot'][0]) {
+				if(!$_POST['lunchbreak'] || ($time < $_POST['lunchtime'] || $time >= ($_POST['lunchtime']+$_POST['lunchduration'][0]))) {
 
-	            switch ($time-floor($time)) {
-		            case '0.0':
-		            	$minutes = '00';
-		            	break;
-		            case '0.25':
-		            	$minutes = '15';
-		            	break;
-		            case '0.5':
-		            	$minutes = '30';
-		            	break;
-		            case '0.75':
-		            	$minutes = '45';
-		            	break;
-	            }
-	            $slots[$date][floor($time).":".$minutes]['count'] = 0;
-	            $slots[$date][floor($time).":".$minutes]['containers'] = '';
-/*
-	            $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['count'] = 0;
-	            $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['containers'] = '';
-*/
+		            switch ($time-floor($time)) {
+			            case '0.0':
+			            	$minutes = '00';
+			            	break;
+			            case '0.25':
+			            	$minutes = '15';
+			            	break;
+			            case '0.5':
+			            	$minutes = '30';
+			            	break;
+			            case '0.75':
+			            	$minutes = '45';
+			            	break;
+		            }
+		            $slots[$date][floor($time).":".$minutes]['count'] = 0;
+		            $slots[$date][floor($time).":".$minutes]['containers'] = array();
+	/*
+		            $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['count'] = 0;
+		            $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['containers'] = '';
+	*/
+				}
             }
 
 		}
@@ -81,6 +85,8 @@
 
 		$data['starttime'] = '10:00';
 		$data['endtime'] = '16:00';
+		$data['lunchtime'] = '13:00';
+		$data['lunchduration'] = '1';
 		$data['timeslot'] = '0.5';
 
 		for($i=1;$i<60;$i++) {
@@ -100,6 +106,15 @@
 			), 'required'=> true));
 
 		// place the form elements and data in the template
+		addfield('line');
+		addfield('checkbox','Include lunch break','lunchbreak');
+		addfield('date','Lunch time','lunchtime',array('date'=>false,'time'=>true));
+		addfield('select','Lunch length','lunchduration',array('multiple'=>false,'options'=>array(
+			array('value'=> '2', 'label'=>'2 hours'),
+			array('value'=> '1', 'label'=>'1 hour'),
+			array('value'=> '0.5', 'label'=>'30 minutes') 
+			), 'required'=> true));
+
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('formelements',$formdata);
 		$cmsmain->assign('formbuttons',$formbuttons);
