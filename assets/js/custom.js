@@ -18,6 +18,10 @@ function cms_form_valutaCO(field) {
 	}
 }
 
+function toggleLunch() {
+	$('#div_lunchtime, #div_lunchduration').toggleClass('hidden');
+}
+
 function toggleDiscountFields() {
 
 	var selectedVal = $('#field_discount_type').find(":selected").val();
