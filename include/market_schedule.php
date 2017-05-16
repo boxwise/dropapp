@@ -21,40 +21,48 @@
 		foreach($_POST['dates'] as $day) {
 			$date = strftime('%A %e %B %Y',strtotime('+'.$day.' Days'));
 
-            for($time=$starttime;$time<$endtime;$time+=$_POST['timeslot'][0]) {
+   			$lunch = false;
+   			for($time=$starttime;$time<$endtime;$time+=$_POST['timeslot'][0]) {
+
+	            switch ($time-floor($time)) {
+		            case '0.0':
+		            	$minutes = '00';
+		            	break;
+		            case '0.25':
+		            	$minutes = '15';
+		            	break;
+		            case '0.5':
+		            	$minutes = '30';
+		            	break;
+		            case '0.75':
+		            	$minutes = '45';
+		            	break;
+	            }
+
 				if(!$_POST['lunchbreak'] || ($time < $_POST['lunchtime'] || $time >= ($_POST['lunchtime']+$_POST['lunchduration'][0]))) {
 
-		            switch ($time-floor($time)) {
-			            case '0.0':
-			            	$minutes = '00';
-			            	break;
-			            case '0.25':
-			            	$minutes = '15';
-			            	break;
-			            case '0.5':
-			            	$minutes = '30';
-			            	break;
-			            case '0.75':
-			            	$minutes = '45';
-			            	break;
-		            }
 		            $slots[$date][floor($time).":".$minutes]['count'] = 0;
 		            $slots[$date][floor($time).":".$minutes]['containers'] = array();
 	/*
 		            $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['count'] = 0;
 		            $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['containers'] = '';
 	*/
+				} else {
+					if(!$lunch) $slots[$date][floor($time).":".$minutes]['lunch'] = true;
+					$lunch = true;
 				}
             }
 
 		}
+		
 
 		$result = db_query('SELECT container, COUNT(id) AS count FROM people WHERE visible AND NOT deleted GROUP BY container');
 		while($row = db_fetch($result)) {
 			$slot = randomtimeslot($slots);
 			$slots[$slot['date']][$slot['time']]['count'] += $row['count'];
-			$slots[$slot['date']][$slot['time']]['containers'][] = $row['container'];
+			$slots[$slot['date']][$slot['time']]['containers'][] = $row['container'];			
 		}
+
 
 /*
 		foreach($slots as $date=>$d) {
@@ -123,11 +131,11 @@
 
 	function randomtimeslot($slots) {
 		$min = minpeople($slots);
-
+		
 		$set = array();
 		foreach($slots as $date=>$dayslots) {
 			foreach($slots[$date] as $time=>$s) {
-				if($slots[$date][$time]['count'] == $min) {
+				if($slots[$date][$time]['count'] == $min && !$slots[$date][$time]['lunch']) {
 					$set[] = array('date'=>$date,'time'=>$time);
 				}
 			}
@@ -139,8 +147,10 @@
 	function minpeople($slots) {
 		foreach($slots as $date=>$dayslots) {
 			foreach($slots[$date] as $time=>$s) {
-				$count = $slots[$date][$time]['count'];
-				if(!isset($min) || $count<$min) $min = $count;
+				if(!$slots[$date][$time]['lunch']) {
+					$count = $slots[$date][$time]['count'];
+					if(!isset($min) || $count<$min) $min = $count;
+				}
 			}
 		}
 		return $min;
