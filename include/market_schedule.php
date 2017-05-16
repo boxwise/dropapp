@@ -107,9 +107,9 @@
 
 		// place the form elements and data in the template
 		addfield('line');
-		addfield('checkbox','Include lunch break','lunchbreak');
-		addfield('date','Lunch time','lunchtime',array('date'=>false,'time'=>true));
-		addfield('select','Lunch length','lunchduration',array('multiple'=>false,'options'=>array(
+		addfield('checkbox','Include lunch break','lunchbreak', array('onchange' => 'toggleLunch()'));
+		addfield('date','Lunch time','lunchtime',array('date'=>false,'time'=>true, 'hidden'=>true));
+		addfield('select','Lunch length','lunchduration',array('multiple'=>false, 'hidden'=>true, 'options'=>array(
 			array('value'=> '2', 'label'=>'2 hours'),
 			array('value'=> '1', 'label'=>'1 hour'),
 			array('value'=> '0.5', 'label'=>'30 minutes') 
