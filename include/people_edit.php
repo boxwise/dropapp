@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'comments','camp_id');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments','camp_id');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$handler->savePost($savekeys);
 
@@ -81,6 +81,7 @@
 
  	addfield('date','Date of birth','date_of_birth', array('date'=>true, 'time'=>false));
 	addfield('line');
+	addfield('checkbox','Extra portion at food distribution','extraportion');
 	addfield('textarea','Comments','comments');
  	addfield('line');
 

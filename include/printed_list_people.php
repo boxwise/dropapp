@@ -4,7 +4,7 @@
 	$col = 40;
 	$begin = true;
 
-	$result = db_query('SELECT id, people.container, COUNT(*) AS number, FLOOR(COUNT(*)/3) AS green, COUNT(*)%3 AS red FROM people WHERE visible AND NOT deleted GROUP BY container ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
+	$result = db_query('SELECT id, people.container, COUNT(*) AS number, FLOOR((COUNT(*) + SUM(extraportion))/3) AS green, (COUNT(*) + SUM(extraportion))%3 AS red, SUM(extraportion) AS extra FROM people WHERE visible AND NOT deleted GROUP BY container ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
 	while($row = db_fetch($result)) {
 		if($begin) {
 			$row['begin'] = true;
@@ -20,7 +20,7 @@
 		$row['type'] = 'familyhead';
 		$list[] = $row;
 
-		$result2 = db_query('SELECT CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender FROM people AS p WHERE visible AND NOT deleted AND container = "'.$row['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
+		$result2 = db_query('SELECT CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender, extraportion AS extra FROM people AS p WHERE visible AND NOT deleted AND container = "'.$row['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
 		while($row2 = db_fetch($result2)) {
 			$row2['type'] = 'member';
 			if(!$row2['age']) $row2['age'] = '?';
