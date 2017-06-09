@@ -35,15 +35,21 @@
 			return this.each(function(){
 				var i = 1;
 				var $this = $(this),
-             		data = $this.data('zortable')
-		        	
-             	if(!data){
-             		// bind settings to element
-             		$this.data('zortable', settings)
+					data = $this.data('zortable')
+
+					if(!data){
+						// bind settings to element
+						$this.data('zortable', settings)
              		
-             		// fix the markup
-					methods.fixmarkup.apply($this)
+         		// fix the markup
+						methods.fixmarkup.apply($this);
 					
+						$this.closest('.sticky-header-container').scroll(function(){
+							if($('.cloned').length){
+						    methods.enabledroppables.apply($this)
+							}
+						});
+
 					$this.on('mouseover', 'tr.item-zortable:not(.inbetween, .no-drag)', function(){
 			    		$(this).filter(function(){
 			    			// depending on the startlevel
@@ -70,14 +76,17 @@
 					        zIndex: 100,
 					        revert: 'invalid',
 					        start: function(e, ui) {
+					        	// enable droppables
+					        	methods.enabledroppables.apply($this)
+
 					        	var currentTarget = $(e.currentTarget);
 					        	draggedItems = currentTarget.data('draggedItems')
 					        	
 					        	// fix width of table
 					        	$(ui.helper).width(currentTarget.width())
 					        					        	
-								// hide all dragged items and open space below
-					        	draggedItems.addClass('cloned').filter(':last').next().find('td').css({height: ($(ui.helper).height() + 1)})
+										// hide all dragged items and open space below
+					        	draggedItems.addClass('cloned').filter(':last').next().find('td').css({height: ($(ui.helper).height() + 1)}).addClass('hover');
 					        	
 					        	// cancel drag/drop with ESC
 					        	$(document).on('keyup', function(e){
@@ -86,55 +95,55 @@
 						        		draggedItems.trigger('mouseup')
 						        		
 						        		// close all dropzones
-				       			        $('.inbetween .hover').removeClass('hover').css({height: 1})
-				       			        $('tr.hover').removeClass('hover').find('.parent-indent').css({height: 1})
+		       			        $('.inbetween .hover').removeClass('hover').css({height: 1})
+		       			        $('tr.hover').removeClass('hover').find('.parent-indent').css({height: 1})
 				       			        
-				       			        // open dropzone of revert
+		       			        // open dropzone of revert
 						        		draggedItems.filter(':last').next().find('td').css({height: ($(ui.helper).height() + 1)}).addClass('revert-to-me')
 						        		
 						        		$(document).off('keyup')
 					        		}
 					        	})
 
-								// disable dropping depending on the amount of levels
+										// disable dropping depending on the amount of levels
 					        	if($this.data('zortable').maxlevel >= 0){
 						        	var currentLevel = currentTarget.data('level');
 						        	var levels = 0;
 
-						        	// made this to prevent being able to drag items with children to levels beyond what's allowed, but buggy, for now disabled
-						        	// draggedItems.each(function(){
-						        	// 	var el = $(this)
-						        	// 	if(el.data('level') > currentLevel){
-						        	// 		currentLevel = el.data('level');
-						        	// 		levels++;
-						        	// 	}
-						        	// })
+						        	//made this to prevent being able to drag items with children to levels beyond what's allowed, but buggy, for now disabled
+						        	draggedItems.each(function(){
+						        		var el = $(this)
+						        		if(el.data('level') > currentLevel){
+						        			currentLevel = el.data('level');
+						        			levels++;
+						        		}
+						        	})
 
-						        	$this.find('tr').each(function(){
-						        		var el = $(this);
-						        		
-						        		// disable childing
-										if(el.data('level') + levels >= $this.data('zortable').maxlevel && el.is('.ui-droppable')){
-											el.droppable('disable')
-										}
-										
-										// disable siblinging
-										if(el.data('level') + levels > $this.data('zortable').maxlevel){
-											el.find('.ui-droppable').droppable('disable')
-										}
-						        	})					        		
+						      		$this.find('tr').each(function(){
+							      		var el = $(this);
+							        		
+												// disable childing
+												if(el.data('level') + levels >= $this.data('zortable').maxlevel && el.is('.ui-droppable')){
+													el.droppable('disable')
+												}
+												
+												// disable siblinging
+												if(el.data('level') + levels > $this.data('zortable').maxlevel){
+													el.find('.ui-droppable').droppable('disable')
+												}
+											})
 					        	}
 							},
 							stop: function(e, ui){
 								$(e.target).data('draggedItems').removeClass('cloned')
-					        	$this.find('.ui-droppable').droppable('enable')
-					        	
-					        	// close revert dropzone
-						        $(e.target).data('draggedItems').filter(':last').next().find('td').css({height: 1}).removeClass('revert-to-me')
-							}
+									$this.find('.ui-droppable').droppable('enable')
+
+									// close revert dropzone
+									$(e.target).data('draggedItems').filter(':last').next().find('td').css({height: 1}).removeClass('revert-to-me')
+								}
 					    })
 				    });
-             	}
+          }
 			});		
 		},
 		fixmarkup : function() {
@@ -142,41 +151,17 @@
 				var $this = $(this);
 				
 				// remove useless inbelow
-				$this.find('.inbelow').each(function(){
-					var el = $(this)
-					if(el.prev('.level-'+ (el.data('level') - 1)).length){
-						el.remove();
-					}
-				})
-
-				// add inbetweens
-				$this.find('tr:not(.inbetween)').each(function(){
-					var el = $(this)
-					var colspan = el.find('td').length;
-					var inbetween = $('<tr class="level-'+el.data('level')+' inbetween"><td colspan="'+colspan+'"><span></span></td></tr>').data('level', el.data('level'))
-					
-					// add inabove if there isn't one yet
-					if(!el.prev('.inbetween.level-'+el.data('level')).length){
-						el.before(inbetween)
-					}
-										
-					// add inbelow
-					if(el.next().data('level') < el.data('level') || !el.next().length){
-						el.after(inbetween.clone().data('level', el.data('level')).addClass('inbelow'));
-						
-						// are we there yet? If the next elements are another level up, keep adding inbelows
-						belowel = el.next()
-						while(belowel.next().data('level') < (belowel.data('level') - 1) || (!belowel.next().length && belowel.data('level') != 0)){
-							belowel.after(inbetween.clone().data('level', (belowel.data('level') - 1)).addClass('inbelow').removeClass('level-'+el.data('level')).addClass('level-'+(belowel.data('level') - 1)));
-							belowel = belowel.next()
+				if($this.closest('table.zortable-active').length){
+					$this.find('.inbelow').each(function(){
+						var el = $(this)
+						if(el.prev('.level-'+ (el.data('level') - 1)).length){
+							el.remove();
 						}
-					}
-				})
+					})
+				} else {
+					$this.closest('table').addClass('zortable-active');
+				}				
 				
-				$this.closest('table').addClass('zortable-active');
-				
-				// make new elements droppable
-				methods.enabledroppables.apply($this)
 			})
 		},
 		enabledroppables : function( ) { 
@@ -184,9 +169,9 @@
 				var $this = $(this);
 				
 				// enable inbetween droppable
-				$this.find('.inbetween').filter(function(){
+				$this.find('.inbetween:in-viewport').filter(function(){
 	    			// depending on the startlevel
-					return $(this).data('level') >= $this.data('zortable').startlevel
+					return ($(this).data('level') >= $this.data('zortable').startlevel && $(this).data('level') <= $this.data('zortable').maxlevel)
 				}).find('td:not(.ui-droppable)').droppable({
 			        accept: '.zortable tr:not(.cancelled)',
 			        tolerance: 'touch',
@@ -194,33 +179,57 @@
 			        over: function(e, ui){
 			        
 			        	// close all other dropzones
-       			        $('.inbetween .hover').not(this).removeClass('hover').css({height: 1})
-       			        $('tr.hover').not(this).removeClass('hover').find('.parent-indent').css({height: 1})
+   			        $('.inbetween .hover').not(this).removeClass('hover').css({height: 1})
+   			        $('tr.hover').not(this).removeClass('hover').find('.parent-indent').css({height: 1})
        			        
-       			        // open this dropzone
-		            	$(this).css({ height: ($(ui.helper).height() + 1)})
+   			        // open this dropzone
+	            	$(this).css({ height: ($(ui.helper).height() + 1)})
 			        },
 			        out: function(e, ui){
 		            	$(this).css({height: 1});
 			        },
 			        drop: function(e, ui) {
 			        	var el = $(this);
-			            var parent = el.closest('tr');
+		            var parent = el.closest('tr');
 						
-						// difference between the parent level en dropped items						
-						var leveldiff = parent.data('level') - ui.draggable.data('draggedItems').filter(':first').data('level');
-						
-						// fix level diferences
-						if(leveldiff != 0){
-							methods.fixleveldiff.apply(ui.draggable.data('draggedItems'), [leveldiff]);
-						}
-						
-						// insert elements
-		                parent.before(ui.draggable.data('draggedItems'));
+								// difference between the parent level en dropped items						
+								var leveldiff = parent.data('level') - ui.draggable.data('draggedItems').filter(':first').data('level');
+								
+								// fix level diferences
+								if(leveldiff != 0){
+									methods.fixleveldiff.apply(ui.draggable.data('draggedItems'), [leveldiff]);
+								}				
 
-		                el.css({height: 1});
+								// insert elements
+		            parent.before(ui.draggable.data('draggedItems'));
+
+								// fixmarkup but only for the dropped items
+								ui.draggable.data('draggedItems').filter('tr:not(.inbetween)').each(function(){
+									var el = $(this)
+									var colspan = el.find('td').length;
+									var inbetween = $('<tr class="level-'+el.data('level')+' inbetween"><td colspan="'+colspan+'"><span></span></td></tr>').data('level', el.data('level'))
+									
+									// add inabove if there isn't one yet
+									if(!el.prev('.inbetween.level-'+el.data('level')).length){
+										el.before(inbetween)
+									}
+														
+									// add inbelow
+									if(el.next().data('level') < el.data('level') || !el.next().length){
+										el.after(inbetween.clone().data('level', el.data('level')).addClass('inbelow'));
+										
+										// are we there yet? If the next elements are another level up, keep adding inbelows
+										belowel = el.next()
+										while(belowel.next().data('level') < (belowel.data('level') - 1) || (!belowel.next().length && belowel.data('level') != 0)){
+											belowel.after(inbetween.clone().data('level', (belowel.data('level') - 1)).addClass('inbelow').removeClass('level-'+el.data('level')).addClass('level-'+(belowel.data('level') - 1)));
+											belowel = belowel.next()
+										}
+									}
+								})
+
+		            el.css({height: 1});
 			            
-			            // finish the drop
+			          // finish the drop
 				        methods.finishdrop.apply($this, [ui.draggable.data('draggedItems')]);
 			        }
 			    });				
@@ -228,9 +237,9 @@
 				
 				// // enable parent droppables
 				if($this.data('zortable').maxlevel > 0){
-					$this.find('tr:not(.ui-droppable, .inbetween, .no-drop)').filter(function(){
-		    			// depending on the startlevel
-						return $(this).data('level') >= ($this.data('zortable').startlevel -1 )
+					$this.find('tr:not(.ui-droppable, .inbetween, .no-drop):in-viewport').filter(function(){
+		    		// depending on the startlevel & maxlevel
+						return ($(this).data('level') >= ($this.data('zortable').startlevel -1 ) && $(this).data('level') <= ($this.data('zortable').maxlevel - 1))
 					}).droppable({
 				        accept: '.zortable tr:not(.cancelled)',
 				        tolerance: 'pointer',
@@ -238,11 +247,11 @@
 				        over: function(e, ui){
 				        
 				        	// close all other dropzones
-	       			        $('.inbetween .hover').not(this).removeClass('hover').css({height: 1})
-	       			        $('tr.hover').not(this).removeClass('hover').find('.parent-indent').css({height: 1})
+     			        $('.inbetween .hover').not(this).removeClass('hover').css({height: 1})
+     			        $('tr.hover').not(this).removeClass('hover').find('.parent-indent').css({height: 1})
 							
-							// open this dropzone
-		     	 	      	$(this).find('.parent-indent').css({ height: $(ui.helper).height()})
+									// open this dropzone
+	     	 	      	$(this).find('.parent-indent').css({ height: $(ui.helper).height()})
 				        },
 				        out: function(e, ui){
 		            		$(this).find('.parent-indent').css({height: 1})
@@ -251,19 +260,44 @@
 				        
 				        	var el = $(this);
 
-							// difference between the parent level en dropped items						
-							var leveldiff = el.data('level') - ui.draggable.data('draggedItems').filter(':first').data('level') + 1;
+									// difference between the parent level en dropped items						
+									var leveldiff = el.data('level') - ui.draggable.data('draggedItems').filter(':first').data('level') + 1;
 
-							// fix level differences
-							methods.fixleveldiff.apply(ui.draggable.data('draggedItems'), [leveldiff]);
+									// fix level differences
+									methods.fixleveldiff.apply(ui.draggable.data('draggedItems'), [leveldiff]);
 
-							// insert elements
-							el.after(ui.draggable.data('draggedItems'))
-				            
-    			            el.find('.parent-indent').css({height: 1});
-				            
-				            // finish the drop
-				            methods.finishdrop.apply($this, [ui.draggable.data('draggedItems')]);
+									// fixmarkup but only for the dropped items
+									ui.draggable.data('draggedItems').filter('tr:not(.inbetween)').each(function(){
+										var el = $(this)
+										var colspan = el.find('td').length;
+										var inbetween = $('<tr class="level-'+el.data('level')+' inbetween"><td colspan="'+colspan+'"><span></span></td></tr>').data('level', el.data('level'))
+										
+										// add inabove if there isn't one yet
+										if(!el.prev('.inbetween.level-'+el.data('level')).length){
+											el.before(inbetween)
+										}
+															
+										// add inbelow
+										if(el.next().data('level') < el.data('level') || !el.next().length){
+											el.after(inbetween.clone().data('level', el.data('level')).addClass('inbelow'));
+											
+											// are we there yet? If the next elements are another level up, keep adding inbelows
+											belowel = el.next()
+											while(belowel.next().data('level') < (belowel.data('level') - 1) || (!belowel.next().length && belowel.data('level') != 0)){
+												belowel.after(inbetween.clone().data('level', (belowel.data('level') - 1)).addClass('inbelow').removeClass('level-'+el.data('level')).addClass('level-'+(belowel.data('level') - 1)));
+												belowel = belowel.next()
+											}
+										}
+									})
+
+
+									// insert elements
+									el.after(ui.draggable.data('draggedItems'))
+						            
+			            el.find('.parent-indent').css({height: 1});
+			            
+			            // finish the drop
+			            methods.finishdrop.apply($this, [ui.draggable.data('draggedItems')]);
 				        }
 				    });									
 				}
@@ -277,13 +311,13 @@
 			})
 		},
 		finishdrop: function(el){
-			 return this.each(function(){
+			return this.each(function(){
 			 	var $this = $(this);
 			 	var tableparent = $(this).closest('.table-parent')
 			 	
-	        	$('.cloned').removeClass('cloned')
+	      $('.cloned').removeClass('cloned')
 	        	
-	            methods.fixmarkup.apply($this)
+	      methods.fixmarkup.apply($this)
 	            
 			 	var list = new Array();
 				$(this).find('tr:not(.inbetween)').each(function(){
@@ -293,13 +327,13 @@
 			 	input = '<input class="zortable-list" name="ids" type="hidden" value="'+JSON.stringify(list)+'">';
 				tableparent.find('fieldset').html(input)
 			 	
-  		        if($this.data('zortable').saveonchange){
+  		  if($this.data('zortable').saveonchange){
 					methods.save.apply($this)
 				} else {
 				 	$this.closest('form').trigger('changeForm')
 				}
 
-			 })
+			})
 		},
 		save : function (){
 			return this.each(function(){

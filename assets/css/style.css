@@ -699,10 +699,10 @@ textarea.select2{
 .zortable .table{
 	border-collapse: separate;
 }
-.table.zortable-active>tbody>tr>td{
+.zortable .table>tbody>tr>td{
 	border-top: none;
 }
-.table.zortable-active{
+.zortable .table{
 	border-bottom:none;
 }
 

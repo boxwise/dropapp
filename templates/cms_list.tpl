@@ -74,42 +74,48 @@
 					  	</tr>
 					</thead>
 					<tbody>
-				      {foreach $data as $row}
-						<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}" class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
-							{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit']))}item-clickable{/if}
-							{if $row['preventdelete']}item-nondeletable{/if}
-							{if $listconfig['allowmove'] && $row['level']>=$listconfig['allowmovefrom'] && $row['level']<=$listconfig['allowmoveto']}item-zortable{/if}
-							{if ($listconfig['allowselect']|is_array && $listconfig['allowselect'][$row['level']]) or (!$listconfig['allowselect']|is_array && $listconfig['allowselect'])}item-selectable{/if}">
-						{foreach $listdata as $key=>$column name="rows"}
-							{if $smarty.foreach.rows.first}
-								<td class="controls-front list-level-{$row['level']} list-column-{$key}">
-									<div class="td-content">
-										<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-										<label class="item-select-label"><input class="item-select" type="checkbox"></label>
-											{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
-												<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
-											{else}
-												<p class="td-content-field">
-											{/if}
-											{include file="cms_list_{$column['type']}.tpl"}
-											{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
-												</a>
-											{else}
-												</p>
-											{/if}
-										<div class="parent-indent"></div>
-									</div>
-								</td>
-							{else}
-								<td class="list-level-{$row['level']} list-column-{$key}">
-									<div class="td-content">{include file="cms_list_{$column['type']}.tpl"}</div>
-								</td>
-							{/if}
-
-						{/foreach}
-
-						</tr>
-				       {/foreach}
+				    {foreach $data as $row}
+				    	{if $prevlevel > $row['level']}
+				    		{while $prevlevel > $row['level']}
+					    		<tr class="level-{$prevlevel} inbetween inbelow" data-level="{$prevlevel}"><td colspan="{$listdata|@count}"><span></span></td></tr>
+									{assign var="prevlevel" value=$prevlevel-1}
+				    		{/while}
+				    	{/if}
+					    {if $listconfig['allowmove']}<tr class="level-{$row['level']} inbetween" data-level="{$row['level']}"><td colspan="{$listdata|@count}"><span></span></td></tr>{/if}				    
+							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}" class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
+								{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit']))}item-clickable{/if}
+								{if $row['preventdelete']}item-nondeletable{/if}
+								{if $listconfig['allowmove'] && $row['level']>=$listconfig['allowmovefrom'] && $row['level']<=$listconfig['allowmoveto']}item-zortable{/if}
+								{if ($listconfig['allowselect']|is_array && $listconfig['allowselect'][$row['level']]) or (!$listconfig['allowselect']|is_array && $listconfig['allowselect'])}item-selectable{/if}">
+								{foreach $listdata as $key=>$column name="rows"}
+									{if $smarty.foreach.rows.first}
+										<td class="controls-front list-level-{$row['level']} list-column-{$key}">
+											<div class="td-content">
+												<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+												<label class="item-select-label"><input class="item-select" type="checkbox"></label>
+													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
+														<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
+													{else}
+														<p class="td-content-field">
+													{/if}
+													{include file="cms_list_{$column['type']}.tpl"}
+													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
+														</a>
+													{else}
+														</p>
+													{/if}
+												<div class="parent-indent"></div>
+											</div>
+										</td>
+									{else}
+										<td class="list-level-{$row['level']} list-column-{$key}">
+											<div class="td-content">{include file="cms_list_{$column['type']}.tpl"}</div>
+										</td>
+									{/if}
+								{/foreach}
+							</tr>
+				    	{assign var=prevlevel value=$row['level']}
+				  	{/foreach}
 					</tbody>
 					{if $listfooter}
 				  	<tfoot>
