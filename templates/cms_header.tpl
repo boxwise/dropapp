@@ -23,4 +23,4 @@
     
   </head>
 
-  <body class="{$action} loading">
+  <body class="{$action} loading" data-action="{$action}">

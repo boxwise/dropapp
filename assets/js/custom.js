@@ -47,15 +47,16 @@ function selectFamily(field){
 		$('body').addClass('loading');
 		$.ajax({
 			type: 'post',
-			url: 'include/purchase.php',
+			url: 'include/check_out.php',
 			data:
 			{
 				people_id: value,
 			},
 			dataType: 'json',
 			success: function(result){
-				url = window.location;
-				window.history.pushState("purchase", "Purchase", url.toString().split("?")[0] + "?action=purchase&people_id="+value);
+				var url = window.location;
+				var action = $('body').data('action');
+				window.history.pushState(action, "Check Out", url.toString().split("?")[0] + "?action="+action+"&people_id="+value);
 				if(result.success){
 					$('#ajax-content').html(result.htmlcontent);												
 					initiateList();

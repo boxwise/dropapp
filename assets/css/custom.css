@@ -14,6 +14,9 @@ body{
 a{
 	color: #61c4ef;
 }
+a:hover{
+	color: #333;
+}
 
 hr{
 	display: block;
@@ -116,14 +119,15 @@ p#familyname{
 	list-style: none;
 }
 .people-list li.parent a{
-	color: #000;
 	font-size: 1.6em;
-}
-.people-list li a{
-	color: #aaa;
 }
 .people-comment {
 	font-weight: normal;
+	display: block;
+	font-style: italic;
+	margin: 0 0 10px 10px;
+	color: #999;
+	font-size: 12px;
 }
 /* status */
 body.status .nav-aside, body.status .header-top-inner .menu-btn, body.status nav.pushy{
@@ -182,6 +186,16 @@ body.status #div_purch .col-sm-10, body.status #div_trans .col-sm-10{
 }
 body.status #div_purch .table-nav, body.status #div_trans .table-nav{
 	display: none;
+}
+
+body.check_in .aside-form #form-submit, body.check_in .aside-form .btn-cancel{
+	display: none;
+}
+body.check_in .info-aside{
+	padding-bottom: 0;
+}
+body.check_in .familycredit{
+	border-bottom: none;
 }
 
 body.stock-list .table-parent{

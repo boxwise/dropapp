@@ -5,7 +5,7 @@
 	$ajax = checkajax();
 
 	$table = 'transactions';
-	$action = 'transactions_edit';
+	$action = 'check_out';
 
 	if(!$ajax) {
 
