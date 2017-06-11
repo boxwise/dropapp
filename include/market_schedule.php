@@ -56,7 +56,7 @@
 		}
 		
 
-		$result = db_query('SELECT container, COUNT(id) AS count FROM people WHERE visible AND NOT deleted GROUP BY container');
+		$result = db_query('SELECT container, COUNT(id) AS count FROM people WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted GROUP BY container');
 		while($row = db_fetch($result)) {
 			$slot = randomtimeslot($slots);
 			$slots[$slot['date']][$slot['time']]['count'] += $row['count'];
