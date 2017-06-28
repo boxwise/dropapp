@@ -20,7 +20,7 @@
 			$savekeys = array('people_id', 'product_id', 'count', 'description', 'drops', 'transaction_date', 'user_id','size_id');
 			$id = $handler->savePost($savekeys);
 
-			redirect('?action=purchase&people_id='.$_POST['people_id'][0]);
+			redirect('?action=check_out&people_id='.$_POST['people_id'][0]);
 		}
 
 		$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
