@@ -1,7 +1,7 @@
 <?php
 
 	$table = 'transactions';
-	$action = 'transactions_edit';
+	$action = 'sales_list';
 
 	if($_POST) {
 
@@ -43,6 +43,10 @@
 			$cmsmain->assign('formelements',$formdata);
 			$cmsmain->assign('formbuttons',$formbuttons);
 
+		} else if ($type=='export') {
+				
+			redirect('?action=sales_list_download');
+
 		} else {
 
 			# General statements for all lists 
@@ -72,7 +76,7 @@
 				addcolumn('text','Amount','aantal');
 				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)'));
 
-			} else if($type=='product') {
+			} else {
 				
 				# Distribution of sales by products 
 				$data = getlistdata('SELECT p.name, g.label AS gender, SUM(t.count) AS aantal 
@@ -87,22 +91,6 @@
 				addcolumn('text','Amount','aantal');
 				$cmsmain->assign('listfooter',array('Total sales','',$totalsales.' items ('.$totaldrops.' drops)'));
 
-			} else {
-				
-				# All Sales 
-				$data = getlistdata('SELECT pro.name AS product, gen.label AS gender, tran.count AS amount, -tran.drops AS price, tran.transaction_date AS transaction_date 
-					FROM (transactions AS tran, people AS pp)
-					LEFT OUTER JOIN products AS pro ON tran.product_id = pro.id
-					LEFT OUTER JOIN genders AS gen ON pro.gender_id = gen.id
-					WHERE tran.people_id = pp.id AND pp.camp_id = '.$_SESSION['camp']['id'].' AND tran.product_id > 0 AND tran.transaction_date >= "'.$start.' 00:00" AND tran.transaction_date <= "'.$end.' 23:59"
-					ORDER BY tran.id');
-
-				addcolumn('text','Product','product');
-				addcolumn('text','Gender','gender');
-				addcolumn('text','Amount','amount');
-				addcolumn('text','Price','price');
-				addcolumn('text','Date','transaction_date');
-				$cmsmain->assign('listfooter',array('Total sales','',$totalsales.' items', $totaldrops.' drops',''));
 			}
 
 			listsetting('allowcopy', false);
@@ -120,8 +108,6 @@
 			$cmsmain->assign('listconfig',$listconfig);
 			$cmsmain->assign('listdata',$listdata);
 		}
-
-
 
 	} else {
 				
