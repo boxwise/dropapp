@@ -6,10 +6,10 @@
 	//PHP script	
 	$action = 'need';
 
-	//Page Title
-	$cmsmain->assign('title','Needed items');
-
 	if (!$_POST && !isset($_GET['resetsearch'])) {
+
+		if($_SESSION['weeks']) $data['weeks']=$_SESSION['weeks'];
+
 		//Form to input the span for the estimation!
 		//comment
 		addfield('custom','','<div class="noprint tipofday"><h3> What do we need the next weeks?</h3><p>You will see an estimate of the clothes needed the next weeks based on the "Estimated Annual Need (EAN)". You can change the EAN in the "Products" menu. Negative effective Need means we have to much.<p><div>');
@@ -17,17 +17,20 @@
 		addfield('number', 'Weeks', 'weeks', array('required'=>true,'width'=>2));
 		$translate['cms_form_submit'] = 'Calculate Need';
 		//move data to Zmarty object
+		$cmsmain->assign('title','Needed items');
 		$cmsmain->assign('include','cms_form.tpl');
 		$cmsmain->assign('translate',$translate);
 		$cmsmain->assign('formelements',$formdata);
 		$cmsmain->assign('data',$data);
 
 	} else {
+
 		if (isset($_POST['weeks'])) $_SESSION['weeks'] = $_POST['weeks'];
 
 		//Stock List with Estimation of needed items
 		initlist();
-		listsetting('allowedit', false);
+		#click on row to get to edit the product's ean
+		listsetting('edit','products_edit');
 		listsetting('allowcopy', false);
 		listsetting('allowadd', false);
 		listsetting('allowdelete', false);
@@ -66,7 +69,6 @@
 			p.name, g.seq, s.seq';
 		
 		$data = getlistdata($query);
-		//$data['weeks']=$_SESSION['weeks']; 		//to debug
 
 		//Calucaltion of Need
 		foreach($data as $key=>$d) {
@@ -80,10 +82,11 @@
 		addcolumn('text','Size','size');
 		addcolumn('text','Need p.p.','en');
 		addcolumn('text','People','target');
-		addcolumn('text','Items','stock');
+		addcolumn('text','Stock','stock');
 		addcolumn('text','eff. Need','diff');
 
 		//move data to Zmarty object
+		$cmsmain->assign('title','Needed items for the next '.$_SESSION['weeks'].' weeks');
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
