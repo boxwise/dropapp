@@ -97,7 +97,7 @@
 
 		$table = 'transactions';
 		addfield('list','Today\'s Purchases','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count AS countupdown, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 AND DATE_FORMAT(t.transaction_date, "%Y-%m-%d") = CURDATE() ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'countupdown'=>'Amount', 'drops2'=>'Drop Coins', 'tdate'=>'Date'),
-			'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>true, 'action'=>'purchase', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
+			'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>true, 'action'=>'check_out', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
 
 		$ajaxform->assign('data',$data);
 		$ajaxform->assign('formelements',$formdata);
