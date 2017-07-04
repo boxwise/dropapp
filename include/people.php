@@ -8,7 +8,7 @@
 
 		initlist();
 
-		$cmsmain->assign('title','People');
+		$cmsmain->assign('title','All residents');
 
 		listsetting('allowcopy', false);
 		listsetting('allowmove', true);
