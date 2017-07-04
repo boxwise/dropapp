@@ -113,7 +113,7 @@
 				
 		if($_SESSION['salesstart']) $data['startdate'] = $_SESSION['salesstart']; else $data['startdate'] = strftime('%Y-%m-%d',strtotime('-7 days'));
 		if($_SESSION['salesend']) $data['enddate'] = $_SESSION['salesend']; else $data['enddate'] = strftime('%Y-%m-%d');
-		$data['type'] = 'export';
+		$data['type'] = 'product';
 
 		addfield('date','Start date','startdate',array('date'=>true,'time'=>false));
 		addfield('date','End date','enddate',array('date'=>true,'time'=>false));
