@@ -19,7 +19,7 @@
 		$transactions_export= db_array($query);
 
 		header('Content-Type: application/csv');
-		header('Content-Disposition: attachment; filename=sales_'.$start.'_'.$end.'csv');
+		header('Content-Disposition: attachment; filename=sales_'.$start.'_'.$end.'.csv');
 		header('Pragma: no-cache');
 		echo "Product,Gender,Amount,Price,Date\n";
 		foreach($transactions_export as $tran) {
@@ -32,7 +32,7 @@
 		# Open Template (possible variables title, text, cancel, action
 		$cmsmain->assign('include','download.tpl');
 		$cmsmain->assign('title','Sales between '.$start.' and '.$end);
-		$cmsmain->assign('text', array('title'=>'Export to .csv-file (for Excel or Google Docs)', 'body'=> 'The requested data is usually too large to be displayed. Please download it instead!'));
+		$cmsmain->assign('text', array('title'=>'Export to .csv file (for Excel or Google Docs)', 'body'=> 'The requested data is usually too large to be displayed. Please download it instead!'));
 		$cmsmain->assign('cancel', $cancel);
 
 	}

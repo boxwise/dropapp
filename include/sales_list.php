@@ -119,10 +119,10 @@
 		addfield('date','End date','enddate',array('date'=>true,'time'=>false));
 		addfield('line');
 		addfield('select', 'Type', 'type', array('options'=>array(
-			array('value'=>'export', 'label'=>'All Sales (for Excel)'),
 			array('value'=>'graph', 'label'=>'Sales Graph'),
 			array('value'=>'product', 'label'=>'By Product'),
-			array('value'=>'gender', 'label'=>'By Gender'))));
+			array('value'=>'gender', 'label'=>'By Gender'),
+			array('value'=>'export', 'label'=>'All Sales (for Excel)'))));
 
 		// open the template
 		$cmsmain->assign('include','cms_form.tpl');
