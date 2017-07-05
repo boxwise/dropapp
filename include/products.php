@@ -28,7 +28,7 @@
 		addcolumn('text','Items','items');
 		if($_SESSION['camp']['market']) addcolumn('text','Price','drops');
 		addcolumn('text','Description','comments');
-		if($_SESSION['camp']['id']==1) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
+		if($_SESSION['camp']['id']== 3 || $_SESSION['camp']['id'] == 1) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
 
 		listsetting('allowsort',true);
 		listsetting('allowcopy',false);
