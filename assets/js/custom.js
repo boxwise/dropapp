@@ -2,7 +2,6 @@ $(function() {
 	$('.bar').click(function(e){
 		$('body').toggleClass('different-view');
 	})
-
 })
 function cms_form_valutaCO(field) {
 	value = $('#field_'+field).val();
@@ -190,4 +189,44 @@ function getSizes(){
 	$('#field_size_id').trigger('change');
 	console.log('wef');
 */
+}
+
+function selectFood(field_array, dist_id_fieldval){
+	var val_array = field_array.map(function(field) {return $('#field_'+field).val();});
+	$('#form-submit').prop('disabled', true);
+	field_array.map(function(field) {return $('#field_'+field).prop('disabled', true);});
+	$('body').addClass('loading');
+	$.ajax({
+		type: 'post',
+		url: 'include/food_checkout_edit.php',
+		data:
+		{
+			foods: val_array,
+			dist_id: dist_id_fieldval
+		},
+		dataType: 'json',
+		success: function(result){
+			if(result.success){
+				$('#ajax-content').html(result.htmlcontent);												
+				$('#form-submit').prop('disabled', false);
+				field_array.map(function(field) {return $('#field_'+field).prop('disabled', false);});
+				$('body').removeClass('loading');
+			}
+			if(result.message){
+				var n = noty({
+					text: result.message,
+					type: (result.success ? 'success' : 'error')
+				});
+			}
+		},
+		error: function(xhr, textStatus, error){
+			console.log(xhr.statusText);
+      			console.log(textStatus);
+      			console.log(error);
+			var n = noty({
+				text: 'Something went wrong, maybe the internet connection is a bit choppy',
+				type: 'error'
+			});
+		}
+	});
 }
