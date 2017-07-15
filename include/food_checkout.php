@@ -37,14 +37,14 @@
 			ORDER BY id DESC';
 		$data = getlistdata($query);
 
-		addcolumn('text','ID','id');
-		addcolumn('text','Label','label');
+
+		addcolumn('date','Start','start_date');
+		addcolumn('text','Comment','label');
 		for ($i=1; $i<6; $i++){
 			#Status is shown in two lines
 			#addcolumn('text_break','Food '.$i,'food_'.$i, array('sec_line' => 'sec_line_'.$i, 'third_line' => 'third_line_'.$i, 'bold'=>true, 'italic'=>true));
 			addcolumn('text_break','Food '.$i,'food_'.$i, array('sec_line' => 'sec_line_'.$i, 'bold'=>true, 'italic'=>true));
 		}
-		addcolumn('date','Start','start_date');
 
 		listsetting('allowcopy', false);
 		listsetting('allowshowhide', true);

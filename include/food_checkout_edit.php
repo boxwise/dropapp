@@ -51,7 +51,7 @@
 		$table = 'food_distributions';
 		$data = db_row('SELECT * FROM '.$table.' WHERE id = :id', array('id'=>$id)); 
 		addfield('hidden','','id');
-		addfield('text', 'Name', 'label', array('required' => true));
+		addfield('text', 'Comment', 'label', array('required' => true));
 
 		#formelements for cms_form_fooddist.tpl
 		for($i = 1; $i < 6; $i++){

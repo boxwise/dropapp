@@ -322,7 +322,7 @@ $(function() {
 	$('.form').each(function(){
 		var el = $(this);
 		$('.form').validate({
-			ignore: [],
+			ignore: ".no-validate",
 			submitHandler: function(form){
 				$('#form-submit').prop('disabled', true);
 				$('body').addClass('loading');
