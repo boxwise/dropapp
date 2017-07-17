@@ -1,6 +1,7 @@
 <?php
 
-	$table = $action;
+	$table = 'people';
+	$action = 'people_edit';
 	$ajax = checkajax();
 	if(!DEFINED('CORE')) include('core.php');
 
@@ -11,19 +12,21 @@
 		$cmsmain->assign('title','Residents');
 
 		listsetting('allowcopy', false);
-		listsetting('allowmove', true);
+		listsetting('allowmove', false);
 		listsetting('allowmoveto', 1);
  		listsetting('allowsort',false);
  		listsetting('allowshowhide',false); 		
+ 		listsetting('allowdelete',false); 		
+ 		#listsetting('allowselect',array(1));
 		listsetting('search', array('firstname','lastname', 'container'));
-		listsetting('add', 'New person');
+		listsetting('allowadd', false);
 
 		listsetting('haspagemenu', true);
-		addpagemenu('all', 'All', array('link'=>'?action=people', 'active'=>true));
-		addpagemenu('deleted', 'Deleted', array('link'=>'?action=people_trash'));
+		addpagemenu('all', 'All', array('link'=>'?action=people'));
+		addpagemenu('deleted', 'Deleted', array('link'=>'?action=people_trash', 'active'=>true));		
 
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
-		$data = getlistdata('SELECT (SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1) AS lastactive, people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops FROM people LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id WHERE NOT people.deleted AND people.camp_id = '.$_SESSION['camp']['id'].' GROUP BY people.id');
+		$data = getlistdata('SELECT (SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1) AS lastactive, people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops FROM people LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id WHERE people.deleted > DATE_SUB(NOW(), INTERVAL 1 MONTH) AND people.camp_id = '.$_SESSION['camp']['id'].' GROUP BY people.id ORDER BY deleted DESC');
 
 		addcolumn('text','Lastname','lastname');
 		addcolumn('text','Firstname','firstname');
@@ -33,7 +36,7 @@
 		addcolumn('text','Drops','drops');
 		addcolumn('datetime','Last active','lastactive');
 
-		addbutton('give','Give drops',array('icon'=>'fa-tint','oneitemonly'=>false));
+		addbutton('undelete','Recover',array('icon'=>'fa-history','oneitemonly'=>false));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
@@ -57,6 +60,11 @@
 		    case 'delete':
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listDelete($table, $ids);
+		        break;
+
+		    case 'undelete':
+				$ids = explode(',',$_POST['ids']);
+		    	list($success, $message, $redirect) = listUnDelete($table, $ids);
 		        break;
 
 		    case 'copy':

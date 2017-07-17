@@ -3,6 +3,13 @@
 		<div class="row row-title">
 			<div class="col-sm-12">
 				<h1>{$title}</h1>
+				{if $listconfig['haspagemenu']}
+					<ul class="pagemenu list-unstyled">
+					{foreach $listconfig['pagemenu'] as $code=>$pagemenu}
+						<li><a class="{if $pagemenu['active']}active{/if}" href="{$pagemenu['link']}">{$pagemenu['label']}</a>
+					{/foreach}
+					</ul>
+				{/if}
 			</div>
 		</div>
 		<div class="table-parent {if $listconfig['tree']}list-tree{/if} {if $listconfig['allowsort']}sortable{/if} {if $listconfig['allowmove']}zortable{/if}" data-table="tablename" data-startlevel="{$listconfig['allowmovefrom']}" data-maxlevel="{if $listconfig['tree']}{$listconfig['allowmoveto']}{else}0{/if}" data-inheritvisibility="{$settings['inheritvisibility']}" data-action="{$listconfig['thisfile']}" data-saveonchange="1" {if $listconfig['maxheight']}data-maxheight="{$listconfig['maxheight']}"{/if}>
@@ -45,7 +52,7 @@
 					{/if}
 				</ul>
 				<ul class="navigations pull-right list-unstyled">
-{include file="cms_list_filter.tpl"}
+					{include file="cms_list_filter.tpl"}
 					{if $listconfig['search']}
 						<li>
 							<form method="post">
@@ -75,7 +82,7 @@
 					</thead>
 					<tbody>
 				    {foreach $data as $row}
-				    	{if $prevlevel > $row['level']}
+				    	{if $prevlevel > $row['level'] && $listconfig['allowmove']}
 				    		{while $prevlevel > $row['level']}
 					    		<tr class="level-{$prevlevel} inbetween inbelow" data-level="{$prevlevel}"><td colspan="{$listdata|@count}"><span></span></td></tr>
 									{assign var="prevlevel" value=$prevlevel-1}

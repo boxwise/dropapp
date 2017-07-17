@@ -604,8 +604,15 @@ function initiateList(){
 								    case 'delete':
 										allTargets.fadeOut(200, function(){
 											$(this).remove();
-										});
-								        break;
+										});								        
+								    break;
+
+								    case 'undelete':
+										allTargets.fadeOut(200, function(){
+											$(this).remove();
+										});								        
+								    break;
+
 								    case 'hide':
 								    	if(parent.data('inheritvisibility')){
 											allTargets.addClass('item-hidden')								    	
