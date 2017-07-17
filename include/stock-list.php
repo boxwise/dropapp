@@ -29,7 +29,7 @@
 	$query .= join(',',$insert);
 
 	$query .= 'FROM sizegroup AS sg, products AS p,	genders AS g, sizes AS s
-		WHERE p.gender_id = g.id AND p.sizegroup_id = sg.id AND s.sizegroup_id = sg.id AND NOT p.deleted
+		WHERE p.gender_id = g.id AND p.sizegroup_id = sg.id AND s.sizegroup_id = sg.id AND NOT p.deleted AND p.visible
 		GROUP BY p.name, g.id, s.label
 		ORDER BY p.name, g.seq, s.seq';
 	
