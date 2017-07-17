@@ -163,10 +163,20 @@ class formHandler {
 				if($fields[$key]['Type']=='float' && $fields[$key]['Null']=="NO") $new = floatval($new);
 				if(substr($fields[$key]['Type'],0,3)=='int' && $fields[$key]['Null']=="NO") $new = intval($new);
 
-				if($old[$key]!=$new) $change .= $key.' changed from "'.$old[$key].'" to "'.$new.'"'."; ";
+				if($old[$key]!=$new) {
+					if(substr($fields[$key]['Type'],0,3)=='int') {
+						db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, to_int) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :old, :new)', array('table'=>$this->table,'id'=>$this->id,'change'=>$key,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR'], 'old'=>$old[$key], 'new'=>$new));
+					} else if($fields[$key]['Type']=='float') {
+						db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_float, to_float) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :old, :new)', array('table'=>$this->table,'id'=>$this->id,'change'=>$key,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR'], 'old'=>$old[$key], 'new'=>$new));
+
+					} else {
+						$change .= $key.' changed from "'.$old[$key].'" to "'.$new.'"'."; ";
+						db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', array('table'=>$this->table,'id'=>$this->id,'change'=>$change,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR']));
+					}
+
+				}
 			}
 		}
-		if($change) db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', array('table'=>$this->table,'id'=>$this->id,'change'=>$change,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR']));
 	}
 
 	function saveMultilanguage($keys) {
