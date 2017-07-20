@@ -17,7 +17,7 @@
 				{foreach $element['listdata'] as $key=>$column}
 				{if $column['type']=="input"}
 				<td> 
-					<input type="number" name="ftran[{$row['id']}][{$column['food_id']}]" placeholder="{$row[$key]}" class="form-control">
+					<input type="number" name="ftran[{$row['id']}][{$column['food_id']}]" placeholder="{$row[$key]}" class="form-control check-minmax">
 				</td>
 				{else}
 				<td class="list-level-0 list-column-{$key}">

@@ -39,8 +39,10 @@
 					}
 				}
 			}
+			$cmsmain->assign('post',$post);
 
-			if(!$id) redirect('?action=food_checkout_edit&origin=food_checkout&id='.$_POST['dist_id']);
+			if($post['__action']=='submitandcancel') redirect('?action='.$post['_origin']);
+			if(!$id) redirect('?action=food_checkout_edit&origin='.$post['_origin'].'&id='.$_POST['dist_id']);
 		}
 
 		#Form
@@ -75,9 +77,12 @@ EOD;
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('formelements',$formdata);
-		$translate['cms_form_submit'] = 'Save last changes';
+		addformbutton('submitandcancel', 'Save & Go back'); 
+		$cmsmain->assign('formbuttons',$formbuttons);
+		$translate['cms_form_submit'] = 'Save';
 		$translate['cms_form_cancel'] = 'Go back';
 		$cmsmain->assign('translate',$translate);
+		$cmsmain->assign('checkConnectionOnSubmit', 'true');
 
 	} else {
 		
