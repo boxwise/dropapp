@@ -235,7 +235,7 @@ $('.checkConnectionOnSubmit').on('click', function(ev){
 	ev.preventDefault();
 	$.ajax({
 		type: 'post',
-		url: 'include/ajax_internet_check.php',
+		url: 'library/ajax/checkconnection.php',
 		success: function(){
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).attr('value', $(this).attr('value')).appendTo('#cms_form');
 			$('#cms_form').submit();
