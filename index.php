@@ -68,10 +68,10 @@
 
 	$allowedfunctions = array('cms_profile','exitloginas','give','transactions','start');
 
-	$allowed = db_numrows('SELECT id FROM cms_functions AS f, cms_access AS x WHERE x.cms_functions_id = f.id AND x.cms_users_id = :user_id AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action)',array('user_id'=>$_SESSION['user']['id'], 'action'=>$action));
+	$allowed = db_numrows('SELECT id FROM cms_functions AS f, cms_access AS x WHERE x.cms_functions_id = f.id AND x.cms_users_id = :user_id AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action OR CONCAT(f.include,"_download") = :action)',array('user_id'=>$_SESSION['user']['id'], 'action'=>$action));
 	$allowed = true;
 	
-	$allowedincamp = db_numrows('SELECT id FROM cms_functions AS f, cms_functions_camps AS x WHERE x.cms_functions_id = f.id AND x.camps_id = :camp_id AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action)',array('camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));
+	$allowedincamp = db_numrows('SELECT id FROM cms_functions AS f, cms_functions_camps AS x WHERE x.cms_functions_id = f.id AND x.camps_id = :camp_id AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action OR CONCAT(f.include,"_download") = :action)',array('camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));
 
 	if  (($allowed&&$allowedincamp) || $_SESSION['user']['is_admin'] || ($_SESSION['user']['usertype']=='family' && $action == 'status') || in_array($action,$allowedfunctions)) {
 		@include('include/'.$action.'.php');
