@@ -32,10 +32,19 @@ function showHistory($table,$id) {
 	while($row = db_fetch($result)) {
 		$row['changedate'] = strftime('%A %d %B %Y, %H:%M',strtotime($row['changedate']));
 		$row['changes'] = strip_tags($row['changes']);
-		if($row['from_int']) {
-			$row['changes'] .= ' changed from '.$row['from_int'].' to '.$row['to_int'].'; ';
-		} else if ($row['from_float']){
-			$row['changes'] .= ' changed from '.$row['from_float'].' to '.$row['to_float'].'; ';
+		if(!(is_null($row['to_int']) && is_null($row['to_float']))) {
+		       	$row['changes'] .= ' changed'; 
+			if(!is_null($row['from_int'])) {
+				$row['changes'] .= ' from '.$row['from_int'];
+			} else if(!is_null($row['from_float'])){
+				$row['changes'] .= ' from '.$row['from_float'];
+			}
+			if(!is_null($row['to_int'])) {
+				$row['changes'] .= ' to '.$row['to_int'];
+			} else if(!is_null($row['to_float'])){
+				$row['changes'] .= ' to '.$row['to_float'];
+			}
+			$row['changes'] .= '; ';
 		}
 		$row['truncate'] = strlen($row['changes']) > 300;
 		$history[] = $row;
