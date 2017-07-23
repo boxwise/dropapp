@@ -135,14 +135,14 @@ EOD;
 		}
 		$query .= ' WHERE p.parent_id=0 AND p.camp_id = '.$camp_id;
 		if($dist_id) {
-			$query .= ' AND fd.id='.$dist_id.' AND COALESCE(p.created, 0) < fd.created AND ((NOT p.deleted AND p.visible) OR fd.created < p.deleted)';
+			$query .= ' AND fd.id='.$dist_id.' AND COALESCE(p.created, 0) < fd.created AND (NOT p.deleted OR fd.created < p.deleted)';
 		} else {
-			$query .= ' AND NOT p.deleted AND p.visible';
+			$query .= ' AND NOT p.deleted';
 		}
 		foreach($food_array as $fkey => $fval) {
 			$query .= ' AND f'.$fkey.'.id = '.$fval; 
 		}
-		$query .= ' ORDER BY container';
+		$query .= ' ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1';
 		$ftdata =getlistdata($query);
 
 		#Table Definitions
