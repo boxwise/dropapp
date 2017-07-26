@@ -77,8 +77,7 @@ var chart = AmCharts.makeChart( "chartdiv", {
 		<div class="affix aside-content">
 		<div class="tipofday">
 			<h3>💡 Tip of the day: {$data['tip']['title']}</h3>
-			<p>{$data['tip']['content']} <br></br></p>
-			<p>Do you have any questions? Check out the manual <a target="_blank" href="https://docs.google.com/document/d/1Cr5Fl5xHYVcMmtN0Z3Ld2TqEaxaRlXWH_jz5Enj6XsY/	edit#heading=h.b2dhx9rzowft">here</a>.</p>
+			<p>{$data['tip']['content']}</p>
 		</div>
 		</div>
 	</aside>
