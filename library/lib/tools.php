@@ -93,7 +93,7 @@ function CMSmenu() {
 	}
 */
 
-	$result1 = db_query('SELECT f.* FROM cms_functions AS f WHERE f.parent_id = 0 ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id']));
+	$result1 = db_query('SELECT f.* FROM cms_functions AS f WHERE f.visible AND f.parent_id = 0 ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id']));
 	while($row1 = db_fetch($result1)) {
 
 		$submenu = array();
