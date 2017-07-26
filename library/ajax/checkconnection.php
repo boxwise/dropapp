@@ -2,5 +2,5 @@
 	require_once('core.php');
 	$ajax = checkajax();
 	if($ajax) {
-		echo false;
+		echo true;
 	}
