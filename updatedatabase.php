@@ -7,13 +7,14 @@
 
 	if(!db_fieldexists('cms_functions','visible')) {
 		echo "Created field 'visible' in table 'cms_functions'<br />";
-		db_query('ALTER TABLE `cms_functions` ADD `visible` VARCHAR(255)');
+		db_query('ALTER TABLE `cms_functions` ADD `visible` TINYINT  NOT NULL');
+		db_query('UPDATE `cms_functions` SET `visible` = 1');
 	} else {
 		echo "Field 'visible' in table 'cms_functions' already exists<br />";
 	}
 	if(!db_fieldexists('cms_functions','allusers')) {
 		echo "Created field 'allusers' in table 'cms_functions'<br />";
-		db_query('ALTER TABLE `cms_functions` ADD `allusers` VARCHAR(255)');
+		db_query('ALTER TABLE `cms_functions` ADD `allusers` TINYINT  NOT NULL');
 	} else {
 		echo "Field 'allusers' in table 'cms_functions' already exists<br />";
 	}
