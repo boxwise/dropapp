@@ -5,6 +5,19 @@
 	
 	echo "<strong>Database update script</strong><br />";
 
+	if(!db_fieldexists('cms_functions','visible')) {
+		echo "Created field 'visible' in table 'cms_functions'<br />";
+		db_query('ALTER TABLE `cms_functions` ADD `visible` VARCHAR(255)');
+	} else {
+		echo "Field 'visible' in table 'cms_functions' already exists<br />";
+	}
+	if(!db_fieldexists('cms_functions','allusers')) {
+		echo "Created field 'allusers' in table 'cms_functions'<br />";
+		db_query('ALTER TABLE `cms_functions` ADD `allusers` VARCHAR(255)');
+	} else {
+		echo "Field 'allusers' in table 'cms_functions' already exists<br />";
+	}
+
 	if(!db_fieldexists('products','comments')) {
 		echo "Created field 'comments' in table 'products'<br />";
 		db_query('ALTER TABLE `products` ADD `comments` VARCHAR(255)');
