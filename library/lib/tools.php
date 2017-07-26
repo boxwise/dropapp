@@ -99,9 +99,9 @@ function CMSmenu() {
 		$submenu = array();
 
 		if($_SESSION['user']['is_admin']) {
-			$result2 = db_query('SELECT f.*, title_'.$lan.' AS title FROM cms_functions AS f LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id WHERE x2.camps_id = :camp AND f.parent_id = :parent_id ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id']));
+			$result2 = db_query('SELECT f.*, title_'.$lan.' AS title FROM cms_functions AS f LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id WHERE f.visible AND x2.camps_id = :camp AND f.parent_id = :parent_id ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id']));
 		} else {
-			$result2 = db_query('SELECT *, title_'.$lan.' AS title FROM (cms_functions AS f, cms_access AS x, cms_users AS u) LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id WHERE x2.camps_id = :camp AND u.id = x.cms_users_id AND f.id = x.cms_functions_id AND u.id = :user_id AND (f.parent_id = :parent_id) ORDER BY seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id'],'user_id'=>$_SESSION['user']['id']));
+			$result2 = db_query('SELECT *, title_'.$lan.' AS title FROM (cms_functions AS f, cms_access AS x, cms_users AS u) LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id WHERE f.visible AND x2.camps_id = :camp AND u.id = x.cms_users_id AND f.id = x.cms_functions_id AND u.id = :user_id AND (f.parent_id = :parent_id) ORDER BY seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id'],'user_id'=>$_SESSION['user']['id']));
 		}
 
 		while($row2 = db_fetch($result2)) {
