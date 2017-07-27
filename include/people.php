@@ -34,6 +34,8 @@
 		addcolumn('datetime','Last active','lastactive');
 
 		addbutton('give','Give drops',array('icon'=>'fa-tint','oneitemonly'=>false));
+		addbutton('merge','Merge to family',array('icon'=>'fa-chain','oneitemonly'=>false));
+		addbutton('detach','Detach from family',array('icon'=>'fa-chain-broken','oneitemonly'=>false));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
@@ -43,6 +45,55 @@
 
 	} else {
 		switch ($_POST['do']) {
+		    case 'merge':
+				$ids = explode(',',$_POST['ids']);
+				foreach($ids as $key=>$value) {
+					if(db_value('SELECT parent_id FROM people WHERE id = :id',array('id'=>$value))) {
+						$containsmembers = true;
+					}
+				}
+				if ($containsmembers) {
+					$message = 'Please select only individuals or family heads to merge';
+					$success = false;
+				} elseif (count($ids)==1) {
+					$message = 'Please select more than one person to merge them into a family';
+					$success = false;
+				} else {
+					$oldest = db_value('SELECT id FROM people WHERE id IN ('.$_POST['ids'].') ORDER BY date_of_birth ASC LIMIT 1');
+					$extradrops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id IN ('.$_POST['ids'].') AND people_id != :oldest', array('oldest'=>$oldest));
+					foreach($ids as $id) {
+						if($id!=$oldest) {
+							db_query('UPDATE people SET parent_id = :oldest WHERE id = :id',array('oldest'=>$oldest,'id'=>$id));
+							$drops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id',array('id'=>$id));
+							db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$id.', -'.$drops.', "Drops moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+						}
+					}
+					db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$oldest.', '.$extradrops.', "Drops moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
+					$success = true;
+					$redirect = true;
+					correctchildren();
+					
+				}
+		        break;
+
+			case 'detach':
+				$ids = explode(',',$_POST['ids']);
+				foreach($ids as $key=>$value) {
+					if(!db_value('SELECT parent_id FROM people WHERE id = :id',array('id'=>$value))) {
+						$containsmembers = true;
+					}
+				}
+				if ($containsmembers) {
+					$message = 'Please select only members of a family, not family heads';
+					$success = false;
+				} else {
+					foreach($ids as $id) {
+						db_query('UPDATE people SET parent_id = 0 WHERE id = :id',array('id'=>$id));
+					}
+					$redirect = true;
+					$success = true;
+				}
+				break;
 		    case 'give':
 				$ids = ($_POST['ids']);
 				$success = true;
@@ -81,6 +132,12 @@
 		die();
 	}
 
+	function correctchildren() {
+		$result = db_query('SELECT (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AS newparent, p1.id FROM people AS p1 WHERE p1.parent_id > 0 AND (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AND NOT deleted');
+		while($row = db_fetch($result)) {
+			db_query('UPDATE people SET parent_id = :newparent WHERE id = :id',array('newparent'=>$row['newparent'],'id'=>$row['id']));
+		}
+	}
 	function correctdrops($id) {
 		#$action = 'correctDrops({id:847, value: 1400}, {id:14, value: 1900})';
 
