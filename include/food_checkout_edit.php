@@ -82,7 +82,7 @@ EOD;
 		$translate['cms_form_submit'] = 'Save';
 		$translate['cms_form_cancel'] = 'Go back';
 		$cmsmain->assign('translate',$translate);
-		#$cmsmain->assign('checkConnectionOnSubmit', 'false');
+		$cmsmain->assign('checkConnectionOnSubmit', 'true');
 
 	} else {
 		
