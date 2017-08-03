@@ -66,7 +66,7 @@
 	
 	$cmsmain->assign('menu',CMSmenu());
 
-	$allowed = db_numrows('SELECT id FROM cms_functions AS f, cms_access AS x WHERE x.cms_functions_id = f.id AND x.cms_users_id = :user_id AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action OR CONCAT(f.include,"_download") = :action)',array('user_id'=>$_SESSION['user']['id'], 'action'=>$action));
+	$allowed = db_numrows('SELECT id FROM cms_functions AS f LEFT OUTER JOIN cms_access AS x ON x.cms_functions_id = f.id WHERE (x.cms_users_id = :user_id OR f.allusers) AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action OR CONCAT(f.include,"_download") = :action)',array('user_id'=>$_SESSION['user']['id'], 'action'=>$action));
 	#$allowed = true;
 	
 	$allowedincamp = db_numrows('SELECT id FROM cms_functions AS f LEFT OUTER JOIN cms_functions_camps AS x ON x.cms_functions_id = f.id WHERE (x.camps_id = :camp_id OR f.allusers) AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action OR CONCAT(f.include,"_download") = :action)',array('camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));

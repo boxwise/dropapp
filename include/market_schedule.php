@@ -3,6 +3,9 @@
 	$weekdays = array('الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','يوم السبت');
 	$months = array('كانون الثاني','فبراير','مارس','أبريل','قد','يونيو','يوليو','أغسطس','سبتمبر','شهر اكتوبر','تشرين الثاني','ديسمبر');
 
+	$weekdays_french = array('Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi');
+	$months_french = array('Janvier','Février','Mars','Avril','Mai','Juin','Julliet','Août','Septembre','Octobre','Novembre','Decembre');
+
 	$action = 'market_schedule';
 	
 	if($_POST) {
@@ -77,8 +80,12 @@
 		$cmsmain->assign('include','market_schedule.tpl');
 
 		$cmsmain->assign('data',$data);
+
 		$cmsmain->assign('weekdays',$weekdays);
 		$cmsmain->assign('months',$months);
+		$cmsmain->assign('weekdays_french',$weekdays_french);
+		$cmsmain->assign('months_french',$months_french);
+
 		$cmsmain->assign('slots',$slots);
 
 
