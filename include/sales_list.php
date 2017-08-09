@@ -76,6 +76,21 @@
 				addcolumn('text','Amount','aantal');
 				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)'));
 
+			} elseif($type=='byday') {
+				
+				# Distribution of sales by day
+				$data = getlistdata('SELECT DATE_FORMAT(t.transaction_date,"%d-%m-%Y") AS salesdate, SUM(t.count) AS aantal 
+					FROM (transactions AS t, people AS pp)
+					LEFT OUTER JOIN products AS p ON t.product_id = p.id
+					LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
+					WHERE t.people_id = pp.id AND pp.camp_id = '.$_SESSION['camp']['id'].' AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"
+					GROUP BY DATE_FORMAT(t.transaction_date,"%d-%m-%Y")
+					ORDER BY t.transaction_date');
+
+				addcolumn('text','Sales','salesdate');
+				addcolumn('text','Amount','aantal');
+				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)'));
+
 			} else {
 				
 				# Distribution of sales by products 
@@ -119,10 +134,11 @@
 		addfield('date','End date','enddate',array('date'=>true,'time'=>false));
 		addfield('line');
 		addfield('select', 'Type', 'type', array('options'=>array(
-			array('value'=>'graph', 'label'=>'Sales Graph'),
-			array('value'=>'product', 'label'=>'By Product'),
-			array('value'=>'gender', 'label'=>'By Gender'),
-			array('value'=>'export', 'label'=>'All Sales (for Excel)'))));
+			array('value'=>'graph', 'label'=>'Sales graph'),
+			array('value'=>'product', 'label'=>'By product'),
+			array('value'=>'gender', 'label'=>'By gender'),
+			array('value'=>'byday', 'label'=>'Total sales by day'),
+			array('value'=>'export', 'label'=>'All sales (for Excel)'))));
 
 		// open the template
 		$cmsmain->assign('include','cms_form.tpl');
