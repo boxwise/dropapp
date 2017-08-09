@@ -50,6 +50,7 @@
 				$ids = explode(',',$_POST['ids']);
 				foreach($ids as $id) {
 					db_query('UPDATE stock SET location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
+					simpleSaveChangeHistory('stock', $id, 'Box moved to '.db_value('SELECT label FROM locations WHERE id = :id',array('id'=>$_POST['option'])));
 					$count++;
 				}
 				$success = $count;

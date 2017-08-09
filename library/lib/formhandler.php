@@ -148,6 +148,8 @@ class formHandler {
 		}
 	}
 
+
+
 	function saveChangeHistory() {
 		// if no history table is present, ignore this function
 		if(!db_tableexists('history')) return;
