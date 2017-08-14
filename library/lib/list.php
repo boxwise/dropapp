@@ -370,7 +370,7 @@
 		if($hasFilter2) $query = insertwhere($query, $listconfig['filter2']['filter'].'='.db_escape($hasFilter2));
 
 
-		if($listconfig['searchvalue']) {
+		if($listconfig['searchvalue'] && !$listconfig['manualsearchquery']) {
 			foreach($listconfig['search'] as $field) {
 				$searchquery[] = '('.$field.' LIKE "%'.$listconfig['searchvalue'].'%")';
 			}
@@ -385,14 +385,15 @@
 		}
 
 /*
-		dump($query);
+		echo nl2br($query);
 		die();
 */
-
+	
 		$data = listdataquery($query,0,$parent);
 		return $data;
 
 	}
+
 
 	// inserts a where element into a new query or adds a new  element to an existing where-chain
 	function insertwhere($query, $where) {

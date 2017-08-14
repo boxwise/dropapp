@@ -22,8 +22,35 @@
 		addpagemenu('all', 'All', array('link'=>'?action=people', 'active'=>true));
 		addpagemenu('deleted', 'Deleted', array('link'=>'?action=people_trash'));
 
+		listsetting('manualsearchquery',true);
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
-		$data = getlistdata('SELECT (SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1) AS lastactive, people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops FROM people LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id WHERE NOT people.deleted AND people.camp_id = '.$_SESSION['camp']['id'].' GROUP BY people.id');
+		$data = getlistdata('
+		SELECT 
+			(SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1) AS lastactive, 
+			people.*, 
+			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
+			IF(gender="M","Male","Female") AS gender2, 
+			IF(people.parent_id,"",SUM(t2.drops)) AS drops 
+		FROM people 
+		LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
+		WHERE 
+			NOT people.deleted AND 
+			people.camp_id = '.$_SESSION['camp']['id']. 
+			($listconfig['searchvalue']?' AND
+			(lastname LIKE "%'.($listconfig['searchvalue']).'%" OR 
+			 firstname LIKE "%'.($listconfig['searchvalue']).'%" OR 
+			 container LIKE "%'.($listconfig['searchvalue']).'%" OR 
+			 (SELECT 
+			 	COUNT(id) 
+			 FROM people AS p 
+			 WHERE 
+			 	(lastname LIKE "%'.($listconfig['searchvalue']).'%" OR 
+			 	 firstname LIKE "%'.($listconfig['searchvalue']).'%" OR 
+			 	 container LIKE "%'.($listconfig['searchvalue']).'%") AND 
+			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
+			 ))
+			':' ')
+		.'GROUP BY people.id');
 
 		addcolumn('text','Lastname','lastname');
 		addcolumn('text','Firstname','firstname');
