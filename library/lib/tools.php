@@ -172,3 +172,10 @@ function utf8_decode_array($array) {
 	}
 	return $array;
 }
+
+function simpleSaveChangeHistory($table, $record, $changes) {
+	if(!db_tableexists('history')) return;
+	
+	db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', array('table'=>$table,'id'=>$record,'change'=>$changes,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR']));
+}
+

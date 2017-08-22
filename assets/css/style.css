@@ -1125,3 +1125,7 @@ tr.level-10 td:first-child{
     padding-top: 6px;
   }
 }
+
+.warning {
+	color:#c00;
+}
