@@ -4,7 +4,7 @@
 	ini_set('display_errors',1);
 	
 	//die('Please use the online CMS!');
-	require_once($_SERVER["DOCUMENT_ROOT"].'/'.$settings['rootdir'].'library/core.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'library/core.php');
 
 	error_reporting(E_ALL);
 	ini_set('display_errors',true);

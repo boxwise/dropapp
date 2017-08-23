@@ -1,5 +1,5 @@
 <?php
-	require('core.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/'.$settings['rootdir'].'library/core.php');
 	
 	for($i=0;$i<150;$i++) {
 		echo strftime('%d-%m-%y',strtotime('-'.$i.' days')).'<br />';
