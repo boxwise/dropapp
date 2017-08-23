@@ -1,6 +1,6 @@
 <?php
 
-	require_once('core.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/'.$settings['rootdir'].'library/core.php');
 
 	$ajax = checkajax();
 

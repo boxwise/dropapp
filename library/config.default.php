@@ -1,7 +1,7 @@
 <?php
 
 	// cms settings
-	$settings['rootdir'] = '/themarket';
+	$settings['rootdir'] = '';
 
 	$settings['db_host'] = 'localhost';
 	$settings['db_user'] = '';
