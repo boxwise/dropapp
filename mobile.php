@@ -3,7 +3,7 @@
 	ini_set('display_errors',true);
 
 	$login = true; #tell core not to check login, because we use an alternate version
-	require_once('core.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/'.$settings['rootdir'].'library/core.php');
 
 	date_default_timezone_set('Europe/Athens');
 	db_query('SET time_zone = "+02:00"');
