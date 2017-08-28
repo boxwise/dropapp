@@ -1,6 +1,5 @@
 <?php
 
-	if(!DEFINED('CORE')) include('core.php');
 
 	$action = 'food_checkout';
 	$table = 'food_distributions';

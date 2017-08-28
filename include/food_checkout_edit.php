@@ -1,5 +1,5 @@
 <?php
-	require_once('core.php');
+
 
 	$ajax = checkajax();
 	$action = 'food_checkout_edit';
