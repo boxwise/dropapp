@@ -50,7 +50,7 @@
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			':' ')
-		.'GROUP BY people.id');
+		.'GROUP BY people.id ORDER BY people.seq');
 
 		addcolumn('text','Lastname','lastname');
 		addcolumn('text','Firstname','firstname');
