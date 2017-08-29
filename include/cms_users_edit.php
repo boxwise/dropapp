@@ -46,7 +46,12 @@
 
 	addfield('select','Available camps','camps',array('multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.cms_users_id IS NOT NULL, 1,0) AS selected FROM camps AS a LEFT OUTER JOIN cms_users_camps AS x ON a.id = x.camps_id AND x.cms_users_id = '.intval($id).' ORDER BY seq'));
 
-	addfield('select',$translate['cms_users_access'],'modules',array('multiple'=>true,'query'=>'SELECT a.id AS value, a.'.$functionfield.' AS label, IF(x.cms_users_id IS NOT NULL, 1,0) AS selected FROM cms_functions AS a LEFT OUTER JOIN cms_access AS x ON a.id = x.cms_functions_id AND x.cms_users_id = '.intval($id).' WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 ORDER BY a.title_en, seq'));
+	addfield('select',$translate['cms_users_access'],'modules',array('multiple'=>true,'query'=>'
+	SELECT 
+		a.id AS value, a.'.$functionfield.' AS label, IF(x.cms_users_id IS NOT NULL, 1,0) AS selected 
+	FROM cms_functions AS a 
+	LEFT OUTER JOIN cms_access AS x ON a.id = x.cms_functions_id AND x.cms_users_id = '.intval($id).' 
+	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 ORDER BY a.title_en, seq'));
 
 	if(db_tableexists('history')) {
 		$changelog = array_keys(db_simplearray('SELECT CONCAT(changedate,", ",tablename,", ",record_id,": ",changes) FROM history WHERE user_id = :id ORDER BY changedate DESC',array('id'=>$data['id'])));

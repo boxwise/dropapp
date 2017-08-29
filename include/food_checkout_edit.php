@@ -1,5 +1,6 @@
 <?php
 
+	require_once($_SERVER["DOCUMENT_ROOT"].'/'.$settings['rootdir'].'library/core.php');
 
 	$ajax = checkajax();
 	$action = 'food_checkout_edit';

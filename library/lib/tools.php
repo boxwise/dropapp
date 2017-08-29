@@ -84,15 +84,6 @@ function redirect($url, $status = 301) {
 function CMSmenu() {
 	global $action, $lan;
 
-/*
-	# deprecated
-	if($_SESSION['user']['usertype']=='family') {
-		$menu = array(0 =>
-			array('id' => '35', 'parent_id' => '0', 'title' => ($lan=='en'?'Drops':($lan=='ar'?'قطرات':'dilopên')), 'include' => '', 'seq' => '1', 'alert' => '0', 'sub' => array(0 => array('id' => '87', 'parent_id' => '35', 'title' => ($lan=='en'?'Status':($lan=='ar'?'الحالة':'Cî')), 'include' => 'status', 'seq' => '1', 'alert' => '0'))));
-		return $menu;
-	}
-*/
-
 	$result1 = db_query('SELECT f.* FROM cms_functions AS f WHERE f.visible AND f.parent_id = 0 ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id']));
 	while($row1 = db_fetch($result1)) {
 
