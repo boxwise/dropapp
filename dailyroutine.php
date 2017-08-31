@@ -22,13 +22,18 @@
 	// people that have not been active for a longer time will be deleted
 	// the amount of days of inactivity is set in the camp table
 	
-	$result = db_query('SELECT p.id, p.lastname, IF(p.modified,p.modified,p.created) AS modified, DATEDIFF(NOW(), IF(p.modified,p.modified,p.created)) AS daysnotmodified
+	$result = db_query('
+SELECT p.id, p.lastname,
+	IF( (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1) >  IF(p.modified,p.modified,p.created), (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1), IF(p.modified,p.modified,p.created)) AS modified,
+	DATEDIFF(NOW(), IF( (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1) >  IF(p.modified,p.modified,p.created), (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1), IF(p.modified,p.modified,p.created))) AS daysnotmodified
 FROM people AS p 
 LEFT OUTER JOIN camps AS c ON c.id = p.camp_id 
 WHERE 
-	NOT p.deleted AND 
+	NOT deleted AND
 	p.parent_id = 0 AND 
-	DATEDIFF(NOW(), IF(p.modified,p.modified,p.created)) > c.delete_inactive_users ');
+	DATEDIFF(NOW(), IF( (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1) >  IF(p.modified,p.modified,p.created), (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1), IF(p.modified,p.modified,p.created))) > c.delete_inactive_users
+ORDER BY daysnotmodified
+	 ');
 	 
 	while($row = db_fetch($result)) {
 		db_query('UPDATE people SET deleted = NOW() WHERE id = :id',array('id'=>$row['id']));
