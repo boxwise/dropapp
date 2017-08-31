@@ -13,6 +13,8 @@
 		
 		$locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
 
+ 		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM product_categories ORDER BY seq','filter'=>'products.category_id'));
+
 		$data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," drops") AS drops, COALESCE(SUM(s.items),0) AS items, IF(SUM(s.items),1,0) AS preventdelete FROM '.$table.'
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id

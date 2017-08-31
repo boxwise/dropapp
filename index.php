@@ -21,27 +21,10 @@
 	if ($action == 'logout') logout();
 
 	// dailyroutine is performed when the last action of any user is not of today
-	
-	$dailyroutine = db_value('SELECT IF(DATEDIFF(NOW(), lastaction)>0,1,0), lastaction FROM cms_users ORDER BY lastaction DESC LIMIT 1');
-	
- 	if($dailyroutine) {
-	 	
-	 	// this function sorts the people list on container/household id, giving the best possible overview
-		$result = db_query('SELECT id, parent_id, people.container FROM people WHERE NOT deleted AND parent_id = 0 ORDER BY camp_id, IF(container="AAA1",1,0), IF(container="?",1,0), SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
-	
-		while($row = db_fetch($result)) {
-			$i++;
-			db_query('UPDATE people SET seq = '.$i.' WHERE id = '.$row['id']);
-	
-			$j=0;
-	
-			$result2 = db_query('SELECT id FROM people WHERE NOT deleted AND parent_id = '.$row['id'].' ORDER BY DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
-			while($row2 = db_fetch($result2)) {
-				$j++;
-				db_query('UPDATE people SET seq = '.$j.' WHERE id = '.$row2['id']);
-			}
-		}	
- 	}
+	if(strftime('%Y-%m-%d')!=$settings['dailyroutine'] || $action == 'dailyroutine') {
+		db_query('UPDATE settings SET value = "'.strftime('%Y-%m-%d').'" WHERE code = "dailyroutine"');
+	 	require('dailyroutine.php');
+	}
 
 
 	$cmsmain = new Zmarty;

@@ -24,11 +24,12 @@
 					array('date'=>$date,'camp_id'=>$_SESSION['camp']['id']));
 
 				if($sales) {
-					$test = db_simplearray('SELECT p.groupname AS gender, SUM(t.count) 
+					$test = db_simplearray('SELECT c.label AS gender, SUM(t.count) 
 						AS aantal FROM (transactions AS t, people AS pp)
 						LEFT OUTER JOIN products AS p ON t.product_id = p.id
+						LEFT OUTER JOIN product_categories AS c ON c.id = p.category_id
 						WHERE t.people_id = pp.id AND pp.camp_id = :camp_id AND t.product_id > 0 AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59"
-						GROUP BY p.groupname ORDER BY SUM(t.count)',array('camp_id'=>$_SESSION['camp']['id']));
+						GROUP BY p.category_id ORDER BY SUM(t.count)',array('camp_id'=>$_SESSION['camp']['id']));
 					foreach($test as $key=>$value) {
 						$data[strftime("%a %e %b",strtotime($date))][$key] = $value;
 					}
