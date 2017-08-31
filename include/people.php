@@ -24,9 +24,12 @@
 
 		listsetting('manualquery',true);
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
+		#			 AS lastactive , 
+
 		$data = getlistdata('
 		SELECT 
-			(SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1) AS lastactive, 
+			IF(DATEDIFF(NOW(),(SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1)) > (SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
+			
 			people.*, 
 			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
 			IF(gender="M","Male","Female") AS gender2, 
@@ -52,13 +55,21 @@
 			':' ')
 		.'GROUP BY people.id ORDER BY people.seq');
 
+		foreach($data as $key=>$value) {
+			if($data[$key]['expired']) {
+				$data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active in a while"></i>'; 
+			} else {
+				$data[$key]['expired'] ='';
+			}
+		}
+
 		addcolumn('text','Lastname','lastname');
 		addcolumn('text','Firstname','firstname');
 		addcolumn('text','Gender','gender2');
 		addcolumn('text','Age','age');
 		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
 		addcolumn('text','Drops','drops');
-		addcolumn('datetime','Last active','lastactive');
+		addcolumn('html','&nbsp;','expired');
 
 		addbutton('give','Give drops',array('icon'=>'fa-tint','oneitemonly'=>false));
 		addbutton('merge','Merge to family',array('icon'=>'fa-chain','oneitemonly'=>false));
