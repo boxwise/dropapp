@@ -7,8 +7,6 @@
 
 	if(!$ajax) {
 
-		
-
 		initlist();
 
 		list($product,$gender,$size) = explode('-',$_GET['id']);
@@ -30,34 +28,34 @@
 			AND p.id = '.intval($product).' AND g.id = '.intval($gender).($size?' AND s.id = '.intval($size):''));
 
 		$data = getlistdata('
-SELECT 
-	stock.*, 
-	SUBSTRING(stock.comments,1, 25) AS shortcomment, 
-	g.label AS gender, 
-	p.name AS product, 
-	s.label AS size, 
-	IF(l.camp_id = '.$_SESSION['camp']['id'].',l.label,c.name) AS location, 
-	l.camp_id = '.$_SESSION['camp']['id'].' AS visible,
-	l.camp_id != '.$_SESSION['camp']['id'].' AS preventdelete,
-	l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit
-FROM 
-	products AS p, 
-	locations AS l, 
-	genders AS g, 
-	sizes AS s, 
-	stock,
-	camps AS c
-WHERE 
-	l.camp_id = c.id AND 
-	stock.size_id = s.id AND 
-	p.gender_id = g.id AND 
-	stock.product_id = p.id AND 
-	p.name = (SELECT name FROM products WHERE id = '.intval($product).') AND 
-	p.gender_id = '.intval($gender).' '.
-	($size?' AND s.id = '.intval($size):'').' AND 
-	NOT stock.deleted AND 
-	stock.location_id = l.id 
-	AND l.visible');
+			SELECT 
+				stock.*, 
+				SUBSTRING(stock.comments,1, 25) AS shortcomment, 
+				g.label AS gender, 
+				p.name AS product, 
+				s.label AS size, 
+				IF(l.camp_id = '.$_SESSION['camp']['id'].',l.label,c.name) AS location, 
+				l.camp_id = '.$_SESSION['camp']['id'].' AS visible,
+				l.camp_id != '.$_SESSION['camp']['id'].' AS preventdelete,
+				l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit
+			FROM 
+				products AS p, 
+				locations AS l, 
+				genders AS g, 
+				sizes AS s, 
+				stock,
+				camps AS c
+			WHERE 
+				l.camp_id = c.id AND 
+				stock.size_id = s.id AND 
+				p.gender_id = g.id AND 
+				stock.product_id = p.id AND 
+				p.name = (SELECT name FROM products WHERE id = '.intval($product).') AND 
+				p.gender_id = '.intval($gender).' '.
+				($size?' AND s.id = '.intval($size):'').' AND 
+				NOT stock.deleted AND 
+				stock.location_id = l.id 
+				AND l.visible');
 		
 		addcolumn('text','Box ID','box_id');
 		addcolumn('text','Product','product');
