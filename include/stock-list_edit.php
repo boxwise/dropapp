@@ -86,11 +86,18 @@ WHERE
 	} else {
 		switch ($_POST['do']) {
 			case 'movebox':
+				$box = db_row('SELECT * FROM stock WHERE id = :id',array('id'=>$id));
+
 				$ids = explode(',',$_POST['ids']);
 				foreach($ids as $id) {
 					db_query('UPDATE stock SET location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
 					$count++;
 				}
+
+				if($box['location_id']!=$_POST['option']) {
+					db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');						
+				}
+
 				$success = $count;
 				$message = ($count==1?'1 box is':$count.' boxes are').' moved';
 				$redirect = '?action='.$_GET['action'];

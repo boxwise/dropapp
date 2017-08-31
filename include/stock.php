@@ -52,8 +52,15 @@
 			case 'movebox':
 				$ids = explode(',',$_POST['ids']);
 				foreach($ids as $id) {
+					$box = db_row('SELECT * FROM stock WHERE id = :id',array('id'=>$id));
+
 					db_query('UPDATE stock SET location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
 					simpleSaveChangeHistory('stock', $id, 'Box moved to '.db_value('SELECT label FROM locations WHERE id = :id',array('id'=>$_POST['option'])));
+					
+					if($box['location_id']!=$_POST['option']) {
+						db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');						
+					}
+					
 					$count++;
 				}
 				$success = $count;

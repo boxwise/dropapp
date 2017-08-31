@@ -12,6 +12,11 @@
 			} while(db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id',array('box_id'=>$_POST['box_id'])));
 
 		}
+		$box = db_row('SELECT * FROM stock WHERE id = :id',array('id'=>$_POST['id']));
+		if($box['location_id']!=$_POST['location_id'][0]) {
+			db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');						
+		}
+		
 		$handler = new formHandler($table);
 
 		$savekeys = array('box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments');
