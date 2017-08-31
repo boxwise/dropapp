@@ -13,16 +13,30 @@
 
 
  		listfilter(array('label'=>'By location','query'=>'SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq','filter'=>'l.id'));
-		$statusarray = array('show'=>'All boxes');
+ 		
+		$statusarray = array('showall'=>'All boxes','ordered'=>'Ordered boxes','dispose'=>'Boxes to dispose');
 		listfilter2(array('label'=>'Only active boxes','options'=>$statusarray,'filter'=>'"show"'));
 
-		$data = getlistdata('SELECT stock.*, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS deprecatable FROM '.$table.'
+		listsetting('manualquery',true);
+		$data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox FROM '.$table.'
+			LEFT OUTER JOIN cms_users AS cu ON cu.id = stock.ordered_by
+			LEFT OUTER JOIN cms_users AS cu2 ON cu2.id = stock.picked_by
 			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
 			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
-			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id '.(!$_SESSION['filter2']['stock']?' WHERE l.visible AND l.camp_id = '.$_SESSION['camp']['id'].'':''));
+			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id 
+		WHERE l.camp_id = '.$_SESSION['camp']['id'].
+		($_SESSION['filter2']['stock']=='ordered'?' AND (stock.ordered OR stock.picked) AND l.visible':($_SESSION['filter2']['stock']=='dispose'?' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible':(!$_SESSION['filter2']['stock']?' AND l.visible':''))));
 			
-		foreach($data as $key=>$value) if($data[$key]['deprecatable']) $data[$key]['deprecatable'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This box hasn\'t been touched in 3 months or more and may be disposed"></i>'; else $data[$key]['deprecatable'] ='';
+		foreach($data as $key=>$value) {
+			if($data[$key]['oldbox']) {
+				$data[$key]['oldbox'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This box hasn\'t been touched in 3 months or more and may be disposed"></i>'; 
+			} else {
+				$data[$key]['oldbox'] ='';
+			}
+			if($data[$key]['ordered']) $data[$key]['order'] = '<i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the market by '.$data[$key]['ordered_name'].' on '.strftime('%e-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
+			if($data[$key]['picked']) $data[$key]['order'] = '<i class="fa fa-truck green tooltip-this" title="This box is picked for the market by '.$data[$key]['picked_name'].' on '.strftime('%e-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
+		}
 
 		addcolumn('text','Box ID','box_id');
 		addcolumn('text','Product','product');
@@ -31,7 +45,8 @@
 		addcolumn('text','Comments','shortcomment');
 		addcolumn('text','Items','items');
 		addcolumn('text','Location','location');
-		addcolumn('html','>3mon','deprecatable');
+		addcolumn('html','&nbsp;','oldbox');
+		addcolumn('html','&nbsp;','order');
 
 		listsetting('allowsort',true);
 		listsetting('allowcopy',false);
@@ -40,6 +55,8 @@
 		$locations = db_simplearray('SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
 		addbutton('movebox','Move',array('icon'=>'fa-arrows', 'options'=>$locations));
 		addbutton('qr','Make label',array('icon'=>'fa-print'));
+		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
+		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
@@ -54,7 +71,7 @@
 				foreach($ids as $id) {
 					$box = db_row('SELECT * FROM stock WHERE id = :id',array('id'=>$id));
 
-					db_query('UPDATE stock SET location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
+					db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
 					simpleSaveChangeHistory('stock', $id, 'Box moved to '.db_value('SELECT label FROM locations WHERE id = :id',array('id'=>$_POST['option'])));
 					
 					if($box['location_id']!=$_POST['option']) {
@@ -66,6 +83,26 @@
 				$success = $count;
 				$message = ($count==1?'1 box is':$count.' boxes are').' moved';
 				$redirect = '?action='.$_GET['action'];
+				break;
+			case 'order':
+				$ids = explode(',',$_POST['ids']);
+				foreach($ids as $id) {
+					db_query('UPDATE stock SET ordered = NOW(), ordered_by = :user, picked = NULL, picked_by = NULL WHERE id = '.intval($id), array('user'=>$_SESSION['user']['id']));
+					simpleSaveChangeHistory('stock', intval($id), 'Box ordered to warehouse ');
+					$message = 'Boxes are marked as ordered for you!';
+					$success = true;
+					$redirect = true;
+				}
+				break;
+			case 'undo-order':
+				$ids = explode(',',$_POST['ids']);
+				foreach($ids as $id) {
+					db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL WHERE id = '.$id);
+					simpleSaveChangeHistory('stock', $id, 'Box order made undone ');
+					$message = 'Boxes are unmarked as ordered';
+					$success = true;
+					$redirect = true;
+				}
 				break;
 			case 'qr':
 				$id = $_POST['ids'];

@@ -84,6 +84,10 @@
 		} elseif($_GET['saveamount']!='') {
 			require_once('mobile/saveamount.php');
 	
+		# Save the new amount of items in this box
+		} elseif(isset($_GET['vieworders'])) {
+			require_once('mobile/vieworders.php');
+	
 		# Find a box by manually entered number
 		} elseif($_GET['findbox']!='') {
 			require_once('mobile/findbox.php');

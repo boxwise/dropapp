@@ -22,7 +22,7 @@
 		addpagemenu('all', 'All', array('link'=>'?action=people', 'active'=>true));
 		addpagemenu('deleted', 'Deleted', array('link'=>'?action=people_trash'));
 
-		listsetting('manualsearchquery',true);
+		listsetting('manualquery',true);
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
 		$data = getlistdata('
 		SELECT 

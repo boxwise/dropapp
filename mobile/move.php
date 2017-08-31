@@ -6,7 +6,7 @@
 
 	$newlocation = db_row('SELECT * FROM locations AS l WHERE l.id = :location',array('location'=>intval($_GET['location'])));
 
-	db_query('UPDATE stock SET location_id = :location_id, modified = NOW(), modified_by = :user WHERE id = :id',array('location_id'=>$newlocation['id'],'id'=>$box['id'],'user'=>$_SESSION['user']['id']));
+	db_query('UPDATE stock SET location_id = :location_id, modified = NOW(), modified_by = :user, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL WHERE id = :id',array('location_id'=>$newlocation['id'],'id'=>$box['id'],'user'=>$_SESSION['user']['id']));
 	db_query('INSERT INTO history (tablename,record_id,changes,ip,changedate,user_id,from_int,to_int) VALUES ("stock",'.$box['id'].', "location_id", "'.$_SERVER['REMOTE_ADDR'].'",NOW(),'.$_SESSION['user']['id'].', '.$box['location_id'].', '.$newlocation['id'].')');
 
 	if($box['location_id']!=$newlocation['id']) {
