@@ -1,5 +1,7 @@
 <?php
 
+#	require_once('core.php');
+
 	//main MYSQL table
 	$table='stock';
 	//PHP script	

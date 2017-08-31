@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'comments','camp_id');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments','camp_id');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$handler->savePost($savekeys);
 
@@ -53,7 +53,7 @@
 			$data['adults'] = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$id));
 			$data['adults'] += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$id));
 
-			$data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE parent_id = :id OR id = :id AND visible AND NOT deleted ORDER BY parent_id, seq',array('id'=>$id));
+			$data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE (parent_id = :id OR id = :id) AND NOT deleted ORDER BY parent_id, seq',array('id'=>$id));
 
 			$data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id',array('id'=>$id));
 			$data['givedropsurl'] = '?action=give&ids='.$id;
@@ -81,6 +81,7 @@
 
  	addfield('date','Date of birth','date_of_birth', array('date'=>true, 'time'=>false));
 	addfield('line');
+	addfield('checkbox','Extra portion at food distribution','extraportion');
 	addfield('textarea','Comments','comments');
  	addfield('line');
 
@@ -88,7 +89,7 @@
 		if($id){
 			$table = 'transactions';
 			addfield('list','Purchases','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$id. ' AND t.product_id != 0 ORDER BY transaction_date DESC', 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>'Drop Coins', 'description'=>'Note','user'=>'Purchase made by', 'tdate'=>'Date'),
-		'allowedit'=>false,'allowadd'=>true, 'add'=>'New Purchase', 'addaction'=>'purchase&people_id='.intval($id),'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'allowsort'=>false, 'modal'=>false));
+		'allowedit'=>false,'allowadd'=>true, 'add'=>'New Purchase', 'addaction'=>'check_out&people_id='.intval($id),'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'allowsort'=>false, 'modal'=>false));
 
 			addfield('line','','');
 

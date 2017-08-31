@@ -21,7 +21,7 @@ function checksession() {
 function logout($redirect = false) {
 	global $settings;
 
-	db_query('UPDATE '.$settings['cms_usertable'].' SET lastaction = NULL WHERE id = :id', array('id'=>$_SESSION['user']['id']));
+	db_query('UPDATE '.$settings['cms_usertable'].' SET lastaction = "0000-00-00 00:00:00" WHERE id = :id', array('id'=>$_SESSION['user']['id']));
 
 	setcookie("autologin_user", null, time()-3600, '/');
 	setcookie("autologin_pass", null, time()-3600, '/');

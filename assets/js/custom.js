@@ -2,7 +2,6 @@ $(function() {
 	$('.bar').click(function(e){
 		$('body').toggleClass('different-view');
 	})
-
 })
 function cms_form_valutaCO(field) {
 	value = $('#field_'+field).val();
@@ -16,6 +15,10 @@ function cms_form_valutaCO(field) {
 	} else {
 		$('#field_'+field).val('€ '+PointPerThousand(value));
 	}
+}
+
+function toggleLunch() {
+	$('#div_lunchtime, #div_lunchduration').toggleClass('hidden');
 }
 
 function toggleDiscountFields() {
@@ -43,15 +46,16 @@ function selectFamily(field){
 		$('body').addClass('loading');
 		$.ajax({
 			type: 'post',
-			url: 'include/purchase.php',
+			url: 'include/check_out.php',
 			data:
 			{
 				people_id: value,
 			},
 			dataType: 'json',
 			success: function(result){
-				url = window.location;
-				window.history.pushState("purchase", "Purchase", url.toString().split("?")[0] + "?action=purchase&people_id="+value);
+				var url = window.location;
+				var action = $('body').data('action');
+				window.history.pushState(action, "Check Out", url.toString().split("?")[0] + "?action="+action+"&people_id="+value);
 				if(result.success){
 					$('#ajax-content').html(result.htmlcontent);												
 					initiateList();
@@ -186,3 +190,80 @@ function getSizes(){
 	console.log('wef');
 */
 }
+
+function selectFood(field_array, dist_id_fieldval){
+	var val_array = field_array.map(function(field) {return $('#field_'+field).val();});
+	$('#form-submit').prop('disabled', true);
+	field_array.map(function(field) {return $('#field_'+field).prop('disabled', true);});
+	$('body').addClass('loading');
+	$.ajax({
+		type: 'post',
+		url: 'include/food_checkout_edit.php',
+		data:
+		{
+			foods: val_array,
+			dist_id: dist_id_fieldval
+		},
+		dataType: 'json',
+		success: function(result){
+			if(result.success){
+				$('#ajax-content').html(result.htmlcontent);												
+				$('#form-submit').prop('disabled', false);
+				field_array.map(function(field) {return $('#field_'+field).prop('disabled', false);});
+				$('body').removeClass('loading');
+			}
+			if(result.message){
+				var n = noty({
+					text: result.message,
+					type: (result.success ? 'success' : 'error')
+				});
+			}
+		},
+		error: function(xhr, textStatus, error){
+			console.log(xhr.statusText);
+      			console.log(textStatus);
+      			console.log(error);
+			var n = noty({
+				text: 'Something went wrong, maybe the internet connection is a bit choppy',
+				type: 'error'
+			});
+		}
+	});
+}
+
+$('.checkConnectionOnSubmit').on('click', function(ev){
+	ev.preventDefault();
+	$.ajax({
+		type: 'post',
+		url: 'ajax.php?file=checkconnection',
+		success: function(){
+			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).attr('value', $(this).attr('value')).appendTo('#cms_form');
+			$('#cms_form').submit();
+		},
+		error: function(xhr, textStatus, error){
+			console.log(xhr.statusText);
+      			console.log(textStatus);
+      			console.log(error);
+			var n = noty({
+				text: 'The connection to the server is lost.',
+				type: 'error'
+			});
+		}
+	});
+});
+
+$('.check-minmax').on('input', function(ev){
+	var min = 0;
+	var max = Number($(this).attr('placeholder'));
+	var that = $(this);
+	if(that.val() < min || that.val() > max) {
+		$('.checkConnectionOnSubmit').prop('disabled',true);
+		that.addClass("error");
+	}
+	setTimeout(function(that, min, max) {
+		if(that.val() < min) that.val(min).removeClass("error");
+		if(that.val() > max) that.val(max).removeClass("error");
+				$('#form-submit').prop('disabled', false);
+		$('.checkConnectionOnSubmit').prop('disabled',false);
+	}, 2000, that, min, max);
+});

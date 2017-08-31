@@ -85,6 +85,47 @@
 		db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', array('table'=>$table,'id'=>$id,'change'=>$change,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR']));
 	}
 
+	function listUnDelete($table, $ids, $uri = false) {
+		global $translate, $action;
+
+		$hasTree = db_fieldexists($table,'parent_id');
+
+        foreach ($ids as $id) {
+       		$count += listUnDeleteAction($table,$id,0,$hasTree);
+        }
+
+        if($count) {
+					return(array(true,$translate['cms_list_undeletesuccess'],false));
+        } else {
+					return(array(false,$translate['cms_list_undeleteerror'],false));
+        }
+	}
+
+	function listUnDeleteAction($table, $id, $count = 0, $recursive = false) {
+
+    $result = db_query('UPDATE '.$table.' SET deleted = 0 WHERE id = :id',array('id'=>$id));
+		$count += $result->rowCount();
+		if($result->rowCount()) saveUnDeleteHistory($table,$id);
+
+		if($recursive) {
+			$childs = db_array('SELECT id FROM '.$table.' WHERE parent_id = :id',array('id'=>$id));
+			foreach($childs as $child) {
+				$count += listUnDeleteAction($table,$child['id'],$count,true);
+			}
+		}
+
+		return $count;
+	}
+
+	function saveUnDeleteHistory($table,$id) {
+		// if no history table is present, ignore this function
+		if(!db_tableexists('history')) return;
+		$change = 'record recovered';
+
+		db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', array('table'=>$table,'id'=>$id,'change'=>$change,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR']));
+	}
+
+
 	function listCopy($table, $ids, $field) {
 		global $translate;
 
@@ -287,6 +328,12 @@
 		foreach($options as $key=>$value) $listconfig['button'][$code][$key] = $value;
 	}
 
+	function addpagemenu($code, $label, $options = array()) {
+		global $listconfig;
+		$listconfig['pagemenu'][$code] = array('label'=>$label);
+		foreach($options as $key=>$value) $listconfig['pagemenu'][$code][$key] = $value;
+	}	
+
 	function getlistdata($query,$parent = 0) {
 		global $table, $settings, $listconfig, $action;
 
@@ -323,7 +370,7 @@
 		if($hasFilter2) $query = insertwhere($query, $listconfig['filter2']['filter'].'='.db_escape($hasFilter2));
 
 
-		if($listconfig['searchvalue']) {
+		if($listconfig['searchvalue'] && !$listconfig['manualsearchquery']) {
 			foreach($listconfig['search'] as $field) {
 				$searchquery[] = '('.$field.' LIKE "%'.$listconfig['searchvalue'].'%")';
 			}
@@ -338,14 +385,15 @@
 		}
 
 /*
-		dump($query);
+		echo nl2br($query);
 		die();
 */
-
+	
 		$data = listdataquery($query,0,$parent);
 		return $data;
 
 	}
+
 
 	// inserts a where element into a new query or adds a new  element to an existing where-chain
 	function insertwhere($query, $where) {

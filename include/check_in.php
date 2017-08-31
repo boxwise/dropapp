@@ -1,11 +1,11 @@
 <?php
 
-	require_once('core.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/'.$settings['rootdir'].'library/core.php');
 
 	$ajax = checkajax();
 
 	$table = 'transactions';
-	$action = 'transactions_edit';
+	$action = 'check_in';
 
 	if(!$ajax) {
 
@@ -20,7 +20,7 @@
 			$savekeys = array('people_id', 'product_id', 'count', 'description', 'drops', 'transaction_date', 'user_id','size_id');
 			$id = $handler->savePost($savekeys);
 
-			redirect('?action=purchase&people_id='.$_POST['people_id'][0]);
+			redirect('?action=check_in&people_id='.$_POST['people_id'][0]);
 		}
 
 		$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
@@ -31,7 +31,7 @@
 			$data['people_id'] = intval($_GET['people_id']);
 		}
 
-		$translate['cms_form_submit'] = 'Save & next purchase';
+		$translate['cms_form_submit'] = 'Edit';
 		$cmsmain->assign('translate',$translate);
 
 		// open the template
@@ -39,16 +39,10 @@
 		addfield('hidden','','id');
 
 		// put a title above the form
-		$cmsmain->assign('title','New purchase');
+		$cmsmain->assign('title','Check In');
 
-		addfield('select','Family','people_id',array('onchange'=>'selectFamily("people_id")', 'required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY p.lastname'));
-		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," drop coins)") AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
-		addfield('number', 'Number', 'count', array('onchange'=>"calcCosts('count')", 'onkeyup'=>"calcCosts('count')", 'required'=>true,'width'=>2));
-		addfield('text','Note','description');
-		addfield('line');
+		addfield('select','Find '.$_SESSION['camp']['familyidentifier'],'people_id',array('onchange'=>'selectFamily("people_id")', 'required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY p.lastname'));
 
-		addfield('ajaxstart','', '', array('id'=>'ajax-content'));
-		addfield('ajaxend');
 
 		addfield('ajaxstart','', '', array('aside'=>true, 'asidetop'=>true, 'id'=>'ajax-aside'));
 		addfield('ajaxend','', '', array('aside'=>true));
@@ -96,8 +90,6 @@
 		$data['allowdrops'] = $_SESSION['user']['is_admin']||db_value('SELECT id FROM cms_functions AS f, cms_access AS a WHERE a.cms_functions_id = f.id AND f.include = "give2all" AND a.cms_users_id = :user_id',array('user_id'=>$_SESSION['user']['id']));
 
 		$table = 'transactions';
-		addfield('list','Today\'s Purchases','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count AS countupdown, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 AND DATE_FORMAT(t.transaction_date, "%Y-%m-%d") = CURDATE() ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'countupdown'=>'Amount', 'drops2'=>'Drop Coins', 'tdate'=>'Date'),
-			'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>true, 'action'=>'purchase', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
 
 		$ajaxform->assign('data',$data);
 		$ajaxform->assign('formelements',$formdata);
@@ -107,7 +99,7 @@
 		// the aside
 		$ajaxaside = new Zmarty;
 
-		$data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE parent_id = :id OR id = :id AND visible AND NOT deleted ORDER BY parent_id, seq',array('id'=>$data['people_id']));
+		$data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = :id OR parent_id = :id AND visible AND NOT deleted ORDER BY parent_id, seq',array('id'=>$data['people_id']));
 
 		$data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id',array('id'=>$data['people_id']));
 		$data['givedropsurl'] = '?action=give&ids='.$data['people_id'];

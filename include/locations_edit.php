@@ -8,7 +8,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('label', 'visible', 'camp_id');
+		$savekeys = array('label', 'visible', 'camp_id', 'container_stock');
 		$id = $handler->savePost($savekeys);
 
 		redirect('?action='.$_POST['_origin']);
@@ -30,6 +30,8 @@
 	addfield('hidden','','id');
 	addfield('hidden','','camp_id');
 	addfield('text','Label','label');
+	addfield('checkbox','Container stock','container_stock');
+
 
 	addfield('checkbox','Visible','visible',array('aside'=>true));
 	addfield('line','','',array('aside'=>true));

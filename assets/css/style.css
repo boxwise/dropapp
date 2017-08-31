@@ -193,6 +193,34 @@ p{
 	padding-left: 25px;
 }
 
+.content .row-title .pagemenu{
+	margin-top: 13px;
+	margin-bottom: -17px;
+}
+.content .row-title .pagemenu li{
+	display: inline-block;
+}
+
+.content .row-title .pagemenu li a{
+	display: block;
+	padding: 4px 15px;
+	color: #000;
+}
+
+.content .row-title .pagemenu li a:hover{
+	background: #f2f2f2;
+	text-decoration: none;
+}
+
+.content .row-title .pagemenu li a.active{
+	color: #61c4ef;
+	font-weight: bold;
+	background: #fff;
+	border-top: 1px solid #eee;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
+}
+
 .content-form{
 	margin-right: 336px;
 /* 	max-width: 900px;	 */
@@ -699,10 +727,10 @@ textarea.select2{
 .zortable .table{
 	border-collapse: separate;
 }
-.table.zortable-active>tbody>tr>td{
+.zortable .table>tbody>tr>td{
 	border-top: none;
 }
-.table.zortable-active{
+.zortable .table{
 	border-bottom:none;
 }
 
@@ -1096,4 +1124,8 @@ tr.level-10 td:first-child{
   .form-horizontal .form-group-sm .control-label {
     padding-top: 6px;
   }
+}
+
+.warning {
+	color:#c00;
 }

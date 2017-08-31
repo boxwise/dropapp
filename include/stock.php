@@ -16,11 +16,13 @@
 		$statusarray = array('show'=>'All boxes');
 		listfilter2(array('label'=>'Only active boxes','options'=>$statusarray,'filter'=>'"show"'));
 
-		$data = getlistdata('SELECT stock.*, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location FROM '.$table.'
+		$data = getlistdata('SELECT stock.*, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS deprecatable FROM '.$table.'
 			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
 			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
 			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id '.(!$_SESSION['filter2']['stock']?' WHERE l.visible AND l.camp_id = '.$_SESSION['camp']['id'].'':''));
+			
+		foreach($data as $key=>$value) if($data[$key]['deprecatable']) $data[$key]['deprecatable'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This box hasn\'t been touched in 3 months or more and may be disposed"></i>'; else $data[$key]['deprecatable'] ='';
 
 		addcolumn('text','Box ID','box_id');
 		addcolumn('text','Product','product');
@@ -29,6 +31,7 @@
 		addcolumn('text','Comments','shortcomment');
 		addcolumn('text','Items','items');
 		addcolumn('text','Location','location');
+		addcolumn('html','>3mon','deprecatable');
 
 		listsetting('allowsort',true);
 		listsetting('allowcopy',false);
@@ -50,6 +53,7 @@
 				$ids = explode(',',$_POST['ids']);
 				foreach($ids as $id) {
 					db_query('UPDATE stock SET location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
+					simpleSaveChangeHistory('stock', $id, 'Box moved to '.db_value('SELECT label FROM locations WHERE id = :id',array('id'=>$_POST['option'])));
 					$count++;
 				}
 				$success = $count;

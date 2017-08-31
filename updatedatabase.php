@@ -1,9 +1,24 @@
 <?php
-	require_once('core.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/'.'library/core.php');
 	
 	if(!$_SESSION['user']['is_admin']) die('Go away!');
 	
 	echo "<strong>Database update script</strong><br />";
+
+	if(!db_fieldexists('cms_functions','visible')) {
+		echo "Created field 'visible' in table 'cms_functions'<br />";
+		db_query('ALTER TABLE `cms_functions` ADD `visible` TINYINT NOT NULL');
+		db_query('UPDATE `cms_functions` SET `visible` = 1');
+	} else {
+		echo "Field 'visible' in table 'cms_functions' already exists<br />";
+	}
+	if(!db_fieldexists('cms_functions','allusers')) {
+		echo "Created field 'allusers' in table 'cms_functions'<br />";
+		db_query('ALTER TABLE `cms_functions` ADD `allusers` TINYINT NOT NULL');
+		db_query('UPDATE `cms_functions` SET `visible` = 0');
+	} else {
+		echo "Field 'allusers' in table 'cms_functions' already exists<br />";
+	}
 
 	if(!db_fieldexists('products','comments')) {
 		echo "Created field 'comments' in table 'products'<br />";

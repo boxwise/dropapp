@@ -7,7 +7,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('name','gender_id', 'value', 'maxperadult', 'maxperchild', 'amountneeded', 'sizegroup_id', 'camp_id', 'comments');
+		$savekeys = array('name','gender_id', 'value', 'category_id', 'maxperadult', 'maxperchild', 'amountneeded', 'sizegroup_id', 'camp_id', 'comments');
 		$id = $handler->savePost($savekeys);
 
 		redirect('?action='.$_POST['_origin']);
@@ -35,6 +35,7 @@
 	addfield('line','','');
 	addfield('select', 'Sizegroup', 'sizegroup_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM sizegroup ORDER BY seq'));
 	if($_SESSION['camp']['market']) addfield('number','Estimated annual need per person','amountneeded',array('width'=>3,'required'=>true));
+	addfield('select', 'Category', 'category_id', array('required'=>true, 'width'=>3, 'multiple'=>false, 'query'=>'SELECT id AS value, label FROM product_categories ORDER BY seq'));
 	addfield('line');
 	addfield('textarea','Description','comments');
 	addfield('line');

@@ -1,10 +1,10 @@
 <?php
 	
+	error_reporting(E_ALL^E_NOTICE);
+	ini_set('display_errors',1);
+	
 	//die('Please use the online CMS!');
-	require_once('core.php');
-
-	error_reporting(E_ALL);
-	ini_set('display_errors',true);
+	require_once($_SERVER["DOCUMENT_ROOT"].'/library/core.php');
 
 	if(!DEFINED('CORE')) {
 		trigger_error('Core is not available - probably the library folder is not in the include_path');
@@ -21,24 +21,9 @@
 	if ($action == 'logout') logout();
 
 	// dailyroutine is performed when the last action of any user is not of today
-	
-	$dailyroutine = db_value('SELECT IF(DATEDIFF(NOW(), lastaction)>0,1,0), lastaction FROM cms_users ORDER BY lastaction DESC LIMIT 1');
-	
-	if($dailyroutine) {
-		$result = db_query('SELECT id, parent_id, people.container FROM people WHERE NOT deleted AND parent_id = 0 ORDER BY IF(container="AAA1",1,0), IF(container="?",1,0), SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
-	
-		while($row = db_fetch($result)) {
-			$i++;
-			db_query('UPDATE people SET seq = '.$i.' WHERE id = '.$row['id']);
-	
-			$j=0;
-	
-			$result2 = db_query('SELECT id FROM people WHERE NOT deleted AND parent_id = '.$row['id'].' ORDER BY DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
-			while($row2 = db_fetch($result2)) {
-				$j++;
-				db_query('UPDATE people SET seq = '.$j.' WHERE id = '.$row2['id']);
-			}
-		}	
+	if(strftime('%Y-%m-%d')!=$settings['dailyroutine'] || $action == 'dailyroutine') {
+		db_query('UPDATE settings SET value = "'.strftime('%Y-%m-%d').'" WHERE code = "dailyroutine"');
+	 	require('dailyroutine.php');
 	}
 
 
@@ -66,14 +51,12 @@
 	
 	$cmsmain->assign('menu',CMSmenu());
 
-	$allowedfunctions = array('cms_profile','exitloginas','give','transactions','start');
-
-	$allowed = db_numrows('SELECT id FROM cms_functions AS f, cms_access AS x WHERE x.cms_functions_id = f.id AND x.cms_users_id = :user_id AND (f.include = :action OR CONCAT(f.include,"_edit") = :action)',array('user_id'=>$_SESSION['user']['id'], 'action'=>$action));
-	$allowed = true;
+	$allowed = db_numrows('SELECT id FROM cms_functions AS f LEFT OUTER JOIN cms_access AS x ON x.cms_functions_id = f.id WHERE (x.cms_users_id = :user_id OR f.allusers) AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action)',array('user_id'=>$_SESSION['user']['id'], 'action'=>$action));
+	#$allowed = true;
 	
-	$allowedincamp = db_numrows('SELECT id FROM cms_functions AS f, cms_functions_camps AS x WHERE x.cms_functions_id = f.id AND x.camps_id = :camp_id AND (f.include = :action OR CONCAT(f.include,"_edit") = :action)',array('camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));
+	$allowedincamp = db_numrows('SELECT id FROM cms_functions AS f LEFT OUTER JOIN cms_functions_camps AS x ON x.cms_functions_id = f.id WHERE (x.camps_id = :camp_id OR f.allusers) AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action)',array('camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));
 
-	if  (($allowed&&$allowedincamp) || $_SESSION['user']['is_admin'] || ($_SESSION['user']['usertype']=='family' && $action == 'status') || in_array($action,$allowedfunctions)) {
+	if  (($allowed&&$allowedincamp) || $_SESSION['user']['is_admin']) {
 		@include('include/'.$action.'.php');
 	}
 

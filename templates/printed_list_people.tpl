@@ -12,10 +12,10 @@
 	{/if}
 	
 	{if $item['type']=='familyhead'}
-	    <tr><td><strong>{$item['container']}</strong></td><td colspan="2"><strong>{$item['number']} people ({if $item['green']}{$item['green']} green{/if}{if $item['green'] && $item['red']}, {/if}{if $item['red']}{$item['red']} red{/if})</strong></td></tr>
+	    <tr><td><strong>{$item['container']}</strong></td><td colspan="3"><strong>{$item['number']} people {if $item['extra']}+ {$item['extra']} extra{/if} ({if $item['green']}{$item['green']} green{/if}{if $item['green'] && $item['red']}, {/if}{if $item['red']}{$item['red']} red{/if})</strong></td></tr>
 	{/if}
 	{if $item['type']=='member'}
-	    <tr><td>{$item['name']|trim}</td><td>{$item['age']}</td><td  colspan="2">{$item['gender']}</td></tr>
+	    <tr><td>{$item['name']|trim}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}</td><td colspan="1">{if $item['extra']}+{$item['extra']} extra{/if}</td></tr>
 	{/if}
 
 	

@@ -23,6 +23,7 @@
 		'bootstrap.min.js',
 		'bootstrap-confirmation.js',
 		'modernizr.custom.86620.js',
+		'isInViewport.min.js',
 		'jquery.zortable.js',
 		'jquery.validate.min.js',
 		'localization/messages_en.js',

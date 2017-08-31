@@ -322,7 +322,7 @@ $(function() {
 	$('.form').each(function(){
 		var el = $(this);
 		$('.form').validate({
-			ignore: [],
+			ignore: ".no-validate",
 			submitHandler: function(form){
 				$('#form-submit').prop('disabled', true);
 				$('body').addClass('loading');
@@ -604,8 +604,15 @@ function initiateList(){
 								    case 'delete':
 										allTargets.fadeOut(200, function(){
 											$(this).remove();
-										});
-								        break;
+										});								        
+								    break;
+
+								    case 'undelete':
+										allTargets.fadeOut(200, function(){
+											$(this).remove();
+										});								        
+								    break;
+
 								    case 'hide':
 								    	if(parent.data('inheritvisibility')){
 											allTargets.addClass('item-hidden')								    	

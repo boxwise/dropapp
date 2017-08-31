@@ -15,13 +15,11 @@
 		foreach($data as $key=>$d) {
 			$units = 0;
 			$unitsrounded = 0;
-			$result = db_query('SELECT
-
-CEIL(((SELECT count(id) FROM people AS p2 WHERE visible AND NOT deleted AND p2.container = p.container AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= '.$settings['adult-age'].')*'.$d['peradult'].' + ((SELECT count(id) FROM people AS p2 WHERE visible AND NOT deleted AND p2.container = p.container AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < '.$settings['adult-age'].')*'.$d['perchild'].'))/'.$d['package'].')*'.$d['package'].' AS rounded,
+			$result = db_query('SELECT CEIL(((SELECT count(id) FROM people AS p2 WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND p2.container = p.container AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= '.$settings['adult-age'].')*'.$d['peradult'].' + ((SELECT count(id) FROM people AS p2 WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND p2.container = p.container AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < '.$settings['adult-age'].')*'.$d['perchild'].'))/'.$d['package'].')*'.$d['package'].' AS rounded,
 
 count(*) AS count
 
-FROM people AS p WHERE visible AND NOT deleted GROUP BY container ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
+FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted GROUP BY container ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
 			while($row = db_fetch($result)) {
 				$unitsrounded += $row['rounded'];
 			}
