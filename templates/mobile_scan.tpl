@@ -5,7 +5,7 @@
 				<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>
 			{/foreach}
 		</div>
-		{if !$data['othercamp']}
+{if !$data['othercamp']}
 		<hr></hr>
 		<p>I took items out of this box to the market:</p>
 			<form method="get">
@@ -22,4 +22,10 @@
 		<div class="toggle-me hide" id="history">
 			{$history}	
 		</div>
+		
+{/if}
+{if $orders}
+	<hr />
+	<h2 class="page-header">View ordered boxes</h2>
+	<a class="btn" href="?vieworders">{$orders} boxes are ordered to the camp</a>
 {/if}

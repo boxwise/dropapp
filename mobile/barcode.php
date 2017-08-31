@@ -1,4 +1,5 @@
 <?php
+
 	$data['barcode'] = $_GET['barcode'];
 
 	if($_GET['barcode'] && !db_value('SELECT id FROM qr WHERE code = :code',array('code'=>$_GET['barcode']))) {
@@ -30,6 +31,9 @@
 			redirect('?editbox='.$box['id'].'&warning=true&message=Oops!! This box is registered in '.$box['campname'].', are you sure this is what you were looking for?<br /><br /> No? <a href="'.$settings['rootdir'].'/mobile.php">Search again!</a><br /><br /> Yes? Edit and save this box to transfer it to '.$_SESSION['camp']['name'].'.');
 		} else {
 			if($box['id']) {
+				$orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND NOT s.deleted AND s.ordered', array('camp'=>$_SESSION['camp']['id']));
+				$tpl->assign('orders',$orders);
+
 				$locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE camp_id = :camp_id ORDER BY seq',array('camp_id'=>$_SESSION['camp']['id'],'location'=>$box['location_id']));
 				$history = showHistory('stock',$box['id']);
 				$tpl->assign('box',$box);
