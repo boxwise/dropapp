@@ -31,6 +31,5 @@ WHERE
 	DATEDIFF(NOW(), IF(p.modified,p.modified,p.created)) > c.delete_inactive_users ');
 	 
 	while($row = db_fetch($result)) {
-		dump($row['lastname']);
 		db_query('UPDATE people SET deleted = NOW() WHERE id = :id',array('id'=>$row['id']));
 	}
