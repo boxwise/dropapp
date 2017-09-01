@@ -18,6 +18,7 @@
 		listfilter2(array('label'=>'Only active boxes','options'=>$statusarray,'filter'=>'"show"'));
 
 		listsetting('manualquery',true);
+		
 		$data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox FROM '.$table.'
 			LEFT OUTER JOIN cms_users AS cu ON cu.id = stock.ordered_by
 			LEFT OUTER JOIN cms_users AS cu2 ON cu2.id = stock.picked_by
@@ -37,8 +38,8 @@
 			} else {
 				$data[$key]['oldbox'] ='';
 			}
-			if($data[$key]['ordered']) $data[$key]['order'] = '<i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the market by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
-			if($data[$key]['picked']) $data[$key]['order'] = '<i class="fa fa-truck green tooltip-this" title="This box is picked for the market by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
+			if($data[$key]['ordered']) $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the market by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
+			if($data[$key]['picked']) $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the market by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
 		}
 
 		addcolumn('text','Box ID','box_id');
