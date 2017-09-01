@@ -8,10 +8,11 @@
 	$ajax = checkajax();
 	if(!DEFINED('CORE')) include('core.php');
 	//MYSQL query for DEFAULT period
-	$weeks = db_row('SELECT week_min AS min, week_max AS max FROM need_periods WHERE id=1');
 	//array of all camps
  	$camps = db_simplearray('SELECT id, name FROM camps WHERE id != :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
 	$market = db_value('SELECT market FROM camps WHERE id = :camp', array('camp'=>$_SESSION['camp']['id']));
+	
+	if(!isset($_SESSION['filter2']['need'])) $_SESSION['filter2']['need'] = 1;
 
 	
 	//addfield('custom','','<div class="noprint tipofday"><h3> What do we need the next weeks?</h3><p>You will see an estimate of the clothes needed the next weeks based on the "Estimated Annual Need (EAN)". You can change the EAN in the "Products" menu. Negative effective Need means we have to much.<p><div>');
@@ -27,6 +28,7 @@
 		listsetting('allowselectall', false);
 		listsetting('allowsort', true);
 		listsetting('search', array('pro.name', 'g.label', 's.label'));
+		listsetting('manualquery',true);
 		//click on row to get to edit the product's ean
 		//listsetting('allowedit', false);
 		listsetting('edit','stock-list_edit');
@@ -42,15 +44,18 @@
 		addcolumn('text','Stock','stock');
 		addcolumn('text','Boxes','boxes');
 		if($market) {
-			addcolumn('text','Color', 'color');
-			addcolumn('text','Order/Get Rid','diff_max');
+			addcolumn('text','Color', 'target');
+			addcolumn('need','Order/Get Rid','diff_max');
 		}
 		foreach($camps as $key=>$camp) {
 			addcolumn('text',$camp,'camp_'.$key);
 		}
 
 		//Filter
- 		listfilter(array('label'=>'Color','options'=>array('green'=>'green', 'red'=>'red', 'blue' =>'blue'),'filter'=>'color'));
+ 		listfilter(array('label'=>'Both needed and overstock','options'=>array('green'=>'Good stock', 'red'=>'Needed', 'blue' =>'Overstock'),'filter'=>'color'));
+ 		
+ 		listfilter2(array('label'=>'Scope','query'=>'SELECT id, label FROM need_periods ORDER BY week_min','filter'=>'scope'));
+
 
 		//MYSQL query for products of the own camp
 		$query = '
@@ -67,9 +72,11 @@
 			(IF(g.adult,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), peo.date_of_birth)), "%Y")+0>=13,0) OR IF(g.baby,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), peo.date_of_birth)), "%Y")+0<2,0) OR IF(g.child,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), peo.date_of_birth)), "%Y")+0 BETWEEN 2 AND 13,0)))*IFNULL(s.portion,100)/100),0) AS target,
 			COALESCE(SUM(st.items),0) AS stock,
 			COALESCE(COUNT(st.items),0) AS boxes';
+			
 		foreach($camps as $key=>$camp) {
 			$query .= ', st_'.$key.'.calc AS camp_'.$key;
 		}
+		
 		$query .= '
 		FROM 	
 			(sizegroup AS sg,
@@ -99,19 +106,36 @@
 			pro.camp_id = '.$_SESSION['camp']['id'].' AND
 			pro.gender_id = g.id AND
 			pro.sizegroup_id = sg.id AND
-			s.sizegroup_id = sg.id
-		GROUP BY 
+			s.sizegroup_id = sg.id';
+
+		switch($_SESSION['filter']['need']) {
+			case 'red':
+				$query .= ' ';
+				break;
+			case 'green':
+				$query .= ' ';
+				break;
+			case 'blue':
+				$query .= ' ';
+				break;
+		}
+
+		($listconfig['searchvalue']?$query .=' AND (pro.name LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%")':'').
+
+		$query .= ' GROUP BY 
 			pro.name, g.id, s.label
 		ORDER BY 
 			pro.name, g.seq, s.seq';
 		
 		//get visible data from camp
 		$data = getlistdata($query);
-
+		
 		foreach($data as $key=>$d) {
 			//href for ean_print to easily change "estimated annual need"
-			$data[$key]['ean_print'] = '<a href="?action=products_edit&origin='.$action.'&id='.$data[$key]['id'].'">'.$d['ean_print'].'</a>';
+			$data[$key]['ean_print'] = '<a href="?action=products_edit&origin='.$action.'&id='.$data[$key]['id'].'" class="tooltip-this" title="Click here to edit the estimated annual need">'.$d['ean_print'].'</a>';
 
+			$weeks = db_row('SELECT week_min AS min, week_max AS max FROM need_periods WHERE id = :id',array('id'=>$_SESSION['filter2']['need']));
+			
 			//calculation of need for the time periods 
 			$data[$key]['diff_min'] = round(($d['target']*$d['ean']*$weeks["min"]/52)-$d['stock']);
 			$data[$key]['diff_max'] = round(($d['target']*$d['ean']*$weeks["max"]/52)-$d['stock']);

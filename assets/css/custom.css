@@ -521,3 +521,28 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 .change-count:hover{
 	color: #000;
 }
+
+td.list-level-0.list-column-ean_print:hover {
+	background-color: #ddd !important;
+}
+td.list-level-0.list-column-ean_print div a:hover {
+	cursor: alias;
+}
+.need-indicator {
+	color:#fff;
+	padding: 2px 0 2px 5px;
+	border-radius: 2px;
+	width:55px;
+}
+.need-red {
+	background-color:#c00;
+}
+.need-blue {
+	background-color:#118eee;
+}
+.need-green {
+	background-color:#30ad2b;
+}
+.green {
+	color:#30ad2b;
+}
