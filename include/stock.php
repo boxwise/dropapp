@@ -26,6 +26,9 @@
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
 			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id 
 		WHERE l.camp_id = '.$_SESSION['camp']['id'].
+		
+		($listconfig['searchvalue']?' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")':'').
+		
 		($_SESSION['filter2']['stock']=='ordered'?' AND (stock.ordered OR stock.picked) AND l.visible':($_SESSION['filter2']['stock']=='dispose'?' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible':(!$_SESSION['filter2']['stock']?' AND l.visible':''))));
 			
 		foreach($data as $key=>$value) {
@@ -34,8 +37,8 @@
 			} else {
 				$data[$key]['oldbox'] ='';
 			}
-			if($data[$key]['ordered']) $data[$key]['order'] = '<i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the market by '.$data[$key]['ordered_name'].' on '.strftime('%e-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
-			if($data[$key]['picked']) $data[$key]['order'] = '<i class="fa fa-truck green tooltip-this" title="This box is picked for the market by '.$data[$key]['picked_name'].' on '.strftime('%e-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
+			if($data[$key]['ordered']) $data[$key]['order'] = '<i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the market by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
+			if($data[$key]['picked']) $data[$key]['order'] = '<i class="fa fa-truck green tooltip-this" title="This box is picked for the market by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
 		}
 
 		addcolumn('text','Box ID','box_id');
@@ -97,7 +100,7 @@
 			case 'undo-order':
 				$ids = explode(',',$_POST['ids']);
 				foreach($ids as $id) {
-					db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL WHERE id = '.$id);
+					db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL  WHERE id = '.$id);
 					simpleSaveChangeHistory('stock', $id, 'Box order made undone ');
 					$message = 'Boxes are unmarked as ordered';
 					$success = true;
