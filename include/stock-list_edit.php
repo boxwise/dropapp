@@ -15,22 +15,11 @@
 
 		$cmsmain->assign('title','Boxes for: '.db_value('SELECT name FROM products WHERE id = :id',array('id'=>$product)).', '.db_value('SELECT label FROM genders WHERE id = :id',array('id'=>$gender)).', '.db_value('SELECT label FROM sizes WHERE id = :id',array('id'=>$size)));
 
-/*
-		$statusarray = array('show'=>'Boxes in market are visible');
-		if($_SESSION['filter']['stock-list']==$_SESSION['camp']['id']) listfilter2(array('label'=>'Boxes in market are hidden','options'=>$statusarray,'filter'=>'"show"'));
-*/
-
-		$data = getlistdata('SELECT stock.*, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'
-			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
-			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
-			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
-			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id WHERE 1=1'.(!$_SESSION['filter2']['stock']?' AND l.id != 4':'').'
-			AND p.id = '.intval($product).' AND g.id = '.intval($gender).($size?' AND s.id = '.intval($size):''));
 
 		$data = getlistdata('
 			SELECT 
 				stock.*, 
-				SUBSTRING(stock.comments,1, 25) AS shortcomment, 
+				SUBSTRING(stock.comments,1, 25) AS shortcomment, cu.naam AS ordered_name, cu2.naam AS picked_name, 
 				g.label AS gender, 
 				p.name AS product, 
 				s.label AS size, 
@@ -39,12 +28,14 @@
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventdelete,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit
 			FROM 
-				products AS p, 
+				(products AS p, 
 				locations AS l, 
 				genders AS g, 
 				sizes AS s, 
 				stock,
-				camps AS c
+				camps AS c)
+			LEFT OUTER JOIN cms_users AS cu ON cu.id = stock.ordered_by
+			LEFT OUTER JOIN cms_users AS cu2 ON cu2.id = stock.picked_by
 			WHERE 
 				l.camp_id = c.id AND 
 				stock.size_id = s.id AND 
@@ -56,6 +47,11 @@
 				NOT stock.deleted AND 
 				stock.location_id = l.id 
 				AND l.visible');
+
+		foreach($data as $key=>$value) {
+			if($data[$key]['ordered']) $data[$key]['order'] = '<i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the market by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
+			if($data[$key]['picked']) $data[$key]['order'] = '<i class="fa fa-truck green tooltip-this" title="This box is picked for the market by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
+		}
 		
 		addcolumn('text','Box ID','box_id');
 		addcolumn('text','Product','product');
@@ -64,12 +60,15 @@
 		addcolumn('text','Comments','shortcomment');
 		addcolumn('text','Items','items');
 		addcolumn('text','Location','location');
+		addcolumn('html','&nbsp;','order');
 
 		listsetting('allowsort',true);
 		listsetting('allowadd',false);
-		listsetting('allowselectall',false);
-		listsetting('allowselect',false);
-		#listsetting('allowedit',$_SESSION['filter']['stock-list']==$_SESSION['camp']['id']);
+		listsetting('allowselectall',true);
+		listsetting('allowselect',true);
+
+		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
+		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
 		#$locations = db_simplearray('SELECT id, label FROM locations ORDER BY seq');
 		#addbutton('movebox','Move box',array('icon'=>'fa-arrows', 'options'=>$locations));
@@ -86,12 +85,40 @@
 			case 'movebox':
 				$ids = explode(',',$_POST['ids']);
 				foreach($ids as $id) {
-					db_query('UPDATE stock SET location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
+					$box = db_row('SELECT * FROM stock WHERE id = :id',array('id'=>$id));
+
+					db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
+					simpleSaveChangeHistory('stock', $id, 'Box moved to '.db_value('SELECT label FROM locations WHERE id = :id',array('id'=>$_POST['option'])));
+					
+					if($box['location_id']!=$_POST['option']) {
+						db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');						
+					}
+					
 					$count++;
 				}
 				$success = $count;
 				$message = ($count==1?'1 box is':$count.' boxes are').' moved';
 				$redirect = '?action='.$_GET['action'];
+				break;
+			case 'order':
+				$ids = explode(',',$_POST['ids']);
+				foreach($ids as $id) {
+					db_query('UPDATE stock SET ordered = NOW(), ordered_by = :user, picked = NULL, picked_by = NULL WHERE id = '.intval($id), array('user'=>$_SESSION['user']['id']));
+					simpleSaveChangeHistory('stock', intval($id), 'Box ordered to warehouse ');
+					$message = 'Boxes are marked as ordered for you!';
+					$success = true;
+					$redirect = true;
+				}
+				break;
+			case 'undo-order':
+				$ids = explode(',',$_POST['ids']);
+				foreach($ids as $id) {
+					db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL WHERE id = '.$id);
+					simpleSaveChangeHistory('stock', $id, 'Box order made undone ');
+					$message = 'Boxes are unmarked as ordered';
+					$success = true;
+					$redirect = true;
+				}
 				break;
 			case 'qr':
 				$id = $_POST['ids'];

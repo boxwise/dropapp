@@ -5,6 +5,13 @@
 			$_POST['box_id'] = generateBoxID();
 		} while(db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id',array('box_id'=>$_POST['box_id'])));
 	}
+
+	$box = db_row('SELECT * FROM stock WHERE id = :id',array('id'=>$_POST['id']));
+	if($box && $box['location_id']!=$_POST['location_id'][0]) {
+		db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL WHERE id = :id',array('id'=>$box['id']));
+		db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');						
+	}
+
 	$handler = new formHandler('stock');
 
 	$savekeys = array('box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments' ,'qr_id');

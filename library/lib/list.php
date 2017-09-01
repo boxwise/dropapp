@@ -366,11 +366,13 @@
 
 		if($hasDeleted && !stripos($query,'DELETED')) $query = insertwhere($query, 'NOT '.$table.'.deleted');
 
-		if($hasFilter) $query = insertwhere($query, $listconfig['filter']['filter'].'='.db_escape($hasFilter));
-		if($hasFilter2) $query = insertwhere($query, $listconfig['filter2']['filter'].'='.db_escape($hasFilter2));
+		if($hasFilter && !$listconfig['manualquery']) 
+			$query = insertwhere($query, $listconfig['filter']['filter'].'='.db_escape($hasFilter));
+		if($hasFilter2 && !$listconfig['manualquery'])
+			$query = insertwhere($query, $listconfig['filter2']['filter'].'='.db_escape($hasFilter2));
 
 
-		if($listconfig['searchvalue'] && !$listconfig['manualsearchquery']) {
+		if($listconfig['searchvalue'] && !$listconfig['manualquery']) {
 			foreach($listconfig['search'] as $field) {
 				$searchquery[] = '('.$field.' LIKE "%'.$listconfig['searchvalue'].'%")';
 			}
