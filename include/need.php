@@ -6,14 +6,20 @@
 	$action = 'need';
 	//ajax for period selection
 	$ajax = checkajax();
-	if(!DEFINED('CORE')) include('core.php');
+
 	//MYSQL query for DEFAULT period
 	//array of all camps
  	$camps = db_simplearray('SELECT id, name FROM camps WHERE id != :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
 	$market = db_value('SELECT market FROM camps WHERE id = :camp', array('camp'=>$_SESSION['camp']['id']));
 	
-	if(!isset($_SESSION['filter2']['need'])) $_SESSION['filter2']['need'] = 1;
-
+	if($_GET['resetfilter2']) {
+		$_SESSION['filter2']['need'] = 1;
+		$_GET['resetfilter2'] = false;
+	}
+	if(!isset($_SESSION['filter2']['need'])) {
+		$_SESSION['filter2']['need'] = 1;
+		$_GET['filter2'] = 1;
+	}
 	
 	//addfield('custom','','<div class="noprint tipofday"><h3> What do we need the next weeks?</h3><p>You will see an estimate of the clothes needed the next weeks based on the "Estimated Annual Need (EAN)". You can change the EAN in the "Products" menu. Negative effective Need means we have to much.<p><div>');
 
@@ -45,7 +51,7 @@
 		addcolumn('text','Boxes','boxes');
 		if($market) {
 			addcolumn('text','Color', 'target');
-			addcolumn('need','Order/Get Rid','diff_max');
+			addcolumn('need','Under/overstock','diff_max');
 		}
 		foreach($camps as $key=>$camp) {
 			addcolumn('text',$camp,'camp_'.$key);

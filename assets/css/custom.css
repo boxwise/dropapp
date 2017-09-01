@@ -525,6 +525,9 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 td.list-level-0.list-column-ean_print:hover {
 	background-color: #ddd !important;
 }
+td.list-level-0.list-column-ean_print div a {
+	text-decoration: underline;
+}
 td.list-level-0.list-column-ean_print div a:hover {
 	cursor: alias;
 }
