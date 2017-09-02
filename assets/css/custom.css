@@ -532,10 +532,16 @@ td.list-level-0.list-column-ean_print div a:hover {
 	cursor: alias;
 }
 .need-indicator {
+	font-size:13px;
+	font-weight: normal;
 	color:#fff;
-	padding: 2px 0 2px 5px;
+	padding: 2px 5px 2px 5px;
 	border-radius: 2px;
-	width:55px;
+	width:60px;
+}
+.row-title .need-indicator {
+	font-size:16px;
+	display:inline;
 }
 .need-red {
 	background-color:#c00;

@@ -137,6 +137,7 @@
 		
 		foreach($data as $key=>$d) {
 			//href for ean_print to easily change "estimated annual need"
+			$data[$key]['id'] .= '-'.$data[$key]['color'].'-'.abs($data[$key]['diff_max']);
 			$data[$key]['ean_print'] = '<a href="?action=products_edit&origin='.$action.'&id='.$data[$key]['id'].'" class="tooltip-this" title="Click here to edit the estimated annual need">'.$d['ean_print'].'</a>';
 		}
 

@@ -9,11 +9,11 @@
 
 		initlist();
 
-		list($product,$gender,$size) = explode('-',$_GET['id']);
+		list($product,$gender,$size,$color,$overunder) = explode('-',$_GET['id']);
 
 		$listconfig['origin'] = $action.'&id='.$_GET['id'];
 
-		$cmsmain->assign('title','Boxes for: '.db_value('SELECT name FROM products WHERE id = :id',array('id'=>$product)).', '.db_value('SELECT label FROM genders WHERE id = :id',array('id'=>$gender)).', '.db_value('SELECT label FROM sizes WHERE id = :id',array('id'=>$size)));
+		$cmsmain->assign('title','Boxes for: '.db_value('SELECT name FROM products WHERE id = :id',array('id'=>$product)).', '.db_value('SELECT label FROM genders WHERE id = :id',array('id'=>$gender)).', '.db_value('SELECT label FROM sizes WHERE id = :id',array('id'=>$size)).' <div class="need-indicator need-'.$color.'"><i class="fa fa-'.($color=='red'?'sign-in':($color=='blue'?'sign-out':'check')).'"></i>&nbsp;'.($color!='green'?$overunder:'').'</div>');
 
 
 		$data = getlistdata('
