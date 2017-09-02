@@ -50,7 +50,6 @@
 		addcolumn('text','Stock','stock');
 		addcolumn('text','Boxes','boxes');
 		if($market) {
-			addcolumn('text','Color', 'target');
 			addcolumn('need','Under/overstock','diff_max');
 		}
 		foreach($camps as $key=>$camp) {

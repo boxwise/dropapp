@@ -76,11 +76,13 @@
 
 		listsetting('allowsort',true);
 		listsetting('allowadd',false);
-		listsetting('allowselectall',true);
-		listsetting('allowselect',true);
+		listsetting('allowselectall',false);
+		listsetting('allowselect',false);
 
+/*
 		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
+*/
 
 		#$locations = db_simplearray('SELECT id, label FROM locations ORDER BY seq');
 		#addbutton('movebox','Move box',array('icon'=>'fa-arrows', 'options'=>$locations));
