@@ -26,7 +26,8 @@
 				IF(l.camp_id = '.$_SESSION['camp']['id'].',l.label,c.name) AS location, 
 				l.camp_id = '.$_SESSION['camp']['id'].' AS visible,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventdelete,
-				l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit
+				l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit,
+				IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox
 			FROM 
 				(products AS p, 
 				locations AS l, 
@@ -49,8 +50,18 @@
 				AND l.visible');
 
 		foreach($data as $key=>$value) {
-			if($data[$key]['ordered']) $data[$key]['order'] = '<i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the market by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
-			if($data[$key]['picked']) $data[$key]['order'] = '<i class="fa fa-truck green tooltip-this" title="This box is picked for the market by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
+			if($data[$key]['oldbox']) {
+				$data[$key]['oldbox'] = '<span class="hide">1</span><i class="fa fa-exclamation-triangle warning tooltip-this" title="This box hasn\'t been touched in 3 months or more and may be disposed"></i>'; 
+			} else {
+				$data[$key]['oldbox'] ='<span class="hide">0</span>';
+			}
+			if($data[$key]['ordered']) {
+				$data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the market by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
+			} elseif($data[$key]['picked']) {
+				$data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the market by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
+			} else {
+				$data[$key]['order'] = '<span class="hide">0</span>';
+			}
 		}
 		
 		addcolumn('text','Box ID','box_id');
@@ -60,6 +71,7 @@
 		addcolumn('text','Comments','shortcomment');
 		addcolumn('text','Items','items');
 		addcolumn('text','Location','location');
+		addcolumn('html','&nbsp;','oldbox');
 		addcolumn('html','&nbsp;','order');
 
 		listsetting('allowsort',true);
