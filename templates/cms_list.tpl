@@ -99,7 +99,7 @@
 										<td class="controls-front list-level-{$row['level']} list-column-{$key}">
 											<div class="td-content">
 												<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-												<label class="item-select-label"><input class="item-select" type="checkbox"></label>
+												<label class="item-select-label"><input class="item-select" type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}></label>
 													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
 														<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
 													{else}

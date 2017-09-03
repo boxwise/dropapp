@@ -274,7 +274,8 @@
 		$listconfig['allowshowhide'] = $hasShowHide;
 		$listconfig['allowselectall'] = true;
 		$listconfig['allowselect'] = true;
-
+		$listconfig['allowselectinvisible'] = true;
+		
 		$listconfig['tree'] = $hasTree;
 
 		if($_GET['resetsearch']) unset($_SESSION['search'][$action]);

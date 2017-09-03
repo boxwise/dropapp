@@ -43,4 +43,4 @@
 		<div class="form-group"><input type="text" name="comments" placeholder="Comments for this box" value="{$box['comments']}" class="form-control"></div>
 		<input type="submit" class="btn" value="Save">
 	</form>
-	<script>{if $box['product_id']}getSizes({$box['size_id']});{/if}</script>
+{* 	<script>{if $box['product_id']}getSizes({$box['size_id']});{/if}</script> *}
