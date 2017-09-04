@@ -4,7 +4,7 @@
 	ini_set('display_errors',1);
 	
 	//die('Please use the online CMS!');
-	require_once($_SERVER["DOCUMENT_ROOT"].'/library/core.php');
+	require_once('library/core.php');
 
 	if(!DEFINED('CORE')) {
 		trigger_error('Core is not available - probably the library folder is not in the include_path');

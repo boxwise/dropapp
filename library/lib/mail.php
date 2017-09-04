@@ -1,5 +1,5 @@
 <?php
-	require_once($_SERVER["DOCUMENT_ROOT"].'/'.$settings['rootdir'].'library/htmlmimemail/htmlMimeMail5.php');
+	require_once($_SERVER["DOCUMENT_ROOT"] . $settings['rootdir'].'/library/htmlmimemail/htmlMimeMail5.php');
 
 	function sendmail($to_email, $to_name, $subject, $content, $email_template = 'cms_email.tpl', $from_email = '', $from_name = '', $debug = false) {
 
