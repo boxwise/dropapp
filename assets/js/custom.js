@@ -5,15 +5,15 @@ $(function() {
 })
 function cms_form_valutaCO(field) {
 	value = $('#field_'+field).val();
-	if(value.substr(0,2)=='â‚¬ ') value = value.replace(/\./g,'');
-	if(value.substr(0,1)=='â‚¬') value = value.substr(1);
+	if(value.substr(0,2)=='€ ') value = value.replace(/\./g,'');
+	if(value.substr(0,1)=='€') value = value.substr(1);
 	if(value.substr(0,1)==' ') value = value.substr(1);
 	value = parseFloat(value.replace(/,/g,'.')).toFixed(2).replace(/\./g,',');
 	if(value=='NaN') value = '';
 	if(value == '') {
 		$('#field_'+field).val();
 	} else {
-		$('#field_'+field).val('â‚¬ '+PointPerThousand(value));
+		$('#field_'+field).val('€ '+PointPerThousand(value));
 	}
 }
 
@@ -231,6 +231,8 @@ function selectFood(field_array, dist_id_fieldval){
 	});
 }
 
+/*
+
 $('.checkConnectionOnSubmit').on('click', function(ev){
 	ev.preventDefault();
 	$.ajax({
@@ -251,6 +253,8 @@ $('.checkConnectionOnSubmit').on('click', function(ev){
 		}
 	});
 });
+
+*/
 
 $('.check-minmax').on('input', function(ev){
 	var min = 0;
