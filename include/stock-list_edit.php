@@ -81,6 +81,8 @@
 		listsetting('allowselect',true);
 		listsetting('allowselectinvisible',false);
 
+		$locations = db_simplearray('SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+		addbutton('movebox','Move',array('icon'=>'fa-arrows', 'options'=>$locations));
 		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
@@ -101,8 +103,8 @@
 				foreach($ids as $id) {
 					$box = db_row('SELECT * FROM stock WHERE id = :id',array('id'=>$id));
 
-					db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
-					simpleSaveChangeHistory('stock', $id, 'Box moved to '.db_value('SELECT label FROM locations WHERE id = :id',array('id'=>$_POST['option'])));
+					db_query('UPDATE stock SET modified = NOW(), modified_by = '.$_SESSION['user']['id'].', ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id',array('location'=>$_POST['option'],'id'=>$id));
+					simpleSaveChangeHistory('stock', $id, 'Box moved from '.db_value('SELECT label FROM locations WHERE id = :id',array('id'=>$box['location_id'])).' to '.db_value('SELECT label FROM locations WHERE id = :id',array('id'=>$_POST['option'])));
 					
 					if($box['location_id']!=$_POST['option']) {
 						db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');						
@@ -112,7 +114,7 @@
 				}
 				$success = $count;
 				$message = ($count==1?'1 box is':$count.' boxes are').' moved';
-				$redirect = '?action='.$_GET['action'];
+				$redirect = true;
 				break;
 			case 'order':
 				$ids = explode(',',$_POST['ids']);
