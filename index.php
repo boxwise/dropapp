@@ -60,7 +60,6 @@
 		@include('include/'.$action.'.php');
 	}
 
-
 	$cmsmain->assign('action',$action);
 	$cmsmain->display('cms_index.tpl');
 

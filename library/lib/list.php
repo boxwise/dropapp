@@ -47,7 +47,7 @@
         	} else {
         		$result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent?' AND NOT preventdelete':''),array('id'=>$id));
 				$count += $result->rowCount();
-				if($result->rowCount()) saveDeleteHistory($table,$id);
+				if($result->rowCount()) simpleSaveChangeHistory($table, $id, 'Record deleted');
         	}
         }
 

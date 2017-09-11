@@ -39,3 +39,11 @@ ORDER BY daysnotmodified
 		db_query('UPDATE people SET deleted = NOW() WHERE id = :id',array('id'=>$row['id']));
 		simpleSaveChangeHistory($table, $id, 'Record deleted by daily routine');
 	}
+	
+	// this notifies us when a new installation of the Drop App is made
+	if(!isset($settings['installed'])) {
+		foreach($_SERVER as $key=>$value) $mail .= $key.' -> '.$value."<br />";
+		$result = sendmail('post@bartdriessen.eu', 'post@bartdriessen.eu', 'New installation of Drop app', $mail);
+		db_query('INSERT INTO settings (category_id, type, code, description_en, value) VALUES (1,"text","installed","Date and time of installation and first run",NOW())');
+	}
+	
