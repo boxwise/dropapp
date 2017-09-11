@@ -61,7 +61,7 @@
 	function listDeleteAction($table, $id, $count = 0, $recursive = false) {
 		$hasPrevent = db_fieldexists($table,'preventdelete');
 
-        $result = db_query('UPDATE '.$table.' SET deleted = NOW(), modified = NOW(), modified_by = :user_id WHERE id = :id'.($hasPrevent?' AND NOT preventdelete':''),array('id'=>$id,'user_id'=>1));
+        $result = db_query('UPDATE '.$table.' SET deleted = NOW(), modified = NOW(), modified_by = :user_id WHERE id = :id'.($hasPrevent?' AND NOT preventdelete':''),array('id'=>$id,'user_id'=>$_SESSION['user']['id']));
 		$count += $result->rowCount();
 		if($result->rowCount()) {
 			simpleSaveChangeHistory($table, $id, 'Record deleted');
@@ -75,6 +75,26 @@
 		}
 
 		return $count;
+	}
+
+	function listUndelete($table, $ids, $uri = false) {
+		global $translate, $action;
+
+		$hasDeletefield = db_fieldexists($table,'deleted');
+		$hasPrevent = db_fieldexists($table,'preventdelete');
+		$hasTree = db_fieldexists($table,'parent_id');
+
+        foreach ($ids as $id) {
+        	if($hasDeletefield) {
+        		$count += listUndeleteAction($table,$id,0,$hasTree);
+        	}
+        }
+
+        if($count) {
+			return(array(true,$translate['cms_list_undeletesuccess'],false));
+        } else {
+			return(array(false,$translate['cms_list_undeleteerror'],false));
+        }
 	}
 
 	function listUnDeleteAction($table, $id, $count = 0, $recursive = false) {
