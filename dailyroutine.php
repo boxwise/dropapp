@@ -37,4 +37,5 @@ ORDER BY daysnotmodified
 	 
 	while($row = db_fetch($result)) {
 		db_query('UPDATE people SET deleted = NOW() WHERE id = :id',array('id'=>$row['id']));
+		simpleSaveChangeHistory($table, $id, 'Record deleted by daily routine');
 	}

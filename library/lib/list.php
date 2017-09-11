@@ -61,10 +61,12 @@
 	function listDeleteAction($table, $id, $count = 0, $recursive = false) {
 		$hasPrevent = db_fieldexists($table,'preventdelete');
 
-        $result = db_query('UPDATE '.$table.' SET deleted = NOW() WHERE id = :id'.($hasPrevent?' AND NOT preventdelete':''),array('id'=>$id));
+        $result = db_query('UPDATE '.$table.' SET deleted = NOW(), modified = NOW(), modified_by = :user_id WHERE id = :id'.($hasPrevent?' AND NOT preventdelete':''),array('id'=>$id,'user_id'=>1));
 		$count += $result->rowCount();
-		if($result->rowCount()) saveDeleteHistory($table,$id);
-
+		if($result->rowCount()) {
+			simpleSaveChangeHistory($table, $id, 'Record deleted');
+		}
+		
 		if($recursive) {
 			$childs = db_array('SELECT id FROM '.$table.' WHERE parent_id = :id'.($hasPrevent?' AND NOT preventdelete':''),array('id'=>$id));
 			foreach($childs as $child) {
@@ -75,38 +77,14 @@
 		return $count;
 	}
 
-	function saveDeleteHistory($table,$id) {
-		// if no history table is present, ignore this function
-		if(!db_tableexists('history')) return;
-		$hasPrevent = db_fieldexists($table,'preventdelete');
-
-		$change = 'record deleted';
-
-		db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', array('table'=>$table,'id'=>$id,'change'=>$change,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR']));
-	}
-
-	function listUnDelete($table, $ids, $uri = false) {
-		global $translate, $action;
-
-		$hasTree = db_fieldexists($table,'parent_id');
-
-        foreach ($ids as $id) {
-       		$count += listUnDeleteAction($table,$id,0,$hasTree);
-        }
-
-        if($count) {
-					return(array(true,$translate['cms_list_undeletesuccess'],false));
-        } else {
-					return(array(false,$translate['cms_list_undeleteerror'],false));
-        }
-	}
-
 	function listUnDeleteAction($table, $id, $count = 0, $recursive = false) {
 
-    $result = db_query('UPDATE '.$table.' SET deleted = 0 WHERE id = :id',array('id'=>$id));
+    	$result = db_query('UPDATE '.$table.' SET deleted = 0, modified = NOW(), modified_by = :user_id WHERE id = :id', array('id'=>$id, 'user_id'=>$_SESSION['user']['id']));
 		$count += $result->rowCount();
-		if($result->rowCount()) saveUnDeleteHistory($table,$id);
-
+		if($result->rowCount()) {
+			simpleSaveChangeHistory($table, $id, 'Record recovered');
+		}
+		
 		if($recursive) {
 			$childs = db_array('SELECT id FROM '.$table.' WHERE parent_id = :id',array('id'=>$id));
 			foreach($childs as $child) {
@@ -115,14 +93,6 @@
 		}
 
 		return $count;
-	}
-
-	function saveUnDeleteHistory($table,$id) {
-		// if no history table is present, ignore this function
-		if(!db_tableexists('history')) return;
-		$change = 'record recovered';
-
-		db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', array('table'=>$table,'id'=>$id,'change'=>$change,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR']));
 	}
 
 

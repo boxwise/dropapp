@@ -67,7 +67,6 @@
 
 
 		addfield('line','','',array('aside'=>true));
-		addfield('created','Created','created',array('aside'=>true));
 
 	}
 

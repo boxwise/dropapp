@@ -1,7 +1,7 @@
 <?php
 
 	$table = 'people';
-	$action = 'people_edit';
+	$action = 'people';
 	$ajax = checkajax();
 	if(!DEFINED('CORE')) include('core.php');
 
@@ -20,13 +20,13 @@
  		#listsetting('allowselect',array(1));
 		listsetting('search', array('firstname','lastname', 'container'));
 		listsetting('allowadd', false);
-
 		listsetting('haspagemenu', true);
+		
 		addpagemenu('all', 'All', array('link'=>'?action=people'));
 		addpagemenu('deleted', 'Deleted', array('link'=>'?action=people_trash', 'active'=>true));		
 
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
-		$data = getlistdata('SELECT (SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1) AS lastactive, people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops FROM people LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id WHERE people.deleted > DATE_SUB(NOW(), INTERVAL '.$settings['daystokeepdeletedpersons'].' DAY) AND people.camp_id = '.$_SESSION['camp']['id'].' GROUP BY people.id ORDER BY deleted DESC');
+		$data = getlistdata('SELECT GREATEST((SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1),people.modified) AS lastactive, people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops FROM people LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id WHERE people.deleted > DATE_SUB(NOW(), INTERVAL '.$settings['daystokeepdeletedpersons'].' DAY) AND people.camp_id = '.$_SESSION['camp']['id'].' GROUP BY people.id ORDER BY deleted DESC');
 
 		addcolumn('text','Lastname','lastname');
 		addcolumn('text','Firstname','firstname');

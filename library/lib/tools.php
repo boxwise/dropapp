@@ -110,9 +110,9 @@ function CMSmenu() {
 }
 
 function getCMSuser($id) {
-	$user = db_row('SELECT * FROM cms_users WHERE id = :id',array('id'=>$id));
+	$user = db_value('SELECT naam FROM cms_users WHERE id = :id',array('id'=>$id));
 // 	return '<a href="mailto:'.$user['email'].'">'.$user['naam'].'</a>';
-	return $user['naam'];
+	return $user;
 }
 
 

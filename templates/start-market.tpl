@@ -83,3 +83,4 @@ var chart = AmCharts.makeChart( "chartdiv", {
 	</aside>
 </div>
 {/if}
+

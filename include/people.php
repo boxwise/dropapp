@@ -1,5 +1,6 @@
 <?php
 
+	
 	$table = $action;
 	$ajax = checkajax();
 	if(!DEFINED('CORE')) include('core.php');
@@ -28,7 +29,9 @@
 
 		$data = getlistdata('
 		SELECT 
-			IF(DATEDIFF(NOW(),(SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1)) > (SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
+			IF(DATEDIFF(NOW(),
+			GREATEST((SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1),people.modified)
+			) > (SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
 			
 			people.*, 
 			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
