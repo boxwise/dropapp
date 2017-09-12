@@ -1,3 +1,7 @@
+# hide hidden files like .user.ini
+RewriteRule \/\. / [R]
+RewriteRule ^\. / [R]
+
 #BEGIN SSL and NON-WWW force
 #<IfModule mod_headers.c>
 #  RewriteEngine On
