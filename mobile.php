@@ -3,7 +3,7 @@
 	ini_set('display_errors',true);
 
 	$login = true; #tell core not to check login, because we use an alternate version
-	require_once($_SERVER["DOCUMENT_ROOT"].'/'.'library/core.php');
+	require_once('library/core.php');
 
 	date_default_timezone_set('Europe/Athens');
 	db_query('SET time_zone = "+02:00"');
@@ -97,6 +97,9 @@
 		}	
 	}
 
+	$data['favicon16'] = $settings['rootdir']. (file_exists("uploads/favicon-16x16.png") ? '/uploads/favicon-16x16.png' : '/assets/img/favicon-16x16.png');
+	$data['favicon32'] = $settings['rootdir']. (file_exists("uploads/favicon-32x32.png") ? '/uploads/favicon-32x32.png' : '/assets/img/favicon-32x32.png');
+	$data['faviconapple'] = $settings['rootdir']. (file_exists("uploads/apple-touch-icon.png") ? '/uploads/apple-touch-icon.png' : '/assets/img/apple-touch-icon.png');
 
 	$tpl->assign('data',$data);	
 	$tpl->display('mobile.tpl');
