@@ -31,7 +31,7 @@
 	$cmsmain->assign('include','cms_form.tpl');
 
 	// put a title above the form
-	$cmsmain->assign('title',$translate['cms_setting']);
+	$cmsmain->assign('title', ucfirst($translate['cms_setting']));
 
 	// define tabs
 
@@ -55,7 +55,6 @@
 			array('options'=>array(
 				array('value'=>'text', 'label'=>$translate['cms_field_text']),
 				array('value'=>'textarea', 'label'=>$translate['cms_field_textarea']),
-				array('value'=>'wysiwyg', 'label'=>$translate['cms_field_wysiwyg']),
 				array('value'=>'checkbox', 'label'=>$translate['cms_field_checkbox']),
 				array('value'=>'select', 'label'=>$translate['cms_field_select'])
 			),'onchange'=>'if(this.options[this.selectedIndex].value=="select") $("#div_options").removeClass("hidden"); else $("#div_options").addClass("hidden");')

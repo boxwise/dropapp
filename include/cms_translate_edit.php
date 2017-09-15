@@ -26,7 +26,7 @@
 	$cmsmain->assign('include','cms_form.tpl');
 
 	// put a title above the form
-	$cmsmain->assign('title',$translate['cms_translate']);
+	$cmsmain->assign('title', ucfirst($translate['cms_translate']));
 
 	addfield('text',$translate['cms_translate_code'],'code',array('required'=>true,'readonly'=>!$_SESSION['user']['is_admin']));
 
@@ -37,7 +37,7 @@
 				array('value'=>'textarea', 'label'=>$translate['cms_field_textarea'])
 			))
 		);
-		addfield('select',$translate['cms_settings_category'],'category_id',array('required'=>true, 'width'=>5,'query'=>'SELECT id AS value, name AS label FROM translate_categories ORDER BY id'));
+		#addfield('select',$translate['cms_settings_category'],'category_id',array('required'=>true, 'width'=>5,'query'=>'SELECT id AS value, name AS label FROM translate_categories ORDER BY id'));
 		addfield('checkbox',$translate['cms_settings_hidden'],'hidden');
 
 	} else {
