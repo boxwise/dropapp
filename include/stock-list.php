@@ -21,10 +21,10 @@
 		ROUND((SELECT COUNT(id) FROM people AS p2 WHERE p2.visible AND NOT p2.deleted AND p2.camp_id = '.$_SESSION['camp']['id'].' AND  
 		(IF(g.male,p2.gender="M",0) OR IF(g.female,p2.gender="F",0)) AND 
 		(IF(g.adult,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0>=13,0) OR IF(g.baby,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0<2,0) OR IF(g.child,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 BETWEEN 2 AND 13,0)))*IFNULL(s.portion,100)/100) AS target,
-		p.amountneeded,';
+		p.amountneeded ';
 
 	foreach($camps as $key=>$camp) {
-		$insert[] = '(SELECT SUM(items) FROM stock AS st, locations AS l, products AS p2 WHERE st.product_id = p2.id AND st.location_id = l.id AND l.visible AND NOT st.deleted AND p.name = p2.name AND p2.gender_id = g.id AND st.size_id = s.id AND l.camp_id = '.$key.') AS "camp'.$key.'"';
+		$insert[] = ', (SELECT SUM(items) FROM stock AS st, locations AS l, products AS p2 WHERE st.product_id = p2.id AND st.location_id = l.id AND l.visible AND NOT st.deleted AND p.name = p2.name AND p2.gender_id = g.id AND st.size_id = s.id AND l.camp_id = '.$key.') AS "camp'.$key.'"';
 	} 
 	$query .= join(',',$insert);
 
