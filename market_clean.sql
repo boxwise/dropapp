@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: 127.0.0.1 (MySQL 5.6.34)
-# Database: demo
-# Generation Time: 2017-09-10 17:04:13 +0000
+# Host: localhost (MySQL 5.6.25)
+# Database: market_demo
+# Generation Time: 2017-09-15 10:09:12 +0000
 # ************************************************************
 
 
@@ -217,7 +217,7 @@ LOCK TABLES `cms_users` WRITE;
 
 INSERT INTO `cms_users` (`id`, `pass`, `naam`, `email`, `is_admin`, `lastlogin`, `lastaction`, `created`, `created_by`, `modified`, `modified_by`, `deleted`, `resetpassword`, `language`)
 VALUES
-	(1,'fe01ce2a7fbac8fafaed7c982a04e229','Site admin','demo@example.com',1,'2017-09-10 18:55:20','2017-09-10 19:03:57',NULL,NULL,'2017-08-23 16:05:45',1,0,X'',2),
+	(1,'fe01ce2a7fbac8fafaed7c982a04e229','Site admin','demo@example.com',1,'2017-09-10 18:55:20','2017-09-15 12:06:13',NULL,NULL,'2017-08-23 16:05:45',1,0,X'',2),
 	(2,'098f6bcd4621d373cade4e832627b4f6','Test','Test@test.nl',0,'0000-00-00 00:00:00','2017-08-23 15:04:23','2017-08-23 16:01:14',1,NULL,NULL,127,NULL,NULL);
 
 /*!40000 ALTER TABLE `cms_users` ENABLE KEYS */;
@@ -6213,8 +6213,7 @@ CREATE TABLE `settings` (
   `category_id` int(11) unsigned NOT NULL,
   `type` varchar(20) DEFAULT NULL,
   `code` varchar(255) NOT NULL,
-  `description_nl` varchar(255) DEFAULT NULL,
-  `description_en` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `options` varchar(255) DEFAULT NULL,
   `value` text,
   `hidden` tinyint(4) NOT NULL DEFAULT '0',
@@ -6229,20 +6228,22 @@ CREATE TABLE `settings` (
 LOCK TABLES `settings` WRITE;
 /*!40000 ALTER TABLE `settings` DISABLE KEYS */;
 
-INSERT INTO `settings` (`id`, `category_id`, `type`, `code`, `description_nl`, `description_en`, `options`, `value`, `hidden`, `created`, `created_by`, `modified`, `modified_by`)
+INSERT INTO `settings` (`id`, `category_id`, `type`, `code`, `description`, `options`, `value`, `hidden`, `created`, `created_by`, `modified`, `modified_by`)
 VALUES
-	(82,1,'text','cms_usertable','Table used for CMS user administration','Table used for CMS user administration',NULL,'cms_users',1,NULL,NULL,'2014-06-08 10:00:56',1),
-	(83,1,'select','cms_language','Language used for CMS interface','Language used for CMS interface','nl=Nederlands,en=English,fr=Français','en',0,NULL,NULL,'2015-02-19 15:03:17',2),
-	(84,1,'text','site_name','Title for the website','Title for the website','','Drop App',0,NULL,NULL,'2017-02-16 13:19:30',1),
-	(86,1,'text','mail_sender','Sender address for e-mails sent by Drop App','Sender address for e-mails sent by Drop App','','love@maartenhunink.com',1,'2014-06-08 21:33:54',1,'2017-08-23 15:56:11',1),
-	(87,1,'text','mail_sender_name','Sender name for e-mails sent by Drop App','Sender name for e-mails sent by Drop App','','Drop App',1,'2014-06-08 21:35:36',1,'2017-08-23 15:56:21',1),
-	(92,1,'text','apple-mobile-web-app-title','Titel for Apple Mobile Web App','Titel for Apple Mobile Web App','','Drop App',0,'2014-06-12 23:36:58',1,'2017-02-16 13:19:55',1),
-	(88,1,'select','site_language','Default language for website','Default language for website','nl=Nederlands,en=English,fr=Français','en',1,NULL,NULL,'2016-10-26 16:48:19',1),
-	(129,1,'select','local_adminonly','Only admin login is permitted?','Only admin login is permitted?','0=Nee;1=Ja','0',0,NULL,NULL,'2017-08-23 15:59:42',1),
-	(132,1,'text','drops_per_adult','Default drops per adult','Default drops per adult','','150',0,'2016-11-22 18:03:18',1,'2017-08-23 15:58:58',1),
-	(133,1,'text','drops_per_child','Default drops per child','Default drops per child','','130',0,'2016-11-22 18:03:18',1,'2017-08-23 15:59:02',1),
-	(134,1,'text','adult-age','People are considered adult starting at','People are considered adult starting at','','13',0,'2016-12-06 10:26:29',1,'2017-08-23 15:59:05',1),
-	(135,1,'text','showhistory','Show history','Show History','0=Nee;1=Ja','1',1,NULL,NULL,NULL,NULL);
+	(82,1,'text','cms_usertable','Table used for CMS user administration',NULL,'cms_users',1,NULL,NULL,'2014-06-08 10:00:56',1),
+	(83,1,'select','cms_language','Language used for CMS interface','nl=Nederlands,en=English,fr=Français','en',0,NULL,NULL,'2015-02-19 15:03:17',2),
+	(84,1,'text','site_name','Title for the website','','Drop App',0,NULL,NULL,'2017-02-16 13:19:30',1),
+	(86,1,'text','mail_sender','Sender address for e-mails sent by Drop App','','love@maartenhunink.com',1,'2014-06-08 21:33:54',1,'2017-08-23 15:56:11',1),
+	(87,1,'text','mail_sender_name','Sender name for e-mails sent by Drop App','','Drop App',1,'2014-06-08 21:35:36',1,'2017-08-23 15:56:21',1),
+	(92,1,'text','apple-mobile-web-app-title','Titel for Apple Mobile Web App','','Drop App',0,'2014-06-12 23:36:58',1,'2017-02-16 13:19:55',1),
+	(88,1,'select','site_language','Default language for website','nl=Nederlands,en=English,fr=Français','en',1,NULL,NULL,'2016-10-26 16:48:19',1),
+	(129,1,'select','local_adminonly','Only admin login is permitted?','0=Nee;1=Ja','0',0,NULL,NULL,'2017-08-23 15:59:42',1),
+	(132,1,'text','drops_per_adult','Default drops per adult','','150',0,'2016-11-22 18:03:18',1,'2017-08-23 15:58:58',1),
+	(133,1,'text','drops_per_child','Default drops per child','','130',0,'2016-11-22 18:03:18',1,'2017-08-23 15:59:02',1),
+	(134,1,'text','adult-age','People are considered adult starting at','','13',0,'2016-12-06 10:26:29',1,'2017-08-23 15:59:05',1),
+	(135,1,'text','showhistory','Show History','0=Nee;1=Ja','1',1,NULL,NULL,NULL,NULL),
+	(136,1,'text','installed','Date and time of installation and first run',NULL,'2017-09-15 11:51:13',0,NULL,NULL,NULL,NULL),
+	(137,1,'text','daystokeepdeletedpersons','Days to keep deleted person','','30',0,'2017-09-15 13:03:49',1,NULL,NULL);
 
 /*!40000 ALTER TABLE `settings` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -22854,7 +22855,7 @@ UNLOCK TABLES;
 
 
 --
--- Dumping routines (PROCEDURE) for database 'demo'
+-- Dumping routines (PROCEDURE) for database 'market_demo'
 --
 DELIMITER ;;
 
@@ -22962,7 +22963,7 @@ END */;;
 DELIMITER ;
 
 --
--- Dumping routines (FUNCTION) for database 'demo'
+-- Dumping routines (FUNCTION) for database 'market_demo'
 --
 DELIMITER ;;
 
