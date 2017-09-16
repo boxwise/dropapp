@@ -9,3 +9,4 @@ minified.js
 barmaadrihun
 .ftpquota
 uploads/*
+!uploads/.gitkeep 
