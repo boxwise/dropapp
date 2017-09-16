@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{if $title}{$title|strip_tags:false} - {/if}{$translate['site_name']}</title>
+    <title>{if $title}{$title|strip_tags:false} - {/if}{$settings['site_name']}</title>
 
     <!-- Bootstrap -->
     <link href="{$settings['rootdir']}/assets/css/css.php?v=6" rel="stylesheet">
@@ -17,9 +17,9 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{$settings['rootdir']}/assets/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" href="{$settings['rootdir']}/assets/img/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="{$settings['rootdir']}/assets/img/favicon-16x16.png" sizes="16x16">
+    <link rel="apple-touch-icon" sizes="180x180" href="{$images['faviconapple']}">
+    <link rel="icon" type="image/png" href="{$images['favicon32']}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{$images['favicon16']}" sizes="16x16">
     
   </head>
 
