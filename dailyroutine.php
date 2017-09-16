@@ -18,7 +18,6 @@
 		}
 	}	
 
-
 	// people that have not been active for a longer time will be deleted
 	// the amount of days of inactivity is set in the camp table
 	
@@ -37,8 +36,18 @@ ORDER BY daysnotmodified
 	 
 	while($row = db_fetch($result)) {
 		db_query('UPDATE people SET deleted = NOW() WHERE id = :id',array('id'=>$row['id']));
-		simpleSaveChangeHistory($table, $id, 'Record deleted by daily routine');
+		simpleSaveChangeHistory('people', $id, 'Record deleted by daily routine');
 	}
+	
+	// family members of deleted people should also be deleted
+	
+	$result = db_query('SELECT p2.id FROM people AS p1, people AS p2 WHERE p2.parent_id = p1.id AND p1.deleted AND NOT p2.deleted');
+	while($row = db_fetch($result)) {
+		db_query('UPDATE people SET deleted = NOW()',array('id'=>$row['id'])); 
+		simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine because family head was deleted');
+	}
+	
+	
 	
 	// this notifies us when a new installation of the Drop App is made
 	if(!isset($settings['installed'])) {
