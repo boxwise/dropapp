@@ -15,7 +15,7 @@
 
  		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM product_categories ORDER BY seq','filter'=>'products.category_id'));
 
-		$data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," drops") AS drops, COALESCE(SUM(s.items),0) AS items, IF(SUM(s.items),1,0) AS preventdelete FROM '.$table.'
+		$data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," '.$translate['market_coins'].'") AS drops, COALESCE(SUM(s.items),0) AS items, IF(SUM(s.items),1,0) AS preventdelete FROM '.$table.'
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
 			LEFT OUTER JOIN stock AS s ON s.product_id = products.id AND NOT s.deleted AND s.location_id IN ('.$locations.') 
@@ -28,7 +28,7 @@
 		addcolumn('text','Gender','gender');
 		addcolumn('text','Sizegroup','sizegroup');
 		addcolumn('text','Items','items');
-		if($_SESSION['camp']['market']) addcolumn('text','Price','drops');
+		if($_SESSION['camp']['market']) addcolumn('text',ucfirst($translate['market_coins']),'drops');
 		addcolumn('text','Description','comments');
 		if($_SESSION['camp']['id']== 3 || $_SESSION['camp']['id'] == 1) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
 

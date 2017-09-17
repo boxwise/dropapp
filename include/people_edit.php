@@ -36,7 +36,12 @@
 	}
 
 	$cmsmain->assign('include','cms_form.tpl');
-	$cmsmain->assign('title',$data['firstname'].' '.$data['lastname']);
+	if($data['firstname'] || $data['lastname']){
+		$cmsmain->assign('title',$data['firstname'].' '.$data['lastname']);	
+	} else {
+		$cmsmain->assign('title', 'Add a new resident');
+	}
+	
 
 	$data['allowdrops'] = $_SESSION['user']['is_admin']||db_value('SELECT id FROM cms_functions AS f, cms_access AS a WHERE a.cms_functions_id = f.id AND f.include = "give2all" AND a.cms_users_id = :user_id',array('user_id'=>$_SESSION['user']['id']));
 
@@ -80,21 +85,23 @@
 
  	addfield('date','Date of birth','date_of_birth', array('date'=>true, 'time'=>false));
 	addfield('line');
-	addfield('checkbox','Extra portion at food distribution','extraportion');
+	if($settings['extraportion']){
+		addfield('checkbox','Extra portion at food distribution','extraportion');	
+	}
 	addfield('textarea','Comments','comments');
  	addfield('line');
 
 	if($data['parent_id'] == 0){
 		if($id){
 			$table = 'transactions';
-			addfield('list','Purchases','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$id. ' AND t.product_id != 0 ORDER BY transaction_date DESC', 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>'Drop Coins', 'description'=>'Note','user'=>'Purchase made by', 'tdate'=>'Date'),
+			addfield('list','Purchases','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$id. ' AND t.product_id != 0 ORDER BY transaction_date DESC', 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($translate['market_coins']), 'description'=>'Note','user'=>'Purchase made by', 'tdate'=>'Date'),
 		'allowedit'=>false,'allowadd'=>true, 'add'=>'New Purchase', 'addaction'=>'check_out&people_id='.intval($id),'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'allowsort'=>false, 'modal'=>false));
 
 			addfield('line','','');
 
 			$table = 'transactions';
-			addfield('list','Transactions','trans', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id WHERE people_id = '.$id. ' AND t.product_id = 0 ORDER BY transaction_date DESC', 'columns'=>array('drops2'=>'Drop Coins', 'description'=>'Note','user'=>'Transaction made by', 'tdate'=>'Date'),
-		'allowedit'=>false,'allowadd'=>$data['allowdrops'], 'add'=>'Give Drops', 'addaction'=>'give&ids='.intval($id), 'allowsort'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'modal'=>false));
+			addfield('list','Transactions','trans', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id WHERE people_id = '.$id. ' AND t.product_id = 0 ORDER BY transaction_date DESC', 'columns'=>array('drops2'=>ucwords($translate['market_coins']), 'description'=>'Note','user'=>'Transaction made by', 'tdate'=>'Date'),
+		'allowedit'=>false,'allowadd'=>$data['allowdrops'], 'add'=>'Give '.ucwords($translate['market_coins']), 'addaction'=>'give&ids='.intval($id), 'allowsort'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'modal'=>false));
 
 
 		}

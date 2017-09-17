@@ -71,10 +71,10 @@
 		addcolumn('text','Gender','gender2');
 		addcolumn('text','Age','age');
 		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
-		addcolumn('text','Drops','drops');
+		addcolumn('text', ucwords($translate['market_coins']),'drops');
 		addcolumn('html','&nbsp;','expired');
 
-		addbutton('give','Give drops',array('icon'=>'fa-tint','oneitemonly'=>false));
+		addbutton('give','Give '.ucwords($translate['market_coins_short']),array('icon'=>'fa-tint','oneitemonly'=>false));
 		addbutton('merge','Merge to family',array('icon'=>'fa-chain','oneitemonly'=>false));
 		addbutton('detach','Detach from family',array('icon'=>'fa-chain-broken','oneitemonly'=>false));
 
@@ -106,10 +106,10 @@
 						if($id!=$oldest) {
 							db_query('UPDATE people SET parent_id = :oldest WHERE id = :id',array('oldest'=>$oldest,'id'=>$id));
 							$drops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id',array('id'=>$id));
-							db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$id.', -'.$drops.', "Drops moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+							db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$id.', -'.$drops.', "'.ucwords($translate['market_coins_short']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
 						}
 					}
-					db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$oldest.', '.$extradrops.', "Drops moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
+					db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$oldest.', '.$extradrops.', "'.ucwords($translate['market_coins_short']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
 					$success = true;
 					$redirect = true;
 					correctchildren();
@@ -186,8 +186,8 @@
 		$person = db_row('SELECT * FROM people AS p WHERE id = :id',array('id'=>$id));
 
 		if($drops && $person['parent_id']) {
-			db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "Drops moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
-			db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "Drops moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+			db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords($translate['market_coins_short']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
+			db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords($translate['market_coins_short']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
 			$newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id',array('id'=>$person['parent_id']));
 			$aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
 			return $aftermove;

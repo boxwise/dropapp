@@ -34,17 +34,17 @@
 	$cmsmain->assign('include','cms_form.tpl');
 
 	// put a title above the form
-	$cmsmain->assign('title','Give drops to selected families');
+	$cmsmain->assign('title','Give '.ucwords($translate['market_coins_short']).' to selected families');
 
 	addfield('hidden','people','people');
 
 
 	addfield('text','Families','names',array('readonly'=>true));
 	addfield('line','','');
-	addfield('text','Give drops','dropsfamily');
+	addfield('text','Give '.ucwords($translate['market_coins_short']),'dropsfamily');
 	addfield('line','','');
-	addfield('text','Give drops per adult','dropsadult');
-	addfield('text','Give drops per child','dropschild');
+	addfield('text','Give '.ucwords($translate['market_coins_short']).' per adult','dropsadult');
+	addfield('text','Give '.ucwords($translate['market_coins_short']).' per child','dropschild');
 	addfield('line','','');
 	addfield('text','Comments','description');
 

@@ -21,6 +21,10 @@ function toggleLunch() {
 	$('#div_lunchtime, #div_lunchduration').toggleClass('hidden');
 }
 
+function toggleSomething(){
+	console.log('something');
+}
+
 function toggleDiscountFields() {
 
 	var selectedVal = $('#field_discount_type').find(":selected").val();

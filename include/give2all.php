@@ -39,25 +39,25 @@
 
 	$data['names'] = 'All families';
 	$data['description'] = 'New cycle started '.strftime('%A %e %B %Y');
-	$translate['cms_form_submit'] = 'Give drops';
+	$translate['cms_form_submit'] = 'Give '. ucwords($translate['market_coins_short']);
 	$cmsmain->assign('translate',$translate);
 
 	// open the template
 	$cmsmain->assign('include','cms_form.tpl');
 
 	// put a title above the form
-	$cmsmain->assign('title','Give drops to all families');
+	$cmsmain->assign('title','Give '.ucwords($translate['market_coins_short']).' to all families');
 
 	addfield('hidden','people','people');
 
-	addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give drops" button on the right, you can\'t turn back anymore!</p></div>');
+	addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($translate['market_coins_short']).'" button on the right, you can\'t turn back anymore!</p></div>');
 
 	addfield('text','Families','names',array('readonly'=>true));
 	addfield('line','','');
 	$data['dropsadult'] = $settings['drops_per_adult'];
 	$data['dropschild'] = $settings['drops_per_child'];
-	addfield('text','Give drops per adult','dropsadult');
-	addfield('text','Give drops per child','dropschild');
+	addfield('text','Give '.ucwords($translate['market_coins_short']).' per adult','dropsadult');
+	addfield('text','Give '.ucwords($translate['market_coins_short']).' per child','dropschild');
 // 	$data['startration'] = 1;
 // 	addfield('checkbox','Reset ration period','startration');
 	addfield('line','','');
