@@ -4,6 +4,7 @@
 
  	// this function sorts the people list on container/household id, giving the best possible overview
 
+/*
 	$result = db_query('SELECT id, parent_id, people.container FROM people WHERE NOT deleted AND parent_id = 0 ORDER BY camp_id, IF(container="AAA1",1,0), IF(container="?",1,0), SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
 
 	while($row = db_fetch($result)) {
@@ -18,6 +19,7 @@
 			db_query('UPDATE people SET seq = '.$j.' WHERE id = '.$row2['id']);
 		}
 	}	
+*/
 
 	// people that have not been active for a longer time will be deleted
 	// the amount of days of inactivity is set in the camp table
@@ -28,7 +30,7 @@
 		$row['lasttransaction'] = db_value('SELECT transaction_date FROM transactions WHERE people_id = :id AND drops < 0 ORDER BY transaction_date DESC LIMIT 1',array('id'=>$row['id']));
 		$row['touch'] = (strtotime($row['lasttransaction'])>strtotime($row['modified'])?$row['lasttransaction']:$row['modified']);
 		if(!$row['touch']) $row['touch'] = $row['created'];
-		
+				
 		$date1 = new DateTime($row['touch']);
 		$date2 = new DateTime();
 		$row['diff'] = $date2->diff($date1)->format("%a");	
@@ -39,6 +41,7 @@
 			db_touch('people',$row['id']);
 		}
 	}
+
 	// cleaning up the database in case of errors
 	// delete children without a parent
 	db_query('UPDATE people p1 LEFT JOIN people p2 ON p1.parent_id = p2.id SET p1.deleted=NOW() WHERE p2.ID IS NULL AND p1.parent_id != 0');
