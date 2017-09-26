@@ -42,6 +42,13 @@ ORDER BY daysnotmodified
 	// cleaning up the database in case of errors
 	// delete children without a parent
 	db_query('UPDATE people p1 LEFT JOIN people p2 ON p1.parent_id = p2.id SET p1.deleted=NOW() WHERE p2.ID IS NULL AND p1.parent_id != 0');
+	// family members of deleted people should also be deleted
+	
+	$result = db_query('SELECT p2.id FROM people AS p1, people AS p2 WHERE p2.parent_id = p1.id AND p1.deleted AND NOT p2.deleted');
+	while($row = db_fetch($result)) {
+		db_query('UPDATE people SET deleted = NOW() WHERE id = :id',array('id'=>$row['id'])); 
+		simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine because family head was deleted');
+	}
 	
 	// delete children with a deleted parent
 	db_query('UPDATE people p1 LEFT JOIN people p2 ON p1.parent_id = p2.id SET p1.deleted=NOW() WHERE p2.deleted AND !p1.deleted AND p1.parent_id != 0');
