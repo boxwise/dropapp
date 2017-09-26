@@ -23,14 +23,14 @@
 	
 	$result = db_query('
 SELECT p.id, p.lastname,
-	IF( (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1) >  IF(p.modified,p.modified,p.created), (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1), IF(p.modified,p.modified,p.created)) AS modified,
-	DATEDIFF(NOW(), IF( (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1) >  IF(p.modified,p.modified,p.created), (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1), IF(p.modified,p.modified,p.created))) AS daysnotmodified
+	IF( (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id AND t.drops < 0 ORDER BY transaction_date DESC LIMIT 1) >  IF(p.modified,p.modified,p.created), (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id AND t.drops < 0 ORDER BY transaction_date DESC LIMIT 1), IF(p.modified,p.modified,p.created)) AS modified,
+	DATEDIFF(NOW(), IF( (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id AND t.drops < 0 ORDER BY transaction_date DESC LIMIT 1) >  IF(p.modified,p.modified,p.created), (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id AND t.drops < 0 ORDER BY transaction_date DESC LIMIT 1), IF(p.modified,p.modified,p.created))) AS daysnotmodified
 FROM people AS p 
 LEFT OUTER JOIN camps AS c ON c.id = p.camp_id 
 WHERE 
 	NOT deleted AND
 	p.parent_id = 0 AND 
-	DATEDIFF(NOW(), IF( (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1) >  IF(p.modified,p.modified,p.created), (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id ORDER BY transaction_date DESC LIMIT 1), IF(p.modified,p.modified,p.created))) > c.delete_inactive_users
+	DATEDIFF(NOW(), IF( (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id AND t.drops < 0 ORDER BY transaction_date DESC LIMIT 1) >  IF(p.modified,p.modified,p.created), (SELECT transaction_date FROM transactions AS t WHERE t.people_id = p.id AND t.drops < 0 ORDER BY transaction_date DESC LIMIT 1), IF(p.modified,p.modified,p.created))) > c.delete_inactive_users
 ORDER BY daysnotmodified
 	 ');
 	 
