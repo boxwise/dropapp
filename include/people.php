@@ -62,7 +62,7 @@
 			if($data[$key]['expired']) {
 				$data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active in a while"></i>'; 
 			} else {
-				$data[$key]['expired'] ='x';
+				$data[$key]['expired'] ='';
 			}
 		}
 
