@@ -51,7 +51,7 @@ ORDER BY daysnotmodified
 	}
 	
 	// delete children with a deleted parent
-	db_query('UPDATE people p1 LEFT JOIN people p2 ON p1.parent_id = p2.id SET p1.deleted=NOW() WHERE p2.deleted AND !p1.deleted AND p1.parent_id != 0');
+	db_query('UPDATE people p1 LEFT JOIN people p2 ON p1.parent_id = p2.id SET p1.deleted = NOW() WHERE p2.deleted AND !p1.deleted AND p1.parent_id != 0');
 	
 	
 	// this notifies us when a new installation of the Drop App is made
