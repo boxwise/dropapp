@@ -22,6 +22,12 @@
 				$adults += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE visible AND NOT deleted AND id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$settings['adult-age'],array('id'=>$person));
 				$drops = intval($_POST['dropsadult'])*$adults;
 				$drops += intval($_POST['dropschild'])*$children;
+
+				if(isset($settings['no_rollover_points']) && ($settings['no_rollover_points'] == 1)) {
+					$currentdrops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :people_id',array('people_id'=>$person));
+					db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>'Reset','drops'=>($currentdrops * -1),'user_id'=>$_SESSION['user']['id']));
+				}
+
 				db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>$_POST['description'],'drops'=>$drops,'user_id'=>$_SESSION['user']['id']));
 
 			}
@@ -50,7 +56,12 @@
 
 	addfield('hidden','people','people');
 
-	addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($translate['market_coins_short']).'" button on the right, you can\'t turn back anymore!</p></div>');
+
+	if(isset($settings['no_rollover_points']) && ($settings['no_rollover_points'] == 1)) {
+		addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($translate['market_coins_short']).'" button on the right, you can\'t turn back anymore! All the current '.$translate['market_coins_short'].' will be reset and new '.$translate['market_coins_short'].' will be given to all families!</p></div>');		
+	} else {
+		addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($translate['market_coins_short']).'" button on the right, you can\'t turn back anymore!</p></div>');		
+	}
 
 	addfield('text','Families','names',array('readonly'=>true));
 	addfield('line','','');
@@ -62,6 +73,7 @@
 // 	addfield('checkbox','Reset ration period','startration');
 	addfield('line','','');
 	addfield('text','Description','description');
+
 
 	#addfield('checkbox','Zichtbaar','visible',array('aside'=>true));
 	addfield('line','','',array('aside'=>true));

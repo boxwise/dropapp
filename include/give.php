@@ -17,6 +17,12 @@
 				$drops = intval($_POST['dropsadult'])*$adults;
 				$drops += intval($_POST['dropschild'])*$children;
 				$drops += intval($_POST['dropsfamily']);
+
+				if(isset($_POST['no_rollover']) && ($_POST['no_rollover'] == 1)) {
+					$currentdrops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :people_id',array('people_id'=>$person));
+					db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>'Reset '.$translate['market_coins_short'],'drops'=>($currentdrops * -1),'user_id'=>$_SESSION['user']['id']));
+				}
+
 				db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>$_POST['description'],'drops'=>$drops,'user_id'=>$_SESSION['user']['id']));
 
 			}
@@ -46,6 +52,11 @@
 	addfield('text','Give '.ucwords($translate['market_coins_short']).' per adult','dropsadult');
 	addfield('text','Give '.ucwords($translate['market_coins_short']).' per child','dropschild');
 	addfield('line','','');
+
+	if(isset($settings['no_rollover_points']) && ($settings['no_rollover_points'] == 1)) {
+		addfield('checkbox', 'Reset current '.$translate['market_coins_short'].' to 0 before giving new '.$translate['market_coins_short'], 'no_rollover');
+	}
+
 	addfield('text','Comments','description');
 
 	#addfield('checkbox','Zichtbaar','visible',array('aside'=>true));
