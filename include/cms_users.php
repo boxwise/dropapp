@@ -20,6 +20,7 @@
 
 		listsetting('add', $translate['cms_users_new']);
 		listsetting('width', 9);
+		listsetting('allowsort', true);
 
 		addbutton('sendlogindata',$translate['cms_users_sendlogin'],array('icon'=>'fa-user','confirm'=>true));
 		if($_SESSION['user']['is_admin'] && !$_SESSION['user2']) {

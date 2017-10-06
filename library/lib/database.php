@@ -185,3 +185,9 @@
 		$tables = db_listtables($table, $dbid);
 		return in_array($table, $tables);
 	}
+
+	function db_touch($table, $id) {
+		if(db_fieldexists($table,'modified')) {
+				db_query('UPDATE '.$table.' SET modified = NOW(), modified_by = :user WHERE id = :id',array('user'=>$_SESSION['user']['id'],'id'=>$id));
+		}
+	}
