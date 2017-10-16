@@ -13,7 +13,7 @@
 
 		}
 		$box = db_row('SELECT * FROM stock WHERE id = :id',array('id'=>$_POST['id']));
-		if($box['location_id']!=$_POST['location_id'][0]) {
+		if($box && ($box['location_id']!=$_POST['location_id'][0])) {
 			db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL WHERE id = :id',array('id'=>$_POST['id']));
 			db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');						
 		}
