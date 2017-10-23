@@ -381,7 +381,6 @@
 		echo nl2br($query);
 		die();
 */
-	
 		$data = listdataquery($query,0,$parent);
 		return $data;
 
@@ -422,15 +421,20 @@
 	function listdataquery($query, $level = 0, $parent = 0) {
 		global $table;
 		$hasTree = db_fieldexists($table, 'parent_id');
-
+		
 		$result = db_query($query, ($hasTree?array('parent_id'=>$parent):array()));
 
 		while($row = db_fetch($result)) {
 			$row['level'] = $level;
 			$data[] = $row;
 
-			if($hasTree) $sub = listdataquery($query, $level+1, $row['id']);
-			foreach($sub as $field) array_push($data, $field);
+			if($hasTree){
+				$rowcount = db_value('SELECT COUNT(1) FROM '.$table.' WHERE parent_id = '.$row['id']);
+				if($rowcount > 0){
+					$sub = listdataquery($query, $level+1, $row['id']);
+					foreach($sub as $field) array_push($data, $field);
+				}
+			}
 
 		}
 		return $data;
