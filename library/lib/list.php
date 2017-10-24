@@ -381,7 +381,9 @@
 		echo nl2br($query);
 		die();
 */
+		$start = microtime(true);
 		$data = listdataquery($query,0,$parent);
+		// echo (microtime(true) - $start);
 		return $data;
 
 	}
