@@ -57,15 +57,15 @@
 		addfield('text', 'Comment', 'label', array('required' => true));
 
 		#formelements for cms_form_fooddist.tpl
-		for($i = 1; $i < 6; $i++){
+		for($i = 1; $i < 7; $i++){
 			if($i==1) {addcolumn('select','Food '.$i ,'food_'.$i, array('required' => true));}
 			else {addcolumn('select','Food '.$i ,'food_'.$i);}
 		}
 		#Triple string for Java Script
 		$onchange = <<<'EOD'
-			selectFood(["food_1", "food_2", "food_3", "food_4", "food_5"], $("[name = 'id']").val()) 
+			selectFood(["food_1", "food_2", "food_3", "food_4", "food_5", "food_6"], $("[name = 'id']").val()) 
 EOD;
-		addfield('fooddist_select', '','', array('listdata' => $listdata, 'placeholder' => 'Select Food', 'options'=> db_array('SELECT f.id AS value, f.name AS label FROM food AS f WHERE f.visible AND NOT COALESCE(f.deleted,0) ORDER BY f.name'), 'onchange' => $onchange, 'head' => false));
+		addfield('fooddist_select', '','', array('listdata' => $listdata, 'placeholder' => 'Select', 'options'=> db_array('SELECT f.id AS value, f.name AS label FROM food AS f WHERE f.visible AND NOT COALESCE(f.deleted,0) ORDER BY f.name'), 'onchange' => $onchange, 'head' => false));
 		$listdata = array();
 		#addfield('line','','');
 
@@ -74,7 +74,8 @@ EOD;
 		addfield('ajaxstart','', '', array('id'=>'ajax-content'));
 		if($id)	$perc = ftran_list(array_diff(array_slice($data,2,5, true),["0"]), $id, $_SESSION['camp']['id'], $settings['adult-age']);
 		addfield('ajaxend');
-		if($id) addfield('custom', '', '<font size=4><b>'.$perc['hidden'].' of '.$perc['all'].' ('.round($perc['hidden']/$perc['all']*100).'%) families <br></b>collected their food </font>.', array('aside' => true, 'asidetop' => true));
+		if($id) addfield('custom', '', '<font size=4><b>'.$perc['hidden'].' of '.$perc['all'].' ('.round($perc['hidden']/$perc['all']*100).'%) families <br></b> collected their food </font>.', array('aside' => true, 'asidetop' => true));
+		# '.$perc['hid_peo'].' of '.$perc['all_peo'].' ('.round($perc['hid_peo']/$perc['all_peo']*100).'%) people 
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('formelements',$formdata);
@@ -127,7 +128,7 @@ EOD;
 			$query .=', (SELECT IF(COUNT(ft.id), 1,0) FROM food_transactions AS ft WHERE ft.people_id = p.id AND ft.dist_id = '.$dist_id.') AS hidden';
 		}
 		foreach($food_array as $fkey => $fval) {
-			$query .= ', CEIL(((SELECT children)*f'.$fkey.'.perchild + (SELECT adults)*f'.$fkey.'.peradult)/f'.$fkey.'.package) AS portion_'.$fkey;
+			$query .= ', CEIL(((SELECT children)*f'.$fkey.'.perchild + (SELECT adults)*f'.$fkey.'.peradult)/f'.$fkey.'.package + (SELECT extra)) AS portion_'.$fkey;
 		}
 		$query .= ' FROM people AS p';
 		if($dist_id) $query.=', food_distributions AS fd';
@@ -155,5 +156,7 @@ EOD;
 		}
 
 		addfield('foodtran', '','', array('listdata'=> $listdata, 'data' => $ftdata, 'maxheight' => 'window'));
-		return array('hidden' => array_sum(array_column($ftdata, 'hidden')), 'all' => array_sum(array_column($ftdata, 'al')));
+		#ToDo
+		#$all_peo = db_value('SELECT COUNT(*) FROM people WHERE NOT deleted and camp_id='.$camp_id);
+		return array('hidden' => array_sum(array_column($ftdata, 'hidden')), 'all' => array_sum(array_column($ftdata, 'al'))); #, 'hid_peo' => ($all_peo - array_sum(array_column($ftdata, 'children')) - array_sum(array_column($ftdata, 'adults'))), 'all_peo' => $all_peo);
 	}
