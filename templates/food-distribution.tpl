@@ -11,14 +11,15 @@
 	{/if}
 	
 	{if $item['type']=='familyhead'}
-	    <tr><td><strong>{$item['container']}</strong></td><td><strong>{$item['number']} people</strong></td><td>
+	    <tr><td><strong>{$item['container']}</strong></td><td><strong>{$item['number']} people {if $item['extra']}+ {$item['extra']} extra{/if} </strong></td><td>
+
 		    {foreach $item['food'] as $key=>$f}
 		    <div class="food-distribution-detail">{$f} {$key}</div>
 		    {/foreach}
 	    </td></tr>
 	{/if}
 	{if $item['type']=='member'}
-	    <tr><td>{$item['name']|trim}</td><td>{$item['age']}</td><td  colspan="2">{$item['gender']}</td></tr>
+	    <tr><td>{$item['name']|trim}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}</td><td colspan="1">{if $item['extra']}+{$item['extra']} extra{/if}</td></tr>
 	{/if}
 
 	
