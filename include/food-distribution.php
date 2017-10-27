@@ -4,7 +4,12 @@
 	$col = 42;
 	$begin = true;
 
-	$result = db_query('SELECT id, people.container, COUNT(*) AS number, SUM(extraportion) AS extra FROM people WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted GROUP BY container ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
+	$result = db_query('
+		SELECT id, people.container, COUNT(*) AS number, SUM(extraportion) AS extra, SUM(IF(DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= '.$settings['adult-age'].', 1, 0)) AS adults, SUM(IF(DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= '.$settings['adult-age'].', 0, 1)) AS children  
+		FROM people 
+		WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted 
+		GROUP BY container 
+		ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
 	while($row = db_fetch($result)) {
 		if($begin) {
 			$row['begin'] = true;

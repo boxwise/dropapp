@@ -11,7 +11,7 @@
 	{/if}
 	
 	{if $item['type']=='familyhead'}
-	    <tr><td><strong>{$item['container']}</strong></td><td><strong>{$item['number']} people {if $item['extra']}+ {$item['extra']} extra{/if} </strong></td><td>
+	    <tr><td><strong>{$item['container']}</strong></td><td><strong>{$item['number']}p. ({$item['adults']}Ad{if $item['children']}, {$item['children']}Kid{/if}){if $item['extra']} + {$item['extra']}{/if} </strong></td><td>
 
 		    {foreach $item['food'] as $key=>$f}
 		    <div class="food-distribution-detail">{$f} {$key}</div>
