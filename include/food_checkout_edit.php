@@ -74,8 +74,7 @@ EOD;
 		addfield('ajaxstart','', '', array('id'=>'ajax-content'));
 		if($id)	$perc = ftran_list(array_diff(array_slice($data,2,5, true),["0"]), $id, $_SESSION['camp']['id'], $settings['adult-age']);
 		addfield('ajaxend');
-		if($id) addfield('custom', '', '<font size=4><b>'.$perc['hidden'].' of '.$perc['all'].' ('.round($perc['hidden']/$perc['all']*100).'%) families <br></b> collected their food </font>.', array('aside' => true, 'asidetop' => true));
-		# '.$perc['hid_peo'].' of '.$perc['all_peo'].' ('.round($perc['hid_peo']/$perc['all_peo']*100).'%) people 
+		if($id) addfield('custom', '', '<font size=4><b>'.$perc['hidden'].' of '.$perc['all'].' ('.round($perc['hidden']/$perc['all']*100).'%) families <br> '.$perc['hid_peo'].' of '.$perc['all_peo'].' ('.round($perc['hid_peo']/$perc['all_peo']*100).'%) people</b><br>collected their food </font>.', array('aside' => true, 'asidetop' => true));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('formelements',$formdata);
@@ -121,11 +120,13 @@ EOD;
 			(SELECT COALESCE(SUM(pe.extraportion),0) + p.extraportion
 				FROM people AS pe
 				WHERE pe.parent_id=p.id) AS extra,
-			CONCAT((SELECT adults), "Ad", IF((SELECT children), CONCAT(", ", (SELECT children), "Kid"), ""), IF((SELECT extra), CONCAT(" +", (SELECT extra)),"")) AS family';
+			CONCAT((SELECT adults), "Ad", IF((SELECT children), CONCAT(", ", (SELECT children), "Kid"), ""), IF((SELECT extra), CONCAT(" +", (SELECT extra)),"")) AS family,
+			(SELECT adults)+(SELECT children) AS al2';
 		if(!$dist_id) {
-			$query .=', 0 as hidden';
+			$query .=', 0 AS hidden, 0 AS hidden2';
 		} else {
-			$query .=', (SELECT IF(COUNT(ft.id), 1,0) FROM food_transactions AS ft WHERE ft.people_id = p.id AND ft.dist_id = '.$dist_id.') AS hidden';
+			$query .=', (SELECT IF(COUNT(ft.id), 1,0) FROM food_transactions AS ft WHERE ft.people_id = p.id AND ft.dist_id = '.$dist_id.') AS hidden,
+(SELECT IF(COUNT(ft.id), (SELECT adults)+(SELECT children),0) FROM food_transactions AS ft WHERE ft.people_id = p.id AND ft.dist_id = '.$dist_id.') AS hidden2';
 		}
 		foreach($food_array as $fkey => $fval) {
 			$query .= ', CEIL(((SELECT children)*f'.$fkey.'.perchild + (SELECT adults)*f'.$fkey.'.peradult)/f'.$fkey.'.package + (SELECT extra)) AS portion_'.$fkey;
@@ -156,7 +157,5 @@ EOD;
 		}
 
 		addfield('foodtran', '','', array('listdata'=> $listdata, 'data' => $ftdata, 'maxheight' => 'window'));
-		#ToDo
-		#$all_peo = db_value('SELECT COUNT(*) FROM people WHERE NOT deleted and camp_id='.$camp_id);
-		return array('hidden' => array_sum(array_column($ftdata, 'hidden')), 'all' => array_sum(array_column($ftdata, 'al'))); #, 'hid_peo' => ($all_peo - array_sum(array_column($ftdata, 'children')) - array_sum(array_column($ftdata, 'adults'))), 'all_peo' => $all_peo);
+		return array('hidden' => array_sum(array_column($ftdata, 'hidden')), 'all' => array_sum(array_column($ftdata, 'al')), 'hid_peo' => array_sum(array_column($ftdata, 'hidden2')), 'all_peo' => array_sum(array_column($ftdata, 'al2')));
 	}
