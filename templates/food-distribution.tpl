@@ -19,7 +19,7 @@
 	    </td></tr>
 	{/if}
 	{if $item['type']=='member'}
-	    <tr><td>{$item['name']|trim}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}</td><td colspan="1">{if $item['extra']}+{$item['extra']} extra{/if}</td></tr>
+	    <tr><td>{$item['name']|trim}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}&emsp;&emsp;{if $item['extra']}+{$item['extra']} extra{/if}</td></tr>
 	{/if}
 
 	
