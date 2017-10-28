@@ -37,6 +37,17 @@
 						$_POST['count'] = $fcount;	
 						$handler = new formHandler($table);
 						$handler->savePost(array_keys($_POST));
+
+						#Reduce food stock in food products menu
+						$fstock = db_value('SELECT stock from food WHERE id = '.$fkey);
+						if(($fstock - $fcount)>0) {
+							$_POST['stock'] = $fstock -$fcount;
+							$_POST['id'] = $fkey;
+							$foodstock_handler = new formHandler('food');
+							$foodstock_handler->savePost(array('stock'));	
+							unset($_POST['stock']);
+							unset($_POST['id']);
+						}
 					}
 				}
 			}
@@ -129,7 +140,7 @@ EOD;
 (SELECT IF(COUNT(ft.id), (SELECT adults)+(SELECT children),0) FROM food_transactions AS ft WHERE ft.people_id = p.id AND ft.dist_id = '.$dist_id.') AS hidden2';
 		}
 		foreach($food_array as $fkey => $fval) {
-			$query .= ', CEIL(((SELECT children)*f'.$fkey.'.perchild + (SELECT adults)*f'.$fkey.'.peradult)/f'.$fkey.'.package + (SELECT extra)) AS portion_'.$fkey;
+			$query .= ', (CEIL(((SELECT children)*f'.$fkey.'.perchild + (SELECT adults)*f'.$fkey.'.peradult)/f'.$fkey.'.package) + (SELECT extra)) AS portion_'.$fkey;
 		}
 		$query .= ' FROM people AS p';
 		if($dist_id) $query.=', food_distributions AS fd';
