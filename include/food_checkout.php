@@ -39,7 +39,7 @@
 
 		addcolumn('date','Start','start_date');
 		addcolumn('text','Comment','label');
-		for ($i=1; $i<6; $i++){
+		for ($i=1; $i<7; $i++){
 			#Status is shown in two lines
 			#addcolumn('text_break','Food '.$i,'food_'.$i, array('sec_line' => 'sec_line_'.$i, 'third_line' => 'third_line_'.$i, 'bold'=>true, 'italic'=>true));
 			addcolumn('text_break','Food '.$i,'food_'.$i, array('sec_line' => 'sec_line_'.$i, 'bold'=>true, 'italic'=>true));
