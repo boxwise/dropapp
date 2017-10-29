@@ -30,9 +30,16 @@
 		$data = getlistdata('
 		SELECT 
 			IF(DATEDIFF(NOW(),
-			GREATEST((SELECT transaction_date FROM transactions AS t WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 ORDER BY transaction_date DESC LIMIT 1),people.modified)
+			GREATEST(COALESCE((SELECT transaction_date 
+				FROM transactions AS t 
+				WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 
+				ORDER BY transaction_date DESC LIMIT 1),0), 
+				COALESCE((SELECT ft.created AS foodtransaction_date
+				FROM food_transactions AS ft
+				WHERE ft.people_id = people.id AND people.parent_id = 0
+				ORDER BY foodtransaction_date DESC LIMIT 1),0),
+				COALESCE(people.modified,0),COALESCE(people.created,0))
 			) > (SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
-			
 			people.*, 
 			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
 			IF(gender="M","Male","Female") AS gender2, 

@@ -27,9 +27,25 @@
 	 
 	$result = db_query('SELECT p.id, p.lastname, p.created, p.modified, c.delete_inactive_users AS treshold FROM people AS p LEFT OUTER JOIN camps AS c ON c.id = p.camp_id WHERE NOT p.deleted AND p.parent_id = 0');
 	while($row = db_fetch($result)) {
+		/*
 		$row['lasttransaction'] = db_value('SELECT transaction_date FROM transactions WHERE people_id = :id AND drops < 0 ORDER BY transaction_date DESC LIMIT 1',array('id'=>$row['id']));
+		$row['lastfoodtransaction'] = db_value('SELECT created FROM food_transactions WHERE people_id = :id ORDER BY created DESC LIMIT 1',array('id'=>$row['id']));
+		if(strtotime($row['lastfoodtransaction'])>strtotime($row['lastransaction'])) {$row['lastransaction'] = $row['lastfoodtransaction'];} 
+		var_export($row['lastfoodtransaction']);
 		$row['touch'] = (strtotime($row['lasttransaction'])>strtotime($row['modified'])?$row['lasttransaction']:$row['modified']);
 		if(!$row['touch']) $row['touch'] = $row['created'];
+		 */
+		$row['touch'] = db_value('SELECT GREATEST(COALESCE((SELECT transaction_date 
+					FROM transactions AS t 
+					WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 
+					ORDER BY transaction_date DESC LIMIT 1),0), 
+					COALESCE((SELECT ft.created AS foodtransaction_date
+					FROM food_transactions AS ft
+					WHERE ft.people_id = people.id AND people.parent_id = 0
+					ORDER BY foodtransaction_date DESC LIMIT 1),0),
+					COALESCE(people.modified,0),COALESCE(people.created,0))
+				FROM people
+				WHERE people_id = :id', array('id'=>$row['id']));
 				
 		$date1 = new DateTime($row['touch']);
 		$date2 = new DateTime();
