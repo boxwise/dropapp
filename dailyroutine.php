@@ -1,10 +1,10 @@
 <?php
-	
 	// This file is called about one time daily
 
+	//to debug through the browser
+	require_once($_SERVER["DOCUMENT_ROOT"].'/library/core.php');
+
  	// this function sorts the people list on container/household id, giving the best possible overview
-
-
 	$result = db_query('SELECT id, parent_id, people.container FROM people WHERE NOT deleted AND parent_id = 0 ORDER BY camp_id, IF(container="AAA1",1,0), IF(container="?",1,0), SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
 
 	while($row = db_fetch($result)) {
@@ -20,12 +20,8 @@
 		}
 	}	
 
-
 	// people that have not been active for a longer time will be deleted
 	// the amount of days of inactivity is set in the camp table
-	
-	require_once($_SERVER["DOCUMENT_ROOT"].'/library/core.php');
-	 
 	$result = db_query('SELECT p.id, p.lastname, p.created, p.modified, c.delete_inactive_users AS treshold FROM people AS p LEFT OUTER JOIN camps AS c ON c.id = p.camp_id WHERE NOT p.deleted AND p.parent_id = 0');
 	while($row = db_fetch($result)) {
 		/*
