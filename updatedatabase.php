@@ -1,5 +1,5 @@
 <?php
-	require_once($_SERVER["DOCUMENT_ROOT"].'/'.'library/core.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/library/core.php');
 	
 	if(!$_SESSION['user']['is_admin']) die('Go away!');
 	
@@ -63,4 +63,18 @@
 
 	} else {
 		echo "Field 'camp_id' in table 'products' already exists<br />";
+	}
+
+	if(!db_fieldexists('locations','is_lost')) {
+		echo "Created field 'is_lost' in table 'locations'<br />";
+		db_query('ALTER TABLE `locations` ADD `is_lost` TINYINT(4) NOT NULL DEFAULT 0;');
+		db_query('UPDATE locations SET is_lost = 1 WHERE UPPER(label) = "LOST";');
+		$result = db_query('SELECT camp_id, MAX(is_lost) AS has_lost FROM locations GROUP BY camp_id');
+		while($row = db_fetch($result)) {
+			if(!$row['has_lost']) {
+				db_query('INSERT INTO locations(label, camp_id, created, visible, is_lost, created_by) VALUES ("LOST", :id, NOW(), 0, 1, :user);', array('id' => $row['camp_id'],'user'=>$_SESSION['user']['id']));
+			}
+		}
+	} else {
+		echo "Field 'is_lost' in table 'locations' already exists<br />";
 	}
