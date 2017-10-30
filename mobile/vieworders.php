@@ -1,8 +1,16 @@
 <?php
-
+	
+	//a Box gets picked
 	if($_GET['picked']) {
 		db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NOW(), picked_by = :user WHERE id = :id',array('id'=>intval($_GET['picked']),'user'=>$_SESSION['user']['id']));
 		simpleSaveChangeHistory('stock', $_GET['picked'], 'Box picked to bring to warehouse ');
+	}
+	//a box is lost
+	if($_GET['lost']) {
+		$from['int'] = db_value('SELECT location_id FROM stock WHERE id = :id', array('id'=>intval($_GET['lost'])));
+		$to['int'] = db_value('SELECT id FROM locations WHERE camp_id = :camp AND is_lost = 1 LIMIT 1', array('camp'=>$_SESSION['camp']['id']));
+		db_query('UPDATE stock SET location_id = :loc, ordered = NULL, ordered_by = NULL, modified = NOW(), modified_by = :user WHERE id = :id',array('loc'=>$to['int'], 'id'=>intval($_GET['lost']),'user'=>$_SESSION['user']['id']));
+		simpleSaveChangeHistory('stock', $_GET['lost'], 'location_id', $from, $to);
 	}
 	
 	$boxes = db_array('
