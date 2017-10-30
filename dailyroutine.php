@@ -24,6 +24,7 @@
 	// people that have not been active for a longer time will be deleted
 	// the amount of days of inactivity is set in the camp table
 	
+	require_once($_SERVER["DOCUMENT_ROOT"].'/library/core.php');
 	 
 	$result = db_query('SELECT p.id, p.lastname, p.created, p.modified, c.delete_inactive_users AS treshold FROM people AS p LEFT OUTER JOIN camps AS c ON c.id = p.camp_id WHERE NOT p.deleted AND p.parent_id = 0');
 	while($row = db_fetch($result)) {
@@ -45,7 +46,7 @@
 					ORDER BY foodtransaction_date DESC LIMIT 1),0),
 					COALESCE(people.modified,0),COALESCE(people.created,0))
 				FROM people
-				WHERE people_id = :id', array('id'=>$row['id']));
+				WHERE id = :id', array('id'=>$row['id']));
 				
 		$date1 = new DateTime($row['touch']);
 		$date2 = new DateTime();
