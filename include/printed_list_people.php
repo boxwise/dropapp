@@ -1,7 +1,7 @@
 <?php
 
 	$i = 0;
-	$col = 40;
+	$col = 35;
 	$begin = true;
 
 	$result = db_query('SELECT id, people.container, COUNT(*) AS number, FLOOR((COUNT(*) + SUM(extraportion))/3) AS green, (COUNT(*) + SUM(extraportion))%3 AS red, SUM(extraportion) AS extra FROM people WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted GROUP BY container ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
