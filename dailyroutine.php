@@ -4,7 +4,7 @@
 
  	// this function sorts the people list on container/household id, giving the best possible overview
 
-/*
+
 	$result = db_query('SELECT id, parent_id, people.container FROM people WHERE NOT deleted AND parent_id = 0 ORDER BY camp_id, IF(container="AAA1",1,0), IF(container="?",1,0), SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
 
 	while($row = db_fetch($result)) {
@@ -19,7 +19,7 @@
 			db_query('UPDATE people SET seq = '.$j.' WHERE id = '.$row2['id']);
 		}
 	}	
-*/
+
 
 	// people that have not been active for a longer time will be deleted
 	// the amount of days of inactivity is set in the camp table
