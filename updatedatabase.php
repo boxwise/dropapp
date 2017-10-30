@@ -78,3 +78,10 @@
 	} else {
 		echo "Field 'is_lost' in table 'locations' already exists<br />";
 	}
+
+	if(db_fieldexists('cms_functions','title_nl')) {
+		echo "Dropped field 'title_nl' in table 'cms_functions'<br />";
+		db_query('ALTER TABLE `cms_functions` DROP `title_nl`');
+	} else {
+		echo "Field 'title_nl' in table 'cms_functions' already removed<br />";
+	}
