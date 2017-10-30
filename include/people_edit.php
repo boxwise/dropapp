@@ -103,6 +103,18 @@
 			addfield('list','Transactions','trans', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id WHERE people_id = '.$id. ' AND t.product_id = 0 ORDER BY transaction_date DESC', 'columns'=>array('drops2'=>ucwords($translate['market_coins']), 'description'=>'Note','user'=>'Transaction made by', 'tdate'=>'Date'),
 		'allowedit'=>false,'allowadd'=>$data['allowdrops'], 'add'=>'Give '.ucwords($translate['market_coins']), 'addaction'=>'give&ids='.intval($id), 'allowsort'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'modal'=>false));
 
+			addfield('line','','');
+
+			$table = 'food_transactions';
+			addfield('list','Food','food', array('width'=>10,'query'=>'
+				SELECT f.name AS food, ft.count, ft.created, u.naam AS user, DATE_FORMAT(ft.created,"%d-%m-%Y %H:%i") AS ftdate 
+				FROM food_transactions AS ft 
+				LEFT OUTER JOIN food AS f ON f.id = ft.food_id
+				LEFT OUTER JOIN cms_users AS u ON u.id = ft.created_by 
+				WHERE ft.people_id = '.$id.' 
+				ORDER BY ft.created DESC', 
+				'columns'=>array('food'=>'Food', 'count'=>'Amount', 'user'=>'Transaction made by', 'ftdate'=>'Date'),
+				'allowedit'=>false,'allowadd'=>false,'allowsort'=>false,'allowselect'=>false,'allowselectall'=>false,'redirect'=>false,'modal'=>false));
 
 		}
 
