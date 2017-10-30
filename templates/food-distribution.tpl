@@ -1,4 +1,3 @@
-<div class="noprint tipofday"><h3>💡 Best printing result</h3><p>Print it out using Google Chrome, choose A4, Portrait and switch off the printing of headers and footers in the Print dialog screen.</p></div>
 {foreach $list as $item name="listpeople"}
 
 	{if !$item['begin'] && $item['newcol']}
@@ -11,7 +10,7 @@
 	{/if}
 	
 	{if $item['type']=='familyhead'}
-	    <tr><td><strong>{$item['container']}&emsp;&emsp;</strong>{$item['number']} people ({$item['adults']}Ad{if $item['children']}, {$item['children']}Kid{/if}{if $item['baby']}, <strong>{$item['baby']}Baby</strong>{/if})</td><td><strong>{if $item['extra']} +{$item['extra']} extra{/if} </strong></td><td>
+	    <tr><td><strong>{$item['container']}&emsp;&emsp;{$item['number']} people</strong></td><td><strong>{$item['adults']*2+$item['children']+$item['baby']+$item['extra']} portions</strong></td><td>
 
 		    {foreach $item['food'] as $key=>$f}
 		    <div class="food-distribution-detail">{$f} {$key}</div>
@@ -19,7 +18,7 @@
 	    </td></tr>
 	{/if}
 	{if $item['type']=='member'}
-	    <tr><td>{$item['name']|trim}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}&emsp;&emsp;{if $item['extra']}+{$item['extra']} extra{/if}</td></tr>
+	    <tr><td>{$item['name']|trim}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}{if $item['extra']}&emsp;&emsp;+{$item['extra']} extra{/if}{if $item['age']<=2}&emsp;&emsp;<div class="food-distribution-detail" style="float:right">Diapers</div>{/if}</td></tr>
 	{/if}
 
 	
