@@ -2,7 +2,7 @@
 	// This file is called about one time daily
 
 	//to debug through the browser
-	require_once($_SERVER["DOCUMENT_ROOT"].'/library/core.php');
+	require_once($_SERVER["DOCUMENT_ROOT"].'/themarket/library/core.php');
 
  	// this function sorts the people list on container/household id, giving the best possible overview
 	$result = db_query('SELECT id, parent_id, people.container FROM people WHERE NOT deleted AND parent_id = 0 ORDER BY camp_id, IF(container="AAA1",1,0), IF(container="?",1,0), SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
@@ -43,16 +43,19 @@
 					COALESCE(people.modified,0),COALESCE(people.created,0))
 				FROM people
 				WHERE id = :id', array('id'=>$row['id']));
-				
-		$date1 = new DateTime($row['touch']);
-		$date2 = new DateTime();
-		$row['diff'] = $date2->diff($date1)->format("%a");	
+		
+		if($row['touch']){
+			$date1 = new DateTime($row['touch']);
+			$date2 = new DateTime();
+			$row['diff'] = $date2->diff($date1)->format("%a");	
 	
-		if($row['diff'] > $row['treshold']) {
-			db_query('UPDATE people SET deleted = NOW() WHERE id = :id',array('id'=>$row['id']));
-			simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine');
-			db_touch('people',$row['id']);
+			if($row['diff'] > $row['treshold']) {
+				db_query('UPDATE people SET deleted = NOW() WHERE id = :id',array('id'=>$row['id']));
+				simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine');
+				db_touch('people',$row['id']);
+			}
 		}
+	
 	}
 
 	// cleaning up the database in case of errors
