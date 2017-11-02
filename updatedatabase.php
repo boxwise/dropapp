@@ -85,3 +85,12 @@
 	} else {
 		echo "Field 'title_nl' in table 'cms_functions' already removed<br />";
 	}
+
+
+	if(!db_fieldexists('camps','food')) {
+		echo "Created field 'food' in table 'camps'<br />";
+		db_query('ALTER TABLE `camps` ADD `food` TINYINT(4) NOT NULL DEFAULT 0;');
+		db_query('UPDATE `camps` SET food=1 WHERE name = "Nea Kavala";');
+	} else {
+		echo "Field 'food' in table 'camps' already added<br />";
+	}
