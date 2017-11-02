@@ -9,7 +9,7 @@
 		<table class="food-distribution">
 	{/if}
 	
-	{if $item['type']=='familyhead'}
+	{if $item['type']=='container'}
 	    <tr><td><strong>{$item['container']}&emsp;&emsp;{$item['number']} people</strong></td><td><strong>{$item['adults']*2+$item['children']+$item['baby']+$item['extra']} portions</strong></td><td>
 
 		    {foreach $item['food'] as $key=>$f}
@@ -17,8 +17,8 @@
 		    {/foreach}
 	    </td></tr>
 	{/if}
-	{if $item['type']=='member'}
-	    <tr><td>{$item['name']|trim}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}{if $item['extra']}&emsp;&emsp;+{$item['extra']} extra{/if}{if $item['age']<=2}&emsp;&emsp;<div class="food-distribution-detail" style="float:right">Diapers</div>{/if}</td></tr>
+	{if $item['type']!='container'}
+	    <tr><td>{if $item['type']=='familyhead'}<strong>{/if}{$item['name']|trim}{if $item['type']=='familyhead'}</strong>{/if}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}{if $item['extra']}&emsp;&emsp;+{$item['extra']} extra{/if}{if $item['age']<=2}&emsp;&emsp;<div class="food-distribution-detail" style="float:right">Diapers</div>{/if}</td></tr>
 	{/if}
 
 	
