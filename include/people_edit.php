@@ -119,17 +119,20 @@
 
 			addfield('line','','');
 
-			$table = 'food_transactions';
-			addfield('list','Food','food', array('width'=>10,'query'=>'
-				SELECT f.name AS food, ft.count, ft.created, u.naam AS user, DATE_FORMAT(ft.created,"%d-%m-%Y %H:%i") AS ftdate 
-				FROM food_transactions AS ft 
-				LEFT OUTER JOIN food AS f ON f.id = ft.food_id
-				LEFT OUTER JOIN cms_users AS u ON u.id = ft.created_by 
-				WHERE ft.people_id = '.$id.' 
-				ORDER BY ft.created DESC
-				LIMIT 10', 
-				'columns'=>array('food'=>'Food', 'count'=>'Amount', 'user'=>'Transaction made by', 'ftdate'=>'Date'),
-				'allowedit'=>false,'allowadd'=>false,'allowsort'=>false,'allowselect'=>false,'allowselectall'=>false,'redirect'=>false,'modal'=>false));
+
+			//show food history
+			if(db_value('SELECT food FROM camps WHERE id ='.$_SESSION['camp']['id'])) {	
+				addfield('list','Food','food', array('width'=>10,'query'=>'
+					SELECT f.name AS food, ft.count, ft.created, u.naam AS user, DATE_FORMAT(ft.created,"%d-%m-%Y %H:%i") AS ftdate 
+					FROM food_transactions AS ft 
+					LEFT OUTER JOIN food AS f ON f.id = ft.food_id
+					LEFT OUTER JOIN cms_users AS u ON u.id = ft.created_by 
+					WHERE ft.people_id = '.$id.' 
+					ORDER BY ft.created DESC
+					LIMIT 10', 
+					'columns'=>array('food'=>'Food', 'count'=>'Amount', 'user'=>'Transaction made by', 'ftdate'=>'Date'),
+					'allowedit'=>false,'allowadd'=>false,'allowsort'=>false,'allowselect'=>false,'allowselectall'=>false,'redirect'=>false,'modal'=>false));
+			}
 
 		}
 
