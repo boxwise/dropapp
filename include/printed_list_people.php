@@ -17,12 +17,12 @@
 			$row['newcol'] = true;
 			$i=$row['number'];
 		}
-		$row['type'] = 'familyhead';
+		$row['type'] = 'container';
 		$list[] = $row;
 
-		$result2 = db_query('SELECT CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender, extraportion AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$row['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
+		$result2 = db_query('SELECT p.parent_id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender, extraportion AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$row['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
 		while($row2 = db_fetch($result2)) {
-			$row2['type'] = 'member';
+			$row2['type'] = ($row2['parent_id'])?'member':'familyhead';
 			if(!$row2['age']) $row2['age'] = '?';
 			$list[] = $row2;
 		}
