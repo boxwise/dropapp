@@ -365,7 +365,8 @@
 
 		if($listconfig['searchvalue'] && !$listconfig['manualquery']) {
 			foreach($listconfig['search'] as $field) {
-				$searchquery[] = '('.$field.' LIKE "%'.$listconfig['searchvalue'].'%")';
+				echo "-".$listconfig['searchvalue']."-".trim($listconfig['searchvalue'])."-";
+				$searchquery[] = '('.$field.' LIKE "%'.trim($listconfig['searchvalue']).'%")';
 			}
 
 			if($searchquery) $query = insertwhere($query,'('.join(' OR ',$searchquery).')');
@@ -381,6 +382,7 @@
 		echo nl2br($query);
 		die();
 */
+
 		$start = microtime(true);
 		$data = listdataquery($query,0,$parent);
 		// echo (microtime(true) - $start);

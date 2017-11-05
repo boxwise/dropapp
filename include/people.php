@@ -50,16 +50,16 @@
 			NOT people.deleted AND 
 			people.camp_id = '.$_SESSION['camp']['id']. 
 			($listconfig['searchvalue']?' AND
-			(lastname LIKE "%'.($listconfig['searchvalue']).'%" OR 
-			 firstname LIKE "%'.($listconfig['searchvalue']).'%" OR 
-			 container LIKE "%'.($listconfig['searchvalue']).'%" OR 
+			(lastname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
+			 firstname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
+			 container LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
 			 (SELECT 
 			 	COUNT(id) 
 			 FROM people AS p 
 			 WHERE 
-			 	(lastname LIKE "%'.($listconfig['searchvalue']).'%" OR 
-			 	 firstname LIKE "%'.($listconfig['searchvalue']).'%" OR 
-			 	 container LIKE "%'.($listconfig['searchvalue']).'%") AND 
+			 	(lastname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
+			 	 firstname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
+			 	 container LIKE "%'.trim($listconfig['searchvalue']).'%") AND 
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			':' ')
