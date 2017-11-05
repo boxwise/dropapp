@@ -365,7 +365,6 @@
 
 		if($listconfig['searchvalue'] && !$listconfig['manualquery']) {
 			foreach($listconfig['search'] as $field) {
-				echo "-".$listconfig['searchvalue']."-".trim($listconfig['searchvalue'])."-";
 				$searchquery[] = '('.$field.' LIKE "%'.trim($listconfig['searchvalue']).'%")';
 			}
 

@@ -164,7 +164,7 @@ function utf8_decode_array($array) {
 	return $array;
 }
 
-function simpleSaveChangeHistory($table, $record, $changes, $from, $to) {
+function simpleSaveChangeHistory($table, $record, $changes, $from = array(), $to = array()) {
 	//from and to variable must be arrays with entry 'int' or 'float'
 	if(!db_tableexists('history')) return;
 	

@@ -144,11 +144,17 @@ class formHandler {
 			} else {
 				db_query($insertquery,$queryvalues);
 				$this->id = db_insertid();
+				$this->saveNewrecordInHistory();
 			}
 		}
 	}
 
+	function saveNewrecordInHistory() {
+		if(!db_tableexists('history')) return;
 
+		db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', array('table'=>$this->table,'id'=>$this->id,'change'=>'Record created','user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR']));
+		
+	}
 
 	function saveChangeHistory() {
 		// if no history table is present, ignore this function
