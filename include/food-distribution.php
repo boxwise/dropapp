@@ -12,7 +12,7 @@
 		FROM people 
 		WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted 
 		GROUP BY container 
-		ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
+		ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');
 	while($row = db_fetch($result)) {
 		if($begin) {
 			$row['begin'] = true;

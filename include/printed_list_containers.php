@@ -1,7 +1,7 @@
 <?php
 	include($_SERVER['DOCUMENT_ROOT'].'/flip/lib/functions.php');
 
-	$containers = db_array("SELECT people.container, count(*) AS count FROM people WHERE visible AND NOT deleted AND NOT container = 'AAA1' AND people.camp_id = ".$_SESSION['camp']['id']." GROUP BY container ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1");
+	$containers = db_array("SELECT people.container, count(*) AS count FROM people WHERE visible AND NOT deleted AND NOT container = 'AAA1' AND people.camp_id = ".$_SESSION['camp']['id']." GROUP BY container ORDER BY SUBSTRING(REPLACE(container,'PK','Z'), 1,1), SUBSTRING(REPLACE(container,'PK','Z'), 2, 10)*1");
 
 	if($_GET['export']) {
 
