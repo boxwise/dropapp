@@ -37,7 +37,7 @@
 
 		foreach($list as $l) {
 			if($l['id']) {
-				echo '"'.trim($l['container']).'","'.$l['number'].' people ('.($l['green']?$l['green'].' green':'').($l['green']&&$l['red']?', ':'').($l['red']?$l['red'].' red':'').')'."\"\n";
+				echo '"'.trim($l['container']).'","'.$l['number'].' people ('.($l['green']?$l['green'].' '.$translate['bag_for_one']:'').($l['green']&&$l['red']?', ':'').($l['red']?$l['red'].' '.$translate['bag_for_three']:'').')'."\"\n";
 			} else {
 				echo '"","'.trim($l['name']).'",'.$l['age'].','.$l['gender']."\n";
 			}

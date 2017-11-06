@@ -12,6 +12,10 @@
 				
 			redirect('?action=food-distribution');
 
+		} else if ($type=='drydiapers') {
+				
+			redirect('?action=food-distribution&diapers=true');
+
 		} else {
 
 			redirect('?action=printed_list_containers');
@@ -24,8 +28,8 @@
 		addfield('select', 'Which List', 'type', array('options'=>array(
 			array('value'=>'veg', 'label'=>'Vegetables'),
 			array('value'=>'dry', 'label'=>'Dry Food'),
+			array('value'=>'drydiapers', 'label'=>'Dry Food and diapers'),
 			array('value'=>'con', 'label'=>'Container'))));
-
 		// open the template
 		$cmsmain->assign('title','Sales overview');
 		$cmsmain->assign('include','cms_form.tpl');
