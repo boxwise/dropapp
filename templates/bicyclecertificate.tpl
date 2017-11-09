@@ -14,14 +14,14 @@
 
 <div class="card">
 	<div class="title"><span class="blue">Drop In The Ocean</span> Bicycle Certificate</div>
-	<div class="picture"><img src="/images/people/{$data['id']}.jpg"></div>
+	<div class="picture rotate{$data['rotate']}"><img src="/images/people/{$data['id']}.jpg"></div>
 	<div class="field name">{$data['firstname']} {$data['lastname']}</div>
 	<div class="label name">name</div>
-	<div class="field container">{$data['container']}</div>
+	<div class="field container">{$data['container']}&nbsp;</div>
 	<div class="label container">container</div>
-	<div class="field dob">{$data['date_of_birth']|date_format:"%e %B %Y"}</div>
+	<div class="field dob">{$data['date_of_birth']|date_format:"%e %B %Y"}&nbsp;</div>
 	<div class="label dob">date of birth</div>
-	<div class="field phone">{$data['phone']}</div>
+	<div class="field phone">{$data['phone']}&nbsp;</div>
 	<div class="label phone">phone</div>
 	<div class="field issued">{$smarty.now|date_format:"%e %B %Y %H:%M"}</div>
 	<div class="label issued">issued</div>
