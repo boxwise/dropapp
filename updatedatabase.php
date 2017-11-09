@@ -94,3 +94,25 @@
 	} else {
 		echo "Field 'food' in table 'camps' already added<br />";
 	}
+
+	if(!db_fieldexists('camps','bicycle')) {
+		echo "Created field 'bicycle' in table 'camps'<br />";
+		db_query('ALTER TABLE `camps` ADD `bicycle` TINYINT(4) NOT NULL DEFAULT 0;');
+		db_query('UPDATE `camps` SET bicycle=1 WHERE name = "Nea Kavala";');
+	} else {
+		echo "Field 'bicycle' in table 'camps' already added<br />";
+	}
+
+	if(!db_fieldexists('people','bicycletraining')) {
+		echo "Created field 'bicycletraining' in table 'people'<br />";
+		db_query('ALTER TABLE `people` ADD `bicycletraining` INT  NOT NULL  DEFAULT 0  AFTER `comments`;');
+	} else {
+		echo "Field 'bicycletraining' in table 'people' already exists<br />";
+	}
+
+	if(!db_fieldexists('people','phone')) {
+		echo "Created field 'phone' in table 'people'<br />";
+		db_query('ALTER TABLE `people` ADD `phone` VARCHAR(255)  AFTER `comments`;');
+	} else {
+		echo "Field 'phone' in table 'people' already exists<br />";
+	}

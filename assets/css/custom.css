@@ -555,3 +555,9 @@ td.list-level-0.list-column-ean_print div a:hover {
 .green {
 	color:#30ad2b;
 }
+.people-picture  {
+	margin-top:10px;
+	width:90px;
+	height:120px;
+	object-fit: cover;
+}

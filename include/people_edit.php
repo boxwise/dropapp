@@ -3,7 +3,7 @@
 	$action = 'people_edit';
 
 	if($_POST) {
-
+		
 		if($_POST['pass']) $_POST['pass'] = md5($_POST['pass']);
 
 		$handler = new formHandler($table);
@@ -12,9 +12,9 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments','camp_id');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments','camp_id','bicycletraining','phone');
 		if($_POST['pass']) $savekeys[] = 'pass';
-		$handler->savePost($savekeys);
+		$id = $handler->savePost($savekeys);
 
 		if($_POST['id'] && $oldcontainer != $_POST['container']) {
 			if($_POST['parent_id']) {
@@ -24,6 +24,17 @@
 				db_query('UPDATE people SET container = :container WHERE parent_id = :id', array('id'=>$_POST['id'], 'container'=>$_POST['container']));
 			}
 		}
+		
+		$postid = ($_POST['id']?$_POST['id']:$id);
+		if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
+			if($_FILES['picture']['type']=='image/jpeg') {
+				move_uploaded_file($_FILES['picture']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/images/people/'.$postid.'.jpg');
+			}
+		}
+		if($_POST['picture_delete']) {
+			unlink($_SERVER['DOCUMENT_ROOT'].'/images/people/'.$postid.'.jpg');
+		}
+		
 		if($_POST['__action']=='submitandedit') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$handler->id);
 		redirect('?action='.$_POST['_origin']);
 	}
@@ -84,11 +95,17 @@
 	'options'=>array(array('value'=>'M', 'label'=>'Male'),array('value'=>'F', 'label'=>'Female'))));
 
  	addfield('date','Date of birth','date_of_birth', array('date'=>true, 'time'=>false));
-	addfield('line');
-	if($settings['extraportion']){
+	if($settings['extraportion'] && $_SESSION['camp']['food']){
+		addfield('line');
 		addfield('checkbox','Extra portion at food distribution','extraportion');	
 	}
-	addfield('textarea','Comments','comments');
+	if($_SESSION['camp']['bicycle']){
+		addfield('line');
+		addfield('checkbox','This person succesfully passed the bicycle training','bicycletraining');
+		addfield('text','Phone number','phone');
+		$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/people/'.$id.'.jpg')?$id:0);
+		addfield('bicyclecertificate','Picture for bicycle card','picture');
+	}
  	addfield('line');
 
 	if($data['parent_id'] == 0){

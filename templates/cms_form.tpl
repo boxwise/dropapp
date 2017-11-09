@@ -6,7 +6,7 @@
 		</div>
 	</div>
 
-	<form id="cms_form" class="form form-horizontal areyousure" method="post"> 
+	<form id="cms_form" class="form form-horizontal areyousure" method="post" enctype="multipart/form-data"> 
 		<input type="text" style="display:none" name="fakeloginautofill" />
 		<input type="password" style="display:none" name="fakepassautofill" />
 
