@@ -14,7 +14,6 @@
 		</div>
 	</div>
 	{if $data[$element['field']]}
-{*
 	<div class="form-group" id="div_{$element['field']}_delete">
 		<input type="hidden" name="__{$element['field']}_delete" value="checkbox">
 		<label class="control-label col-sm-2 checkbox-control-label"></label>
@@ -23,7 +22,6 @@
 			</label>
 		</div>
 	</div>
-*}
 	<div class="form-group" id="div_printcertificate">
 		<label for="field" class="control-label col-sm-2"></label>
 		<div class="col-sm-6">
