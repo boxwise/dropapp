@@ -104,6 +104,10 @@
 		addfield('checkbox','This person succesfully passed the bicycle training','bicycletraining');
 		addfield('text','Phone number','phone');
 		$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/people/'.$id.'.jpg')?$id:0);
+		if($data['picture']) {
+			$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/images/people/'.$id.'.jpg');
+			$data['rotate'] = ($exif['Orientation']==3?180:($exif['Orientation']==6?90:($exif['Orientation']==8?270:0)));
+		}
 		addfield('bicyclecertificate','Picture for bicycle card','picture');
 	}
  	addfield('line');

@@ -557,7 +557,34 @@ td.list-level-0.list-column-ean_print div a:hover {
 }
 .people-picture  {
 	margin-top:10px;
+	object-fit: cover;
 	width:90px;
 	height:120px;
-	object-fit: cover;
+}
+.rotate90 img {
+	width:120px;
+	height:90px;
+	margin-top:30px;
+	-webkit-transform:rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+.rotate270 img {
+	width:120px;
+	height:90px;
+	margin-top:30px;
+	-webkit-transform:rotate(270deg);
+	-moz-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	transform: rotate(270deg);
+}
+.rotate180 img {
+	-webkit-transform:rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
 }
