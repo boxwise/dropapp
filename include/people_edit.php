@@ -95,6 +95,7 @@
 	'options'=>array(array('value'=>'M', 'label'=>'Male'),array('value'=>'F', 'label'=>'Female'))));
 
  	addfield('date','Date of birth','date_of_birth', array('date'=>true, 'time'=>false));
+ 	addfield('textarea','Comments','comments');
 	if($settings['extraportion'] && $_SESSION['camp']['food']){
 		addfield('line');
 		addfield('checkbox','Extra portion at food distribution','extraportion');	

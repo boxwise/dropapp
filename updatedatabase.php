@@ -116,3 +116,20 @@
 	} else {
 		echo "Field 'phone' in table 'people' already exists<br />";
 	}
+	
+	if(!db_tableexists('bicycles')) {
+		echo "Created table 'bicycles'<br />";
+		db_query("CREATE TABLE `bicycles` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+LOCK TABLES `bicycles` WRITE;
+INSERT INTO `bicycles` (`id`, `name`, `deleted`)
+VALUES (1,'1',0), (2,'2',0), (3,'3',0), (4,'4',0), (5,'5',0), (6,'6',0), (7,'7',0), (8,'8',0), (9,'9',0), (10,'10',0), (11,'11',0), (12,'12',0), (13,'13',0), (14,'14',0), (15,'15',0), (16,'16',0), (17,'17',0), (18,'18',0), (19,'19',0), (20,'20',0);
+UNLOCK TABLES;");
+	} else {
+		echo "Table 'bicycles' already exists<br />";
+	}
+
