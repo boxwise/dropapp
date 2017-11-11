@@ -12,8 +12,8 @@
 		$cmsmain->assign('title','Bicycles');
 
 		$data = getlistdata('SELECT *, 
-	(SELECT IF(status="out",(SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),"") FROM bicycle_transaction AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
-	(SELECT IF(status="out",transaction_date,0) FROM bicycle_transaction AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
+	(SELECT IF(status="out",(SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),"") FROM bicycle_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
+	(SELECT IF(status="out",transaction_date,0) FROM bicycle_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
 FROM bicycles AS b WHERE NOT b.deleted');
 
 		addcolumn('text','Name','label');

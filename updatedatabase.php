@@ -125,7 +125,7 @@
 	}
 	if(!db_tableexists('bicycle_transactions')) {
 		echo "Created table 'bicycle_transactions'<br />";
-		db_query("CREATE TABLE `bicycle_transaction` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `transaction_date` datetime DEFAULT NULL, `bicycle_id` int(11) DEFAULT NULL, `people_id` int(11) DEFAULT NULL, `status` varchar(5) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;	
+		db_query("CREATE TABLE `bicycle_transactions` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `transaction_date` datetime DEFAULT NULL, `bicycle_id` int(11) DEFAULT NULL, `people_id` int(11) DEFAULT NULL, `status` varchar(5) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;	
 ");
 	} else {
 		echo "Table 'bicycle_transactions' already exists<br />";

@@ -2,13 +2,13 @@
 	$table = 'cms_users';
 
 	if($_GET['return']) {
-		db_query('INSERT INTO bicycle_transaction (transaction_date, bicycle_id, people_id, status) VALUES (NOW(), :id, :people_id, "in")', array('id'=>$_GET['return'],'people_id'=>$_GET['user']));
+		db_query('INSERT INTO bicycle_transactions (transaction_date, bicycle_id, people_id, status) VALUES (NOW(), :id, :people_id, "in")', array('id'=>$_GET['return'],'people_id'=>$_GET['user']));
 		redirect('?action=bicycles');
 	}
 
 	if($_POST) {
 		
-		$table = 'bicycle_transaction';
+		$table = 'bicycle_transactions';
 		$keys = array('transaction_date','bicycle_id','people_id','status');
 
 		$handler = new formHandler($table);
@@ -21,7 +21,7 @@
 
 	// open the template
 
-	$data = db_row('SELECT b.*, bt.transaction_date, bt.people_id, bt.status, CONCAT(p.firstname," ",p.lastname) AS user FROM bicycles AS b LEFT OUTER JOIN bicycle_transaction AS bt ON bt.bicycle_id = b.id LEFT OUTER JOIN people AS p ON bt.people_id = p.id WHERE b.id = :id ORDER BY transaction_date DESC ',array('id'=>$id));
+	$data = db_row('SELECT b.*, bt.transaction_date, bt.people_id, bt.status, CONCAT(p.firstname," ",p.lastname) AS user FROM bicycles AS b LEFT OUTER JOIN bicycle_transactions AS bt ON bt.bicycle_id = b.id LEFT OUTER JOIN people AS p ON bt.people_id = p.id WHERE b.id = :id ORDER BY transaction_date DESC ',array('id'=>$id));
 
 	if($data['status']=='out') {
 
