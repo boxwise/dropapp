@@ -50,7 +50,7 @@ class formHandler {
 						if(!in_array('multiple',$properties)) $value = $value[0];
 						break;
 					case 'date':
-						$value = strftime('%Y-%m-%d %H:%M:%S',strtotime($value));
+						if($value) $value = strftime('%Y-%m-%d %H:%M:%S',strtotime($value));
 						break;
 					case 'readonly':
 						$keys = array_diff($keys, array($key));
