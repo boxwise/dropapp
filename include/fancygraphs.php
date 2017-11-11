@@ -1,11 +1,11 @@
 <?php
 
-	$data['men'] = db_simplearray('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0, COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND date_of_birth IS NOT NULL AND gender = "M" GROUP BY DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0',array('camp_id'=>$_SESSION['camp']['id']));
+	$data['men'] = db_simplearray('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0, COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND date_of_birth IS NOT NULL AND date_of_birth != "0000-00-00" AND gender = "M" GROUP BY DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0',array('camp_id'=>$_SESSION['camp']['id']));
 
 
-	$data['women'] = db_simplearray('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0, COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND date_of_birth IS NOT NULL AND gender = "F" GROUP BY DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0',array('camp_id'=>$_SESSION['camp']['id']));
+	$data['women'] = db_simplearray('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0, COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND date_of_birth IS NOT NULL AND date_of_birth != "0000-00-00" AND gender = "F" GROUP BY DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0',array('camp_id'=>$_SESSION['camp']['id']));
 
-	$data['oldest'] = db_value('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 FROM people WHERE visible AND NOT deleted AND date_of_birth IS NOT NULL AND camp_id = :camp_id ORDER BY date_of_birth LIMIT 1',array('camp_id'=>$_SESSION['camp']['id']));
+	$data['oldest'] = db_value('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 FROM people WHERE visible AND NOT deleted AND date_of_birth IS NOT NULL AND date_of_birth != "0000-00-00" AND camp_id = :camp_id ORDER BY date_of_birth LIMIT 1',array('camp_id'=>$_SESSION['camp']['id']));
 	$data['oldest'] = ceil($data['oldest']/10)*10;
 
 	$array = db_array('SELECT lastname,
