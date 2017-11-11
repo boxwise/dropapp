@@ -123,7 +123,15 @@
 	} else {
 		echo "Table 'bicycles' already exists<br />";
 	}
-	
+	if(!db_tableexists('bicycle_transactions')) {
+		echo "Created table 'bicycle_transactions'<br />";
+		db_query("CREATE TABLE `bicycle_transaction` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `transaction_date` datetime DEFAULT NULL, `bicycle_id` int(11) DEFAULT NULL, `people_id` int(11) DEFAULT NULL, `status` varchar(5) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;	
+");
+	} else {
+		echo "Table 'bicycle_transactions' already exists<br />";
+	}
+
+
 	if(!db_row('SELECT * FROM cms_functions WHERE title_en = "Bicycles"')) {
 		echo "Added bicycles menu items<br />";
 		db_query('INSERT INTO `cms_functions` (`id`,`parent_id`,`title_en`,`include`,`seq`,`created`,`created_by`,`modified`,`modified_by`,`alert`,`adminonly`,`visible`,`allusers`) VALUES (NULL,"0","Bicycles","","6","2017-11-11 12:13:12","1","NULL","NULL","0","0","1","0");');

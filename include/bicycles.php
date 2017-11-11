@@ -11,18 +11,16 @@
 
 		$cmsmain->assign('title','Bicycles');
 
-		$data = getlistdata('SELECT * FROM bicycles ORDER BY label');
+		$data = getlistdata('SELECT *, 
+	(SELECT IF(status="out",(SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),"") FROM bicycle_transaction AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
+	(SELECT IF(status="out",transaction_date,0) FROM bicycle_transaction AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
+FROM bicycles AS b WHERE NOT b.deleted');
 
 		addcolumn('text','Name','label');
-
-		listsetting('add', $translate['cms_users_new']);
-		listsetting('width', 9);
-		listsetting('allowsort', true);
-
-		addbutton('sendlogindata',$translate['cms_users_sendlogin'],array('icon'=>'fa-user','confirm'=>true));
-		if($_SESSION['user']['is_admin'] && !$_SESSION['user2']) {
-			addbutton('loginasuser',$translate['cms_users_loginas'],array('icon'=>'fa-users','confirm'=>true,'oneitemonly'=>true));
-		}
+		addcolumn('text','Rented out to','user');
+		addcolumn('datetime','Date','date');
+		
+		listsetting('add', 'Add a new bike');
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
