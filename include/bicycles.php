@@ -21,6 +21,8 @@ FROM bicycles AS b WHERE NOT b.deleted');
 		addcolumn('datetime','Date','date');
 		
 		listsetting('allowadd', false);
+		listsetting('allowselect', false);
+		listsetting('allowselectall', false);
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
