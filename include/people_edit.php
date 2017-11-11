@@ -155,7 +155,7 @@
 					'columns'=>array('food'=>'Food', 'count'=>'Amount', 'user'=>'Transaction made by', 'ftdate'=>'Date'),
 					'allowedit'=>false,'allowadd'=>false,'allowsort'=>false,'allowselect'=>false,'allowselectall'=>false,'redirect'=>false,'modal'=>false));
 			}
-			if(db_value('SELECT id FROM bicycle_transactions WHERE id ='.id)) {	
+			if(db_value('SELECT id FROM bicycle_transactions WHERE people_id ='.$id)) {	
 				addfield('list','Bicycles','bicycles', array('width'=>10,'query'=>'
 					SELECT DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS transaction_date, b.label, status  FROM bicycle_transactions AS bt LEFT OUTER JOIN bicycles AS b ON bt.bicycle_id = b.id WHERE people_id = '.$id.' ORDER BY transaction_date DESC LIMIT 10', 
 					'columns'=>array('label'=>'Bicycle', 'status'=>'in/out', 'transaction_date'=>'Date'),

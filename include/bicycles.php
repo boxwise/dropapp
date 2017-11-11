@@ -20,7 +20,7 @@ FROM bicycles AS b WHERE NOT b.deleted');
 		addcolumn('text','Rented out to','user');
 		addcolumn('datetime','Date','date');
 		
-		listsetting('add', 'Add a new bike');
+		listsetting('allowadd', false);
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
@@ -42,7 +42,6 @@ FROM bicycles AS b WHERE NOT b.deleted');
 		    case 'copy':
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
-
 		        break;
 
 		    case 'hide':
