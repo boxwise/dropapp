@@ -14,7 +14,7 @@
 (SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= 13)+IF(p.gender="F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 >= 13,1,0) AS female,
 (SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < 13)+IF(p.gender="M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 < 13,1,0) AS boys,
 (SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < 13)+IF(p.gender="F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 < 13,1,0) AS girls
-FROM people AS p WHERE camp_id = :camp_id AND p.visible AND parent_id = 0 AND NOT deleted AND container != "?"',array('camp_id'=>$_SESSION['camp']['id']));
+FROM people AS p WHERE camp_id = :camp_id AND date_of_birth != "0000-00-00" AND p.visible AND parent_id = 0 AND NOT deleted AND container != "?"',array('camp_id'=>$_SESSION['camp']['id']));
 	$data['familysize'] = array();
 	foreach($array as $a) {
 		$data['familysize'][$a['size']]['count'] ++;

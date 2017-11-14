@@ -164,9 +164,9 @@
 
 		}
 
-		addfield('created','Created','created',array('aside'=>true));
 
 	}
+	addfield('created','Created','created',array('aside'=>true));
 
 
 	if ($id) addformbutton('submitandedit',$translate['cms_form_save']);
