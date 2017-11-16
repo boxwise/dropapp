@@ -98,23 +98,22 @@ body.qr {
 .boxlabel {
 	border-right:1px solid #eee;
 	border-bottom:1px solid #eee;
-	width:50%;
-	float:left;
-	height:99mm;
-	padding:8mm;
+	width:100%;
+	height:148.5;
+	padding:12mm;
 	position: relative;
 }
 .boxlabel-title {
 	font-weight: bold;
-	font-size:6mm;
+	font-size:10mm;
 	padding-bottom:14mm;
 }
 .boxlabel-qr {
 	position: absolute;
-	top:8mm;
-	right:8mm;
-	width:3cm;
-	height: 3cm;
+	top:12mm;
+	right:12mm;
+	width:4cm;
+	height: 4cm;
 }
 .boxlabel-qr img {
 	width:100%;
@@ -138,7 +137,7 @@ body.qr {
 	margin-bottom: 2mm;
 }
 .boxlabel-field-short {
-	width:51mm;
+	width:120mm;
 }
 .boxlabel-field-contents {
 	padding-bottom:5px;
@@ -146,11 +145,11 @@ body.qr {
 .boxlabel-field-left {
 	clear:both;
 	float:left;
-	width:45%;
+	width:90%;
 }
 .boxlabel-field-right {
 	float:right;
-	width:45%;
+	width:90%;
 }
 .boxlabel-small {
 	border-right:1px solid #eee;
