@@ -67,7 +67,8 @@
 
 		foreach($data as $key=>$value) {
 			if($data[$key]['expired']) {
-				$data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active in a while"></i>'; 
+				$daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
+				$data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '. floor($daysinactive) .' days."></i>'; 
 			} else {
 				$data[$key]['expired'] ='';
 			}
