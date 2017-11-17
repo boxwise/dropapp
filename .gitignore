@@ -9,4 +9,6 @@ minified.js
 barmaadrihun
 .ftpquota
 uploads/*
+vendor
+phinx.yml
 !uploads/.gitkeep 
