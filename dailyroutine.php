@@ -2,7 +2,7 @@
 	// This file is called about one time daily
 
 	//to debug through the browser
-	require_once($_SERVER["DOCUMENT_ROOT"].'/library/core.php');
+	require_once('library/core.php');
 
  	// this function sorts the people list on container/household id, giving the best possible overview
 	$result = db_query('SELECT id, parent_id, people.container FROM people WHERE NOT deleted AND parent_id = 0 ORDER BY camp_id, IF(container="AAA1",1,0), IF(container="?",1,0), SUBSTRING(REPLACE(container,"PK","Z"), 1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');

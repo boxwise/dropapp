@@ -1,5 +1,5 @@
 <?php
-	require_once($_SERVER["DOCUMENT_ROOT"].'/library/core.php');
+	require_once('library/core.php');
 	
 	if(!$_SESSION['user']['is_admin']) die('Go away!');
 	
