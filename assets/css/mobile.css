@@ -38,11 +38,23 @@ button:active, .btn:active{
 	background: #ddd;
 	color: #999;
 }
+.btn-warning{
+	background: #ed6262;
+}
+.btn-warning:hover, .btn-warning:active{
+	background: #d54141;
+}
 .btn-list .btn{
 	margin-bottom: 15px;
 }
 .btn-list .btn:last-child{
 	margin-bottom: 0;
+}
+.btn-list-small .btn{
+	margin-bottom: 7px;
+}
+.btn-small{
+	font-size: 0.7em;
 }
 header{
 	background: #395c6b;
