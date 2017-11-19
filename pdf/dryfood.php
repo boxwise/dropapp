@@ -57,7 +57,7 @@ while($container = db_fetch($result)) {
 			if($person['extra']) $w-=16;
 			if($person['age']<2) $w-=11;
 		}
-		$pdf->CellFit($w,4,$person['name'],1,0,'L',false,'',true,false);
+		$pdf->CellFit($w,4,$person['name'],0,0,'L',false,'',true,false);
 		if($person['extra'] && $title!='bread') {
 			$pdf->SetXY($pdf->X+50,$pdf->Y-3);
 			$pdf->SetFont('helvetica','',7);
