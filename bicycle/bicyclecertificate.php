@@ -17,8 +17,8 @@
 	$id = intval($_GET['id']);
 	
 	$data = db_row('SELECT * FROM people WHERE id = :id',array('id'=>$id));
-	$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/people/'.$id.'.jpg')?$id:0);
-	$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/images/people/'.$id.'.jpg');
+	$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg')?$id:0);
+	$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg');
 	$data['rotate'] = ($exif['Orientation']==3?180:($exif['Orientation']==6?90:($exif['Orientation']==8?270:0)));
 
 	if(!$data['picture']) {

@@ -14,7 +14,7 @@
 
 <div class="card">
 	<div class="title"><span class="blue">Drop In The Ocean</span> Bicycle Certificate</div>
-	<div class="picture rotate{$data['rotate']}"><img src="/images/people/{$data['id']}.jpg"></div>
+	<div class="picture rotate{$data['rotate']}"><img src="/uploads/people/{$data['id']}.jpg"></div>
 	<div class="field name">{$data['firstname']} {$data['lastname']}</div>
 	<div class="label name">name</div>
 	<div class="field container">{$data['container']}&nbsp;</div>

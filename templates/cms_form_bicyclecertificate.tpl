@@ -9,7 +9,7 @@
 			>
 			{if $element['tooltip']}{include file="cms_tooltip.tpl" valign=" middle"}{/if}
 			{if $data[$element['field']]}
-				<div class="rotate{$data['rotate']}"><img src="/images/people/{$data[$element['field']]}.jpg" class="people-picture"></div>
+				<div class="rotate{$data['rotate']}"><img src="/uploads/people/{$data[$element['field']]}.jpg" class="people-picture"></div>
 			{/if}
 		</div>
 	</div>

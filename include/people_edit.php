@@ -28,11 +28,11 @@
 		$postid = ($_POST['id']?$_POST['id']:$id);
 		if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
 			if($_FILES['picture']['type']=='image/jpeg') {
-				move_uploaded_file($_FILES['picture']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/images/people/'.$postid.'.jpg');
+				move_uploaded_file($_FILES['picture']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$postid.'.jpg');
 			}
 		}
 		if($_POST['picture_delete']) {
-			unlink($_SERVER['DOCUMENT_ROOT'].'/images/people/'.$postid.'.jpg');
+			unlink($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$postid.'.jpg');
 		}
 		
 		if($_POST['__action']=='submitandedit') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$handler->id);
@@ -104,9 +104,9 @@
 		addfield('line');
 		addfield('checkbox','This person succesfully passed the bicycle training','bicycletraining');
 		addfield('text','Phone number','phone');
-		$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/images/people/'.$id.'.jpg')?$id:0);
+		$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg')?$id:0);
 		if($data['picture']) {
-			$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/images/people/'.$id.'.jpg');
+			$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg');
 			$data['rotate'] = ($exif['Orientation']==3?180:($exif['Orientation']==6?90:($exif['Orientation']==8?270:0)));
 		}
 		addfield('bicyclecertificate','Picture for bicycle card','picture');
