@@ -8,6 +8,14 @@
 
 			redirect('?action=printed_list_people');
 
+		} else if ($type=='drynew') {
+				
+			redirect('/pdf/dryfood.php?title=dryfood');
+
+		} else if ($type=='breadnew') {
+				
+			redirect('/pdf/dryfood.php?title=bread');
+
 		} else if ($type=='dry') {
 				
 			redirect('?action=food-distribution');
@@ -27,8 +35,9 @@
 		addfield('line');
 		addfield('select', 'Which List', 'type', array('options'=>array(
 			array('value'=>'veg', 'label'=>'Vegetables'),
-			array('value'=>'dry', 'label'=>'Dry Food'),
-			array('value'=>'drydiapers', 'label'=>'Dry Food and diapers'),
+			array('value'=>'drynew', 'label'=>'Dry Food'),
+			array('value'=>'breadnew', 'label'=>'Bread'),
+			array('value'=>'dry', 'label'=>'Dry Food (old style)'),
 			array('value'=>'con', 'label'=>'Container'))));
 		// open the template
 		$cmsmain->assign('title','Sales overview');
