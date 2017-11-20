@@ -64,7 +64,7 @@ while($container = db_fetch($result)) {
 			$pdf->SetFillColor(240,240,240);
 			$pdf->Cell(16,3.5,'Extra portion',1,0,'C',1);
 		}
-		if($person['age']&&$person['age']<2 && $title!='bread') {
+		if($person['age']!='?' && $person['age']<2 && $title!='bread') {
 			$pdf->SetXY($person['extra']?$pdf->X+$pdf->Column-56:$pdf->X+$pdf->Column-39,$pdf->Y-3);
 			$pdf->SetFont('helvetica','',7);
 			$pdf->SetFillColor(240,240,240);
