@@ -24,7 +24,7 @@ class PDF extends FPDF {
 	function NewColumn() {
 		$this->X += $this->Column;
 		$this->Y = $this->TopMargin;
-		if($this->X>200-$this->LeftMargin) {
+		if($this->X>210-$this->LeftMargin-$this->Column) {
 			$this->NewPage();
 		}
 	}
@@ -37,7 +37,7 @@ class PDF extends FPDF {
 		$this->Y=$this->TopMargin;
 		
 		$this->SetFont('helvetica','',7);
-		$this->SetXY(9,285);
+		$this->SetXY($this->LeftMargin-1,285);
 		$this->Cell(200,4,'Drop In The Ocean / '.$_SESSION['camp']['name'].' / '.$translate['listtitle_'.$_GET['title']].' List '.strftime('%A %e %B %Y %H:%M').' / Page '.$this->PageNo());
 	}
 
