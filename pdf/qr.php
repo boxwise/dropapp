@@ -35,6 +35,10 @@ for($i=0;$i<intval($_GET['count']);$i++) {
 	db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$hash.'",NOW())');
 	
 	$pdf->Image('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://market.drapenihavet.no/'.$settings['rootdir'].'/mobile.php?barcode='.$hash, 165, 10+$y, 35, 35, 'png');
+
+	$pdf->Image('logo.png', 92, 107+$y, 26, 31);
+
+
 	$pdf->Line(50,$y+80,160,$y+80);
 	$pdf->Text(50,$y+84,'Contents');
 
