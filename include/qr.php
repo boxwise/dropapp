@@ -7,7 +7,10 @@
 
 		$data['fulllabel'] = $_POST['fulllabel'];
 
-		if($_POST['label']) {
+		if($_POST['fulllabel']) {
+			$labels = explode(',',$_POST['label']);
+			redirect('/pdf/qr.php?count='.$_POST['count']);
+		} elseif($_POST['label']) {
 			$i=0;
 			$labels = explode(',',$_POST['label']);
 			foreach($labels as $l) {
