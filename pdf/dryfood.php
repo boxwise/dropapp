@@ -26,9 +26,9 @@ $pdf->SetAutoPageBreak(false);
 
 $result = db_query('
 	SELECT id, people.container, COUNT(*) AS number, SUM(extraportion) AS extra, 
-		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) >= '.$settings['adult-age'].', 1, 0)) AS adults, 
-		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 2, 1, 0)) AS baby, 
-		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) >= '.$settings['adult-age'].' OR (DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) <= 2, 0, 1)) AS children
+		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$settings['adult-age'].', 0, 1)) AS adults, 
+		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 3, 1, 0)) AS baby, 
+		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$settings['adult-age'].' AND NOT (DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) <3, 1, 0)) AS children
 	FROM people 
 	WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted 
 	GROUP BY container 
@@ -48,7 +48,7 @@ while($container = db_fetch($result)) {
 	
 	$result2 = db_query('SELECT p.parent_id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, extraportion AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
 	while($person = db_fetch($result2)) {
-		if(!$person['age']) $person['age'] = '?';
+		#if(!$person['age']) $person['age'] = '?';
 		$pdf->SetFont('helvetica',($person['parent_id']?'':'B'),10);
 		
 		$pdf->SetXY($pdf->X-1,$pdf->Y-3);
@@ -64,7 +64,7 @@ while($container = db_fetch($result)) {
 			$pdf->SetFillColor(240,240,240);
 			$pdf->Cell(16,3.5,'Extra portion',1,0,'C',1);
 		}
-		if($person['age']!='?' && $person['age']<2 && $title!='bread') {
+		if($person['age']!='?' && $person['age']<3 && $title!='bread') {
 			$pdf->SetXY($person['extra']?$pdf->X+$pdf->Column-56:$pdf->X+$pdf->Column-39,$pdf->Y-3);
 			$pdf->SetFont('helvetica','',7);
 			$pdf->SetFillColor(240,240,240);
