@@ -48,7 +48,7 @@ while($container = db_fetch($result)) {
 	
 	$result2 = db_query('SELECT p.parent_id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, extraportion AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
 	while($person = db_fetch($result2)) {
-		#if(!$person['age']) $person['age'] = '?';
+		if(is_null($person['age'])) $person['age'] = '?';
 		$pdf->SetFont('helvetica',($person['parent_id']?'':'B'),10);
 		
 		$pdf->SetXY($pdf->X-1,$pdf->Y-3);
