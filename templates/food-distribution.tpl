@@ -18,7 +18,7 @@
 	    </td></tr>
 	{/if}
 	{if $item['type']!='container'}
-	    <tr><td>{if $item['type']=='familyhead'}<strong>{/if}{$item['name']|trim}{if $item['type']=='familyhead'}</strong>{/if}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}{if $item['extra']}&emsp;&emsp;+{$item['extra']} extra{/if}{if $smarty.get.diapers && $item['age']<2}&emsp;&emsp;<div class="food-distribution-detail" style="float:right">Diapers</div>{/if}</td></tr>
+	    <tr><td>{if $item['type']=='familyhead'}<strong>{/if}{$item['name']|trim}{if $item['type']=='familyhead'}</strong>{/if}</td><td>{$item['age']}</td><td  colspan="1">{$item['gender']}{if $item['extra']}&emsp;&emsp;+{$item['extra']} extra{/if}{if $smarty.get.diapers && $item['age']<3}&emsp;&emsp;<div class="food-distribution-detail" style="float:right">Diapers</div>{/if}</td></tr>
 	{/if}
 
 	
