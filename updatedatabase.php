@@ -138,6 +138,13 @@
 		db_query('INSERT INTO `cms_functions` (`id`,`parent_id`,`title_en`,`include`,`seq`,`created`,`created_by`,`modified`,`modified_by`,`alert`,`adminonly`,`visible`,`allusers`) VALUES (NULL,"131","Bicycle lending","bicycle_transaction","0","2017-11-11 12:14:19","1","NULL","NULL","0","0","1","0")');
 		db_query('INSERT INTO `cms_functions` (`id`,`parent_id`,`title_en`,`include`,`seq`,`created`,`created_by`,`modified`,`modified_by`,`alert`,`adminonly`,`visible`,`allusers`) VALUES (NULL,"131","Bicycles","bicycles","1","2017-11-11 12:14:19","1","NULL","NULL","0","0","1","0")');
 	} else {
-		echo "Bicycles menu items already exist<br />";
+		echo "Bicycles menu items already exists<br />";
+	}
+
+	if(!db_fieldexists('people','notregistered')) {
+		echo "Created field 'notregistered' in table 'people'<br />";
+		db_query('ALTER TABLE `people` ADD `notregistered` TINYINT  NOT NULL  DEFAULT "0" ');
+	} else {
+		echo "Field 'notregistered' in table 'people' already exists<br />";
 	}
 
