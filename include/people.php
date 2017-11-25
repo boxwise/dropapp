@@ -43,7 +43,8 @@
 			people.*, 
 			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
 			IF(gender="M","Male","Female") AS gender2, 
-			IF(people.parent_id,"",SUM(t2.drops)) AS drops 
+			IF(people.parent_id,"",SUM(t2.drops)) AS drops,  
+			IF(notregistered,"NR","") AS nr
 		FROM people 
 		LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
 		WHERE 
@@ -78,6 +79,7 @@
 		addcolumn('text','Firstname','firstname');
 		addcolumn('text','Gender','gender2');
 		addcolumn('text','Age','age');
+		addcolumn('text','NR','nr');
 		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
 		addcolumn('text', ucwords($translate['market_coins']),'drops');
 		addcolumn('html','&nbsp;','expired');

@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments','camp_id','bicycletraining','phone');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments','camp_id','bicycletraining','phone','notregistered');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$id = $handler->savePost($savekeys);
 
@@ -96,8 +96,9 @@
 
  	addfield('date','Date of birth','date_of_birth', array('date'=>true, 'time'=>false));
  	addfield('textarea','Comments','comments');
+	addfield('line');
+	addfield('checkbox','This person is not officially registered in camp','notregistered');	
 	if($settings['extraportion'] && $_SESSION['camp']['food']){
-		addfield('line');
 		addfield('checkbox','Extra portion at food distribution','extraportion');	
 	}
 	if($_SESSION['camp']['bicycle']){
