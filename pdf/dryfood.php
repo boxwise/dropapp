@@ -25,7 +25,7 @@ $pdf->Column = 80;
 $pdf->SetAutoPageBreak(false);
 
 $result = db_query('
-	SELECT id, people.container, COUNT(*) AS number, SUM(extraportion) AS extra, 
+	SELECT id, people.container, COUNT(*) AS number, SUM(extraportion)+SUM(notregistered) AS extra, 
 		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$settings['adult-age'].', 0, 1)) AS adults, 
 		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 3, 1, 0)) AS baby, 
 		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$settings['adult-age'].' AND NOT (DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) <3, 1, 0)) AS children
@@ -46,7 +46,7 @@ while($container = db_fetch($result)) {
 	$pdf->Print($container['number'].' people ('.($container['adults']?$container['adults'].' adults':'').($container['children']?', '.($container['children']+$container['baby']).' children':'').')',15);
 	$pdf->NewLine();
 	
-	$result2 = db_query('SELECT p.parent_id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, extraportion AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
+	$result2 = db_query('SELECT p.parent_id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, (notregistered+extraportion) AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
 	while($person = db_fetch($result2)) {
 		if(is_null($person['age'])) $person['age'] = '?';
 		$pdf->SetFont('helvetica',($person['parent_id']?'':'B'),10);

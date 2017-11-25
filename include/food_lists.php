@@ -16,10 +16,6 @@
 				
 			redirect('/pdf/dryfood.php?title=bread');
 
-		} else if ($type=='dry') {
-				
-			redirect('?action=food-distribution');
-
 		} else if ($type=='drydiapers') {
 				
 			redirect('?action=food-distribution&diapers=true');
@@ -37,7 +33,6 @@
 			array('value'=>'veg', 'label'=>'Vegetables'),
 			array('value'=>'drynew', 'label'=>'Dry Food'),
 			array('value'=>'breadnew', 'label'=>'Bread'),
-			array('value'=>'dry', 'label'=>'Dry Food (old style)'),
 			array('value'=>'con', 'label'=>'Container'))));
 		// open the template
 		$cmsmain->assign('title','Sales overview');

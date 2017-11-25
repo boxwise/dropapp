@@ -99,7 +99,7 @@
 	addfield('line');
 	addfield('checkbox','This person is not officially registered in camp','notregistered');	
 	if($settings['extraportion'] && $_SESSION['camp']['food']){
-		addfield('checkbox','Extra portion at food distribution','extraportion');	
+		addfield('checkbox','Extra food due to health condition (as indicated by Red Cross)','extraportion');	
 	}
 	if($_SESSION['camp']['bicycle']){
 		addfield('line');
