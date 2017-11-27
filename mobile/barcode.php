@@ -24,7 +24,7 @@
 		LEFT OUTER JOIN locations AS l ON l.id = s.location_id
 		LEFT OUTER JOIN qr AS q ON q.id = s.qr_id
 		LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
-		WHERE NOT s.deleted AND q.code = :barcode',array('barcode'=>$data['barcode']));
+		WHERE q.code = :barcode',array('barcode'=>$data['barcode']));
 		}
 		if($box['camp_id']!=$_SESSION['camp']['id'] && $box['campname']) {
 			$tpl->assign('include','mobile_newbox.tpl');
