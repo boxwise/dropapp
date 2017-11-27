@@ -27,8 +27,8 @@
 		WHERE q.code = :barcode',array('barcode'=>$data['barcode']));
 		}
 		if ($box['deleted']) {
-			$tpl->assign('include','mobile_newbox.tpl');
-			redirect('?editbox='.$box['id'].'&warning=true&message=Deleted box<br /><br /> No? <a href="'.$settings['rootdir'].'/mobile.php">Search again!</a><br /><br /> Yes? Edit and save this box to transfer it to '.$_SESSION['camp']['name'].'.');
+			$tpl->assign('include','mobile_editbox.tpl');
+			redirect('?editbox='.$box['id'].'&warning=true&message=This box was deleted. Editing and saving this form undeletes it.');
 		} elseif($box['camp_id']!=$_SESSION['camp']['id'] && $box['campname']) {
 			$tpl->assign('include','mobile_newbox.tpl');
 			redirect('?editbox='.$box['id'].'&warning=true&message=Oops!! This box is registered in '.$box['campname'].', are you sure this is what you were looking for?<br /><br /> No? <a href="'.$settings['rootdir'].'/mobile.php">Search again!</a><br /><br /> Yes? Edit and save this box to transfer it to '.$_SESSION['camp']['name'].'.');
