@@ -117,19 +117,45 @@
 		echo "Field 'phone' in table 'people' already exists<br />";
 	}
 	
-	if(!db_tableexists('bicycles')) {
-		echo "Created table 'bicycles'<br />";
-		db_query("CREATE TABLE `bicycles` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `label` varchar(255) DEFAULT NULL, `deleted` tinyint(4) NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8; LOCK TABLES `bicycles` WRITE; INSERT INTO `bicycles` (`id`, `label`, `deleted`) VALUES (1,'Bike 1',0), (2,'Bike 2',0), (3,'Bike 3',0), (4,'Bike 4',0), (5,'Bike 5',0), (6,'Bike 6',0), (7,'Bike 7',0), (8,'Bike 8',0), (9,'Bike 9',0), (10,'Bike 10',0), (11,'Bike 11',0), (12,'Bike 12',0), (13,'Bike 13',0), (14,'Bike 14',0), (15,'Bike 15',0), (16,'Bike 16',0), (17,'Bike 17',0), (18,'Bike 18',0), (19,'Bike 19',0), (20,'Bike 20',0); UNLOCK TABLES;");
-	} else {
-		echo "Table 'bicycles' already exists<br />";
+	/* Bicycle and borrowing */
+	if(db_tableexists('bicycles')) {
+		db_query('RENAME TABLE `bicycles` TO `borrow_items`');
+		db_query('UPDATE cms_functions SET include = "borrow", title_en = "Borrow items" WHERE include = "bicycles"');
+		db_query('UPDATE cms_functions SET title_en = "Borrow items" WHERE id = 131');
 	}
-	if(!db_tableexists('bicycle_transactions')) {
-		echo "Created table 'bicycle_transactions'<br />";
-		db_query("CREATE TABLE `bicycle_transactions` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `transaction_date` datetime DEFAULT NULL, `bicycle_id` int(11) DEFAULT NULL, `people_id` int(11) DEFAULT NULL, `status` varchar(5) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;	
+	if(db_tableexists('bicycle_transactions')) {
+		db_query('RENAME TABLE `bicycle_transactions` TO `borrow_transactions`');
+	}
+	if(!db_tableexists('borrow_items')) {
+		echo "Created table 'borrow_items'<br />";
+		db_query("CREATE TABLE `borrow_items` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `label` varchar(255) DEFAULT NULL, `deleted` tinyint(4) NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8; LOCK TABLES `bicycles` WRITE; INSERT INTO `bicycles` (`id`, `label`, `deleted`) VALUES (1,'Bike 1',0), (2,'Bike 2',0), (3,'Bike 3',0), (4,'Bike 4',0), (5,'Bike 5',0), (6,'Bike 6',0), (7,'Bike 7',0), (8,'Bike 8',0), (9,'Bike 9',0), (10,'Bike 10',0), (11,'Bike 11',0), (12,'Bike 12',0), (13,'Bike 13',0), (14,'Bike 14',0), (15,'Bike 15',0), (16,'Bike 16',0), (17,'Bike 17',0), (18,'Bike 18',0), (19,'Bike 19',0), (20,'Bike 20',0); UNLOCK TABLES;");
+	} else {
+		echo "Table 'borrow_items' already exists<br />";
+	}
+	if(!db_tableexists('borrow_transactions')) {
+		echo "Created table 'borrow_transactions'<br />";
+		db_query("CREATE TABLE `borrow_transactions` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT, `transaction_date` datetime DEFAULT NULL, `bicycle_id` int(11) DEFAULT NULL, `people_id` int(11) DEFAULT NULL, `status` varchar(5) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;	
 ");
 	} else {
-		echo "Table 'bicycle_transactions' already exists<br />";
+		echo "Table 'borrow_transactions' already exists<br />";
 	}
+	if(!db_fieldexists('borrow_items','category_id')) {
+		echo "Created field 'category_id' in table 'borrow_items'<br />";
+		db_query('ALTER TABLE `borrow_items` ADD `category_id` INT  NOT NULL  DEFAULT "0" ');
+		db_query('UPDATE borrow_items SET category_id = 1');
+	} else {
+		echo "Field 'category_id' in table 'borrow_items' already exists<br />";
+	}
+	if(!db_tableexists('borrow_categories')) {
+		echo "Created table 'borrow_categories'<br />";
+		db_query("CREATE TABLE `borrow_categories` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `label` varchar(255) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8; LOCK TABLES `borrow_categories` WRITE; INSERT INTO `borrow_categories` (`id`, `label`) VALUES (1,'Bicycles'), (2,'Gym gear'); UNLOCK TABLES;");
+	} else {
+		echo "Table 'borrow_categories' already exists<br />";
+	}
+
+
+
+
 
 
 	if(!db_row('SELECT * FROM cms_functions WHERE title_en = "Bicycles"')) {

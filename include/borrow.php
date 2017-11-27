@@ -1,6 +1,6 @@
 <?php
 
-	$table = $action;
+	$table = 'borrow_items';
 	$ajax = checkajax();
 	if(!DEFINED('CORE')) include('core.php');
 
@@ -9,17 +9,19 @@
 
 		initlist();
 
-		$cmsmain->assign('title','Bicycles');
+		$cmsmain->assign('title','Borrow items');
 
-		$data = getlistdata('SELECT *, 
-	(SELECT IF(status="out",(SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),"") FROM bicycle_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
-	(SELECT IF(status="out",transaction_date,0) FROM bicycle_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
-FROM bicycles AS b WHERE NOT b.deleted');
+		$data = getlistdata('SELECT b.*, bc.label AS category, 
+	(SELECT IF(status="out",(SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
+	(SELECT IF(status="out",transaction_date,0) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
+FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted');
 
+		addcolumn('text','Category','category');
 		addcolumn('text','Name','label');
 		addcolumn('text','Rented out to','user');
 		addcolumn('datetime','Date','date');
 		
+		listsetting('allowsort', true);
 		listsetting('allowadd', false);
 		listsetting('allowselect', false);
 		listsetting('allowselectall', false);
