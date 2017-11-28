@@ -3,7 +3,8 @@
 
 	if($box['deleted']) {
 		unset($box['location_id']);
-		$data['warning'] = "This box has been deleted. Editing and saving this form undeletes it.";
+		$data['message'] = "This box has been deleted. Editing and saving this form undeletes it.";
+		$data['warning'] = true;
 	}
 	
 	$data['products'] = db_array('SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label, sizegroup_id FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE NOT p.deleted AND p.camp_id = :camp_id ORDER BY name',array('camp_id'=>$_SESSION['camp']['id']));
