@@ -20,8 +20,7 @@
 	if($_POST['id']) $savekeys[] = 'id';
 	$id = $handler->savePost($savekeys);
 
-
-	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE NOT s.deleted AND s.id = :id',array('id'=>$id));
+	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id',array('id'=>$id));
 
 	if($_POST['id']) {
 		$message = 'Box '.$box['box_id'].' modified with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'].'. <a href="?boxid='.$box['id'].'">Go back to this box.</a>';
@@ -31,8 +30,4 @@
 
 	$data['barcode'] = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$box['qr_id']));
 
-	if($data['barcode']) {
-		redirect('?barcode='.$data['barcode'].'&message='.$message);	
-	} else {
-		redirect('?boxid='.$id.'&message='.$message);	
-	}
+	redirect('?barcode='.$data['barcode'].'&message='.$message);	
