@@ -12,9 +12,10 @@
 		db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');						
 	}
 
+	$_POST['deleted'] = '';
 	$handler = new formHandler('stock');
 
-	$savekeys = array('box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments' ,'qr_id');
+	$savekeys = array('box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments' ,'qr_id', 'deleted');
 	if($_POST['id']) $savekeys[] = 'id';
 	$id = $handler->savePost($savekeys);
 
