@@ -12,12 +12,12 @@
 		db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');						
 	}
 
-	$_POST['deleted'] = '';
 	$handler = new formHandler('stock');
 
-	$savekeys = array('box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments' ,'qr_id', 'deleted');
+	$savekeys = array('box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments' ,'qr_id');
 	if($_POST['id']) $savekeys[] = 'id';
 	$id = $handler->savePost($savekeys);
+	db_query('UPDATE stock SET deleted = NULL WHERE id = :id',array('id'=>$id));
 
 
 	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE NOT s.deleted AND s.id = :id',array('id'=>$id));
