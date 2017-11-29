@@ -119,10 +119,10 @@
 						if($id!=$oldest) {
 							db_query('UPDATE people SET parent_id = :oldest WHERE id = :id',array('oldest'=>$oldest,'id'=>$id));
 							$drops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id',array('id'=>$id));
-							db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$id.', -'.$drops.', "'.ucwords($translate['market_coins_short']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+							db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$id.', -'.intval($drops).', "'.ucwords($translate['market_coins_short']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
 						}
 					}
-					db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$oldest.', '.$extradrops.', "'.ucwords($translate['market_coins_short']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
+					db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$oldest.', '.intval($extradrops).', "'.ucwords($translate['market_coins_short']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
 					$success = true;
 					$redirect = true;
 					correctchildren();
