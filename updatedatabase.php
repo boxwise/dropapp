@@ -3,7 +3,8 @@
 	
 	if(!$_SESSION['user']['is_admin']) die('Go away!');
 	
-	db_query('ALTER TABLE `stock` CHANGE `deleted` `deleted` DATETIME  NULL  DEFAULT NULL;');
+	db_query('ALTER TABLE `stock` CHANGE `deleted` `deleted` DATETIME  NOT NULL  DEFAULT "0000-00-00 00:00:00"');
+
 	echo "<strong>Database update script</strong><br />";
 
 	if(!db_fieldexists('cms_functions','visible')) {
