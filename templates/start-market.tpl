@@ -132,10 +132,10 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 <hr />
 <h1 class="light">We have <span class="number">{$data['items']}</span> items in our warehouses, in <span class="number">{$data['boxes']}</span> boxes. Already <span class="number">{$data['sold']}</span> items have been sold in the market in <span class="number">{$data['marketdays']}</span> opening days. Most popular item is <span class="number">{$data['popularname']}</span> with <span class="number">{$data['popularcount']}</span> items sold.</h1>
 <hr />
-{if $data['sales']}<h2>Sales in the last 14 days</h2>
+{if $data['sales']}<h2>Sales in the last 21 days</h2>
 <div id="chartdiv"></div>
 {/if}
-{if $data['borrow']}<h2>Items lent out in the last 14 days</h2>
+{if $data['borrow']}<h2>Items lent out in the last 21 days</h2>
 <div id="chartdiv2"></div>
 {/if}
 

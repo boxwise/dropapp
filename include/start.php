@@ -24,7 +24,7 @@
 		$data['popularcount'] = intval($popular['count']);
 		$data['popularname'] = $popular['product']?$popular['product']:'none';
 	
-		$date = strftime('%Y-%m-%d',strtotime('-14 days'));
+		$date = strftime('%Y-%m-%d',strtotime('-21 days'));
 		$end = strftime('%Y-%m-%d');
 	
 		while (strtotime($date) <= strtotime($end)) {
