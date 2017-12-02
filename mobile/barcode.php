@@ -1,6 +1,7 @@
 <?php
 
 	$data['barcode'] = $_GET['barcode'];
+	
 
 	if($_GET['barcode'] && !db_value('SELECT id FROM qr WHERE code = :code',array('code'=>$_GET['barcode']))) {
 		$data['warning'] = true;
@@ -26,7 +27,7 @@
 		LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
 		WHERE q.code = :barcode',array('barcode'=>$data['barcode']));
 		}
-		if ($box['deleted']) {
+		if ($box['deleted']!="0000-00-00 00:00:00") {
 			$tpl->assign('include','mobile_editbox.tpl');
 			redirect('?editbox='.$box['id']);
 		} elseif($box['camp_id']!=$_SESSION['camp']['id'] && $box['campname']) {
