@@ -3,6 +3,9 @@
 #chartdiv {
 	height: 300px;
 }
+#chartdiv2 {
+	height: 300px;
+}
 </style>
 
 <!-- Resources -->
@@ -23,8 +26,7 @@ var chart = AmCharts.makeChart( "chartdiv", {
 		{
         "date": "{$date}",
         "sales": "{$sales}",
-		}
-		{if not $smarty.foreach.sales.last},{/if}
+		},
 	{/foreach}
 	],
   "valueAxes": [ {
@@ -59,6 +61,67 @@ var chart = AmCharts.makeChart( "chartdiv", {
   }
 
 } );
+var chart = AmCharts.makeChart( "chartdiv2", {
+  "type": "serial",
+  "theme": "light",
+  "fontFamily": "Helvetica Neue ,Helvetica,Arial,sans-serif",
+  "dataProvider": [
+
+	{foreach $data['borrow'] as $date=>$borrow name=borrow}
+		{
+        "date": "{$date}",
+			{foreach $borrow as $key=>$value name=groups}
+		        "{$key}": {$value['count']},
+			{/foreach}
+		}
+		{if not $smarty.foreach.days.last},{/if}
+	{/foreach}
+
+
+
+	],
+  "valueAxes": [ {
+    "gridColor": "#FFFFFF",
+	"minimum": 0,
+    "gridAlpha": 0.2,
+    "dashLength": 0,
+		"minimum": 0,
+        "stackType": "regular",
+        "axisAlpha": 0,
+        "position": "left",
+  } ],
+  "gridAboveGraphs": true,
+  "startDuration": 1,
+  "graphs": [ {
+    "balloonText": "<b>[[value]]</b> Bicycles borrowed", 
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "valueField": "Bicycles"
+  },{
+    "balloonText": "<b>[[value]]</b> Gym gear items borrowed",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "valueField": "Gym gear"
+  } ],
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "date",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "gridAlpha": 0,
+    "tickPosition": "start",
+    "tickLength": 5
+  },
+  "export": {
+    "enabled": false
+  }
+
+} );
 </script>
 
 <!-- HTML -->
@@ -71,6 +134,10 @@ var chart = AmCharts.makeChart( "chartdiv", {
 <hr />
 {if $data['sales']}<h2>Sales in the last 14 days</h2>
 <div id="chartdiv"></div>
+{/if}
+{if $data['borrow']}<h2>Items lent out in the last 14 days</h2>
+<div id="chartdiv2"></div>
+{/if}
 
 	
 	<aside id="aside-container">
@@ -82,5 +149,4 @@ var chart = AmCharts.makeChart( "chartdiv", {
 		</div>
 	</aside>
 </div>
-{/if}
 
