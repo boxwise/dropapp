@@ -135,7 +135,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 {if $data['sales']}<h2>Sales in the last 21 days</h2>
 <div id="chartdiv"></div>
 {/if}
-{if $data['borrow']}<h2>Items lent out in the last 21 days</h2>
+{if $data['borrow'] && $smarty.session.camp['bicycle']}<h2>Items lent out in the last 21 days</h2>
 <div id="chartdiv2"></div>
 {/if}
 
