@@ -355,7 +355,7 @@
 
 		if($hasTree) $query = insertwhere($query,'parent_id = :parent_id');
 
-		if($hasDeleted && !stripos($query,'DELETED')) $query = insertwhere($query, 'NOT '.$table.'.deleted');
+		if($hasDeleted && !stripos($query,'DELETED')) $query = insertwhere($query, '(NOT '.$table.'.deleted OR '.$table.' IS NULL)');
 
 		if($hasFilter && !$listconfig['manualquery']) 
 			$query = insertwhere($query, $listconfig['filter']['filter'].'='.db_escape($hasFilter));
