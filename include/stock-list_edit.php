@@ -45,7 +45,7 @@
 				p.name = (SELECT name FROM products WHERE id = '.intval($product).') AND 
 				p.gender_id = '.intval($gender).' '.
 				($size?' AND s.id = '.intval($size):'').' AND 
-				NOT stock.deleted AND 
+				(NOT stock.deleted OR stock.deleted IS NULL) AND 
 				stock.location_id = l.id 
 				AND l.visible');
 
