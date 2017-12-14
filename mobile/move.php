@@ -2,7 +2,7 @@
 
 	$move = intval($_GET['move']);
 
-	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location, s.location_id AS location_id FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE NOT s.deleted AND s.id = :id',array('id'=>$move));
+	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location, s.location_id AS location_id FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id',array('id'=>$move));
 
 	$newlocation = db_row('SELECT * FROM locations AS l WHERE l.id = :location',array('location'=>intval($_GET['location'])));
 

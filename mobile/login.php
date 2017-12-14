@@ -2,7 +2,7 @@
 
 	$_POST['pass'] = md5($_POST['pass']);
 
-	$row = db_row('SELECT *, "org" AS usertype FROM '.$settings['cms_usertable'].' WHERE email != "" AND email = :email AND NOT deleted',array('email'=>$_POST['email']));
+	$row = db_row('SELECT *, "org" AS usertype FROM '.$settings['cms_usertable'].' WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)',array('email'=>$_POST['email']));
 
 	if($row) { #e-mailaddress exists in database
 		if($settings['local_adminonly'] && !$row['is_admin'] && $_SERVER['Local']) {
