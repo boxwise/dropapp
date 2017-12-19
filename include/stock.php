@@ -3,6 +3,11 @@
 	$table = $action;
 	$ajax = checkajax();
 	if(!DEFINED('CORE')) include('core.php');
+	ini_set('display_errors', true);
+	error_reporting(E_ALL);
+
+	require_once($_SERVER['DOCUMENT_ROOT'].'/library/lib/PHPExcel.php');
+	require_once($_SERVER['DOCUMENT_ROOT'].'/library/lib/PHPExcel/Writer/Excel2007.php');
 
 	if(!$ajax) {
 
@@ -71,11 +76,16 @@
 		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
+		addbutton('export','Export list',array('icon'=>'fa-download','showalways'=>true));
+
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
 		$cmsmain->assign('include','cms_list.tpl');
 
+		if($_GET['export']) {
+			exportstock($data);
+		}
 
 	} else {
 		switch ($_POST['do']) {
@@ -146,6 +156,10 @@
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 		        break;
+		    case 'export':
+		    	list($success, $message, $redirect) = array(true,'','?action=stock&export=true');
+				
+		        break;
 		}
 
 		$return = array("success" => $success, 'message'=> $message, 'redirect'=>$redirect);
@@ -153,3 +167,31 @@
 		echo json_encode($return);
 		die();
 	}
+
+function exportstock($data) {
+	$e = new PHPExcel();
+	$e->getProperties()->setCreator("Drop in the Ocean");
+	$e->getProperties()->setTitle('Boxes export '.strftime('%A %d %B %Y, %H:%M'));
+	$e->setActiveSheetIndex(0);
+
+	$keys = array('box_id'=>'Box number', 'product'=>'Product', 'gender'=>'Gender', 'size'=>'Size', 'location'=>'Location');
+	
+	$i=0;
+	foreach($keys as $key=>$name) {
+		$columns[$i] = $name;
+		$e->getActiveSheet()->setCellValueByColumnAndRow($i,1,$name);
+		$i++;
+	}
+
+		header('Content-type: application/vnd.ms-excel');
+	header('Content-Disposition: attachment;filename="Bestellingen.xlsx"');
+	header('Cache-Control: max-age=0');
+
+	$objWriter = PHPExcel_IOFactory::createWriter($e, 'Excel2007');
+	$tmp = sys_get_temp_dir().'/'.md5(time());
+	$objWriter->save($tmp);
+	readfile($tmp);
+	unlink($tmp);
+
+
+}

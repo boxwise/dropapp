@@ -155,11 +155,6 @@
 		echo "Table 'borrow_categories' already exists<br />";
 	}
 
-
-
-
-
-
 	if(!db_row('SELECT * FROM cms_functions WHERE title_en = "Bicycles"')) {
 		echo "Added bicycles menu items<br />";
 		db_query('INSERT INTO `cms_functions` (`id`,`parent_id`,`title_en`,`include`,`seq`,`created`,`created_by`,`modified`,`modified_by`,`alert`,`adminonly`,`visible`,`allusers`) VALUES (NULL,"0","Bicycles","","6","2017-11-11 12:13:12","1","NULL","NULL","0","0","1","0");');
@@ -176,3 +171,9 @@
 		echo "Field 'notregistered' in table 'people' already exists<br />";
 	}
 
+	if(!db_fieldexists('borrow_items','visible')) {
+		echo "Created field 'visible' in table 'borrow_items'<br />";
+		db_query('ALTER TABLE `borrow_items` CHANGE `visible` `visible` TINYINT(4)  NOT NULL  DEFAULT "0"');
+	} else {
+		echo "Field 'visible' in table 'borrow_items' already exists<br />";
+	}

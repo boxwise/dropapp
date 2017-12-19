@@ -11,7 +11,9 @@
 
 		$cmsmain->assign('title','Borrow items');
 
-		$data = getlistdata('SELECT b.*, bc.label AS category, 
+		$data = getlistdata('SELECT b.label, bc.label AS category, 
+	(SELECT IF(status="out",t.id,"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS id, 
+
 	(SELECT IF(status="out",(SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
 	(SELECT IF(status="out",transaction_date,0) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
 FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted');
@@ -22,8 +24,9 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		addcolumn('datetime','Date','date');
 		
 		listsetting('allowsort', true);
+		listsetting('allowdelete', true);
 		listsetting('allowadd', false);
-		listsetting('allowselect', false);
+		listsetting('allowselect', true);
 		listsetting('allowselectall', false);
 
 		$cmsmain->assign('data',$data);
@@ -40,7 +43,12 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 
 		    case 'delete':
 				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listDelete($table, $ids);
+				foreach($ids as $id) {
+					if($id) db_query('DELETE FROM borrow_transactions WHERE id = :id',array('id'=>$id));
+				}
+				$message = 'Transactions cancelled';
+				$success = true;
+				$redirect = true;
 		        break;
 
 		    case 'copy':
