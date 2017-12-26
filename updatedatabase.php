@@ -184,3 +184,11 @@
 	} else {
 		echo "Field 'comment' in table 'borrow_items' already exists<br />";
 	}
+	
+	if(!db_fieldexists('people','bicycleban')) {
+		echo "Created field 'bicycleban' in table 'people'<br />";
+		db_query('ALTER TABLE `people` ADD `bicycleban` DATE  NULL  AFTER `notregistered`;
+');
+	} else {
+		echo "Field 'bicycleban' in table 'people' already exists<br />";
+	}
