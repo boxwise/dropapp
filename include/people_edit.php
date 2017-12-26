@@ -111,7 +111,7 @@
 			$data['rotate'] = ($exif['Orientation']==3?180:($exif['Orientation']==6?90:($exif['Orientation']==8?270:0)));
 		}
 		addfield('bicyclecertificate','Picture for bicycle card','picture');
-		addfield('date','Bicycle ban until','bicycleban',array('time'=>false,'date'=>true));
+		addfield('date','Bicycle ban until','bicycleban',array('time'=>false,'date'=>true,'tooltip'=>'Ban this person from the borrowing system until (and including) this date. Empty this field to cancel the ban.'));
 	}
  	addfield('line');
 
