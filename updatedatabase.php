@@ -173,7 +173,8 @@
 
 	if(!db_fieldexists('borrow_items','visible')) {
 		echo "Created field 'visible' in table 'borrow_items'<br />";
-		db_query('ALTER TABLE `borrow_items` CHANGE `visible` `visible` TINYINT(4)  NOT NULL  DEFAULT "0"');
+		db_query('ALTER TABLE `people` ADD `visible` TINYINT(4)  NOT NULL  DEFAULT 0');
+
 	} else {
 		echo "Field 'visible' in table 'borrow_items' already exists<br />";
 	}
