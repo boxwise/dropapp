@@ -144,6 +144,7 @@
 			addfield('line','','');
 
 
+/*
 			//show food history
 			if(db_value('SELECT food FROM camps WHERE id ='.$_SESSION['camp']['id'])) {	
 				addfield('list','Food','food', array('width'=>10,'query'=>'
@@ -157,6 +158,7 @@
 					'columns'=>array('food'=>'Food', 'count'=>'Amount', 'user'=>'Transaction made by', 'ftdate'=>'Date'),
 					'allowedit'=>false,'allowadd'=>false,'allowsort'=>false,'allowselect'=>false,'allowselectall'=>false,'redirect'=>false,'modal'=>false));
 			}
+*/
 			//show borrow history
 			if(db_value('SELECT id FROM borrow_transactions WHERE people_id ='.$id)) {	
 				addfield('list','Bicycles','bicycles', array('width'=>10,'query'=>'
