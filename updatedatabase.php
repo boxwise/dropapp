@@ -174,7 +174,13 @@
 	if(!db_fieldexists('borrow_items','visible')) {
 		echo "Created field 'visible' in table 'borrow_items'<br />";
 		db_query('ALTER TABLE `borrow_items` ADD `visible` TINYINT(4)  NOT NULL  DEFAULT 0');
-
 	} else {
 		echo "Field 'visible' in table 'borrow_items' already exists<br />";
+	}
+	
+	if(!db_fieldexists('borrow_items','comment')) {
+		echo "Created field 'comment' in table 'borrow_items'<br />";
+		db_query('ALTER TABLE `borrow_items` ADD `comment` TEXT  NOT NULL');
+	} else {
+		echo "Field 'comment' in table 'borrow_items' already exists<br />";
 	}

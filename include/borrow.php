@@ -21,6 +21,8 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		addcolumn('text','Name','label');
 		addcolumn('text','Rented out to','user');
 		addcolumn('datetime','Date','date');
+
+		addbutton('edititem','Edit item',array('icon'=>'fa-edit','oneitemonly'=>true));
 		
 		listsetting('allowsort', true);
 		listsetting('allowdelete', false);
@@ -36,6 +38,11 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 
 	} else {
 		switch ($_POST['do']) {
+			case 'edititem':
+				$id = intval($_POST['ids']);
+				$success = true;
+				$redirect = '?action=borrow_edititem&id='.$id;
+				break;
 		    case 'move':
 				$ids = json_decode($_POST['ids']);
 		    	list($success, $message, $redirect) = listMove($table, $ids);
