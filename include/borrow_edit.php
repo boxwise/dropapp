@@ -31,7 +31,6 @@
 		
 	} else {
 			
-		$data = array();	
 		$data['bicycle_id'] = $id;
 		$data['label'] = db_value('SELECT label FROM borrow_items WHERE id = :id',array('id'=>$id));
 		$data['status'] = 'out';
