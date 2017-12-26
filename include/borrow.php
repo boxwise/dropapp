@@ -11,8 +11,7 @@
 
 		$cmsmain->assign('title','Borrow items');
 
-		$data = getlistdata('SELECT b.label, bc.label AS category, 
-	(SELECT IF(status="out",t.id,"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS id, 
+		$data = getlistdata('SELECT b.visible, b.visible AS editable, b.label, bc.label AS category, b.id,
 
 	(SELECT IF(status="out",(SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
 	(SELECT IF(status="out",transaction_date,0) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
@@ -24,7 +23,8 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		addcolumn('datetime','Date','date');
 		
 		listsetting('allowsort', true);
-		listsetting('allowdelete', true);
+		listsetting('allowdelete', false);
+		listsetting('allowshowhide', true);
 		listsetting('allowadd', false);
 		listsetting('allowselect', true);
 		listsetting('allowselectall', false);
@@ -59,6 +59,7 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		    case 'hide':
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listShowHide($table, $ids, 0);
+		    	$message = $_POST['ids'];
 		        break;
 
 		    case 'show':
