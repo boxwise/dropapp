@@ -26,7 +26,7 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		
 		listsetting('allowsort', true);
 		listsetting('allowdelete', false);
-		listsetting('allowshowhide', true);
+		listsetting('allowshowhide', false);
 		listsetting('allowadd', false);
 		listsetting('allowselect', true);
 		listsetting('allowselectall', false);
