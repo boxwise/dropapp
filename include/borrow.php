@@ -41,7 +41,7 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 			case 'edititem':
 				$id = intval($_POST['ids']);
 				$success = true;
-				$redirect = '?action=borrow_edititem&id='.$id;
+				$redirect = '?action=borrowedititem&id='.$id;
 				break;
 		    case 'move':
 				$ids = json_decode($_POST['ids']);
