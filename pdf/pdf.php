@@ -15,21 +15,21 @@ class PDF extends FPDF {
 	}
 	
 	function NewLine() {
-		$this->Y+=5;
+		$this->Y+=$this->Lineheight;
 		if($this->Y>285) {
 			$this->NewColumn();
 		}
 	}
 	
-	function NewColumn() {
+	function NewColumn($lastcontainer = '') {
 		$this->X += $this->Column;
 		$this->Y = $this->TopMargin;
 		if($this->X>210-$this->LeftMargin-$this->Column) {
-			$this->NewPage();
+			$this->NewPage($lastcontainer);
 		}
 	}
 	
-	function NewPage() {
+	function NewPage($lastcontainer = '') {
 		global $translate;
 		
 		$this->AddPage();
@@ -39,6 +39,9 @@ class PDF extends FPDF {
 		$this->SetFont('helvetica','',7);
 		$this->SetXY($this->LeftMargin-1,285);
 		$this->Cell(200,4,'Drop In The Ocean / '.$_SESSION['camp']['name'].' / '.$translate['listtitle_'.$_GET['title']].' List '.strftime('%A %e %B %Y %H:%M').' / Page '.$this->PageNo());
+		$this->setXY(210-$this->LeftMargin-5,284);
+		$this->SetFont('helvetica','B',16);
+		$this->Cell(5,4,$lastcontainer);
 	}
 
     //Cell with horizontal scaling if text is too wide

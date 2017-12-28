@@ -6,7 +6,7 @@
 		$type = $_POST['type'][0];
 		if($type =='veg') {
 
-			redirect('?action=printed_list_people');
+			redirect('/pdf/dryfood.php?title=vegetables');
 
 		} else if ($type=='drynew') {
 				
