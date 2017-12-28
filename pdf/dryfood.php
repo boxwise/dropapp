@@ -46,34 +46,12 @@ while($container = db_fetch($result)) {
 	$pdf->Print($container['number'].' people ('.($container['adults']?$container['adults'].' adults':'').($container['children']?', '.($container['children']+$container['baby']).' children':'').')',15);
 	$pdf->NewLine();
 	
-	$result2 = db_query('SELECT p.parent_id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, (notregistered+extraportion) AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
+	$result2 = db_query('SELECT p.parent_id, p.id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, (notregistered+extraportion) AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" AND parent_id = 0 ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
 	while($person = db_fetch($result2)) {
-		if(is_null($person['age'])) $person['age'] = '?';
-		$pdf->SetFont('helvetica',($person['parent_id']?'':'B'),10);
-		
-		$pdf->SetXY($pdf->X-1,$pdf->Y-3);
-		$w = $pdf->Column-28;
-		if($title!='bread') {
-			if($person['extra']) $w-=16;
-			if($person['age']<2) $w-=11;
-		}
-		$pdf->CellFit($w,4,$person['name'],0,0,'L',false,'',true,false);
-		if($person['extra'] && $title!='bread') {
-			$pdf->SetXY($pdf->X+$pdf->Column-45,$pdf->Y-3);
-			$pdf->SetFont('helvetica','',7);
-			$pdf->SetFillColor(240,240,240);
-			$pdf->Cell(16,3.5,'Extra portion',1,0,'C',1);
-		}
-		if($person['age']!='?' && $person['age']<3 && $title!='bread') {
-			$pdf->SetXY($person['extra']?$pdf->X+$pdf->Column-56:$pdf->X+$pdf->Column-39,$pdf->Y-3);
-			$pdf->SetFont('helvetica','',7);
-			$pdf->SetFillColor(240,240,240);
-			$pdf->Cell(10,3.5,'Diapers',1,0,'C',1);
-		}
-		$pdf->SetFont('helvetica','',10);
-		$pdf->Print($person['age'],$pdf->Column-27);
-		$pdf->Print($person['gender'],$pdf->Column-18);
-		$pdf->NewLine();
+		Writename($person);
+		$result3 = db_query('SELECT p.parent_id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, (notregistered+extraportion) AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" AND parent_id = '.intval($person['id']).' ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
+		while($person2 = db_fetch($result3)) Writename($person2);
+
 	}
 	$pdf->Line($pdf->X, $pdf->Y-2.5, $pdf->X+$pdf->Column-5, $pdf->Y-2.5);
 	$pdf->Y+=3;
@@ -83,3 +61,32 @@ while($container = db_fetch($result)) {
 	
 $pdf->Output('I');
 
+function Writename($person) {
+	global $pdf;
+	if(is_null($person['age'])) $person['age'] = '?';
+	$pdf->SetFont('helvetica',($person['parent_id']?'':'B'),10);
+	
+	$pdf->SetXY($pdf->X-1,$pdf->Y-3);
+	$w = $pdf->Column-28;
+	if($title!='bread') {
+		if($person['extra']) $w-=16;
+		if($person['age']<2) $w-=11;
+	}
+	$pdf->CellFit($w,4,$person['name'],0,0,'L',false,'',true,false);
+	if($person['extra'] && $title!='bread') {
+		$pdf->SetXY($pdf->X+$pdf->Column-45,$pdf->Y-3);
+		$pdf->SetFont('helvetica','',7);
+		$pdf->SetFillColor(240,240,240);
+		$pdf->Cell(16,3.5,'Extra portion',1,0,'C',1);
+	}
+	if($person['age']!='?' && $person['age']<3 && $title!='bread') {
+		$pdf->SetXY($person['extra']?$pdf->X+$pdf->Column-56:$pdf->X+$pdf->Column-39,$pdf->Y-3);
+		$pdf->SetFont('helvetica','',7);
+		$pdf->SetFillColor(240,240,240);
+		$pdf->Cell(10,3.5,'Diapers',1,0,'C',1);
+	}
+	$pdf->SetFont('helvetica','',10);
+	$pdf->Print($person['age'],$pdf->Column-27);
+	$pdf->Print($person['gender'],$pdf->Column-18);
+	$pdf->NewLine();
+}
