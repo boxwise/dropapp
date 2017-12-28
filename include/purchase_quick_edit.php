@@ -4,7 +4,7 @@
 	error_reporting(E_ALL);
 
 
-	require_once('core.php');
+	if(!DEFINED('CORE')) include('../library/core.php');
 
 	$table = 'transactions';
 	$action = 'transactions_edit';
