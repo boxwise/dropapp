@@ -13,10 +13,13 @@
 
 		$data = getlistdata('SELECT b.visible, b.visible AS editable, b.label, bc.label AS category, b.id,
 
-	(SELECT IF(status="out",(SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),b.comment) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
+	(SELECT IF(status="out",CONCAT((SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),IF(t.lights," ***","")),b.comment) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
 	(SELECT IF(status="out",transaction_date,0) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
 FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted');
 
+		foreach($data as $key=>$value) {
+				if(strpos($data[$key]['user'],"***")) $data[$key]['user'] = str_replace('***','💡',$data[$key]['user']);
+		}
 		addcolumn('text','Category','category');
 		addcolumn('text','Name','label');
 		addcolumn('text','Rented out to','user');
