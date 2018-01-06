@@ -82,7 +82,7 @@
 				s.label AS size,
 				ROUND(pro.amountneeded,1) AS ean_print,
 				pro.amountneeded AS ean,
-				COALESCE(ROUND((SELECT COUNT(id) FROM people AS peo WHERE NOT peo.deleted AND peo.camp_id = '.$_SESSION['camp']['id'].' AND  
+				COALESCE(ROUND((SELECT COUNT(id) FROM people AS peo WHERE (NOT peo.deleted OR peo.deleted IS NULL) AND peo.camp_id = '.$_SESSION['camp']['id'].' AND  
 				(IF(g.male,peo.gender="M",0) OR IF(g.female,peo.gender="F",0)) AND 
 				(IF(g.adult,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), peo.date_of_birth)), "%Y")+0>=13,0) OR IF(g.baby,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), peo.date_of_birth)), "%Y")+0<2,0) OR IF(g.child,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), peo.date_of_birth)), "%Y")+0 BETWEEN 2 AND 13,0)))*IFNULL(s.portion,100)/100),0) AS target,
 				COALESCE(SUM(st.items),0) AS stock,
@@ -101,7 +101,7 @@
 			LEFT JOIN 
 				(SELECT st.items, st.product_id, st.size_id, s.label
 					FROM stock AS st, locations AS l, sizes AS s
-					WHERE NOT st.deleted AND st.location_id = l.id AND l.visible AND st.size_id = s.id) st  
+					WHERE (NOT st.deleted OR st.deleted IS NULL) AND st.location_id = l.id AND l.visible AND st.size_id = s.id) st  
 				ON (st.product_id = pro.id AND UPPER(st.label) = UPPER(s.label))';
 		//left joins for other camps to distinguish between NULL and 0
 		foreach($camps as $key=>$camp) {
@@ -110,14 +110,14 @@
 				(SELECT COALESCE(SUM(st.items),0) AS calc, UPPER(pro.name) AS product, pro.gender_id, UPPER(s.label) AS size
 					FROM (products AS pro, sizes AS s, locations AS l)
 					LEFT JOIN stock st
-					ON (NOT st.deleted AND st.location_id = l.id AND pro.id = st.product_id AND s.id = st.size_id)
+					ON ((NOT st.deleted OR st.deleted IS NULL) AND st.location_id = l.id AND pro.id = st.product_id AND s.id = st.size_id)
 					WHERE l.visible AND l.camp_id = '.$key.' AND pro.camp_id = '.$key.'
 					GROUP BY UPPER(pro.name), pro.gender_id, UPPER(s.label)) st_'.$key.'
 				ON (st_'.$key.'.product = UPPER(pro.name) AND st_'.$key.'.gender_id = g.id AND st_'.$key.'.size = UPPER(s.label))';
 		}
 		$query .='
 			WHERE
-				NOT pro.deleted AND
+				(NOT pro.deleted OR pro.deleted IS NULL) AND
 				pro.camp_id = '.$_SESSION['camp']['id'].' AND
 				pro.gender_id = g.id AND
 				pro.sizegroup_id = sg.id AND
@@ -125,8 +125,11 @@
 
 		($listconfig['searchvalue']?$query .=' AND (pro.name LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%")':'').
 		$query .= ' GROUP BY 
-				pro.name, g.id, s.label
-			ORDER BY 
+				pro.id, pro.name, pro.amountneeded, g.id, g.label, s.id, s.label';
+		foreach($camps as $key=>$camp) {
+			$query .= ', st_'.$key.'.calc';
+		}
+		$query .= ' ORDER BY 
 				pro.name, g.seq, s.seq) AS sub ';
 		//end of big subquery, HAVING for filter of calculation
 		($_SESSION['filter']['need'] ? $query .= 'HAVING color = "'.$_SESSION['filter']['need'].'" ' : "") ;
@@ -166,14 +169,14 @@
 				(SELECT COALESCE(SUM(st.items),0) AS calc, UPPER(pro.name) AS product, pro.gender_id, UPPER(s.label) AS size
 					FROM (products AS pro, sizes AS s, locations AS l)
 					LEFT JOIN stock st
-					ON (NOT st.deleted AND st.location_id = l.id AND pro.id = st.product_id AND s.id = st.size_id)
+					ON ((NOT st.deleted OR st.deleted IS NULL) AND st.location_id = l.id AND pro.id = st.product_id AND s.id = st.size_id)
 					WHERE l.visible AND l.camp_id = '.$key.' AND pro.camp_id = '.$key.'
 					GROUP BY UPPER(pro.name), pro.gender_id, UPPER(s.label)) st_'.$key.'
 				ON (st_'.$key.'.product = UPPER(pro.name) AND st_'.$key.'.gender_id = g.id AND st_'.$key.'.size = UPPER(s.label))';
 			}
 			$query_other .='
 			WHERE
-				NOT pro.deleted AND
+				(NOT pro.deleted OR pro.deleted IS NULL) AND
 				NOT pro.camp_id = '.$_SESSION['camp']['id'].' AND
 				pro.gender_id = g.id AND
 				pro.sizegroup_id = sg.id AND
