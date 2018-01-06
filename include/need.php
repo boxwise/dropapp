@@ -125,8 +125,11 @@
 
 		($listconfig['searchvalue']?$query .=' AND (pro.name LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%")':'').
 		$query .= ' GROUP BY 
-				pro.name, g.id, s.label
-			ORDER BY 
+				pro.id, pro.name, pro.amountneeded, g.id, g.label, s.id, s.label';
+		foreach($camps as $key=>$camp) {
+			$query .= ', st_'.$key.'.calc';
+		}
+		$query .= ' ORDER BY 
 				pro.name, g.seq, s.seq) AS sub ';
 		//end of big subquery, HAVING for filter of calculation
 		($_SESSION['filter']['need'] ? $query .= 'HAVING color = "'.$_SESSION['filter']['need'].'" ' : "") ;

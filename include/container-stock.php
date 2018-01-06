@@ -15,23 +15,23 @@ SELECT
 	g.label AS gender,
 	s.label AS size,
 	IFNULL(COUNT(s2.id),0) AS boxes,
-	(SELECT COUNT(s3.id) FROM stock AS s3
-	 LEFT OUTER JOIN locations AS l2 ON l2.id = s3.location_id
-	 WHERE 
-NOT s3.deleted AND s3.product_id = p.id AND p.gender_id = g.id AND s3.size_id = s.id AND l2.visible)-IFNULL(COUNT(s2.id),0) AS totalboxes, IFNULL(SUM(s2.items),0) AS stock
+	(SELECT COUNT(s3.id)
+		FROM stock AS s3
+		LEFT OUTER JOIN locations AS l2 ON l2.id = s3.location_id
+	 	WHERE (NOT s3.deleted OR s3.deleted IS NULL) AND s3.product_id = p.id AND p.gender_id = g.id AND s3.size_id = s.id AND l2.visible)-IFNULL(COUNT(s2.id),0) AS totalboxes, IFNULL(SUM(s2.items),0) AS stock
 FROM
 	(products AS p,
 	sizes AS s)
 LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
-LEFT OUTER JOIN stock AS s2 ON s2.product_id = p.id AND s2.size_id = s.id AND NOT s2.deleted AND s2.location_id IN ('.$container_stock_locations.')
+LEFT OUTER JOIN stock AS s2 ON s2.product_id = p.id AND s2.size_id = s.id AND (NOT s2.deleted OR s2.deleted IS NULL) AND s2.location_id IN ('.$container_stock_locations.')
 WHERE
-	NOT p.deleted AND
+	(NOT p.deleted OR p.deleted IS NULL) AND
 	s.sizegroup_id = p.sizegroup_id AND
 	p.camp_id = '.$_SESSION['camp']['id'].' AND
 	p.stockincontainer
 	'.($_SESSION['search']['container-stock']?'AND p.name LIKE "%'.$_SESSION['search']['container-stock'].'%"':'').'
 GROUP BY
-	p.name, g.label, s.id
+	p.id, p.name, g.id, g.label, s.id, s.label 
 
 UNION
 
@@ -43,21 +43,21 @@ SELECT
 	IFNULL(COUNT(s2.id),0) AS boxes,
 	(SELECT COUNT(s3.id) FROM stock AS s3
 	 LEFT OUTER JOIN locations AS l2 ON l2.id = s3.location_id
-	 WHERE NOT s3.deleted AND s3.product_id = p.id AND p.gender_id = g.id AND s3.size_id = s.id AND l2.visible)-IFNULL(COUNT(s2.id),0) AS totalboxes,
+	 WHERE (NOT s3.deleted OR s3.deleted IS NULL) AND s3.product_id = p.id AND p.gender_id = g.id AND s3.size_id = s.id AND l2.visible)-IFNULL(COUNT(s2.id),0) AS totalboxes,
 	IFNULL(SUM(s2.items),0) AS stock
 FROM
 	(products AS p,
 	sizes AS s)
 LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
-LEFT OUTER JOIN stock AS s2 ON s2.product_id = p.id AND s2.size_id = s.id AND NOT s2.deleted AND s2.location_id IN ('.$container_stock_locations.')
+LEFT OUTER JOIN stock AS s2 ON s2.product_id = p.id AND s2.size_id = s.id AND (NOT s2.deleted OR s2.deleted IS NULL) AND s2.location_id IN ('.$container_stock_locations.')
 WHERE
-	NOT p.deleted AND
+	(NOT p.deleted OR p.deleted IS NULL) AND
 	s.sizegroup_id = p.sizegroup_id AND
 	s2.location_id IN ('.$container_stock_locations.') AND
 	NOT p.stockincontainer
 	'.($_SESSION['search']['container-stock']?'AND p.name LIKE "%'.$_SESSION['search']['container-stock'].'%"':'').'
 GROUP BY
-	p.name, g.label, s.id
+	p.id, p.name, g.id, g.label, s.id, s.label 
 
 ');
 
