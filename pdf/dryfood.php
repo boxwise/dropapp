@@ -20,8 +20,9 @@ $pdf->AddFont('helvetica','BI','helveticabi.php');
 
 $pdf->SetFont('helvetica','',10);
 $pdf->LeftMargin = 20; 
+$pdf->Lineheight = 4.5;
 $pdf->TopMargin = 20; 
-$pdf->Column = 80;
+$pdf->Column = 85;
 $pdf->SetAutoPageBreak(false);
 
 $result = db_query('
@@ -34,52 +35,65 @@ $result = db_query('
 	GROUP BY container 
 	ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');
 
-
 while($container = db_fetch($result)) {
+	
 	$letter = strtoupper(substr($container['container'],0,1));
-	if($letter!=$oldletter) $pdf->newPage();
+	if($letter!=$oldletter) $pdf->newPage($container['container']);
 	if($pdf->Y+(5*$container['number']) > 275) {
-		$pdf->NewColumn();
+		$pdf->NewColumn($container['container']);
 	}
 	$pdf->SetFont('helvetica','B',10);
 	$pdf->Print($container['container']);
 	$pdf->Print($container['number'].' people ('.($container['adults']?$container['adults'].' adults':'').($container['children']?', '.($container['children']+$container['baby']).' children':'').')',15);
 	$pdf->NewLine();
+	$pdf->Line($pdf->X, $pdf->Y-2.5, $pdf->X+$pdf->Column-$pdf->Lineheight, $pdf->Y-2.5);
+	$pdf->Y+=2;
 	
-	$result2 = db_query('SELECT p.parent_id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, (notregistered+extraportion) AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
+	$result2 = db_query('SELECT p.parent_id, p.id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, (notregistered+extraportion) AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" AND parent_id = 0 ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
 	while($person = db_fetch($result2)) {
-		if(is_null($person['age'])) $person['age'] = '?';
-		$pdf->SetFont('helvetica',($person['parent_id']?'':'B'),10);
-		
-		$pdf->SetXY($pdf->X-1,$pdf->Y-3);
-		$w = $pdf->Column-28;
-		if($title!='bread') {
-			if($person['extra']) $w-=16;
-			if($person['age']<2) $w-=11;
+		Writename($person);
+		$result3 = db_query('SELECT p.parent_id, CONCAT(TRIM(p.lastname),", ",TRIM(p.firstname)) AS name, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age, IF(gender="M","male","female") AS gender, (notregistered+extraportion) AS extra FROM people AS p WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted AND container = "'.$container['container'].'" AND parent_id = '.intval($person['id']).' ORDER BY parent_id, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
+		while($person2 = db_fetch($result3)) {
+			Writename($person2);
 		}
-		$pdf->CellFit($w,4,$person['name'],0,0,'L',false,'',true,false);
-		if($person['extra'] && $title!='bread') {
-			$pdf->SetXY($pdf->X+$pdf->Column-45,$pdf->Y-3);
-			$pdf->SetFont('helvetica','',7);
-			$pdf->SetFillColor(240,240,240);
-			$pdf->Cell(16,3.5,'Extra portion',1,0,'C',1);
-		}
-		if($person['age']!='?' && $person['age']<3 && $title!='bread') {
-			$pdf->SetXY($person['extra']?$pdf->X+$pdf->Column-56:$pdf->X+$pdf->Column-39,$pdf->Y-3);
-			$pdf->SetFont('helvetica','',7);
-			$pdf->SetFillColor(240,240,240);
-			$pdf->Cell(10,3.5,'Diapers',1,0,'C',1);
-		}
-		$pdf->SetFont('helvetica','',10);
-		$pdf->Print($person['age'],$pdf->Column-27);
-		$pdf->Print($person['gender'],$pdf->Column-18);
-		$pdf->NewLine();
+
 	}
-	$pdf->Line($pdf->X, $pdf->Y-2.5, $pdf->X+$pdf->Column-5, $pdf->Y-2.5);
-	$pdf->Y+=3;
+	$pdf->Line($pdf->X, $pdf->Y-2.5, $pdf->X+$pdf->Column-$pdf->Lineheight, $pdf->Y-2.5);
+	$pdf->Y+=2;
 	$oldletter = $letter;	
 }
 
 	
 $pdf->Output('I');
 
+function Writename($person) {
+	global $pdf, $title;
+	if(is_null($person['age'])) $person['age'] = '?';
+	$pdf->SetFont('helvetica',($person['parent_id']?'':'B'),10);
+	
+	$parent = ($person['parent_id']?4:0);
+	
+	$pdf->SetXY($pdf->X-1+$parent,$pdf->Y-3);
+	$w = $pdf->Column-28;
+	if($title!='bread') {
+		if($person['extra']) $w-=16;
+		if($person['age']<2) $w-=11;
+	}
+	$pdf->CellFit($w-$parent,4,$person['name'],0,0,'L',false,'',true,false);
+	if($person['extra'] && $title!='bread') {
+		$pdf->SetXY($pdf->X+$pdf->Column-45,$pdf->Y-3);
+		$pdf->SetFont('helvetica','',7);
+		$pdf->SetFillColor(240,240,240);
+		$pdf->Cell(16,3.5,'Extra portion',1,0,'C',1);
+	}
+	if($person['age']!='?' && $person['age']<3 && $title=='dryfood') {
+		$pdf->SetXY($person['extra']?$pdf->X+$pdf->Column-56:$pdf->X+$pdf->Column-39,$pdf->Y-3);
+		$pdf->SetFont('helvetica','',7);
+		$pdf->SetFillColor(240,240,240);
+		$pdf->Cell(10,3.5,'Diapers',1,0,'C',1);
+	}
+	$pdf->SetFont('helvetica','',10);
+	$pdf->Print($person['age'],$pdf->Column-27);
+	$pdf->Print($person['gender'],$pdf->Column-18);
+	$pdf->NewLine();
+}

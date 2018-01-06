@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments','camp_id','bicycletraining','phone','notregistered');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments','camp_id','bicycletraining','phone','notregistered','bicycleban');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$id = $handler->savePost($savekeys);
 
@@ -111,6 +111,7 @@
 			$data['rotate'] = ($exif['Orientation']==3?180:($exif['Orientation']==6?90:($exif['Orientation']==8?270:0)));
 		}
 		addfield('bicyclecertificate','Picture for bicycle card','picture');
+		addfield('date','Bicycle ban until','bicycleban',array('time'=>false,'date'=>true,'tooltip'=>'Ban this person from the borrowing system until (and including) this date. Empty this field to cancel the ban.'));
 	}
  	addfield('line');
 
@@ -143,6 +144,7 @@
 			addfield('line','','');
 
 
+/*
 			//show food history
 			if(db_value('SELECT food FROM camps WHERE id ='.$_SESSION['camp']['id'])) {	
 				addfield('list','Food','food', array('width'=>10,'query'=>'
@@ -156,6 +158,8 @@
 					'columns'=>array('food'=>'Food', 'count'=>'Amount', 'user'=>'Transaction made by', 'ftdate'=>'Date'),
 					'allowedit'=>false,'allowadd'=>false,'allowsort'=>false,'allowselect'=>false,'allowselectall'=>false,'redirect'=>false,'modal'=>false));
 			}
+*/
+			//show borrow history
 			if(db_value('SELECT id FROM borrow_transactions WHERE people_id ='.$id)) {	
 				addfield('list','Bicycles','bicycles', array('width'=>10,'query'=>'
 					SELECT DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS transaction_date, b.label, status  FROM borrow_transactions AS bt LEFT OUTER JOIN borrow_items AS b ON bt.bicycle_id = b.id WHERE people_id = '.$id.' ORDER BY transaction_date DESC LIMIT 10', 

@@ -1,5 +1,5 @@
 	<h2 class="page-header">{if $box['id']}Edit box{else}Make a new box{/if}</h2>
-	<form method="post" action="?savebox=1">
+	<form method="post" action="?savebox=1" onsubmit="submitbutton.disabled = true; return true;">
 		<input type="hidden" name="id" value="{$box['id']}">
 		<input type="hidden" name="qr_id" value="{$box['qr_id']}">
 		<input type="hidden" name="camp_id" value="{$smarty.session.camp['id']}">
@@ -41,6 +41,6 @@
 		</div>
 		<div class="form-group"><input type="number" name="items" pattern="\d*" placeholder="Number of items" value="{$box['items']}" class="form-control" min="1" required></div>
 		<div class="form-group"><input type="text" name="comments" placeholder="Comments for this box" value="{$box['comments']}" class="form-control"></div>
-		<input type="submit" class="btn" value="Save">
+		<input type="submit" name="submitbutton" class="btn" value="Save">
 	</form>
 {* 	<script>{if $box['product_id']}getSizes({$box['size_id']});{/if}</script> *}

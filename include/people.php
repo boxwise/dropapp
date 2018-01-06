@@ -90,6 +90,7 @@
 		addbutton('give','Give '.ucwords($translate['market_coins_short']),array('icon'=>'fa-tint','oneitemonly'=>false));
 		addbutton('merge','Merge to family',array('icon'=>'fa-chain','oneitemonly'=>false));
 		addbutton('detach','Detach from family',array('icon'=>'fa-chain-broken','oneitemonly'=>false));
+		addbutton('touch','Touch',array('icon'=>'fa-hand-o-up'));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
@@ -177,6 +178,18 @@
 		    case 'show':
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listShowHide($table, $ids, 1);
+		        break;
+
+		    case 'touch':
+				$ids = explode(',',$_POST['ids']);
+				foreach($ids as $id) {
+					db_query('UPDATE people SET modified = NOW(), modified_by = :user WHERE id = :id',array('id'=>$id,'user'=>$_SESSION['user']['id']));
+					simpleSaveChangeHistory('people', $id, 'Touched');
+				}
+				$success = true;
+				$message = 'Selected people have been touched';
+				$redirect = true;
+				
 		        break;
 		}
 
