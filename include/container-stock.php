@@ -7,6 +7,7 @@
 	listsetting('search', array('p.name'));
 
 	$container_stock_locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND container_stock AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
+	if(!$container_stock_locations) $container_stock_locations = 0;
 
 	$data = getlistdata('
 SELECT
@@ -23,7 +24,7 @@ FROM
 	(products AS p,
 	sizes AS s)
 LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
-LEFT OUTER JOIN stock AS s2 ON s2.product_id = p.id AND s2.size_id = s.id AND NOT s2.deleted AND s2.location_id IN (0,'.$container_stock_locations.')
+LEFT OUTER JOIN stock AS s2 ON s2.product_id = p.id AND s2.size_id = s.id AND NOT s2.deleted AND s2.location_id IN ('.$container_stock_locations.')
 WHERE
 	NOT p.deleted AND
 	s.sizegroup_id = p.sizegroup_id AND
