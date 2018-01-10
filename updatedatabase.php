@@ -195,7 +195,7 @@
 	
 	if(!db_fieldexists('borrow_transactions','lights')) {
 		echo "Created field 'lights' in table 'borrow_transactions'<br />";
-		db_query('ALTER TABLE `borrow_transactions` ADD `lights` TINYINT  NOT NULL  DEFAULT 0 AFTER `modified_by`');
+		db_query('ALTER TABLE `borrow_transactions` ADD `lights` TINYINT  NOT NULL  DEFAULT 0');
 	} else {
 		echo "Field 'lights' in table 'borrow_transactions' already exists<br />";
 	}
