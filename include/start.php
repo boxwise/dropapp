@@ -43,14 +43,18 @@
 	WHERE t.people_id = pp.id AND pp.camp_id = :camp_id AND t.product_id > 0 AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59"',array('camp_id'=>$_SESSION['camp']['id']));
 			}
 			
-			$result = db_query('SELECT c.label, 
-SUM(ROUND(time_to_sec((TIMEDIFF((SELECT b2.transaction_date FROM borrow_transactions AS b2 WHERE b1.bicycle_id = b2.bicycle_id AND b1.people_id = b2.people_id AND b2.status = "in" AND b2.transaction_date > b1.transaction_date ORDER BY b2.transaction_date ASC LIMIT 1), b1.transaction_date))) / 60)) AS time, 
-COUNT(b1.id) AS count FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bicycle_id LEFT OUTER JOIN borrow_categories AS c ON c.id = i.category_id  WHERE b1.status = "out" AND DATE_FORMAT(b1.transaction_date,"%Y-%m-%d") = :date GROUP BY c.id', array('date'=>$date));
+			$result = db_query('SELECT c.label, p.gender, 
+			
+SUM(ROUND(time_to_sec((TIMEDIFF((SELECT b2.transaction_date FROM borrow_transactions AS b2 WHERE b1.bicycle_id = b2.bicycle_id AND b1.people_id = b2.people_id AND b2.status = "in" AND b2.transaction_date > b1.transaction_date ORDER BY b2.transaction_date ASC LIMIT 1), b1.transaction_date))) / 60)) AS time,
+ 
+COUNT(b1.id) AS count 
+
+FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bicycle_id LEFT OUTER JOIN borrow_categories AS c ON c.id = i.category_id LEFT OUTER JOIN people AS p ON p.id = b1.people_id WHERE b1.status = "out" AND DATE_FORMAT(b1.transaction_date,"%Y-%m-%d") = :date GROUP BY p.gender, c.id', array('date'=>$date));
 
 			while($borrow = db_fetch($result)) {
+				$borrow['label'] .= ' '.$borrow['gender'];
 				$data['borrow'][strftime("%a %e %b",strtotime($date))][$borrow['label']] = $borrow;
 			}
-			
 	        $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
 		}
 	

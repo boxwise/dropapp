@@ -93,17 +93,31 @@ var chart = AmCharts.makeChart( "chartdiv2", {
   "gridAboveGraphs": true,
   "startDuration": 1,
   "graphs": [ {
-    "balloonText": "<b>[[value]]</b> Bicycles borrowed", 
+    "balloonText": "<b>[[value]]</b> Bicycles Male", 
     "fillAlphas": 0.8,
     "lineAlpha": 0.2,
     "type": "column",
-    "valueField": "Bicycles"
+    "fillColors": "#34aad1",
+    "valueField": "Bicycles M"
   },{
-    "balloonText": "<b>[[value]]</b> Gym gear items borrowed",
+    "balloonText": "<b>[[value]]</b> Bicycles Female", 
     "fillAlphas": 0.8,
     "lineAlpha": 0.2,
     "type": "column",
-    "valueField": "Gym gear"
+    "fillColors": "#db57bd",
+    "valueField": "Bicycles F"
+  },{
+    "balloonText": "<b>[[value]]</b> Gym gear items Male",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "valueField": "Gym gear M"
+  },{
+    "balloonText": "<b>[[value]]</b> Gym gear items Female",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "valueField": "Gym gear F"
   } ],
   "chartCursor": {
     "categoryBalloonEnabled": false,
@@ -147,7 +161,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 {/if}
 
 	
-	<aside id="aside-container">
+	<aside id="aside-container" class="noprint">
 		<div class="affix aside-content">
 		<div class="tipofday">
 			<h3>💡 Tip of the day: {$data['tip']['title']}</h3>

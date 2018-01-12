@@ -4,7 +4,9 @@
 .nav-aside, .header-top, .level0 {
 	display:none;
 }
-
+.content-form{
+	margin-right: 0;
+}
 .content {
 	margin-left:0px;	
 	padding:0;
