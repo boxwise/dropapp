@@ -12,3 +12,4 @@ uploads/*
 vendor
 phinx.yml
 !uploads/.gitkeep 
+phpmyadmin/*
