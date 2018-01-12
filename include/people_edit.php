@@ -163,9 +163,9 @@
 */
 			//show borrow history
 			if(db_value('SELECT id FROM borrow_transactions WHERE people_id ='.$id)) {	
-				addfield('list','Bicycles','bicycles', array('width'=>10,'query'=>'
+				addfield('list','Bicycles','bicycles', array('tab'=>'bicycle','width'=>10,'query'=>'
 					SELECT DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS transaction_date, b.label, status  FROM borrow_transactions AS bt LEFT OUTER JOIN borrow_items AS b ON bt.bicycle_id = b.id WHERE people_id = '.$id.' ORDER BY transaction_date DESC LIMIT 10', 
-					'columns'=>array('tab'=>'bicycle','label'=>'Bicycle', 'status'=>'in/out', 'transaction_date'=>'Date'),
+					'columns'=>array('label'=>'Bicycle', 'status'=>'in/out', 'transaction_date'=>'Date'),
 					'allowedit'=>false,'allowadd'=>false,'allowsort'=>false,'allowselect'=>false,'allowselectall'=>false,'redirect'=>false,'modal'=>false));
 			}			
 
