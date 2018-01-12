@@ -3,10 +3,15 @@
 
 	$data['items'] = intval(db_value('SELECT SUM(items) FROM (stock AS s, products AS p) LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE s.product_id = p.id AND NOT p.deleted AND NOT s.deleted AND l.visible AND l.camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
 	$data['boxes'] = db_value('SELECT COUNT(s.id) FROM (stock AS s, products AS p) LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE s.product_id = p.id AND NOT p.deleted AND NOT s.deleted AND l.visible AND l.camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
+	
 
 	if($_SESSION['camp']['market']) {
 		$data['tip'] = db_row('SELECT * FROM tipofday ORDER BY RAND()');
 		$data['families'] = db_value('SELECT COUNT(id) FROM people AS p WHERE visible AND parent_id = 0 AND NOT deleted AND p.camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
+		$data['residents'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
+		$data['notregistered'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND notregistered',array('camp_id'=>$_SESSION['camp']['id']));
+		$data['residentscamp'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND LEFT(container,2) != "PK"',array('camp_id'=>$_SESSION['camp']['id']));
+		$data['residentsoutside'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND LEFT(container,2) = "PK"',array('camp_id'=>$_SESSION['camp']['id']));
 		$data['residents'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
 		$data['totalmen'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND gender = "M" AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
 		$data['menperc'] = $data['totalmen']/$data['residents']*100;
@@ -14,6 +19,8 @@
 		$data['womenperc'] = $data['totalwomen']/$data['residents']*100;
 	
 		$data['containers'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
+		$data['containerscamp'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = :camp_id AND LEFT(container,2) != "PK"',array('camp_id'=>$_SESSION['camp']['id']));
+		$data['containersoutside'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = :camp_id AND LEFT(container,2) = "PK"',array('camp_id'=>$_SESSION['camp']['id']));
 	
 		$data['adults'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= '.$settings['adult-age'],array('camp_id'=>$_SESSION['camp']['id']));
 		$data['children'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < '.$settings['adult-age'],array('camp_id'=>$_SESSION['camp']['id']));
