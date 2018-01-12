@@ -128,7 +128,14 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 <div class="content-form">
 	<h1>Hello there!</h1>
 	
-	<h1 class="light">There are currently <span class="number">{$data['residents']}</span> people living in {$currentcamp['name']}, in <span class="number">{$data['families']}</span> families{* are living in <span class="number">{$data['containers']}</span> containers *}.<br /><span class="men">{($data['totalmen'])}</span> of them are male (<span class="men">{$data['menperc']|round}%</span>) and <span class="women">{$data['totalwomen']}</span> are female (<span class="women">{$data['womenperc']|round}</span>%).<br />Of these people, <span class="number">{$data['children']}</span> are {$settings['adult-age']-1} or younger (<span class="number">{($data['children']/$data['residents']*100)|round}%</span>).<br /><span class="number">{$data['under18']}</span> are under 18 (<span class="number">{($data['under18']/$data['residents']*100)|round}%</span>).</h1>
+	<h1 class="light">
+{if $smarty.session.camp['id']==1}
+	There are currently <span class="number">{$data['residentscamp']}</span> people living in {$currentcamp['name']}, <span class="number">{$data['families']}</span> families are living in <span class="number">{$data['containerscamp']}</span> containers. <span class="number">{$data['notregistered']}</span> people live in camp unregistered. <span class="number">{$data['residentsoutside']}</span> people live outside, in <span class="number">{$data['containersoutside']}</span> locations.<br />
+{else}
+	There are currently <span class="number">{$data['residents']}</span> people living in {$currentcamp['name']}, in <span class="number">{$data['families']}</span> families are living in <span class="number">{$data['containers']}</span> containers.<br />
+{/if}
+	
+	<span class="men">{($data['totalmen'])}</span> of our community are male (<span class="men">{$data['menperc']|round}%</span>) and <span class="women">{$data['totalwomen']}</span> are female (<span class="women">{$data['womenperc']|round}</span>%).<br />Of these people, <span class="number">{$data['children']}</span> are {$settings['adult-age']-1} or younger (<span class="number">{($data['children']/$data['residents']*100)|round}%</span>).<br /><span class="number">{$data['under18']}</span> are under 18 (<span class="number">{($data['under18']/$data['residents']*100)|round}%</span>).</h1>
 <hr />
 <h1 class="light">We have <span class="number">{$data['items']}</span> items in our warehouses, in <span class="number">{$data['boxes']}</span> boxes. Already <span class="number">{$data['sold']}</span> items have been sold in the market in <span class="number">{$data['marketdays']}</span> opening days. Most popular item is <span class="number">{$data['popularname']}</span> with <span class="number">{$data['popularcount']}</span> items sold.</h1>
 <hr />
