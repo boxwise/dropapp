@@ -53,6 +53,7 @@
 		$cmsmain->assign('title', 'Add a new resident');
 	}
 	
+	$cmsmain->assign('tabs',array('people'=>'Personal','bicycle'=>'Bicycle','transaction'=>'Transactions'));
 
 	$data['allowdrops'] = $_SESSION['user']['is_admin']||db_value('SELECT id FROM cms_functions AS f, cms_access AS a WHERE a.cms_functions_id = f.id AND f.include = "give2all" AND a.cms_users_id = :user_id',array('user_id'=>$_SESSION['user']['id']));
 
@@ -88,37 +89,35 @@
 
 	addfield('hidden','camp_id','camp_id');
 	addfield('hidden','parent_id','parent_id');
-	addfield('text','Lastname','lastname');
-	addfield('text','Firstname','firstname',array('required'=>true));
-	addfield('text',$_SESSION['camp']['familyidentifier'],'container',array('required'=>true));
-	addfield('select','Gender','gender',array(
-	'options'=>array(array('value'=>'M', 'label'=>'Male'),array('value'=>'F', 'label'=>'Female'))));
+	addfield('text','Lastname','lastname',array('tab'=>'people'));
+	addfield('text','Firstname','firstname',array('tab'=>'people','required'=>true));
+	addfield('text',$_SESSION['camp']['familyidentifier'],'container',array('tab'=>'people','required'=>true));
+	addfield('select','Gender','gender',array('tab'=>'people',
+	'options'=>array(array('value'=>'M', 'label'=>'Male'), array('value'=>'F', 'label'=>'Female'))));
 
- 	addfield('date','Date of birth','date_of_birth', array('date'=>true, 'time'=>false));
- 	addfield('textarea','Comments','comments');
-	addfield('line');
-	addfield('checkbox','This person is not officially registered in camp','notregistered');	
+ 	addfield('date','Date of birth','date_of_birth', array('tab'=>'people', 'date'=>true, 'time'=>false));
+ 	addfield('textarea','Comments','comments',array('tab'=>'people'));
+	addfield('line','','',array('tab'=>'people'));
+	addfield('checkbox','This person is not officially registered in camp','notregistered',array('tab'=>'people'));	
 	if($settings['extraportion'] && $_SESSION['camp']['food']){
-		addfield('checkbox','Extra food due to health condition (as indicated by Red Cross)','extraportion');	
+		addfield('checkbox','Extra food due to health condition (as indicated by Red Cross)','extraportion',array('tab'=>'people'));	
 	}
 	if($_SESSION['camp']['bicycle']){
-		addfield('line');
-		addfield('checkbox','This person succesfully passed the bicycle training','bicycletraining');
-		addfield('text','Phone number','phone');
+		addfield('checkbox','This person succesfully passed the bicycle training','bicycletraining',array('tab'=>'bicycle'));
+		addfield('text','Phone number','phone',array('tab'=>'bicycle'));
 		$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg')?$id:0);
 		if($data['picture']) {
 			$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg');
 			$data['rotate'] = ($exif['Orientation']==3?180:($exif['Orientation']==6?90:($exif['Orientation']==8?270:0)));
 		}
-		addfield('bicyclecertificate','Picture for bicycle card','picture');
-		addfield('date','Bicycle ban until','bicycleban',array('time'=>false,'date'=>true,'tooltip'=>'Ban this person from the borrowing system until (and including) this date. Empty this field to cancel the ban.'));
+		addfield('bicyclecertificate','Picture for bicycle card','picture',array('tab'=>'bicycle'));
+		addfield('date','Bicycle ban until','bicycleban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the borrowing system until (and including) this date. Empty this field to cancel the ban.'));
 	}
- 	addfield('line');
 
 	if($data['parent_id'] == 0){
 		if($id){
 			$table = 'transactions';
-			addfield('list','Purchases','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
+			addfield('list','Purchases','purch', array('tab'=>'transaction','width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
 				FROM transactions AS t 
 				LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
 				LEFT OUTER JOIN products AS p ON p.id = t.product_id 
@@ -129,10 +128,10 @@
 				'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($translate['market_coins']), 'description'=>'Note','user'=>'Purchase made by', 'tdate'=>'Date'),
 		'allowedit'=>false,'allowadd'=>true, 'add'=>'New Purchase', 'addaction'=>'check_out&people_id='.intval($id),'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'allowsort'=>false, 'modal'=>false));
 
-			addfield('line','','');
+			addfield('line','','',array('tab'=>'transaction'));
 
 			$table = 'transactions';
-			addfield('list','Transactions','trans', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate 
+			addfield('list','Transactions','trans', array('tab'=>'transaction','width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate 
 				FROM transactions AS t 
 				LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
 				WHERE people_id = '.$id. ' AND t.product_id = 0 
@@ -141,7 +140,6 @@
 				'columns'=>array('drops2'=>ucwords($translate['market_coins']), 'description'=>'Note','user'=>'Transaction made by', 'tdate'=>'Date'),
 		'allowedit'=>false,'allowadd'=>$data['allowdrops'], 'add'=>'Give '.ucwords($translate['market_coins']), 'addaction'=>'give&ids='.intval($id), 'allowsort'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'modal'=>false));
 
-			addfield('line','','');
 
 
 /*
