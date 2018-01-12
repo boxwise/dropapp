@@ -323,9 +323,9 @@ p{
 	color: #999;
 }
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus, .nav>li>a:hover, .nav>li>a:focus{
-	border-color: #ddd #ddd #D71920;
-	color: #D71920;
-	background: #fff;
+	border-color: #ddd #ddd #61c4ef;
+	color: #fff;
+	background: #61c4ef;
 }
 
 /* lock/unlock */
