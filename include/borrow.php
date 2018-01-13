@@ -26,6 +26,7 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		addcolumn('datetime','Date','date');
 
 		addbutton('edititem','Edit item',array('icon'=>'fa-edit','oneitemonly'=>true));
+		addbutton('borrowhistory','View history',array('icon'=>'fa-history','oneitemonly'=>true));
 		
 		listsetting('allowsort', true);
 		listsetting('allowdelete', false);
@@ -45,6 +46,11 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 				$id = intval($_POST['ids']);
 				$success = true;
 				$redirect = '?action=borrowedititem&id='.$id;
+				break;
+			case 'borrowhistory':
+				$id = intval($_POST['ids']);
+				$success = true;
+				$redirect = '?action=borrowhistory&id='.$id;
 				break;
 		    case 'move':
 				$ids = json_decode($_POST['ids']);
