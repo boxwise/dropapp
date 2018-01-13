@@ -38,7 +38,7 @@
 		$data['label'] = db_value('SELECT label FROM borrow_items WHERE id = :id',array('id'=>$id));
 		$data['status'] = 'out';
 		$data['category_id'] = db_value('SELECT category_id FROM borrow_items WHERE id = :id',array('id'=>$id));
-		$data['transaction_date'] = strftime("%Y-%m-%d %H:%M");
+		$data['transaction_date'] = strftime("%Y-%m-%d %H:%M:%S");
 
 		if($visible) {
 			$cmsmain->assign('title','Start a new rental for '.$data['label']);
