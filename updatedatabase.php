@@ -105,7 +105,6 @@
 	db_addfield('camps','workshop',"TINYINT(4) NOT NULL DEFAULT '0' AFTER `bicycle`","UPDATE `camps` SET workshop = 1 WHERE name = 'Nea Kavala';");
 
 	
-/* test */
 function db_addfield($table,$field,$options,$query = "") {
 	if(!db_fieldexists($table,$field)) {
 		db_query("ALTER TABLE `".$table."` ADD `".$field."` ".$options);
