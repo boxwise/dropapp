@@ -90,6 +90,7 @@
 		addbutton('give','Give '.ucwords($translate['market_coins_short']),array('icon'=>'fa-tint','oneitemonly'=>false));
 		addbutton('merge','Merge to family',array('icon'=>'fa-chain','oneitemonly'=>false));
 		addbutton('detach','Detach from family',array('icon'=>'fa-chain-broken','oneitemonly'=>false));
+		addbutton('print','Print bicycle card',array('icon'=>'fa-print'));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-o-up'));
 
 		$cmsmain->assign('data',$data);
@@ -190,6 +191,10 @@
 				$message = 'Selected people have been touched';
 				$redirect = true;
 				
+		        break;
+		    case 'print':
+				$success = true;
+		    	$redirect = '/pdf/bicyclecard.php?id='.$_POST['ids'];
 		        break;
 		}
 

@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments','camp_id','bicycletraining','phone','notregistered','bicycleban');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$id = $handler->savePost($savekeys);
 
@@ -53,8 +53,8 @@
 		$cmsmain->assign('title', 'Add a new resident');
 	}
 	
-	if($_SESSION['camp']['bicycle']) {
-		$cmsmain->assign('tabs',array('people'=>'Personal','bicycle'=>'Bicycle','transaction'=>'Transactions'));	
+	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']) {
+		$cmsmain->assign('tabs',array('people'=>'Personal','bicycle'=>($_SESSION['camp']['bicycle']?'Bicycle':'').($_SESSION['camp']['bicycle']&&$_SESSION['camp']['bicycle']?' & ':'').($_SESSION['camp']['workshop']?'Workshop':''),'transaction'=>'Transactions'));	
 	} else {
 		$cmsmain->assign('tabs',array('people'=>'Personal','transaction'=>'Transactions'))	;
 	}
@@ -106,16 +106,27 @@
 	if($settings['extraportion'] && $_SESSION['camp']['food']){
 		addfield('checkbox','Extra food due to health condition (as indicated by Red Cross)','extraportion',array('tab'=>'people'));	
 	}
-	if($_SESSION['camp']['bicycle']){
-		addfield('checkbox','This person succesfully passed the bicycle training','bicycletraining',array('tab'=>'bicycle'));
-		addfield('text','Phone number','phone',array('tab'=>'bicycle'));
+	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']){
 		$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg')?$id:0);
 		if($data['picture']) {
 			$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg');
 			$data['rotate'] = ($exif['Orientation']==3?180:($exif['Orientation']==6?90:($exif['Orientation']==8?270:0)));
 		}
-		addfield('bicyclecertificate','Picture for bicycle card','picture',array('tab'=>'bicycle'));
+		addfield('photo','Picture for cards','picture',array('tab'=>'bicycle'));
+		addfield('line','','',array('tab'=>'bicycle'));
+		addfield('text','Phone number','phone',array('tab'=>'bicycle'));
+	}
+	if($_SESSION['camp']['bicycle']){
+		addfield('line','','',array('tab'=>'bicycle'));
+		addfield('checkbox','This person succesfully passed the bicycle training', 'bicycletraining', array('tab'=>'bicycle'));
 		addfield('date','Bicycle ban until','bicycleban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the borrowing system until (and including) this date. Empty this field to cancel the ban.'));
+		addfield('bicyclecard','Card','bicyclecard',array('tab'=>'bicycle'));
+	}
+	if($_SESSION['camp']['workshop']){
+		addfield('line','','',array('tab'=>'bicycle'));
+		addfield('checkbox','This person succesfully passed the workshop training', 'workshoptraining', array('tab'=>'bicycle'));
+		addfield('date','Workshop ban until','workshopban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the workshop until (and including) this date. Empty this field to cancel the ban.'));
+		addfield('workshopcard','Card','workshopcard',array('tab'=>'bicycle'));
 	}
 
 	if($data['parent_id'] == 0){
@@ -164,9 +175,10 @@
 			//show borrow history
 	addfield('line','','',array('tab'=>'bicycle'));
 			if(db_value('SELECT id FROM borrow_transactions WHERE people_id ='.$id)) {	
-				addfield('list','Bicycles','bicycles', array('tab'=>'bicycle','width'=>10,'query'=>'
-					SELECT DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS transaction_date, b.label, status  FROM borrow_transactions AS bt LEFT OUTER JOIN borrow_items AS b ON bt.bicycle_id = b.id WHERE people_id = '.$id.' ORDER BY transaction_date DESC LIMIT 10', 
-					'columns'=>array('label'=>'Bicycle', 'status'=>'in/out', 'transaction_date'=>'Date'),
+				addfield('list','Last 10 transactions','bicycles', array('tab'=>'bicycle','width'=>10,'query'=>'
+					SELECT DATE_FORMAT(transaction_date,"%e-%m-%Y %H:%i:%S") AS dateout, 
+(SELECT DATE_FORMAT(transaction_date,"%e-%m-%Y %H:%i:%S") FROM borrow_transactions AS t2 WHERE t.bicycle_id = t2.bicycle_id AND t2.transaction_date > t.transaction_date ORDER BY transaction_date LIMIT 1) AS datein, (SELECT label FROM borrow_items WHERE id = t.bicycle_id) AS name FROM borrow_transactions AS t LEFT OUTER JOIN people AS p ON p.id = t.people_id WHERE p.id = '.intval($id).' AND status = "out" ORDER BY transaction_date DESC LIMIT 10', 
+					'columns'=>array('name'=>'Bicycle', 'dateout'=>'Start', 'datein'=>'End'),
 					'allowedit'=>false,'allowadd'=>false,'allowsort'=>false,'allowselect'=>false,'allowselectall'=>false,'redirect'=>false,'modal'=>false));
 			}			
 

@@ -22,10 +22,4 @@
 			</label>
 		</div>
 	</div>
-	<div class="form-group" id="div_printcertificate">
-		<label for="field" class="control-label col-sm-2"></label>
-		<div class="col-sm-6">
-	 		<a href="/bicycle/bicyclecertificate.php?id={$data[$element['field']]}" target="_blank" class="btn btn-success">Print Bicycle Certificate</a>
-		</div>
-	</div>
 	{/if}

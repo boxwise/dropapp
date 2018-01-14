@@ -93,9 +93,11 @@
 	db_addfield('borrow_items','comment',"TEXT  NOT NULL");
 	
 	db_addfield('people','camp_id',"INT  NOT NULL  DEFAULT 0  AFTER `comments`;",'UPDATE people SET camp_id = 1');
-	db_addfield('people','bicycletraining',"INT  NOT NULL  DEFAULT 0  AFTER `comments`;");
 	db_addfield('people','phone',"VARCHAR(255)  AFTER `comments`");
+	db_addfield('people','bicycletraining',"INT  NOT NULL  DEFAULT 0  AFTER `comments`;");
 	db_addfield('people','bicycleban',"DATE  NULL  AFTER `notregistered`");
+	db_addfield('people','workshoptraining',"INT  NOT NULL  DEFAULT 0  AFTER `comments`;");
+	db_addfield('people','workshopban',"DATE  NULL  AFTER `notregistered`");
 	db_addfield('people','notregistered',"TINYINT  NOT NULL  DEFAULT 0");
 	
 	db_addfield('borrow_transactions','lights',"TINYINT NOT NULL DEFAULT 0");
