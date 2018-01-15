@@ -152,11 +152,16 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 	<span class="men">{($data['totalmen'])}</span> of our community are male (<span class="men">{$data['menperc']|round}%</span>) and <span class="women">{$data['totalwomen']}</span> are female (<span class="women">{$data['womenperc']|round}</span>%).<br />Of these people, <span class="number">{$data['children']}</span> are {$settings['adult-age']-1} or younger (<span class="number">{($data['children']/$data['residents']*100)|round}%</span>).<br /><span class="number">{$data['under18']}</span> are under 18 (<span class="number">{($data['under18']/$data['residents']*100)|round}%</span>).</h1>
 <hr />
 <h1 class="light">We have <span class="number">{$data['items']}</span> items in our warehouses, in <span class="number">{$data['boxes']}</span> boxes. Already <span class="number">{$data['sold']}</span> items have been sold in the market in <span class="number">{$data['marketdays']}</span> opening days. Most popular item is <span class="number">{$data['popularname']}</span> with <span class="number">{$data['popularcount']}</span> items sold.</h1>
+{if $smarty.session.camp['bicycle']}<hr />
+<h1 class="light">Last week <span class="number">{$data['newcardsM']+$data['newcardsF']}</span> new Bicycle Certificates were made, <span class="men">{$data['newcardsM']}</span> for men and <span class="women">{$data['newcardsF']}</span> for women</h1>
+{/if}
+
 <hr />
-{if $data['sales']}<h2>Sales in the last 21 days</h2>
+{if $data['sales']}<h1>Sales in the last 21 days</h1>
 <div id="chartdiv"></div>
 {/if}
-{if $data['borrow'] && $smarty.session.camp['bicycle']}<h2>Items lent out in the last 21 days</h2>
+{if $data['borrow'] && $smarty.session.camp['bicycle']}<h1>Items lent out in the last 21 days</h1>
+<hr />
 <div id="chartdiv2"></div>
 {/if}
 

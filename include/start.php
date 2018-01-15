@@ -57,6 +57,14 @@ FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bi
 			}
 	        $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
 		}
+
+		$previous_week = strtotime('last week');
+		$start_week = date("Y-m-d",strtotime("monday",$previous_week));
+		$end_week = date("Y-m-d",strtotime("sunday",$previous_week));
+		
+		$data['newcardsM'] = db_value('SELECT COUNT(p.id) FROM history AS h LEFT OUTER JOIN people AS p ON p.id = h.record_id WHERE changedate >= "'.$start_week.'" AND changedate <= "'.$end_week.'" AND tablename = "people" AND changes = "bicycletraining" AND p.gender = "M"');
+		$data['newcardsF'] = db_value('SELECT COUNT(p.id) FROM history AS h LEFT OUTER JOIN people AS p ON p.id = h.record_id WHERE changedate >= "'.$start_week.'" AND changedate <= "'.$end_week.'" AND tablename = "people" AND changes = "bicycletraining" AND p.gender = "F"');
+
 	
 		// open the template
 		$cmsmain->assign('include','start-market.tpl');
