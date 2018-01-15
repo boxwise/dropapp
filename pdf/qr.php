@@ -26,7 +26,7 @@ for($i=0;$i<intval($_GET['count']);$i++) {
 		$pdf->AddPage();
 		$y = 0;
 	} else {
-		$pdf->Line(0,148.5,210,148.5);
+		#$pdf->Line(0,148.5,210,148.5);
 		$y = 148.5;
 	}
 
