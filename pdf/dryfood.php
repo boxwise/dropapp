@@ -38,7 +38,10 @@ $result = db_query('
 while($container = db_fetch($result)) {
 	
 	$letter = strtoupper(substr($container['container'],0,1));
-	if($letter!=$oldletter) $pdf->newPage($container['container']);
+	if($letter!=$oldletter) {
+		echo 'x';
+		$pdf->newPage($container['container']);
+	}
 	if($pdf->Y+(5*$container['number']) > 275) {
 		$pdf->NewColumn($container['container']);
 	}
@@ -60,7 +63,8 @@ while($container = db_fetch($result)) {
 	}
 	$pdf->Line($pdf->X, $pdf->Y-2.5, $pdf->X+$pdf->Column-$pdf->Lineheight, $pdf->Y-2.5);
 	$pdf->Y+=2;
-	$oldletter = $letter;	
+	$oldletter = $letter;
+	die();	
 }
 
 	
