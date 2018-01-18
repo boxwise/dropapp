@@ -144,9 +144,9 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 	
 	<h1 class="light">
 {if $smarty.session.camp['id']==1}
-	There are currently <span class="number">{$data['residentscamp']}</span> people living in {$currentcamp['name']}, <span class="number">{$data['families']}</span> families are living in <span class="number">{$data['containerscamp']}</span> containers. <span class="number">{$data['notregistered']}</span> people live in camp unregistered. <span class="number">{$data['residentsoutside']}</span> people live outside, in <span class="number">{$data['containersoutside']}</span> locations.<br />
+	There are currently <span class="number">{$data['residentscamp']}</span> people living in {$currentcamp['name']}, <span class="number">{$data['families']}</span> families are living in <span class="number">{$data['containerscamp']}</span> addresses. <span class="number">{$data['notregistered']}</span> people live in camp unregistered. <span class="number">{$data['residentsoutside']}</span> people live outside, in <span class="number">{$data['containersoutside']}</span> locations.<br />
 {else}
-	There are currently <span class="number">{$data['residents']}</span> people living in {$currentcamp['name']}, in <span class="number">{$data['families']}</span> families are living in <span class="number">{$data['containers']}</span> containers.<br />
+	There are currently <span class="number">{$data['residents']}</span> people living in {$currentcamp['name']}, in <span class="number">{$data['families']}</span> families are living in <span class="number">{$data['containers']}</span> addresses.<br />
 {/if}
 	
 	<span class="men">{($data['totalmen'])}</span> of our community are male (<span class="men">{$data['menperc']|round}%</span>) and <span class="women">{$data['totalwomen']}</span> are female (<span class="women">{$data['womenperc']|round}</span>%).<br />Of these people, <span class="number">{$data['children']}</span> are {$settings['adult-age']-1} or younger (<span class="number">{($data['children']/$data['residents']*100)|round}%</span>).<br /><span class="number">{$data['under18']}</span> are under 18 (<span class="number">{($data['under18']/$data['residents']*100)|round}%</span>).</h1>
