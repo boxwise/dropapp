@@ -106,6 +106,7 @@
 	db_addfield('camps','bicycle',"TINYINT(4) NOT NULL DEFAULT '0' AFTER `bicycle`","UPDATE `camps` SET bicycle = 1 WHERE name = 'Nea Kavala';");	
 	db_addfield('camps','workshop',"TINYINT(4) NOT NULL DEFAULT '0' AFTER `bicycle`","UPDATE `camps` SET workshop = 1 WHERE name = 'Nea Kavala';");
 
+	if(!db_value('SELECT * FROM product_categories WHERE label = "Food"')) db_query('INSERT INTO `product_categories` (`label`, `seq`) VALUES ("Food", 11);');
 	
 function db_addfield($table,$field,$options,$query = "") {
 	if(!db_fieldexists($table,$field)) {

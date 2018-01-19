@@ -100,5 +100,5 @@ while($p = db_fetch($result)) {
 }
 
 	
-$pdf->Output('I');
+$pdf->Output('D','Workshop Cards.pdf');
 

@@ -99,5 +99,5 @@ while($p = db_fetch($result)) {
 }
 
 	
-$pdf->Output('I');
+$pdf->Output('D','Bicycle Cards.pdf');
 
