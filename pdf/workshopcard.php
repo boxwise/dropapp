@@ -70,8 +70,8 @@ while($p = db_fetch($result)) {
 		$pdf->Rotate(0);
 		$pdf->UnsetClipping();
 		
-		$labels = array('name','container','date of birth','phone','issued');
-		$data = array('name','address','birthdate','phone','issued');
+		$labels = array('name','address','date of birth','phone','issued');
+		$data = array('name','container','birthdate','phone','issued');
 		for($l=0;$l<5;$l++) {
 			$pdf->SetDrawColor(100);
 			$pdf->line($pdf->X+38,$pdf->Y+15.5+($l*8),$pdf->X+81,$pdf->Y+15.5+($l*8));
