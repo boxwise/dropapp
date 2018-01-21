@@ -9,8 +9,6 @@ require('pdf.php');
 define('PDFSCRIPT',true);
 define('FPDF_FONTPATH','fonts/');
 
-$title = $_GET['title'];
-
 $pdf=new PDF();
 
 $pdf->AddFont('helvetica','','helvetica.php');
@@ -64,10 +62,10 @@ while($container = db_fetch($result)) {
 }
 
 	
-$pdf->Output('D','Distribution List.pdf');
+$pdf->Output('I','Distribution List.pdf');
 
 function Writename($person) {
-	global $pdf, $title;
+	global $pdf;
 	if(is_null($person['age'])) $person['age'] = '?';
 	$pdf->SetFont('helvetica',($person['parent_id']?'':'B'),10);
 	
@@ -75,18 +73,17 @@ function Writename($person) {
 	
 	$pdf->SetXY($pdf->X-1+$parent,$pdf->Y-3);
 	$w = $pdf->Column-28;
-	if($title!='bread') {
-		if($person['extra']) $w-=16;
-		if($person['age']<2) $w-=11;
-	}
+	if($person['extra']) $w-=10;
+	if($person['age']<2) $w-=11;
+
 	$pdf->CellFit($w-$parent,4,$person['name'],0,0,'L',false,'',true,false);
-	if($person['extra'] && $title!='bread') {
-		$pdf->SetXY($pdf->X+$pdf->Column-45,$pdf->Y-3);
+	if($person['extra'] && $_GET['double']) {
+		$pdf->SetXY($pdf->X+$pdf->Column-39,$pdf->Y-3);
 		$pdf->SetFont('helvetica','',7);
 		$pdf->SetFillColor(240,240,240);
-		$pdf->Cell(16,3.5,'Extra portion',1,0,'C',1);
+		$pdf->Cell(10,3.5,'Double',1,0,'C',1);
 	}
-	if($person['age']!='?' && $person['age']<3 && $title=='dryfood') {
+	if($person['age']!='?' && $person['age']<3 && $_GET['diapers']) {
 		$pdf->SetXY($person['extra']?$pdf->X+$pdf->Column-56:$pdf->X+$pdf->Column-39,$pdf->Y-3);
 		$pdf->SetFont('helvetica','',7);
 		$pdf->SetFillColor(240,240,240);

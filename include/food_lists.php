@@ -3,39 +3,29 @@
 	$action = 'food_lists';
 
 	if($_POST) {
-		$type = $_POST['type'][0];
-		if($type =='veg') {
+		$double = $_POST['double'];
+		$diapers = $_POST['diapers'];
+		redirect('/pdf/dryfood.php?diapers='.$diapers.'&double='.$double);
 
-			redirect('/pdf/dryfood.php?title=vegetables');
-
-		} else if ($type=='drynew') {
-				
-			redirect('/pdf/dryfood.php?title=dryfood');
-
-		} else if ($type=='breadnew') {
-				
-			redirect('/pdf/dryfood.php?title=bread');
-
-		} else if ($type=='drydiapers') {
-				
-			redirect('?action=food-distribution&diapers=true');
-
-		} else {
-
-			redirect('?action=printed_list_containers');
-
-		}
 
 	} else {
+/*
 		addfield('custom','','<div class="noprint tipofday"><h3>💡 Best printing result</h3><p>Print it out using Google Chrome, choose A4, Portrait and switch off the printing of headers and footers in the Print dialog screen.</p></div>');
 		addfield('line');
+*/
+/*
 		addfield('select', 'Which List', 'type', array('options'=>array(
 			array('value'=>'veg', 'label'=>'Vegetables'),
-			array('value'=>'drynew', 'label'=>'Dry Food'),
-			array('value'=>'breadnew', 'label'=>'Bread'),
-			array('value'=>'con', 'label'=>'Container'))));
+// 			array('value'=>'drynew', 'label'=>'Dry Food'),
+			array('value'=>'breadnew', 'label'=>'Bread')
+// 			array('value'=>'con', 'label'=>'Container')
+			)));
+*/
+		addfield('checkbox','Double portion (for vegetables)','double');
+		addfield('checkbox','Include diapers in the list','diapers');
+		
 		// open the template
-		$cmsmain->assign('title','Sales overview');
+		$cmsmain->assign('title','Distribution list');
 		$cmsmain->assign('include','cms_form.tpl');
 		// Title
 		// Form Button
