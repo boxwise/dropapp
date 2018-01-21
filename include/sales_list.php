@@ -80,17 +80,23 @@
 			} elseif($type=='byday') {
 				
 				# Distribution of sales by day
-				$data = getlistdata('SELECT DATE_FORMAT(t.transaction_date,"%d-%m-%Y") AS salesdate, SUM(t.count) AS aantal 
+				$data = getlistdata('SELECT DATE_FORMAT(t.transaction_date,"%d-%m-%Y") AS salesdate, SUM(t.count) AS aantal, COUNT(DISTINCT(t.people_id)) AS people
 					FROM (transactions AS t, people AS pp)
 					LEFT OUTER JOIN products AS p ON t.product_id = p.id
 					LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
 					WHERE t.people_id = pp.id AND pp.camp_id = '.$_SESSION['camp']['id'].' AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"
 					GROUP BY DATE_FORMAT(t.transaction_date,"%d-%m-%Y")
 					ORDER BY t.transaction_date');
+				$totalvisitors = db_value('SELECT COUNT(DISTINCT(t.people_id)) AS people
+					FROM (transactions AS t, people AS pp)
+					LEFT OUTER JOIN products AS p ON t.product_id = p.id
+					LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
+					WHERE t.people_id = pp.id AND pp.camp_id = '.$_SESSION['camp']['id'].' AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"');
 
 				addcolumn('text','Sales','salesdate');
 				addcolumn('text','Amount','aantal');
-				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)'));
+				addcolumn('text','Visitors','people');
+				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)',$totalvisitors));
 
 			} else {
 				
