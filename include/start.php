@@ -58,9 +58,12 @@ FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bi
 	        $date = date ("Y-m-d", strtotime("+1 day", strtotime($date)));
 		}
 
-		$previous_week = strtotime('last week');
+		$data['weeklabel'] = (strftime('%w')?'Last':'This');
+		$previous_week = strtotime($data['weeklabel'].' week');
 		$start_week = date("Y-m-d",strtotime("monday",$previous_week));
 		$end_week = date("Y-m-d",strtotime("sunday",$previous_week));
+	
+		$data['newpeople'] = db_value('SELECT COUNT(id) FROM people WHERE NOT deleted AND created >= "'.$start_week.'" AND created <= "'.$end_week.'" AND camp_id = '.intval($_SESSION['camp']['id'])." AND LEFT(container,2) != 'PK'");
 		
 		$data['newcardsM'] = db_value('SELECT COUNT(p.id) FROM history AS h LEFT OUTER JOIN people AS p ON p.id = h.record_id WHERE changedate >= "'.$start_week.'" AND changedate <= "'.$end_week.'" AND tablename = "people" AND changes = "bicycletraining" AND p.gender = "M"');
 		$data['newcardsF'] = db_value('SELECT COUNT(p.id) FROM history AS h LEFT OUTER JOIN people AS p ON p.id = h.record_id WHERE changedate >= "'.$start_week.'" AND changedate <= "'.$end_week.'" AND tablename = "people" AND changes = "bicycletraining" AND p.gender = "F"');
