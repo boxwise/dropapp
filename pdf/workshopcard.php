@@ -38,19 +38,28 @@ while($p = db_fetch($result)) {
 		$_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.intval($p['id']).'.jpg':'');
 		
 	if($p['workshoptraining'] && $picture) {
+		
+		if($p['workshopsupervisor']) $super = true;
+		
 		$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.intval($p['id']).'.jpg');
 		$rotate = ($exif['Orientation']==3?180:($exif['Orientation']==6?-90:($exif['Orientation']==8?90:0)));
 		list($imgw,$imgh) = getimagesize($picture);
 	
 		$pdf->newCard();
-		$pdf->Rect($pdf->X,$pdf->Y,$pdf->W,$pdf->H,'F');
+		if($super) $pdf->SetFillColor(100,0,0,0);
+		$pdf->Rect($pdf->X,$pdf->Y,$pdf->W,$pdf->H,'DF');
 		$pdf->Rect($pdf->X,$pdf->Y+$pdf->H,$pdf->W,$pdf->H);
 	
 		$pdf->SetFont('helvetica','B',11.5);
 		$pdf->SetTextColor(100,0,0,0);
+		if($super) $pdf->SetTextColor(0);
 		$pdf->Print(4,7,'Drop in the ocean');
 		$pdf->SetTextColor(100);
-		$pdf->Print(40.5,7,'Workshop Certificate');
+		if($super) {
+			$pdf->Print(40,7,'Workshop Supervisor');
+		} else {
+			$pdf->Print(40.5,7,'Workshop Certificate');
+		}
 		
 		$photow = 30;
 		$photoh = 40;
@@ -100,5 +109,5 @@ while($p = db_fetch($result)) {
 }
 
 	
-$pdf->Output('D','Workshop Cards.pdf');
+$pdf->Output('I','Workshop Cards.pdf');
 

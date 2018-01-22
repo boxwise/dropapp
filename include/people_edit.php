@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$id = $handler->savePost($savekeys);
 
@@ -133,6 +133,7 @@
 	if($_SESSION['camp']['workshop']){
 		addfield('line','','',array('tab'=>'bicycle'));
 		addfield('checkbox','This person succesfully passed the workshop training', 'workshoptraining', array('tab'=>'bicycle'));
+		addfield('checkbox','This person is a workshop supervisor', 'workshopsupervisor', array('tab'=>'bicycle'));
 		addfield('date','Workshop ban until','workshopban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the workshop until (and including) this date. Empty this field to cancel the ban.'));
 		addfield('workshopcard','Card','workshopcard',array('tab'=>'bicycle'));
 	}

@@ -17,6 +17,9 @@ a{
 a:hover{
 	color: #333;
 }
+.blue {
+	color:#61c4ef;
+}
 
 hr{
 	display: block;

@@ -62,7 +62,7 @@ while($container = db_fetch($result)) {
 }
 
 	
-$pdf->Output('I','Distribution List.pdf');
+$pdf->Output('D','Distribution List.pdf');
 
 function Writename($person) {
 	global $pdf;

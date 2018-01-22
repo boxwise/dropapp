@@ -77,7 +77,7 @@
 				$data[$key]['expired'] .= '<i class="fa fa-bicycle tooltip-this" title="This person has a bicycle certificate."></i> ';
 			}
 			if($data[$key]['workshoptraining']) {
-				$data[$key]['expired'] .= '<i class="fa fa-wrench tooltip-this" title="This person has a workshop certificate."></i> ';
+				$data[$key]['expired'] .= '<i class="fa fa-wrench tooltip-this '.($data[$key]['workshopsupervisor']?'blue':'').'" title="This person has a workshop certificate."></i> ';
 			}
 		}
 
