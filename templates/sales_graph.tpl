@@ -126,6 +126,15 @@ var chart = AmCharts.makeChart("chartdiv", {
         "type": "column",
 		"color": "#000000",
         "valueField": "Other"
+    },{
+        "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+        "fillAlphas": 0.8,
+        "labelText": "[[value]]",
+        "lineAlpha": 0.3,
+        "title": "Food",
+        "type": "column",
+		"color": "#000000",
+        "valueField": "Food"
 	}],
     "depth3D": 20,
 	"angle": 30,

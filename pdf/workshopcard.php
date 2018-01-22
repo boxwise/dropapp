@@ -46,13 +46,17 @@ while($p = db_fetch($result)) {
 		list($imgw,$imgh) = getimagesize($picture);
 	
 		$pdf->newCard();
-		if($super) $pdf->SetFillColor(100,0,0,0);
+		$pdf->SetLineColor(0);
+		if($super) {
+			$pdf->SetFillColor(100,0,0,0);
+		} else {
+			$pdf->SetFillColor(0);
+		}
 		$pdf->Rect($pdf->X,$pdf->Y,$pdf->W,$pdf->H,'DF');
 		$pdf->Rect($pdf->X,$pdf->Y+$pdf->H,$pdf->W,$pdf->H);
 	
 		$pdf->SetFont('helvetica','B',11.5);
-		$pdf->SetTextColor(100,0,0,0);
-		if($super) $pdf->SetTextColor(0);
+		if($super) $pdf->SetTextColor(0); else $pdf->SetTextColor(100,0,0,0);
 		$pdf->Print(4,7,'Drop in the ocean');
 		$pdf->SetTextColor(100);
 		if($super) {
