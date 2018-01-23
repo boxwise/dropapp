@@ -46,7 +46,7 @@ while($p = db_fetch($result)) {
 		list($imgw,$imgh) = getimagesize($picture);
 	
 		$pdf->newCard();
-		$pdf->SetLineColor(0);
+		$pdf->SetDrawColor(0);
 		if($super) {
 			$pdf->SetFillColor(100,0,0,0);
 		} else {
