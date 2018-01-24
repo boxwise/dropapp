@@ -14,7 +14,12 @@
 		$data = getlistdata('SELECT b.visible, b.visible AS editable, b.label, bc.label AS category, b.id,
 
 	(SELECT IF(status="out",CONCAT((SELECT CONCAT(firstname," ",lastname) FROM people WHERE id = people_id),IF(t.lights," ***","")),b.comment) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
-	(SELECT IF(status="out",transaction_date,0) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
+	(SELECT IF(status="out",
+	
+	IF(TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>10400,CONCAT("<b class=\"warning\">",DATE_FORMAT(TIMEDIFF(NOW(),transaction_date),"%H:%i")," <i class=\"fa fa-warning\"></i></b>"),DATE_FORMAT(TIMEDIFF(NOW(),transaction_date),"%H:%i"))
+	
+	
+	,"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
 FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted');
 
 		foreach($data as $key=>$value) {
@@ -23,7 +28,7 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		addcolumn('text','Category','category');
 		addcolumn('text','Name','label');
 		addcolumn('text','Rented out to','user');
-		addcolumn('datetime','Date','date');
+		addcolumn('html','Duration','date');
 
 		addbutton('edititem','Edit item',array('icon'=>'fa-edit','oneitemonly'=>true));
 		addbutton('borrowhistory','View history',array('icon'=>'fa-history','oneitemonly'=>true));

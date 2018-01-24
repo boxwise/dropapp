@@ -21,7 +21,7 @@
 
 	// open the template
 
-	$data = db_row('SELECT b.*, bt.lights, bt.transaction_date, bt.people_id, bt.status, CONCAT(p.firstname," ",p.lastname) AS user FROM borrow_items AS b LEFT OUTER JOIN borrow_transactions AS bt ON bt.bicycle_id = b.id LEFT OUTER JOIN people AS p ON bt.people_id = p.id WHERE b.id = :id ORDER BY transaction_date DESC ',array('id'=>$id));
+	$data = db_row('SELECT b.*, bt.lights, TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>10400 AS toolate, DATE_FORMAT(TIMEDIFF(NOW(),transaction_date),"%H:%i") AS duration, bt.transaction_date, bt.people_id, bt.status, CONCAT(p.firstname," ",p.lastname) AS user FROM borrow_items AS b LEFT OUTER JOIN borrow_transactions AS bt ON bt.bicycle_id = b.id LEFT OUTER JOIN people AS p ON bt.people_id = p.id WHERE b.id = :id ORDER BY transaction_date DESC ',array('id'=>$id));
 
 	if($data['status']=='out') {
 
