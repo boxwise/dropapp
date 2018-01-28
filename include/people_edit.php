@@ -12,9 +12,10 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','languages');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$id = $handler->savePost($savekeys);
+		$handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
 		if($_POST['id'] && $oldcontainer != $_POST['container']) {
 			if($_POST['parent_id']) {
@@ -109,7 +110,9 @@
 
  	addfield('date','Date of birth','date_of_birth', array('tab'=>'people', 'date'=>true, 'time'=>false));
 	addfield('line','','',array('tab'=>'people'));
-	addfield('text','Language(s)','languages',array('tab'=>'people','tooltip'=>'Put mothertongue first, followed by the additional languages spoken'));
+	addfield('select','Language(s)','languages',array('tab'=>'people','multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' ORDER BY seq'));
+
+
  	addfield('textarea','Comments','comments',array('tab'=>'people'));
 	addfield('line','','',array('tab'=>'people'));
 	addfield('checkbox','This person is not officially registered in camp','notregistered',array('tab'=>'people'));	
