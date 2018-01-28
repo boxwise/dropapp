@@ -53,14 +53,14 @@
 			($listconfig['searchvalue']?' AND
 			(lastname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
 			 firstname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
-			 container LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
+			 container = "'.trim($listconfig['searchvalue']).'" OR 
 			 (SELECT 
 			 	COUNT(id) 
 			 FROM people AS p 
 			 WHERE 
 			 	(lastname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
 			 	 firstname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
-			 	 container LIKE "%'.trim($listconfig['searchvalue']).'%") AND 
+			 	 container = "'.trim($listconfig['searchvalue']).'") AND 
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			':' ')
