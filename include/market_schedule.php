@@ -20,6 +20,32 @@
 		$data['startdate'] = strftime('%A %e %B %Y',strtotime('+'.min($_POST['dates']).' Days'));
 		$data['enddate'] = strftime('%A %e %B %Y',strtotime('+'.max($_POST['dates']).' Days'));
 
+		db_query('UPDATE camps SET 
+			schedulestart = :start, 
+			schedulestop = :stop,
+			schedulebreak = :break,
+			schedulebreakstart = :breaktime,
+			schedulebreakduration = :breakduration, 
+			scheduletimeslot = :timeslot 
+		WHERE id = :camp',array('camp'=>$_SESSION['camp']['id'], 
+			'start'=>$_POST['starttime'], 
+			'stop'=>$_POST['endtime'],
+			'break'=>intval($_POST['lunchbreak']),
+			'breaktime'=>$_POST['lunchtime'],
+			'breakduration'=>$_POST['lunchduration'][0],
+			'timeslot'=>$_POST['timeslot'][0]
+		));
+		
+		$_SESSION['camp'] = db_row('SELECT * FROM camps WHERE id = :camp',array('camp'=>$_SESSION['camp']['id']));
+/*
+		$data['starttime'] = ($_SESSION['camp']['schedulestart']?$_SESSION['camp']['schedulestart']:'10:00');
+		$data['endtime'] = ($_SESSION['camp']['schedulestop']?$_SESSION['camp']['schedulestop']:'16:00');
+		$data['lunchbreak'] = ($_SESSION['camp']['schedulebreak']?$_SESSION['camp']['schedulebreak']:'1');
+		$data['lunchtime'] = ($_SESSION['camp']['schedulebreakstart']?$_SESSION['camp']['schedulebreakstart']:'13:00');
+		$data['lunchduration'] = ($_SESSION['camp']['schedulebreakduration']?$_SESSION['camp']['schedulebreakduration']:'1');
+		$data['timeslot'] = ($_SESSION['camp']['scheduletimeslot']?$_SESSION['camp']['scheduletimeslot']:'0.5');
+*/
+
 		$slots = array();
 		foreach($_POST['dates'] as $day) {
 			$date = strftime('%A %e %B %Y',strtotime('+'.$day.' Days'));
@@ -98,11 +124,14 @@
 		$translate['cms_form_submit'] = 'Make schedule';
 		$cmsmain->assign('translate',$translate);
 
-		$data['starttime'] = '10:00';
-		$data['endtime'] = '16:00';
-		$data['lunchtime'] = '13:00';
-		$data['lunchduration'] = '1';
-		$data['timeslot'] = '0.5';
+		$data['starttime'] = ($_SESSION['camp']['schedulestart']?$_SESSION['camp']['schedulestart']:'10:00');
+		$data['endtime'] = ($_SESSION['camp']['schedulestop']?$_SESSION['camp']['schedulestop']:'16:00');
+		$data['lunchbreak'] = intval($_SESSION['camp']['schedulebreak']);
+		$data['lunchtime'] = ($_SESSION['camp']['schedulebreakstart']?$_SESSION['camp']['schedulebreakstart']:'13:00');
+		$data['lunchduration'] = ($_SESSION['camp']['schedulebreakduration']?$_SESSION['camp']['schedulebreakduration']:'1');
+		$data['timeslot'] = ($_SESSION['camp']['scheduletimeslot']?$_SESSION['camp']['scheduletimeslot']:'0.5');
+
+dump($data['lunchbreak']);
 
 		for($i=1;$i<60;$i++) {
 			$datelist[] = array('value'=>$i,'label'=>strftime('%A %e %B %Y',strtotime('+'.$i.' Days')));
@@ -123,11 +152,12 @@
 		// place the form elements and data in the template
 		addfield('line');
 		addfield('checkbox','Include lunch break','lunchbreak', array('onchange' => 'toggleLunch()'));
-		addfield('date','Lunch time','lunchtime',array('date'=>false,'time'=>true, 'hidden'=>true));
-		addfield('select','Lunch length','lunchduration',array('multiple'=>false, 'hidden'=>true, 'options'=>array(
-			array('value'=> '2', 'label'=>'2 hours'),
+		addfield('date','Lunch time','lunchtime',array('date'=>false,'time'=>true, 'hidden'=>!$data['lunchbreak']));
+		addfield('select','Lunch length','lunchduration',array('multiple'=>false, 'hidden'=>!$data['lunchbreak'], 'options'=>array(
+			array('value'=> '0.5', 'label'=>'30 minutes'), 
 			array('value'=> '1', 'label'=>'1 hour'),
-			array('value'=> '0.5', 'label'=>'30 minutes') 
+			array('value'=> '1.5', 'label'=>'1,5 hour'),
+			array('value'=> '2', 'label'=>'2 hours')
 			), 'required'=> true));
 
 		$cmsmain->assign('data',$data);

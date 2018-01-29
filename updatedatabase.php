@@ -81,6 +81,15 @@
 
 	db_addfield('products','comments',"VARCHAR(255)");	
 
+	db_addfield('camps','schedulestart',"VARCHAR(255)");	
+	db_addfield('camps','schedulestop',"VARCHAR(255)");	
+	db_addfield('camps','schedulebreak',"VARCHAR(255)");	
+	db_addfield('camps','schedulebreakstart',"VARCHAR(255)");	
+	db_addfield('camps','schedulebreakduration',"VARCHAR(255)");	
+	db_addfield('camps','scheduletimeslot',"VARCHAR(255)");	
+	db_addfield('camps','dropsperadult',"VARCHAR(255)");	
+	db_addfield('camps','dropsperchild',"VARCHAR(255)");	
+
 	db_addfield('cms_functions','visible',"TINYINT NOT NULL",'UPDATE `cms_functions` SET `visible` = 1');	
 	db_addfield('cms_functions','allusers',"TINYINT  NOT NULL ",'UPDATE `cms_functions` SET `visible` = 0');	
 	db_addfield('cms_functions','adminonly',"TINYINT  NOT NULL  DEFAULT 0  AFTER `title_ar`");	
