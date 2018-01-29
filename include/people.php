@@ -99,7 +99,7 @@
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-o-up'));
 
-		addbutton('export','Export',array('icon'=>'fa-file-excel-o'));
+		if($_SESSION['user']['is_admin']) addbutton('export','Export',array('icon'=>'fa-file-excel-o'));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
