@@ -99,6 +99,8 @@
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-o-up'));
 
+		addbutton('export','Export',array('icon'=>'fa-file-excel-o'));
+
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
@@ -201,6 +203,10 @@
 		    case 'print':
 				$success = true;
 		    	$redirect = '/pdf/'.$_POST['option'].'card.php?id='.$_POST['ids'];
+		        break;
+		    case 'export':
+				$success = true;
+		    	$redirect = '?action=people_export';
 		        break;
 		}
 

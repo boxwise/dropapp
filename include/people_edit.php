@@ -110,7 +110,7 @@
 
  	addfield('date','Date of birth','date_of_birth', array('tab'=>'people', 'date'=>true, 'time'=>false));
 	addfield('line','','',array('tab'=>'people'));
-	addfield('select','Language(s)','languages',array('tab'=>'people','multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' ORDER BY seq'));
+	addfield('select','Language(s)','languages',array('tab'=>'people','multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible'));
 
 
  	addfield('textarea','Comments','comments',array('tab'=>'people'));
