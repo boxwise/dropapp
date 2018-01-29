@@ -84,6 +84,8 @@
 	db_addfield('cms_functions','visible',"TINYINT NOT NULL",'UPDATE `cms_functions` SET `visible` = 1');	
 	db_addfield('cms_functions','allusers',"TINYINT  NOT NULL ",'UPDATE `cms_functions` SET `visible` = 0');	
 	db_addfield('cms_functions','adminonly',"TINYINT  NOT NULL  DEFAULT 0  AFTER `title_ar`");	
+
+	db_addfield('cms_users','coordinator',"TINYINT  NOT NULL  DEFAULT 0");	
 	
 	db_addfield('borrow_items','category_id',"INT  NOT NULL  DEFAULT 0 ");	
 	db_addfield('borrow_items','visible',"TINYINT(4)  NOT NULL  DEFAULT 0");	

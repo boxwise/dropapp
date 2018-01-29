@@ -3,7 +3,7 @@
 
 	if($_POST) {
 
-		$keys = array('naam','email');
+		$keys = array('naam','email','coordinator');
 		if($_POST['pass']) {
 			$_POST['pass'] = md5($_POST['pass']);
 			array_push($keys, 'pass');
@@ -35,6 +35,7 @@
 	addfield('line');
 
 	addfield('email',$translate['cms_users_email'],'email',array('required'=>true,'tooltip'=>$translate['cms_users_email_tooltip']));
+	addfield('checkbox', 'Coordinator', 'coordinator');
 	addfield('custom','','<h3>'.$translate['cms_users_password_change'].'</h3>');
 	addfield('password',$translate['cms_users_password'],'pass',array('repeat'=>true,'tooltip'=>$translate['cms_users_password_tooltip']));
 	addfield('line');
