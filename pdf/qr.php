@@ -45,7 +45,7 @@ for($i=0;$i<intval($_GET['count']);$i++) {
 	$pdf->Text(50,$y+84,'Contents');
 
 	$pdf->Line(10,$y+30,70,$y+30);
-	$pdf->Text(10,$y+34,'Count');
+	$pdf->Text(10,$y+34,'Number of items');
 
 	$pdf->Line(10,$y+130,70,$y+130);
 	$pdf->Text(10,$y+134,'Gender');
