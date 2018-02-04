@@ -31,7 +31,7 @@ $result = db_query('
 	FROM people 
 	WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted 
 	GROUP BY container 
-	ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');
+	ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1, seq');
 
 while($container = db_fetch($result)) {
 	

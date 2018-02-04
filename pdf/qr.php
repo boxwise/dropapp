@@ -34,22 +34,24 @@ for($i=0;$i<intval($_GET['count']);$i++) {
 	$hash = md5($id);
 	db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$hash.'",NOW())');
 	
-	$pdf->Image('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://market.drapenihavet.no/'.$settings['rootdir'].'/mobile.php?barcode='.$hash, 165, 12+$y, 35, 35, 'png');
+	$pdf->Image('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://market.drapenihavet.no/'.$settings['rootdir'].'/mobile.php?barcode='.$hash, 88, 12+$y, 34, 34, 'png');
 
 	$pdf->Image('logo.png', 92, 107+$y, 26, 31);
 
-
+	$pdf->Line(140,$y+30,200,$y+30);
+	$pdf->Text(140,$y+34,'Box Number');
+	
 	$pdf->Line(50,$y+80,160,$y+80);
 	$pdf->Text(50,$y+84,'Contents');
 
 	$pdf->Line(10,$y+30,70,$y+30);
-	$pdf->Text(10,$y+34,'Box Number');
+	$pdf->Text(10,$y+34,'Count');
 
 	$pdf->Line(10,$y+130,70,$y+130);
 	$pdf->Text(10,$y+134,'Gender');
 
 	$pdf->Line(140,$y+130,200,$y+130);
-	$pdf->Text(194,$y+134,'Size');
+	$pdf->Text(140,$y+134,'Size');
 
 }
 

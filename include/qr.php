@@ -49,6 +49,7 @@
 		$cmsmain->assign('title','New QR Box Labels');
 
 		$data['count'] = 1;
+		$data['fulllabel'] = 1;
 
 		$translate['cms_form_submit'] = 'Make labels';
 		$cmsmain->assign('translate',$translate);
@@ -58,7 +59,7 @@
 			addfield('hidden','','count');
 			addfield('hidden','','label');
 		} else {
-			$data['count'] = 24;
+			$data['count'] = 2;
 			addfield('number','Number of labels','count',array('min'=>0,'max'=>999));
 		}
 		addfield('checkbox','Make big labels including fields for box number and contents','fulllabel');
