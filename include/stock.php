@@ -129,7 +129,7 @@
 				break;
 			case 'qr':
 				$id = $_POST['ids'];
-				$redirect = '?action=qr&label='.$id;
+				$redirect = '/pdf/qr.php?label='.$id;
 				break;
 		    case 'move':
 				$ids = json_decode($_POST['ids']);

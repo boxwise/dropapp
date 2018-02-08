@@ -61,6 +61,7 @@
  		
  		listfilter2(array('label'=>'Scope','query'=>'SELECT id, label FROM need_periods ORDER BY week_min','filter'=>'scope'));
 
+		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('link'=>'?action=need&export=true','icon'=>'fa-file-excel-o','showalways'=>true));
 
 			
 		$weeks = db_row('SELECT week_min AS min, week_max AS max FROM need_periods WHERE id = :id',array('id'=>$_SESSION['filter2']['need']));
@@ -86,7 +87,8 @@
 				(IF(g.male,peo.gender="M",0) OR IF(g.female,peo.gender="F",0)) AND 
 				(IF(g.adult,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), peo.date_of_birth)), "%Y")+0>=13,0) OR IF(g.baby,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), peo.date_of_birth)), "%Y")+0<2,0) OR IF(g.child,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), peo.date_of_birth)), "%Y")+0 BETWEEN 2 AND 13,0)))*IFNULL(s.portion,100)/100),0) AS target,
 				COALESCE(SUM(st.items),0) AS stock,
-				COALESCE(COUNT(st.items),0) AS boxes';
+				COALESCE(COUNT(st.items),0) AS boxes,
+				s.portion AS portion';
 				
 		foreach($camps as $key=>$camp) {
 			$query .= ', st_'.$key.'.calc AS camp_'.$key;
@@ -143,6 +145,7 @@
 			$data[$key]['ean_print'] = '<a href="?action=products_edit&origin='.$action.'&id='.$data[$key]['id'].'" class="tooltip-this" title="Click here to edit the estimated annual need">'.$d['ean_print'].'</a>';
 		}
 
+/*
 		//products of other camps hidden
 		if(false){ 
 			//MYSQL query to show the products of other camps
@@ -191,14 +194,47 @@
 			$data = array_merge($data,$data_other);
 
 		}
-	
+*/
+		
+		if($_GET['export']) {
+			header("Content-type: text/csv");
+			header("Content-Disposition: attachment; filename=needed-items.csv");
+			header("Pragma: no-cache");
+			header("Expires: 0");
+			
+			$keys = array('product'=>'Product','gender'=>'Gender','size'=>'Size','ean'=>'Estimated annual need','target'=>'Target group size','stock'=>'Stock','portion'=>'Portion');
+			
+			foreach($keys as $value) {
+				echo '"'.$value.'",';
+			}
+			echo "\n";
+			foreach($data as $d) {
+				foreach($keys as $key=>$value) {
+					echo '"'.$d[$key].'",';
+				}
+				echo "\n";
+			}
+			
+			die();
+		}
 		//move data to Zmarty object
 		$cmsmain->assign('title','Needed items');
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
 		$cmsmain->assign('include','cms_list.tpl');
+		
 	} else {
-		//ajax for select of time periods
+		switch ($_POST['do']) {
+		    case 'export':
+				$success = true;
+		    	$redirect = '?action=need&export=true';
+		        break;
+		}
+
+		$return = array("success" => $success, 'message'=> $message, 'redirect'=>$redirect, 'action'=>$aftermove);
+
+		echo json_encode($return);
+		die();
 	}
 

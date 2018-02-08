@@ -30,7 +30,10 @@
 		addcolumn('text','Items','items');
 		if($_SESSION['camp']['market']) addcolumn('text',ucfirst($translate['market_coins']),'drops');
 		addcolumn('text','Description','comments');
-		if($_SESSION['camp']['id']== 3 || $_SESSION['camp']['id'] == 1) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
+		if($_SESSION['camp']['id']== 3) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
+
+		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
+
 
 		listsetting('allowsort',true);
 		listsetting('allowcopy',false);
@@ -73,6 +76,10 @@
 
 		    case 'togglecontainer':
 		    	list($success, $message, $redirect, $newvalue) = listSwitch($table, 'stockincontainer', $_POST['id']);
+		        break;
+		    case 'export':
+				$success = true;
+		    	$redirect = '?action=products_export';
 		        break;
 		}
 

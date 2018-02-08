@@ -19,6 +19,26 @@
 					{if $listconfig['allowselectall']}<li>
 						<label class="btn btn-default btn-sm tooltip-this" data-toggle="tooltip" data-placement="top" title="{$translate['cms_list_selectall']}" for="group-select-1"><input id="group-select-1" type="checkbox" class="group-select"></label>
 					</li>{/if}
+					<li>
+						<div class="btn-group">
+							{foreach $listconfig['button'] as $code=>$button}
+								{if $button['showalways']}
+									{if $button['options']}
+										<div class="btn-group">
+											<div type="button" class="btn btn-sm btn-default dropdown-toggle">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']} <span class="caret"></span></div>
+											<ul class="dropdown-menu pull-right button-multi" role="menu">
+												{foreach $button['options'] as $key=>$option}
+													<li><a href="#" data-operation="{$code}" data-option="{$key}" class="start-operation {if $button['confirm']}confirm{/if}">{$option}</a></li>
+												{/foreach}
+											</ul>
+										</div>
+									{else}
+										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default" href="{if $button['link']}{$button['link']}{else}#{/if}">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']}</button>
+									{/if}
+								{/if}
+							{/foreach}
+						</div>
+					</li>
 					<li class="items-selected-dependent">
 						<div class="btn-group">
 
