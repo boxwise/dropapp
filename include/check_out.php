@@ -123,7 +123,8 @@
 		
 		$data['givedropsurl'] = '?action=give&ids='.$data['people_id'];
 
-
+		$data['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1',array('id'=>$data['people_id'])),true);
+		
 		$ajaxaside->assign('data',$data);
 		$htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
 

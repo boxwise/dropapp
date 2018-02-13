@@ -171,3 +171,34 @@ function simpleSaveChangeHistory($table, $record, $changes, $from = array(), $to
 	db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :from_int, :from_float, :to_int, :to_float)', array('table'=>$table,'id'=>$record,'change'=>$changes,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR'], 'from_int'=>$from['int'], 'from_float'=>$from['float'], 'to_int'=>$to['int'], 'to_float'=>$to['float']));
 }
 
+function displayDate($datum, $time = false, $long = false) {
+	global $_txt;
+	
+	if(!is_int($datum)) $datum = strtotime($datum);
+	$d = strftime('%Y-%m-%d',$datum);
+	
+	if($d == strftime('%Y-%m-%d',strtotime('+2 day'))) $dmy = 'Tomorrow'.strftime('%A',$datum);
+	if($d == strftime('%Y-%m-%d',strtotime('+1 day'))) $dmy = 'Tomorrow';
+	if($d == strftime('%Y-%m-%d')) $dmy = $_txt['today'];
+	if($d == strftime('%Y-%m-%d',strtotime('-1 day'))) $dmy = 'Yesterday';
+	if($d == strftime('%Y-%m-%d',strtotime('-2 day'))) $dmy = 'Two days ago';
+
+	if (!$datum) return 'Unknown';
+	if ($time) 
+		if(!$dmy) {
+			return strftime('%e %B %Y, %H:%M', $datum);
+		} else {
+			return $dmy.strftime(', %H:%M', $datum);
+		}
+	else
+		if($long) {
+			if(!$dmy) {
+				return strftime('%e %B %Y', $datum);
+			} else {
+				return $dmy;
+			}
+		} else {
+			return strftime('%d-%m-%Y', $datum);
+		}	
+}
+
