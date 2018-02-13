@@ -89,6 +89,7 @@
 	db_addfield('camps','scheduletimeslot',"VARCHAR(255)");	
 	db_addfield('camps','dropsperadult',"VARCHAR(255)");	
 	db_addfield('camps','dropsperchild',"VARCHAR(255)");	
+	db_addfield('camps','cyclestart',"DATETIME NULL");	
 
 	db_addfield('cms_functions','visible',"TINYINT NOT NULL",'UPDATE `cms_functions` SET `visible` = 1');	
 	db_addfield('cms_functions','allusers',"TINYINT  NOT NULL ",'UPDATE `cms_functions` SET `visible` = 0');	

@@ -15,7 +15,8 @@
 
 		db_query('UPDATE camps SET 
 			dropsperadult = :dropsperadult, 
-			dropsperchild = :dropsperchild
+			dropsperchild = :dropsperchild, 
+			cyclestart = NOW()
 		WHERE id = :camp',array('camp'=>$_SESSION['camp']['id'], 
 			'dropsperadult'=>$_POST['dropsadult'], 
 			'dropsperchild'=>$_POST['dropschild']
