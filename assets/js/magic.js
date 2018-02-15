@@ -581,7 +581,7 @@ function initiateList(){
 				el.confirmation('show')
 			} else if(el.data('operation')!='none') {
 				el.data('confirmed', false);
-				if(parent.find('.table .item-select:checked').length){
+				if(parent.find('.table .item-select:checked').length || el.closest('.item-selected-independend').length){
 					// define the target
 					selectedTargets = parent.find('.item-select:checked').closest('tr');
 
