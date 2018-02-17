@@ -19,7 +19,7 @@
 					{if $listconfig['allowselectall']}<li>
 						<label class="btn btn-default btn-sm tooltip-this" data-toggle="tooltip" data-placement="top" title="{$translate['cms_list_selectall']}" for="group-select-1"><input id="group-select-1" type="checkbox" class="group-select"></label>
 					</li>{/if}
-					<li>
+					<li class="item-selected-independend">
 						<div class="btn-group">
 							{foreach $listconfig['button'] as $code=>$button}
 								{if $button['showalways']}
