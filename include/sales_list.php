@@ -98,6 +98,20 @@
 				addcolumn('text','Visitors','people');
 				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)',$totalvisitors));
 
+			} elseif($type=='category') {
+				
+				# Distribution of sales by products 
+				$data = getlistdata('SELECT pc.label AS name, SUM(t.count) AS aantal 
+					FROM (transactions AS t, people AS pp)
+					LEFT OUTER JOIN products AS p ON t.product_id = p.id
+					LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
+					LEFT OUTER JOIN product_categories AS pc ON p.category_id = pc.id
+					WHERE t.people_id = pp.id AND pp.camp_id = '.$_SESSION['camp']['id'].' AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"
+					GROUP BY p.category_id');
+
+				addcolumn('text','Product','name');
+				addcolumn('text','Amount','aantal');
+				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)'));
 			} else {
 				
 				# Distribution of sales by products 
@@ -143,6 +157,7 @@
 		addfield('select', 'Type', 'type', array('options'=>array(
 			array('value'=>'graph', 'label'=>'Sales graph'),
 			array('value'=>'product', 'label'=>'By product'),
+			array('value'=>'category', 'label'=>'By product category'),
 			array('value'=>'gender', 'label'=>'By gender'),
 			array('value'=>'byday', 'label'=>'Total sales by day'),
 			array('value'=>'export', 'label'=>'All sales (for Excel)'))));
