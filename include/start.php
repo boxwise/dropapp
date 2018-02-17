@@ -68,7 +68,11 @@ FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bi
 		$data['newcardsM'] = db_value('SELECT COUNT(p.id) FROM history AS h LEFT OUTER JOIN people AS p ON p.id = h.record_id WHERE changedate >= "'.$start_week.'" AND changedate <= "'.$end_week.'" AND tablename = "people" AND changes = "bicycletraining" AND p.gender = "M"');
 		$data['newcardsF'] = db_value('SELECT COUNT(p.id) FROM history AS h LEFT OUTER JOIN people AS p ON p.id = h.record_id WHERE changedate >= "'.$start_week.'" AND changedate <= "'.$end_week.'" AND tablename = "people" AND changes = "bicycletraining" AND p.gender = "F"');
 
-	
+		$data['totalcardsM'] = db_value('SELECT COUNT(id) FROM people WHERE NOT deleted AND bicycletraining AND gender = "M"');
+		$data['totalcardsF'] = db_value('SELECT COUNT(id) FROM people WHERE NOT deleted AND bicycletraining AND gender = "F"');
+		$data['cardsM'] = intval(100 * $data['totalcardsM'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "M" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
+		$data['cardsF'] = intval(100 * $data['totalcardsF'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "F" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
+
 		// open the template
 		$cmsmain->assign('include','start-market.tpl');
 	
