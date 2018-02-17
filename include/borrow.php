@@ -36,9 +36,11 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		listsetting('allowsort', true);
 		listsetting('allowdelete', false);
 		listsetting('allowshowhide', false);
-		listsetting('allowadd', false);
+		listsetting('allowadd', $_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']);
 		listsetting('allowselect', true);
 		listsetting('allowselectall', false);
+		
+		$listconfig['edit'] = 'borrowedititem';
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
