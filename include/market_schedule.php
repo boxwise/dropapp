@@ -68,6 +68,8 @@
 		            	break;
 	            }
 
+	            $slots[$date][floor($time).":".$minutes]['time'] = ($time>12.5?floor($time)-12:floor($time)).":".$minutes.($time>12.5?' pm':' am');
+
 				if(!$_POST['lunchbreak'] || ($time < $_POST['lunchtime'] || $time >= ($_POST['lunchtime']+$_POST['lunchduration'][0]))) {
 
 		            $slots[$date][floor($time).":".$minutes]['count'] = 0;
