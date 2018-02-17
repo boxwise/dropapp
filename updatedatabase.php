@@ -39,6 +39,70 @@
 			}
 		}
 	}
+	
+	if(!db_tableexists('library')) {
+		echo "Created table 'library'<br />";
+		db_query("CREATE TABLE `library` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) DEFAULT NULL,
+  `booktitle_en` varchar(255) DEFAULT NULL,
+  `booktitle_ar` varchar(255) DEFAULT NULL,
+  `author` varchar(255) DEFAULT NULL,
+  `publisher` varchar(255) DEFAULT NULL,
+  `level_id` int(11) DEFAULT NULL,
+  `language_id` int(11) DEFAULT NULL,
+  `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  `visible` tinyint(4) NOT NULL DEFAULT '0',
+  `comment` text NOT NULL,
+  `created` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `modified_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+	}
+
+	if(!db_tableexists('library_level')) {
+		echo "Created table 'library_level'<br />";
+		db_query("CREATE TABLE `library_level` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;");
+		db_query("INSERT INTO `library_level` (`id`, `label`)
+VALUES
+	(0, 'Easy'),
+	(1, '1'),
+	(2, '2'),
+	(3, '3'),
+	(4, '4'),
+	(5, '5'),
+	(6, 'B2');
+");
+	}
+
+	if(!db_tableexists('library_type')) {
+		echo "Created table 'library_type'<br />";
+		db_query("CREATE TABLE `library_type` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;");
+		db_query("INSERT INTO `library_type` (`id`, `label`)
+VALUES
+	(1, 'Arabic Children'),
+	(2, 'Arabic Educational'),
+	(3, 'Arabic Novel'),
+	(4, 'Arabic Poetry'),
+	(5, 'English Arabic'),
+	(6, 'English Arabic Adult'),
+	(7, 'English Arabic Children'),
+	(8, 'English Children'),
+	(9, 'English Graded Reader'),
+	(10, 'English Novel'),
+	(11, 'Poetry');
+");
+	}
 
 	
 	/* Bicycle and borrowing */
