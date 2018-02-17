@@ -67,7 +67,7 @@
 					</li>
 					{if $listconfig['allowadd']}
 					<li>
-						<a class="new-page item-add btn btn-sm btn-default" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}"><i class="fa fa-plus"></i> {$listconfig['add']}</a>
+						<a class="new-page item-add btn btn-sm btn-default" href="?action={if $listconfig['new']}{$listconfig['new']}{else}{$listconfig['edit']}{/if}&origin={$listconfig['origin']}"><i class="fa fa-plus"></i> {$listconfig['add']}</a>
 					</li>
 					{/if}
 				</ul>

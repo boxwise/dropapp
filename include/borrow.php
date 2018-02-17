@@ -40,7 +40,7 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		listsetting('allowselect', true);
 		listsetting('allowselectall', false);
 		
-		$listconfig['edit'] = 'borrowedititem';
+		$listconfig['new'] = 'borrowedititem';
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
