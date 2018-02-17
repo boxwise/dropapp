@@ -101,7 +101,7 @@
 			} elseif($type=='category') {
 				
 				# Distribution of sales by products 
-				$data = getlistdata('SELECT pc.label AS name, SUM(t.count) AS aantal 
+				$data = getlistdata('SELECT pc.label AS name, SUM(t.count) AS aantal, -SUM(t.drops) AS drops
 					FROM (transactions AS t, people AS pp)
 					LEFT OUTER JOIN products AS p ON t.product_id = p.id
 					LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
@@ -110,8 +110,9 @@
 					GROUP BY p.category_id');
 
 				addcolumn('text','Product','name');
-				addcolumn('text','Amount','aantal');
-				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)'));
+				addcolumn('text','Items','aantal');
+				addcolumn('text','Drops','drops');
+				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items',$totaldrops.' drops'));
 			} else {
 				
 				# Distribution of sales by products 
