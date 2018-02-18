@@ -15,6 +15,7 @@
 
 		$data = getlistdata('SELECT * FROM library');
 		
+		addcolumn('text','Code','code');
 		addcolumn('text','Book title','booktitle_en');
 		addcolumn('html','Book title','booktitle_ar');
 		addcolumn('text','Author','author');
@@ -24,7 +25,7 @@
 		listsetting('allowsort',true);
 		listsetting('allowcopy',false);
 		listsetting('allowshowhide',false);
-		listsetting('add', 'Add a product');
+		listsetting('add', 'Add a book');
 		listsetting('delete', 'Delete');
 
 		$cmsmain->assign('data',$data);
