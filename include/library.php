@@ -9,7 +9,7 @@
 		initlist();
 
 		$cmsmain->assign('title','Library');
-		listsetting('search', array('booktitle_en', 'booktitle_ar', 'author', 'publisher'));
+		listsetting('search', array('code', 'booktitle_en', 'booktitle_ar', 'author', 'publisher'));
 		
 //  		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM product_categories ORDER BY seq','filter'=>'products.category_id'));
 
@@ -20,7 +20,6 @@
 		addcolumn('text','Author','author');
 
 // 		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
-dump($data[0]['booktitle_ar']);
 
 		listsetting('allowsort',true);
 		listsetting('allowcopy',false);
