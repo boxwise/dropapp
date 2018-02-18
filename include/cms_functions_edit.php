@@ -6,13 +6,7 @@
 		$handler = new formHandler($table);
 		#$handler->debug = true;
 		$keys = array();
-		if(db_fieldexists($table,'title_'.$lan)) {
-		 	$result = db_query('SELECT * FROM languages WHERE visible ORDER BY seq');
-		 	while($row = db_fetch($result)) $keys[] = 'title_'.$row['code'];
-		} else {
-			$keys[] = 'title';
-		}
-		$handler->savePost(array_merge($keys,array('include','parent_id','adminonly','visible','allusers')));
+		$handler->savePost(array_merge($keys,array('title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers')));
 		$handler->saveMultiple('modules','cms_access','cms_functions_id','cms_users_id');
 		$handler->saveMultiple('camps','cms_functions_camps','cms_functions_id','camps_id');
 
@@ -33,14 +27,7 @@
 
  	addfield('select','Onderdeel van','parent_id',array('required'=>true,'formatlist'=>'formatparent','multiple'=>false, 'placeholder'=>'Maak een keuze', 'options'=>getParentarray($table, 0, 1, $title)));
 
-	if(db_fieldexists($table,'title_'.$lan)) {
-	 	$result = db_query('SELECT * FROM languages WHERE visible ORDER BY seq');
-	 	while($row = db_fetch($result)) {
-			addfield('text',$translate['cms_function'].' ('.$row['name'].')','title_'.$row['code'],array('required'=>true));
-	 	}
-	} else {
-		addfield('text',$translate['cms_function'],'title',array('required'=>true));
-	}
+	addfield('text',$translate['cms_function'],'title_en',array('required'=>true));
 	addfield('text',$translate['cms_function_include'],'include');
 
 	addfield('checkbox','This item is visible in the menu','visible');
