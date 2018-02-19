@@ -17,6 +17,7 @@
 		$lunchtime = intval(substr($_POST['lunchtime'],0,strpos($_POST['lunchtime'],':')));
 		$lunchtime += floatval(substr($_POST['lunchtime'],strpos($_POST['lunchtime'],':')+1)/60);
 
+dump($_POST['lunchduration'][0]);
 		$data['startdate'] = strftime('%A %e %B %Y',strtotime('+'.min($_POST['dates']).' Days'));
 		$data['enddate'] = strftime('%A %e %B %Y',strtotime('+'.max($_POST['dates']).' Days'));
 
@@ -68,7 +69,7 @@
 		            	break;
 	            }
 
-	            $slots[$date][floor($time).":".$minutes]['time'] = ($time>12.5?floor($time)-12:floor($time)).":".$minutes.($time>12.5?' pm':' am');
+	            #$slots[$date][floor($time).":".$minutes]['time'] = ($time>12.5?floor($time)-12:floor($time)).":".$minutes.($time>12.5?' pm':' am');
 
 				if(!$_POST['lunchbreak'] || ($time < $_POST['lunchtime'] || $time >= ($_POST['lunchtime']+$_POST['lunchduration'][0]))) {
 
