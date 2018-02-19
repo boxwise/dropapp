@@ -17,7 +17,6 @@
 		$lunchtime = intval(substr($_POST['lunchtime'],0,strpos($_POST['lunchtime'],':')));
 		$lunchtime += floatval(substr($_POST['lunchtime'],strpos($_POST['lunchtime'],':')+1)/60);
 
-dump($_POST['lunchduration'][0]);
 		$data['startdate'] = strftime('%A %e %B %Y',strtotime('+'.min($_POST['dates']).' Days'));
 		$data['enddate'] = strftime('%A %e %B %Y',strtotime('+'.max($_POST['dates']).' Days'));
 
