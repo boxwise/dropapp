@@ -1,6 +1,6 @@
 <?php
 
-	$table = $action;
+	$table = 'library';
 	$ajax = checkajax();
 	if(!DEFINED('CORE')) include('core.php');
 
