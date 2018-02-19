@@ -107,7 +107,7 @@
 	addfield('hidden','parent_id','parent_id');
 	addfield('text','Lastname','lastname',array('tab'=>'people'));
 	addfield('text','Firstname','firstname',array('tab'=>'people','required'=>true));
-	addfield('text',$_SESSION['camp']['familyidentifier'],'container',array('tab'=>'people','required'=>true));
+	addfield('text',$_SESSION['camp']['familyidentifier'],'container',array('tab'=>'people','required'=>true,'onchange'=>'capitalize("container")'));
 	addfield('select','Gender','gender',array('tab'=>'people',
 	'options'=>array(array('value'=>'M', 'label'=>'Male'), array('value'=>'F', 'label'=>'Female'))));
 

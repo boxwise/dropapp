@@ -39,6 +39,11 @@ if($('#field_people_id').val() != undefined){
 	eval(($('#field_people_id').attr('onchange')));
 }
 
+function capitalize(field) {
+	value = $('#field_'+field).val();
+	$('#field_'+field).val(value.toUpperCase());
+}
+
 function selectFamily(field){
 	value = $('#field_'+field).val();
 	if(value){
