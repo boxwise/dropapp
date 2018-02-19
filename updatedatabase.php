@@ -169,9 +169,11 @@ VALUES
 	db_addfield('people','phone',"VARCHAR(255)  AFTER `comments`");
 	db_addfield('people','bicycletraining',"INT  NOT NULL  DEFAULT 0  AFTER `comments`;");
 	db_addfield('people','bicycleban',"DATE  NULL  AFTER `notregistered`");
+	db_addfield('people','bicyclebancomment',"TEXT  NOT NULL");
 	db_addfield('people','workshoptraining',"INT  NOT NULL  DEFAULT 0  AFTER `comments`;");
 	db_addfield('people','workshopban',"DATE  NULL  AFTER `notregistered`");
 	db_addfield('people','workshopsupervisor',"INT  NOT NULL  DEFAULT 0  AFTER `workshoptraining`;");
+	db_addfield('people','workshopbancomment',"TEXT  NOT NULL");
 	db_addfield('people','notregistered',"TINYINT  NOT NULL  DEFAULT 0");
 	
 	db_addfield('borrow_transactions','lights',"TINYINT NOT NULL DEFAULT 0");

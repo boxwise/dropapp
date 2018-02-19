@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
@@ -135,15 +135,19 @@
 	if($_SESSION['camp']['bicycle']){
 		addfield('line','','',array('tab'=>'bicycle'));
 		addfield('checkbox','This person succesfully passed the bicycle training', 'bicycletraining', array('tab'=>'bicycle'));
-		addfield('date','Bicycle ban until','bicycleban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the borrowing system until (and including) this date. Empty this field to cancel the ban.'));
 		addfield('bicyclecard','Card','bicyclecard',array('tab'=>'bicycle'));
+		addfield('line','','',array('tab'=>'bicycle'));
+		addfield('date','Bicycle ban until','bicycleban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the borrowing system until (and including) this date. Empty this field to cancel the ban.'));
+		addfield('textarea','Comment','bicyclebancomment',array('tab'=>'bicycle','width'=>6,'tooltip'=>'Please always make a note with a bicycle ban, stating the reason of the ban, your name and the date the ban started.'));
 	}
 	if($_SESSION['camp']['workshop']){
 		addfield('line','','',array('tab'=>'bicycle'));
 		addfield('checkbox','This person succesfully passed the workshop training', 'workshoptraining', array('tab'=>'bicycle'));
 		addfield('checkbox','This person is a workshop supervisor', 'workshopsupervisor', array('tab'=>'bicycle'));
-		addfield('date','Workshop ban until','workshopban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the workshop until (and including) this date. Empty this field to cancel the ban.'));
 		addfield('workshopcard','Card','workshopcard',array('tab'=>'bicycle'));
+		addfield('line','','',array('tab'=>'bicycle'));
+		addfield('date','Workshop ban until','workshopban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the workshop until (and including) this date. Empty this field to cancel the ban.'));
+		addfield('textarea','Comment','workshopbancomment',array('tab'=>'bicycle','width'=>6,'tooltip'=>'Please always make a note with a workshop ban, stating the reason of the ban, your name and the date the ban started.'));
 	}
 
 	if($data['parent_id'] == 0){
