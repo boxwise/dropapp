@@ -33,6 +33,9 @@
 		listsetting('allowselect', true);
 		listsetting('allowselectall', false);
 		
+		listsetting('add', 'Borrow out a new book');
+
+		
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
