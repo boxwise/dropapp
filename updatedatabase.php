@@ -104,6 +104,21 @@ VALUES
 ");
 	}
 
+	if(!db_tableexists('library_transactions')) {
+		echo "Created table 'library_transactions'<br />";
+		db_query('CREATE TABLE `library_transactions` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `transaction_date` datetime DEFAULT NULL,
+  `book_id` int(11) DEFAULT NULL,
+  `people_id` int(11) DEFAULT NULL,
+  `status` varchar(5) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `modified_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;');
+	}
 	
 	/* Bicycle and borrowing */
 	if(db_tableexists('bicycles')) {
