@@ -28,6 +28,8 @@
 		listsetting('add', 'Add a book');
 		listsetting('delete', 'Delete');
 
+		addbutton('libraryhistory','View history',array('icon'=>'fa-history','oneitemonly'=>true));
+
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
@@ -35,6 +37,11 @@
 
 	} else {
 		switch ($_POST['do']) {
+			case 'libraryhistory':
+				$id = intval($_POST['ids']);
+				$success = true;
+				$redirect = '?action=libraryhistory&id='.$id;
+				break;
 		    case 'move':
 				$ids = json_decode($_POST['ids']);
 		    	list($success, $message, $redirect) = listMove($table, $ids);

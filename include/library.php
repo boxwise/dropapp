@@ -11,14 +11,20 @@
 
 		$cmsmain->assign('title','Library');
 
-		$data = getlistdata('SELECT *, CONCAT(l.booktitle_en,", ",l.booktitle_ar) AS title, (SELECT CONCAT(firstname," ",lastname," (",container,")") FROM library_transactions AS lt, people AS p WHERE lt.people_id = p.id AND lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) AS name FROM library AS l WHERE (SELECT status FROM library_transactions AS lt WHERE lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) = "out"');
+		$data = getlistdata('
+		SELECT
+			l.id, 
+			CONCAT(booktitle_en,IF(booktitle_ar!="",CONCAT(" - ",booktitle_ar),""),IF(author!="",CONCAT(" (",author,")"),"")) AS title, 
+			(SELECT CONCAT(firstname," ",lastname," (",container,")") FROM library_transactions AS lt, people AS p WHERE lt.people_id = p.id AND lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) AS name,
+			(SELECT CONCAT(HOUR(TIMEDIFF(NOW(),transaction_date)),":",LPAD(MINUTE(TIMEDIFF(NOW(),transaction_date)),2,"0")) FROM library_transactions AS lt WHERE lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) AS duration
+		
+		FROM library AS l WHERE 
+			(SELECT status FROM library_transactions AS lt WHERE lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) = "out"');
 
 		addcolumn('text','Book','title');
 		addcolumn('html','Rented out to','name');
-		addcolumn('html','Duration','date');
+		addcolumn('html','Duration','duration');
 
-		addbutton('edititem','Edit item',array('icon'=>'fa-edit','oneitemonly'=>true));
-		addbutton('borrowhistory','View history',array('icon'=>'fa-history','oneitemonly'=>true));
 		
 		listsetting('allowsort', true);
 		listsetting('allowdelete', false);
@@ -27,8 +33,6 @@
 		listsetting('allowselect', true);
 		listsetting('allowselectall', false);
 		
-		$listconfig['new'] = 'borrowedititem';
-
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
@@ -36,16 +40,6 @@
 
 	} else {
 		switch ($_POST['do']) {
-			case 'edititem':
-				$id = intval($_POST['ids']);
-				$success = true;
-				$redirect = '?action=borrowedititem&id='.$id;
-				break;
-			case 'borrowhistory':
-				$id = intval($_POST['ids']);
-				$success = true;
-				$redirect = '?action=borrowhistory&id='.$id;
-				break;
 		    case 'move':
 				$ids = json_decode($_POST['ids']);
 		    	list($success, $message, $redirect) = listMove($table, $ids);
