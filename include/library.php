@@ -29,7 +29,7 @@
 		listsetting('allowsort', true);
 		listsetting('allowdelete', false);
 		listsetting('allowshowhide', false);
-		listsetting('allowadd', $_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']);
+		listsetting('allowadd', true);
 		listsetting('allowselect', true);
 		listsetting('allowselectall', false);
 		
