@@ -120,7 +120,7 @@
 				$ids = explode(',',$_POST['ids']);
 				foreach($ids as $id) {
 					db_query('UPDATE stock SET ordered = NOW(), ordered_by = :user, picked = NULL, picked_by = NULL WHERE id = '.intval($id), array('user'=>$_SESSION['user']['id']));
-					simpleSaveChangeHistory('stock', intval($id), 'Box ordered to warehouse ');
+					simpleSaveChangeHistory('stock', intval($id), 'Box ordered to market ');
 					$message = 'Boxes are marked as ordered for you!';
 					$success = true;
 					$redirect = true;

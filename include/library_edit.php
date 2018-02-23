@@ -32,6 +32,9 @@
 		$data['visible'] = 1;
 		$data['status'] = "out";
 		$data['transaction_date'] = strftime("%Y-%m-%d %H:%M:%S");
+
+		$translate['cms_form_submit'] = 'Start borrowing';
+		$cmsmain->assign('translate',$translate);
 			
 		$cmsmain->assign('title','Borrow out a book');
 

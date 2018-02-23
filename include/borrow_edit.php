@@ -43,6 +43,9 @@
 		if($visible) {
 			$cmsmain->assign('title','Start a new rental for '.$data['label']);
 
+			$translate['cms_form_submit'] = 'Start borrowing';
+			$cmsmain->assign('translate',$translate);
+
 			if($data['category_id']==1) {
 				if($time>16.5) {
 					addfield('custom','&nbsp','<h2><span class="warning">After 16:30 we do not start new rentals!</span></h2>');
@@ -55,7 +58,7 @@
 				addfield('custom','&nbsp','<h3>Take the resident\'s ID and make sure the resident is 16 or older<br />Asure the user to bring everything back before 16:30</h3>');
 				addfield('select','Find person','people_id',array('required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.firstname, " ", p.lastname, " (", p.container, ")") AS label, NOT visible AS disabled FROM people AS p WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 16 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1'));
 			}
-
+			
 		} else {
 			$data['hidesubmit'] = true;
 			addfield('custom','&nbsp',$comment);

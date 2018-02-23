@@ -62,46 +62,46 @@
 
 	$data['allowdrops'] = $_SESSION['user']['is_admin']||db_value('SELECT id FROM cms_functions AS f, cms_access AS a WHERE a.cms_functions_id = f.id AND f.include = "give2all" AND a.cms_users_id = :user_id',array('user_id'=>$_SESSION['user']['id']));
 
-	if($data['parent_id'] == 0){
-		if($id){
-			$ajaxaside = new Zmarty;
+	if($id){
+		$sideid = ($data['parent_id']?$data['parent_id']:$id); 
+		$side['person'] = $id;
+		$ajaxaside = new Zmarty;
 
-			#$formdata = $formbuttons = '';
+		#$formdata = $formbuttons = '';
 
-			$data['name'] = db_row('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = '. $id);
+		$side['name'] = db_row('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = '. $sideid);
 
-			$data['children'] = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) < '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$id));
-			$data['children'] += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) < '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$id));
-			$data['adults'] = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$id));
-			$data['adults'] += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$id));
+		$side['children'] = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) < '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$sideid));
+		$side['children'] += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) < '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$sideid));
+		$side['adults'] = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$sideid));
+		$side['adults'] += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$settings['adult-age'].' AND visible AND NOT deleted',array('id'=>$sideid));
 
-			$data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE (parent_id = :id OR id = :id) AND NOT deleted ORDER BY parent_id, seq',array('id'=>$id));
+		$side['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE (parent_id = :id OR id = :id) AND NOT deleted ORDER BY parent_id, seq',array('id'=>$sideid));
 
-		$adults = $settings['maxfooddrops_adult'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 0, 1)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ',array('id'=>$id));
-		$children = $settings['maxfooddrops_child'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 1, 0)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ',array('id'=>$id));
+		$adults = $settings['maxfooddrops_adult'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 0, 1)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ',array('id'=>$sideid));
+		$children = $settings['maxfooddrops_child'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 1, 0)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ',array('id'=>$sideid));
 
-		$data['fooddrops'] = intval($adults)+intval($children);
-		$data['foodspent'] = db_value('SELECT SUM(drops) FROM transactions AS t, products AS p WHERE t.product_id = p.id AND p.category_id = 11 AND t.people_id = :id AND DATE_FORMAT(t.transaction_date,"%Y-%m-%d") = DATE_FORMAT(NOW(),"%Y-%m-%d")',array('id'=>$id));		
-		$data['fooddrops'] += $data['foodspent'];
-
-
-			$data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id',array('id'=>$id));
-			$data['givedropsurl'] = '?action=give&ids='.$id;
-
-			$data['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1',array('id'=>$id)),true);
+		$side['fooddrops'] = intval($adults)+intval($children);
+		$side['foodspent'] = db_value('SELECT SUM(drops) FROM transactions AS t, products AS p WHERE t.product_id = p.id AND p.category_id = 11 AND t.people_id = :id AND DATE_FORMAT(t.transaction_date,"%Y-%m-%d") = DATE_FORMAT(NOW(),"%Y-%m-%d")',array('id'=>$sideid));		
+		$side['fooddrops'] += $data['foodspent'];
 
 
-			$ajaxaside->assign('data',$data);
-			$htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
+		$side['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id',array('id'=>$sideid));
+		$side['givedropsurl'] = '?action=give&ids='.$sideid;
 
-			addfield('html', '', $htmlaside, array('aside'=>true, 'asidetop'=>true));
-
-		}
+		$side['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1',array('id'=>$sideid)),true);
 
 
-		addfield('line','','',array('aside'=>true));
+		$ajaxaside->assign('data',$side);
+		$htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
+
+		addfield('html', '', $htmlaside, array('aside'=>true, 'asidetop'=>true));
 
 	}
+
+
+	addfield('line','','',array('aside'=>true));
+
 
 	addfield('hidden','camp_id','camp_id');
 	addfield('hidden','parent_id','parent_id');

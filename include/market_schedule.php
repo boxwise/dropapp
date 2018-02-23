@@ -133,8 +133,6 @@
 		$data['lunchduration'] = ($_SESSION['camp']['schedulebreakduration']?$_SESSION['camp']['schedulebreakduration']:'1');
 		$data['timeslot'] = ($_SESSION['camp']['scheduletimeslot']?$_SESSION['camp']['scheduletimeslot']:'0.5');
 
-dump($data['lunchbreak']);
-
 		for($i=1;$i<60;$i++) {
 			$datelist[] = array('value'=>$i,'label'=>strftime('%A %e %B %Y',strtotime('+'.$i.' Days')));
 		}

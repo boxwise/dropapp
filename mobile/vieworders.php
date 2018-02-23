@@ -3,7 +3,7 @@
 	//a Box gets picked
 	if($_GET['picked']) {
 		db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NOW(), picked_by = :user WHERE id = :id',array('id'=>intval($_GET['picked']),'user'=>$_SESSION['user']['id']));
-		simpleSaveChangeHistory('stock', $_GET['picked'], 'Box picked to bring to warehouse ');
+		simpleSaveChangeHistory('stock', $_GET['picked'], 'Box picked from warehouse ');
 	}
 	//a box is lost
 	if($_GET['lost']) {

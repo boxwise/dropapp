@@ -37,7 +37,8 @@
 		// open the template
 		$cmsmain->assign('include','cms_form.tpl');
 		addfield('hidden','','id');
-
+		
+		$data['hidesubmit'] = true;
 		// put a title above the form
 		$cmsmain->assign('title','Check In');
 
@@ -47,7 +48,7 @@
 		addfield('ajaxstart','', '', array('aside'=>true, 'asidetop'=>true, 'id'=>'ajax-aside'));
 		addfield('ajaxend','', '', array('aside'=>true));
 
-		addfield('created','Created','created',array('aside'=>true));
+		#addfield('created','Created','created',array('aside'=>true));
 
 
 		// place the form elements and data in the template

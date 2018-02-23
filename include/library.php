@@ -30,7 +30,7 @@
 		listsetting('allowdelete', false);
 		listsetting('allowshowhide', false);
 		listsetting('allowadd', true);
-		listsetting('allowselect', true);
+		listsetting('allowselect', false);
 		listsetting('allowselectall', false);
 		
 		listsetting('add', 'Borrow out a new book');
