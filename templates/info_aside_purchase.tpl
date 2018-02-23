@@ -1,4 +1,4 @@
-<div class="info-aside" id="people_id_selected">
+<div class="info-aside" id="people_id_selected">{$data['test']}
 	<ul class="people-list">
 	{foreach $data['people'] as $person}
 		<li {if $person['id']==$data['person']}class="parent"{/if}><a href="?action=people_edit&amp;id={$person['id']}">{$person['firstname']} {$person['lastname']} ({$person['age']} yr, {$person['gender']})</a>{if $person['comments']}<span class="people-comment">{$person['comments']}</span>{/if}</li>

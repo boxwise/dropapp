@@ -122,7 +122,7 @@
 		$data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id',array('id'=>$data['people_id']));
 		
 		$data['givedropsurl'] = '?action=give&ids='.$data['people_id'];
-
+		$data['person'] = $data['people_id'];
 		$data['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1',array('id'=>$data['people_id'])),true);
 		
 		$ajaxaside->assign('data',$data);
