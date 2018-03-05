@@ -75,6 +75,7 @@
 
 	addfield('text','Families','names',array('readonly'=>true));
 	addfield('line','','');
+	$data['hidecancel'] = true;
 	$data['dropsadult'] = ($_SESSION['camp']['dropsperadult']?$_SESSION['camp']['dropsperadult']:$settings['drops_per_adult']);
 	$data['dropschild'] = ($_SESSION['camp']['dropsperchild']?$_SESSION['camp']['dropsperchild']:$settings['drops_per_child']);
 
@@ -87,8 +88,8 @@
 
 
 	#addfield('checkbox','Zichtbaar','visible',array('aside'=>true));
-	addfield('line','','',array('aside'=>true));
-	addfield('created','Created','created',array('aside'=>true));
+	#addfield('line','','',array('aside'=>true));
+	#addfield('created','Created','created',array('aside'=>true));
 
 
 	// place the form elements and data in the template

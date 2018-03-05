@@ -306,24 +306,25 @@ p{
 	margin-top: 30px;
 }
 .nav-tabs li.active a{
-	font-weight: bold;
 }
 .nav-tabs li a.error{
 	background: #F78B83;
 	color: #fff;
 }
 .nav-tabs li.active a.error{
-	background: #fff;
+	background: #eee;
 }
 
 .nav-tabs>li>a{
 	margin-right: 10px;
+	font-weight: bold;
 	border: 1px solid #eee;
 	border-bottom-color: #ddd;
-	color: #999;
+	color: #333;
+	background-color: #eee;
 }
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus, .nav>li>a:hover, .nav>li>a:focus{
-	border-color: #ddd #ddd #61c4ef;
+	border-color: #61c4ef #61c4ef #61c4ef;
 	color: #fff;
 	background: #61c4ef;
 }
@@ -1069,7 +1070,7 @@ tr.level-10 td:first-child{
 }
 
 /* putting the right sidebar below the form */
-@media screen and (max-width: 1000px){
+@media screen and (max-width: 959px){
 	.content-form{
 		margin-right: 0;
 	}
@@ -1128,4 +1129,29 @@ tr.level-10 td:first-child{
 
 .warning {
 	color:#c00;
+}
+
+@media (max-width: 480px) {
+	h1 {
+		font-size:1.5em;
+	}
+	body {
+		font-size:13px;
+	}
+	.nav-tabs>li>a {
+		margin-right: -25px;
+		padding:10px;
+		border: 1px solid #ccc;
+	}
+	table {
+		font-size:11px;
+	}
+	.table>thead>tr>th,.table>tbody>tr>th,.table>tfoot>tr>th,.table>thead>tr>td,.table>tbody>tr>td,.table>tfoot>tr>td {
+		padding:4px;
+	}
+}
+
+#cms_form h2 {
+	margin:0;
+	padding:0;
 }

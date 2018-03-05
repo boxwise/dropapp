@@ -50,6 +50,7 @@
 
 		$data['count'] = 1;
 		$data['fulllabel'] = 1;
+		$data['hidecancel'] = true;
 
 		$translate['cms_form_submit'] = 'Make labels';
 		$cmsmain->assign('translate',$translate);

@@ -21,7 +21,7 @@
 			{if $tabs|count>1}
 				<ul class="nav nav-tabs">
 					{foreach $tabs as $key=>$value name="tabs"}
-					<li {if $smarty.foreach.tabs.first}class="active"{/if}><a href="#tab_{$key}" data-toggle="tab">{$value}</a></li>
+					<li {if $smarty.foreach.tabs.first}class="active"{/if}><a href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$smarty.foreach.tabs.iteration}"> {$value}</a></li>
 					{/foreach}
 				</ul>
 			{/if}
@@ -51,7 +51,7 @@
 					<button name="__action" value="{$button['action']}" class="btn btn-submit btn-success{if $checkConnectionOnSubmit} checkConnectionOnSubmit{/if}">{$button['label']}</button>
 				{/foreach}
 
-				<a href="{$settings['cmsdir']}/?action={$smarty.get.origin|escape:'html'}" class="btn btn-cancel btn-default">{$translate['cms_form_cancel']}</a>
+				{if !$data['hidecancel']}<a href="{$settings['cmsdir']}/?action={$smarty.get.origin|escape:'html'}" class="btn btn-cancel btn-default">{$translate['cms_form_cancel']}</a>{/if}
 				
 				<div class="aside-form">
 					{foreach $formelements as $element}		

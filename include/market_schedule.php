@@ -136,6 +136,7 @@
 		for($i=1;$i<60;$i++) {
 			$datelist[] = array('value'=>$i,'label'=>strftime('%A %e %B %Y',strtotime('+'.$i.' Days')));
 		}
+		$data['hidecancel'] = true;
 
 		addfield('select','Dates for next cycle','dates',array('multiple'=>true,'options'=>$datelist));
 		addfield('line');
