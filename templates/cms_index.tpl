@@ -17,7 +17,7 @@
 </nav>
 
 <!-- Site Overlay -->
-{* <div class="site-overlay"></div> *}
+<div class="site-overlay"></div>
 
 <!-- Your Content -->
 <div id="container" {if $modal}class="modal-form"{/if}>

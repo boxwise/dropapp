@@ -714,6 +714,7 @@ function initiateList(){
 			e.preventDefault();
 		})
 
+
 		// Bootstrap Confirmation, more info: https://github.com/tavicu/bs-confirmation
 		$('.confirm').each(function(e){
 			var el = $(this);
