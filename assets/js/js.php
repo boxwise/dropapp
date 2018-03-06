@@ -13,6 +13,7 @@
 	time() + $offset) . " GMT";
 	header($ExpStr);
 
+$debug  = true;
 	$debug = ($_GET['debug']==true) ? true : false;
 	$rewrite = ($_GET['rewrite']==true) ? true : false;
 
