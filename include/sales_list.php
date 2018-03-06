@@ -89,19 +89,13 @@
 					ORDER BY t.transaction_date');
 
 				foreach($data as $key=>$d) {
-					$date = strftime('%Y-%m-%d',strtotime($d['salesdate']));
-					$result = db_query('SELECT (SELECT COUNT(p.id) FROM people AS p WHERE p.id = people_id OR p.parent_id = people_id AND NOT deleted) AS count FROM transactions AS t WHERE transaction_date > "'.$date.' 00:00" AND transaction_date < "'.$date.' 23:59" AND product_id > 0 GROUP BY people_id');
-					$visitors = 0;
-					while($row = db_fetch($result)) {
-						$visitors += intval($row['count']); 
-					}
-					$data[$key]['people'] = $visitors;
-// 					$data[$key]['people'] = db_value('SELECT COUNT(DISTINCT(p.id)) FROM people AS p, transactions AS t WHERE (p.id = t.people_id OR p.parent_id = t.people_id) AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59" AND t.product_id > 0');
+					$date = strftime('%Y-%m-%d',strtotime($d['salesdate'])); 
+ 					$data[$key]['people'] = db_value('SELECT COUNT(DISTINCT(p.id)) FROM people AS p, transactions AS t WHERE (p.id = t.people_id OR p.parent_id = t.people_id) AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59" AND t.product_id > 0 AND camp_id = :campid',array('campid'=>$_SESSION['camp']['id']));
 					$totalvisitors += $data[$key]['people'];
 				}
 				addcolumn('text','Sales','salesdate');
 				addcolumn('text','Amount','aantal');
-				addcolumn('text','Visitors','people');
+				addcolumn('text','Beneficiaries','people');
 				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)',$totalvisitors));
 
 			} elseif($type=='category') {
