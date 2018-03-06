@@ -90,7 +90,7 @@
 
 				foreach($data as $key=>$d) {
 					$date = strftime('%Y-%m-%d',strtotime($d['salesdate']));
-					$result = db_query('SELECT (SELECT COUNT(p.id) FROM people AS p WHERE p.id = people_id OR p.parent_id = people_id AND NOT deleted) AS count FROM transactions AS t WHERE transaction_date > "'.$start.' 00:00" AND transaction_date < "'.$end.' 23:59" AND product_id > 0 GROUP BY people_id');
+					$result = db_query('SELECT (SELECT COUNT(p.id) FROM people AS p WHERE p.id = people_id OR p.parent_id = people_id AND NOT deleted) AS count FROM transactions AS t WHERE transaction_date > "'.$date.' 00:00" AND transaction_date < "'.$date.' 23:59" AND product_id > 0 GROUP BY people_id');
 					$visitors = 0;
 					while($row = db_fetch($result)) {
 						$visitors += intval($row['count']); 
