@@ -1,22 +1,21 @@
 <?
 	require('../library/core.php');
 	
-/*
 	db_query('DELETE FROM volvi');
 	$f = file_get_contents('csv.csv');
 	$f = explode("\r\n",$f);
 	array_shift($f);
 	
-	foreach($f as $p) {
-		$p = explode(';',$p);
+	foreach($f as $line) {
+		$p = explode(';',$line);
+		var_export($p);
 		if($p[1]=='Focal Point') {
-			db_query('INSERT INTO volvi (parent_id, label, age, gender) VALUES (0,"'.$p[1].'",'.$p[2].',"'.$p[3].'")');
+			db_query('INSERT INTO volvi (parent_id, label, age, gender) VALUES (0,"'.$p[1].'",'.intval($p[2]).',"'.$p[3].'")');
 			$id = db_insertid();
 		} else {
-			db_query('INSERT INTO volvi (parent_id, label, age, gender) VALUES ('.$id.',"'.$p[1].'",'.$p[2].',"'.$p[3].'")');
+			db_query('INSERT INTO volvi (parent_id, label, age, gender) VALUES ('.$id.',"'.$p[1].'",'.intval($p[2]).',"'.$p[3].'")');
 		}
 	}
-*/
 	
 	echo db_value('SELECT COUNT(id) FROM volvi WHERE parent_id = 0').' families<br />';
 	
