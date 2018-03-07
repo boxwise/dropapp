@@ -38,7 +38,7 @@
 			
 		$cmsmain->assign('title','Borrow out a book');
 
-		addfield('select','Find book','book_id',array('required'=>true, 'multiple'=>false, 'query'=>'SELECT id AS value, CONCAT(booktitle_en,IF(booktitle_ar!="",CONCAT(" - ",booktitle_ar),""),IF(author!="",CONCAT(" (",author,")"),"")) AS label FROM library
+		addfield('select','Find book','book_id',array('required'=>true, 'multiple'=>false, 'query'=>'SELECT id AS value, CONCAT(code," - ",booktitle_en,IF(booktitle_ar!="",CONCAT(" - ",booktitle_ar),""),IF(author!="",CONCAT(" (",author,")"),"")) AS label FROM library WHERE visible
 		'));
 
 

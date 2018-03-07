@@ -268,6 +268,8 @@ $(function() {
 	$('.date').each(function(){
 		var el = $(this);
 		var options = $.extend( {
+			calendarWeeks: true,
+			showTodayButton: true,
 		}, el.data());
 		el.datetimepicker(options).on('dp.change dp.show', function(){
 			$(this).find('input').trigger('keyup')

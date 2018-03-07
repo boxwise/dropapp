@@ -9,24 +9,26 @@
 		initlist();
 
 		$cmsmain->assign('title','Library');
-		listsetting('search', array('code', 'booktitle_en', 'booktitle_ar', 'author', 'publisher'));
+		listsetting('search', array('code', 'booktitle_en', 'booktitle_ar', 'author'));
 		
 //  		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM product_categories ORDER BY seq','filter'=>'products.category_id'));
 
 		$data = getlistdata('SELECT * FROM library');
 		
 		addcolumn('text','Code','code');
-		addcolumn('text','Book title','booktitle_en');
-		addcolumn('html','Book title','booktitle_ar');
+		addcolumn('text','English title','booktitle_en');
+		addcolumn('html','Original title','booktitle_ar');
 		addcolumn('text','Author','author');
 
 // 		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
 
 		listsetting('allowsort',true);
 		listsetting('allowcopy',false);
-		listsetting('allowshowhide',false);
+		listsetting('allowshowhide',true);
 		listsetting('add', 'Add a book');
 		listsetting('delete', 'Delete');
+		listsetting('show', 'Available');
+		listsetting('hide', 'Not available');
 
 		addbutton('libraryhistory','View history',array('icon'=>'fa-history','oneitemonly'=>true));
 

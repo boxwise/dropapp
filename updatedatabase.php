@@ -48,7 +48,6 @@
   `booktitle_en` varchar(255) DEFAULT NULL,
   `booktitle_ar` varchar(255) DEFAULT NULL,
   `author` varchar(255) DEFAULT NULL,
-  `publisher` varchar(255) DEFAULT NULL,
   `level_id` int(11) DEFAULT NULL,
   `language_id` int(11) DEFAULT NULL,
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
@@ -60,25 +59,11 @@
   `modified_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-	}
+	} 
 
-	if(!db_tableexists('library_level')) {
-		echo "Created table 'library_level'<br />";
-		db_query("CREATE TABLE `library_level` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `label` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;");
-		db_query("INSERT INTO `library_level` (`id`, `label`)
-VALUES
-	(0, 'Easy'),
-	(1, '1'),
-	(2, '2'),
-	(3, '3'),
-	(4, '4'),
-	(5, '5'),
-	(6, 'B2');
-");
+	if(db_tableexists('library_level')) {
+		echo "Dropped table 'library_level'<br />";
+		db_query("DROP TABLE `library_level`");
 	}
 
 	if(!db_tableexists('library_type')) {
@@ -90,17 +75,27 @@ VALUES
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;");
 		db_query("INSERT INTO `library_type` (`id`, `label`)
 VALUES
-	(1, 'Arabic Children'),
-	(2, 'Arabic Educational'),
-	(3, 'Arabic Novel'),
-	(4, 'Arabic Poetry'),
-	(5, 'English Arabic'),
-	(6, 'English Arabic Adult'),
-	(7, 'English Arabic Children'),
-	(8, 'English Children'),
-	(9, 'English Graded Reader'),
-	(10, 'English Novel'),
-	(11, 'Poetry');
+ 	(1, 'Arabic Children'),
+	(12, 'Arabic English Fiction'),
+	(13, 'Arabic Fiction'),
+	(14, 'Arabic Non Fiction'),
+	(15, 'Arabic Young Adult'),
+	(16, 'Catalan Children'),
+	(17, 'Dictionaries and Encyclopedias'),
+	(18, 'Educational Books'),
+	(19, 'English Children'),
+	(20, 'English Fiction'),
+	(21, 'English Non Fiction'),
+	(22, 'English Young Adult'),
+	(23, 'Farsi'),
+	(24, 'French'),
+	(25, 'French Children'),
+	(26, 'Graded Readers'),
+	(27, 'Graded Readers Non Fiction'),
+	(28, 'Kurdish'),
+	(29, 'Other'),
+	(30, 'Portuguese Children Books'),
+	(31, 'Urdu');
 ");
 	}
 
