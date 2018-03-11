@@ -21,7 +21,7 @@
 
 		if($hasCategory) {
 			$hasSeq = db_fieldexists('settings_categories','seq');
-			listfilter(array('label'=>'Filter op categorie','query'=>'SELECT id AS value, name AS label FROM settings_categories '.(!$_SESSION['user']['is_admin']?' WHERE NOT admin_only':'').' '.($hasSeq?'ORDER BY seq':'ORDER BY id'),'filter'=>'category_id'));
+			listfilter(array('label'=>'Filter by category','query'=>'SELECT id AS value, name AS label FROM settings_categories '.(!$_SESSION['user']['is_admin']?' WHERE NOT admin_only':'').' '.($hasSeq?'ORDER BY seq':'ORDER BY id'),'filter'=>'category_id'));
 			$data = getlistdata('SELECT t.* FROM '.$table.' AS t LEFT OUTER JOIN settings_categories AS c ON t.category_id = c.id '.(!$_SESSION['user']['is_admin']?' WHERE NOT t.hidden AND (c.admin_only IS NULL OR NOT c.admin_only)':''));
 
 		} else {
