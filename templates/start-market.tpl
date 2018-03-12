@@ -154,7 +154,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 {/if}
 
 {if $smarty.session.camp['workshop']}<hr />
-<h1 class="light">{$data['weeklabel']} week {if $data['newbrcardsM']+$data['newbrcardsF']}<span class="number">{$data['newbrcardsM']+$data['newbrcardsF']}</span>{else}no{/if} new Workshop Cards were made{if $data['newbrcardsM']+$data['newbrcardsF']}, <span class="men">{$data['newbrcardsM']}</span> for men and <span class="women">{$data['newbrcardsF']}</span> for women{/if}. In total <span class="number">{$data['totalbrcardsM']+$data['totalcardsF']}</span> Bicycle Certificates are active (Of which <span class="women">{$data['totalbrcardsF']}</span> for women). So <span class="men">{($data['brcardsM'])}%</span> of men and <span class="women">{($data['brcardsF'])}%</span> of the women residents have a workshop card.</h1>
+<h1 class="light">{$data['weeklabel']} week {if $data['newbrcardsM']+$data['newbrcardsF']}<span class="number">{$data['newbrcardsM']+$data['newbrcardsF']}</span>{else}no{/if} new Workshop Cards were made{if $data['newbrcardsM']+$data['newbrcardsF']}, <span class="men">{$data['newbrcardsM']}</span> for men and <span class="women">{$data['newbrcardsF']}</span> for women{/if}. In total <span class="number">{$data['totalbrcardsM']+$data['totalcardsF']}</span> Workshop Cards are active (Of which <span class="women">{$data['totalbrcardsF']}</span> for women). So <span class="men">{($data['brcardsM'])}%</span> of men and <span class="women">{($data['brcardsF'])}%</span> of the women residents have a workshop card.</h1>
 {/if}
 
 <hr />
