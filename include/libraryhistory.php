@@ -16,6 +16,7 @@
 
 		addcolumn('text','Date out','dateout');
 		addcolumn('text','Date back','datein');
+		
 		addcolumn('text','Rented out to','name');
 		
 		listsetting('allowedit', false);

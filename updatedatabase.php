@@ -174,6 +174,8 @@ VALUES
 	db_addfield('borrow_items','category_id',"INT  NOT NULL  DEFAULT 0 ");	
 	db_addfield('borrow_items','visible',"TINYINT(4)  NOT NULL  DEFAULT 0");	
 	db_addfield('borrow_items','comment',"TEXT  NOT NULL");
+
+	db_addfield('library_transactions','comment',"TEXT  NOT NULL");
 	
 	db_addfield('people','camp_id',"INT  NOT NULL  DEFAULT 0  AFTER `comments`;",'UPDATE people SET camp_id = 1');
 	db_addfield('people','phone',"VARCHAR(255)  AFTER `comments`");
