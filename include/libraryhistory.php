@@ -12,7 +12,7 @@
 		$cmsmain->assign('title','History for '.db_value('SELECT CONCAT(booktitle_en,IF(booktitle_ar!="",CONCAT(" - ",booktitle_ar),""),IF(author!="",CONCAT(" (",author,")"),"")) FROM library WHERE id = :id',array('id'=>$_GET['id'])));
 
 		$data = getlistdata('SELECT transaction_date AS dateout, 
-(SELECT transaction_date FROM library_transactions AS t2 WHERE t.book_id = t2.book_id AND t2.transaction_date > t.transaction_date ORDER BY transaction_date LIMIT 1) AS datein, CONCAT(firstname," ",lastname," (",container,")") AS name FROM library_transactions AS t LEFT OUTER JOIN people AS p ON p.id = t.people_id WHERE book_id = '.intval($_GET['id']).' AND status = "out" ORDER BY transaction_date DESC');
+(SELECT transaction_date FROM library_transactions AS t2 WHERE t.book_id = t2.book_id AND t2.transaction_date > t.transaction_date ORDER BY transaction_date LIMIT 1) AS datein, IF(t.people_id = -1,t.comment,CONCAT(firstname," ",lastname," (",container,")")) AS name FROM library_transactions AS t LEFT OUTER JOIN people AS p ON p.id = t.people_id WHERE book_id = '.intval($_GET['id']).' AND status = "out" ORDER BY transaction_date DESC');
 
 		addcolumn('text','Date out','dateout');
 		addcolumn('text','Date back','datein');

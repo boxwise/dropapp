@@ -599,3 +599,7 @@ td.list-level-0.list-column-ean_print div a:hover {
 	-o-transform: rotate(180deg);
 	transform: rotate(180deg);
 }
+
+.library_edit #div_comment {
+	display: none;
+}

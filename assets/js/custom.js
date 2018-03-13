@@ -34,6 +34,11 @@ function toggleDiscountFields() {
 	$('#div_discount_'+selectedVal).removeClass('hidden');
 }
 
+function toggleLibraryComment() {
+	value = $('#field_people_id').find(":selected").val();
+	if(value==-1) $('#div_comment').show();
+	if(value>0) $('#div_comment').hide();
+}
 
 if($('#field_people_id').val() != undefined){
 	eval(($('#field_people_id').attr('onchange')));
