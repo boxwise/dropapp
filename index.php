@@ -12,7 +12,7 @@
 	}
 
 	date_default_timezone_set('Europe/Athens');
-	db_query('SET time_zone = "+03:00"');
+	db_query('SET time_zone = "+'.(date('Z')/3600).':00"');
 	
 	# action set by POST will override GET
 	$action = (isset($_POST['action'])?$_POST['action']:(isset($_GET['action'])?$_GET['action']:'start'));
