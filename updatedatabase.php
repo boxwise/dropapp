@@ -40,6 +40,65 @@
 		}
 	}
 	
+	if(!db_tableexists('laundry_slots')) {
+		echo "Created table 'laundry_slots'<br />";
+		db_query('CREATE TABLE `laundry_slots` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `day` tinyint(4) DEFAULT NULL,
+  `time` tinyint(4) DEFAULT NULL,
+  `machine` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=302 DEFAULT CHARSET=utf8;');	
+		$x = 1;
+		for($day=0;$day<13;$day++) {
+			if($day!=6) {
+				for($time=1;$time<=5;$time++) {
+					for($machine=2;$machine<=6;$machine++) {
+						$x++;
+						echo $day.' '.$time.' '.$machine.' '.'<br />';
+						db_query('INSERT INTO laundry_slots (id, day, time, machine) VALUES (:id,:day,:time,:machine)',array('id'=>$x,'day'=>$day,'time'=>$time,'machine'=>$machine));
+					}
+	
+				}
+			}
+		}
+	}
+	
+	if(!db_tableexists('laundry_times')) {
+		echo "Created table 'laundry_times'<br />";
+		db_query('CREATE TABLE `laundry_times` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;');	
+		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:30'),(2, '11:30 - 1:00'),(3, '1:00 - 2:30'),(4, '2:30 - 4:00'),(5, '4:00 - 5:30');");	
+	}
+	
+	if(!db_tableexists('laundry_machines')) {
+		echo "Created table 'laundry_machines'<br />";
+		db_query('CREATE TABLE `laundry_machines` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;');	
+		db_query("INSERT INTO `laundry_machines` (`id`, `label`) VALUES (2, '2️⃣'),(3, '3️⃣'),(4, '4️⃣ '),(5, '5️⃣'),(6, '6️⃣');");	
+	}
+	
+	if(!db_tableexists('laundry_appointments')) {
+		echo "Created table 'laundry_appointments'<br />";
+		db_query('CREATE TABLE `laundry_appointments` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `cyclestart` date DEFAULT NULL,
+  `timeslot` tinyint(4) DEFAULT NULL,
+  `people_id` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `modified_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;');		
+	}
+	
 	if(!db_tableexists('library')) {
 		echo "Created table 'library'<br />";
 		db_query("CREATE TABLE `library` (
