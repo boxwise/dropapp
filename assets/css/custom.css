@@ -332,6 +332,9 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 	float:left;
 	margin-right:5px;
 }
+.transparent {
+	opacity: 0.7;
+}
 .light .number {
 	color: #000;
 }
@@ -602,4 +605,55 @@ td.list-level-0.list-column-ean_print div a:hover {
 
 .library_edit #div_comment {
 	display: none;
+}
+.laundry table {
+	width:100%;
+}
+.laundry td.dates {
+	font-weight: bold;
+	font-size:170%;
+	background-color: #fff;
+	min-width: 100px;
+	border:none;
+	padding:36px 8px 0px;
+}
+.laundry td.times {
+	font-weight: bold;
+	font-size:120%;
+	border:none;
+	background-color: #fff;
+	padding:8px;
+}
+.laundry td.cell:hover {
+}
+.laundry td {
+	min-width: 100px;
+	background-color: #fafafa;
+	width: 16.6%;
+	border-top:1px solid #ddd;
+/* 	padding:8px; */
+	vertical-align: top;
+}
+.laundry td a.edit {
+	display:block;
+	width: 100%;
+	padding:8px;
+	color:#000;
+}
+.laundry td a:hover {
+	background-color: #eee;
+	cursor: pointer;
+	text-decoration: none;
+}
+.laundry a.delete {
+	display:inline;
+	float:right;
+	padding:8px;
+	width:24px;
+}
+.laundry td.newday {
+	border-top: 20px solid #fff;
+}
+.laundry td.first {
+	padding-top:0;
 }

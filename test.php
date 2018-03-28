@@ -1,11 +1,17 @@
 <?php
 	require('library/core.php');
 	
-	date_default_timezone_set('Europe/Athens');
-	db_query('SET time_zone = "+'.(date('Z')/3600).':00"');
+	db_query('DELETE FROM laundry_slots');
+	$x = 1;
+	for($day=0;$day<13;$day++) {
+		if($day!=6) {
+			for($time=1;$time<=5;$time++) {
+				for($machine=2;$machine<=6;$machine++) {
+					$x++;
+					echo $day.' '.$time.' '.$machine.' '.'<br />';
+					db_query('INSERT INTO laundry_slots (id, day, time, machine) VALUES (:id,:day,:time,:machine)',array('id'=>$x,'day'=>$day,'time'=>$time,'machine'=>$machine));
+				}
 
-echo db_value('SELECT NOW()');
-echo '<br />';
-
-
-echo strftime("%Y-%m-%d %H:%M:%S");
+			}
+		}
+	}

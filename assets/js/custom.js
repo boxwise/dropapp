@@ -49,6 +49,51 @@ function capitalize(field) {
 	$('#field_'+field).val(value.toUpperCase());
 }
 
+function laundry(i) {
+	value = $(i).attr('name');
+	alert(value);
+}
+function updateLaundry(field) {
+	value = $('#field_'+field).val();
+	timeslot = $('#field_timeslot').val();
+	if(value) {
+		$('#form-submit').prop('disabled', true);
+		$('#field_'+field).prop('disabled', true);
+		$('body').addClass('loading');
+		$.ajax({
+			type: 'post',
+			url: 'include/laundry_ajax.php',
+			data:
+			{
+				people_id: value,
+				timeslot: timeslot,
+			},
+			dataType: 'json',
+			success: function(result){
+				var url = window.location;
+				var action = $('body').data('action');
+				if(result.success){
+					$('#ajax-content').html(result.htmlcontent);
+					$('#field_'+field).prop('disabled', false);
+					$('body').removeClass('loading');
+				}
+				if(result.message){
+					var n = noty({
+						text: result.message,
+						type: (result.success ? 'success' : 'error')
+					});
+				}
+			},
+			error: function(result){
+				var n = noty({
+					text: 'Something went wrong, maybe the internet connection is a bit choppy',
+					type: 'error'
+				});
+			}
+		});
+	}
+}
+
 function selectFamily(field){
 	value = $('#field_'+field).val();
 	if(value){
