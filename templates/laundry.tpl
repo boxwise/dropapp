@@ -13,6 +13,7 @@
 	
 	{foreach $data['dates'] as $day => $d name=days}
 		<h2><i class="icon-open-{$day} fa fa-angle-right {if !$d['past']}hidden{/if}"></i><i class="icon-close-{$day} fa fa-angle-down {if $d['past']} hidden{/if}"></i> <a href="#" class="laundry-showhide" data-day="{$day}">{$d['label']}</a></h2>
+		<a name="{$day}"></a>
 		<table id="laundry-table-{$day}"{if $d['past']} class="hidden"{/if}>
 	
 		{foreach $data['machines'] as $machine => $m}
@@ -23,10 +24,10 @@
 
 			{foreach $data['times'] as $time => $t}
 				<td class="cell">
-					<a href="#" class="delete"><i class="fa fa-trash-o"></i></a>
+					{if $data['slots'][$day][$time][$machine]['id']}<a href="?origin=laundry&action=laundry_noshow&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}" class="delete"><i class="fa fa-eye{if !$data['slots'][$day][$time][$machine]['noshow']}-slash{/if}"></i></a>{/if}
 					<a href="?origin=laundry&action=laundry_edit&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}" class="edit"><span class="transparent">{$data['slots'][$day][$time][$machine]['machinename']}</span>&nbsp;
 				{if $data['slots'][$day][$time][$machine]['id']}
-					{$data['slots'][$day][$time][$machine]['firstname']} {$data['slots'][$day][$time][$machine]['lastname']} ({$data['slots'][$day][$time][$machine]['container']})
+					<span class="{if $data['slots'][$day][$time][$machine]['noshow']}strikethrough{/if}">{$data['slots'][$day][$time][$machine]['firstname']} {$data['slots'][$day][$time][$machine]['lastname']} ({$data['slots'][$day][$time][$machine]['container']})</span>
 				{/if}
 				</a></td>
 			{/foreach}

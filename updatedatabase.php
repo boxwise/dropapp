@@ -90,6 +90,7 @@
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `cyclestart` date DEFAULT NULL,
   `timeslot` int(11) DEFAULT NULL,
+  `noshow` tinyint(4) NOT NULL DEFAULT '0',
   `people_id` int(11) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
