@@ -14,10 +14,10 @@
 
 	$element['field'] .= '<h2 class="light">This family has <span class="number">'.multiple($adults,'adult','adults').'</span> and <span class="number">'.multiple($children,'child','children').'</span> and is entitled to <span class="number">'.multiple(ceil((1*$adults)+(0.5*$children)),'washing machine slot','washing machine slots').'</span> every cycle.</h2>';
 	
-	$result = db_query("SELECT ls.*, lt.label, lm.label AS machine FROM laundry_appointments AS la, laundry_slots AS ls, laundry_times AS lt, laundry_machines AS lm WHERE lm.id = ls.machine AND lt.id = ls.time AND la.timeslot = ls.id AND la.people_id = :people_id AND la.cyclestart = :cyclestart ORDER BY timeslot",array('people_id'=>$data['people_id'],'cyclestart'=>$settings['laundry_cyclestart']));
+	$result = db_query("SELECT ls.*, lt.label, lm.label AS machine, la.noshow FROM laundry_appointments AS la, laundry_slots AS ls, laundry_times AS lt, laundry_machines AS lm WHERE lm.id = ls.machine AND lt.id = ls.time AND la.timeslot = ls.id AND la.people_id = :people_id AND la.cyclestart = :cyclestart ORDER BY timeslot",array('people_id'=>$data['people_id'],'cyclestart'=>$settings['laundry_cyclestart']));
 #	if(db_numrows($result)) $element['field'] .= '<h2>Current appointments in this cycle';
 	while($row = db_fetch($result)) {
-		$app[] = ($row['id']==$_POST['timeslot']?'<span class="number">':'').strftime('%A %d %B %Y', strtotime('+'.$row['day'].' days', strtotime($settings['laundry_cyclestart']))).', '.$row['label'].' '.$row['machine'].($row['id']==$_POST['timeslot']?' (this one)</span>':'');
+		$app[] = ($row['id']==$_POST['timeslot']?'<span class="number">':'').strftime('%A %d %B %Y', strtotime('+'.$row['day'].' days', strtotime($settings['laundry_cyclestart']))).', '.$row['label'].' '.$row['machine'].($row['id']==$_POST['timeslot']?' (this one)</span>':'').($row['noshow']?' NO-SHOW':'');
 	}
 	
 	if(is_array($app))
