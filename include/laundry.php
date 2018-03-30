@@ -9,7 +9,7 @@
 		if($t < strtotime(strftime('%Y-%m-%d'))) $data['dates'][$day['day']]['past'] = true;
 	}
 	
-	$data['machines'] = db_simplearray('SELECT id, label FROM laundry_machines');
+	$data['machines'] = db_simplearray('SELECT id, label FROM laundry_machines ORDER BY id');
 	
 	$result = db_query('SELECT ls.id AS timeslot, ls.day, ls.time, ls.machine, lm.label AS machinename, p.* FROM laundry_slots AS ls LEFT OUTER JOIN laundry_appointments AS la ON la.timeslot = ls.id AND cyclestart = :cyclestart LEFT OUTER JOIN people AS p ON p.id = la.people_id LEFT OUTER JOIN laundry_machines AS lm ON lm.id = ls.machine ORDER BY ls.id ',array('cyclestart'=>$settings['laundry_cyclestart']));
 	while($row = db_fetch($result)) {

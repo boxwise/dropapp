@@ -16,7 +16,7 @@
 		<table id="laundry-table-{$day}"{if $d['past']} class="hidden"{/if}>
 	
 		{foreach $data['machines'] as $machine => $m}
-			{if $machine==2}
+			{if $m@first}
 				<tr>{foreach $data['times'] as $t}<td class="times">{$t}</td>{/foreach}</tr>
 			{/if}
 			<tr>
