@@ -83,6 +83,9 @@ FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bi
 		$data['brcardsM'] = intval(100 * $data['totalbrcardsM'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "M" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
 		$data['brcardsF'] = intval(100 * $data['totalbrcardsF'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "F" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
 
+		$data['laundry_appointments'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE cyclestart = :cyclestart',array('cyclestart'=>$settings['laundry_cyclestart']));
+		$data['laundry_slots'] = db_value('SELECT COUNT(id) FROM laundry_slots');
+		$data['laundry_noshow'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE cyclestart = :cyclestart AND noshow',array('cyclestart'=>$settings['laundry_cyclestart']));
 
 		// open the template
 		$cmsmain->assign('include','start-market.tpl');
