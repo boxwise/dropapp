@@ -158,7 +158,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 {/if}
 
 {if $smarty.session.camp['laundry']}<hr />
-<h1 class="light">This laundry cycle (of two weeks) started <span class="number">{$settings['laundry_cyclestart']|date_format:"%d-%m-%Y"}</span>. Until now <span class="number">{$data['laundry_appointments']}</span> appointments have been made, using <span class="number">{($data['laundry_appointments']/$data['laundry_slots']*100)|number_format:0:",":"."}%</span> of the capacity. We have <span class="number">{$data['laundry_noshow']}</span> no-shows (<span class="number">{($data['laundry_noshow']/$data['laundry_appointments']*100)|number_format:0:",":"."}%</span>). We have served {$data['laundry_beneficiaries']} beneficiaries.</h1>
+<h1 class="light">This laundry cycle (of two weeks) started <span class="number">{$settings['laundry_cyclestart']|date_format:"%d-%m-%Y"}</span>. Until now <span class="number">{$data['laundry_appointments']}</span> appointments have been made, using <span class="number">{($data['laundry_appointments']/$data['laundry_slots']*100)|number_format:0:",":"."}%</span> of the capacity. We have <span class="number">{$data['laundry_noshow']}</span> no-shows (<span class="number">{($data['laundry_noshow']/$data['laundry_appointments']*100)|number_format:0:",":"."}%</span>). We have served <span class="number">{$data['laundry_beneficiaries']}</span> beneficiaries.</h1>
 {/if}
 
 <hr />
