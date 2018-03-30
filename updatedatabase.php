@@ -40,6 +40,17 @@
 		}
 	}
 	
+	if(!db_tableexists('laundry_machines')) {
+		echo "Created table 'laundry_machines'<br />";
+		db_query('CREATE TABLE `laundry_machines` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;');	
+		db_query("INSERT INTO `laundry_machines` (`id`, `label`) VALUES (2, '2️⃣'),(3, '3️⃣'),(4, '4️⃣ '),(5, '5️⃣'),(6, '6️⃣');");	
+	}
+	
+
 	if(!db_tableexists('laundry_slots')) {
 		echo "Created table 'laundry_slots'<br />";
 		db_query('CREATE TABLE `laundry_slots` (
@@ -53,7 +64,7 @@
 		for($day=0;$day<13;$day++) {
 			if($day!=6) {
 				for($time=1;$time<=5;$time++) {
-					for($machine=2;$machine<=6;$machine++) {
+					for($machine=1;$machine<=6;$machine++) {
 						$x++;
 						db_query('INSERT INTO laundry_slots (id, day, time, machine) VALUES (:id,:day,:time,:machine)',array('id'=>$x,'day'=>$day,'time'=>$time,'machine'=>$machine));
 					}
@@ -71,16 +82,6 @@
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;');	
 		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:30'),(2, '11:30 - 1:00'),(3, '1:00 - 2:30'),(4, '2:30 - 4:00'),(5, '4:00 - 5:30');");	
-	}
-	
-	if(!db_tableexists('laundry_machines')) {
-		echo "Created table 'laundry_machines'<br />";
-		db_query('CREATE TABLE `laundry_machines` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `label` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;');	
-		db_query("INSERT INTO `laundry_machines` (`id`, `label`) VALUES (2, '2️⃣'),(3, '3️⃣'),(4, '4️⃣ '),(5, '5️⃣'),(6, '6️⃣');");	
 	}
 	
 	if(!db_tableexists('laundry_appointments')) {
