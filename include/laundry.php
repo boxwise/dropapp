@@ -6,7 +6,7 @@
 	while($day = db_fetch($result)) {
 		$t = strtotime('+'.$day['day'].' days',strtotime($settings['laundry_cyclestart']));
 		$data['dates'][$day['day']]['label'] = strftime('%A %d %B %Y',$t);
-		#if($t < strtotime(strftime('%Y-%m-%d'))) $data['dates'][$day['day']]['past'] = true;
+		if($t < strtotime(strftime('%Y-%m-%d'))) $data['dates'][$day['day']]['past'] = true;
 	}
 	
 	$data['machines'] = db_simplearray('SELECT id, label FROM laundry_machines ORDER BY id');
