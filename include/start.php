@@ -86,7 +86,8 @@ FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bi
 		$data['laundry_appointments'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE cyclestart = :cyclestart',array('cyclestart'=>$settings['laundry_cyclestart']));
 		$data['laundry_slots'] = db_value('SELECT COUNT(id) FROM laundry_slots');
 		$data['laundry_noshow'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE cyclestart = :cyclestart AND noshow',array('cyclestart'=>$settings['laundry_cyclestart']));
-		$data['laundry_beneficiaries'] = db_value('SELECT (SELECT COUNT(id) FROM people WHERE id = people_id OR parent_id = people_id) FROM laundry_appointments WHERE cyclestart = :cyclestart ', array('cyclestart'=>$settings['laundry_cyclestart']));
+		$result = db_query('SELECT (SELECT COUNT(id) FROM people WHERE id = people_id OR parent_id = people_id) AS c FROM laundry_appointments WHERE cyclestart = :cyclestart ', array('cyclestart'=>$settings['laundry_cyclestart']));
+		while($row = db_fetch($result)) $data['laundry_beneficiaries'] += $row['c'];
 		
 		// open the template
 		$cmsmain->assign('include','start-market.tpl');
