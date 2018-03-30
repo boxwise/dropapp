@@ -89,7 +89,7 @@
 		db_query('CREATE TABLE `laundry_appointments` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `cyclestart` date DEFAULT NULL,
-  `timeslot` tinyint(4) DEFAULT NULL,
+  `timeslot` int(11) DEFAULT NULL,
   `people_id` int(11) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,

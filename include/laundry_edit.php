@@ -2,7 +2,7 @@
 
 	$table = 'laundry_appointments';
 	$action = 'laundry';
-
+	
 	if($_POST) {
 
 		$_POST['cyclestart'] = $settings['laundry_cyclestart'];
