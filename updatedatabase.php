@@ -1,5 +1,7 @@
 <?php
 	require_once('library/core.php');
+	error_reporting(E_ALL);
+	ini_set('display_errors',true);
 	
 	if(!$_SESSION['user']['is_admin']) die('Go away!');
 	
@@ -47,7 +49,7 @@
   `label` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;');	
-		db_query("INSERT INTO `laundry_machines` (`id`, `label`) VALUES (2, '2️⃣'),(3, '3️⃣'),(4, '4️⃣ '),(5, '5️⃣'),(6, '6️⃣');");	
+		db_query("INSERT INTO `laundry_machines` (`id`, `label`) VALUES (1, '1️⃣'), (2, '2️⃣'),(3, '3️⃣'),(4, '4️⃣ '),(5, '5️⃣'),(6, '6️⃣');");	
 	}
 	
 
@@ -90,7 +92,7 @@
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `cyclestart` date DEFAULT NULL,
   `timeslot` int(11) DEFAULT NULL,
-  `noshow` tinyint(4) NOT NULL DEFAULT '0',
+  `noshow` tinyint(4) NOT NULL DEFAULT 0,
   `people_id` int(11) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
@@ -224,7 +226,7 @@ VALUES
 	db_addfield('camps','dropsperadult',"VARCHAR(255)");	
 	db_addfield('camps','dropsperchild',"VARCHAR(255)");	
 	db_addfield('camps','cyclestart',"DATETIME NULL");	
-	db_addfield('camps','laundry',"TINYINT NOT NULL","UPDATE camps SET laundry = 1 WHERE id = 1");	
+	db_addfield('camps','laundry',"TINYINT NOT NULL  DEFAULT 0 AFTER `workshop`");	
 
 	db_addfield('cms_functions','visible',"TINYINT NOT NULL",'UPDATE `cms_functions` SET `visible` = 1');	
 	db_addfield('cms_functions','allusers',"TINYINT  NOT NULL ",'UPDATE `cms_functions` SET `visible` = 0');	
