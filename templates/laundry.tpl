@@ -3,37 +3,39 @@
 
 		<div class="row row-title">
 			<div class="col-sm-12">
-				<h1>&nbsp;Laundry</h1>
+				<h1>Laundry</h1>
 			</div>
 		</div>
 
-		{if $smarty.session.user.is_admin or $smarty.session.user.coordinator}&nbsp;<a class="new-page item-add btn btn-sm btn-default" href="?action=laundry_startcycle&origin=laundry"><i class="fa fa-recycle"></i> Start new cycle</a><br /><br />{/if}
+		{if $smarty.session.user.is_admin or $smarty.session.user.coordinator}<a class="new-page item-add btn btn-sm btn-default" href="?action=laundry_startcycle&origin=laundry"><i class="fa fa-recycle"></i> Start new cycle</a><br /><br />{/if}
 
 
-<table class="">
 	
 	{foreach $data['dates'] as $day => $d name=days}
+		<h2><i class="icon-open-{$day} fa fa-angle-right {if !$d['past']}hidden{/if}"></i><i class="icon-close-{$day} fa fa-angle-down {if $d['past']} hidden{/if}"></i> <a href="#" class="laundry-showhide" data-day="{$day}">{$d['label']}</a></h2>
+		<table id="laundry-table-{$day}"{if $d['past']} class="hidden"{/if}>
 	
 		{foreach $data['machines'] as $machine => $m}
 			{if $machine==2}
-				<tr></td><td class="dates {if $smarty.foreach.days.first}first{/if}" colspan=5>{$d}</td></tr>
 				<tr>{foreach $data['times'] as $t}<td class="times">{$t}</td>{/foreach}</tr>
 			{/if}
 			<tr>
 
 			{foreach $data['times'] as $time => $t}
-				<td class="cell"><a href="?origin=laundry&action=laundry_edit&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}" class="edit"><span class="transparent">{$data['slots'][$day][$time][$machine]['machinename']}</span>&nbsp;
+				<td class="cell">
+					<a href="#" class="delete"><i class="fa fa-trash-o"></i></a>
+					<a href="?origin=laundry&action=laundry_edit&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}" class="edit"><span class="transparent">{$data['slots'][$day][$time][$machine]['machinename']}</span>&nbsp;
 				{if $data['slots'][$day][$time][$machine]['id']}
 					{$data['slots'][$day][$time][$machine]['firstname']} {$data['slots'][$day][$time][$machine]['lastname']} ({$data['slots'][$day][$time][$machine]['container']})
-				{/if}<a href="#" class="delete"><i class="fa fa-trash-o"></i></a>
+				{/if}
 				</a></td>
 			{/foreach}
 			</tr>
 			
 
 		{/foreach}
+		</table>
 	{/foreach}
-</table>
 
 	</div>
 </div>

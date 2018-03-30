@@ -1,7 +1,17 @@
 $(function() {
 	$('.bar').click(function(e){
 		$('body').toggleClass('different-view');
+	});
+
+	$('.laundry-showhide').click(function(e){
+		i = $(this).data('day');
+		$('#laundry-table-'+i).toggleClass('hidden');
+		$('.icon-close-'+i).toggleClass('hidden');
+		$('.icon-open-'+i).toggleClass('hidden');
+		
 	})
+	
+	
 })
 function cms_form_valutaCO(field) {
 	value = $('#field_'+field).val();
@@ -49,10 +59,7 @@ function capitalize(field) {
 	$('#field_'+field).val(value.toUpperCase());
 }
 
-function laundry(i) {
-	value = $(i).attr('name');
-	alert(value);
-}
+
 function updateLaundry(field) {
 	value = $('#field_'+field).val();
 	timeslot = $('#field_timeslot').val();

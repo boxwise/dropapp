@@ -4,7 +4,9 @@
 	
 	$result = db_query('SELECT DISTINCT day FROM laundry_slots');
 	while($day = db_fetch($result)) {
-		$data['dates'][$day['day']] = strftime('%A %d %B %Y',strtotime('+'.$day['day'].' days',strtotime($settings['laundry_cyclestart'])));
+		$t = strtotime('+'.$day['day'].' days',strtotime($settings['laundry_cyclestart']));
+		$data['dates'][$day['day']]['label'] = strftime('%A %d %B %Y',$t);
+		if($t < strtotime(strftime('%Y-%m-%d'))) $data['dates'][$day['day']]['past'] = true;
 	}
 	
 	$data['machines'] = db_simplearray('SELECT id, label FROM laundry_machines');
