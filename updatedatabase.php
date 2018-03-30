@@ -224,6 +224,7 @@ VALUES
 	db_addfield('camps','dropsperadult',"VARCHAR(255)");	
 	db_addfield('camps','dropsperchild',"VARCHAR(255)");	
 	db_addfield('camps','cyclestart',"DATETIME NULL");	
+	db_addfield('camps','laundry',"TINYINT NOT NULL","UPDATE camps SET laundry = 1 WHERE id = 1");	
 
 	db_addfield('cms_functions','visible',"TINYINT NOT NULL",'UPDATE `cms_functions` SET `visible` = 1');	
 	db_addfield('cms_functions','allusers',"TINYINT  NOT NULL ",'UPDATE `cms_functions` SET `visible` = 0');	
