@@ -14,7 +14,7 @@
 		$savekeys = array('cyclestart', 'timeslot', 'people_id');
 		$id = $handler->savePost($savekeys);
 
-		redirect('?action=laundry');
+		redirect('?action=laundry'.$data['day']);
 	}
 	
 	$timeslot = intval($_GET['timeslot']);
@@ -34,7 +34,9 @@
 	$cmsmain->assign('title', strftime('%A %d %B %Y', strtotime('+'.$data['day'].' days', strtotime($settings['laundry_cyclestart']))).'<br />'.db_value('SELECT label FROM laundry_times WHERE id = :time',array('time'=>$data['time'])).' '.db_value('SELECT label FROM laundry_machines WHERE id = :machine',array('machine'=>$data['machine'])));
 
 	$data['timeslot'] = $timeslot;
+	$data['day'] = $data['day'];
 	addfield('hidden','','timeslot');
+	addfield('hidden','','day');
 
 	addfield('select','Find '.$_SESSION['camp']['familyidentifier'],'people_id',array('onchange'=>'updateLaundry("people_id")', 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1'));
 
