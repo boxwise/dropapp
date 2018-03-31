@@ -33,8 +33,23 @@
 				$drops = intval($_POST['dropsadult'])*$adults;
 				$drops += intval($_POST['dropschild'])*$children;
 
+				$volunteers = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND (id = :id OR parent_id = :id) AND volunteer',array('id'=>$person));
+
+				$currentdrops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :people_id',array('people_id'=>$person));
+				
+				if(!$volunteers) {
+					$max = $adults * $_SESSION['camp']['dropcapadult'] + $children * $_SESSION['camp']['dropcapchild'];
+					$cap = -($currentdrops+$drops)+$max;
+					if($cap<0) {
+						#echo $f['container'].' max:'.$max.' current:'.$currentdrops.' new:'.$drops.' correction:'.$cap.'<br />';	
+						$drops += $cap;
+						$_POST['description'] .= " (capped to maximum)";
+					}
+					
+				}
+
+
 				if(isset($settings['no_rollover_points']) && ($settings['no_rollover_points'] == 1)) {
-					$currentdrops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :people_id',array('people_id'=>$person));
 					db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>'Reset','drops'=>($currentdrops * -1),'user_id'=>$_SESSION['user']['id']));
 				}
 
