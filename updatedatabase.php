@@ -253,6 +253,7 @@ VALUES
 	db_addfield('people','workshopsupervisor',"INT  NOT NULL  DEFAULT 0  AFTER `workshoptraining`;");
 	db_addfield('people','workshopbancomment',"TEXT  NOT NULL");
 	db_addfield('people','notregistered',"TINYINT  NOT NULL  DEFAULT 0");
+	db_addfield('people','volunteer',"TINYINT  NOT NULL  DEFAULT 0");
 	
 	db_addfield('borrow_transactions','lights',"TINYINT NOT NULL DEFAULT 0");
 	
