@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
@@ -125,6 +125,8 @@
 	if($settings['extraportion'] && $_SESSION['camp']['food']){
 		addfield('checkbox','Extra food due to health condition (as indicated by Red Cross)','extraportion',array('tab'=>'people'));	
 	}
+	addfield('checkbox','This person is a resident volunteer with A drop in the ocean','volunteer',array('tab'=>'people'));	
+
 	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']){
 		$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg')?$id:0);
 		if($data['picture']) {

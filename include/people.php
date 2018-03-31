@@ -79,6 +79,9 @@
 			if($data[$key]['workshoptraining']) {
 				$data[$key]['expired'] .= '<i class="fa fa-wrench tooltip-this '.($data[$key]['workshopsupervisor']?'blue':'').'" title="This person has a workshop certificate."></i> ';
 			}
+			if($data[$key]['volunteer']) {
+				$data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This is a resident volunteer."></i> ';
+			}
 		}
 
 		addcolumn('text','Lastname','lastname');
