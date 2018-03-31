@@ -25,7 +25,6 @@ GROUP BY p.id
 	
 	while($row = db_fetch($result)) {
 		if($row['drops']>$row['maxdrops']) {
-			echo $row['firstname'].' '.$row['lastname'].' '.$row['container'].', '.$row['drops'].' drops capped to '.$row['maxdrops'].'<br />';
 			db_query('INSERT INTO transactions (people_id, description, drops, transaction_date) VALUES (:id, "Drops capped to maximum", :drops, NOW())',array('id'=>$row['id'],'drops'=>-$row['drops']+$row['maxdrops']));
 		}
 	}

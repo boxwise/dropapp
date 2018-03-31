@@ -41,7 +41,6 @@
 					$max = $adults * $_SESSION['camp']['dropcapadult'] + $children * $_SESSION['camp']['dropcapchild'];
 					$cap = -($currentdrops+$drops)+$max;
 					if($cap<0) {
-						#echo $f['container'].' max:'.$max.' current:'.$currentdrops.' new:'.$drops.' correction:'.$cap.'<br />';	
 						$drops += $cap;
 						$_POST['description'] .= " (capped to maximum)";
 					}
