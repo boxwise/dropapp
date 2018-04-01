@@ -25,9 +25,10 @@
 			{foreach $data['times'] as $time => $t}
 				<td class="cell">
 					{if $data['slots'][$day][$time][$machine]['id']}<a href="?origin=laundry&action=laundry_noshow&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}" class="delete"><i class="fa fa-eye{if !$data['slots'][$day][$time][$machine]['noshow']}-slash{/if}"></i></a>{/if}
+					
 					<a href="?origin=laundry&action=laundry_edit&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}" class="edit"><span class="transparent">{$data['slots'][$day][$time][$machine]['machinename']}</span>&nbsp;
-				{if $data['slots'][$day][$time][$machine]['id']}
-					<span class="{if $data['slots'][$day][$time][$machine]['noshow']}strikethrough{/if}">{$data['slots'][$day][$time][$machine]['firstname']} {$data['slots'][$day][$time][$machine]['lastname']} ({$data['slots'][$day][$time][$machine]['container']})</span>
+				{if $data['slots'][$day][$time][$machine]['people_id']}
+					<span class="{if $data['slots'][$day][$time][$machine]['noshow']}strikethrough{/if}">{$data['slots'][$day][$time][$machine]['firstname']} {$data['slots'][$day][$time][$machine]['lastname']} {if $data['slots'][$day][$time][$machine]['container']}({$data['slots'][$day][$time][$machine]['container']}){/if}</span>
 				{/if}
 				</a></td>
 			{/foreach}
