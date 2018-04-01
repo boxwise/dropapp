@@ -10,7 +10,6 @@
 		db_query('DELETE FROM laundry_appointments WHERE cyclestart = :cyclestart AND timeslot = :timeslot',array('cyclestart'=>$_POST['cyclestart'],'timeslot'=>$_POST['timeslot']));
 		
 		$handler = new formHandler($table);
-
 		$savekeys = array('cyclestart', 'timeslot', 'people_id');
 		$id = $handler->savePost($savekeys);
 

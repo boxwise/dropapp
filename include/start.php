@@ -83,7 +83,7 @@ FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bi
 		$data['brcardsM'] = intval(100 * $data['totalbrcardsM'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "M" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
 		$data['brcardsF'] = intval(100 * $data['totalbrcardsF'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "F" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
 
-		$data['laundry_appointments'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE people_id != -1 AND cyclestart = :cyclestart',array('cyclestart'=>$settings['laundry_cyclestart']));
+		$data['laundry_appointments'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE people_id > 0 AND cyclestart = :cyclestart',array('cyclestart'=>$settings['laundry_cyclestart']));
 		$data['laundry_slots'] = db_value('SELECT COUNT(id) FROM laundry_slots');
 		$data['laundry_noshow'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE cyclestart = :cyclestart AND noshow',array('cyclestart'=>$settings['laundry_cyclestart']));
 		$result = db_query('SELECT (SELECT COUNT(id) FROM people WHERE id = people_id OR parent_id = people_id) AS c FROM laundry_appointments WHERE cyclestart = :cyclestart ', array('cyclestart'=>$settings['laundry_cyclestart']));
@@ -91,7 +91,7 @@ FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bi
 		
 		$previous = strftime('%Y-%m-%d',strtotime('-14 days',strtotime($settings['laundry_cyclestart'])));
 
-		$data['laundry_prev_appointments'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE people_id != -1 AND cyclestart = :cyclestart',array('cyclestart'=>$previous));
+		$data['laundry_prev_appointments'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE people_id > 0 AND cyclestart = :cyclestart',array('cyclestart'=>$previous));
 		$data['laundry_prev_noshow'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE cyclestart = :cyclestart AND noshow',array('cyclestart'=>$previous));
 		$result = db_query('SELECT (SELECT COUNT(id) FROM people WHERE id = people_id OR parent_id = people_id) AS c FROM laundry_appointments WHERE cyclestart = :cyclestart ', array('cyclestart'=>$previous));
 		while($row = db_fetch($result)) $data['laundry_prev_beneficiaries'] += $row['c'];
