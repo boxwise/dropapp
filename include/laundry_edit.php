@@ -28,7 +28,7 @@
 	$cmsmain->assign('include','cms_form.tpl');
 
 	// put a title above the form
-	$cmsmain->assign('title', strftime('%A %d %B %Y', strtotime('+'.$data['day'].' days', strtotime($settings['laundry_cyclestart']))).'<br />'.db_value('SELECT label FROM laundry_times WHERE id = :time',array('time'=>$data['time'])).' '.db_value('SELECT label FROM laundry_machines WHERE id = :machine',array('machine'=>$data['machine'])));
+	$cmsmain->assign('title', strftime('%A %d %B %Y', strtotime('+'.$data['day'].' days', strtotime($settings['laundry_cyclestart']))).'<br />'.db_value('SELECT label FROM laundry_times WHERE id = :time',array('time'=>$data['time'])).' <span class="machine">'.db_value('SELECT label FROM laundry_machines WHERE id = :machine',array('machine'=>$data['machine'])).'</span>');
 
 	$data['timeslot'] = $timeslot;
 	$data['day'] = $data['day'];
