@@ -254,6 +254,10 @@ VALUES
 	db_addfield('people','workshopbancomment',"TEXT  NOT NULL");
 	db_addfield('people','notregistered',"TINYINT  NOT NULL  DEFAULT 0");
 	db_addfield('people','volunteer',"TINYINT  NOT NULL  DEFAULT 0");
+
+	db_addfield('laundry_appointments','dropoff',"TINYINT  NOT NULL  DEFAULT 0");
+	db_addfield('laundry_appointments','collected',"TINYINT  NOT NULL  DEFAULT 0");
+	db_addfield('laundry_appointments','comment',"TEXT  NOT NULL");
 	
 	db_addfield('borrow_transactions','lights',"TINYINT NOT NULL DEFAULT 0");
 	
