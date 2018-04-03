@@ -18,6 +18,8 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+
     <link rel="apple-touch-icon" sizes="180x180" href="{$images['faviconapple']}">
     <link rel="icon" type="image/png" href="{$images['favicon32']}" sizes="32x32">
     <link rel="icon" type="image/png" href="{$images['favicon16']}" sizes="16x16">
