@@ -8,23 +8,21 @@
 		$_POST['cyclestart'] = $settings['laundry_cyclestart'];
 		
 		db_query('DELETE FROM laundry_appointments WHERE cyclestart = :cyclestart AND timeslot = :timeslot',array('cyclestart'=>$_POST['cyclestart'],'timeslot'=>$_POST['timeslot']));
+
+		unset($_POST['id']);
 		
-		$handler = new formHandler($table);
-		$savekeys = array('cyclestart', 'timeslot', 'people_id');
-		$id = $handler->savePost($savekeys);
+			$handler = new formHandler($table);
+			$savekeys = array('cyclestart', 'timeslot', 'people_id','comment');
+			$id = $handler->savePost($savekeys);
+
 
 		redirect('?action=laundry'.$data['day']);
 	}
 	
 	$timeslot = intval($_GET['timeslot']);
 
-	$data = db_row('SELECT ls.id AS timeslot, ls.day, ls.time, la.people_id, ls.machine, p.* FROM laundry_slots AS ls LEFT OUTER JOIN laundry_appointments AS la ON la.timeslot = ls.id AND cyclestart = :cyclestart LEFT OUTER JOIN people AS p ON p.id = la.people_id WHERE timeslot = :id',array('cyclestart'=>$settings['laundry_cyclestart'], 'id'=>$timeslot));
+	$data = db_row('SELECT ls.id AS timeslot, ls.day, ls.time, la.people_id, la.comment, ls.machine, p.* FROM laundry_slots AS ls LEFT OUTER JOIN laundry_appointments AS la ON la.timeslot = ls.id AND cyclestart = :cyclestart LEFT OUTER JOIN people AS p ON p.id = la.people_id WHERE timeslot = :id',array('cyclestart'=>$settings['laundry_cyclestart'], 'id'=>$timeslot));
 	if(!$data) $data = db_row('SELECT ls.id AS timeslot, ls.day, ls.time, ls.machine FROM laundry_slots AS ls WHERE id = :id',array('id'=>$timeslot));
-	
-	if (!$id) {
-		$data['visible'] = 1;
-		$data['camp_id'] = $_SESSION['camp']['id'];
-	}
 
 	// open the template
 	$cmsmain->assign('include','cms_form.tpl');
@@ -39,15 +37,12 @@
 
 	$people = db_array('SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');
 	array_unshift($people, array('value'=>-1,'label'=>'Drop Laundry','disabled'=>0));
-
-
-
 	addfield('select','Find '.$_SESSION['camp']['familyidentifier'],'people_id',array('onchange'=>'updateLaundry("people_id")', 'multiple'=>false, 'options'=>$people));
 
-		addfield('ajaxstart','', '', array('id'=>'ajax-content'));
-		addfield('ajaxend');
+	addfield('ajaxstart','', '', array('id'=>'ajax-content'));
+	addfield('ajaxend');
 
-
+ 	addfield('textarea','Comments','comment',array('width'=>6));
 
 	// place the form elements and data in the template
 	$cmsmain->assign('data',$data);

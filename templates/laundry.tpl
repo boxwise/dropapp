@@ -12,8 +12,8 @@
 
 	
 	{foreach $data['dates'] as $day => $d name=days}
-		<h2><i class="icon-open-{$day} fa fa-angle-right {if !$d['past']}hidden{/if}"></i><i class="icon-close-{$day} fa fa-angle-down {if $d['past']} hidden{/if}"></i> <a href="#" class="laundry-showhide" data-day="{$day}">{$d['label']}</a></h2>
 		<a name="{$day}"></a>
+		<h2><i class="icon-open-{$day} fa fa-angle-right {if !$d['past']}hidden{/if}"></i><i class="icon-close-{$day} fa fa-angle-down {if $d['past']} hidden{/if}"></i> <a href="#" class="laundry-showhide" data-day="{$day}">{$d['label']}</a></h2>
 		<table id="laundry-table-{$day}"{if $d['past']} class="hidden"{/if}>
 	
 		{foreach $data['machines'] as $machine => $m}
@@ -24,11 +24,25 @@
 
 			{foreach $data['times'] as $time => $t}
 				<td class="cell">
-					{if $data['slots'][$day][$time][$machine]['id']}<a href="?origin=laundry&action=laundry_noshow&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}" class="delete"><i class="fa fa-eye{if !$data['slots'][$day][$time][$machine]['noshow']}-slash{/if}"></i></a>{/if}
-					
+					{if $data['slots'][$day][$time][$machine]['id']}
+{* 					<a href="" class="delete"></a> *}
+					<div class="dropdown">
+  <a class="dropdown-toggle delete" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-caret-down"></i>
+  </a>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    {if !$data['slots'][$day][$time][$machine]['dropoff']}<a class="dropdown-item" href="?origin=laundry&action=laundry_noshow&toggle=noshow&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}">{if $data['slots'][$day][$time][$machine]['noshow']}<i class="fa fa-undo"></i> Revert no show{else}<i class="fa fa-ban"></i> No show{/if}</a>{/if}
+    {if !$data['slots'][$day][$time][$machine]['noshow']}
+		{if !$data['slots'][$day][$time][$machine]['collected']}
+    <a class="dropdown-item" href="?origin=laundry&action=laundry_noshow&toggle=dropoff&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}">{if $data['slots'][$day][$time][$machine]['dropoff']}<i class="fa fa-undo"></i> Revert drop off{else}<i class="fa fa-sign-in"></i> Dropped off{/if}</a>
+    	{/if}
+    {if $data['slots'][$day][$time][$machine]['dropoff']}<a class="dropdown-item" href="?origin=laundry&action=laundry_noshow&toggle=collected&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}">{if $data['slots'][$day][$time][$machine]['collected']}<i class="fa fa-undo"></i> Revert collect{else}<i class="fa fa-check"></i> Collected{/if}</a>{/if}
+    {/if}
+  </div>
+</div>
+{/if}
 					<a href="?origin=laundry&action=laundry_edit&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}" class="edit"><span class="transparent">{$data['slots'][$day][$time][$machine]['machinename']}</span>&nbsp;
 				{if $data['slots'][$day][$time][$machine]['people_id']}
-					<span class="{if $data['slots'][$day][$time][$machine]['noshow']}strikethrough{/if}">{$data['slots'][$day][$time][$machine]['firstname']} {$data['slots'][$day][$time][$machine]['lastname']} {if $data['slots'][$day][$time][$machine]['container']}({$data['slots'][$day][$time][$machine]['container']}){/if}</span>
+					<span class="{if $data['slots'][$day][$time][$machine]['noshow']}strikethrough{/if}{if $data['slots'][$day][$time][$machine]['dropoff']} dropoff{/if}{if $data['slots'][$day][$time][$machine]['collected']} collected{/if}">{$data['slots'][$day][$time][$machine]['firstname']} {$data['slots'][$day][$time][$machine]['lastname']} {if $data['slots'][$day][$time][$machine]['container']}({$data['slots'][$day][$time][$machine]['container']}){/if} {if $data['slots'][$day][$time][$machine]['comment']}<i class="fa fa-comment tooltip-this" title="{$data['slots'][$day][$time][$machine]['comment']|escape}"></i>{/if}{if $data['slots'][$day][$time][$machine]['collected']} <i class="fa fa-check"></i>{elseif $data['slots'][$day][$time][$machine]['dropoff']} <i class="fa fa-sign-in"></i>{/if}</span>
 				{/if}
 				</a></td>
 			{/foreach}

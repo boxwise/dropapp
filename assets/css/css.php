@@ -23,7 +23,7 @@
 
 	$files = array(
 		'bootstrap.min.css',
-		'font-awesome.min.css',
+		'fontawesome.min.css',
 		'jquery.qtip.min.css',
 		'pushy.css',
 		'pnotify.custom.min.css',
