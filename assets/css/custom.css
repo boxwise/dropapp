@@ -688,20 +688,21 @@ td.list-level-0.list-column-ean_print div a:hover {
 	font-weight: bold;
 	padding:2px 5px;
 	border-radius: 3px;
+	background-color:#999;
 }
-.schedule-A {
+.schedule-A, .schedule-1 {
 	background-color:#5EB567;
 }
-.schedule-B {
+.schedule-B, .schedule-2 {
 	background-color:#E40474;
 }
-.schedule-C {
+.schedule-C, .schedule-3 {
 	background-color:#336FB6;
 }
-.schedule-D {
+.schedule-D, .schedule-4 {
 	background-color:#E6650D;
 }
-.schedule-E {
+.schedule-E, .schedule-I {
 	background-color:#554193;
 }
 .schedule-P {
