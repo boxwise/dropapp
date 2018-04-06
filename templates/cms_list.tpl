@@ -45,22 +45,24 @@
 							{if $listconfig['allowshowhide']}<button data-operation="show" class="action-show start-operation btn btn-default btn-sm" href="#"><i class="fa glyphicon fa-eye"></i> {$listconfig['show']}</button>
 							<button data-operation="hide" class="start-operation btn btn-default btn-sm" href="#"><i class="fa fa-eye-slash"></i> {$listconfig['hide']}</button>{/if}
 
-							{if $listconfig['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_delete']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="action-delete start-operation btn btn-sm confirm btn-danger" href="#"><i class="fa fa-trash-o"></i> {$listconfig['delete']}</button>{/if}
+							{if $listconfig['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_delete']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="action-delete start-operation btn btn-sm confirm btn-danger" href="#"><i class="fa fa-trash"></i> {$listconfig['delete']}</button>{/if}
 
 							{if $listconfig['allowcopy']}<button data-operation="copy" data-placement="top" class="action-copy start-operation btn btn-sm btn-default" href="#"><i class="fa fa-copy"></i> {$listconfig['copy']}</button>{/if}
 
 							{foreach $listconfig['button'] as $code=>$button}
-								{if $button['options']}
-									<div class="btn-group">
-										<div type="button" class="btn btn-sm btn-default dropdown-toggle">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']} <span class="caret"></span></div>
-										<ul class="dropdown-menu pull-right button-multi" role="menu">
-											{foreach $button['options'] as $key=>$option}
-												<li><a href="#" data-operation="{$code}" data-option="{$key}" class="start-operation {if $button['confirm']}confirm{/if}">{$option}</a></li>
-											{/foreach}
-										</ul>
-									</div>
-								{else}
-									<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if}" href="{if $button['link']}{$button['link']}{else}#{/if}">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']}</button>
+								{if !$button['showalways']}
+									{if $button['options']}
+										<div class="btn-group">
+											<div type="button" class="btn btn-sm btn-default dropdown-toggle">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']} <span class="caret"></span></div>
+											<ul class="dropdown-menu pull-right button-multi" role="menu">
+												{foreach $button['options'] as $key=>$option}
+													<li><a href="#" data-operation="{$code}" data-option="{$key}" class="start-operation {if $button['confirm']}confirm{/if}">{$option}</a></li>
+												{/foreach}
+											</ul>
+										</div>
+									{else}
+										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if}" href="{if $button['link']}{$button['link']}{else}#{/if}">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']}</button>
+									{/if}
 								{/if}
 							{/foreach}
 						</div>
@@ -79,7 +81,7 @@
 								<div class="input-group form-inline search-group">
 									<div class="has-feedback">
 										<input type="text" class="form-control input-sm" name="search" value="{$listconfig['searchvalue']}">
-										{if $listconfig['searchvalue']}<a class="fa fa-times form-control-feedback" href="?action={$listconfig['origin']}&resetsearch=true"></a>{/if}
+										{if $listconfig['searchvalue']}<a class="fa fa-times-circle form-control-feedback" href="?action={$listconfig['origin']}&resetsearch=true"></a>{/if}
 									</div>
 									<span class="input-group-btn">
 										<button class="btn btn-sm btn-default" type="submit"><span class="fa fa-search"></span></button>

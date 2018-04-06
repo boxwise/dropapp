@@ -33,7 +33,7 @@
     {if !$data['slots'][$day][$time][$machine]['dropoff']}<a class="dropdown-item" href="?origin=laundry&action=laundry_noshow&toggle=noshow&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}">{if $data['slots'][$day][$time][$machine]['noshow']}<i class="fa fa-undo"></i> Revert no show{else}<i class="fa fa-ban"></i> No show{/if}</a>{/if}
     {if !$data['slots'][$day][$time][$machine]['noshow']}
 		{if !$data['slots'][$day][$time][$machine]['collected']}
-    <a class="dropdown-item" href="?origin=laundry&action=laundry_noshow&toggle=dropoff&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}">{if $data['slots'][$day][$time][$machine]['dropoff']}<i class="fa fa-undo"></i> Revert drop off{else}<i class="fa fa-sign-in-alt"></i> Dropped off{/if}</a>
+    <a class="dropdown-item" href="?origin=laundry&action=laundry_noshow&toggle=dropoff&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}">{if $data['slots'][$day][$time][$machine]['dropoff']}<i class="fa fa-undo"></i> Revert drop off{else}<i class="fa fa-sign-in"></i> Dropped off{/if}</a>
     	{/if}
     {if $data['slots'][$day][$time][$machine]['dropoff']}<a class="dropdown-item" href="?origin=laundry&action=laundry_noshow&toggle=collected&timeslot={$data['slots'][$day][$time][$machine]['timeslot']}">{if $data['slots'][$day][$time][$machine]['collected']}<i class="fa fa-undo"></i> Revert collect{else}<i class="fa fa-check"></i> Collected{/if}</a>{/if}
     {/if}

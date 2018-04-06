@@ -94,15 +94,15 @@
 		addcolumn('html','&nbsp;','expired');
 
 		addbutton('give','Give '.ucwords($translate['market_coins_short']),array('icon'=>'fa-tint','oneitemonly'=>false));
-		addbutton('merge','Merge to family',array('icon'=>'fa-chain','oneitemonly'=>false));
-		addbutton('detach','Detach from family',array('icon'=>'fa-chain-broken','oneitemonly'=>false));
+		addbutton('merge','Merge to family',array('icon'=>'fa-link','oneitemonly'=>false));
+		addbutton('detach','Detach from family',array('icon'=>'fa-unlink','oneitemonly'=>false));
 
 		$options = array('bicycle'=>'Bicycle card','workshop'=>'Workshop card');
 
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
-		addbutton('touch','Touch',array('icon'=>'fa-hand-o-up'));
+		addbutton('touch','Touch',array('icon'=>'fa-hand-pointer'));
 
-		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
+		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel','showalways'=>true));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);

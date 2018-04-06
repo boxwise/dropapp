@@ -659,6 +659,7 @@ textarea.select2{
 	color: #000;
 	position: absolute;
 	pointer-events: visible;
+	font-size:10px;
 }
 .search-group a.form-control-feedback:hover{
 	text-decoration: none;
