@@ -102,7 +102,7 @@
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-pointer'));
 
-		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel','showalways'=>true));
+		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
