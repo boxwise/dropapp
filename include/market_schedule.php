@@ -90,7 +90,6 @@
 
 		}
 		
-
 		$result = db_query('SELECT container, COUNT(id) AS count FROM people WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted GROUP BY container');
 		while($row = db_fetch($result)) {
 			$slot = randomtimeslot($slots);
@@ -98,7 +97,11 @@
 			$slots[$slot['date']][$slot['time']]['containers'][] = $row['container'];			
 		}
 
-
+		foreach($slots as $date=>$slot) {
+			foreach($slot as $time=>$s) {
+				$slots[$date]['max'] = max($slots[$date]['max'],count($s['containers']));
+			}
+		}
 /*
 		foreach($slots as $date=>$d) {
 			echo '<strong>'.$date.'</strong><br />';
