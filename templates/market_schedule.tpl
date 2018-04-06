@@ -5,7 +5,7 @@
 		<tr><td colspan="{($slots[$date]['max'])+1}"><h2>{$date} – {$weekdays_french[$date|date_format:"%u"]} {$date|date_format:"%e"}  {$months_french[($date|date_format:"%m"|intval)-1]}<br />{$weekdays[$date|date_format:"%u"]} {$date|date_format:"%e"}  {$months[($date|date_format:"%m"|intval)-1]} </h2></td></tr>
 		{foreach $slots[$date] as $time=>$t}
 			{if $slots[$date][$time]['displaytime']}
-			<tr><td>{$slots[$date][$time]['displaytime']}</td>
+			<tr><td class="time">{$slots[$date][$time]['displaytime']}</td>
 			
 			{if $slots[$date][$time]['lunch']}
 				<td colspan="{$slots[$date]['max']}">Lunch break / Déjeuner / غداء</td>

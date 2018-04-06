@@ -40,17 +40,23 @@
 	margin-right:15mm;
 }
 
+.market_schedule .time {
+	width:2cm;
+}
+.market_schedule td {
+	font-size:13px;
+	padding:3px 5px;
+}
+
 .market_schedule table {
 	display: block;
 	page-break-inside: avoid;
 }
-.market_schedule td {
-	font-size:15px;
-	padding:0.3mm 6mm 0.3mm 0.5mm;
-}
+/*
 .market_schedule table {
 	margin-right:15mm;
 }
+*/
 .market_schedule h1 {
 	font-size:24px;
 	line-height: 27px;
