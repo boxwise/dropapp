@@ -264,7 +264,7 @@ body.stock-list .table-parent, body.products .table-parent, body.stock .table-pa
 }
 .market_schedule td {
 	font-size:14px;
-	padding:5px 15px 5px 15px;
+	padding:5px 5px;
 	border-bottom: 1px solid #ccc;
 }
 
@@ -677,4 +677,33 @@ td.list-level-0.list-column-ean_print div a:hover {
 	padding:1px 4px;
 	font-weight: bold;
 	border-radius: 2px;
+}
+.schedule-cell {
+	padding:0;
+	margin:0;
+	border:1px;
+}
+.schedule {
+	color:#fff;
+	font-weight: bold;
+	padding:2px 5px;
+	border-radius: 3px;
+}
+.schedule-A {
+	background-color:#5EB567;
+}
+.schedule-B {
+	background-color:#E40474;
+}
+.schedule-C {
+	background-color:#336FB6;
+}
+.schedule-D {
+	background-color:#E6650D;
+}
+.schedule-E {
+	background-color:#554193;
+}
+.schedule-P {
+	background-color:#7E990D;
 }

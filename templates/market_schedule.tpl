@@ -11,7 +11,7 @@
 				<td colspan="{$slots[$date]['max']}">Lunch break / Déjeuner / غداء</td>
 			{else}
 				{foreach $slots[$date][$time]['containers'] as $slot}
-					<td style="width:50px">{$slot}</td>
+					<td class="schedule-cell"><span class="schedule schedule-{$slot|substr:0:1}">{$slot}</span></td>
 				{/foreach}
 				{for $i=($slots[$date][$time]['containers']|count) to ($slots[$date]['max'])-1}<td></td>{/for}
 			{/if}				
