@@ -34,6 +34,11 @@
 
 		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
 
+		foreach($data as $d) {
+			$count += $d['items'];
+		}
+		$cmsmain->assign('listfooter',array('','','',$count,'',''));
+
 
 		listsetting('allowsort',true);
 		listsetting('allowcopy',false);
