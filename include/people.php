@@ -23,6 +23,9 @@
 		addpagemenu('all', 'All', array('link'=>'?action=people', 'active'=>true));
 		addpagemenu('deleted', 'Deleted', array('link'=>'?action=people_trash'));
 
+		$statusarray = array('week'=>'New this week','month'=>'New this month');
+		listfilter(array('label'=>'Show all people','options'=>$statusarray,'filter'=>'"show"'));
+
 		listsetting('manualquery',true);
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
 		#			 AS lastactive , 
@@ -49,6 +52,8 @@
 		LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
 		WHERE 
 			NOT people.deleted AND 
+			'.($listconfig['filtervalue']=='week'?' DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") AND':'').
+			($listconfig['filtervalue']=='month'?' DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") AND':'').'
 			people.camp_id = '.$_SESSION['camp']['id']. 
 			($listconfig['searchvalue']?' AND
 			(lastname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
@@ -92,6 +97,7 @@
 		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
 		addcolumn('text', ucwords($translate['market_coins']),'drops');
 		addcolumn('html','&nbsp;','expired');
+		if($listconfig['filtervalue']) addcolumn('date','Created','created');
 
 		addbutton('give','Give '.ucwords($translate['market_coins_short']),array('icon'=>'fa-tint','oneitemonly'=>false));
 		addbutton('merge','Merge to family',array('icon'=>'fa-link','oneitemonly'=>false));

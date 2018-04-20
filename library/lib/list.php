@@ -455,7 +455,7 @@
 		if($listdata[$field]['type']=='date') {
 			foreach($data as $key=>$row) {
 				if($row[$field] && strtotime($row[$field])>0) {
-					$data[$key][$field] = strftime('%d %B %Y',strtotime($row[$field]));
+					$data[$key][$field] = strftime('%e %B %Y',strtotime($row[$field]));
 				} else {
 					$data[$key][$field] = '';
 				}
