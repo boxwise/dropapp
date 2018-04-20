@@ -464,7 +464,7 @@
 		} else if($listdata[$field]['type']=='datetime') {
 			foreach($data as $key=>$row) {
 				if($row[$field] && strtotime($row[$field])>0) {
-					$data[$key][$field] = strftime('%d %B %Y, %H:%M',strtotime($row[$field]));
+					$data[$key][$field] = strftime('%e %B %Y, %H:%M',strtotime($row[$field]));
 				} else {
 					$data[$key][$field] = '';
 				}
@@ -473,7 +473,7 @@
 		} else if($listdata[$field]['type']=='datetime-short') {
 			foreach($data as $key=>$row) {
 				if($row[$field] && strtotime($row[$field])>0) {
-					$data[$key][$field] = strftime('%d-%m-%y %H:%M',strtotime($row[$field]));
+					$data[$key][$field] = strftime('%e-%m-%y %H:%M',strtotime($row[$field]));
 				} else {
 					$data[$key][$field] = '';
 				}

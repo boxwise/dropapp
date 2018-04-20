@@ -97,7 +97,7 @@
 		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
 		addcolumn('text', ucwords($translate['market_coins']),'drops');
 		addcolumn('html','&nbsp;','expired');
-		if($listconfig['filtervalue']) addcolumn('date','Created','created');
+		if($listconfig['filtervalue']) addcolumn('datetime','Created','created');
 
 		addbutton('give','Give '.ucwords($translate['market_coins_short']),array('icon'=>'fa-tint','oneitemonly'=>false));
 		addbutton('merge','Merge to family',array('icon'=>'fa-link','oneitemonly'=>false));
