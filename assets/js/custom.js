@@ -44,6 +44,20 @@ function cms_form_valutaCO(field) {
 	}
 }
 
+$(document).ready(function() {
+    if ($('#field_laundryblock').length){
+		if(!$('#field_laundryblock').is(':checked')) $("#div_laundrycomment").hide();
+    }
+});
+$('#field_laundryblock').click(function(){
+    if($(this).is(':checked')){
+	    $("#div_laundrycomment").show();
+    } else {
+	    $('#field_laundrycomment').val("");
+	    $("#div_laundrycomment").hide();
+    }
+});
+
 function toggleLunch() {
 	$('#div_lunchtime, #div_lunchduration').toggleClass('hidden');
 }

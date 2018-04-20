@@ -254,6 +254,8 @@ VALUES
 	db_addfield('people','workshopbancomment',"TEXT  NOT NULL");
 	db_addfield('people','notregistered',"TINYINT  NOT NULL  DEFAULT 0");
 	db_addfield('people','volunteer',"TINYINT  NOT NULL  DEFAULT 0");
+	db_addfield('people','laundryblock',"TINYINT  NOT NULL  DEFAULT 0");
+	db_addfield('people','laundrycomment',"VARCHAR(255)");
 
 	db_addfield('laundry_appointments','dropoff',"TINYINT  NOT NULL  DEFAULT 0");
 	db_addfield('laundry_appointments','collected',"TINYINT  NOT NULL  DEFAULT 0");

@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer','laundryblock','laundrycomment');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
@@ -54,11 +54,18 @@
 		$cmsmain->assign('title', 'Add a new resident');
 	}
 	
-	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']) {
-		$cmsmain->assign('tabs',array('people'=>'Personal','bicycle'=>($_SESSION['camp']['bicycle']?'Bicycle':'').($_SESSION['camp']['bicycle']&&$_SESSION['camp']['bicycle']?' & ':'').($_SESSION['camp']['workshop']?'Workshop':''),'transaction'=>'Transactions'));	
-	} else {
-		$cmsmain->assign('tabs',array('people'=>'Personal','transaction'=>'Transactions'))	;
+	$tabs['people'] = 'Personal';
+	if ($_SESSION['camp']['bicycle'] && $_SESSION['camp']['workshop']) {
+		$tabs['bicycle'] = 'Bicycle & Workshop';
+	} elseif($_SESSION['camp']['bicycle']) {
+		$tabs['bicycle'] = 'Bicycle';
+	} elseif($_SESSION['camp']['workshop']) {
+		$tabs['bicycle'] = 'Workshop';
 	}
+	$tabs['transaction'] = 'Transactions';
+	if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) $tabs['laundry'] = 'Laundry';
+	
+	$cmsmain->assign('tabs',$tabs);
 
 	$data['allowdrops'] = $_SESSION['user']['is_admin']||db_value('SELECT id FROM cms_functions AS f, cms_access AS a WHERE a.cms_functions_id = f.id AND f.include = "give2all" AND a.cms_users_id = :user_id',array('user_id'=>$_SESSION['user']['id']));
 
@@ -153,6 +160,20 @@
 		addfield('line','','',array('tab'=>'bicycle'));
 		addfield('date','Workshop ban until','workshopban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the workshop until (and including) this date. Empty this field to cancel the ban.'));
 		addfield('textarea','Comment','workshopbancomment',array('tab'=>'bicycle','width'=>6,'tooltip'=>'Please always make a note with a workshop ban, stating the reason of the ban, your name and the date the ban started.'));
+	}
+	
+	if(($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id']) {
+		addfield('checkbox','This family has no access to laundry', 'laundryblock', array('tab'=>'laundry'));
+		addfield('text','Comment','laundrycomment',array('tab'=>'laundry'));
+		
+		$result = db_query("SELECT changedate, to_int, u.naam, (SELECT SUBSTR(changes,POSITION('\" to \"' IN changes)+5) FROM history WHERE tablename = 'people' AND record_id = :id AND changedate = h.changedate AND changes LIKE \"%laundrycomment%\") AS comment FROM history AS h, cms_users AS u WHERE tablename = 'people' AND record_id = :id AND changes = 'laundryblock' AND user_id = u.id ORDER BY changedate DESC",array('id'=>$data['id']));
+		while($row = db_fetch($result)) {
+			
+			$row['comment'] = substr($row['comment'],1,strlen($row['comment'])-4);
+			$log[] = strftime('%d-%m-%Y %H:%M:%S',strtotime($row['changedate'])).' - '.$row['naam'].' '.($row['to_int']?'enabled':'disabled').' the laundry block - '.($row['comment']?'comment: '.$row['comment']:'');
+		}
+		$data['log'] = join("\n",$log);
+		addfield('textarea','Log','log',array('tab'=>'laundry','readonly'=>true));
 	}
 
 	if($data['parent_id'] == 0){

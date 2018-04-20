@@ -167,13 +167,17 @@ class formHandler {
 		foreach ($this->keys as $key) {
 			if(!in_array($key, array('created','created_by','modified','modified_by'))) {
 				$new = $this->post[$key];
+				$change = '';
 
-				if($fields[$key]['Type']=='date') $new = strftime('%Y-%m-%d',strtotime($new));
+				if($fields[$key]['Type']=='date') {
+					$new = strftime('%Y-%m-%d',strtotime($new));
+					if($new = '1970-01-01') $new = $old[$key];
+				}
 				if($fields[$key]['Type']=='float' && $fields[$key]['Null']=="NO") $new = floatval($new);
 				if(substr($fields[$key]['Type'],0,3)=='int' && $fields[$key]['Null']=="NO") $new = intval($new);
 
 				if($old[$key]!=$new) {
-					if(substr($fields[$key]['Type'],0,3)=='int') {
+					if(substr($fields[$key]['Type'],0,3)=='int' || substr($fields[$key]['Type'],0,7)=='tinyint') {
 						db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, to_int) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :old, :new)', array('table'=>$this->table,'id'=>$this->id,'change'=>$key,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR'], 'old'=>$old[$key], 'new'=>$new));
 					} else if($fields[$key]['Type']=='float') {
 						db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_float, to_float) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :old, :new)', array('table'=>$this->table,'id'=>$this->id,'change'=>$key,'user_id'=>$_SESSION['user']['id'],'ip'=>$_SERVER['REMOTE_ADDR'], 'old'=>$old[$key], 'new'=>$new));
