@@ -12,8 +12,12 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer','laundryblock','laundrycomment');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer');
 		if($_POST['pass']) $savekeys[] = 'pass';
+		if($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) {
+			$savekeys[] = 'laundryblock';
+			$savekeys[] = 'laundrycomment';
+		}
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
