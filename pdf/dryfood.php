@@ -34,13 +34,13 @@ $result = db_query('
 	ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1, seq');
 
 while($container = db_fetch($result)) {
+	if(!$container['container']) $container['container']=' ';
 	
 	$letter = strtoupper(substr($container['container'],0,1));
 	if($letter!=$oldletter) $pdf->newPage($container['container']);
 	if($pdf->Y+(5*$container['number']) > 275) {
 		$pdf->NewColumn($container['container']);
 	}
-	if(!$pdf->haspage) $pdf->NewColumn('A');
 	$pdf->SetFont('helvetica','B',10);
 	$pdf->Print($container['container']);
 	$pdf->Print($container['number'].' people ('.($container['adults']?$container['adults'].' adults':'').($container['children']?', '.($container['children']+$container['baby']).' children':'').')',15);
