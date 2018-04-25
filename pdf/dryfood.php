@@ -40,7 +40,7 @@ while($container = db_fetch($result)) {
 	if($pdf->Y+(5*$container['number']) > 275) {
 		$pdf->NewColumn($container['container']);
 	}
-	if(!$pdf->haspage) $pdf->NewColumn(' ');
+	if(!$pdf->haspage) $pdf->NewColumn('A');
 	$pdf->SetFont('helvetica','B',10);
 	$pdf->Print($container['container']);
 	$pdf->Print($container['number'].' people ('.($container['adults']?$container['adults'].' adults':'').($container['children']?', '.($container['children']+$container['baby']).' children':'').')',15);
