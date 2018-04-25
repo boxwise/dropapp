@@ -22,6 +22,7 @@ class PDF extends FPDF {
 	}
 	
 	function NewColumn($lastcontainer = '') {
+		$this->haspage = true;
 		$this->X += $this->Column;
 		$this->Y = $this->TopMargin;
 		if($this->X>210-$this->LeftMargin-$this->Column) {
@@ -33,6 +34,7 @@ class PDF extends FPDF {
 		global $translate;
 		
 		$this->AddPage();
+		$this->haspage = true;
 		$this->X=$this->LeftMargin;
 		$this->Y=$this->TopMargin;
 		
