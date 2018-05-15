@@ -19,7 +19,7 @@
 
  		listfilter(array('label'=>'By location','query'=>'SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq','filter'=>'l.id'));
  		
-		$statusarray = array('showall'=>'All boxes','ordered'=>'Ordered boxes','dispose'=>'Boxes to dispose');
+		$statusarray = array('showall'=>'All boxes','ordered'=>'Ordered boxes','dispose'=>'Untouched for 3 month');
 		listfilter2(array('label'=>'Only active boxes','options'=>$statusarray,'filter'=>'"show"'));
 
 		listsetting('manualquery',true);

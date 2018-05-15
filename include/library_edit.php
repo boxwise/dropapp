@@ -20,10 +20,10 @@
 
 	// open the template
 
-	$data = db_row('SELECT b.*, TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>610000 AS toolate, CONCAT(HOUR(TIMEDIFF(NOW(),transaction_date)),":",LPAD(MINUTE(TIMEDIFF(NOW(),transaction_date)),2,"0")) AS duration, bt.transaction_date, bt.people_id, bt.status, bt.comment AS btcomment, CONCAT(firstname," ",lastname," (",container,")") AS user FROM library AS b LEFT OUTER JOIN library_transactions AS bt ON bt.book_id = b.id LEFT OUTER JOIN people AS p ON bt.people_id = p.id WHERE b.id = :id ORDER BY transaction_date DESC ',array('id'=>$id));
+	$data = db_row('SELECT b.*, TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>610000 AS toolate, TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date)) AS duration, bt.transaction_date, bt.people_id, bt.status, bt.comment AS btcomment, CONCAT(firstname," ",lastname," (",container,")") AS user FROM library AS b LEFT OUTER JOIN library_transactions AS bt ON bt.book_id = b.id LEFT OUTER JOIN people AS p ON bt.people_id = p.id WHERE b.id = :id ORDER BY transaction_date DESC ',array('id'=>$id));
 
 	if($data['status']=='out') {
-
+		$data['duration'] = ceil($data['duration']/86400).' days';
 		if($data['people_id']==-1) $data['user'] = $data['btcomment'];
 		$cmsmain->assign('title',$data['user'].' is returning '.$data['code'].($data['booktitle_en']?' - '.$data['booktitle_en']:""));
 		$cmsmain->assign('data',$data);
