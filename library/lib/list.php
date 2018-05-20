@@ -313,6 +313,21 @@
 		}
 	}
 
+	function listfilter3($options = array()) {
+		global $listconfig, $action;
+
+		if($options['query']) $options['options'] = db_simplearray($options['query']);
+		listsetting('filter3',$options);
+
+		if($_GET['resetfilter3']) unset($_SESSION['filter3'][$action]);
+		if($_GET['filter3']) {
+			$listconfig['filtervalue3'] = $_GET['filter3'];
+			$_SESSION['filter3'][$action] = $listconfig['filtervalue3'];
+		} elseif($_SESSION['filter3'][$action]) {
+			$listconfig['filtervalue3'] = $_SESSION['filter3'][$action];
+		}
+	}
+
 	function addbutton($code, $label, $options = array()) {
 		global $listconfig;
 		$listconfig['button'][$code] = array('label'=>$label);
@@ -334,6 +349,7 @@
 
 		$hasFilter = $listconfig['filtervalue'];
 		$hasFilter2 = $listconfig['filtervalue2'];
+		$hasFilter3 = $listconfig['filtervalue3'];
 
 		$hasSubtable = db_tableexists($table.'_content');
 
@@ -361,6 +377,8 @@
 			$query = insertwhere($query, $listconfig['filter']['filter'].'='.db_escape($hasFilter));
 		if($hasFilter2 && !$listconfig['manualquery'])
 			$query = insertwhere($query, $listconfig['filter2']['filter'].'='.db_escape($hasFilter2));
+		if($hasFilter3 && !$listconfig['manualquery'])
+			$query = insertwhere($query, $listconfig['filter3']['filter'].'='.db_escape($hasFilter3));
 
 
 		if($listconfig['searchvalue'] && !$listconfig['manualquery']) {

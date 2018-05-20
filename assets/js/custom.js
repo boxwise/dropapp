@@ -91,7 +91,7 @@ function capitalize(field) {
 }
 
 
-function updateLaundry(field) {
+function updateLaundry(field, offset) {
 	value = $('#field_'+field).val();
 	timeslot = $('#field_timeslot').val();
 	if(value) {
@@ -104,6 +104,7 @@ function updateLaundry(field) {
 			data:
 			{
 				people_id: value,
+				offset: offset,
 				timeslot: timeslot,
 			},
 			dataType: 'json',

@@ -8,6 +8,8 @@
 	$ajaxform = new Zmarty;
 
 	$data['people_id'] = intval($_POST['people_id']);
+	$offset = intval($_POST['offset']);
+	$cyclestart = strftime('%Y-%m-%d',strtotime('+'.$offset.' days', strtotime($settings['laundry_cyclestart'])));
 
 	if($data['people_id'] == -1) {
 		$element['field'] .= '<h2 class="light"><span class="number">Laundry for the Drop Market</span></h2>';
@@ -20,10 +22,10 @@
 	}
 	
 	
-	$result = db_query("SELECT ls.*, lt.label, lm.label AS machine, la.noshow FROM laundry_appointments AS la, laundry_slots AS ls, laundry_times AS lt, laundry_machines AS lm WHERE lm.id = ls.machine AND lt.id = ls.time AND la.timeslot = ls.id AND la.people_id = :people_id AND la.cyclestart = :cyclestart ORDER BY timeslot",array('people_id'=>$data['people_id'],'cyclestart'=>$settings['laundry_cyclestart']));
+	$result = db_query("SELECT ls.*, lt.label, lm.label AS machine, la.noshow FROM laundry_appointments AS la, laundry_slots AS ls, laundry_times AS lt, laundry_machines AS lm WHERE lm.id = ls.machine AND lt.id = ls.time AND la.timeslot = ls.id AND la.people_id = :people_id AND la.cyclestart = :cyclestart ORDER BY timeslot",array('people_id'=>$data['people_id'],'cyclestart'=>$cyclestart));
 #	if(db_numrows($result)) $element['field'] .= '<h2>Current appointments in this cycle';
 	while($row = db_fetch($result)) {
-		$app[] = ($row['id']==$_POST['timeslot']?'<span class="number">':'').strftime('%A %d %B %Y', strtotime('+'.$row['day'].' days', strtotime($settings['laundry_cyclestart']))).', '.$row['label'].' <span class="machine">'.$row['machine'].'</span>'.($row['id']==$_POST['timeslot']?' (this one)</span>':'').($row['noshow']?' NO-SHOW':'');
+		$app[] = ($row['id']==$_POST['timeslot']?'<span class="number">':'').strftime('%A %d %B %Y', strtotime('+'.$row['day'].' days', strtotime($cyclestart))).', '.$row['label'].' <span class="machine">'.$row['machine'].'</span>'.($row['id']==$_POST['timeslot']?' (this one)</span>':'').($row['noshow']?' NO-SHOW':'');
 	}
 	
 	if(is_array($app))

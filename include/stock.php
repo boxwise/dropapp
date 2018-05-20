@@ -22,6 +22,9 @@
 		$statusarray = array('showall'=>'All boxes','ordered'=>'Ordered boxes','dispose'=>'Untouched for 3 month');
 		listfilter2(array('label'=>'Only active boxes','options'=>$statusarray,'filter'=>'"show"'));
 
+		$genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
+		listfilter3(array('label'=>'Gender','options'=>$genders,'filter'=>'"s.gender_id"'));
+
 		listsetting('manualquery',true);
 		
 		$data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox FROM '.$table.'
@@ -37,6 +40,8 @@
 		
 		($_SESSION['filter2']['stock']=='ordered'?' AND (stock.ordered OR stock.picked) AND l.visible':($_SESSION['filter2']['stock']=='dispose'?' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible':(!$_SESSION['filter2']['stock']?' AND l.visible':''))).
 		
+		($_SESSION['filter3']['stock']?' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')':'').
+
 		($_SESSION['filter']['stock']?' AND (stock.location_id = '.$_SESSION['filter']['stock'].')':''));
 			
 		foreach($data as $key=>$value) {

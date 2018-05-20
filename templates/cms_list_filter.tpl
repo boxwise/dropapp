@@ -44,3 +44,26 @@
 		</div>
 	</li>
 {/if}
+{if $listconfig['filter3']}
+	<li>
+		<div class="btn-group">
+			<div type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+				{if $listconfig['filtervalue3']}
+					{$listconfig['filter3']['options'][$listconfig['filtervalue3']]}
+				{else}
+					{$listconfig['filter3']['label']}
+				{/if}
+				{if $listconfig['filtervalue3']}
+					<a class="fa fa-times form-control-feedback" href="?action={$listconfig['origin']}&resetfilter3=true"></a>
+				{else}
+					<span class="caret"></span>
+				{/if}
+			</div>
+			<ul class="dropdown-menu pull-right" role="menu">
+				{foreach $listconfig['filter3']['options'] as $key=>$option}
+					<li><a href="?action={$listconfig['origin']}&filter3={$key}">{$option}</a></li></li> 
+				{/foreach}
+			</ul>
+		</div>
+	</li>
+{/if}
