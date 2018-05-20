@@ -103,7 +103,7 @@
 		addbutton('merge','Merge to family',array('icon'=>'fa-link','oneitemonly'=>false));
 		addbutton('detach','Detach from family',array('icon'=>'fa-unlink','oneitemonly'=>false));
 
-		$options = array('bicycle'=>'Bicycle card','workshop'=>'Workshop card');
+		$options = array('bicycle'=>'Bicycle card','workshop'=>'Workshop card','occ'=>'OCCycle card');
 
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-pointer'));
