@@ -65,7 +65,7 @@ while($p = db_fetch($result)) {
 			$pdf->Print(4,106,'Open Cultural Center');
 			$pdf->Print(4,101,'In case of emergency');
 			$pdf->SetFont('helvetica','B',11);
-			$pdf->Print(42,106,'+30 694 6899518');
+			$pdf->Print(42,106,'+30 694 903 9092');
 			$pdf->Print(43,101,'112');
 			$pdf->Rotate(0);
 
