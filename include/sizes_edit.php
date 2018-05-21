@@ -28,7 +28,7 @@
 	$cmsmain->assign('title','Size');
 
 	addfield('text','Label','label');
-	addfield('select', 'Size group', 'sizegroup_id', array('required'=>false, 'multiple'=>false, 'query'=>'SELECT id AS value, label FROM sizegroup'));
+	addfield('select', 'Size group', 'sizegroup_id', array('required'=>false, 'multiple'=>false, 'query'=>'SELECT id AS value, label FROM sizegroup ORDER BY seq'));
 	addfield('number','Portion','portion',array('tooltip'=>'Fill in the percentage that this size takes in this size group'));
 
 
