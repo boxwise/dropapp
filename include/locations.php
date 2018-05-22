@@ -14,9 +14,10 @@
 		$cmsmain->assign('title','Locations');
 		listsetting('search', array('sizes.label'));
 
-		$data = getlistdata('SELECT * FROM locations WHERE camp_id = '.$_SESSION['camp']['id']);
+		$data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount FROM locations WHERE camp_id = '.$_SESSION['camp']['id']);
 
 		addcolumn('text','Locations','label');
+		addcolumn('text','Number of boxes','boxcount');
 
 		listsetting('allowsort',false);
 		listsetting('allowcopy',true);
