@@ -133,6 +133,13 @@ function updateLaundry(field, offset) {
 	}
 }
 
+function selectFamilyReload(field) {
+	value = $('#field_'+field).val();
+	if(value){
+		//window.location = '?action=check_out2&people_id='+value;
+	}
+}
+
 function selectFamily(field){
 	value = $('#field_'+field).val();
 	if(value){

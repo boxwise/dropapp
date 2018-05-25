@@ -708,3 +708,29 @@ td.list-level-0.list-column-ean_print div a:hover {
 .schedule-P {
 	background-color:#7E990D;
 }
+
+.btn-male {
+	background-color: #eda654;
+	color:#000;
+}
+.btn-female {
+	background-color: #e28ecf;
+	color:#000;
+}
+.btn-unisex {
+	background-color: #79d46f;
+	color:#000;
+}
+.btn-boy {
+	background-color: #71cccf;
+	color:#000;
+}
+.btn-baby {
+	background-color: #edeb6c;
+	color:#000;
+}
+.btn-disabled {
+	background-color: #eee;
+	color:#ccc;
+	text-decoration: line-through;
+}

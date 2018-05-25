@@ -5,12 +5,19 @@
 	$ajax = checkajax();
 
 	$table = 'transactions';
-	$action = 'check_out';
+	$action = 'check_out2';
 
 	if(!$ajax) {
+		
+		IF($_GET['product_id']) {
+			$_GET['__product_id'] = 'select';
+			$_GET['__people_id'] = 'select';
+			$_GET['product_id'] = array(0=>$_GET['product_id']);
+			$_GET['people_id'] = array(0=>$_GET['people_id']);
+			$_POST = $_GET;
+		}
 
 		if($_POST) {
-
 			$_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
 			$_POST['user_id'] = $_SESSION['user']['id'];
 			$_POST['drops'] = -intval($_POST['count']) * db_value('SELECT value FROM products WHERE id = :id', array('id'=>$_POST['product_id'][0]));
@@ -20,7 +27,8 @@
 			$savekeys = array('people_id', 'product_id', 'count', 'description', 'drops', 'transaction_date', 'user_id','size_id');
 			$id = $handler->savePost($savekeys);
 
-			redirect('?action=check_out&people_id='.$_POST['people_id'][0]);
+
+			redirect('?action='.$action.'&people_id='.$_POST['people_id'][0]);
 		}
 
 		$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
@@ -48,6 +56,29 @@
 		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$translate['market_coins'].')") AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
 		addfield('number', 'Number', 'count', array('onchange'=>"calcCosts('count')", 'onkeyup'=>"calcCosts('count')", 'required'=>true,'width'=>2));
 		#addfield('text','Note','description');
+		
+		$data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id',array('id'=>$data['people_id']));
+
+		if($data['people_id']) {
+			$genders = db_simplearray('SELECT g.id FROM genders AS g, products AS p WHERE p.gender_id = g.id ORDER BY g.seq');
+			foreach($genders as $g=>$value) {
+				$buttons = db_query('SELECT CONCAT(pr.name, " ", g.shortlabel) AS name, pr.value AS price, g.seq, g.color, pr.id FROM transactions AS t, people AS p, products AS pr, genders AS g WHERE g.id = :gender AND pr.gender_id = g.id AND NOT pr.deleted AND t.product_id = pr.id AND t.people_id = p.id AND p.camp_id = :campid AND DATEDIFF(NOW(),transaction_date) < 60 GROUP BY t.product_id ORDER BY COUNT(t.id) DESC LIMIT 4',array('campid'=>$_SESSION['camp']['id'],'gender'=>$g));
+	
+				while($b = db_fetch($buttons)) {
+					if($b['price']<=$data['dropcoins']) {
+						$buttons_html[] = '<a href="?action='.$action.'&people_id='.$data['people_id'].'&count=1&product_id='.$b['id'].'" class="btn btn-'.$b['color'].'" style="width:180px">'.$b['name'].'</a>';
+					} else {
+						$buttons_html[] = '<a href="#" class="btn btn-disabled" style="width:180px">'.$b['name'].'</a>';
+					}
+				}
+		
+	
+			}
+			
+			addfield('custom','Quick buttons',join($buttons_html),array('width'=>10));
+		}
+
+		
 		addfield('line');
 
 		addfield('custom','','<button name="__action" id="form-submit" value="" class="btn btn-submit btn-success">Save & next purchase</button>',array('aside'=>true, 'asidetop'=>true, ));
@@ -73,6 +104,7 @@
 			    case 'delete':
 					$ids = explode(',',$_POST['ids']);
 			    	list($success, $message, $redirect) = listDelete($table, $ids);
+			    	$redirect = '?action='.$action.'&people_id='.$data['people_id'];
 			        break;
 
 			    case 'hide':
@@ -86,7 +118,7 @@
 			        break;
 			}
 
-			$return = array("success" => $success, 'message'=> $message, 'redirect'=>false, 'action'=>"$('#field_people_id').trigger('change')");
+			$return = array("success" => $success, 'message'=> $message, 'redirect'=>$redirect, 'action'=>"$('#field_people_id').trigger('change')");
 
 			echo json_encode($return);
 			die();
