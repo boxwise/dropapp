@@ -133,17 +133,8 @@ function updateLaundry(field, offset) {
 	}
 }
 
-function selectFamilyReload(field) {
-	value = $('#field_'+field).val();
-	if(value){	
-		
 
-	} else {
-		selectFamily(field);
-	}
-}
-
-function selectFamily(field){
+function selectFamily(field, reload){
 	value = $('#field_'+field).val();
 
 	var queryDict = {}
@@ -151,7 +142,7 @@ location.search.substr(1).split("&").forEach(function(item) {queryDict[item.spli
 
 	if(value){
 		
-		if(queryDict['people_id'] != value) window.location = '?action=check_out2&people_id='+value;
+		if(queryDict['people_id'] != value && reload) window.location = '?action=check_out2&people_id='+value;
 		
 		if(value != $('#div_purch').data('listid')){
 			$('#div_purch').hide();
