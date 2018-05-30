@@ -67,7 +67,8 @@
 		$tabs['bicycle'] = 'Workshop';
 	}
 	$tabs['transaction'] = 'Transactions';
-		if(($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id']) $tabs['laundry'] = 'Laundry';
+	
+	if(($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $_SESSION['camp']['id']==1) $tabs['laundry'] = 'Laundry';
 	
 	$cmsmain->assign('tabs',$tabs);
 
