@@ -45,7 +45,7 @@
 			)) > (SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
 			people.*, 
 			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
-			IF(gender="M","Male","Female") AS gender2, 
+			IF(gender="M","Male",IF(gender="F","Female","")) AS gender2, 
 			IF(people.parent_id,"",SUM(t2.drops)) AS drops,  
 			IF(notregistered,"NR","") AS nr
 		FROM people 
