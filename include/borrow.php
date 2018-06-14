@@ -10,6 +10,10 @@
 
 		$cmsmain->assign('title','Borrow items');
 
+ 		listfilter(array('label'=>'Category','query'=>'SELECT id, label FROM borrow_categories ORDER BY id','filter'=>'b.category_id'));
+		listsetting('manualquery',true);
+
+
 		$data = getlistdata('SELECT b.visible, b.visible AS editable, b.label, bc.label AS category, b.id,
 
 	(SELECT IF(status="out",CONCAT((SELECT CONCAT(firstname," ",lastname," (",container,")") FROM people WHERE id = people_id),IF(t.lights," ***","")),b.comment) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
@@ -19,7 +23,11 @@
 	
 	
 	,"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
-FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted');
+FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted'.
+		($_SESSION['filter']['borrow']?' AND (b.category_id = '.$_SESSION['filter']['borrow'].')':'')
+
+
+);
 
 		foreach($data as $key=>$value) {
 				if(strpos($data[$key]['user'],"***")) $data[$key]['user'] = str_replace('***','💡',$data[$key]['user']);
