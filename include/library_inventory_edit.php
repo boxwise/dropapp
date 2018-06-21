@@ -7,7 +7,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('booktitle_en','booktitle_ar', 'author', 'code', 'visible');
+		$savekeys = array('booktitle_en','booktitle_ar', 'author', 'code', 'visible', 'camp_id');
 		$id = $handler->savePost($savekeys);
 
 		redirect('?action='.$_POST['_origin']);
@@ -15,9 +15,12 @@
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 
+	if(!$id) $data['camp_id'] = $_SESSION['camp']['id'];
+	
 	// open the template
 	$cmsmain->assign('include','cms_form.tpl');
 	addfield('hidden','','id');
+	addfield('hidden','','camp_id');
 
 	// put a title above the form
 	$cmsmain->assign('title',$data['booktitle_en']);
@@ -28,7 +31,7 @@
 	addfield('text','Original title','booktitle_ar');
 	addfield('text','Author','author');
 	addfield('line');
- 	addfield('select', 'Type', 'type_id', array('width'=>3, 'multiple'=>false, 'query'=>'SELECT id AS value, label FROM library_type ORDER BY id'));
+ 	addfield('select', 'Type', 'type_id', array('width'=>3, 'multiple'=>false, 'query'=>'SELECT id AS value, label FROM library_type WHERE camp_id = '.intval($_SESSION['camp']['id']).' ORDER BY id'));
 	addfield('checkbox', 'Available for borrowing', 'visible');
 
 	addfield('line','','',array('aside'=>true));

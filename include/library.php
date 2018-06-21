@@ -20,6 +20,7 @@
 			(SELECT TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date)) FROM library_transactions AS lt WHERE lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) AS duration
 		
 		FROM library AS l WHERE 
+			camp_id = '.intval($_SESSION['camp']['id']).' AND
 			(SELECT status FROM library_transactions AS lt WHERE lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) = "out"');
 
 		foreach($data as $key=>$d) {

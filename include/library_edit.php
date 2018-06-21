@@ -39,8 +39,8 @@
 			
 		$cmsmain->assign('title','Borrow out a book');
 
-		addfield('select','Find book','book_id',array('required'=>true, 'multiple'=>false, 'query'=>'SELECT id AS value, CONCAT(code," - ",booktitle_en,IF(booktitle_ar!="",CONCAT(" - ",booktitle_ar),""),IF(author!="",CONCAT(" (",author,")"),"")) AS label FROM library WHERE visible
-		'));
+		addfield('select','Find book','book_id',array('required'=>true, 'multiple'=>false, 'query'=>'SELECT id AS value, CONCAT(code," - ",booktitle_en,IF(booktitle_ar!="",CONCAT(" - ",booktitle_ar),""),IF(author!="",CONCAT(" (",author,")"),"")) AS label FROM library WHERE visible AND camp_id = 
+		'.intval($_SESSION['camp']['id'])));
 
 		$people = db_array('SELECT p.id AS value, CONCAT(p.firstname, " ", p.lastname, " (", p.container, ")") AS label, NOT visible AS disabled FROM people AS p WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 16 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');
 		array_unshift($people, array('value'=>-1,'label'=>'Somebody else','disabled'=>0));

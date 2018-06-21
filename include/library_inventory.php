@@ -13,7 +13,7 @@
 		
 //  		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM product_categories ORDER BY seq','filter'=>'products.category_id'));
 
-		$data = getlistdata('SELECT * FROM library');
+		$data = getlistdata('SELECT * FROM library WHERE camp_id = '.intval($_SESSION['camp']['id']));
 		
 		addcolumn('text','Code','code');
 		addcolumn('text','English title','booktitle_en');
