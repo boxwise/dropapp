@@ -11,7 +11,7 @@
 		if($hasdescription) $savekeys[] = 'description';
 
 		foreach($settings['languages'] as $language) {
-			$savekeys[] = $language['code'];
+			if($language['code'] && db_fieldexists('translate',$language['code'])) $savekeys[] = $language['code'];
 		}
 		$handler->savePost($savekeys);
 

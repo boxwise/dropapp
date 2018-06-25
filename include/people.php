@@ -72,17 +72,22 @@
 		.'GROUP BY people.id ORDER BY people.seq');
 
 		$daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
+
 		foreach($data as $key=>$value) {
 			if($data[$key]['expired']) {
 				$data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '. floor($daysinactive) .' days."></i> '; 
 			} else {
 				$data[$key]['expired'] ='';
 			}
-			if($data[$key]['bicycletraining']) {
+			if($data[$key]['bicycletraining'] && $_SESSION['camp']['bicycle']) {
 				$data[$key]['expired'] .= '<i class="fa fa-bicycle tooltip-this" title="This person has a bicycle certificate."></i> ';
 			}
-			if($data[$key]['workshoptraining']) {
+			if($data[$key]['workshoptraining'] && $_SESSION['camp']['workshop']) {
 				$data[$key]['expired'] .= '<i class="fa fa-wrench tooltip-this '.($data[$key]['workshopsupervisor']?'blue':'').'" title="This person has a workshop certificate."></i> ';
+			}
+
+			if(file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
+				$data[$key]['expired'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
 			}
 			if($data[$key]['volunteer']) {
 				$data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This is a resident volunteer."></i> ';
@@ -103,8 +108,11 @@
 		addbutton('merge','Merge to family',array('icon'=>'fa-link','oneitemonly'=>false));
 		addbutton('detach','Detach from family',array('icon'=>'fa-unlink','oneitemonly'=>false));
 
-		$options = array('bicycle'=>'Bicycle card','workshop'=>'Workshop card','occ'=>'OCCycle card');
-
+		if($_SESSION['camp']['bicycle']) $options['bicycle'] = 'Bicycle card';
+		if($_SESSION['camp']['id']==1) $options['occ'] = 'OCCycle card';
+		if($_SESSION['camp']['bicycle']) $options['workshop'] = 'Workshop card';
+		if($_SESSION['camp']['idcard']) $options['id'] = 'ID Card';
+		
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-pointer'));
 

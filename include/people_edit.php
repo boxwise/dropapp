@@ -65,6 +65,8 @@
 		$tabs['bicycle'] = 'Bicycle';
 	} elseif($_SESSION['camp']['workshop']) {
 		$tabs['bicycle'] = 'Workshop';
+	} elseif($_SESSION['camp']['idcard']) {
+		$tabs['bicycle'] = 'ID Card';
 	}
 	$tabs['transaction'] = 'Transactions';
 	
@@ -139,7 +141,7 @@
 	}
 	addfield('checkbox','This person is a resident volunteer with A drop in the ocean','volunteer',array('tab'=>'people'));	
 
-	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']){
+	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']||$_SESSION['camp']['idcard']){
 		$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg')?$id:0);
 		if($data['picture']) {
 			$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg');

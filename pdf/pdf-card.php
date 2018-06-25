@@ -1,4 +1,5 @@
-<?
+<?php
+	
 require('fpdf.php');
 
 setlocale (LC_ALL, '');

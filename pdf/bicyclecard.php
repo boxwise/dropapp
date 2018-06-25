@@ -69,6 +69,22 @@ while($p = db_fetch($result)) {
 			$pdf->Print(43,101,'112');
 			$pdf->Rotate(0);
 
+		} elseif($card='id') {
+			$pdf->SetTextColor(100,0,0,0);
+			$pdf->SetFont('helvetica','B',12.5);
+			$pdf->Print(4,7,'Drop in the ocean');
+			$pdf->SetTextColor(0);
+			$pdf->Print(43,7,'Membership Card');
+
+			$pdf->Rotate(180,$pdf->X+42.5,$pdf->Y+82.5);
+			$pdf->SetFont('helvetica','',11);
+			$pdf->Print(4,101,'Drop In The Ocean');
+			$pdf->Print(4,106,'In case of emergency');
+			$pdf->SetFont('helvetica','B',11);
+			$pdf->Print(39,101,'+30 69........');
+			$pdf->Print(43,106,'112');
+			$pdf->Rotate(0);
+
 		} else {
 			$pdf->SetTextColor(100,0,0,0);
 			$pdf->SetFont('helvetica','B',12.5);
@@ -119,7 +135,11 @@ while($p = db_fetch($result)) {
 		$pdf->Rotate(180,$pdf->X+42.5,$pdf->Y+82.5);
 		$pdf->SetFont('helvetica','',6.5);
 		$pdf->SetXY($pdf->X+3,$pdf->Y+59);
-		$pdf->MultiCell(80,3,$translate['bicycle-rules']);
+		if($card='id') {
+			$pdf->MultiCell(80,3,$translate['idcard-rules']);
+		} else {
+			$pdf->MultiCell(80,3,$translate['bicycle-rules']);
+		}
 		$pdf->Rotate(0);
 	}
 
