@@ -227,6 +227,7 @@ VALUES
 	db_addfield('camps','dropsperchild',"VARCHAR(255)");	
 	db_addfield('camps','cyclestart',"DATETIME NULL");	
 	db_addfield('camps','laundry',"TINYINT NOT NULL  DEFAULT 0 AFTER `workshop`",'UPDATE camps SET laundry = 1 WHERE id = 1');	
+	db_addfield('camps','idcard',"TINYINT  NOT NULL  DEFAULT 0 AFTER `bicycle`");
 	
 	db_addfield('camps','dropcapadult',"INT  NOT NULL  DEFAULT 99999 ");	
 	db_addfield('camps','dropcapchild',"INT  NOT NULL  DEFAULT 99999 ");	
@@ -260,7 +261,6 @@ VALUES
 	db_addfield('people','volunteer',"TINYINT  NOT NULL  DEFAULT 0");
 	db_addfield('people','laundryblock',"TINYINT  NOT NULL  DEFAULT 0");
 	db_addfield('people','laundrycomment',"VARCHAR(255)");
-	db_addfield('people','idcard',"TINYINT  NOT NULL  DEFAULT 0 AFTER `bicycle`");
 
 	db_addfield('laundry_appointments','dropoff',"TINYINT  NOT NULL  DEFAULT 0");
 	db_addfield('laundry_appointments','collected',"TINYINT  NOT NULL  DEFAULT 0");
