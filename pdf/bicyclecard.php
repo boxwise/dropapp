@@ -33,7 +33,6 @@ $ids = join(',',$ids);
 
 $result = db_query('SELECT *, CONCAT(firstname," ",lastname) AS name, DATE_FORMAT(date_of_birth,"%d-%m-%Y") AS birthdate, DATE_FORMAT(NOW(),"%d-%m-%Y %H:%i") AS issued FROM people WHERE id IN ('.$ids.')');
 
-
 while($p = db_fetch($result)) {
 	
 	$picture = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.intval($p['id']).'.jpg')?
@@ -69,7 +68,7 @@ while($p = db_fetch($result)) {
 			$pdf->Print(43,101,'112');
 			$pdf->Rotate(0);
 
-		} elseif($card='id') {
+		} elseif($card=='id') {
 			$pdf->SetTextColor(100,0,0,0);
 			$pdf->SetFont('helvetica','B',12.5);
 			$pdf->Print(4,7,'Drop in the ocean');
@@ -135,7 +134,7 @@ while($p = db_fetch($result)) {
 		$pdf->Rotate(180,$pdf->X+42.5,$pdf->Y+82.5);
 		$pdf->SetFont('helvetica','',6.5);
 		$pdf->SetXY($pdf->X+3,$pdf->Y+59);
-		if($card='id') {
+		if($card=='id') {
 			$pdf->MultiCell(80,3,$translate['idcard-rules']);
 		} else {
 			$pdf->MultiCell(80,3,$translate['bicycle-rules']);
