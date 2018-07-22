@@ -61,12 +61,10 @@
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;');	
 		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:00'), (2, '11:00 - 12:00'), (3, '12:00 - 13:00'), (4, '13:00 - 14:00'), (5, '14:00 - 15:00'), (6, '15:00 - 16:00'), (7, '16:00 - 17:00'), (8, '17:00 - 18:00');");	
-/*
 	} elseif (db_numrows('SELECT * FROM laundry_times')==5) {
 		$resetslots = true;
 		db_query("DELETE FROM laundry_times");	
 		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:00'), (2, '11:00 - 12:00'), (3, '12:00 - 13:00'), (4, '13:00 - 14:00'), (5, '14:00 - 15:00'), (6, '15:00 - 16:00'), (7, '16:00 - 17:00'), (8, '17:00 - 18:00');");	
-*/
 	}
 	
 	if(!db_tableexists('laundry_slots')) {
