@@ -557,6 +557,13 @@ td.list-level-0.list-column-ean_print div a:hover {
 	border-radius: 5px;
 	font-size:80%;
 }
+.warningbox2 {
+	background-color: #c00;
+	color:#fff;
+	padding:5px 10px;
+	font-weight: bold;
+	border-radius: 5px;
+}
 .need-red {
 	background-color:#c00;
 }
@@ -629,7 +636,7 @@ td.list-level-0.list-column-ean_print div a:hover {
 .laundry td {
 	min-width: 100px;
 	background-color: #fafafa;
-	width: 16.6%;
+	width: 12.5%;
 	border-top:1px solid #ddd;
 /* 	padding:8px; */
 	vertical-align: top;
