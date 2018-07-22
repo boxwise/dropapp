@@ -51,9 +51,26 @@
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;');	
 		db_query("INSERT INTO `laundry_machines` (`id`, `label`) VALUES (1, '1️⃣'), (2, '2️⃣'),(3, '3️⃣'),(4, '4️⃣ '),(5, '5️⃣'),(6, '6️⃣');");	
 	}
+		
+	$resetslots = false;
+	if(!db_tableexists('laundry_times')) {
+		echo "Created table 'laundry_times'<br />";
+		db_query('CREATE TABLE `laundry_times` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;');	
+		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:00'), (2, '11:00 - 12:00'), (3, '12:00 - 13:00'), (4, '13:00 - 14:00'), (5, '14:00 - 15:00'), (6, '15:00 - 16:00'), (7, '16:00 - 17:00'), (8, '17:00 - 18:00');");	
+/*
+	} elseif (db_numrows('SELECT * FROM laundry_times')==5) {
+		$resetslots = true;
+		db_query("DELETE FROM laundry_times");	
+		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:00'), (2, '11:00 - 12:00'), (3, '12:00 - 13:00'), (4, '13:00 - 14:00'), (5, '14:00 - 15:00'), (6, '15:00 - 16:00'), (7, '16:00 - 17:00'), (8, '17:00 - 18:00');");	
+*/
+	}
 	
-
 	if(!db_tableexists('laundry_slots')) {
+		$resetslots = true;
 		echo "Created table 'laundry_slots'<br />";
 		db_query('CREATE TABLE `laundry_slots` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -62,10 +79,15 @@
   `machine` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=302 DEFAULT CHARSET=utf8;');	
+	}
+
+	if($resetslots) {
+		db_query("DELETE FROM laundry_slots");	
 		$x = 1;
+		$maxtime = db_numrows('SELECT * FROM laundry_times');
 		for($day=0;$day<13;$day++) {
 			if($day!=6) {
-				for($time=1;$time<=5;$time++) {
+				for($time=1;$time<=$maxtime;$time++) {
 					for($machine=1;$machine<=6;$machine++) {
 						$x++;
 						db_query('INSERT INTO laundry_slots (id, day, time, machine) VALUES (:id,:day,:time,:machine)',array('id'=>$x,'day'=>$day,'time'=>$time,'machine'=>$machine));
@@ -75,16 +97,7 @@
 			}
 		}
 	}
-	
-	if(!db_tableexists('laundry_times')) {
-		echo "Created table 'laundry_times'<br />";
-		db_query('CREATE TABLE `laundry_times` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `label` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;');	
-		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:30'),(2, '11:30 - 1:00'),(3, '1:00 - 2:30'),(4, '2:30 - 4:00'),(5, '4:00 - 5:30');");	
-	}
+
 	
 	if(!db_tableexists('laundry_appointments')) {
 		echo "Created table 'laundry_appointments'<br />";
@@ -260,6 +273,7 @@ VALUES
 	db_addfield('people','notregistered',"TINYINT  NOT NULL  DEFAULT 0");
 	db_addfield('people','volunteer',"TINYINT  NOT NULL  DEFAULT 0");
 	db_addfield('people','laundryblock',"TINYINT  NOT NULL  DEFAULT 0");
+	db_addfield('people','approvalsigned',"TINYINT  NOT NULL  DEFAULT 0");
 	db_addfield('people','laundrycomment',"VARCHAR(255)");
 
 	db_addfield('laundry_appointments','dropoff',"TINYINT  NOT NULL  DEFAULT 0");
