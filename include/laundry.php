@@ -1,6 +1,8 @@
 <?
 	
 	$data['offset'] = ($_GET['cycle']=='next'?14:($_GET['cycle']=='current'?0:$_SESSION['laundryoffset']));
+	if(!isset($data['offset'])) $data['offset'] = 0;
+
 	$_SESSION['laundryoffset'] = $data['offset'];
 	
 	
