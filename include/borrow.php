@@ -16,7 +16,7 @@
 
 		$data = getlistdata('SELECT b.visible, b.visible AS editable, b.label, bc.label AS category, b.id,
 
-	(SELECT IF(status="out",CONCAT((SELECT CONCAT(firstname," ",lastname," (",container,")") FROM people WHERE id = people_id),IF(t.lights," ***","")),b.comment) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
+	(SELECT IF(status="out",CONCAT((SELECT CONCAT(firstname," ",lastname," (",container,")") FROM people WHERE id = people_id),IF(t.lights," ***",""),IF(t.helmet," ###","")),b.comment) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
 	(SELECT IF(status="out",
 	
 	IF(TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>11000,CONCAT("<b class=\"warning\">",CONCAT(HOUR(TIMEDIFF(NOW(),transaction_date)),":",LPAD(MINUTE(TIMEDIFF(NOW(),transaction_date)),2,"0")),"&nbsp;<i class=\"fa fa-warning\"></i></b>"),DATE_FORMAT(TIMEDIFF(NOW(),transaction_date),"%H:%i"))
@@ -30,12 +30,13 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 );
 
 		foreach($data as $key=>$value) {
+				if(strpos($data[$key]['user'],"###")) $data[$key]['user'] = str_replace('###','🧢',$data[$key]['user']);
 				if(strpos($data[$key]['user'],"***")) $data[$key]['user'] = str_replace('***','💡',$data[$key]['user']);
 		}
 		#addcolumn('text','Category','category');
-		addcolumn('text','Name','label');
+		addcolumn('text','Name','label',array('width'=>200));
 		addcolumn('html','Rented out to','user');
-		addcolumn('html','Duration','date');
+		addcolumn('html','Duration','date',array('width'=>80));
 
 		addbutton('edititem','Edit item',array('icon'=>'fa-edit','oneitemonly'=>true));
 		addbutton('borrowhistory','View history',array('icon'=>'fa-history','oneitemonly'=>true));

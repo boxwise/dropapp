@@ -279,6 +279,7 @@ VALUES
 	db_addfield('laundry_appointments','comment',"TEXT  NOT NULL");
 	
 	db_addfield('borrow_transactions','lights',"TINYINT NOT NULL DEFAULT 0");
+	db_addfield('borrow_transactions','helmet',"TINYINT NOT NULL DEFAULT 0");
 	
 	db_addfield('camps','food',"TINYINT(4) NOT NULL DEFAULT '0' AFTER `bicycle`","UPDATE `camps` SET food = 1 WHERE name = 'Nea Kavala';");	
 	db_addfield('camps','bicycle',"TINYINT(4) NOT NULL DEFAULT '0' AFTER `bicycle`","UPDATE `camps` SET bicycle = 1 WHERE name = 'Nea Kavala';");	
