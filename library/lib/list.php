@@ -34,6 +34,25 @@
 		return(array(true,$return,false,$aftermove));
 	}
 
+	function listRealDelete($table, $ids, $uri = false) {
+		global $translate, $action;
+
+		$hasPrevent = db_fieldexists($table,'preventdelete');
+		$hasTree = db_fieldexists($table,'parent_id');
+
+        foreach ($ids as $id) {
+    		$result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent?' AND NOT preventdelete':''),array('id'=>$id));
+			$count += $result->rowCount();
+			if($result->rowCount()) simpleSaveChangeHistory($table, $id, 'Record deleted without undelete');
+        }
+
+        if($count) {
+			return(array(true,$translate['cms_list_deletesuccess'],false));
+        } else {
+			return(array(false,$translate['cms_list_deleteerror'],false));
+        }
+	}
+	
 	function listDelete($table, $ids, $uri = false) {
 		global $translate, $action;
 
