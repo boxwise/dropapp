@@ -47,7 +47,7 @@
         }
 
         if($count) {
-			return(array(true,$translate['cms_list_deletesuccess'],false));
+			return(array(true,$translate['cms_list_deletesuccess'],true));
         } else {
 			return(array(false,$translate['cms_list_deleteerror'],false));
         }
