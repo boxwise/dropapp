@@ -7,6 +7,8 @@
 
 	if(!$ajax) {
 
+		$translate['cms_list_confirm_title'] = 'Are you sure? You can not undo this anymore';
+
 		initlist();
 
 		$cmsmain->assign('title','Residents');
@@ -51,6 +53,7 @@
 		addcolumn('datetime','Last active','lastactive');
 
 		addbutton('undelete','Recover',array('icon'=>'fa-history','oneitemonly'=>false));
+		addbutton('realdelete','Full delete',array('icon'=>'fa-trash','oneitemonly'=>false,'confirm'=>true));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
@@ -79,6 +82,11 @@
 		    case 'undelete':
 				$ids = explode(',',$_POST['ids']);
 		    	list($success, $message, $redirect) = listUnDelete($table, $ids);
+		        break;
+
+		    case 'realdelete':
+				$ids = explode(',',$_POST['ids']);
+		    	list($success, $message, $redirect) = listRealDelete($table, $ids);
 		        break;
 
 		    case 'copy':
