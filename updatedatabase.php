@@ -60,11 +60,11 @@
   `label` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;');	
-		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:00'), (2, '11:00 - 12:00'), (3, '12:00 - 13:00'), (4, '13:00 - 14:00'), (5, '14:00 - 15:00'), (6, '15:00 - 16:00'), (7, '16:00 - 17:00'), (8, '17:00 - 18:00');");	
-	} elseif (db_numrows('SELECT * FROM laundry_times')==5) {
+		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:15'), (2, '11:15 - 12:30'), (3, '12:30 - 13:45'), (4, '13:45 - 15:00'), (5, '15:00 - 16:15'), (6, '16:15 - 17:30');");	
+	} elseif (db_numrows('SELECT * FROM laundry_times')!=6) {
 		$resetslots = true;
 		db_query("DELETE FROM laundry_times");	
-		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:00'), (2, '11:00 - 12:00'), (3, '12:00 - 13:00'), (4, '13:00 - 14:00'), (5, '14:00 - 15:00'), (6, '15:00 - 16:00'), (7, '16:00 - 17:00'), (8, '17:00 - 18:00');");	
+		db_query("INSERT INTO `laundry_times` (`id`, `label`) VALUES (1, '10:00 - 11:15'), (2, '11:15 - 12:30'), (3, '12:30 - 13:45'), (4, '13:45 - 15:00'), (5, '15:00 - 16:15'), (6, '16:15 - 17:30');");	
 	}
 	
 	if(!db_tableexists('laundry_slots')) {
@@ -294,3 +294,5 @@ function db_addfield($table,$field,$options,$query = "") {
 		if($query) db_query($query);
 	}
 }
+
+	echo "<br /><br /><a href='/'>Continue</a>";
