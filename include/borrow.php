@@ -13,13 +13,12 @@
  		listfilter(array('label'=>'Category','query'=>'SELECT id, label FROM borrow_categories ORDER BY id','filter'=>'b.category_id'));
 		listsetting('manualquery',true);
 
-
 		$data = getlistdata('SELECT b.visible, b.visible AS editable, b.label, bc.label AS category, b.id,
 
 	(SELECT IF(status="out",CONCAT((SELECT CONCAT(firstname," ",lastname," (",container,")") FROM people WHERE id = people_id),IF(t.lights," ***",""),IF(t.helmet," ###","")),b.comment) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
 	(SELECT IF(status="out",
 	
-	IF(TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>11000,CONCAT("<b class=\"warning\">",CONCAT(HOUR(TIMEDIFF(NOW(),transaction_date)),":",LPAD(MINUTE(TIMEDIFF(NOW(),transaction_date)),2,"0")),"&nbsp;<i class=\"fa fa-warning\"></i></b>"),DATE_FORMAT(TIMEDIFF(NOW(),transaction_date),"%H:%i"))
+	IF(TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>'.(intval($_SESSION['camp']['bicyclerenttime'])*3600).',CONCAT("<b class=\"warning\">",CONCAT(HOUR(TIMEDIFF(NOW(),transaction_date)),":",LPAD(MINUTE(TIMEDIFF(NOW(),transaction_date)),2,"0")),"&nbsp;<i class=\"fa fa-warning\"></i></b>"),DATE_FORMAT(TIMEDIFF(NOW(),transaction_date),"%H:%i"))
 	
 	
 	,"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date

@@ -239,8 +239,10 @@ VALUES
 	db_addfield('camps','cyclestart',"DATETIME NULL");	
 	db_addfield('camps','laundry',"TINYINT NOT NULL  DEFAULT 0 AFTER `workshop`",'UPDATE camps SET laundry = 1 WHERE id = 1');	
 	db_addfield('camps','idcard',"TINYINT  NOT NULL  DEFAULT 0 AFTER `bicycle`");
+	db_addfield('camps','bicyclerenttime',"INT  NOT NULL  DEFAULT 0",'UPDATE camps SET bicyclerenttime = 120 WHERE id = 1');
 	
 	db_addfield('camps','dropcapadult',"INT  NOT NULL  DEFAULT 99999 ");	
+	db_addfield('camps','dropcapchild',"INT  NOT NULL  DEFAULT 99999 ");	
 	db_addfield('camps','dropcapchild',"INT  NOT NULL  DEFAULT 99999 ");	
 	
 	db_addfield('cms_functions','visible',"TINYINT NOT NULL",'UPDATE `cms_functions` SET `visible` = 1');	
