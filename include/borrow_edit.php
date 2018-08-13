@@ -5,7 +5,7 @@
 	$endtime = 17.5;
 	
 	if($_GET['return']) {
-		db_query('INSERT INTO borrow_transactions (transaction_date, bicycle_id, people_id, status) VALUES (NOW(), :id, :people_id, "in")', array('id'=>$_GET['return'],'people_id'=>$_GET['user']));
+		db_query('INSERT INTO borrow_transactions (transaction_date, bicycle_id, people_id, status, location_id) VALUES (NOW(), :id, :people_id, "in", :location)', array('id'=>$_GET['return'],'people_id'=>$_GET['user'],'location'=>$_SESSION['filter2']['borrow']));
 
 		db_query('UPDATE borrow_items SET location_id = :location WHERE id = :id', array('id'=>$_GET['return'], 'location'=>$_SESSION['filter2']['borrow']));
 
@@ -15,7 +15,7 @@
 	if($_POST) {
 		
 		$table = 'borrow_transactions';
-		$keys = array('transaction_date','bicycle_id','people_id','status','lights','helmet');
+		$keys = array('transaction_date','bicycle_id','people_id','status','lights','helmet','location_id');
 		
 		db_query('UPDATE borrow_items SET location_id = :location WHERE id = :id', array('id'=>$_POST['bicycle_id'], 'location'=>$_SESSION['filter2']['borrow']));
 

@@ -294,6 +294,7 @@ VALUES (1, 1, 'Drop Shop'), (2, 2, 'OCC');
 	
 	db_addfield('borrow_transactions','lights',"TINYINT NOT NULL DEFAULT 0");
 	db_addfield('borrow_transactions','helmet',"TINYINT NOT NULL DEFAULT 0");
+	db_addfield('borrow_transactions','location_id',"INT NOT NULL DEFAULT 0");
 	
 	db_addfield('camps','food',"TINYINT(4) NOT NULL DEFAULT '0' AFTER `bicycle`","UPDATE `camps` SET food = 1 WHERE name = 'Nea Kavala';");	
 	db_addfield('camps','bicycle',"TINYINT(4) NOT NULL DEFAULT '0' AFTER `bicycle`","UPDATE `camps` SET bicycle = 1 WHERE name = 'Nea Kavala';");	
