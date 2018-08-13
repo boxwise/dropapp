@@ -210,6 +210,18 @@ VALUES
 		echo "Created table 'borrow_categories'<br />";
 		db_query("CREATE TABLE `borrow_categories` (`id` int(11) unsigned NOT NULL AUTO_INCREMENT, `label` varchar(255) DEFAULT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8; LOCK TABLES `borrow_categories` WRITE; INSERT INTO `borrow_categories` (`id`, `label`) VALUES (1,'Bicycles'), (2,'Gym gear'); UNLOCK TABLES;");
 	}
+	if(!db_tableexists('borrow_locations')) {
+		echo "Created table 'borrow_locations'<br />";
+		db_query("CREATE TABLE `borrow_locations` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,`camp_id` int(11) DEFAULT NULL, `location` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+INSERT INTO `borrow_locations` (`id`, `camp_id`, `location`)
+VALUES (1, 1, 'Drop Shop'), (2, 2, 'OCC');
+");
+		db_addfield('borrow_items','location_id',"int(11) DEFAULT NULL","UPDATE borrow_items SET location_id = 1;UPDATE borrow_items SET location_id = 2 WHERE category_id = 3;");
+
+	}
 	if(!db_tableexists('x_people_languages')) {
 		echo "Created table 'x_people_languages'<br />";
 		db_query("CREATE TABLE `x_people_languages` (`people_id` int(11) DEFAULT NULL, `language_id` int(11) DEFAULT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");

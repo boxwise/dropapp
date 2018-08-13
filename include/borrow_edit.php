@@ -6,6 +6,9 @@
 	
 	if($_GET['return']) {
 		db_query('INSERT INTO borrow_transactions (transaction_date, bicycle_id, people_id, status) VALUES (NOW(), :id, :people_id, "in")', array('id'=>$_GET['return'],'people_id'=>$_GET['user']));
+
+		db_query('UPDATE borrow_items SET location_id = :location WHERE id = :id', array('id'=>$_GET['return'], 'location'=>$_SESSION['filter2']['borrow']));
+
 		redirect('?action=borrow');
 	}
 
@@ -13,6 +16,8 @@
 		
 		$table = 'borrow_transactions';
 		$keys = array('transaction_date','bicycle_id','people_id','status','lights','helmet');
+		
+		db_query('UPDATE borrow_items SET location_id = :location WHERE id = :id', array('id'=>$_POST['bicycle_id'], 'location'=>$_SESSION['filter2']['borrow']));
 
 		$handler = new formHandler($table);
 		$handler->savePost($keys);
@@ -36,12 +41,12 @@
 		$visible = 	$data['visible'];
 		$comment = 	$data['comment'];
 			
-		$data = array();
+		$data = db_row('SELECT * FROM borrow_items WHERE id = :id',array('id'=>$id));
 		$data['bicycle_id'] = $id;
-		$data['label'] = db_value('SELECT label FROM borrow_items WHERE id = :id',array('id'=>$id));
 		$data['status'] = 'out';
 		$data['category_id'] = db_value('SELECT category_id FROM borrow_items WHERE id = :id',array('id'=>$id));
 		$data['transaction_date'] = strftime("%Y-%m-%d %H:%M:%S");
+		$data['location_id'] = $_SESSION['filter2']['borrow'];
 
 		if($visible) {
 			$cmsmain->assign('title','Start a new rental for '.$data['label']);
@@ -50,12 +55,13 @@
 			$cmsmain->assign('translate',$translate);
 
 			$time = strftime('%H')+(strftime('%M')/60);
+			addfield('hidden','','location_id');
 			
 			if($data['category_id']==1 || $data['category_id']==3) {
 				if($time>$endtime) {
 					addfield('custom','&nbsp','<h2><span class="warning">After '.sprintf('%02d:%02d', (int) $endtime, fmod($endtime, 1) * 60).' we do not start new rentals!</span></h2>');
 				}
-				addfield('custom','&nbsp','<h3>Check the user\'s Bicycle Certificate, and make sure the user has a reflective vest, front light, helmet and key. <br />Asure the user to back before '.strftime("%H:%M",strtotime('+2 Hours')).'</h3>');
+				addfield('custom','&nbsp','<h3>Check the user\'s Bicycle Certificate, and make sure the user has a reflective vest, front light, helmet and key. <br />Asure the user to be back before '.strftime("%H:%M",strtotime('+2 Hours')).'</h3>');
 				addfield('select','Find person','people_id',array('required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.firstname, " ", p.lastname, " (", p.container, ")"," ",IF(bicycleban >= DATE_FORMAT(NOW(),"%Y-%m-%d"),CONCAT("(BAN UNTIL ",DATE_FORMAT(bicycleban,"%d-%m-%Y"),")"),"")) AS label, 
 				IF(bicycleban >= DATE_FORMAT(NOW(),"%Y-%m-%d"),1,0) AS disabled FROM people AS p WHERE p.bicycletraining AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1'));
 				addfield('checkbox','Rented out with helmet','helmet');
@@ -66,8 +72,9 @@
 			}
 			
 		} else {
+
 			$data['hidesubmit'] = true;
-			addfield('custom','&nbsp',$comment);
+			addfield('custom','&nbsp',$data['comment']);
 			$cmsmain->assign('title',$data['label'].' is not available for rent');
 		}
 		
