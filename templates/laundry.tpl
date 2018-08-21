@@ -7,8 +7,10 @@
 			</div>
 		</div>
 
+{*
 <a class="new-page item-add btn btn-sm btn-default" href="?action=laundry&cycle=current"><i class="fa fa-arrow-down"></i> Current cycle</a>
 <a class="new-page item-add btn btn-sm btn-default" href="?action=laundry&cycle=next"><i class="fa fa-arrow-right"></i> Next cycle</a>
+*}
 
 		{if $smarty.session.user.is_admin or $smarty.session.user.coordinator}<a class="new-page item-add btn btn-sm btn-default" href="?action=laundry_startcycle&origin=laundry"><i class="fa fa-recycle"></i> Start new cycle</a><br /><br />{/if}
 
