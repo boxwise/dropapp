@@ -14,25 +14,30 @@
  		listfilter(array('label'=>'Category','query'=>'SELECT id, label FROM borrow_categories ORDER BY id','filter'=>'b.category_id'));
 		listsetting('manualquery',true);
 
-		$query = 'SELECT b.visible, b.visible AS editable, b.label, b.location_id, bl.location, b.category_id, bc.label AS category, b.id,
+		$query = 'SELECT b.visible, b.visible AS editable, b.label, b.location_id, b.category_id, bc.label AS category, b.id,
 
 	(SELECT status FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS status, 
 	(SELECT IF(status="out",CONCAT((SELECT CONCAT(firstname," ",lastname," (",container,")") FROM people WHERE id = people_id),IF(t.lights," ***",""),IF(t.helmet," ###","")),b.comment) FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS user, 
 	(SELECT IF(status="out",
 	
-	IF(TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>'.(intval($_SESSION['camp']['bicyclerenttime'])*3600).',CONCAT("<b class=\"warning\">",CONCAT(HOUR(TIMEDIFF(NOW(),transaction_date)),":",LPAD(MINUTE(TIMEDIFF(NOW(),transaction_date)),2,"0")),"&nbsp;<i class=\"fa fa-warning\"></i></b>"),DATE_FORMAT(TIMEDIFF(NOW(),transaction_date),"%H:%i")),"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
-FROM borrow_items AS b 
-LEFT OUTER JOIN borrow_locations AS bl ON bl.id = b.location_id
-LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted'.
+	IF(TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>'.(intval($_SESSION['camp']['bicyclerenttime'])*3600).',CONCAT("<b class=\"warning\">",CONCAT(HOUR(TIMEDIFF(NOW(),transaction_date)),":",LPAD(MINUTE(TIMEDIFF(NOW(),transaction_date)),2,"0")),"&nbsp;<i class=\"fa fa-warning\"></i></b>"),DATE_FORMAT(TIMEDIFF(NOW(),transaction_date),"%H:%i"))
+	
+	
+	,"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
+FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted'.
 		($_SESSION['filter']['borrow']?' AND (b.category_id = '.$_SESSION['filter']['borrow'].')':'');
 		
-		$data = getlistdata($query);
-
 		if($_SESSION['filter2']['borrow']) {
+			$data = getlistdata($query);
+
 			foreach($data as $key=>$d) {
 				if($d['location_id']!=$_SESSION['filter2']['borrow'] && $d['status']!='out') unset($data[$key]);
 				if($_SESSION['filter2']['borrow']==2 && ($d['category_id']==2 || $d['category_id']==4)) unset($data[$key]);
 			}
+		} else {
+			$listfooter['label'] = 'Select your location in the top right before proceeding';
+			$listfooter['user'] = '';
+			$listfooter['date'] = '';
 		}
 
 		foreach($data as $key=>$value) {
@@ -46,7 +51,6 @@ LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.del
 		addcolumn('text','Name','label',array('width'=>200));
 		addcolumn('html','Rented out to','user');
 		addcolumn('html','Duration','date',array('width'=>80));
-		addcolumn('text','Location','location',array('width'=>80));
 
 		addbutton('edititem','Edit item',array('icon'=>'fa-edit','oneitemonly'=>true));
 		addbutton('borrowhistory','View history',array('icon'=>'fa-history','oneitemonly'=>true));
