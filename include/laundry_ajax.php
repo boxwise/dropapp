@@ -21,10 +21,8 @@
 
 	}
 
-/*
 	$data['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id',array('id'=>$data['people_id']));
 	if(!$data['approvalsigned']) $element['field'] .= "<br /><div class='warningbox2'>Please have the familyhead read and sign the approval form for storing and processing their data. The signed form need to stored carefully.</div><br />";
-*/
 
 	
 	$result = db_query("SELECT ls.*, lt.label, lm.label AS machine, la.noshow FROM laundry_appointments AS la, laundry_slots AS ls, laundry_times AS lt, laundry_machines AS lm WHERE lm.id = ls.machine AND lt.id = ls.time AND la.timeslot = ls.id AND la.people_id = :people_id AND la.cyclestart = :cyclestart ORDER BY timeslot",array('people_id'=>$data['people_id'],'cyclestart'=>$cyclestart));

@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer','approvalsigned');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		if($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) {
 			$savekeys[] = 'laundryblock';
@@ -82,6 +82,7 @@
 		$ajaxaside = new Zmarty;
 
 		#$formdata = $formbuttons = '';
+		$side['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', array('id'=>$id));
 
 		$side['name'] = db_row('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = '. $sideid);
 
@@ -129,6 +130,9 @@
 	'options'=>array(array('value'=>'M', 'label'=>'Male'), array('value'=>'F', 'label'=>'Female'))));
 
  	addfield('date','Date of birth','date_of_birth', array('tab'=>'people', 'date'=>true, 'time'=>false));
+ 	addfield('checkbox','Approval form for storing personal data is signed (also for family members)','approvalsigned', array('tab'=>'people'));
+ 	
+ 	
 	addfield('line','','',array('tab'=>'people'));
 	addfield('select','Language(s)','languages',array('tab'=>'people','multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible'));
 

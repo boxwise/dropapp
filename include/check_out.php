@@ -98,6 +98,7 @@
 
 		$data['people_id'] = intval($_POST['people_id']);
 		$data['allowdrops'] = $_SESSION['user']['is_admin']||db_value('SELECT id FROM cms_functions AS f, cms_access AS a WHERE a.cms_functions_id = f.id AND f.include = "give2all" AND a.cms_users_id = :user_id',array('user_id'=>$_SESSION['user']['id']));
+		$data['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', array('id'=>$data['people_id']));
 
 		// This can be a warning that is given based on certain shopping actions in the past.
 // 		$data['shoeswarning'] = db_value('SELECT COUNT(id) FROM transactions WHERE people_id = :id AND product_id IN (63,709) AND transaction_date >= "2017-11-13 00:00"', array('id'=>$data['people_id']));
