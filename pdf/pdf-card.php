@@ -239,7 +239,7 @@ class PDF extends FPDF {
         $this->ColorFlag = ($this->FillColor != $this->TextColor);
     }
     	
-	function Print($x, $y, $text) {
+	function PDFPrint($x, $y, $text) {
 		$this->Text($this->X + $x,$this->Y + $y,$text);
 	}
 	function PrintLn($text, $x = 0) {
