@@ -9,7 +9,6 @@ minified.js
 barmaadrihun
 .ftpquota
 uploads/*
-notafactory/*
 vendor
 phinx.yml
 !uploads/.gitkeep 
