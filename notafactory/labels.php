@@ -21,7 +21,7 @@
 	$pdf->SetAutoPageBreak(false);
 	$pdf->SetLineWidth(0.1);
 	
-	$result = db_query('SELECT n.*, c.full AS country FROM notafactory AS n LEFT OUTER JOIN notafactory_countries AS c ON n.`Shipping Address Country` = c.code WHERE `Line Item Product ID` NOT IN (51) AND `Order ID`=866 GROUP BY `Order ID` ORDER BY `Shipping Address Country`,`Shipping Address Postcode`');
+	$result = db_query('SELECT n.*, c.full AS country FROM notafactory AS n LEFT OUTER JOIN notafactory_countries AS c ON n.`Shipping Address Country` = c.code WHERE `Line Item Product ID` NOT IN (51) GROUP BY `Order ID` ORDER BY `Shipping Address Country`,`Shipping Address Postcode`');
 	while($row = db_fetch($result)) {
 		$products = db_query('SELECT `Line Item Quantity` AS count, `Line Item Meta` AS meta FROM notafactory WHERE `Order ID` = :id AND `Line Item Product ID` NOT IN (51)',array('id'=>$row['Order ID']));
 		$orderline = array();
@@ -59,7 +59,7 @@
 		$l[] = ucfirst($row['Shipping Address First Name']).' '.ucfirst($row['Shipping Address Last Name']);
 		if($row['Shipping Address Address 1']) $l[] = ucfirst($row['Shipping Address Address 1']);
 		if($row['Shipping Address Address 2']) $l[] = ucfirst($row['Shipping Address Address 2']);
-		$l[] = strtoupper($row['Shipping Address Postcode']).'   '.ucfirst($row['Shipping Address City']).($row['Shipping Address State']?' '.$row['Shipping Address State']:'');
+		$l[] = strtoupper($row['Shipping Address Postcode']).($row['Shipping Address Postcode']?'   ':'').ucfirst($row['Shipping Address City']).($row['Shipping Address State']?' '.$row['Shipping Address State']:'');
 
 		if($row['country']) {
 			$l[] = $row['country']; 
@@ -73,10 +73,10 @@
 	}
 	
 	$top = 13.1;
-	$left = 4.65;
+	$left = 8;
 	$h = 67.7;
-	$w = 99.1;
-	$spacing = 2.5;
+	$w = 97;
+	$spacing = 0;
 	
 	for($i=0;$i<count($label);$i++) {
 		$l = $label[$i];
@@ -94,19 +94,19 @@
 
 		$pdf->SetFont('ubuntu','',6.5);
 		$pdf->SetTextColor(0);
-		$pdf->Text($x+40,$y+6,'Return address:');
+		$pdf->Text($x+$w-58,$y+6,'Return address:');
 		#$pdf->Text($x+40,$y+9,'Walenburgerweg 88-a, 3021 NB  Rotterdam, Netherlands');
-		$pdf->Text($x+40,$y+9,'Kadijkselaan 13, 2861 CG  Bergambacht, Netherlands');
+		$pdf->Text($x+$w-58,$y+9,'Kadijkselaan 13, 2861 CG  Bergambacht, Netherlands');
 		$pdf->SetFont('ubuntu','',10);
 	
 		$pdf->Rect($x,$y,$w, $h);
 		
 		$l = array_reverse($l);
 		$ls = array_reverse($ls);
-		$ypos = $y+$h-10;
+		$ypos = $y+$h-8;
 		foreach($l as $key=>$line) {
-			$pdf->Text($x+20,$ypos,utf8_decode($line));
-			$ypos -= 5;
+			$pdf->Text($x+15,$ypos,utf8_decode($line));
+			$ypos -= 4.5;
 		}
 		
 		$ypos -= 2;
@@ -114,7 +114,7 @@
 		$pdf->SetFont('ubuntu','',6.5);
 		
 		foreach($ls as $key=>$line) {
-			$pdf->Text($x+20,$ypos,utf8_decode($line));
+			$pdf->Text($x+15,$ypos,utf8_decode($line));
 			$ypos -= 3;
 		}
 		
