@@ -57,12 +57,12 @@ while($p = db_fetch($result)) {
 	
 		$pdf->SetFont('helvetica','B',11.5);
 		if($super) $pdf->SetTextColor(0); else $pdf->SetTextColor(100,0,0,0);
-		$pdf->Print(4,7,'Drop in the ocean');
+		$pdf->PDFPrint(4,7,'Drop in the ocean');
 		$pdf->SetTextColor(100);
 		if($super) {
-			$pdf->Print(40,7,'Workshop Supervisor');
+			$pdf->PDFPrint(40,7,'Workshop Supervisor');
 		} else {
-			$pdf->Print(40.5,7,'Workshop Certificate');
+			$pdf->PDFPrint(40.5,7,'Workshop Certificate');
 		}
 		
 		$photow = 30;
@@ -90,20 +90,20 @@ while($p = db_fetch($result)) {
 			$pdf->line($pdf->X+38,$pdf->Y+15.5+($l*8),$pdf->X+81,$pdf->Y+15.5+($l*8));
 			$pdf->SetTextColor(80);
 			$pdf->SetFont('helvetica','',6.5);
-			$pdf->Print(38,18+($l*8),$labels[$l]);
+			$pdf->PDFPrint(38,18+($l*8),$labels[$l]);
 			$pdf->SetTextColor(100);
 			$pdf->SetFont('helvetica','',9);
-			$pdf->Print(38,14.5+($l*8),$p[$data[$l]]);
+			$pdf->PDFPrint(38,14.5+($l*8),$p[$data[$l]]);
 		}
 		
 		$pdf->SetTextColor(0);
 		$pdf->Rotate(180,$pdf->X+42.5,$pdf->Y+82.5);
 		$pdf->SetFont('helvetica','',11);
-		$pdf->Print(4,106,'Drop In The Ocean');
-		$pdf->Print(4,101,'In case of emergency');
+		$pdf->PDFPrint(4,106,'Drop In The Ocean');
+		$pdf->PDFPrint(4,101,'In case of emergency');
 		$pdf->SetFont('helvetica','B',11);
-		$pdf->Print(39,106,'+30 694 6899518');
-		$pdf->Print(43,101,'112');
+		$pdf->PDFPrint(39,106,'+30 694 6899518');
+		$pdf->PDFPrint(43,101,'112');
 		$pdf->SetFont('helvetica','',6.5);
 		$pdf->SetXY($pdf->X+3,$pdf->Y+59);
 		$pdf->MultiCell(80,3,$translate['workshop-rules']);
