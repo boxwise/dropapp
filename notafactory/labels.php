@@ -11,7 +11,7 @@
 
 	$pdf=new PDF();
 	
-	$pdf->AddFont('ubuntu','','Ubuntu-R.php');
+	$pdf->AddFont('ubuntu','','DejaVuSansCondensed.ttf',true);
 	
 	$pdf->SetFont('ubuntu','',10);
 	$pdf->LeftMargin = 15; 
@@ -55,16 +55,16 @@
 			$row['Shipping Address Postcode'] = substr($row['Shipping Address Postcode'],0,4).' '.substr($row['Shipping Address Postcode'],4,2);
 		}
 		
-		if($row['Shipping Address Company']) $l[] = ucfirst($row['Shipping Address Company']);
-		$l[] = ucfirst($row['Shipping Address First Name']).' '.ucfirst($row['Shipping Address Last Name']);
-		if($row['Shipping Address Address 1']) $l[] = ucfirst($row['Shipping Address Address 1']);
-		if($row['Shipping Address Address 2']) $l[] = ucfirst($row['Shipping Address Address 2']);
-		$l[] = strtoupper($row['Shipping Address Postcode']).($row['Shipping Address Postcode']?'   ':'').ucfirst($row['Shipping Address City']).($row['Shipping Address State']?' '.$row['Shipping Address State']:'');
+		if($row['Shipping Address Company']) $l[] = utf8_encode(ucfirst($row['Shipping Address Company']));
+		$l[] = utf8_encode(ucfirst($row['Shipping Address First Name'])).' '.utf8_encode(ucfirst($row['Shipping Address Last Name']));
+		if($row['Shipping Address Address 1']) $l[] = utf8_encode(ucfirst($row['Shipping Address Address 1']));
+		if($row['Shipping Address Address 2']) $l[] = utf8_encode(ucfirst($row['Shipping Address Address 2']));
+		$l[] = strtoupper($row['Shipping Address Postcode']).($row['Shipping Address Postcode']?'   ':'').utf8_encode(ucfirst($row['Shipping Address City'])).($row['Shipping Address State']?' '.$row['Shipping Address State']:'');
 
 		if($row['country']) {
-			$l[] = $row['country']; 
+			$l[] = utf8_encode($row['country']); 
 		} else { 
-			$l[] = $row['Shipping Address Country'];
+			$l[] = utf8_encode($row['Shipping Address Country']);
 		}
 		
 		$label[] = $l;
@@ -120,4 +120,4 @@
 		
 	}
 	
-	$pdf->Output('I');
+	$pdf->Output('Labels Greece.pdf','D');

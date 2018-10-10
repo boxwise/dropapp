@@ -44,7 +44,10 @@ for($i=0;$i<intval($_GET['count']);$i++) {
 		db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$hash.'",NOW())');
 	}
 	
-	$pdf->Image('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://market.drapenihavet.no/'.$settings['rootdir'].'/mobile.php?barcode='.$hash, 88, 12+$y, 34, 34, 'png');
+	$url = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://market.drapenihavet.no/'.$settings['rootdir'].'/mobile.php?barcode='.$hash;
+	$valid = remoteFileExists($url);
+	if(!$valid) die('The service that we use to create QR-codes seem to be offline. Try again in a few minutes!');
+	$pdf->Image($url, 88, 12+$y, 34, 34, 'png');
 
 	$pdf->Image('logo.png', 92, 107+$y, 26, 31);
 
@@ -92,3 +95,28 @@ for($i=0;$i<intval($_GET['count']);$i++) {
 
 $pdf->Output('I');
 
+function remoteFileExists($url) {
+    $curl = curl_init($url);
+
+    //don't fetch the actual page, you only want to check the connection is ok
+    curl_setopt($curl, CURLOPT_NOBODY, true);
+
+    //do request
+    $result = curl_exec($curl);
+
+    $ret = false;
+
+    //if request did not fail
+    if ($result !== false) {
+        //if request was ok, check response code
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);  
+
+        if ($statusCode == 200) {
+            $ret = true;   
+        }
+    }
+
+    curl_close($curl);
+
+    return $ret;
+}

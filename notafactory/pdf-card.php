@@ -1,11 +1,14 @@
 <?php
 	
-require('fpdf.php');
+require('tfpdf.php');
+
+	ini_set('display_errors',1);
+	error_reporting(E_ALL);
 
 setlocale (LC_ALL, '');
 setlocale (LC_TIME, 'en_GB');
 
-class PDF extends FPDF {
+class PDF extends tFPDF {
 
 	var $angle=0;
 
