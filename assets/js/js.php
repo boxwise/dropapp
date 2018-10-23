@@ -13,9 +13,9 @@
 	time() + $offset) . " GMT";
 	header($ExpStr);
 
-$debug  = true;
 	$debug = ($_GET['debug']==true) ? true : false;
 	$rewrite = ($_GET['rewrite']==true) ? true : false;
+	$debug = true;
 
 	$date = @filectime('minified.js');
 
@@ -46,7 +46,7 @@ $debug  = true;
 	}
 
 	if($rewrite || $debug) {
-		echo "/* Rewrite */\n\n";
+		echo ($debug?"/* Debug */\n\n":"/* Rewrite */\n\n");
 
 		foreach($files as $file) {
 			if($debug) {

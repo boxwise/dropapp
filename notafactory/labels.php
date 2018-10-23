@@ -15,7 +15,7 @@
 	
 	$pdf->SetFont('ubuntu','',10);
 	$pdf->LeftMargin = 15; 
-	$pdf->TopMargin = 15; 
+	$pdf->TopMargin = 18; 
 	$pdf->W = 85; 
 	$pdf->H = 55; 
 	$pdf->SetAutoPageBreak(false);
@@ -26,6 +26,9 @@
 		$products = db_query('SELECT `Line Item Quantity` AS count, `Line Item Meta` AS meta FROM notafactory WHERE `Order ID` = :id AND `Line Item Product ID` NOT IN (51)',array('id'=>$row['Order ID']));
 		$orderline = array();
 		while($p = db_fetch($products)) {
+			$product = '';
+			if($row['Line Item Product ID']==101) $product = 'arab'; 
+			if($row['Line Item Product ID']==76) $product = 'artist'; 
 			$p['meta'] = str_replace("pa_",'',$p['meta']);
 			$p['meta'] = str_replace(" ",'',strtoupper($p['meta']));
 			$p['meta'] = str_replace("\n",'',$p['meta']);
@@ -36,7 +39,8 @@
 			$p['meta'] = str_ireplace('Lightgrey','grey',$p['meta']);
 			$p['meta'] = str_ireplace('light-grey','grey',$p['meta']);
 			$p['meta'] = str_ireplace('White','white',$p['meta']);
-			$orderline[] = $p['count'].'*'.$p['meta'];
+			$p['meta'] = str_ireplace('noprint:true','-noprint',$p['meta']);
+			$orderline[] = $p['count'].'*'.$product.$p['meta'];
 		}		
 
 		$orderline1 = array_slice($orderline,0,5);
@@ -61,10 +65,13 @@
 		if($row['Shipping Address Address 2']) $l[] = utf8_encode(ucfirst($row['Shipping Address Address 2']));
 		$l[] = strtoupper($row['Shipping Address Postcode']).($row['Shipping Address Postcode']?'   ':'').utf8_encode(ucfirst($row['Shipping Address City'])).($row['Shipping Address State']?' '.$row['Shipping Address State']:'');
 
-		if($row['country']) {
-			$l[] = utf8_encode($row['country']); 
-		} else { 
-			$l[] = utf8_encode($row['Shipping Address Country']);
+		if($row['Shipping Address Country']!='NL') {
+			if($row['country']) {
+				$l[] = utf8_encode($row['country']); 
+			} else { 
+				$l[] = utf8_encode($row['Shipping Address Country']);
+			}
+			
 		}
 		
 		$label[] = $l;
@@ -72,7 +79,7 @@
 
 	}
 	
-	$top = 13.1;
+	$top = 16.1;
 	$left = 8;
 	$h = 67.7;
 	$w = 97;
@@ -99,7 +106,7 @@
 		$pdf->Text($x+$w-58,$y+9,'Kadijkselaan 13, 2861 CG  Bergambacht, Netherlands');
 		$pdf->SetFont('ubuntu','',10);
 	
-		$pdf->Rect($x,$y,$w, $h);
+		#$pdf->Rect($x,$y,$w, $h);
 		
 		$l = array_reverse($l);
 		$ls = array_reverse($ls);
@@ -120,4 +127,4 @@
 		
 	}
 	
-	$pdf->Output('Labels Greece.pdf','D');
+	$pdf->Output('Labels Not A Factory.pdf','I');

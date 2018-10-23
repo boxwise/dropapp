@@ -12,7 +12,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer','approvalsigned');
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer','approvalsigned','signaturefield');
 		if($_POST['pass']) $savekeys[] = 'pass';
 		if($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) {
 			$savekeys[] = 'laundryblock';
@@ -71,6 +71,8 @@
 	$tabs['transaction'] = 'Transactions';
 	
 	if(($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $_SESSION['camp']['id']==1) $tabs['laundry'] = 'Laundry';
+
+	$tabs['signature'] = 'Privacy declaration';
 	
 	$cmsmain->assign('tabs',$tabs);
 
@@ -130,7 +132,7 @@
 	'options'=>array(array('value'=>'M', 'label'=>'Male'), array('value'=>'F', 'label'=>'Female'))));
 
  	addfield('date','Date of birth','date_of_birth', array('tab'=>'people', 'date'=>true, 'time'=>false));
- 	addfield('checkbox','Approval form for storing personal data is signed (also for family members)','approvalsigned', array('tab'=>'people'));
+ 	#addfield('checkbox','Approval form for storing personal data is signed (also for family members)','approvalsigned', array('tab'=>'people'));
  	
  	
 	addfield('line','','',array('tab'=>'people'));
@@ -186,6 +188,9 @@
 		$data['log'] = join("\n",$log);
 		addfield('textarea','Log','log',array('tab'=>'laundry','readonly'=>true));
 	}
+	
+	addfield('signature','Signature','signaturefield',array('tab'=>'signature'));
+ 	addfield('checkbox','Form signed','approvalsigned', array('tab'=>'signature','hidden'=>true));
 
 	if($data['parent_id'] == 0){
 		if($id){
@@ -213,23 +218,6 @@
 				'columns'=>array('drops2'=>ucwords($translate['market_coins']), 'description'=>'Note','user'=>'Transaction made by', 'tdate'=>'Date'),
 		'allowedit'=>false,'allowadd'=>$data['allowdrops'], 'add'=>'Give '.ucwords($translate['market_coins']), 'addaction'=>'give&ids='.intval($id), 'allowsort'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'modal'=>false));
 
-
-
-/*
-			//show food history
-			if(db_value('SELECT food FROM camps WHERE id ='.$_SESSION['camp']['id'])) {	
-				addfield('list','Food','food', array('width'=>10,'query'=>'
-					SELECT f.name AS food, ft.count, ft.created, u.naam AS user, DATE_FORMAT(ft.created,"%d-%m-%Y %H:%i") AS ftdate 
-					FROM food_transactions AS ft 
-					LEFT OUTER JOIN food AS f ON f.id = ft.food_id
-					LEFT OUTER JOIN cms_users AS u ON u.id = ft.created_by 
-					WHERE ft.people_id = '.$id.' 
-					ORDER BY ft.created DESC
-					LIMIT 10', 
-					'columns'=>array('food'=>'Food', 'count'=>'Amount', 'user'=>'Transaction made by', 'ftdate'=>'Date'),
-					'allowedit'=>false,'allowadd'=>false,'allowsort'=>false,'allowselect'=>false,'allowselectall'=>false,'redirect'=>false,'modal'=>false));
-			}
-*/
 			//show borrow history
 	addfield('line','','',array('tab'=>'bicycle'));
 			if(db_value('SELECT id FROM borrow_transactions WHERE people_id ='.$id)) {	

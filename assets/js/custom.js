@@ -10,6 +10,23 @@ $(function() {
 		$('.icon-open-'+i).toggleClass('hidden');
 		
 	})	
+
+	old = $('#signaturefield').val();
+	$('#sig').signature({ 
+	    change: function(event, ui) { 
+		    $('#field_approvalsigned').prop('checked', !$('#sig').signature('isEmpty'));
+	    } 
+	});	
+	$('#sig').signature({color: '#0000ff',guideline: true, syncField: '#signaturefield', syncFormat: 'SVG'}); 
+	$('#sig').signature('draw', old)
+
+
+
+	$('#clear').click(function() {
+		$('#sig').signature('clear');
+		return false;
+	});
+
 })
 
 // The function actually applying the offset

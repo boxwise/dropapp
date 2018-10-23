@@ -23,7 +23,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{$images['faviconapple']}">
     <link rel="icon" type="image/png" href="{$images['favicon32']}" sizes="32x32">
     <link rel="icon" type="image/png" href="{$images['favicon16']}" sizes="16x16">
-    
+ 
+   
   </head>
 
   <body class="{$action} loading" data-action="{$action}">

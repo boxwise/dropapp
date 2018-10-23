@@ -27,7 +27,7 @@
 
 	addfield('text','Code','code',array('width'=>2));
 	addfield('line');
-	addfield('text','English title','booktitle_en',array('setformtitle'=>true));
+	addfield('text','English title','booktitle_en',array('setformtitle'=>true,'required'=>true));
 	addfield('text','Original title','booktitle_ar');
 	addfield('text','Author','author');
 	addfield('line');

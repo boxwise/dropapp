@@ -57,7 +57,7 @@ p{
 	line-height: 130%;
 }
 
-/* header */
+/*! header */
 
 .header-top{
 	position: fixed;
@@ -276,7 +276,35 @@ p{
 	top:50px;
 }
 
-/* -------------- Form ------------------- */
+/*! Touch Signature */
+
+.signature-consent-image {
+	width:100%;
+}
+.signature-text {
+	font-size:120%;
+	padding:0;
+}
+.signature-text .nav-tabs {
+	font-size:83%;
+}
+body > iframe { display: none; }
+
+.kbw-signature { 
+	width: 400px; 
+	height: 200px; 
+}
+
+.kbw-signature {
+	display: inline-block;
+	border: 1px solid #a0a0a0;
+	-ms-touch-action: none;
+}
+.kbw-signature-disabled {
+	opacity: 0.35;
+}
+
+/*! -------------- Form ------------------- */
 
 .row-title{
 	border-bottom: 1px solid #eee;
