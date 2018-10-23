@@ -17,7 +17,7 @@ $(function() {
 		    $('#field_approvalsigned').prop('checked', !$('#sig').signature('isEmpty'));
 	    } 
 	});	
-	$('#sig').signature({color: '#0000ff',guideline: true, syncField: '#signaturefield', syncFormat: 'SVG'}); 
+	$('#sig').signature({color: '#0000ff',guideline: true, syncField: '#signaturefield', syncFormat: 'JSON'}); 
 	$('#sig').signature('draw', old)
 
 

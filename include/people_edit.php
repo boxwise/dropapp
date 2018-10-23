@@ -4,8 +4,6 @@
 
 	if($_POST) {
 		
-		echo 'x';
-		
 		if($_POST['pass']) $_POST['pass'] = md5($_POST['pass']);
 
 		$handler = new formHandler($table);
