@@ -44,13 +44,13 @@
 			<p>J’approuve également que les données personnelles de ma famille soient stockées et traitées ainsi que décrit ci-dessus</p>
 		</div>
 		<div class="tab-pane fade" id="languagetab_ar">
-			<img src="/assets/img/consent-arabic.jpg" class="signature-consent-image" />
+			<img src="{$settings['rootdir']}/assets/img/consent-arabic.jpg" class="signature-consent-image" />
 		</div>
 		<div class="tab-pane fade" id="languagetab_so">
-			<img src="/assets/img/consent-sorani.jpg" class="signature-consent-image" />
+			<img src="{$settings['rootdir']}/assets/img/consent-sorani.jpg" class="signature-consent-image" />
 		</div>
 		<div class="tab-pane fade" id="languagetab_fa">
-			<img src="/assets/img/consent-farsi.jpg" class="signature-consent-image" />
+			<img src="{$settings['rootdir']}/assets/img/consent-farsi.jpg" class="signature-consent-image" />
 		</div>
 	</div>
 <div class="fc"></div>
