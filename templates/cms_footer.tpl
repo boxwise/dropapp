@@ -6,7 +6,7 @@
     <script src="{$settings['rootdir']}/assets/js/jquery.tablesorter.min.js"></script>
     <script src="{$settings['rootdir']}/assets/js/jquery.tablesorter.widgets.js"></script>
 	<script src="{$settings['rootdir']}/assets/js/jquery.ui.touch-punch.min.js"></script>
-	<script src="/jsignature/jquery.signature.js"></script>
+	<script src="{$settings['rootdir']}/jsignature/jquery.signature.js"></script>
 
     <script src="{$settings['rootdir']}/assets/js/magic.js?v=7"></script>
     <script src="{$settings['rootdir']}/assets/js/custom.js?v=7"></script>    
