@@ -413,7 +413,8 @@ $(function() {
 	    		this.defaultShowErrors();
 	    		el.find('.nav-tabs a').removeClass('error')
 	    		el.find('.tab-pane:has(.form-control.error)').each(function(){
-	    			$('a[href=#'+$(this).attr('id')+']').addClass('error');
+	    			var targetTab = $(this).attr('id');
+	    			$('a[href="#'+targetTab+'"]').addClass('error');
 	    		})
 	    	},
 	    	success: function(error){

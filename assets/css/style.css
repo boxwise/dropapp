@@ -340,7 +340,7 @@ body > iframe { display: none; }
 	color: #fff;
 }
 .nav-tabs li.active a.error{
-	background: #eee;
+	background: #61c4ef;
 }
 
 .nav-tabs>li>a{
