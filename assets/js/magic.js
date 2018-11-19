@@ -1,4 +1,5 @@
 $(function() {
+				$('body').addClass('loading');
 	// Noty, for more info: http://ned.im/noty/
     $.noty.defaults = {
 	    layout: 'topCenter',
