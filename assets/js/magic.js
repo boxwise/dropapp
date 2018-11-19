@@ -335,7 +335,6 @@ $(function() {
 						data: $(form).serialize(),
 						dataType: 'json',
 						success: function(result){
-							$('body').removeClass('loading');
 							$('#form-submit').prop('disabled', false);
 							if(result.message){
 								var n = noty({
@@ -350,13 +349,14 @@ $(function() {
 									execReload(result.redirect)
 								}
 							}
+							$('body').removeClass('loading');
 						},
 						error: function(result){
-							$('body').removeClass('loading');
 							var n = noty({
 								text: 'This file cannot be found or what\'s being returned is not json.',
 								type: 'error'
 							});
+							$('body').removeClass('loading');
 						}
 					})
 				} else {
@@ -536,10 +536,10 @@ function initiateList(){
 					}
 				}, el.data());
 				el.tablesorter(options)
-				$('body').removeClass('loading');
+// 				$('body').removeClass('loading');
 			})
 		} else {
-			$('body').removeClass('loading');
+// 			$('body').removeClass('loading');
 		}
 		$('.table').on('change', '.item-select', function(e){
 			var el = $(this)
@@ -779,8 +779,9 @@ function initiateList(){
 			});
 		})
 	} else {
-		$('body').removeClass('loading');
+// 		$('body').removeClass('loading');
 	}
+	$('body').removeClass('loading');
 }
 
 // format select2 for the parent select
