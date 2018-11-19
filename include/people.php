@@ -30,6 +30,8 @@
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
 		#			 AS lastactive , 
 
+$search = substr(db_escape(trim($listconfig['searchvalue'])),1,strlen(db_escape(trim($listconfig['searchvalue'])))-2);
+
 		$data = getlistdata('
 		SELECT 
 			IF(DATEDIFF(NOW(),
@@ -56,16 +58,16 @@
 			($listconfig['filtervalue']=='month'?' DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") AND':'').'
 			people.camp_id = '.$_SESSION['camp']['id']. 
 			($listconfig['searchvalue']?' AND
-			(lastname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
-			 firstname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
-			 container = "'.trim($listconfig['searchvalue']).'" OR 
+			(lastname LIKE "%'.$search.'%" OR 
+			 firstname LIKE "%'.$search.'%" OR 
+			 container = "'.$search.'" OR 
 			 (SELECT 
 			 	COUNT(id) 
 			 FROM people AS p 
 			 WHERE 
-			 	(lastname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
-			 	 firstname LIKE "%'.trim($listconfig['searchvalue']).'%" OR 
-			 	 container = "'.trim($listconfig['searchvalue']).'") AND 
+			 	(lastname LIKE "%'.$search.'%" OR 
+			 	 firstname LIKE "%'.$search.'%" OR 
+			 	 container = "'.$search.'") AND 
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			':' ')
