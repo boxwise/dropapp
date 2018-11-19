@@ -533,10 +533,10 @@ function initiateList(){
 					},
 					initialized: function(){
 						el.closest('.table-parent').addClass('sortable-initialized');
-						$('body').removeClass('loading');
 					}
 				}, el.data());
 				el.tablesorter(options)
+				$('body').removeClass('loading');
 			})
 		} else {
 			$('body').removeClass('loading');
