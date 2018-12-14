@@ -11,10 +11,11 @@
 
 		$cmsmain->assign('title',$translate['cms_users']);
 
-		$data = getlistdata('SELECT cms_users.*, NOT is_admin AS visible, IFNULL(GROUP_CONCAT(c.name ORDER BY c.seq SEPARATOR ", "),IF(cms_users.is_admin,"All camps","")) AS camps FROM cms_users LEFT OUTER JOIN cms_users_camps AS x ON x.cms_users_id = cms_users.id LEFT OUTER JOIN camps AS c ON c.id = x.camps_id '.($_SESSION['user']['is_admin']?'':' WHERE NOT is_admin').' GROUP BY cms_users.id');
+		$data = getlistdata('SELECT cms_users.*, NOT is_admin AS visible, IFNULL(GROUP_CONCAT(c.name ORDER BY c.seq SEPARATOR ", "),IF(cms_users.is_admin,"All camps","")) AS camps, IF(coordinator,"*","") AS iscoordinator FROM cms_users LEFT OUTER JOIN cms_users_camps AS x ON x.cms_users_id = cms_users.id LEFT OUTER JOIN camps AS c ON c.id = x.camps_id '.($_SESSION['user']['is_admin']?'':' WHERE NOT is_admin').' GROUP BY cms_users.id');
 
 		addcolumn('text',$translate['cms_users_naam'],'naam');
 		addcolumn('text',$translate['cms_users_email'],'email');
+		addcolumn('text','Coordinator','iscoordinator');
 		addcolumn('text','Camps','camps');
 		addcolumn('datetime',$translate['cms_users_lastlogin'],'lastlogin');
 
