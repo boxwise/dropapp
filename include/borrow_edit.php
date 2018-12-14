@@ -2,7 +2,9 @@
 	
 	$table = 'cms_users';
 
-	$endtime = 17.5;
+	$endtime = $settings['bicycle_closingtime'];
+	$endtime = substr($endtime,0,strpos($endtime,':'))+(substr($endtime,strpos($endtime,':')+1)/60);
+	
 	
 	if($_GET['return']) {
 		db_query('INSERT INTO borrow_transactions (transaction_date, bicycle_id, people_id, status, location_id) VALUES (NOW(), :id, :people_id, "in", :location)', array('id'=>$_GET['return'],'people_id'=>$_GET['user'],'location'=>$_SESSION['filter2']['borrow']));

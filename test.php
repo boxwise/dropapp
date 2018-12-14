@@ -1,4 +1,6 @@
 <?php
+	die();
+	
 	require('library/core.php');
 	
 	$result = db_query('SELECT * FROM people AS p WHERE camp_id = 3 AND parent_id = 0 AND NOT deleted');
