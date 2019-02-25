@@ -20,7 +20,7 @@
 		COALESCE( NULLIF( (SELECT COUNT(st.id) FROM stock AS st, products AS p2, locations AS l WHERE st.product_id = p2.id AND p2.gender_id = g.id AND st.size_id = s.id AND st.location_id = l.id AND (NOT st.deleted OR st.deleted IS NULL) AND l.visible AND p.name = p2.name AND l.camp_id = '.$_SESSION['camp']['id'].'),0),"") AS boxes,
 		ROUND((SELECT COUNT(id) FROM people AS p2 WHERE p2.visible AND (NOT p2.deleted OR p2.deleted IS NULL) AND p2.camp_id = '.$_SESSION['camp']['id'].' AND  
 		(IF(g.male,p2.gender="M",0) OR IF(g.female,p2.gender="F",0)) AND 
-		(IF(g.adult,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0>=13,0) OR IF(g.baby,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0<2,0) OR IF(g.child,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 BETWEEN 2 AND 13,0)))*IFNULL(s.portion,100)/100) AS target,
+		(IF(g.adult,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0>='.$settings['adult-age'].',0) OR IF(g.baby,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0<2,0) OR IF(g.child,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 BETWEEN 2 AND '.$settings['adult-age'].',0)))*IFNULL(s.portion,100)/100) AS target,
 		p.amountneeded ';
 
 	foreach($camps as $key=>$camp) {
