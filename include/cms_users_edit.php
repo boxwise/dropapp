@@ -52,12 +52,14 @@
 	LEFT OUTER JOIN cms_access AS x ON a.id = x.cms_functions_id AND x.cms_users_id = '.intval($id).' 
 	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 ORDER BY a.title_en, seq'));
 
+/*
 	if(db_tableexists('history')) {
 		$changelog = array_keys(db_simplearray('SELECT CONCAT(changedate,", ",tablename,", ",record_id,": ",changes) FROM history WHERE user_id = :id ORDER BY changedate DESC',array('id'=>$data['id'])));
 		foreach($changelog as $key=>$value) $changelog[$key] = str_replace(array("\n","\r"),"",strip_tags($changelog[$key]));
 		$data['changelog'] = join("\r\n",$changelog);
 		addfield('textarea','Acties','changelog',array('readonly'=>true,'rows'=>12));
 	}
+*/
 
 	addfield('created','Gemaakt','created',array('aside'=>true));
 
