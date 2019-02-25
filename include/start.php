@@ -20,7 +20,7 @@
 	
 		$data['containers'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
 		$data['containerscamp'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE NOT deleted AND visible AND camp_id = :camp_id AND LEFT(container,2) != "PK"',array('camp_id'=>$_SESSION['camp']['id']));
-		$data['containersoutside'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = :camp_id AND LEFT(container,2) = "PK"',array('camp_id'=>$_SESSION['camp']['id']));
+		$data['containersoutside'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE NOT deleted AND visible AND camp_id = :camp_id AND LEFT(container,2) = "PK"',array('camp_id'=>$_SESSION['camp']['id']));
 	
 		$data['adults'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= '.$settings['adult-age'],array('camp_id'=>$_SESSION['camp']['id']));
 		$data['children'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < '.$settings['adult-age'],array('camp_id'=>$_SESSION['camp']['id']));
