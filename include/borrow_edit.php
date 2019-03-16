@@ -2,7 +2,11 @@
 	
 	$table = 'cms_users';
 
-	$endtime = $settings['bicycle_closingtime'];
+	if(strftime('%w')==6) {
+		$endtime = $settings['bicycle_closingtime_saturday'];	
+	} else {
+		$endtime = $settings['bicycle_closingtime'];	
+	}
 	$endtime = substr($endtime,0,strpos($endtime,':'))+(substr($endtime,strpos($endtime,':')+1)/60);
 	
 	
