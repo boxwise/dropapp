@@ -11,7 +11,7 @@
 		$cmsmain->assign('title','Library');
 		listsetting('search', array('code', 'booktitle_en', 'booktitle_ar', 'author'));
 		
-//  		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM product_categories ORDER BY seq','filter'=>'products.category_id'));
+  		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM library_type ORDER BY label','filter'=>'library.type_id'));
 
 		$data = getlistdata('SELECT * FROM library WHERE camp_id = '.intval($_SESSION['camp']['id']));
 		
