@@ -1,0 +1,9 @@
+<?php
+    // cms settings
+    $settings['rootdir'] = '';
+    // db settings
+    $settings['db_database'] = 'dropapp_demo';
+    $settings['db_host'] = '127.0.0.1:3306';
+    // credentials
+    $settings['db_user'] = 'xxx';
+    $settings['db_pass'] = 'xxx';
