@@ -1,10 +1,10 @@
 <?php
 
-	function db_connect($host,$dbidr,$pass,$db) {
+	function db_connect($dsn,$username,$password) {
 		global $defaultdbid;
 
 		try {
-			$defaultdbid = new PDO('mysql:host='.$host.';dbname='.$db, $dbidr, $pass);
+			$defaultdbid = new PDO($dsn, $username, $password);
 			$defaultdbid->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$defaultdbid->setAttribute(PDO::ATTR_EMULATE_PREPARES,true);
 		}

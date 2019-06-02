@@ -1,7 +1,10 @@
 <?php
     // cms settings
     $settings['rootdir'] = '';
-    // db settings
+    // when connecting via app_engine we need a specific DSN
+    // which will override the db_database and db_host combination
+    //$settings['db_dsn'] = 'mysql:dbname=dropapp_demo;unix_socket=/cloudsql/dropapp-242214:europe-west1:dropapp-production';
+    // when just running locally
     $settings['db_database'] = 'dropapp_demo';
     $settings['db_host'] = '127.0.0.1:3306';
     // credentials
