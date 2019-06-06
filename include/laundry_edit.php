@@ -27,6 +27,9 @@
 	$data = db_row('SELECT ls.id AS timeslot, ls.day, ls.time, la.people_id, la.comment, ls.machine, p.* FROM laundry_slots AS ls LEFT OUTER JOIN laundry_appointments AS la ON la.timeslot = ls.id AND cyclestart = :cyclestart LEFT OUTER JOIN people AS p ON p.id = la.people_id WHERE timeslot = :id',array('cyclestart'=>$cyclestart, 'id'=>$timeslot));
 	if(!$data) $data = db_row('SELECT ls.id AS timeslot, ls.day, ls.time, ls.machine FROM laundry_slots AS ls WHERE id = :id',array('id'=>$timeslot));
 
+	$data['station'] = db_value('SELECT station FROM laundry_machines WHERE id = :id',array('id'=>$data['machine']));
+	$data['access'] = db_value('SELECT access FROM laundry_stations WHERE id = :id',array('id'=>$data['station']));
+
 	// open the template
 	$cmsmain->assign('include','cms_form.tpl');
 
@@ -38,7 +41,7 @@
 	addfield('hidden','','timeslot');
 	addfield('hidden','','day');
 
-	$people = db_array('SELECT p.id AS value, laundryblock AS disabled, CONCAT(p.container, " ",p.firstname, " ", p.lastname,IF(laundryblock," - blocked, ask your coordinator","")) AS label FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');
+	$people = db_array('SELECT p.id AS value, laundryblock AS disabled, CONCAT(p.container, " ",p.firstname, " ", p.lastname,IF(laundryblock," - blocked, ask your coordinator","")) AS label FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' AND '.$data['access'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');
 	array_unshift($people, array('value'=>-1,'label'=>'Drop Laundry','disabled'=>0));
 	addfield('select','Find '.$_SESSION['camp']['familyidentifier'],'people_id',array('onchange'=>'updateLaundry("people_id",'.$offset.')', 'multiple'=>false, 'options'=>$people));
 

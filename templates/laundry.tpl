@@ -3,7 +3,7 @@
 
 		<div class="row row-title">
 			<div class="col-sm-12">
-				<h1>Laundry</h1>
+				<h1>{$data['stationname']}</h1>
 			</div>
 		</div>
 
@@ -11,8 +11,19 @@
 <a class="new-page item-add btn btn-sm btn-default" href="?action=laundry&cycle=current"><i class="fa fa-arrow-down"></i> Current cycle</a>
 <a class="new-page item-add btn btn-sm btn-default" href="?action=laundry&cycle=next"><i class="fa fa-arrow-right"></i> Next cycle</a>
 *}
+		<div class="btn-group">
+			<div type="button" class="btn btn-sm btn-default dropdown-toggle">Choose laundry station <span class="caret"></span></div>
+			<ul class="dropdown-menu pull-right button-multi" role="menu">
+			{foreach $data['stationlist'] as $stationid => $stationlabel}
+				<li><a href="?action=laundry&station={$stationid}">{$stationlabel}</a></li>
+			{/foreach}
+			</ul>
+		</div>&nbsp;
 
-		{if $smarty.session.user.is_admin or $smarty.session.user.coordinator}<a class="new-page item-add btn btn-sm btn-default" href="?action=laundry_startcycle&origin=laundry"><i class="fa fa-recycle"></i> Start new cycle</a><br /><br />{/if}
+		{if $smarty.session.user.is_admin or $smarty.session.user.coordinator}
+			<a class="new-page item-add btn btn-sm btn-default" href="?action=laundry_startcycle&origin=laundry"><i class="fa fa-recycle"></i> Start new cycle</a>
+			<br /><br />
+		{/if}
 
 	{foreach $data['dates'] as $day => $d name=days}
 		<a name="{$day}"></a>
