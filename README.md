@@ -18,7 +18,7 @@ To service the current version which is still running in three refugee camps thr
 
 Create a new database and import market_clean.sql
 
-Then copy .htaccess.default and /lib/config.php.default and remove the .default in the filename. Then change the necesary usernames, folders and database settings.
+Then copy .htaccess.default and /config.php.default and remove the .default in the filename. Then change the necesary usernames, folders and database settings.
 
 After this you should be able to login to the app using emailaddress: demo@example.com with password: demo
 
