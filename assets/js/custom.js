@@ -117,7 +117,7 @@ function updateLaundry(field, offset) {
 		$('body').addClass('loading');
 		$.ajax({
 			type: 'post',
-			url: 'include/laundry_ajax.php',
+			url: 'ajax.php?file=laundry',
 			data:
 			{
 				people_id: value,

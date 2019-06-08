@@ -1,10 +1,5 @@
 <?php
 
-	if(!DEFINED('CORE')) include($_SERVER['DOCUMENT_ROOT'].'/library/core.php');
-
-	$ajax = checkajax();
-	if(!$ajax) die();
-
 	$ajaxform = new Zmarty;
 
 	$data['people_id'] = intval($_POST['people_id']);
