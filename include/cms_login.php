@@ -1,6 +1,5 @@
 <?php
 setlocale(LC_ALL, 'nl_NL');
-require_once('library/core.php');
 
 if(file_exists("uploads/background-1.jpg")){
 	foreach (glob("uploads/background-*.jpg") as $filename) {

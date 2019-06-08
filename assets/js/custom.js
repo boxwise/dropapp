@@ -159,7 +159,7 @@ location.search.substr(1).split("&").forEach(function(item) {queryDict[item.spli
 
 	if(value){
 		
-		if(queryDict['people_id'] != value && reload) window.location = '?action=check_out2&people_id='+value;
+		if(queryDict['people_id'] != value && reload) window.location = '?action=check_out&people_id='+value;
 		
 		if(value != $('#div_purch').data('listid')){
 			$('#div_purch').hide();
@@ -169,7 +169,7 @@ location.search.substr(1).split("&").forEach(function(item) {queryDict[item.spli
 		$('body').addClass('loading');
 		$.ajax({
 			type: 'post',
-			url: 'include/check_out.php',
+			url: 'ajax.php?file=check_out',
 			data:
 			{
 				people_id: value,
