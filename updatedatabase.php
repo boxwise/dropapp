@@ -8,6 +8,7 @@
 	echo "<strong>Database update script</strong><br />";
 	
 	
+	
 function db_addfield($table,$field,$options,$query = "") {
 	if(!db_fieldexists($table,$field)) {
 		db_query("ALTER TABLE `".$table."` ADD `".$field."` ".$options);

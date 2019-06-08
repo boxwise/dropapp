@@ -1,6 +1,6 @@
 <?php
 
-	if(!DEFINED('CORE')) include('../library/core.php');
+	if(!DEFINED('CORE')) include($_SERVER['DOCUMENT_ROOT'].'/library/core.php');
 
 	$ajax = checkajax();
 	if(!$ajax) die();
