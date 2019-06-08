@@ -7,7 +7,6 @@
 
 	$table = 'borrow_items';
 	$ajax = checkajax();
-	if(!DEFINED('CORE')) include('core.php');
 
 	$result = db_query('
 	SELECT p.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 AS age, GROUP_CONCAT(l.name SEPARATOR ", ") AS languages

@@ -1,7 +1,5 @@
 <?php
 
-	if(!DEFINED('CORE')) include('../library/core.php');
-
 	$ajax = checkajax();
 
 	$table = 'transactions';

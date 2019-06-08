@@ -2,8 +2,6 @@
 
 	$table = 'borrow_transactions';
 	$ajax = checkajax();
-	if(!DEFINED('CORE')) include('core.php');
-
 
 	if(!$ajax) {
 

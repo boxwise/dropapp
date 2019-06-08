@@ -3,7 +3,6 @@
 	$table = 'stock';
 	$action = 'stock';
 	$ajax = checkajax();
-	if(!DEFINED('CORE')) include('core.php');
 
 	if(!$ajax) {
 

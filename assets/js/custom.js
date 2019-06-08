@@ -314,6 +314,7 @@ function getSizes(){
 */
 }
 
+/*
 function selectFood(field_array, dist_id_fieldval){
 	var val_array = field_array.map(function(field) {return $('#field_'+field).val();});
 	$('#form-submit').prop('disabled', true);
@@ -353,6 +354,7 @@ function selectFood(field_array, dist_id_fieldval){
 		}
 	});
 }
+*/
 
 /*
 

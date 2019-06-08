@@ -2,9 +2,6 @@
 
 	$table = $action;
 	$ajax = checkajax();
-	if(!DEFINED('CORE')) include('core.php');
-	ini_set('display_errors', true);
-	error_reporting(E_ALL);
 
 	require_once($_SERVER['DOCUMENT_ROOT'].'/library/lib/PHPExcel.php');
 	require_once($_SERVER['DOCUMENT_ROOT'].'/library/lib/PHPExcel/Writer/Excel2007.php');

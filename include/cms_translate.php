@@ -2,7 +2,6 @@
 
 	$table = 'translate';
 	$ajax = checkajax();
-	if(!DEFINED('CORE')) include('core.php');
 
 	if(!$ajax) {
 

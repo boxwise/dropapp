@@ -6,8 +6,6 @@
 	header("Expires: 0");
 
 	$ajax = checkajax();
-	if(!DEFINED('CORE')) include('core.php');
-
 
 	$locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
 
