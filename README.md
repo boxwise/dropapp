@@ -18,7 +18,7 @@ To service the current version which is still running in three refugee camps thr
 
 You can get MySQL running locally using the following:
 
-   docker run -p 3306:3306 --name mysql01 -e MYSQL_ROOT_PASSWORD=XYZ -e MYSQL_ROOT_HOST=% -d mysql/mysql-server:latest
+    docker run -p 3306:3306 --name mysql01 -e MYSQL_ROOT_PASSWORD=XYZ -e MYSQL_ROOT_HOST=% -d mysql/mysql-server:latest
 
 Create a new database and import market_clean.sql
 
