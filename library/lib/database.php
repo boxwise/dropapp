@@ -15,7 +15,7 @@
 
 		db_query("SET CHARACTER SET utf8");
 		db_query("SET NAMES 'utf8'");
-		db_query("SET SESSION sql_mode = 'NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
+		db_query("SET SESSION sql_mode = 'NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'");
 
 		return $defaultdbid;
 	}
