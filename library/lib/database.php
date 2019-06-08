@@ -1,10 +1,10 @@
 <?php
 
-	function db_connect($host,$dbidr,$pass,$db) {
+	function db_connect($dsn,$username,$password) {
 		global $defaultdbid;
 
 		try {
-			$defaultdbid = new PDO('mysql:host='.$host.';dbname='.$db, $dbidr, $pass);
+			$defaultdbid = new PDO($dsn, $username, $password);
 			$defaultdbid->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$defaultdbid->setAttribute(PDO::ATTR_EMULATE_PREPARES,true);
 		}
@@ -15,7 +15,7 @@
 
 		db_query("SET CHARACTER SET utf8");
 		db_query("SET NAMES 'utf8'");
-		db_query("SET SESSION sql_mode = 'NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'");
+		db_query("SET SESSION sql_mode = 'NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'");
 
 		return $defaultdbid;
 	}

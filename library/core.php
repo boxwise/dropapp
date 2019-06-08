@@ -12,7 +12,12 @@ require_once('config.php');
 require_once('lib/database.php');
 
 # connect to database
-db_connect($settings['db_host'],$settings['db_user'],$settings['db_pass'],$settings['db_database']);
+if (array_key_exists('db_dsn',$settings)) {
+    $db_dsn = $settings['db_dsn'];
+} else {
+    $db_dsn = 'mysql:host='.$settings['db_host'].';dbname='.$settings['db_database'];
+}
+db_connect($db_dsn,$settings['db_user'],$settings['db_pass']);
 
 # get settings from settings table
 $result = db_query('SELECT code, value FROM settings');

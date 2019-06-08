@@ -16,9 +16,19 @@ To service the current version which is still running in three refugee camps thr
 
 ### How do I get set up? ###
 
+You can get MySQL running locally using the following:
+
+    docker run -p 3306:3306 --name mysql01 -e MYSQL_ROOT_PASSWORD=XYZ -e MYSQL_ROOT_HOST=% -d mysql/mysql-server:latest
+
 Create a new database and import market_clean.sql
 
-Then copy .htaccess.default and /lib/config.php.default and remove the .default in the filename. Then change the necesary usernames, folders and database settings.
+Then copy .htaccess.default and /config.php.default and remove the .default in the filename. Then change the necesary usernames, folders and database settings. You can use the root password you specified above if running locally.
+
+### Running the app ###
+
+To start the app using the PHP Development Server, run
+
+    php -S localhost:8080 -c php.ini
 
 After this you should be able to login to the app using emailaddress: demo@example.com with password: demo
 
@@ -28,7 +38,7 @@ You gotta be awesome and kind
 
 ### Who do I talk to? ###
 
-Right now best talkt to [Hans](mailto:hans@boxwise.co)!
+Right now best talk to [Hans](mailto:hans@boxwise.co)!
 
 ### License ###
 
