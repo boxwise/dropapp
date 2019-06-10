@@ -25,11 +25,15 @@ To service the current version which is still running in three refugee camps thr
 
    composer install
 
-3. To configure the app, copy /config.php.default and remove the .default in the filename. The default configuration does not need to change if you are using Docker (see below).
+3. To configure the app, copy `/config.php.default` and remove the `.default` in the filename. The default configuration does not need to change if you are using Docker (see below).
 
 4. To run the application, we assume you have Docker installed. You can then run:
 
    docker-compose up
+
+5. To initialize the database for the first time, you should run:
+
+   vendor/bin/phinx migrate -e development
 
 ### Accessing the app
 
@@ -37,11 +41,19 @@ Once the docker containers are running the app is accessible at http://localhost
 
 After this you should be able to login to the app using email address: demo@example.com with password: demo
 
-### Accessing the database
+### Database and migrations
 
-If you want to connect to the MySQL server you can do this using
+If you want to connect to the MySQL server from your host machine, you can do this using
 
     docker exec -it dropapp_mysql_db_1 mysql -uroot -p
+
+If you want to reset it, you should stop docker, delete the files in `/.docker/data/mysql` and call `docker-compose up` again.
+
+We're using (Phinx)[https://phinx.org/] and (phinx-migrations-generator)[https://github.com/odan/phinx-migrations-generator] to manage database migrations. Running
+
+   vendor/bin/phinx-migrations generate
+
+Will generate a new migration based on the diff of /db/migrations/schema.php.
 
 ### Contribution guidelines ###
 
