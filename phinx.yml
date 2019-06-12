@@ -1,0 +1,36 @@
+
+/* ATTN: This file must *not* contain any real credentials, 
+         as this whole directory is deployed to public web server
+         and committed to source control.
+         
+         NO_AUTO_VALUE_ON_ZERO required in mysql_attr_init_command because 
+           we do weird stuff like inserting 0 ids in auto-incremented columns
+           and have date columns defaulting to 0000-00-00
+        */
+paths:
+    migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'
+    seeds: '%%PHINX_CONFIG_DIR%%/db/seeds'
+environments:
+    default_migration_table: phinxlog
+    default_database: development
+    production:
+        adapter: mysql
+        host: '%%PHINX_DBHOST%%'
+        name: '%%PHINX_DBNAME%%'
+        user: '%%PHINX_DBUSER%%'
+        pass: '%%PHINX_DBPASS%%'
+        unix_socket: '%%PHINX_UNIXSOCKET%%'
+        port: 3306
+        charset: utf8
+        mysql_attr_init_command: "SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO'"
+    development:
+        adapter: mysql
+        host: 127.0.0.1
+        name: dropapp_dev
+        user: root
+        pass: dropapp_root
+        port: 9906
+        charset: utf8
+        mysql_attr_init_command: "SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO'"
+
+version_order: creation

@@ -10,6 +10,5 @@ minified.js
 .ftpquota
 uploads/*
 vendor
-phinx.yml
 !uploads/.gitkeep 
 phpmyadmin/*

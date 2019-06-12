@@ -34,12 +34,15 @@ To service the current version which is still running in three refugee camps thr
 5. To initialize the database for the first time, you should run:
 
    vendor/bin/phinx migrate -e development
+   vendor/bin/phinx seed:run -e development
+
+   The first command creates the schema, the second command seeds the database with some dummy data
 
 ### Accessing the app
 
 Once the docker containers are running the app is accessible at http://localhost:8100/
 
-After this you should be able to login to the app using email address: demo@example.com with password: demo
+After this you should be able to login to the app using email address: some.admin@boxwise.co with password: admin
 
 ### Database and migrations
 

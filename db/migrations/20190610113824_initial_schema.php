@@ -2594,6 +2594,7 @@ class InitialSchema extends AbstractMigration
             ->addColumn('deleted', 'datetime', [
                 'null' => false,
                 'after' => 'picked_by',
+                'default' => '0000-00-00 00:00:00',
             ])
         ->addIndex(['box_id'], [
                 'name' => 'box_id',
