@@ -206,8 +206,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -220,8 +220,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('name', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('seq', 'integer', [
@@ -242,8 +242,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('familyidentifier', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'market',
             ])
             ->addColumn('delete_inactive_users', 'integer', [
@@ -285,57 +285,57 @@ class InitialSchema extends AbstractMigration
             ->addColumn('schedulestart', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'laundry',
             ])
             ->addColumn('schedulestop', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'schedulestart',
             ])
             ->addColumn('schedulebreak', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'schedulestop',
             ])
             ->addColumn('schedulebreakstart', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'schedulebreak',
             ])
             ->addColumn('schedulebreakduration', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'schedulebreakstart',
             ])
             ->addColumn('scheduletimeslot', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'schedulebreakduration',
             ])
             ->addColumn('dropsperadult', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'scheduletimeslot',
             ])
             ->addColumn('dropsperchild', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'dropsperadult',
             ])
             ->addColumn('cyclestart', 'datetime', [
@@ -364,8 +364,8 @@ class InitialSchema extends AbstractMigration
         $this->table('cms_access', [
                 'id' => false,
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -403,16 +403,16 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'default' => '',
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'parent_id',
             ])
             ->addColumn('include', 'string', [
                 'null' => false,
                 'default' => '',
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'title_en',
             ])
             ->addColumn('seq', 'integer', [
@@ -594,8 +594,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -608,8 +608,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('name', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('package', 'float', [
@@ -620,8 +620,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('unit_id', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'package',
             ])
             ->addColumn('peradult', 'float', [
@@ -677,8 +677,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'MyISAM',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -690,8 +690,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('label', 'string', [
                 'null' => false,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('food_1', 'integer', [
@@ -757,8 +757,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'MyISAM',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -809,8 +809,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -822,15 +822,15 @@ class InitialSchema extends AbstractMigration
             ->addColumn('label', 'string', [
                 'null' => false,
                 'limit' => 20,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('shortlabel', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'label',
             ])
             ->addColumn('seq', 'integer', [
@@ -889,8 +889,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('color', 'string', [
                 'null' => false,
                 'limit' => 20,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'baby',
             ])
             ->create();
@@ -898,8 +898,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -912,8 +912,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('tablename', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('record_id', 'integer', [
@@ -924,8 +924,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('changes', 'text', [
                 'null' => true,
                 'limit' => 65535,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'record_id',
             ])
             ->addColumn('user_id', 'integer', [
@@ -936,8 +936,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('ip', 'string', [
                 'null' => true,
                 'limit' => 20,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'user_id',
             ])
             ->addColumn('changedate', 'datetime', [
@@ -1442,8 +1442,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -1455,8 +1455,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('label', 'string', [
                 'null' => false,
                 'limit' => 20,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('camp_id', 'integer', [
@@ -1522,8 +1522,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -1540,22 +1540,22 @@ class InitialSchema extends AbstractMigration
             ->addColumn('content', 'text', [
                 'null' => true,
                 'limit' => 65535,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'logdate',
             ])
             ->addColumn('ip', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'content',
             ])
             ->addColumn('user', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'ip',
             ])
             ->create();
@@ -1563,8 +1563,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'MyISAM',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -1577,8 +1577,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('label', 'string', [
                 'null' => false,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('week_min', 'integer', [
@@ -1596,8 +1596,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['value'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -1609,8 +1609,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('label', 'string', [
                 'null' => false,
                 'limit' => 20,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'value',
             ])
             ->create();
@@ -1793,8 +1793,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -1817,16 +1817,16 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'default' => '',
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'seq',
             ])
             ->addColumn('lastname', 'string', [
                 'null' => false,
                 'default' => '',
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'firstname',
             ])
             ->addColumn('date_of_birth', 'date', [
@@ -1837,8 +1837,8 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'default' => '',
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'date_of_birth',
             ])
             ->addColumn('family_id', 'integer', [
@@ -1879,32 +1879,32 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'default' => '',
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'url',
             ])
             ->addColumn('tent', 'string', [
                 'null' => false,
                 'default' => '',
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'container',
             ])
             ->addColumn('email', 'string', [
                 'null' => false,
                 'default' => '',
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'tent',
             ])
             ->addColumn('pass', 'string', [
                 'null' => false,
                 'default' => '',
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'email',
             ])
             ->addColumn('language', 'integer', [
@@ -1916,15 +1916,15 @@ class InitialSchema extends AbstractMigration
             ->addColumn('resetpassword', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'language',
             ])
             ->addColumn('comments', 'text', [
                 'null' => true,
                 'limit' => 65535,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'resetpassword',
             ])
             ->addColumn('workshoptraining', 'integer', [
@@ -1942,8 +1942,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('phone', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'workshopsupervisor',
             ])
             ->addColumn('bicycletraining', 'integer', [
@@ -1985,15 +1985,15 @@ class InitialSchema extends AbstractMigration
             ->addColumn('bicyclebancomment', 'text', [
                 'null' => false,
                 'limit' => 65535,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'bicycleban',
             ])
             ->addColumn('workshopbancomment', 'text', [
                 'null' => false,
                 'limit' => 65535,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'bicyclebancomment',
             ])
             ->addColumn('volunteer', 'integer', [
@@ -2011,8 +2011,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('laundrycomment', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'laundryblock',
             ])
             ->addColumn('approvalsigned', 'integer', [
@@ -2024,8 +2024,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('signaturefield', 'text', [
                 'null' => true,
                 'limit' => 65535,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'approvalsigned',
             ])
         ->addIndex(['parent_id'], [
@@ -2074,8 +2074,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2087,15 +2087,15 @@ class InitialSchema extends AbstractMigration
             ->addColumn('name', 'string', [
                 'null' => false,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('groupname', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'name',
             ])
             ->addColumn('category_id', 'integer', [
@@ -2168,8 +2168,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('comments', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'stockincontainer',
             ])
             ->addColumn('deleted', 'datetime', [
@@ -2180,8 +2180,8 @@ class InitialSchema extends AbstractMigration
         $this->table('products_prices', [
                 'id' => false,
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2204,8 +2204,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2218,8 +2218,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('code', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('created', 'datetime', [
@@ -2231,8 +2231,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2245,15 +2245,15 @@ class InitialSchema extends AbstractMigration
             ->addColumn('source', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('destination', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'source',
             ])
             ->addColumn('created', 'datetime', [
@@ -2364,8 +2364,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2399,8 +2399,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2413,8 +2413,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('label', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('seq', 'integer', [
@@ -2427,8 +2427,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2440,8 +2440,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('label', 'string', [
                 'null' => false,
                 'limit' => 20,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('sizegroup_id', 'integer', [
@@ -2482,8 +2482,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2497,8 +2497,8 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'default' => '',
                 'limit' => 11,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('product_id', 'integer', [
@@ -2529,29 +2529,29 @@ class InitialSchema extends AbstractMigration
             ->addColumn('comments', 'text', [
                 'null' => false,
                 'limit' => 65535,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'qr_id',
             ])
             ->addColumn('_type', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'comments',
             ])
             ->addColumn('_gender', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => '_type',
             ])
             ->addColumn('_size', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => '_gender',
             ])
             ->addColumn('created', 'datetime', [
@@ -2617,8 +2617,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2631,15 +2631,15 @@ class InitialSchema extends AbstractMigration
             ->addColumn('title', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('content', 'text', [
                 'null' => true,
                 'limit' => 65535,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'title',
             ])
             ->create();
@@ -2647,8 +2647,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2680,8 +2680,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('description', 'string', [
                 'null' => false,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'count',
             ])
             ->addColumn('drops', 'integer', [
@@ -2822,8 +2822,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2836,8 +2836,8 @@ class InitialSchema extends AbstractMigration
             ->addColumn('name', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->create();
@@ -2845,8 +2845,8 @@ class InitialSchema extends AbstractMigration
                 'id' => false,
                 'primary_key' => ['id'],
                 'engine' => 'InnoDB',
-                'encoding' => 'latin1',
-                'collation' => 'latin1_swedish_ci',
+                'encoding' => 'utf8',
+                'collation' => 'utf8_general_ci',
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
@@ -2858,15 +2858,15 @@ class InitialSchema extends AbstractMigration
             ->addColumn('label', 'string', [
                 'null' => false,
                 'limit' => 20,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'id',
             ])
             ->addColumn('longlabel', 'string', [
                 'null' => true,
                 'limit' => 255,
-                'collation' => 'latin1_swedish_ci',
-                'encoding' => 'latin1',
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
                 'after' => 'label',
             ])
             ->addColumn('seq', 'integer', [
