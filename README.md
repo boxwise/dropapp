@@ -16,21 +16,47 @@ To service the current version which is still running in three refugee camps thr
 
 ### How do I get set up? ###
 
-You can get MySQL running locally using the following:
+1. You first need to install 'compose' (we suggest making it available globally)
 
-    docker run -p 3306:3306 --name mysql01 -e MYSQL_ROOT_PASSWORD=XYZ -e MYSQL_ROOT_HOST=% -d mysql/mysql-server:latest
+    curl -s https://getcomposer.org/installer | php
+    mv composer.phar /usr/local/bin/composer
 
-Create a new database and import market_clean.sql
+2. You can install the required dependencies then using
 
-Then copy .htaccess.default and /config.php.default and remove the .default in the filename. Then change the necesary usernames, folders and database settings. You can use the root password you specified above if running locally.
+   composer install
 
-### Running the app ###
+3. To configure the app, copy `/config.php.default` and remove the `.default` in the filename. The default configuration does not need to change if you are using Docker (see below).
 
-To start the app using the PHP Development Server, run
+4. To run the application, we assume you have Docker installed. You can then run:
 
-    php -S localhost:8080 -c php.ini
+   docker-compose up
 
-After this you should be able to login to the app using emailaddress: demo@example.com with password: demo
+5. To initialize the database for the first time, you should run:
+
+   vendor/bin/phinx migrate -e development
+   vendor/bin/phinx seed:run -e development
+
+   The first command creates the schema, the second command seeds the database with some dummy data
+
+### Accessing the app
+
+Once the docker containers are running the app is accessible at http://localhost:8100/
+
+After this you should be able to login to the app using email address: some.admin@boxwise.co with password: admin
+
+### Database and migrations
+
+If you want to connect to the MySQL server from your host machine, you can do this using
+
+    docker exec -it dropapp_mysql_db_1 mysql -uroot -p
+
+If you want to reset it, you should stop docker, delete the files in `/.docker/data/mysql` and call `docker-compose up` again.
+
+We're using (Phinx)[https://phinx.org/] and (phinx-migrations-generator)[https://github.com/odan/phinx-migrations-generator] to manage database migrations. Running
+
+   vendor/bin/phinx-migrations generate
+
+Will generate a new migration based on the diff of /db/migrations/schema.php.
 
 ### Contribution guidelines ###
 

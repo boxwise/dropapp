@@ -1,15 +1,14 @@
 # Add any directories, files, or patterns you don't want to be tracked by version control
 /.htaccess
+/.docker/data
 config.php
 .DS_Store
 error_log
 templates/templates_c/*
 minified.css
 minified.js
-barmaadrihun
 .ftpquota
 uploads/*
 vendor
-phinx.yml
 !uploads/.gitkeep 
 phpmyadmin/*

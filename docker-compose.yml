@@ -1,0 +1,24 @@
+version: '3.1'
+
+services:
+  db_mysql:
+    image: mysql/mysql-server:latest
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: dropapp_root
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: dropapp_dev
+    volumes:
+      - ./.docker/data/mysql:/var/lib/mysql
+    ports:
+      - "9906:3306"
+  web:
+    build: .docker/php 
+    depends_on:
+      - db_mysql
+    volumes:
+      - .:/var/www/html/
+    ports:
+      - "8100:80"
+    stdin_open: true
+    tty: true
