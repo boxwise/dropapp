@@ -18,24 +18,24 @@ To service the current version which is still running in three refugee camps thr
 
 1. You first need to install 'compose' (we suggest making it available globally)
 
-    curl -s https://getcomposer.org/installer | php
-    mv composer.phar /usr/local/bin/composer
+       curl -s https://getcomposer.org/installer | php`
+       mv composer.phar /usr/local/bin/composer`
 
 2. You can install the required dependencies then using
 
-   composer install
+       composer install
 
 3. To configure the app, copy `/config.php.default` and remove the `.default` in the filename. The default configuration does not need to change if you are using Docker (see below).
 
 4. To run the application, we assume you have Docker installed. You can then run:
 
-   docker-compose up
+       docker-compose up
 
 5. To initialize the database for the first time, you should run:
 
-   vendor/bin/phinx migrate -e development
-   vendor/bin/phinx seed:run -e development
-
+       vendor/bin/phinx migrate -e development
+       vendor/bin/phinx seed:run -e development
+ 
    The first command creates the schema, the second command seeds the database with some dummy data
 
 ### Accessing the app
@@ -54,7 +54,7 @@ If you want to reset it, you should stop docker, delete the files in `/.docker/d
 
 We're using (Phinx)[https://phinx.org/] and (phinx-migrations-generator)[https://github.com/odan/phinx-migrations-generator] to manage database migrations. Running
 
-   vendor/bin/phinx-migrations generate
+    vendor/bin/phinx-migrations generate
 
 Will generate a new migration based on the diff of /db/migrations/schema.php.
 
