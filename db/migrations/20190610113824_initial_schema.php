@@ -382,7 +382,7 @@ class InitialSchema extends AbstractMigration
         $this->table('cms_functions', [
                 'id' => false,
                 'primary_key' => ['id'],
-                'engine' => 'MyISAM',
+                'engine' => 'InnoDB',
                 'encoding' => 'utf8',
                 'collation' => 'utf8_bin',
                 'comment' => '',
@@ -483,7 +483,7 @@ class InitialSchema extends AbstractMigration
         $this->table('cms_users', [
                 'id' => false,
                 'primary_key' => ['id'],
-                'engine' => 'MyISAM',
+                'engine' => 'InnoDB',
                 'encoding' => 'utf8',
                 'collation' => 'utf8_bin',
                 'comment' => '',
@@ -676,7 +676,7 @@ class InitialSchema extends AbstractMigration
         $this->table('food_distributions', [
                 'id' => false,
                 'primary_key' => ['id'],
-                'engine' => 'MyISAM',
+                'engine' => 'InnoDB',
                 'encoding' => 'utf8',
                 'collation' => 'utf8_general_ci',
                 'comment' => '',
@@ -756,7 +756,7 @@ class InitialSchema extends AbstractMigration
         $this->table('food_transactions', [
                 'id' => false,
                 'primary_key' => ['id'],
-                'engine' => 'MyISAM',
+                'engine' => 'InnoDB',
                 'encoding' => 'utf8',
                 'collation' => 'utf8_general_ci',
                 'comment' => '',
@@ -1562,7 +1562,7 @@ class InitialSchema extends AbstractMigration
         $this->table('need_periods', [
                 'id' => false,
                 'primary_key' => ['id'],
-                'engine' => 'MyISAM',
+                'engine' => 'InnoDB',
                 'encoding' => 'utf8',
                 'collation' => 'utf8_general_ci',
                 'comment' => '',
@@ -1617,7 +1617,7 @@ class InitialSchema extends AbstractMigration
         $this->table('pagetree', [
                 'id' => false,
                 'primary_key' => ['id'],
-                'engine' => 'MyISAM',
+                'engine' => 'InnoDB',
                 'encoding' => 'utf8',
                 'collation' => 'utf8_general_ci',
                 'comment' => '',
@@ -2278,7 +2278,7 @@ class InitialSchema extends AbstractMigration
         $this->table('settings', [
                 'id' => false,
                 'primary_key' => ['id'],
-                'engine' => 'MyISAM',
+                'engine' => 'InnoDB',
                 'encoding' => 'utf8',
                 'collation' => 'utf8_general_ci',
                 'comment' => '',
@@ -2729,7 +2729,7 @@ class InitialSchema extends AbstractMigration
         $this->table('translate', [
                 'id' => false,
                 'primary_key' => ['id'],
-                'engine' => 'MyISAM',
+                'engine' => 'InnoDB',
                 'encoding' => 'utf8',
                 'collation' => 'utf8_general_ci',
                 'comment' => '',
