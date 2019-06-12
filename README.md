@@ -54,7 +54,7 @@ If you want to reset it, you should stop docker, delete the files in `/.docker/d
 
 We're using (Phinx)[https://phinx.org/] and (phinx-migrations-generator)[https://github.com/odan/phinx-migrations-generator] to manage database migrations. Running
 
-   vendor/bin/phinx-migrations generate
+    vendor/bin/phinx-migrations generate
 
 Will generate a new migration based on the diff of /db/migrations/schema.php.
 
