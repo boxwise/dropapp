@@ -760,7 +760,7 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'latin1',
                 'collation' => 'latin1_swedish_ci',
                 'comment' => '',
-                'row_format' => 'FIXED',
+                'row_format' => 'DYNAMIC',
             ])
             ->addColumn('id', 'integer', [
                 'null' => false,
