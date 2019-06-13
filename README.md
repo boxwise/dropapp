@@ -48,11 +48,11 @@ After this you should be able to login to the app using email address: some.admi
 
 If you want to connect to the MySQL server from your host machine, you can do this using
 
-    docker exec -it dropapp_mysql_db_1 mysql -uroot -p
+    docker exec -it dropapp_mysql_db_1 mysql -u root -p
 
 If you want to reset it, you should stop docker, delete the files in `/.docker/data/mysql` and call `docker-compose up` again.
 
-We're using (Phinx)[https://phinx.org/] and (phinx-migrations-generator)[https://github.com/odan/phinx-migrations-generator] to manage database migrations. Running
+We're using [Phinx](https://phinx.org/) and [phinx-migrations-generator](https://github.com/odan/phinx-migrations-generator) to manage database migrations. Running
 
     vendor/bin/phinx-migrations generate
 
