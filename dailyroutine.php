@@ -94,12 +94,5 @@ GROUP BY p.id
 	db_query('UPDATE people p1 LEFT JOIN people p2 ON p1.parent_id = p2.id SET p1.deleted = NOW() WHERE p2.deleted AND !p1.deleted AND p1.parent_id != 0');
 	
 	
-	// this notifies us when a new installation of the Drop App is made
-	if(!isset($settings['installed'])) {
-		foreach($_SERVER as $key=>$value) $mail .= $key.' -> '.$value."<br />";
-		$result = sendmail('post@bartdriessen.eu', 'post@bartdriessen.eu', 'New installation of Drop app', $mail);
-		db_query('INSERT INTO settings (category_id, type, code, description_en, value) VALUES (1,"text","installed","Date and time of installation and first run",NOW())');
-	}
-	
 	header('/');
 	
