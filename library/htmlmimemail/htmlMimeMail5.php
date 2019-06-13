@@ -164,11 +164,11 @@ class htmlMimeMail5
     public function setCRLF($crlf = "\n")
     {
         if (!defined('CRLF')) {
-            define('CRLF', $crlf, true);
+            define('CRLF', $crlf);
         }
 
         if (!defined('MAIL_MIMEPART_CRLF')) {
-            define('MAIL_MIMEPART_CRLF', $crlf, true);
+            define('MAIL_MIMEPART_CRLF', $crlf);
         }
     }
 

@@ -26,21 +26,31 @@
 	 	require('dailyroutine.php');
 	}
 
-
 	$cmsmain = new Zmarty;
+
+	/* make an organisation menu -------------------------------------------- */
+	if($_SESSION['user']['is_admin']) {
+		if($_GET['organisation']) {
+			unset($_SESSION['camp']);
+			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id',array('id'=>$_GET['organisation']));
+		}
+		$organisations = db_array('SELECT * FROM organisations ORDER BY label');
+		$cmsmain->assign('organisations',$organisations);
+	}
+	/* end of the camp menu addition -------------------------------------------- */
 	
 	/* new: fill the camp selection menu -------------------------------------------- */
 	if($_GET['camp']) {
 		if($_SESSION['user']['is_admin']) {
-			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c WHERE c.id = :camp ORDER BY c.seq',array('camp'=>$_GET['camp']));
+			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c WHERE organisation_id = :organisation_id AND c.id = :camp ORDER BY c.seq',array('camp'=>$_GET['camp'],'organisation_id'=>$_SESSION['organisation']['id']));
 		} else {
-			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE c.id = x.camps_id AND c.id = :camp AND x.cms_users_id = :id ORDER BY c.seq',array('camp'=>$_GET['camp'], 'id'=>$_SESSION['user']['id']));
+			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE organisation_id = :organisation_id AND c.id = x.camps_id AND c.id = :camp AND x.cms_users_id = :id ORDER BY c.seq',array('camp'=>$_GET['camp'], 'id'=>$_SESSION['user']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
 		}
 	}
 	if($_SESSION['user']['is_admin']) {
-		$camplist = db_array('SELECT c.* FROM camps AS c ORDER BY c.seq');
+		$camplist = db_array('SELECT c.* FROM camps AS c WHERE organisation_id = :organisation_id ORDER BY c.seq', array('organisation_id'=>$_SESSION['organisation']['id']));
 	} else {
-		$camplist = db_array('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE x.camps_id = c.id AND x.cms_users_id = :id ORDER BY c.seq',array('id'=>$_SESSION['user']['id']));
+		$camplist = db_array('SELECT c.* FROM camps AS c, cms_usergroups_camps AS x WHERE c.organisation_id = :organisation_id AND x.camp_id = c.id AND x.cms_usergroups_id = :usergroup ORDER BY c.seq',array('usergroup'=>$_SESSION['usergroup']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
 	}
 	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
 	$cmsmain->assign('camps',$camplist);

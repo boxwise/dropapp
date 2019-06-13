@@ -278,7 +278,8 @@ class Mail_MIMEPart
         $escape = '=';
         $output = '';
 
-        while(list(, $line) = each($lines)){
+        #while(list(, $line) = each($lines)){
+	    foreach($lines as $value) {
 
             $linlen     = strlen($line);
             $newline = '';
