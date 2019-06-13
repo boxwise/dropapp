@@ -3,11 +3,12 @@
  		<div class="pull-left">
 			<a href="#" class="menu-btn visible-xs">&#9776;</a>
 			<a href="{$settings['rootdir']}/" class="brand">{$settings['site_name']}</a>
-			{$smarty.session.organisation.label}
+			{if $smarty.session.organisation.label}{$smarty.session.organisation.label}
 			{if $camps|count==1}
 	 			/ {$camps[0]['name']}
 	 		{elseif $camps|count<1}
 	 			/ No camp
+			{/if}
 			{/if}
  		</div>
 		<ul class="nav navbar-nav pull-right">

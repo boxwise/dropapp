@@ -11,7 +11,7 @@
 		$savekeys = array('label');
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('camps', 'cms_usergroups_camps', 'cms_usergroups_id', 'camp_id');
-		$handler->saveMultiple('functions', 'cms_usergroups_functions', 'cms_usergroups_id', 'cms_functions_id');
+		$handler->saveMultiple('cms_functions', 'cms_usergroups_functions', 'cms_usergroups_id', 'cms_functions_id');
 
 		redirect('?action='.$_POST['_origin']);
 	}
@@ -32,7 +32,7 @@
 
 	addfield('select','Available camps','camps',array('multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected FROM camps AS a LEFT OUTER JOIN cms_usergroups_camps AS x ON a.id = x.camp_id AND x.cms_usergroups_id = '.intval($id).' ORDER BY seq'));
 
-	addfield('select',$translate['cms_users_access'],'functions',array('multiple'=>true,'query'=>'
+	addfield('select',$translate['cms_users_access'],'cms_functions',array('multiple'=>true,'query'=>'
 	SELECT 
 		a.id AS value, a.title_en AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 
 	FROM cms_functions AS a 

@@ -102,7 +102,7 @@ FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bi
 		$cmsmain->assign('include','start-market.tpl');
 	
 		// place the form elements and data in the template
-	} else {
+	} elseif($_SESSION['organisation']['id']) {
 		$cmsmain->assign('include','start-nomarket.tpl');
 	}
 

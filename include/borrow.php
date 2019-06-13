@@ -9,7 +9,7 @@
 
 		$cmsmain->assign('title','Borrow items');
 
- 		listfilter2(array('label'=>'Location','query'=>'SELECT id, location FROM borrow_locations ORDER BY id','filter'=>'b.location_id'));
+ 		listfilter2(array('label'=>'Location','query'=>'SELECT id, location FROM borrow_locations WHERE camp_id = '.intval($_SESSION['camp']['id']).' ORDER BY id','filter'=>'b.location_id'));
  		listfilter(array('label'=>'Category','query'=>'SELECT id, label FROM borrow_categories ORDER BY id','filter'=>'b.category_id'));
 		listsetting('manualquery',true);
 
