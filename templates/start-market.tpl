@@ -137,8 +137,6 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 
 <!-- HTML -->
 <div class="content-form">
-	<a href="https://boxwise.co" target="_target"><img src="/assets/img/boxwise.jpg" style="max-width:70%;"/></a>
-
 	<h1>Hello there!</h1>
 	
 	<h1 class="light">
