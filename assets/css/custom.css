@@ -12,13 +12,13 @@ body{
 }
 
 a{
-	color: #61c4ef;
+	color: #009DAD;
 }
 a:hover{
 	color: #333;
 }
 .blue {
-	color:#61c4ef;
+	color:#009DAD;
 }
 
 hr{
@@ -35,11 +35,11 @@ hr{
 .login-reset-template{
 	top: 0;
 	padding-top: 40px;
-	background: #61c4ef;
+	background: #009DAD;
 	min-height: 100%;
 	position: absolute;
 	width: 100%;
-	background: #61c4ef no-repeat center center fixed;
+	background: #009DAD no-repeat center center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -47,17 +47,17 @@ hr{
 }
 
 .login-reset-template h1{
-	color: #fff;
+	color: #000000;
 }
 
 .header-top{
-	background: #61c4ef;
+	background: #009DAD;
 }
 .pushy{
 	left: -200px;
 }
 .nav-aside ul li.active > a{
-	color: #61c4ef;
+	color: #009DAD;
 }
 
 .aside-form-top{
@@ -168,7 +168,7 @@ body.status .dropcoins-text{
 }
 body.status .dropcoins i{
 	font-size: 8em;
-	color: #61c4ef;
+	color: #009DAD;
 	float: left;
 }
 body.status .dropcoins b{
@@ -350,7 +350,7 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 	background-color: #f8f8f8 !important;
 }
 .cp-spinner{width:48px;height:48px;display:inline-block;box-sizing:border-box;position:relative;top: 50%;transform: translateY(-50%);}
-.cp-round:before{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #fff;border-right:solid 6px #fff;border-bottom:solid 6px #fff;border-left:solid 6px #fff;position:absolute;top:0;left:0}.cp-round:after{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #61c4ef;border-right:solid 6px transparent;border-bottom:solid 6px transparent;border-left:solid 6px transparent;position:absolute;top:0;left:0;animation:cp-round-animate 1s ease-in-out infinite}@keyframes cp-round-animate{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.cp-round:before{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #fff;border-right:solid 6px #fff;border-bottom:solid 6px #fff;border-left:solid 6px #fff;position:absolute;top:0;left:0}.cp-round:after{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #009DAD;border-right:solid 6px transparent;border-bottom:solid 6px transparent;border-left:solid 6px transparent;position:absolute;top:0;left:0;animation:cp-round-animate 1s ease-in-out infinite}@keyframes cp-round-animate{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 
 .input-element-small {
 	float: left;
@@ -518,7 +518,7 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 	font-size: 1.8em;
 	height: 10px;
 	overflow: hidden;
-	color: #61c4ef;
+	color: #009DAD;
 }
 .count-down{
 	line-height: 0;
