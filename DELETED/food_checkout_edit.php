@@ -83,7 +83,7 @@ EOD;
 
 		#----------Ajax Placeholder for food transactions
 		addfield('ajaxstart','', '', array('id'=>'ajax-content'));
-		if($id)	$perc = ftran_list(array_diff(array_slice($data,2,5, true),["0"]), $id, $_SESSION['camp']['id'], $_SESSION['camp']['adult-age']);
+		if($id)	$perc = ftran_list(array_diff(array_slice($data,2,5, true),["0"]), $id, $_SESSION['camp']['id'], $_SESSION['camp']['adult_age']);
 		addfield('ajaxend');
 		if($id) addfield('custom', '', '<font size=4><b>'.$perc['hidden'].' of '.$perc['all'].' ('.round($perc['hidden']/$perc['all']*100).'%) families <br> '.$perc['hid_peo'].' of '.$perc['all_peo'].' ('.round($perc['hid_peo']/$perc['all_peo']*100).'%) people</b><br>collected their food </font>.', array('aside' => true, 'asidetop' => true));
 
@@ -106,7 +106,7 @@ EOD;
 		$food_cols = array_map('intval',filter_input(INPUT_POST, foods, FILTER_SANITIZE_NUMBER_INT,FILTER_REQUIRE_ARRAY));
 		$id = filter_input(INPUT_POST, dist_id, FILTER_SANITIZE_NUMBER_INT);
 		
-		ftran_list(array_diff($food_cols,[0]), $id, $_SESSION['camp']['id'], $_SESSION['camp']['adult-age']);
+		ftran_list(array_diff($food_cols,[0]), $id, $_SESSION['camp']['id'], $_SESSION['camp']['adult_age']);
 
 		$ajaxform->assign('formelements',$formdata);
 		$htmlcontent = $ajaxform->fetch('cms_form_ajax.tpl');
