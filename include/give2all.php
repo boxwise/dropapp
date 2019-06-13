@@ -47,11 +47,6 @@
 					
 				}
 
-
-				if(isset($settings['no_rollover_points']) && ($settings['no_rollover_points'] == 1)) {
-					db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>'Reset','drops'=>($currentdrops * -1),'user_id'=>$_SESSION['user']['id']));
-				}
-
 				db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>$_POST['description'],'drops'=>$drops,'user_id'=>$_SESSION['user']['id']));
 
 			}
@@ -80,12 +75,7 @@
 
 	addfield('hidden','people','people');
 
-
-	if(isset($settings['no_rollover_points']) && ($settings['no_rollover_points'] == 1)) {
-		addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($translate['market_coins_short']).'" button on the right, you can\'t turn back anymore! All the current '.$translate['market_coins_short'].' will be reset and new '.$translate['market_coins_short'].' will be given to all families!</p></div>');		
-	} else {
-		addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($translate['market_coins_short']).'" button on the right, you can\'t turn back anymore!</p></div>');		
-	}
+	addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($translate['market_coins_short']).'" button on the right, you can\'t turn back anymore!</p></div>');		
 
 	addfield('text','Families','names',array('readonly'=>true));
 	addfield('line','','');

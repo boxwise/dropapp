@@ -53,10 +53,6 @@
 	addfield('text','Give '.ucwords($translate['market_coins_short']).' per child','dropschild');
 	addfield('line','','');
 
-	if(isset($settings['no_rollover_points']) && ($settings['no_rollover_points'] == 1)) {
-		addfield('checkbox', 'Reset current '.$translate['market_coins_short'].' to 0 before giving new '.$translate['market_coins_short'], 'no_rollover');
-	}
-
 	addfield('text','Comments','description');
 
 	#addfield('checkbox','Zichtbaar','visible',array('aside'=>true));
