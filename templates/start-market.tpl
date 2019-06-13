@@ -94,7 +94,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
     "fillAlphas": 0.8,
     "lineAlpha": 0.2,
     "type": "column",
-    "fillColors": "#34aad1",
+    "fillColors": "#4cbac5",
     "valueField": "Bicycles M"
   },{
     "balloonText": "<b>[[value]]</b> Bicycles Female", 

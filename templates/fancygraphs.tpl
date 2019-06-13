@@ -34,8 +34,8 @@ var chart = AmCharts.makeChart("chartdiv", {
     }],
     "startDuration": 0.5,
     "graphs": [{
-        "fillColors": "#34aad1",
-        "lineColor": "#34aad1",
+        "fillColors": "#4cbac5",
+        "lineColor": "#4cbac5",
 	    "fillAlphas": 1,
 	    "lineAlpha": 0,
 	    "type": "column",
@@ -111,8 +111,8 @@ var chart2 = AmCharts.makeChart("chartdiv2", {
     "startDuration": 0.5,
     "graphs": [{
        "balloonText": "[[value]] men in families of [[category]] persons",
-        "fillColors": "#34aad1",
-        "lineColor": "#34aad1",
+        "fillColors": "#4cbac5",
+        "lineColor": "#4cbac5",
         "title": "Number of men per family size",
         "type": "column",
         "valueField": "male",

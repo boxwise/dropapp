@@ -339,7 +339,7 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 	color: #000;
 }
 .light .men {
-	color: #34aad1;
+	color: #4cbac5;
 }
 .light .women {
 	color: #db57bd;
@@ -417,7 +417,7 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-radius: 6px;
-	background-color:rgb(235, 247, 253);
+	background-color:#e5f5f6;
 	margin:25px 0;
 	max-width: 400px;
 }
