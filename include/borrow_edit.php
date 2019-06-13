@@ -3,11 +3,16 @@
 	$table = 'cms_users';
 
 	if(strftime('%w')==6) {
-		$endtime = $settings['bicycle_closingtime_saturday'];	
+		$endtime = $_SESSION['camp']['bicycle_closingtime_saturday'];	
 	} else {
-		$endtime = $settings['bicycle_closingtime'];	
+		$endtime = $_SESSION['camp']['bicycle_closingtime'];	
 	}
-	$endtime = substr($endtime,0,strpos($endtime,':'))+(substr($endtime,strpos($endtime,':')+1)/60);
+	if($endtime){
+		$endtime = substr($endtime,0,strpos($endtime,':'))+(substr($endtime,strpos($endtime,':')+1)/60);
+	} else {
+		$endtime = 24;
+	}
+	
 	
 	
 	if($_GET['return']) {
