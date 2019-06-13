@@ -1,6 +1,6 @@
 {include file="cms_header.tpl"}
 	<div class="login-reset-template" style="background-image: url(assets/img/background-{math equation='rand(1,5)'}.jpg);">
-		<h1>{$settings['site_name']}</h1>
+		<h1>{$translate['site_name']}</h1>
 		<form id="reset" class="well-center login-reset-form form" data-ajax="1" data-action="reset" method="post">
 			<h2>{$translate['cms_reset_pagetitle']}</h2>
 			<p>{$translate['cms_reset_description']}</p>

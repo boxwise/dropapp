@@ -1,6 +1,6 @@
 {include file="cms_header.tpl"}
 	<div class="login-reset-template" style="background-image: url(assets/img/background-{math equation='rand(1,5)'}.jpg);">
-		<h1>{$settings['site_name']}</h1>
+		<h1>{$translate['site_name']}</h1>
 		<form id="reset" class="well-center login-reset-form form" data-ajax="1" data-action="reset2" method="post">
 			<input type="hidden" name="hash" value="{$smarty.get.hash|escape:'html'}" />
 			<input type="hidden" name="userid" value="{$smarty.get.userid|escape:'html'}" />

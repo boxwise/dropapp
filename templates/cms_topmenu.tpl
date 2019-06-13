@@ -2,7 +2,7 @@
 	<div class="header-top-inner container-fluid">
  		<div class="pull-left">
 			<a href="#" class="menu-btn visible-xs">&#9776;</a>
-			<a href="{$settings['rootdir']}/" class="brand">{$settings['site_name']}</a>
+			<a href="{$settings['rootdir']}/" class="brand">{$translate['site_name']}</a>
 			{if $camps|count==1}
 	 			{$camps[0]['name']}
 	 		{elseif $camps|count<1}

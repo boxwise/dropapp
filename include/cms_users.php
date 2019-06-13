@@ -102,7 +102,7 @@
 			$newpassword = createPassword();
 
 			$mail = $translate['cms_sendlogin_mail'];
-			$mail = str_ireplace('{sitename}',$settings['site_name'].' ('.$_SERVER['HTTP_HOST'].$settings['rootdir'].')',$mail);
+			$mail = str_ireplace('{sitename}',$translate['site_name'].' ('.$_SERVER['HTTP_HOST'].$settings['rootdir'].')',$mail);
 			$mail = str_ireplace('{password}',$newpassword,$mail);
 
 			$result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);

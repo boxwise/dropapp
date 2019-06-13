@@ -24,7 +24,7 @@
 	</head>
 	<body class="mobile">
 		<header>
-			<strong><a href="{$settings['rootdir']}/mobile.php">{$settings['site_name']}</a></strong>
+			<strong><a href="{$settings['rootdir']}/mobile.php">{$translate['site_name']}</a></strong>
 			{if $smarty.session.user}
 		 		{if $camps|count>1}
 		 			<div id="campselect">

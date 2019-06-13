@@ -13,7 +13,7 @@
 		db_query('UPDATE '.$settings['cms_usertable'].' SET resetpassword = :hash WHERE id = :id ',array('hash'=>$hash,'id'=>$row['id']));
 
 		$message = $translate['cms_reset_mail'];
-		$message = str_ireplace('{sitename}',$settings['site_name'].' ('.$_SERVER['HTTP_HOST'].')',$message);
+		$message = str_ireplace('{sitename}',$translate['site_name'].' ('.$_SERVER['HTTP_HOST'].')',$message);
 
 		if($row['usertype']=='family') {
 			$message = str_ireplace('{link}','http://'.$_SERVER['HTTP_HOST'].$settings['cmsdir'].'/reset.php?peopleid='.$row['id'].'&hash='.$hash,$message);
