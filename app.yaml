@@ -6,3 +6,13 @@ runtime: php72
 # run a long-running PHP script as a worker process (e.g. "php worker.php").
 #
 # entrypoint: serve index.php
+# ([^/]*/|)
+
+handlers:
+- url: /assets
+  static_dir: assets
+- url: /uploads
+  static_dir: uploads
+- url: /.*
+  script: auto
+  secure: always

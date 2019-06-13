@@ -5,11 +5,10 @@ config.php
 .DS_Store
 error_log
 templates/templates_c/*
-minified.css
-minified.js
 .ftpquota
 uploads/*
 vendor
 !uploads/.gitkeep 
 phpmyadmin/*
 *.sql
+config.php.production
