@@ -10,12 +10,14 @@
 		$cmsmain->assign('title','User groups');
 		listsetting('search', array('g.label'));
 
-		$data = getlistdata('SELECT g.*, IFNULL(GROUP_CONCAT(c.name ORDER BY c.seq SEPARATOR ", "),"") AS camps FROM cms_usergroups AS g 
+		$data = getlistdata('SELECT g.*, IFNULL(GROUP_CONCAT(c.name ORDER BY c.seq SEPARATOR ", "),"") AS camps, l.shortlabel AS userlevel FROM cms_usergroups AS g 
 LEFT OUTER JOIN cms_usergroups_camps AS x ON x.cms_usergroups_id = g.id
+LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 LEFT OUTER JOIN camps AS c ON x.camp_id = c.id
 GROUP BY g.id');
 
 		addcolumn('text','Name','label');
+		addcolumn('text','Level','userlevel');
 		addcolumn('text','Camps','camps');
 
 		listsetting('allowsort',true);

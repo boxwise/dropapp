@@ -21,7 +21,7 @@
 
 	// dailyroutine is performed when the last action of any user is not of today
 	if(strftime('%Y-%m-%d')!=$settings['dailyroutine'] || $action == 'dailyroutine') {
-		db_query('UPDATE settings SET value = "'.strftime('%Y-%m-%d').'" WHERE code = "dailyroutine"');
+		db_query('UPDATE cms_settings SET value = "'.strftime('%Y-%m-%d').'" WHERE code = "dailyroutine"');
 	 	require('dailyroutine.php');
 	}
 
