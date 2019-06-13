@@ -7,13 +7,13 @@
 
 	$data['oldest'] = db_value('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 FROM people WHERE visible AND NOT deleted AND date_of_birth IS NOT NULL AND date_of_birth != "0000-00-00" AND camp_id = :camp_id ORDER BY date_of_birth LIMIT 1',array('camp_id'=>$_SESSION['camp']['id']));
 	$data['oldest'] = ceil($data['oldest']/10)*10;
-
+dump($_SESSION['camp']['adult-age']);
 	$array = db_array('SELECT lastname,
 (SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id)+1 AS size,
-(SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= '.$settings['adult-age'].')+IF(p.gender="M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 >= '.$settings['adult-age'].',1,0) AS male,
-(SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= '.$settings['adult-age'].')+IF(p.gender="F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 >= '.$settings['adult-age'].',1,0) AS female,
-(SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < '.$settings['adult-age'].')+IF(p.gender="M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 < '.$settings['adult-age'].',1,0) AS boys,
-(SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < '.$settings['adult-age'].')+IF(p.gender="F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 < '.$settings['adult-age'].',1,0) AS girls
+(SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult-age'].')+IF(p.gender="M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult-age'].',1,0) AS male,
+(SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult-age'].')+IF(p.gender="F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult-age'].',1,0) AS female,
+(SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult-age'].')+IF(p.gender="M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult-age'].',1,0) AS boys,
+(SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult-age'].')+IF(p.gender="F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult-age'].',1,0) AS girls
 FROM people AS p WHERE camp_id = :camp_id AND date_of_birth != "0000-00-00" AND p.visible AND parent_id = 0 AND NOT deleted AND container != "?"',array('camp_id'=>$_SESSION['camp']['id']));
 	$data['familysize'] = array();
 	foreach($array as $a) {
@@ -49,8 +49,8 @@ FROM people AS p WHERE camp_id = :camp_id AND date_of_birth != "0000-00-00" AND 
 		$data['containerscamp'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = :camp_id AND LEFT(container,2) != "PK"',array('camp_id'=>$_SESSION['camp']['id']));
 		$data['containersoutside'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = :camp_id AND LEFT(container,2) = "PK"',array('camp_id'=>$_SESSION['camp']['id']));
 
-	$data['adults'] = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= '.$settings['adult-age'],array('camp_id'=>$_SESSION['camp']['id']));
-	$data['children'] = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < '.$settings['adult-age'],array('camp_id'=>$_SESSION['camp']['id']));
+	$data['adults'] = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult-age'],array('camp_id'=>$_SESSION['camp']['id']));
+	$data['children'] = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult-age'],array('camp_id'=>$_SESSION['camp']['id']));
 	$data['under18'] = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < 18',array('camp_id'=>$_SESSION['camp']['id']));
 
 	// open the template

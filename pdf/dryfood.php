@@ -25,9 +25,9 @@ $pdf->SetAutoPageBreak(false);
 
 $result = db_query('
 	SELECT id, people.container, COUNT(*) AS number, SUM(extraportion)+SUM(notregistered) AS extra, 
-		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$settings['adult-age'].', 0, 1)) AS adults, 
+		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$_SESSION['camp']['adult-age'].', 0, 1)) AS adults, 
 		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 3, 1, 0)) AS baby, 
-		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$settings['adult-age'].' AND NOT (DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) <3, 1, 0)) AS children
+		SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$_SESSION['camp']['adult-age'].' AND NOT (DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) <3, 1, 0)) AS children
 	FROM people 
 	WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted 
 	GROUP BY container 

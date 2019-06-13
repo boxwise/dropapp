@@ -9,8 +9,8 @@
 	
 	$result = db_query('SELECT 
 	p.*, SUM(t.drops) AS drops,
-	IF((SELECT COUNT(id) FROM people WHERE volunteer AND (id = p.id OR parent_id = p.id)),99999,dropcapadult * (SELECT COUNT(id) FROM people WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 >= '.$settings['adult-age'].') +
-	dropcapchild * (SELECT COUNT(id) FROM people WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 < '.$settings['adult-age'].')) AS maxdrops
+	IF((SELECT COUNT(id) FROM people WHERE volunteer AND (id = p.id OR parent_id = p.id)),99999,dropcapadult * (SELECT COUNT(id) FROM people WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 >= '.$_SESSION['camp']['adult-age'].') +
+	dropcapchild * (SELECT COUNT(id) FROM people WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 < '.$_SESSION['camp']['adult-age'].')) AS maxdrops
 FROM 
 	people AS p, 
 	transactions AS t,

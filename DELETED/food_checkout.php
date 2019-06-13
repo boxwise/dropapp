@@ -15,10 +15,10 @@
 		$query='SELECT fd.id as id, fd.label as label, fd.created AS start_date,
 			(SELECT COUNT(pc.id) 
 				FROM people AS pc
-				WHERE pc.camp_id = '.$_SESSION['camp']['id'].' AND COALESCE(pc.created,0) < fd.created AND ((NOT pc.deleted AND pc.visible) OR fd.created < pc.deleted) AND (YEAR(NOW()) - YEAR(pc.date_of_birth) - (DAYOFYEAR(NOW()) > DAYOFYEAR(pc.date_of_birth))) < '.$settings['adult-age'].') AS children,
+				WHERE pc.camp_id = '.$_SESSION['camp']['id'].' AND COALESCE(pc.created,0) < fd.created AND ((NOT pc.deleted AND pc.visible) OR fd.created < pc.deleted) AND (YEAR(NOW()) - YEAR(pc.date_of_birth) - (DAYOFYEAR(NOW()) > DAYOFYEAR(pc.date_of_birth))) < '.$_SESSION['camp']['adult-age'].') AS children,
 			(SELECT COUNT(pa.id) 
 				FROM people AS pa
-				WHERE pa.camp_id = '.$_SESSION['camp']['id'].' AND pa.created < fd.created AND ((NOT pa.deleted AND pa.visible) OR fd.created < pa.deleted) AND (YEAR(NOW()) - YEAR(pa.date_of_birth) - (DAYOFYEAR(NOW()) > DAYOFYEAR(pa.date_of_birth))) > '.$settings['adult-age'].') AS adults';
+				WHERE pa.camp_id = '.$_SESSION['camp']['id'].' AND pa.created < fd.created AND ((NOT pa.deleted AND pa.visible) OR fd.created < pa.deleted) AND (YEAR(NOW()) - YEAR(pa.date_of_birth) - (DAYOFYEAR(NOW()) > DAYOFYEAR(pa.date_of_birth))) > '.$_SESSION['camp']['adult-age'].') AS adults';
 		for ($i=1; $i<6; $i++){
 			$query .= ', f'.$i.'.name AS food_'.$i.', ROUND(((SELECT children) * f'.$i.'.perchild) + ((SELECT adults) * f'.$i.'.peradult)) AS total_'.$i.',
 				(SELECT ROUND(SUM(ft'.$i.'.count)*f'.$i.'.package,1) FROM food_transactions AS ft'.$i.' WHERE fd.food_'.$i.' = ft'.$i.'.food_id AND fd.id = ft'.$i.'.dist_id) AS collected_'.$i.', 
