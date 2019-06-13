@@ -4,7 +4,7 @@
 
 	$data['people_id'] = intval($_POST['people_id']);
 	$offset = intval($_POST['offset']);
-	$cyclestart = strftime('%Y-%m-%d',strtotime('+'.$offset.' days', strtotime($settings['laundry_cyclestart'])));
+	$cyclestart = strftime('%Y-%m-%d',strtotime('+'.$offset.' days', strtotime($_SESSION['camp']['laundry_cyclestart'])));
 
 	if($data['people_id'] == -1) {
 		$element['field'] .= '<h2 class="light"><span class="number">Laundry for the Drop Market</span></h2>';

@@ -3,14 +3,14 @@
 
 	if($_POST) {
 
-		$settings['laundry_cyclestart'] = $_POST['cyclestart'];
+		$_SESSION['camp']['laundry_cyclestart'] = $_POST['cyclestart'];
 		
-		db_query('UPDATE settings SET value = :cyclestart WHERE code = "laundry_cyclestart"', array('cyclestart'=>strftime('%Y-%m-%d',strtotime($_POST['cyclestart']))));
+		db_query('UPDATE camps SET laundry_cyclestart = :cyclestart WHERE id  = :camp_id', array('cyclestart'=>strftime('%Y-%m-%d',strtotime($_POST['cyclestart'])), 'camp_id' => $_SESSION['camp']['id']));
 		
 		redirect('?action=laundry');
 	}
 	
-	$data['cyclestart'] = strftime('%Y-%m-%d',strtotime('+14 days',strtotime($settings['laundry_cyclestart'])));
+	$data['cyclestart'] = strftime('%Y-%m-%d',strtotime('+14 days',strtotime($_SESSION['camp']['laundry_cyclestart'])));
 	
 	// open the template
 	$cmsmain->assign('include','cms_form.tpl');

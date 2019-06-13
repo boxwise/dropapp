@@ -13,7 +13,7 @@
 	$_SESSION['laundryoffset'] = $data['offset'];
 	
 	
-	$cyclestart = strftime('%Y-%m-%d',strtotime('+'.$data['offset'].' days', strtotime($settings['laundry_cyclestart'])));
+	$cyclestart = strftime('%Y-%m-%d',strtotime('+'.$data['offset'].' days', strtotime($_SESSION['camp']['laundry_cyclestart'])));
 	
 	$data['times'] = db_simplearray('SELECT DISTINCT ls.time, lt.label FROM laundry_slots AS ls, laundry_times AS lt WHERE lt.id = ls.time');
 	
