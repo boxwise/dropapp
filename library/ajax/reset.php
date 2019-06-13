@@ -1,16 +1,12 @@
 <?php
 
-	$row = db_row('SELECT *, "org" AS usertype FROM '.$settings['cms_usertable'].' WHERE email != "" AND email = :email AND NOT deleted',array('email'=>$_POST['email']));
-	if(!$row) {
-		$settings['cms_usertable'] = 'people';
-		$row = db_row('SELECT *, "family" AS usertype, CONCAT(firstname," ",lastname) AS naam  FROM people WHERE email != "" AND email = :email AND NOT deleted',array('email'=>$_POST['email']));
-	}
+	$row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND NOT deleted',array('email'=>$_POST['email']));
 
 	if($row) { #e-mailaddress exists in database
 
 		$hash = md5(uniqid(time()));
 
-		db_query('UPDATE '.$settings['cms_usertable'].' SET resetpassword = :hash WHERE id = :id ',array('hash'=>$hash,'id'=>$row['id']));
+		db_query('UPDATE cms_users SET resetpassword = :hash WHERE id = :id ',array('hash'=>$hash,'id'=>$row['id']));
 
 		$message = $translate['cms_reset_mail'];
 		$message = str_ireplace('{sitename}',$translate['site_name'].' ('.$_SERVER['HTTP_HOST'].')',$message);

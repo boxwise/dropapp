@@ -2,7 +2,7 @@
 
 	$_POST['pass'] = md5($_POST['pass']);
 
-	$row = db_row('SELECT *, "org" AS usertype FROM '.$settings['cms_usertable'].' WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)',array('email'=>$_POST['email']));
+	$row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)',array('email'=>$_POST['email']));
 
 	if($row) { #e-mailaddress exists in database
 		if($settings['local_adminonly'] && !$row['is_admin'] && $_SERVER['Local']) {
@@ -16,7 +16,7 @@
 
 			$_SESSION['user'] = $row;
 
-			db_query('UPDATE '.$settings['cms_usertable'].' SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
+			db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
 			logfile('Mobile user logged in with '.$_SERVER['HTTP_USER_AGENT']);
 
 			if(isset($_POST['autologin'])) {

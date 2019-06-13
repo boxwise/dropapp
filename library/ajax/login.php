@@ -2,21 +2,16 @@
 
 	$_POST['pass'] = md5($_POST['pass']);
 
-	$row = db_row('SELECT *, "org" AS usertype FROM '.$settings['cms_usertable'].' WHERE email != "" AND email = :email AND NOT deleted',array('email'=>$_POST['email']));
+	$row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND NOT deleted',array('email'=>$_POST['email']));
 
 	if($row) { #e-mailaddress exists in database
-		if($settings['local_adminonly'] && !$row['is_admin'] && $_SERVER['Local']) {
-			$success = false;
-			$message = translate('cms_login_error_adminonly').$settings['local_adminonly'];
-			$redirect = false;
-			logfile('Login on the local-website is blocked for '.$_POST['email']);
-		} elseif($row['pass']==$_POST['pass']) { # password is correct
+		if($row['pass']==$_POST['pass']) { # password is correct
 			$success = true;
 			$message = '';
 
 			$_SESSION['user'] = $row;
 
-			db_query('UPDATE '.$settings['cms_usertable'].' SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
+			db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
 			logfile('User logged in with '.$_SERVER['HTTP_USER_AGENT']);
 
 			if(isset($_POST['autologin'])) {

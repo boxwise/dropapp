@@ -1,10 +1,5 @@
 <?php
-	$row = db_row('SELECT * FROM '.$settings['cms_usertable'].' WHERE resetpassword != "" AND resetpassword = :hash AND id = :userid AND NOT deleted',array('hash'=>$_POST['hash'], 'userid'=>$_POST['userid']));
-	if(!$row) {
-		$settings['cms_usertable'] = 'people';
-		$row = db_row('SELECT *, "family" AS usertype, CONCAT(firstname," ",lastname) AS naam  FROM people WHERE resetpassword != "" AND resetpassword = :hash AND id = :userid AND NOT deleted',array('hash'=>$_POST['hash'], 'userid'=>$_POST['peopleid']));
-		$_POST['userid'] = $_POST['peopleid'];
-	}
+	$row = db_row('SELECT * FROM cms_users WHERE resetpassword != "" AND resetpassword = :hash AND id = :userid AND NOT deleted',array('hash'=>$_POST['hash'], 'userid'=>$_POST['userid']));
 
 	if($row) { #e-mailaddress exists in database
 
@@ -16,7 +11,7 @@
 			$message = translate('cms_reset_tooshort');
 		} else {
 
-			db_query('UPDATE '.$settings['cms_usertable'].' SET pass = :pass, resetpassword = "" WHERE id = :userid',array('pass'=>md5($_POST['pass']),'userid'=>$_POST['userid']));
+			db_query('UPDATE cms_users SET pass = :pass, resetpassword = "" WHERE id = :userid',array('pass'=>md5($_POST['pass']),'userid'=>$_POST['userid']));
 			$success = true;
 			$message = translate('cms_reset_success');
 		}
