@@ -142,7 +142,7 @@
  	addfield('textarea','Comments','comments',array('tab'=>'people'));
 	addfield('line','','',array('tab'=>'people'));
 	addfield('checkbox','This person is not officially registered in camp','notregistered',array('tab'=>'people'));	
-	if($settings['extraportion'] && $_SESSION['camp']['food']){
+	if($_SESSION['camp']['extraportion'] && $_SESSION['camp']['food']){
 		addfield('checkbox','Extra food due to health condition (as indicated by Red Cross)','extraportion',array('tab'=>'people'));	
 	}
 	addfield('checkbox','This person is a resident volunteer with A drop in the ocean','volunteer',array('tab'=>'people'));	
