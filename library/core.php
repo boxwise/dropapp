@@ -20,7 +20,7 @@ if (array_key_exists('db_dsn',$settings)) {
 db_connect($db_dsn,$settings['db_user'],$settings['db_pass']);
 
 # get settings from settings table
-$result = db_query('SELECT code, value FROM settings');
+$result = db_query('SELECT code, value FROM cms_settings');
 while($row = db_fetch($result)) $settings[$row['code']] = $row['value'];
 
 $locale = db_row('SELECT locale FROM languages WHERE code = :lan',array('lan'=>$settings['cms_language']));

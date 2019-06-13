@@ -10,7 +10,7 @@ if(defined('CORE')) {
 }
 
 if(defined('COREMOBILE')) {
-	$lan = $settings['site_language'];
+	$lan = $settings['cms_language'];
 	$lanid = db_value('SELECT id FROM languages WHERE code = :code',array('code'=>$lan));
 }
 

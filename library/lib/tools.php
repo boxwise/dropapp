@@ -73,7 +73,7 @@ function ConvertURL(){
 		$_GET['get'.$count] = $item;
 		$count++;
 	}
-	if(!$lan) $lan = $settings['site_language'];
+	if(!$lan) $lan = $settings['cms_language'];
 }
 
 function redirect($url, $status = 301) {

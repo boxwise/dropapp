@@ -4,13 +4,7 @@
 
 	$row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)',array('email'=>$_POST['email']));
 
-	if($row) { #e-mailaddress exists in database
-		if($settings['local_adminonly'] && !$row['is_admin'] && $_SERVER['Local']) {
-			$success = false;
-			$message = translate('cms_login_error_adminonly').$settings['local_adminonly'];
-			$redirect = false;
-			logfile('Mobile login on the local-website is blocked for '.$_POST['email']);
-		} elseif($row['pass']==$_POST['pass']) { # password is correct
+	if($row['pass']==$_POST['pass']) { # password is correct
 			$success = true;
 			$message = '';
 

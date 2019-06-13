@@ -1,10 +1,9 @@
 <?php
-	$table = 'settings';
+	$table = 'cms_settings';
 
 	if($_POST) {
 
 		$hasBilanguage = db_fieldexists($table,'description_nl');
-		$hasCategory = db_fieldexists($table,'category_id');
 
 		//echo $_POST['value'];
 
@@ -12,11 +11,10 @@
 		//$handler->debug = true;
 
 		if($hasBilanguage) {
-			$keys = array('description_nl','description_en','code','value','hidden','type','options');
+			$keys = array('description_nl','description_en','code','value','type','options');
 		} else {
-			$keys = array('description','code','value','hidden','type','options');
+			$keys = array('description','code','value','type','options');
 		}
-		if($hasCategory) $keys[] = 'category_id';
 		$handler->savePost($keys);
 
 		if($_POST['__action']=='submitandedit') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$id);
@@ -36,13 +34,8 @@
 	// define tabs
 
 	$hasBilanguage = db_fieldexists($table,'description_nl');
-	$hasCategory = db_fieldexists($table,'category_id');
 
 	if($_SESSION['user']['is_admin']) {
-
-		if($hasCategory) {
-			addfield('select',$translate['cms_settings_category'], 'category_id', array('query'=>'SELECT id AS value, name AS label FROM settings_categories'));
-		}
 
 		if($hasBilanguage) {
 			addfield('textarea',$translate['cms_settings_description'].' NL','description_nl');
@@ -63,7 +56,6 @@
 		// alleen voor type = select
 		addfield('text',$translate['cms_settings_options'],'options',array('tooltip'=>'Vul de mogelijke keuzes in als volgt: waarde=Label,waarde2=Label2,waarde3=Label3','hidden'=>$data['type']!='select'));
 
-		addfield('checkbox',$translate['cms_settings_hidden'],'hidden');
 		addfield('line');
 
 	} else {

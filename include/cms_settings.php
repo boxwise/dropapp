@@ -1,6 +1,6 @@
 <?php
 
-	$table = 'settings';
+	$table = 'cms_settings';
 	$ajax = checkajax();
 
 	if(!$ajax) {
@@ -9,7 +9,6 @@
 
 		$cmsmain->assign('title',$translate['cms_settings']);
 
-		$hasCategory = db_fieldexists($table,'category_id');
 		$hasBilanguage = db_fieldexists($table,'description_nl');
 
 		if($hasBilanguage) {
@@ -18,14 +17,7 @@
 			listsetting('search', array('code','description'));
 		}
 
-		if($hasCategory) {
-			$hasSeq = db_fieldexists('settings_categories','seq');
-			listfilter(array('label'=>'Filter by category','query'=>'SELECT id AS value, name AS label FROM settings_categories '.(!$_SESSION['user']['is_admin']?' WHERE NOT admin_only':'').' '.($hasSeq?'ORDER BY seq':'ORDER BY id'),'filter'=>'category_id'));
-			$data = getlistdata('SELECT t.* FROM '.$table.' AS t LEFT OUTER JOIN settings_categories AS c ON t.category_id = c.id '.(!$_SESSION['user']['is_admin']?' WHERE NOT t.hidden AND (c.admin_only IS NULL OR NOT c.admin_only)':''));
-
-		} else {
-			$data = getlistdata('SELECT u.*, GROUP_CONCAT(c.name ORDER BY c.seq SEPARATOR ', ') AS camps FROM cms_users AS u INNER JOIN cms_users_camps AS x ON x.cms_users_id = u.id LEFT OUTER JOIN camps AS c ON c.id = x.camps_id '.($_SESSION['user']['is_admin']?'':' WHERE NOT t.hidden').' GROUP BY u.id');
-		}
+		$data = getlistdata('SELECT t.* FROM '.$table.' AS t');
 
 		if($hasBilanguage) {
 			addcolumn('text',$translate['cms_settings_description'],'description_'.$lan,array('width'=>'33%'));
