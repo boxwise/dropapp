@@ -4,7 +4,7 @@
 		<div class="well-center">
 			<h2>{$translate['cms_error']}</h2>
 			<p>{$error}</p>
-			{if $smarty.server.Local}
+			{if $smarty.session.user['is_admin']}
 			<small>
 				<p>regelnummer {$line} van bestand {$file}</p>
 				{$backtrace}
