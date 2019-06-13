@@ -61,7 +61,7 @@
 	addfield('number', 'Default Drops per adult', 'dropsperadult', array('tab'=>'market'));
 	addfield('number', 'Default Drops per child', 'dropsperchild', array('tab'=>'market'));
 	addfield('number', 'Maximum Drops per adult', 'dropcapadult', array('tab'=>'market'));
-	addfield('number', 'Maximum Drops per child', 'dropcapchild', array('tab'=>'market'));
+	addfield('number', 'Maximum Drops per child', 'dropcapchild', array('tab'=>'market','width'=>2));
 
 	addfield('number', 'Duration to rent a bicycle', 'bicyclerenttime', array('tab'=>'bicycle'));
 	addfield('text', 'Default closing time', 'bicycle_closingtime', array('tab'=>'bicycle'));
