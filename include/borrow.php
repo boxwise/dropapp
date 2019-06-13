@@ -55,9 +55,9 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 		addbutton('borrowhistory','View history',array('icon'=>'fa-history','oneitemonly'=>true));
 		
 		listsetting('allowsort', true);
-		listsetting('allowdelete', $_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']);
+		listsetting('allowdelete', $_SESSION['usergroup']['allow_borrow_adddelete']||$_SESSION['user']['is_admin']);
 		listsetting('allowshowhide', false);
-		listsetting('allowadd', $_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']);
+		listsetting('allowadd', $_SESSION['usergroup']['allow_borrow_adddelete']||$_SESSION['user']['is_admin']);
 		listsetting('allowselect', true);
 		listsetting('allowselectall', false);
 		

@@ -113,7 +113,7 @@ $search = substr(db_escape(trim($listconfig['searchvalue'])),1,strlen(db_escape(
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-pointer'));
 
-		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
+		addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);

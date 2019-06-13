@@ -6,7 +6,7 @@
 		$handler = new formHandler($table);
 		#$handler->debug = true;
 		$keys = array();
-		$handler->savePost(array_merge($keys,array('title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps','fororgansations')));
+		$handler->savePost(array_merge($keys,array('title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps','fororganisations')));
 
 		redirect('?action='.$_POST['_origin']);
 	}

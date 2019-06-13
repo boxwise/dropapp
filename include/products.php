@@ -31,7 +31,7 @@
 		addcolumn('text','Description','comments');
 		if($_SESSION['camp']['id']== 3) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
 
-		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
+		addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
 
 		foreach($data as $d) {
 			$count += $d['items'];

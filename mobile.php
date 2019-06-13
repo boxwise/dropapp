@@ -44,7 +44,7 @@
 		$data['destination'] = $_SERVER['REQUEST_URI'];
 		$tpl->assign('include','mobile_login.tpl');
 	} elseif(!$_SESSION['camp']['id']) { 
-		$data['message'] = 'You don\'t have access to this camp. Ask your coordinator to correct this!';
+		$data['message'] = 'You don\'t have access to this camp. Ask your supervisor to correct this!';
 
 #		$tpl->assign('include','mobile_message.tpl');
 	} else {
