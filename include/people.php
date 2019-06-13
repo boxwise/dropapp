@@ -26,10 +26,8 @@
 		listfilter(array('label'=>'Show all people','options'=>$statusarray,'filter'=>'"show"'));
 
 		listsetting('manualquery',true);
-		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
-		#			 AS lastactive , 
 
-$search = substr(db_escape(trim($listconfig['searchvalue'])),1,strlen(db_escape(trim($listconfig['searchvalue'])))-2);
+		$search = substr(db_escape(trim($listconfig['searchvalue'])),1,strlen(db_escape(trim($listconfig['searchvalue'])))-2);
 
 		$data = getlistdata('
 		SELECT 
@@ -113,7 +111,7 @@ $search = substr(db_escape(trim($listconfig['searchvalue'])),1,strlen(db_escape(
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-pointer'));
 
-		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
+		addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);

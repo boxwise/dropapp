@@ -8,7 +8,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('label','allow_laundry_startcycle');
+		$savekeys = array('label','allow_laundry_startcycle','allow_laundry_block','allow_borrow_adddelete','userlevel');
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('camps', 'cms_usergroups_camps', 'cms_usergroups_id', 'camp_id');
 		$handler->saveMultiple('cms_functions', 'cms_usergroups_functions', 'cms_usergroups_id', 'cms_functions_id');
@@ -30,6 +30,8 @@
 
 	addfield('text','Name','label');
 
+	addfield('select','Level','userlevel',array('required'=>true,'query'=>'SELECT id AS value, label FROM cms_usergroups_levels ORDER BY level'));
+
 	addfield('select','Available camps','camps',array('multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected FROM camps AS a LEFT OUTER JOIN cms_usergroups_camps AS x ON a.id = x.camp_id AND x.cms_usergroups_id = '.intval($id).' ORDER BY seq'));
 
 	addfield('select',$translate['cms_users_access'],'cms_functions',array('multiple'=>true,'query'=>'
@@ -41,6 +43,9 @@
 
 	addfield('line');
 	addfield('checkbox','Users can start a new laundry cycle','allow_laundry_startcycle');
+	addfield('checkbox','Users can block residents from using the laundry','allow_laundry_block');
+	addfield('line');
+	addfield('checkbox','Users can add or remove Bicycle/sport items','allow_borrow_adddelete');
 	
 
 	addfield('line','','',array('aside'=>true));

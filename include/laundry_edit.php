@@ -41,7 +41,7 @@
 	addfield('hidden','','timeslot');
 	addfield('hidden','','day');
 
-	$people = db_array('SELECT p.id AS value, laundryblock AS disabled, CONCAT(p.container, " ",p.firstname, " ", p.lastname,IF(laundryblock," - blocked, ask your coordinator","")) AS label FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' AND '.$data['access'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');
+	$people = db_array('SELECT p.id AS value, laundryblock AS disabled, CONCAT(p.container, " ",p.firstname, " ", p.lastname,IF(laundryblock," - blocked, ask your supervisor","")) AS label FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' AND '.$data['access'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1');
 	array_unshift($people, array('value'=>-1,'label'=>'Drop Laundry','disabled'=>0));
 	addfield('select','Find '.$_SESSION['camp']['familyidentifier'],'people_id',array('onchange'=>'updateLaundry("people_id",'.$offset.')', 'multiple'=>false, 'options'=>$people));
 

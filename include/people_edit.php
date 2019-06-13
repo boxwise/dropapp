@@ -14,7 +14,7 @@
 		}
  		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer','approvalsigned','signaturefield');
 		if($_POST['pass']) $savekeys[] = 'pass';
-		if($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) {
+		if($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) {
 			$savekeys[] = 'laundryblock';
 			$savekeys[] = 'laundrycomment';
 		}
@@ -70,7 +70,7 @@
 	}
 	$tabs['transaction'] = 'Transactions';
 	
-	if(($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $_SESSION['camp']['id']==1) $tabs['laundry'] = 'Laundry';
+	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $_SESSION['camp']['id']==1) $tabs['laundry'] = 'Laundry';
 
 	$tabs['signature'] = 'Privacy declaration';
 	
@@ -175,7 +175,7 @@
 		addfield('textarea','Comment','workshopbancomment',array('tab'=>'bicycle','width'=>6,'tooltip'=>'Please always make a note with a workshop ban, stating the reason of the ban, your name and the date the ban started.'));
 	}
 	
-	if(($_SESSION['user']['coordinator']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id']) {
+	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id']) {
 		addfield('checkbox','This family has no access to laundry', 'laundryblock', array('tab'=>'laundry'));
 		addfield('text','Comment','laundrycomment',array('tab'=>'laundry'));
 		
