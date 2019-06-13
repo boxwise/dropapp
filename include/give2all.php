@@ -21,6 +21,7 @@
 			'dropsperadult'=>$_POST['dropsadult'], 
 			'dropsperchild'=>$_POST['dropschild']
 		));
+		$_SESSION['camp'] = db_row('SELECT * FROM camps WHERE id = :camp',array('camp'=>$_SESSION['camp']['id']));
 
 		foreach($people as $person) {
 			$f = db_row('SELECT * FROM people WHERE camp_id = :camp_id AND id = :id',array('id'=>$person,'camp_id'=>$_SESSION['camp']['id']));
