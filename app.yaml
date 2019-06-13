@@ -13,3 +13,6 @@ handlers:
   static_dir: assets
 - url: /uploads
   static_dir: uploads
+- url: /.*
+  script: auto
+  secure: always
