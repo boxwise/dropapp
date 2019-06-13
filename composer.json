@@ -3,6 +3,7 @@
         "odan/phinx-migrations-generator": "^4.0"
     },
     "require": {
-        "robmorgan/phinx": "^0.10.7"
+        "robmorgan/phinx": "^0.10.7",
+        "google/cloud-storage": "^1.12"
     }
 }
