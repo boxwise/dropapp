@@ -5,11 +5,6 @@
 		</div>
 		<input type="submit" class="btn" value="Search">
 	</form>
-{if !$smarty.session.camp['require_qr']}
-	<hr />
-	<h2 class="page-header">Create a new box</h2>
-	<a class="btn" href="?newbox=1">New box</a>
-{/if}
 {if $orders}
 	<hr />
 	<h2 class="page-header">View ordered boxes</h2>
