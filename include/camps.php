@@ -15,6 +15,8 @@
 
 		listsetting('add', 'Add a camp');
 
+		$listconfig['allowselectall'] = false;
+
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
