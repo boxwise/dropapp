@@ -13,7 +13,7 @@
  		</div>
 		<ul class="nav navbar-nav pull-right">
 			<li><a href="{$settings['rootdir']}/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
-	 		{if $organisations|count>1}
+	 		{if $smarty.session.user['is_admin']}
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe visible-xs"></i><span class="hidden-xs">{if $smarty.session.organisation['label']}{$smarty.session.organisation['label']}{else}Choose organisation{/if} </span><b class="caret"></b></a>
 					<ul class="dropdown-menu dropdown-menu-right">

@@ -26,10 +26,8 @@
 		listfilter(array('label'=>'Show all people','options'=>$statusarray,'filter'=>'"show"'));
 
 		listsetting('manualquery',true);
-		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
-		#			 AS lastactive , 
 
-$search = substr(db_escape(trim($listconfig['searchvalue'])),1,strlen(db_escape(trim($listconfig['searchvalue'])))-2);
+		$search = substr(db_escape(trim($listconfig['searchvalue'])),1,strlen(db_escape(trim($listconfig['searchvalue'])))-2);
 
 		$data = getlistdata('
 		SELECT 
