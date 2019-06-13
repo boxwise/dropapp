@@ -19,8 +19,6 @@
 		addcolumn('html','Original title','booktitle_ar');
 		addcolumn('text','Author','author');
 
-// 		if($_SESSION['user']['is_admin'] || $_SESSION['user']['coordinator']) addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
-
 		listsetting('allowsort',true);
 		listsetting('allowcopy',false);
 		listsetting('allowshowhide',true);

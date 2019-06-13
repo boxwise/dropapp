@@ -2,7 +2,7 @@
 	if(!isset($_SESSION['laundrystation'])) $_SESSION['laundrystation'] = db_value('SELECT id FROM laundry_stations ORDER BY id LIMIT 1');
 	if($_GET['station']) $_SESSION['laundrystation'] = intval($_GET['station']);
 	
-	$data['stationlist'] = db_simplearray('SELECT id, label FROM laundry_stations ORDER BY id');
+	$data['stationlist'] = db_simplearray('SELECT id, label FROM laundry_stations WHERE camp_id = :camp_id ORDER BY id',array('camp_id'=>$_SESSION['camp']['id']));
 	
 	$data['station'] = $_SESSION['laundrystation'];
 	$data['stationname'] = db_value('SELECT label FROM laundry_stations WHERE id = :id',array('id'=>$data['station']));
@@ -11,8 +11,7 @@
 	if(!isset($data['offset'])) $data['offset'] = 0;
 
 	$_SESSION['laundryoffset'] = $data['offset'];
-	
-	
+		
 	$cyclestart = strftime('%Y-%m-%d',strtotime('+'.$data['offset'].' days', strtotime($_SESSION['camp']['laundry_cyclestart'])));
 	
 	$data['times'] = db_simplearray('SELECT DISTINCT ls.time, lt.label FROM laundry_slots AS ls, laundry_times AS lt WHERE lt.id = ls.time');

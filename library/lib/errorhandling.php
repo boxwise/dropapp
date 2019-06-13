@@ -2,7 +2,6 @@
 
 function exception_error_handler($errno, $errstr, $errfile, $errline) {
 
-
     switch ($errno) {
 	    case E_USER_ERROR:
 	    case E_USER_WARNING:
@@ -54,7 +53,7 @@ function debug_backtrace_string() {
     $trace = debug_backtrace();
     unset($trace[0]); //Remove call to this function from stack trace
     foreach($trace as $node) {
-        $stack .= "<p>#$i ".$node['file'] ."(" .$node['line']."): ";
+        $stack .= "<p>#$i ".(isset($node['file'])?$node['file']:'') ."(" .(isset($node['line'])?$node['line']:'')."): ";
         if(isset($node['class'])) {
             $stack .= $node['class'] . "->";
         }

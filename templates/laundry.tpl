@@ -20,7 +20,7 @@
 			</ul>
 		</div>&nbsp;
 
-		{if $smarty.session.user.is_admin or $smarty.session.user.coordinator}
+		{if $smarty.session.user.is_admin or $smarty.session.usergroup.allow_laundry_startcycle}
 			<a class="new-page item-add btn btn-sm btn-default" href="?action=laundry_startcycle&origin=laundry"><i class="fa fa-recycle"></i> Start new cycle</a>
 			<br /><br />
 		{/if}

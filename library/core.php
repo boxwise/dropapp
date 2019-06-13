@@ -45,4 +45,7 @@ require_once('lib/form.php');
 require_once('lib/list.php');
 require_once('lib/formhandler.php');
 
+# functions that are app specific but need to available globally
+require_once('functions.php');
+
 if (!$login) checksession(); #check if a valid session exists; if none, redirect to loginpage

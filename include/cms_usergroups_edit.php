@@ -8,7 +8,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('label');
+		$savekeys = array('label','allow_laundry_startcycle');
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('camps', 'cms_usergroups_camps', 'cms_usergroups_id', 'camp_id');
 		$handler->saveMultiple('cms_functions', 'cms_usergroups_functions', 'cms_usergroups_id', 'cms_functions_id');
@@ -39,6 +39,9 @@
 	LEFT OUTER JOIN cms_usergroups_functions AS x ON a.id = x.cms_functions_id AND x.cms_usergroups_id = '.intval($id).' 
 	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 ORDER BY a.title_en, seq'));
 
+	addfield('line');
+	addfield('checkbox','Users can start a new laundry cycle','allow_laundry_startcycle');
+	
 
 	addfield('line','','',array('aside'=>true));
 	addfield('created','Created','created',array('aside'=>true));

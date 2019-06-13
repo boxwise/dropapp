@@ -67,12 +67,16 @@
 	$cmsmain->assign('menu',CMSmenu());
 	
 	# checks if the requested action is allowed for the user's usergroup and camp
-	$allowed = db_numrows('SELECT * FROM cms_functions AS f 
+	$allowed = db_numrows('SELECT f.id, f.title_en, IF(f2.parent_id != 0,"3","2") FROM cms_functions AS f 
 LEFT OUTER JOIN cms_usergroups_functions AS uf ON uf.cms_functions_id = f.id
 LEFT OUTER JOIN cms_functions_camps AS fc ON fc.cms_functions_id = f.id
+LEFT OUTER JOIN cms_functions AS f2 ON f.parent_id = f2.id
+LEFT OUTER JOIN cms_usergroups_functions AS uf2 ON uf2.cms_functions_id = f2.id
+LEFT OUTER JOIN cms_functions_camps AS fc2 ON fc2.cms_functions_id = f2.id
 WHERE 
-(f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action) AND
-uf.cms_usergroups_id = :usergroup AND fc.camps_id = :camp_id',array('usergroup'=>$_SESSION['usergroup']['id'],'camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));
+(f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action) 
+AND ((f2.parent_id = 0 AND uf.cms_usergroups_id = :usergroup AND fc.camps_id = :camp_id) OR (f2.parent_id != 0 AND uf2.cms_usergroups_id = :usergroup AND fc2.camps_id = :camp_id))
+',array('usergroup'=>$_SESSION['usergroup']['id'],'camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));
 
 	# if the action is allowed or if the user is a system admin, we load it
 	if  ($allowed || $_SESSION['user']['is_admin']) {

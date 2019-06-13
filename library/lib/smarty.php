@@ -14,7 +14,7 @@ class Zmarty extends Smarty {
 		$this->assign('modal',isset($_GET['modal']));
 		$this->assign('settings',$settings);
 		$this->assign('translate',$translate);
-		if(!$_SERVER['Local']) $this->registerFilter("output", "minify_html");
+		$this->registerFilter("output", "minify_html");
 	}
 
 }

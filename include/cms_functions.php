@@ -21,7 +21,7 @@
 
 		listsetting('allowselect',array(0=>true,1=>true));
 		listsetting('allowmovefrom',0);
-		listsetting('allowmoveto',1);
+		listsetting('allowmoveto',2);
 		listsetting('width',6);
 
 		$cmsmain->assign('data',$data);
