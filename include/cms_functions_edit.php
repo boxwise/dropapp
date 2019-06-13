@@ -7,7 +7,6 @@
 		#$handler->debug = true;
 		$keys = array();
 		$handler->savePost(array_merge($keys,array('title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps')));
-		$handler->saveMultiple('camps','cms_functions_camps','cms_functions_id','camps_id');
 
 		redirect('?action='.$_POST['_origin']);
 	}
@@ -33,8 +32,6 @@
 	addfield('checkbox','Only available for admin users','adminonly');
 	addfield('checkbox','Available for all camps','allcamps');
 	
-	addfield('select','Available for these camps','camps',array('multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.cms_functions_id IS NOT NULL, 1,0) AS selected FROM camps AS a LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.camps_id AND x.cms_functions_id = '.intval($id).' ORDER BY seq'));
-
 	addfield('created','Gemaakt','created',array('aside'=>true));
 
 	$cmsmain->assign('data',$data);

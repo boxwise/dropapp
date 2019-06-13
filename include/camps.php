@@ -9,7 +9,7 @@
 
 		$cmsmain->assign('title','Camps');
 
-		$data = getlistdata('SELECT * FROM camps');
+		$data = getlistdata('SELECT * FROM camps WHERE organisation_id = '.intval($_SESSION['organisation']['id']));
 
 		addcolumn('text','Name','name');
 
