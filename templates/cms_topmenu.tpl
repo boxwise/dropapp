@@ -3,22 +3,31 @@
  		<div class="pull-left">
 			<a href="#" class="menu-btn visible-xs">&#9776;</a>
 			<a href="{$settings['rootdir']}/" class="brand">{$translate['site_name']}</a>
+			{$smarty.session.organisation.label}
 			{if $camps|count==1}
-	 			{$camps[0]['name']}
+	 			/ {$camps[0]['name']}
 	 		{elseif $camps|count<1}
-	 			No camps available for this user
+	 			/ No camp
 			{/if}
  		</div>
 		<ul class="nav navbar-nav pull-right">
 			<li><a href="{$settings['rootdir']}/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
+	 		{if $organisations|count>1}
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe visible-xs"></i><span class="hidden-xs">{if $smarty.session.organisation['label']}{$smarty.session.organisation['label']}{else}Choose organisation{/if} </span><b class="caret"></b></a>
+					<ul class="dropdown-menu dropdown-menu-right">
+				 		{foreach $organisations as $o}
+				 			<li><a href="?action={$campaction}&organisation={$o['id']}" value="{$o['id']}">{$o['label']} {if $o['id']==$smarty.session.organisation['id']}<span class="fa fa-check"></span>{/if}</a></li>
+				 		{/foreach}
+					</ul>
+				</li>
+	 		{/if}
 	 		{if $camps|count>1}
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe visible-xs"></i><span class="hidden-xs">{$currentcamp['name']} </span><b class="caret"></b></a>
 					<ul class="dropdown-menu dropdown-menu-right">
 				 		{foreach $camps as $c}
-				 			{if $c['id']!=$currentcamp['id']}
-				 				<li><a href="?action={$campaction}&camp={$c['id']}" value="{$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</a></li>
-				 			{/if}
+				 			<li><a href="?action={$campaction}&camp={$c['id']}" value="{$c['id']}" >{$c['name']} {if $c['id']==$currentcamp['id']}<span class="fa fa-check"></span>{/if}</a></li>
 				 		{/foreach}
 					</ul>
 				</li>

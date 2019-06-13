@@ -12,3 +12,4 @@ uploads/*
 vendor
 !uploads/.gitkeep 
 phpmyadmin/*
+*.sql

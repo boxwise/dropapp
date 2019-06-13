@@ -7,13 +7,19 @@
 
 		initlist();
 
-		$cmsmain->assign('title','Camps');
+		$cmsmain->assign('title','User groups');
+		listsetting('search', array('g.label'));
 
-		$data = getlistdata('SELECT * FROM camps WHERE organisation_id = '.intval($_SESSION['organisation']['id']));
+		$data = getlistdata('SELECT g.*, IFNULL(GROUP_CONCAT(c.name ORDER BY c.seq SEPARATOR ", "),"") AS camps FROM cms_usergroups AS g 
+LEFT OUTER JOIN cms_usergroups_camps AS x ON x.cms_usergroups_id = g.id
+LEFT OUTER JOIN camps AS c ON x.camp_id = c.id
+GROUP BY g.id');
 
-		addcolumn('text','Name','name');
+		addcolumn('text','Name','label');
+		addcolumn('text','Camps','camps');
 
-		listsetting('add', 'Add a camp');
+		listsetting('allowsort',true);
+		listsetting('add', 'Add a User Group');
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);

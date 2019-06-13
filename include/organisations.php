@@ -7,13 +7,15 @@
 
 		initlist();
 
-		$cmsmain->assign('title','Camps');
+		$cmsmain->assign('title','Organisations');
+		listsetting('search', array('o.label'));
 
-		$data = getlistdata('SELECT * FROM camps WHERE organisation_id = '.intval($_SESSION['organisation']['id']));
+		$data = getlistdata('SELECT * FROM organisations AS o');
 
-		addcolumn('text','Name','name');
+		addcolumn('text','Name','label');
 
-		listsetting('add', 'Add a camp');
+		listsetting('allowsort',true);
+		listsetting('add', 'Add an organisation');
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);

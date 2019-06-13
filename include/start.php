@@ -25,11 +25,12 @@
 		$data['adults'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult_age'],array('camp_id'=>$_SESSION['camp']['id']));
 		$data['children'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult_age'],array('camp_id'=>$_SESSION['camp']['id']));
 		$data['under18'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < 18',array('camp_id'=>$_SESSION['camp']['id']));
-	
+
 		$data['sold'] = db_value('SELECT SUM(count) FROM transactions AS t, people AS p WHERE t.people_id = p.id AND p.camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
 		$data['marketdays'] = db_value('SELECT COUNT(DISTINCT(DATE_FORMAT(transaction_date,"%d-%m-%Y"))) FROM transactions AS t, people AS p WHERE t.people_id = p.id AND p.camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
 		$data['bank'] = db_value('SELECT SUM(drops) FROM people AS p, transactions AS t WHERE p.camp_id = :camp_id AND t.people_id = p.id ',array('camp_id'=>$_SESSION['camp']['id']));
 
+	
 		$popular = db_row('SELECT SUM(count) AS count, CONCAT(p.name," ", g.label) AS product FROM transactions AS t, products AS p, genders AS g WHERE g.id = p.gender_id AND p.id = t.product_id AND p.camp_id = :camp_id GROUP BY product_id ORDER BY SUM(count) DESC LIMIT 1',array('camp_id'=>$_SESSION['camp']['id']));
 		$data['popularcount'] = intval($popular['count']);
 		$data['popularname'] = $popular['product']?$popular['product']:'none';

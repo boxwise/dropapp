@@ -26,28 +26,37 @@
 	 	require('dailyroutine.php');
 	}
 
-
 	$cmsmain = new Zmarty;
+
+	/* make an organisation menu, if the user is system admin */
+	if($_SESSION['user']['is_admin']) {
+		if($_GET['organisation']) {
+			unset($_SESSION['camp']);
+			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id',array('id'=>$_GET['organisation']));
+		}
+		$organisations = db_array('SELECT * FROM organisations ORDER BY label');
+		$cmsmain->assign('organisations',$organisations);
+	}
 	
-	/* new: fill the camp selection menu -------------------------------------------- */
+	# This fills the camp menu in the top bar (only if the user has access to more than 1 camp
 	if($_GET['camp']) {
 		if($_SESSION['user']['is_admin']) {
-			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c WHERE c.id = :camp ORDER BY c.seq',array('camp'=>$_GET['camp']));
+			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c WHERE organisation_id = :organisation_id AND c.id = :camp ORDER BY c.seq',array('camp'=>$_GET['camp'],'organisation_id'=>$_SESSION['organisation']['id']));
 		} else {
-			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE c.id = x.camps_id AND c.id = :camp AND x.cms_users_id = :id ORDER BY c.seq',array('camp'=>$_GET['camp'], 'id'=>$_SESSION['user']['id']));
+			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE organisation_id = :organisation_id AND c.id = x.camps_id AND c.id = :camp AND x.cms_users_id = :id ORDER BY c.seq',array('camp'=>$_GET['camp'], 'id'=>$_SESSION['user']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
 		}
 	}
 	if($_SESSION['user']['is_admin']) {
-		$camplist = db_array('SELECT c.* FROM camps AS c ORDER BY c.seq');
+		$camplist = db_array('SELECT c.* FROM camps AS c WHERE organisation_id = :organisation_id ORDER BY c.seq', array('organisation_id'=>$_SESSION['organisation']['id']));
 	} else {
-		$camplist = db_array('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE x.camps_id = c.id AND x.cms_users_id = :id ORDER BY c.seq',array('id'=>$_SESSION['user']['id']));
+		$camplist = db_array('SELECT c.* FROM camps AS c, cms_usergroups_camps AS x WHERE c.organisation_id = :organisation_id AND x.camp_id = c.id AND x.cms_usergroups_id = :usergroup ORDER BY c.seq',array('usergroup'=>$_SESSION['usergroup']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
 	}
 	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
 	$cmsmain->assign('camps',$camplist);
 	$cmsmain->assign('currentcamp',$_SESSION['camp']);
 	$cmsmain->assign('campaction',strpos($action,'_edit')?substr($action,0,-5):$action);
-	/* end of the camp menu addition -------------------------------------------- */
 
+	# this should somehow be just in the main template right?
 	$images['favicon16'] = $settings['rootdir']. (file_exists("uploads/favicon-16x16.png") ? '/uploads/favicon-16x16.png' : '/assets/img/favicon-16x16.png');
 	$images['favicon32'] = $settings['rootdir']. (file_exists("uploads/favicon-32x32.png") ? '/uploads/favicon-32x32.png' : '/assets/img/favicon-32x32.png');
 	$images['faviconapple'] = $settings['rootdir']. (file_exists("uploads/apple-touch-icon.png") ? '/uploads/apple-touch-icon.png' : '/assets/img/apple-touch-icon.png');
@@ -56,13 +65,17 @@
 	
 	
 	$cmsmain->assign('menu',CMSmenu());
-
-	$allowed = db_numrows('SELECT id FROM cms_functions AS f LEFT OUTER JOIN cms_access AS x ON x.cms_functions_id = f.id WHERE (x.cms_users_id = :user_id OR f.allusers) AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action)',array('user_id'=>$_SESSION['user']['id'], 'action'=>$action));
-	#$allowed = true;
 	
-	$allowedincamp = db_numrows('SELECT id FROM cms_functions AS f LEFT OUTER JOIN cms_functions_camps AS x ON x.cms_functions_id = f.id WHERE (x.camps_id = :camp_id OR f.allusers) AND (f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action)',array('camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));
+	# checks if the requested action is allowed for the user's usergroup and camp
+	$allowed = db_numrows('SELECT * FROM cms_functions AS f 
+LEFT OUTER JOIN cms_usergroups_functions AS uf ON uf.cms_functions_id = f.id
+LEFT OUTER JOIN cms_functions_camps AS fc ON fc.cms_functions_id = f.id
+WHERE 
+(f.include = :action OR CONCAT(f.include,"_edit") = :action OR CONCAT(f.include,"_trash") = :action) AND
+uf.cms_usergroups_id = :usergroup AND fc.camps_id = :camp_id',array('usergroup'=>$_SESSION['usergroup']['id'],'camp_id'=>$_SESSION['camp']['id'], 'action'=>$action));
 
-	if  (($allowed&&$allowedincamp) || $_SESSION['user']['is_admin']) {
+	# if the action is allowed or if the user is a system admin, we load it
+	if  ($allowed || $_SESSION['user']['is_admin']) {
 		@include('include/'.$action.'.php');
 	}
 

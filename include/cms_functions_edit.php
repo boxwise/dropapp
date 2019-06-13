@@ -6,9 +6,7 @@
 		$handler = new formHandler($table);
 		#$handler->debug = true;
 		$keys = array();
-		$handler->savePost(array_merge($keys,array('title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers')));
-		$handler->saveMultiple('modules','cms_access','cms_functions_id','cms_users_id');
-		$handler->saveMultiple('camps','cms_functions_camps','cms_functions_id','camps_id');
+		$handler->savePost(array_merge($keys,array('title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps')));
 
 		redirect('?action='.$_POST['_origin']);
 	}
@@ -32,11 +30,8 @@
 
 	addfield('checkbox','This item is visible in the menu','visible');
 	addfield('checkbox','Only available for admin users','adminonly');
-	addfield('checkbox','Available for all users','allusers');
+	addfield('checkbox','Available for all camps','allcamps');
 	
-	addfield('select',$translate['cms_function_users'],'modules',array('multiple'=>true,'query'=>'SELECT u.id AS value, u.naam AS label, IF(x.cms_users_id IS NOT NULL,1,0) AS selected FROM cms_users AS u LEFT OUTER JOIN cms_access AS x ON x.cms_users_id = u.id AND x.cms_functions_id = '.intval($id).' WHERE NOT u.deleted AND NOT u.is_admin ORDER BY u.naam'));
-	addfield('select','Available for these camps','camps',array('multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.cms_functions_id IS NOT NULL, 1,0) AS selected FROM camps AS a LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.camps_id AND x.cms_functions_id = '.intval($id).' ORDER BY seq'));
-
 	addfield('created','Gemaakt','created',array('aside'=>true));
 
 	$cmsmain->assign('data',$data);

@@ -10,6 +10,8 @@
 			$message = '';
 
 			$_SESSION['user'] = $row;
+			$_SESSION['usergroup'] = db_row('SELECT * FROM cms_usergroups WHERE id = :id',array('id'=>$_SESSION['user']['cms_usergroups_id']));
+			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id',array('id'=>$_SESSION['usergroup']['organisation_id']));
 
 			db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
 			logfile('User logged in with '.$_SERVER['HTTP_USER_AGENT']);
