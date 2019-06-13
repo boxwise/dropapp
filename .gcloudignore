@@ -15,3 +15,9 @@
 
 # PHP Composer dependencies:
 /vendor/
+# other folders to ignore
+.docker
+phinx.yml
+docker-compose.yml
+reset.php
+build.php

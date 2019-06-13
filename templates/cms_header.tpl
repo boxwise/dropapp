@@ -8,7 +8,7 @@
     <title>{if $title}{$title|strip_tags:false} - {/if}{$settings['site_name']}</title>
 
     <!-- Bootstrap -->
-    <link href="{$settings['rootdir']}/assets/css/css.php?v=7" rel="stylesheet">
+    <link href="{$settings['rootdir']}/assets/css/minified.css" rel="stylesheet">
     <link href="{$settings['rootdir']}/assets/css/custom.css?v=7" rel="stylesheet">    
     <link href="{$settings['rootdir']}/assets/css/print.css" rel="stylesheet" media="print">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
