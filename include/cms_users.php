@@ -96,8 +96,18 @@
 			$message = '"Login als" is alleen voor admingebruikers';
 		} else {
 			$_SESSION['user2'] = $_SESSION['user'];
+			$_SESSION['camp2'] = $_SESSION['camp'];
+			$_SESSION['usergroup2'] = $_SESSION['usergroup'];
+			$_SESSION['organisation2'] = $_SESSION['organisation'];
 			$_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id=:id',array('id'=>$id));
-			unset($_SESSION['camp']);
+			$_SESSION['usergroup'] = db_row('SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel FROM cms_usergroups AS ug WHERE ug.id = :id',array('id'=>$_SESSION['user']['cms_usergroups_id']));
+			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id',array('id'=>$_SESSION['usergroup']['organisation_id']));
+			$camplist = db_array('
+				SELECT c.* 
+				FROM camps AS c, cms_usergroups_camps AS x 
+				WHERE (NOT c.deleted OR c.deleted IS NULL) AND c.organisation_id = :organisation_id AND x.camp_id = c.id AND x.cms_usergroups_id = :usergroup 
+				ORDER BY c.seq',array('usergroup'=>$_SESSION['usergroup']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
+			if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
 			$success = true;
 			$message = 'Nu ingelogd als '.$_SESSION['user']['naam'];
 		}
