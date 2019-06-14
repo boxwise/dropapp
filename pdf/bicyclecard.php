@@ -33,7 +33,7 @@ $result = db_query('SELECT *, CONCAT(firstname," ",lastname) AS name, DATE_FORMA
 
 while($p = db_fetch($result)) {
 	
-	verifycampaccess($p['camp_id']);
+	verifycampaccess($p['id']);
 
 	$picture = (file_exists($settings['upload_dir'].'/people/'.intval($p['id']).'.jpg')?
 		$settings['upload_dir'].'/people/'.intval($p['id']).'.jpg':'');
