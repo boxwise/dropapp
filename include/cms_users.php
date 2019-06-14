@@ -89,6 +89,10 @@
 		echo json_encode($return);
 		die();
 	}
+	
+	} else {
+		trigger_error('You do not have access to this menu. Please ask your admin to change this!');
+	}
 
 	function loginasuser($table,$ids) {
 
@@ -150,8 +154,4 @@
 			}
 		}
 		return $password;
-	}
-
-	} else {
-		trigger_error('You do not have access to this menu. Please ask your admin to change this!');
 	}
