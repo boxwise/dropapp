@@ -81,7 +81,7 @@
 				$data[$key]['expired'] .= '<i class="fa fa-wrench tooltip-this '.($data[$key]['workshopsupervisor']?'blue':'').'" title="This person has a workshop certificate."></i> ';
 			}
 
-			if(file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
+			if(file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
 				$data[$key]['expired'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
 			}
 			if($data[$key]['volunteer']) {
