@@ -36,7 +36,7 @@
 		SELECT a.id AS value, a.name AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 
 		FROM camps AS a 
 		LEFT OUTER JOIN cms_usergroups_camps AS x ON a.id = x.camp_id AND x.cms_usergroups_id = '.intval($id).' 
-		WHERE (NOT a.deleted OR a.deleted IS NULL) 
+		WHERE (NOT a.deleted OR a.deleted IS NULL) AND a.organisation_id = '.$_SESSION['organisation']['id'].'
 		ORDER BY seq'));
 
 	addfield('select',$translate['cms_users_access'],'cms_functions',array('multiple'=>true,'query'=>'
