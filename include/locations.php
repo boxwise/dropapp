@@ -5,7 +5,7 @@
 
 	if(!$ajax) {
 
-		$result = db_query('SELECT l.* FROM locations AS l');
+		if(!$_SESSION['camp']['id']) usererror("The list of locations is not available when there is no camp selected");
 
 		initlist();
 

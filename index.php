@@ -42,7 +42,7 @@
 		if($_SESSION['user']['is_admin']) {
 			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c WHERE organisation_id = :organisation_id AND c.id = :camp ORDER BY c.seq',array('camp'=>$_GET['camp'],'organisation_id'=>$_SESSION['organisation']['id']));
 		} else {
-			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_users_camps AS x WHERE organisation_id = :organisation_id AND c.id = x.camps_id AND c.id = :camp AND x.cms_users_id = :id ORDER BY c.seq',array('camp'=>$_GET['camp'], 'id'=>$_SESSION['user']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
+			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_usergroups_camps AS x WHERE organisation_id = :organisation_id AND c.id = x.camp_id AND c.id = :camp AND x.cms_usergroups_id = :usergroup ORDER BY c.seq',array('camp'=>$_GET['camp'], 'usergroup'=>$_SESSION['usergroup']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
 		}
 	}
 	if($_SESSION['user']['is_admin']) {

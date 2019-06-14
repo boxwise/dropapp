@@ -6,6 +6,7 @@
 
 	if(!$ajax) {
 
+		if(!$_SESSION['camp']['id']) usererror("The list of residents is not available when there is no camp selected");
 		initlist();
 
 		$cmsmain->assign('title','Residents');

@@ -6,7 +6,7 @@
 			<p>{$error}</p>
 			{if $smarty.session.user['is_admin']}
 			<small>
-				<p>regelnummer {$line} van bestand {$file}</p>
+				{if $line && $file}<p>line {$line} in file {$file}</p>{/if}
 				{$backtrace}
 			</small>
 			{/if}

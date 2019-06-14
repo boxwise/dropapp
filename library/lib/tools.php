@@ -90,7 +90,7 @@ function CMSmenu() {
 		$submenu = array();
 
 		if($_SESSION['user']['is_admin']) {
-			$result2 = db_query('SELECT f.*, title_'.$lan.' AS title FROM cms_functions AS f LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id WHERE f.visible AND (x2.camps_id = :camp OR f.allusers OR f.allcamps) AND f.parent_id = :parent_id '.(!$_SESSION['organisation']['id']?'AND f.fororganisations':'').' GROUP BY f.id ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id']));
+			$result2 = db_query('SELECT f.*, title_'.$lan.' AS title FROM cms_functions AS f LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id WHERE f.visible AND (x2.camps_id = :camp OR f.allusers OR f.allcamps) AND f.parent_id = :parent_id '.(!$_SESSION['camp']['id']?'AND f.fororganisations':'').' GROUP BY f.id ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id']));
 		} else {
 			
 			

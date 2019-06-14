@@ -1,6 +1,10 @@
 <?php
 
-function exception_error_handler($errno, $errstr, $errfile, $errline) {
+function usererror($errstr) {
+	exception_error_handler(E_USER_ERROR,$errstr);
+}
+
+function exception_error_handler($errno, $errstr, $errfile = '', $errline = '') {
 
     switch ($errno) {
 	    case E_USER_ERROR:
@@ -19,28 +23,14 @@ function exception_error_handler($errno, $errstr, $errfile, $errline) {
 
 			die();
 
-	        echo '<h3>Waarschuwing</h3>'.$errstr;
-			logfile('E_USER_WARNING: '.$errstr.', line '.$errline.', file '.$errfile);
-
-
-	        break;
-
-			echo "<h1>Er is iets foutgegaan</h1>";
-	        echo '<h3>Opmerking</h3>'.$errstr.'<br />';
-			logfile('E_USER_NOTICE: '.$errstr);
-
-			array_walk(debug_backtrace(), create_function('$a,$b', 'print "<br /><b>". basename( $a[\'file\'] ). "</b> &nbsp; {$a[\'function\']} (), regel {$a[\'line\']} &nbsp; ". $a[\'file\'];'));
-
-	        break;
-
 		case E_WARNING:
 		case E_NOTICE:
 		case E_STRICT:
 	        break;
 
 	    default:
-			echo "<h1>Er is iets foutgegaan</h1>";
-	        echo '<h3>Fout</h3>'.$errstr.' ('.$errno.')<br />bestand: '.$errfile.'<br />regelnummer: '.$errline;
+			echo "<h1>Something went wrong</h1>";
+	        echo '<h3>Error</h3>'.$errstr.' ('.$errno.')<br />file: '.$errfile.'<br />line: '.$errline;
 			logfile('ERROR: '.$errstr.', line '.$errline.', file '.$errfile);
 	        exit($errno);
 	        break;
@@ -74,7 +64,5 @@ function dump(&$var) {
 	echo '</pre>';
 }
 
-#error_reporting(E_ALL^E_NOTICE);
-#ini_set('display_errors',1);
 set_error_handler("exception_error_handler");
 smarty::muteExpectedErrors();
