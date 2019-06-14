@@ -90,14 +90,29 @@ function CMSmenu() {
 		$submenu = array();
 
 		if($_SESSION['user']['is_admin']) {
-			$result2 = db_query('SELECT f.*, title_'.$lan.' AS title FROM cms_functions AS f LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id WHERE f.visible AND (x2.camps_id = :camp OR f.allusers OR f.allcamps) AND f.parent_id = :parent_id '.(!$_SESSION['camp']['id']?'AND f.fororganisations':'').' GROUP BY f.id ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id']));
+			# is an organisation selected?
+			if($_SESSION['organisation']['id']){
+				$result2 = db_query('
+				SELECT f.*, title_'.$lan.' AS title 
+				FROM cms_functions AS f 
+				LEFT OUTER JOIN cms_functions_camps AS x2 ON x2.cms_functions_id = f.id 
+				WHERE f.visible AND (x2.camps_id = :camp OR f.allusers OR f.allcamps) AND f.parent_id = :parent_id '.(!$_SESSION['camp']['id']?'AND f.fororganisations ':'').'
+				GROUP BY f.id ORDER BY f.seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id']));
+			} else {
+				$result2 = db_query('
+				SELECT f.*, title_en AS title 
+				FROM cms_functions AS f 
+				WHERE f.visible AND f.adminonly AND f.parent_id = :parent_id 
+				ORDER BY f.seq', array('parent_id'=>$row1['id']) );
+			}
+
 		} else {
-			
-			
-			$result2 = db_query('SELECT f.*, title_en AS title 
-FROM (cms_functions AS f, cms_usergroups_functions AS uf, cms_functions_camps AS fc)
-WHERE uf.cms_functions_id = f.id AND uf.cms_usergroups_id = :usergroup AND fc.cms_functions_id = f.id AND (fc.camps_id = :camp OR f.allcamps) AND
- (f.parent_id = :parent_id) GROUP BY f.id ORDER BY seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id'],'usergroup'=>$_SESSION['usergroup']['id']));
+			$result2 = db_query('
+			SELECT f.*, title_en AS title 
+			FROM (cms_functions AS f, cms_usergroups_functions AS uf, cms_functions_camps AS fc)
+			WHERE uf.cms_functions_id = f.id AND uf.cms_usergroups_id = :usergroup AND fc.cms_functions_id = f.id AND (fc.camps_id = :camp OR f.allcamps) AND (f.parent_id = :parent_id)
+			GROUP BY f.id 
+			ORDER BY seq',array('camp'=>$_SESSION['camp']['id'],'parent_id'=>$row1['id'],'usergroup'=>$_SESSION['usergroup']['id']));
 		}
 
 		while($row2 = db_fetch($result2)) {
