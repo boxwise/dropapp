@@ -1,7 +1,7 @@
 <?php
 	$qrid = db_value('SELECT id FROM qr WHERE code = :barcode',array('barcode'=>$_GET['saveassignbox']));
 
-	if(!intval($_GET['box'])) die('Missing Box ID');
+	if(!intval($_GET['box'])) trigger_error('Missing Box ID');
 	db_query('UPDATE stock SET qr_id = :qrid, modified = NOW(), modified_by = :user WHERE id = :boxid',array('qrid'=>$qrid,'boxid'=>$_GET['box'],'user'=>$_SESSION['user']['id']));
 
 	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :box_id',array('box_id'=>$_GET['box']));

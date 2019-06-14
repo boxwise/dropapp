@@ -1,9 +1,5 @@
 <?php
 
-function usererror($errstr) {
-	exception_error_handler(E_USER_ERROR,$errstr);
-}
-
 function exception_error_handler($errno, $errstr, $errfile = '', $errline = '') {
     switch ($errno) {
 	    case E_USER_ERROR:

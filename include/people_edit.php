@@ -4,16 +4,17 @@
 
 	if($_POST) {
 		
-		if($_POST['pass']) $_POST['pass'] = md5($_POST['pass']);
-
 		$handler = new formHandler($table);
 		$handler->makeURL('fullname');
 
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
+
+			$campid = db_value('SELECT camp_id FROM people WHERE id = :id',array('id'=>$_POST['id']));
+			verifycampaccess($campid);
+
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'pass', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban','workshopsupervisor','bicyclebancomment','workshopbancomment','volunteer','approvalsigned','signaturefield');
-		if($_POST['pass']) $savekeys[] = 'pass';
+ 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield');
 		if($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) {
 			$savekeys[] = 'laundryblock';
 			$savekeys[] = 'laundrycomment';
@@ -51,7 +52,9 @@
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
-
+	
+	verifycampaccess($data['camp_id']);
+	
 	if (!$id) {
 		$data['visible'] = 1;
 		$data['camp_id'] = $_SESSION['camp']['id'];
