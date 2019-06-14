@@ -29,7 +29,8 @@
 		addcolumn('text',$translate['cms_users_naam'],'naam');
 		addcolumn('text',$translate['cms_users_email'],'email');
 		addcolumn('text','Role','usergroup');
-		addcolumn('datetime',$translate['cms_users_lastlogin'],'lastlogin');
+		addcolumn('date','Valid from','valid_firstday');
+		addcolumn('date','Valid until','valid_lastday');
 
 		listsetting('add', $translate['cms_users_new']);
 		listsetting('width', 12);

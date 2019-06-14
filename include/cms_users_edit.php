@@ -5,7 +5,7 @@
 
 	if($_POST) {
 
-		$keys = array('naam','email','cms_usergroups_id');
+		$keys = array('naam','email','cms_usergroups_id','valid_firstday','valid_lastday');
 
 		$handler = new formHandler($table);
 		$handler->savePost($keys);
@@ -38,6 +38,11 @@
 		ORDER BY ug.label',array('organisation_id'=>$_SESSION['organisation']['id'],'userlevel'=>$_SESSION['usergroup']['userlevel'],'is_admin'=>$_SESSION['user']['is_admin']));
 	addfield('select','Select user group','cms_usergroups_id',array('required'=>true,'options'=>$usergroups));
 	
+	addfield('line');
+	addfield('date','Valid from','valid_firstday',array('date'=>true,'time'=>false));
+	addfield('date','Valid until','valid_lastday',array('date'=>true,'time'=>false));
+
+	addfield('line');
 	if($data['lastlogin']=='0000-00-00 00:00:00') $data['lastlogin'] = '';
 	addfield('info',$translate['cms_users_lastlogin'],'lastlogin',array('date'=>'true','time'=>'true'));
 	addfield('line');
