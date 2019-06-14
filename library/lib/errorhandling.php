@@ -5,7 +5,6 @@ function usererror($errstr) {
 }
 
 function exception_error_handler($errno, $errstr, $errfile = '', $errline = '') {
-
     switch ($errno) {
 	    case E_USER_ERROR:
 	    case E_USER_WARNING:
