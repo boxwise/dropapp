@@ -17,7 +17,7 @@
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 
 	if (!$id) {
-		$data = db_defaults('camps');
+		$data = db_defaults($table);
 		$data['visible'] = 1;
 		$data['organisation_id'] = $_SESSION['organisation']['id'];
 	}
@@ -42,7 +42,7 @@
 	addfield('text','Camp name','name',array('setformtitle'=>true, 'tab'=>'general'));
 	addfield('line','','',array('tab'=>'general'));
 
-	addfield('select','Functions available for this camp','functions',array('tab'=>'general','multiple'=>true,'query'=>'
+	addfield('select','Functions available for this camp','functions',array('width'=>6,'tab'=>'general','multiple'=>true,'query'=>'
 		SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected 
 		FROM cms_functions AS a 
 		LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).' 
