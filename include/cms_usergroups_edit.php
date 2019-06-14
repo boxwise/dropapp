@@ -32,7 +32,11 @@
 
 	addfield('text','Name','label');
 
-	addfield('select','Level','userlevel',array('required'=>true,'query'=>'SELECT id AS value, label FROM cms_usergroups_levels ORDER BY level'));
+	addfield('select','Level','userlevel',array('required'=>true,'query'=>'
+		SELECT id AS value, label 
+		FROM cms_usergroups_levels 
+		WHERE level < '.intval($_SESSION['usergroup']['userlevel']).'
+		ORDER BY level'));
 
 	addfield('select','Available camps','camps',array('multiple'=>true,'query'=>'
 		SELECT a.id AS value, a.name AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 

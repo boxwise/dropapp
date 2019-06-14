@@ -19,6 +19,7 @@
 			LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 			LEFT OUTER JOIN camps AS c ON x.camp_id = c.id
 			WHERE (NOT c.deleted OR c.deleted IS NULL) AND g.organisation_id = '.$_SESSION['organisation']['id'].'
+				 AND '.(!$_SESSION['user']['is_admin']?'l.level < '.intval($_SESSION['usergroup']['userlevel']):'').'
 			GROUP BY g.id');
 
 		addcolumn('text','Name','label');
