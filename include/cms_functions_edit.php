@@ -6,7 +6,7 @@
 		$handler = new formHandler($table);
 		#$handler->debug = true;
 		$keys = array();
-		$handler->savePost(array_merge($keys,array('title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps','fororganisations')));
+		$handler->savePost(array_merge($keys,array('title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps')));
 
 		redirect('?action='.$_POST['_origin']);
 	}
@@ -32,7 +32,6 @@
 	addfield('checkbox','Only available for admin users','adminonly');
 	addfield('checkbox','Available for all camps','allcamps');
 	addfield('checkbox','Available for all users','allusers');
-	addfield('checkbox','Organisation wide functions (shown if no camp is selected)','fororgansations');
 	
 	addfield('created','Gemaakt','created',array('aside'=>true));
 
