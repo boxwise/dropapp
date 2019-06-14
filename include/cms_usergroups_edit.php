@@ -4,11 +4,11 @@
 	$action = 'cms_usergroups_edit';
 
 	if($_POST) {
-
+		$_POST['organisation_id'] = $_SESSION['organisation']['id'];
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('label','allow_laundry_startcycle','allow_laundry_block','allow_borrow_adddelete','userlevel');
+		$savekeys = array('label','allow_laundry_startcycle','allow_laundry_block','allow_borrow_adddelete','userlevel','organisation_id');
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('camps', 'cms_usergroups_camps', 'cms_usergroups_id', 'camp_id');
 		$handler->saveMultiple('cms_functions', 'cms_usergroups_functions', 'cms_usergroups_id', 'cms_functions_id');
