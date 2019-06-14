@@ -39,7 +39,7 @@
 	
 	$cmsmain->assign('tabs',$tabs);
 
-	addfield('text','Camp name','name',array('setformtitle'=>true, 'tab'=>'general'));
+	addfield('text','Camp name','name',array('setformtitle'=>true, 'tab'=>'general','required'=>true));
 	addfield('line','','',array('tab'=>'general'));
 
 	addfield('select','Functions available for this camp','functions',array('width'=>6,'tab'=>'general','multiple'=>true,'query'=>'
@@ -86,7 +86,7 @@
 			array('value'=> '1', 'label'=>'1 hour'),
 			array('value'=> '0.5', 'label'=>'30 minutes'), 
 			array('value'=> '0.25', 'label'=>'15 minutes')
-			), 'required'=> true));
+			)));
 	addfield('line','','',array('tab'=>'market'));
 	addfield('checkbox', 'Include lunch break?', 'schedulebreak', array('tab'=>'market'));
 	addfield('date', 'Lunch time', 'schedulebreakstart', array('tab'=>'market','date'=>false,'time'=>true,));
@@ -95,7 +95,7 @@
 			array('value'=> '1', 'label'=>'1 hour'),
 			array('value'=> '1.5', 'label'=>'1,5 hour'),
 			array('value'=> '2', 'label'=>'2 hours')
-			), 'required'=> true));
+			)));
 
 
 	addfield('number', 'Max duration to rent a bicycle', 'bicyclerenttime', array('tab'=>'bicycle'));

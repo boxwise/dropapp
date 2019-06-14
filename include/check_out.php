@@ -27,6 +27,13 @@
 			$data['visible'] = 1;
 			$data['count'] = 1;
 			$data['people_id'] = intval($_GET['people_id']);
+			if($data['people_id']) $data['camp_id'] = db_value('SELECT camp_id FROM people WHERE id = :id',array('id'=>$data['people_id']));
+		}
+
+		#check if user has access rights to this record
+		$camps = camplist(true); 
+		if(!in_array($data['camp_id'],$camps)) {
+			trigger_error('This record is not available');
 		}
 
 		$data['hidesubmit'] = true;

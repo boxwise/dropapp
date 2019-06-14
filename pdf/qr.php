@@ -46,7 +46,7 @@ for($i=0;$i<intval($_GET['count']);$i++) {
 	
 	$url = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://market.drapenihavet.no/'.$settings['rootdir'].'/mobile.php?barcode='.$hash;
 	$valid = remoteFileExists($url);
-	if(!$valid) die('The service that we use to create QR-codes seem to be offline. Try again in a few minutes!');
+	if(!$valid) trigger_error('The service that we use to create QR-codes seem to be offline. Try again in a few minutes!');
 	$pdf->Image($url, 88, 12+$y, 34, 34, 'png');
 
 	$pdf->Image('logo.png', 92, 107+$y, 26, 31);

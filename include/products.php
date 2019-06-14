@@ -11,7 +11,8 @@
 		listsetting('search', array('name', 'g.label','products.comments'));
 		
 		$locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
-
+		if(!$locations) $locations = 0;
+		
  		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM product_categories ORDER BY seq','filter'=>'products.category_id'));
 
 		$data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," '.$translate['market_coins'].'") AS drops, COALESCE(SUM(s.items),0) AS items, IF(SUM(s.items),1,0) AS preventdelete FROM '.$table.'
@@ -36,7 +37,11 @@
 		foreach($data as $d) {
 			$count += $d['items'];
 		}
-		$cmsmain->assign('listfooter',array('','','',$count,'',''));
+		if($_SESSION['camp']['market']) {
+			$cmsmain->assign('listfooter',array('','','',$count,'',''));
+		} else {
+			$cmsmain->assign('listfooter',array('','','',$count,''));
+		}
 
 
 		listsetting('allowsort',true);

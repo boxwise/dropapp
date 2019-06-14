@@ -51,7 +51,13 @@
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
-
+	
+	#check if user has access rights to this record
+	$camps = camplist(true); 
+	if(!in_array($data['camp_id'],$camps)) {
+		trigger_error('This record is not available');
+	}
+	
 	if (!$id) {
 		$data['visible'] = 1;
 		$data['camp_id'] = $_SESSION['camp']['id'];
