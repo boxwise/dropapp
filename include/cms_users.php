@@ -107,7 +107,7 @@
 				FROM camps AS c, cms_usergroups_camps AS x 
 				WHERE (NOT c.deleted OR c.deleted IS NULL) AND c.organisation_id = :organisation_id AND x.camp_id = c.id AND x.cms_usergroups_id = :usergroup 
 				ORDER BY c.seq',array('usergroup'=>$_SESSION['usergroup']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
-			if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
+			$_SESSION['camp'] = $camplist[0];
 			$success = true;
 			$message = 'Nu ingelogd als '.$_SESSION['user']['naam'];
 		}
