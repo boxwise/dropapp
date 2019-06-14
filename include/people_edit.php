@@ -10,8 +10,7 @@
 		if($_POST['id']) {
 			$oldcontainer = db_value('SELECT container FROM people WHERE id = :id',array('id'=>$_POST['id']));
 
-			$campid = db_value('SELECT camp_id FROM people WHERE id = :id',array('id'=>$_POST['id']));
-			verifycampaccess($campid);
+			verifycampaccess($_POST['id']);
 
 		}
  		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield');
@@ -52,8 +51,7 @@
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
-	
-	verifycampaccess($data['camp_id']);
+	verifycampaccess($id);
 	
 	if (!$id) {
 		$data['visible'] = 1;

@@ -26,7 +26,9 @@
 		}
 	}
 	
-	function verifycampaccess($camp_id) {
+	function verifycampaccess($id) {
+		if(!$id) return;
+		$camp_id = db_value('SELECT camp_id FROM people WHERE id = :id',array('id'=>$id));
 		$camps = camplist(true); 
 		if(!in_array($camp_id,$camps)) {
 			trigger_error("You don't have access to this record");

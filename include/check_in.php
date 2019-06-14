@@ -10,8 +10,7 @@
 		if($_POST) {
 
 			if($_POST['id']) {
-				$campid = db_value('SELECT camp_id FROM people WHERE id = :id',array('id'=>$_POST['id']));
-				verifycampaccess($campid);
+				verifycampaccess($_POST['id']);
 			}
 
 			$_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
@@ -31,10 +30,9 @@
 			$data['visible'] = 1;
 			$data['count'] = 1;
 			$data['people_id'] = intval($_GET['people_id']);
-			if($data['people_id']) $data['camp_id'] = db_value('SELECT camp_id FROM people WHERE id = :id',array('id'=>$data['people_id']));
 		}
 
-		verifycampaccess($data['camp_id']);
+		verifycampaccess($data['people_id']);
 
 		$translate['cms_form_submit'] = 'Edit';
 		$cmsmain->assign('translate',$translate);
