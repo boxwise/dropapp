@@ -1,6 +1,8 @@
 <?php
 	$table = 'cms_users';
 
+	if($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
+
 	if($_POST) {
 
 		$keys = array('naam','email','cms_usergroups_id');
@@ -29,10 +31,11 @@
 	addfield('email',$translate['cms_users_email'],'email',array('required'=>true,'tooltip'=>$translate['cms_users_email_tooltip']));
 	
 	$usergroups = db_array('
-		SELECT id AS value, label 
-		FROM cms_usergroups 
-		WHERE organisation_id = :organisation_id 
-		ORDER BY label',array('organisation_id'=>$_SESSION['organisation']['id']));
+		SELECT ug.id AS value, ug.label 
+		FROM cms_usergroups AS ug
+		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON (ugl.id=ug.userlevel)
+		WHERE ug.organisation_id = :organisation_id AND (ugl.level < :userlevel OR :is_admin)
+		ORDER BY ug.label',array('organisation_id'=>$_SESSION['organisation']['id'],'userlevel'=>$_SESSION['usergroup']['userlevel'],'is_admin'=>$_SESSION['user']['is_admin']));
 	addfield('select','Select user group','cms_usergroups_id',array('required'=>true,'options'=>$usergroups));
 	
 	if($data['lastlogin']=='0000-00-00 00:00:00') $data['lastlogin'] = '';
@@ -43,3 +46,6 @@
 
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
+	} else {
+		trigger_error('You do not have access to this menu. Please ask your admin to change this!');
+	}
