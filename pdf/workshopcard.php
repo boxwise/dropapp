@@ -34,6 +34,9 @@ $ids = join(',',$ids);
 $result = db_query('SELECT *, CONCAT(firstname," ",lastname) AS name, DATE_FORMAT(date_of_birth,"%d-%m-%Y") AS birthdate, DATE_FORMAT(NOW(),"%d-%m-%Y %H:%i") AS issued FROM people WHERE id IN ('.$ids.')');
 
 while($p = db_fetch($result)) {
+
+	verifycampaccess($p['camp_id']);
+
 	$picture = (file_exists($settings['upload_dir'].'/people/'.intval($p['id']).'.jpg')?
 		$settings['upload_dir'].'/people/'.intval($p['id']).'.jpg':'');
 		

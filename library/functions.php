@@ -17,3 +17,18 @@
 		}
 		return $camplist;
 	}
+	
+	function getcampdata($id) {
+		if($_SESSION['user']['is_admin']) {
+			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c WHERE (NOT c.deleted OR c.deleted IS NULL) AND organisation_id = :organisation_id AND c.id = :camp ORDER BY c.seq',array('camp'=>$id,'organisation_id'=>$_SESSION['organisation']['id']));
+		} else {
+			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_usergroups_camps AS x WHERE (NOT c.deleted OR c.deleted IS NULL) AND organisation_id = :organisation_id AND c.id = x.camp_id AND c.id = :camp AND x.cms_usergroups_id = :usergroup ORDER BY c.seq',array('camp'=>$id, 'usergroup'=>$_SESSION['usergroup']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
+		}
+	}
+	
+	function verifycampaccess($camp_id) {
+		$camps = camplist(true); 
+		if(!in_array($camp_id,$camps)) {
+			trigger_error("You don't have access to this record");
+		}
+	}

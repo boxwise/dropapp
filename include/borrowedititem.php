@@ -27,7 +27,7 @@
 
 	addfield('text','Label','label');
 	addfield('select','Category','category_id', array('required'=>true,'query'=>'SELECT id AS value, label FROM borrow_categories'));
-	addfield('select','Location','location_id', array('required'=>true,'query'=>'SELECT id AS value, location AS label FROM borrow_locations'));
+	addfield('select','Location','location_id', array('required'=>true,'query'=>'SELECT id AS value, location AS label FROM borrow_locations WHERE camp_id = '.intval($_SESSION['camp']['id'])));
 	addfield('checkbox','Available','visible');
 	addfield('textarea','Comments','comment');
 

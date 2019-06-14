@@ -5,7 +5,7 @@
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{if $title}{$title|strip_tags:false} - {/if}{$translate['site_name']}</title>
+    <title>{if isset($title)}{$title|strip_tags:false} - {/if}{$translate['site_name']}</title>
 
     <!-- Bootstrap -->
     <link href="{$settings['rootdir']}/assets/css/minified.css" rel="stylesheet">

@@ -27,11 +27,8 @@
 			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_usergroups_camps AS x WHERE (NOT c.deleted OR c.deleted IS NULL) AND c.id = x.camp_id AND c.id = :camp AND x.cms_usergroups_id = :usergroup',array('camp'=>$_GET['camp'], 'usergroup'=>$_SESSION['usergroup']['id']));
 		}
 	}
-	if($_SESSION['user']['is_admin']) {
-		$camplist = db_array('SELECT c.id, CONCAT(o.label,": ",c.name) AS name FROM camps AS c, organisations AS o WHERE (NOT c.deleted OR c.deleted IS NULL) AND c.organisation_id = o.id');
-	} else {
-		$camplist = db_array('SELECT c.id, c.name FROM camps AS c, cms_usergroups_camps AS x WHERE (NOT c.deleted OR c.deleted IS NULL) AND x.camp_id = c.id AND x.cms_usergroups_id = :usergroup',array('usergroup'=>$_SESSION['usergroup']['id']));
-	}
+
+	$camplist = camplist();
 	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
 	$tpl->assign('camps',$camplist);
 	$tpl->assign('currentcamp',$_SESSION['camp']);

@@ -5,6 +5,7 @@
 
 	if(!$ajax) {
 
+		if(!$_SESSION['camp']['bicycle']) trigger_error('Bicycle borrowing is not enabled for your camp');
 		initlist();
 
 		$cmsmain->assign('title','Borrow items');

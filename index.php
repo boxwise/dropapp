@@ -36,13 +36,8 @@
 	}
 	
 	# This fills the camp menu in the top bar (only if the user has access to more than 1 camp
-	if($_GET['camp']) {
-		if($_SESSION['user']['is_admin']) {
-			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c WHERE (NOT c.deleted OR c.deleted IS NULL) AND organisation_id = :organisation_id AND c.id = :camp ORDER BY c.seq',array('camp'=>$_GET['camp'],'organisation_id'=>$_SESSION['organisation']['id']));
-		} else {
-			$_SESSION['camp'] = db_row('SELECT c.* FROM camps AS c, cms_usergroups_camps AS x WHERE (NOT c.deleted OR c.deleted IS NULL) AND organisation_id = :organisation_id AND c.id = x.camp_id AND c.id = :camp AND x.cms_usergroups_id = :usergroup ORDER BY c.seq',array('camp'=>$_GET['camp'], 'usergroup'=>$_SESSION['usergroup']['id'], 'organisation_id'=>$_SESSION['organisation']['id']));
-		}
-	}
+	if($_GET['camp']) getcampdata($_GET['camp']);
+	
 	$camplist = camplist();
 	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
 	$cmsmain->assign('camps',$camplist);
