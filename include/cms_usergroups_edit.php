@@ -32,14 +32,20 @@
 
 	addfield('select','Level','userlevel',array('required'=>true,'query'=>'SELECT id AS value, label FROM cms_usergroups_levels ORDER BY level'));
 
-	addfield('select','Available camps','camps',array('multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected FROM camps AS a LEFT OUTER JOIN cms_usergroups_camps AS x ON a.id = x.camp_id AND x.cms_usergroups_id = '.intval($id).' WHERE (NOT a.deleted OR a.deleted IS NULL) ORDER BY seq'));
+	addfield('select','Available camps','camps',array('multiple'=>true,'query'=>'
+		SELECT a.id AS value, a.name AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 
+		FROM camps AS a 
+		LEFT OUTER JOIN cms_usergroups_camps AS x ON a.id = x.camp_id AND x.cms_usergroups_id = '.intval($id).' 
+		WHERE (NOT a.deleted OR a.deleted IS NULL) 
+		ORDER BY seq'));
 
 	addfield('select',$translate['cms_users_access'],'cms_functions',array('multiple'=>true,'query'=>'
 	SELECT 
 		a.id AS value, a.title_en AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 
 	FROM cms_functions AS a 
 	LEFT OUTER JOIN cms_usergroups_functions AS x ON a.id = x.cms_functions_id AND x.cms_usergroups_id = '.intval($id).' 
-	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 ORDER BY a.title_en, seq'));
+	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 AND a.visible AND !a.fororganisations
+	ORDER BY a.title_en, seq'));
 
 	addfield('line');
 	addfield('checkbox','Users can start a new laundry cycle','allow_laundry_startcycle');
