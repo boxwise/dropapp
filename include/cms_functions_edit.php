@@ -29,9 +29,9 @@
 	addfield('text',$translate['cms_function_include'],'include');
 
 	addfield('checkbox','This item is visible in the menu','visible');
-	addfield('checkbox','Only available for admin users','adminonly');
+	addfield('checkbox','Only available for gods','adminonly');
 	addfield('checkbox','Available for all camps','allcamps');
-	addfield('checkbox','Available for all users','allusers');
+	addfield('checkbox','Available for all usergroups','allusers');
 	
 	addfield('created','Gemaakt','created',array('aside'=>true));
 
