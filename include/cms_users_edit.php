@@ -28,7 +28,11 @@
 	addfield('text',$translate['cms_users_naam'],'naam',array('required'=>true));
 	addfield('email',$translate['cms_users_email'],'email',array('required'=>true,'tooltip'=>$translate['cms_users_email_tooltip']));
 	
-	$usergroups = db_array('SELECT id AS value, label FROM cms_usergroups WHERE organisation_id = :organisation_id ORDER BY label',array('organisation_id'=>$_SESSION['organisation']['id']));
+	$usergroups = db_array('
+		SELECT id AS value, label 
+		FROM cms_usergroups 
+		WHERE organisation_id = :organisation_id 
+		ORDER BY label',array('organisation_id'=>$_SESSION['organisation']['id']));
 	addfield('select','Select user group','cms_usergroups_id',array('required'=>true,'options'=>$usergroups));
 	
 	if($data['lastlogin']=='0000-00-00 00:00:00') $data['lastlogin'] = '';

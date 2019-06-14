@@ -42,7 +42,12 @@
 	addfield('text','Camp name','name',array('setformtitle'=>true, 'tab'=>'general'));
 	addfield('line','','',array('tab'=>'general'));
 
-	addfield('select','Functions available for this camp','functions',array('tab'=>'general','multiple'=>true,'query'=>'SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected FROM cms_functions AS a LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).' WHERE a.parent_id != 0 AND a.visible AND NOT a.allcamps ORDER BY seq'));
+	addfield('select','Functions available for this camp','functions',array('tab'=>'general','multiple'=>true,'query'=>'
+		SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected 
+		FROM cms_functions AS a 
+		LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).' 
+		WHERE a.parent_id != 0 AND a.visible AND NOT a.allcamps AND NOT a.fororganisations AND NOT a.adminonly AND NOT a.allusers
+		ORDER BY seq'));
 	addfield('line','','',array('tab'=>'general'));
 
 	addfield('number', 'Delete inactive residents', 'delete_inactive_users', array('tab'=>'general','width'=>2,'tooltip'=>'Residents without activity in Boxwise will be deleted. Deleted residents will remain visible in the Deleted tab in the Residents page.'));
