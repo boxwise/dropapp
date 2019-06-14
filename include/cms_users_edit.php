@@ -1,6 +1,8 @@
 <?php
 	$table = 'cms_users';
 
+	if($_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
+
 	if($_POST) {
 
 		$keys = array('naam','email','cms_usergroups_id');
@@ -43,3 +45,6 @@
 
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
+	} else {
+		trigger_error('You do not have access to this menu. Please ask your admin to change this!');
+	}

@@ -3,6 +3,8 @@
 	$table = 'cms_usergroups';
 	$action = 'cms_usergroups_edit';
 
+	if($_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
+
 	if($_POST) {
 		$_POST['organisation_id'] = $_SESSION['organisation']['id'];
 
@@ -62,3 +64,6 @@
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
+	} else {
+		trigger_error('You do not have access to this menu. Please ask your admin to change this!');
+	}

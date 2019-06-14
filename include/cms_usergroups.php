@@ -3,6 +3,8 @@
 	$table = $action;
 	$ajax = checkajax();
 
+	if($_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
+
 	if(!$ajax) {
 
 		initlist();
@@ -65,4 +67,8 @@
 
 		echo json_encode($return);
 		die();
+
+	} 
+	} else {
+		trigger_error('You do not have access to this menu. Please ask your admin to change this!');
 	}

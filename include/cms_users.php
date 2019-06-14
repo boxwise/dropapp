@@ -3,6 +3,7 @@
 	$table = $action;
 	$ajax = checkajax();
 	
+	if($_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
 
 	if(!$ajax) {
 
@@ -12,16 +13,17 @@
 		
 		$camps = db_value('SELECT GROUP_CONCAT(id) FROM cms_usergroups_camps AS uc, camps AS c WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup', array('usergroup'=>$_SESSION['usergroup']['id']));
 		
-		$data = getlistdata('SELECT cms_users.*, NOT is_admin AS visible, g.label AS usergroup 
-		FROM cms_users 
-		LEFT OUTER JOIN cms_usergroups AS g ON g.id = cms_users.cms_usergroups_id 
-		LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
-		LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
-		WHERE 
-			'.(!$_SESSION['user']['is_admin']?'l.level <= '.intval($_SESSION['usergroup']['userlevel']).' AND ':'').'
-			'.($_SESSION['user']['is_admin']?'':'(uc.camp_id IN ('.($camps?$camps:0).')) AND ').' 
-			(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin']?' OR cms_users.is_admin':'').')
-		GROUP BY cms_users.id
+		$data = getlistdata('
+			SELECT cms_users.*, NOT is_admin AS visible, g.label AS usergroup 
+			FROM cms_users 
+			LEFT OUTER JOIN cms_usergroups AS g ON g.id = cms_users.cms_usergroups_id 
+			LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
+			LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
+			WHERE 
+				'.(!$_SESSION['user']['is_admin']?'l.level < '.intval($_SESSION['usergroup']['userlevel']).' AND ':'').'
+				'.($_SESSION['user']['is_admin']?'':'(uc.camp_id IN ('.($camps?$camps:0).')) AND ').' 
+				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin']?' OR cms_users.is_admin':'').')
+			GROUP BY cms_users.id
 		');
 
 		addcolumn('text',$translate['cms_users_naam'],'naam');
@@ -148,4 +150,8 @@
 			}
 		}
 		return $password;
+	}
+
+	} else {
+		trigger_error('You do not have access to this menu. Please ask your admin to change this!');
 	}
