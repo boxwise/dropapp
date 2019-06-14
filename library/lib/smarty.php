@@ -5,11 +5,7 @@ class Zmarty extends Smarty {
 
 		parent::__construct();
         $this->debugging = false;
-        if ($settings['google_projectid'])
-            $this->setCompileDir( 'gs://#default#/smarty/compile' );
-        else
-            $this->setCompileDir($_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/templates/templates_c');
-
+        $this->setCompileDir($settings['smarty_dir']);
 		$this->addTemplateDir($_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/templates');
 		$this->assign('lan',$lan);
 		$this->assign('modal',isset($_GET['modal']));

@@ -34,14 +34,14 @@ $ids = join(',',$ids);
 $result = db_query('SELECT *, CONCAT(firstname," ",lastname) AS name, DATE_FORMAT(date_of_birth,"%d-%m-%Y") AS birthdate, DATE_FORMAT(NOW(),"%d-%m-%Y %H:%i") AS issued FROM people WHERE id IN ('.$ids.')');
 
 while($p = db_fetch($result)) {
-	$picture = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.intval($p['id']).'.jpg')?
-		$_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.intval($p['id']).'.jpg':'');
+	$picture = (file_exists($settings['upload_dir'].'/people/'.intval($p['id']).'.jpg')?
+		$settings['upload_dir'].'/people/'.intval($p['id']).'.jpg':'');
 		
 	if($p['workshoptraining'] && $picture) {
 		
 		if($p['workshopsupervisor']) $super = true;
 		
-		$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.intval($p['id']).'.jpg');
+		$exif = exif_read_data($settings['upload_dir'].'/people/'.intval($p['id']).'.jpg');
 		$rotate = ($exif['Orientation']==3?180:($exif['Orientation']==6?-90:($exif['Orientation']==8?90:0)));
 		list($imgw,$imgh) = getimagesize($picture);
 	

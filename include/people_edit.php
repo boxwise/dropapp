@@ -33,11 +33,17 @@
 		$postid = ($_POST['id']?$_POST['id']:$id);
 		if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
 			if($_FILES['picture']['type']=='image/jpeg') {
-				move_uploaded_file($_FILES['picture']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$postid.'.jpg');
+				$targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
+				$res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
+				if (!$res) {
+					error_log("Could not save uploaded file to $targetFile");
+				}
+			} else {
+				error_log('Skipped uploaded file of type '.$_FILES['picture']['type']);
 			}
 		}
 		if($_POST['picture_delete']) {
-			unlink($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$postid.'.jpg');
+			unlink($settings['upload_dir'].'/people/'.$postid.'.jpg');
 		}
 		
 		if($_POST['__action']=='submitandedit') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$handler->id);
@@ -148,9 +154,9 @@
 	addfield('checkbox','This person is a resident volunteer with A drop in the ocean','volunteer',array('tab'=>'people'));	
 
 	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']||$_SESSION['camp']['idcard']){
-		$data['picture'] = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg')?$id:0);
+		$data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg')?$id:0);
 		if($data['picture']) {
-			$exif = exif_read_data($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.$id.'.jpg');
+			$exif = exif_read_data($settings['upload_dir'].'/people/'.$id.'.jpg');
 			$data['rotate'] = ($exif['Orientation']==3?180:($exif['Orientation']==6?90:($exif['Orientation']==8?270:0)));
 		}
 		addfield('photo','Picture for cards','picture',array('tab'=>'bicycle'));
