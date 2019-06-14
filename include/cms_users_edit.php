@@ -5,14 +5,24 @@
 
 	if($_POST) {
 
-		$keys = array('naam','email','cms_usergroups_id');
+		$posted_userlevel = db_value('
+			SELECT ugl.level 
+			FROM cms_usergroups AS ug
+			LEFT OUTER JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
+			WHERE ug.id = :id', array('id'=>$_POST['cms_usergroups_id']));
+		if($_SESSION['user']['is_admin'] || ($_SESSION['usergroup']['userlevel']> $posted_userlevel)) {
 
-		$handler = new formHandler($table);
-		$handler->savePost($keys);
-		$row = db_row('SELECT * FROM '.$table.' WHERE id = :id ',array('id'=>$_SESSION['user']['id']));
-		$_SESSION['user'] = array_merge($_SESSION['user'],$row);
+			$keys = array('naam','email','cms_usergroups_id');
 
-		redirect('?action='.$_POST['_origin']);
+			$handler = new formHandler($table);
+			$handler->savePost($keys);
+			$row = db_row('SELECT * FROM '.$table.' WHERE id = :id ',array('id'=>$_SESSION['user']['id']));
+			$_SESSION['user'] = array_merge($_SESSION['user'],$row);
+
+			redirect('?action='.$_POST['_origin']);
+		} else {
+			trigger_error("Naughty boy!");
+		}
 	}
 
 	// collect data for the form

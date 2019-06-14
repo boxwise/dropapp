@@ -6,16 +6,21 @@
 	if($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
 
 	if($_POST) {
-		$_POST['organisation_id'] = $_SESSION['organisation']['id'];
+		if($_SESSION['user']['is_admin'] || ($_SESSION['usergroup']['userlevel']> db_value('SELECT level FROM cms_usergroups_levels WHERE id = :id', array('id'=>$_POST['userlevel'])))) {
 
-		$handler = new formHandler($table);
+			$_POST['organisation_id'] = $_SESSION['organisation']['id'];
 
-		$savekeys = array('label','allow_laundry_startcycle','allow_laundry_block','allow_borrow_adddelete','userlevel','organisation_id');
-		$id = $handler->savePost($savekeys);
-		$handler->saveMultiple('camps', 'cms_usergroups_camps', 'cms_usergroups_id', 'camp_id');
-		$handler->saveMultiple('cms_functions', 'cms_usergroups_functions', 'cms_usergroups_id', 'cms_functions_id');
+			$handler = new formHandler($table);
 
-		redirect('?action='.$_POST['_origin']);
+			$savekeys = array('label','allow_laundry_startcycle','allow_laundry_block','allow_borrow_adddelete','userlevel','organisation_id');
+			$id = $handler->savePost($savekeys);
+			$handler->saveMultiple('camps', 'cms_usergroups_camps', 'cms_usergroups_id', 'camp_id');
+			$handler->saveMultiple('cms_functions', 'cms_usergroups_functions', 'cms_usergroups_id', 'cms_functions_id');
+
+			redirect('?action='.$_POST['_origin']);
+		} else {
+			trigger_error("Naughty boy!");
+		}
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
