@@ -32,7 +32,7 @@
 		addcolumn('datetime',$translate['cms_users_lastlogin'],'lastlogin');
 
 		listsetting('add', $translate['cms_users_new']);
-		listsetting('width', 9);
+		listsetting('width', 12);
 		listsetting('allowsort', true);
 
 		addbutton('sendlogindata',$translate['cms_users_sendlogin'],array('icon'=>'fa-user','confirm'=>true));
