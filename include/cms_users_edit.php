@@ -1,7 +1,7 @@
 <?php
 	$table = 'cms_users';
 
-	if($_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
+	if($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
 
 	if($_POST) {
 

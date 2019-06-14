@@ -3,7 +3,7 @@
 	$table = 'cms_usergroups';
 	$action = 'cms_usergroups_edit';
 
-	if($_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
+	if($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
 
 	if($_POST) {
 		$_POST['organisation_id'] = $_SESSION['organisation']['id'];
