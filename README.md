@@ -25,7 +25,7 @@ To service the current version which is still running in three refugee camps thr
 
        composer install
 
-3. To configure the app, copy `/config.php.default` and remove the `.default` in the filename. The default configuration does not need to change if you are using Docker (see below).
+3. To configure the app, copy `/library/config.php.default` and remove the `.default` in the filename. The default configuration does not need to change if you are using Docker (see below).
 
 4. To run the application, we assume you have Docker installed. You can then run:
 

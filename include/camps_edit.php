@@ -7,7 +7,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('name','market','familyidentifier','delete_inactive_users','food','bicycle','idcard','workshop','laundry','schedulestart','schedulestop','schedulebreak','schedulebreakstart','schedulebreakduration','scheduletimeslot','dropsperadult','dropsperchild','dropcapadult','dropcapchild','bicyclerenttime','adult_age','daystokeepdeletedpersons','extraportion','maxfooddrops_adult','maxfooddrops_child','bicycle_closingtime','bicycle_closingtime_saturday');
+		$savekeys = array('name','market','familyidentifier','delete_inactive_users','food','bicycle','idcard','workshop','laundry','schedulestart','schedulestop','schedulebreak','schedulebreakstart','schedulebreakduration','scheduletimeslot','dropsperadult','dropsperchild','dropcapadult','dropcapchild','bicyclerenttime','adult_age','daystokeepdeletedpersons','extraportion','maxfooddrops_adult','maxfooddrops_child','bicycle_closingtime','bicycle_closingtime_saturday','organisation_id');
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('functions','cms_functions_camps','camps_id','cms_functions_id');
 
@@ -18,11 +18,13 @@
 
 	if (!$id) {
 		$data['visible'] = 1;
+		$data['organisation_id'] = $_SESSION['organisation']['id'];
 	}
 
 	// open the template
 	$cmsmain->assign('include','cms_form.tpl');
 	addfield('hidden','','id');
+	addfield('hidden','','organisation_id');
 
 	// put a title above the form
 	$cmsmain->assign('title','Camp');

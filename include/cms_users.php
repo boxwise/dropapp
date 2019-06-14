@@ -10,7 +10,7 @@
 
 		$cmsmain->assign('title',$translate['cms_users']);
 		
-		$camps = db_value('SELECT GROUP_CONCAT(id) FROM cms_usergroups_camps AS uc, camps AS c WHERE uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup', array('usergroup'=>$_SESSION['usergroup']['id']));
+		$camps = db_value('SELECT GROUP_CONCAT(id) FROM cms_usergroups_camps AS uc, camps AS c WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup', array('usergroup'=>$_SESSION['usergroup']['id']));
 		
 		$data = getlistdata('SELECT cms_users.*, NOT is_admin AS visible, g.label AS usergroup 
 		FROM cms_users 
