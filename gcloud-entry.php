@@ -15,16 +15,19 @@ if ($settings['google_projectid']) {
 }
 // The GAE environment requires a single entry point, so we're
 // doing basic routing from here
-switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
+$parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
+switch ($parsedUrl) {
 case '/':
 case '/index.php':
     require 'index.php';
     break;
 case '/login.php':
-    require 'login.php';
-    break;
 case '/ajax.php':
-    require 'ajax.php';
+case '/pdf/workshopcard.php':
+case '/pdf/bicyclecard.php':
+case '/pdf/qr.php':
+case '/pdf/dryfood.php':
+    require substr($parsedUrl,1); // trim /
     break;
 default:
     http_response_code(404);

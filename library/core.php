@@ -6,7 +6,7 @@ session_name('core');
 session_start();
 
 # load configuration file
-require_once('config.php');
+require_once(__DIR__.'/../config.php');
 
 # load database library
 require_once('lib/database.php');
