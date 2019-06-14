@@ -9,8 +9,6 @@ require('pdf-card.php');
 define('PDFSCRIPT',true);
 define('FPDF_FONTPATH','fonts/');
 
-$title = $_GET['title'];
-
 $pdf=new PDF();
 
 $pdf->AddFont('helvetica','','helvetica.php');
@@ -38,8 +36,9 @@ while($p = db_fetch($result)) {
 	$picture = (file_exists($_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.intval($p['id']).'.jpg')?
 		$_SERVER['DOCUMENT_ROOT'].'/uploads/people/'.intval($p['id']).'.jpg':'');
 		
+	
 	if($p['bicycletraining']) {
-		
+	
 		if(!$picture) $picture = $_SERVER['DOCUMENT_ROOT'].'/assets/img/no-picture.jpg';
 		$exif = exif_read_data($picture);
 		$rotate = ($exif['Orientation']==3?180:($exif['Orientation']==6?-90:($exif['Orientation']==8?90:0)));

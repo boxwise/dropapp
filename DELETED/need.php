@@ -11,7 +11,7 @@
 	//array of all camps
  	$camps = db_simplearray('SELECT c.id, c.name FROM camps AS c
 LEFT OUTER JOIN organisations AS o ON c.organisation_id = o.id
-WHERE c.id != :camp_id AND o.id = :organisation GROUP BY c.id',array('camp_id'=>$_SESSION['camp']['id'],'organisation'=>$_SESSION['organisation']['id']));
+WHERE (NOT c.deleted OR c.deleted IS NULL) AND c.id != :camp_id AND o.id = :organisation GROUP BY c.id',array('camp_id'=>$_SESSION['camp']['id'],'organisation'=>$_SESSION['organisation']['id']));
 	$market = db_value('SELECT market FROM camps WHERE id = :camp', array('camp'=>$_SESSION['camp']['id']));
 	
 	if($_GET['resetfilter2']) {

@@ -8,7 +8,7 @@
 	$cmsmain->assign('title','General stock');
 	listsetting('search', array('p.name'));
 
- 	$camps = db_simplearray('SELECT id, name FROM camps WHERE id != :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
+ 	$camps = db_simplearray('SELECT id, name FROM camps WHERE (NOT deleted OR deleted IS NULL) AND id != :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
 
 	$query = 'SELECT CONCAT(p.id,"-",g.id,"-",IFNULL(s.id,"")) AS id,
 		SUM(p.camp_id = '.$_SESSION['camp']['id'].') AS visible,
