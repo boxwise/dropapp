@@ -1,6 +1,8 @@
 <?php
     // cms settings
     $settings['rootdir'] = '';
+    // api key for sending email
+    $settings['sendgrid_key'] = '';
     // when connecting via app_engine we need a specific DSN
     // which will override the db_database and db_host combination
     // $settings['db_dsn'] = 'mysql:dbname=dropapp_demo;unix_socket=/cloudsql/dropapp-242214:europe-west1:dropapp-production';

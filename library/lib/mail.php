@@ -1,6 +1,4 @@
 <?php
-	require_once($_SERVER["DOCUMENT_ROOT"] . $settings['rootdir'].'/library/htmlmimemail/htmlMimeMail5.php');
-
 	function sendmail($to_email, $to_name, $subject, $content, $email_template = 'cms_email.tpl', $from_email = '', $from_name = '', $debug = false) {
 
 		global $settings, $translate;
@@ -33,13 +31,15 @@
 		}
 
 		foreach($rcpt as $to) {
-			$m = new htmlMimeMail5();
-			$m->setHTMLCharset('UTF-8');
-			$m->setTextCharset('UTF-8');
-			$m->setFrom($from_name.' <'.$from_email.'>');
-			$m->setSubject(utf8_decode($subject));
-			$m->setHTML(str_replace('*|NAAM|*',$to['name'],$mail));
-			$m->send(array($to['email']));
+			$email = new \SendGrid\Mail\Mail(); 
+			$email->setFrom($from_email, $from_name);
+			$email->setSubject($subject);
+			$email->addTo($to['email']);
+			$email->addContent(
+				"text/html", str_replace('*|NAAM|*',$to['name'],$mail)
+			);
+			$sendgrid = new \SendGrid($settings['sendgrid_key']);
+			$response = $sendgrid->send($email);
 		 }
 
 	}
