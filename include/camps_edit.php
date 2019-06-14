@@ -47,7 +47,12 @@
 	addfield('text', 'Location identifier of residents', 'familyidentifier', array('tab'=>'general'));
 	addfield('checkbox', 'Do you give out general ID-cards?', 'idcard', array('tab'=>'general'));
 
-	addfield('select','Functions available for this camp','functions',array('tab'=>'features','multiple'=>true,'query'=>'SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected FROM cms_functions AS a LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).' WHERE a.parent_id != 0 AND a.visible AND NOT a.allcamps ORDER BY seq'));
+	addfield('select','Functions available for this camp','functions',array('tab'=>'features','multiple'=>true,'query'=>'
+		SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected 
+		FROM cms_functions AS a 
+		LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).' 
+		WHERE a.parent_id != 0 AND a.visible AND NOT a.allcamps AND NOT a.fororganisations AND NOT a.adminonly AND NOT a.allusers
+		ORDER BY seq'));
 	addfield('checkbox', 'Running a Free Shop?', 'market', array('tab'=>'features'));
 	addfield('checkbox', 'Do you distribute food?', 'food', array('tab'=>'features'));
 	addfield('checkbox', 'Do you rent bikes?', 'bicycle', array('tab'=>'features'));

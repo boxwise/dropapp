@@ -44,7 +44,7 @@
 		a.id AS value, a.title_en AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 
 	FROM cms_functions AS a 
 	LEFT OUTER JOIN cms_usergroups_functions AS x ON a.id = x.cms_functions_id AND x.cms_usergroups_id = '.intval($id).' 
-	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 AND a.visible AND !a.fororganisations
+	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 AND a.visible AND NOT a.fororganisations
 	ORDER BY a.title_en, seq'));
 
 	addfield('line');
