@@ -33,6 +33,7 @@
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
+	verify_campaccess_location($data['location_id']);
 
 	if (!$id) {
 		$data['visible'] = 1;

@@ -8,11 +8,12 @@ function exception_error_handler($errno, $errstr, $errfile = '', $errline = '') 
 
 			$error = new Zmarty;
 			$error->assign('error',$errstr);
-			$error->assign('line',$errline);
-			$error->assign('file',$errfile);
-
-
-			$error->assign('backtrace',debug_backtrace_string());
+			
+			if($_SESSION['user']['is_admin']) {
+				$error->assign('line',$errline);
+				$error->assign('file',$errfile);
+				$error->assign('backtrace',debug_backtrace_string());
+			}
 
 			$error->display('cms_error.tpl');
 

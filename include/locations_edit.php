@@ -5,7 +5,9 @@
 
 	if($_POST) {
 
-
+		verify_campaccess_location($_POST['id']);
+		if(!in_array($_POST['camp_id'],camplist(true))) trigger_error("You don't have access to this record");
+	
 		$handler = new formHandler($table);
 
 		$savekeys = array('label', 'visible', 'camp_id', 'container_stock');
@@ -16,6 +18,8 @@
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 
+	#verify_campaccess_location($id);
+	
 	if (!$id) {
 		$data['visible'] = 1;
 		$data['camp_id'] = $_SESSION['camp']['id'];

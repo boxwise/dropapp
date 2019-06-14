@@ -26,11 +26,26 @@
 		}
 	}
 	
-	function verifycampaccess($id) {
+	#this function verifies if a people id belongs to a camp that the current user has access to.
+	function verify_campaccess_people($id) {
 		if(!$id) return;
 		$camp_id = db_value('SELECT camp_id FROM people WHERE id = :id',array('id'=>$id));
 		$camps = camplist(true); 
 		if(!in_array($camp_id,$camps)) {
 			trigger_error("You don't have access to this record");
 		}
+	}
+	
+	#this function verifies if a location id belongs to a camp that the current user has access to.
+	function verify_campaccess_location($id) {
+		if(!$id) return;
+		$camp_id = db_value('SELECT camp_id FROM locations WHERE id = :id',array('id'=>$id));
+		$camps = camplist(true); 
+		if(!in_array($camp_id,$camps)) {
+			trigger_error("You don't have access to this record");
+		}
+	}
+	
+	function verify_deletedrecord($table,$id) {
+		if(db_value('SELECT IF(NOT deleted OR deleted IS NULL,0,1) FROM '.$table.' WHERE id = :id',array('id'=>$id))) trigger_error("This record does not exist");
 	}

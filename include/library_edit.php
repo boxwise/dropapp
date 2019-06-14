@@ -6,6 +6,9 @@
 	}
 
 	if($_POST) {
+
+		verify_campaccess_people($_POST['people_id'][0]);
+		verify_deletedrecord('people',$_POST['people_id'][0]);
 		
 		$table = 'library_transactions';
 		$keys = array('transaction_date','book_id','people_id','status','comment');
@@ -22,7 +25,11 @@
 
 	$data = db_row('SELECT b.*, TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>610000 AS toolate, TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date)) AS duration, bt.transaction_date, bt.people_id, bt.status, bt.comment AS btcomment, CONCAT(firstname," ",lastname," (",container,")") AS user FROM library AS b LEFT OUTER JOIN library_transactions AS bt ON bt.book_id = b.id LEFT OUTER JOIN people AS p ON bt.people_id = p.id WHERE b.id = :id ORDER BY transaction_date DESC ',array('id'=>$id));
 
+	verify_campaccess_people($data['people_id']);
+	verify_deletedrecord('people',$data['people_id']);
+
 	if($data['status']=='out') {
+
 		$data['duration'] = ceil($data['duration']/86400).' days';
 		if($data['people_id']==-1) $data['user'] = $data['btcomment'];
 		$cmsmain->assign('title',$data['user'].' is returning '.$data['code'].($data['booktitle_en']?' - '.$data['booktitle_en']:""));
