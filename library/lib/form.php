@@ -80,7 +80,7 @@
 			if($data[$field] && $data[$field]!='0000-00-00') $data[$field] = strftime('%d-%m-%Y',strtotime($data[$field]));
 			$formdata[$field]['dateformat'] = 'DD-MM-YYYY';
 		} elseif($formdata[$field]['time']) {
-			$data[$field] = strftime('%H:%M',strtotime($data[$field]));
+			if($data[$field]) $data[$field] = strftime('%H:%M',strtotime($data[$field]));
 			$formdata[$field]['dateformat'] = 'H:mm';
 		}
 /*

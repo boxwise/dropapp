@@ -70,11 +70,16 @@
 		$daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
 		foreach($data as $key=>$value) {
+			
 			if($data[$key]['expired']) {
 				$data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '. floor($daysinactive) .' days."></i> '; 
 			} else {
 				$data[$key]['expired'] ='';
 			}
+			if($data[$key]['parent_id']==0 && !$data[$key]['approvalsigned']) {
+				$data[$key]['expired'] .= '<i class="fa fa-pencil-square warning tooltip-this" title="This family didn\'t sign the privacy declaration"></i> ';
+			}
+
 			if($data[$key]['bicycletraining'] && $_SESSION['camp']['bicycle']) {
 				$data[$key]['expired'] .= '<i class="fa fa-bicycle tooltip-this" title="This person has a bicycle certificate."></i> ';
 			}
