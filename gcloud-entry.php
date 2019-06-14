@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
-require_once 'config.php';
+require_once 'library/config.php';
 // register google cloud storage client
 use Google\Cloud\Storage\StorageClient;
 function register_stream_wrapper($projectId)
