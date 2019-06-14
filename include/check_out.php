@@ -10,7 +10,8 @@
 		if($_POST) {
 
 			if($_POST['id']) {
-				verifycampaccess($_POST['id']);
+				verify_campaccess_people($_POST['id']);
+				verify_deletedrecord($table,$_POST['id']);
 			}
 
 			$_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
@@ -33,7 +34,8 @@
 			$data['people_id'] = intval($_GET['people_id']);
 		}
 
-		verifycampaccess($data['people_id']);
+		verify_campaccess_people($data['people_id']);
+		verify_deletedrecord('people',$data['people_id']);
 
 		$data['hidesubmit'] = true;
 		$data['hidecancel'] = true;

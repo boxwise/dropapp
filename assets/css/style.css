@@ -706,7 +706,6 @@ textarea.select2{
 /* table general */
 .table-parent{
 	margin:0 0 30px;
-	max-width:900px;
 }
 .content-form .table-parent {
 	margin:0;

@@ -9,22 +9,41 @@
 			$success = true;
 			$message = '';
 
-			$_SESSION['user'] = $row;
-			$_SESSION['usergroup'] = db_row('SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel FROM cms_usergroups AS ug WHERE ug.id = :id',array('id'=>$_SESSION['user']['cms_usergroups_id']));
-			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id',array('id'=>$_SESSION['usergroup']['organisation_id']));
-
-			db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
-			logfile('User logged in with '.$_SERVER['HTTP_USER_AGENT']);
-
-			if(isset($_POST['autologin'])) {
-				setcookie("autologin_user", $_POST['email'], time()+(3600*24*90), '/');
-				setcookie("autologin_pass", $_POST['pass'], time()+(3600*24*90), '/');
-			} else {
-				setcookie("autologin_user", null, time()-3600, '/');
-				setcookie("autologin_pass", null, time()-3600, '/');
+			$today = new DateTime();
+			if($row['valid_firstday']) {
+				$valid_firstday = new DateTime($row['valid_firstday']);
+				if($today < $valid_firstday) {
+					$success = false;
+					$message = "This user account is not yet valid";
+				}
 			}
-			#include('update.php');
-			$redirect = $settings['rootdir'].'/?action=start';
+			if($row['valid_lastday']) {
+				$valid_lastday = new DateTime($row['valid_lastday']);
+				if($today > $valid_lastday) {
+					$success = false;
+					$message = "This user account has expired";
+				}
+			}
+
+			if($success) {
+				$_SESSION['user'] = $row;
+				$_SESSION['usergroup'] = db_row('SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel FROM cms_usergroups AS ug WHERE ug.id = :id',array('id'=>$_SESSION['user']['cms_usergroups_id']));
+				$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id',array('id'=>$_SESSION['usergroup']['organisation_id']));
+	
+				db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id',array('id'=>$_SESSION['user']['id']));
+				logfile('User logged in with '.$_SERVER['HTTP_USER_AGENT']);
+	
+				if(isset($_POST['autologin'])) {
+					setcookie("autologin_user", $_POST['email'], time()+(3600*24*90), '/');
+					setcookie("autologin_pass", $_POST['pass'], time()+(3600*24*90), '/');
+				} else {
+					setcookie("autologin_user", null, time()-3600, '/');
+					setcookie("autologin_pass", null, time()-3600, '/');
+				}
+				#include('update.php');
+				$redirect = $settings['rootdir'].'/?action=start';
+			}
+
 		} else { # password is not correct
 			$success = false;
 			$message = translate('cms_login_error_wrongpassword');

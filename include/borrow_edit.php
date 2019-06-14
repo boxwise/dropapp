@@ -14,7 +14,8 @@
 	}
 	
 	if($_GET['return']) {
-		verifycampaccess(intval($_GET['user']));
+		verify_campaccess_people(intval($_GET['user']));
+		verify_deletedrecord('people',intval($_GET['user']));
 		
 		db_query('INSERT INTO borrow_transactions (transaction_date, bicycle_id, people_id, status, location_id) VALUES (NOW(), :id, :people_id, "in", :location)', array('id'=>$_GET['return'],'people_id'=>$_GET['user'],'location'=>$_SESSION['filter2']['borrow']));
 
@@ -24,8 +25,8 @@
 	}
 
 	if($_POST) {
-
-		verifycampaccess(intval($_POST['people_id']));
+		verify_campaccess_people(intval($_POST['people_id'][0]));
+		verify_deletedrecord('people',intval($_POST['people_id'][0]));
 		
 		$table = 'borrow_transactions';
 		$keys = array('transaction_date','bicycle_id','people_id','status','lights','helmet','location_id');
@@ -44,7 +45,8 @@
 
 	$data = db_row('SELECT b.*, bt.lights, bt.helmet, TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date))>'.(intval($_SESSION['camp']['bicyclerenttime'])*3600).' AS toolate, CONCAT(HOUR(TIMEDIFF(NOW(),transaction_date)),":",LPAD(MINUTE(TIMEDIFF(NOW(),transaction_date)),2,"0")) AS duration, bt.transaction_date, bt.people_id, bt.status, CONCAT(firstname," ",lastname," (",container,")") AS user FROM borrow_items AS b LEFT OUTER JOIN borrow_transactions AS bt ON bt.bicycle_id = b.id LEFT OUTER JOIN people AS p ON bt.people_id = p.id WHERE b.id = :id ORDER BY transaction_date DESC ',array('id'=>$id));
 
-	verifycampaccess($data['people_id']);
+	verify_campaccess_people($data['people_id']);
+	verify_deletedrecord('people',$data['people_id']);
 
 	if($data['status']=='out') {
 
