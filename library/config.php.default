@@ -3,9 +3,9 @@
     $settings['rootdir'] = '';
     // api key for sending email
     $settings['sendgrid_key'] = '';
-    // when connecting via app_engine we need a specific DSN
-    // which will override the db_database and db_host combination
-    // $settings['db_dsn'] = 'mysql:dbname=dropapp_demo;unix_socket=/cloudsql/dropapp-242214:europe-west1:dropapp-production';
+    // when connecting via app_engine we need a specific unix socket
+    // which will override the db_host combination
+    // $settings['db_socket'] = '/cloudsql/dropapp-XYZ:europe-west1:dropapp-ABC';
     // when just running locally
     $settings['db_database'] = 'dropapp_dev';
     $settings['db_host'] = 'db_mysql';
