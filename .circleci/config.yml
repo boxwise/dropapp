@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.3-stretch-node-browsers
+    steps:
+      - checkout
+      - run: sudo docker-php-ext-install pdo_mysql exif
+      # composer cache
+      - restore_cache:
+          keys:
+          # "composer.lock" can be used if it is committed to the repo
+          - v1-dependencies-{{ checksum "composer.json" }}
+      - run: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
+      # build static assets
+      - run: php build.php
