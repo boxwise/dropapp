@@ -1,4 +1,6 @@
-# README #
+[![CircleCI](https://circleci.com/gh/boxwise/dropapp.svg?style=svg)](https://circleci.com/gh/boxwise/dropapp)
+
+# Readme #
 
 You just found the Drop App (first version of [Boxwise](www.boxwise.co) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.  
 We developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Our second user is [Intervolve](https://intervolvegr.com/) who is using Drop App in the Koutsochero camp in Larissa, Greece.  
