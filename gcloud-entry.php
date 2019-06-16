@@ -30,7 +30,7 @@ case '/pdf/workshopcard.php':
 case '/pdf/bicyclecard.php':
 case '/pdf/qr.php':
 case '/pdf/dryfood.php':
-case '/reset-demo.php':
+case '/reseed-db.php':
     require substr($parsedUrl,1); // trim /
     break;
 default:

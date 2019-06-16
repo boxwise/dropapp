@@ -1,5 +1,5 @@
-# Use the PHP 7.3 runtime (BETA) by replacing "php72" below with "php73"
 runtime: php72
+service: default
 
 entrypoint: serve gcloud-entry.php
 
@@ -11,3 +11,6 @@ handlers:
 - url: /.*
   script: auto
   secure: always
+
+
+  
