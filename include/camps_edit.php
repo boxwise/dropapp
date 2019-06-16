@@ -31,7 +31,7 @@
 	addfield('hidden','','organisation_id');
 
 	// put a title above the form
-	$cmsmain->assign('title','Camp');
+	$cmsmain->assign('title','Base');
 
 	
 	$tabs['general']='General Settings';
@@ -41,7 +41,7 @@
 	
 	$cmsmain->assign('tabs',$tabs);
 
-	addfield('text','Camp name','name',array('setformtitle'=>true, 'tab'=>'general','required'=>true));
+	addfield('text','Base name','name',array('setformtitle'=>true, 'tab'=>'general','required'=>true));
 	addfield('line','','',array('tab'=>'general'));
 
 	addfield('select','Functions available for this camp','functions',array('width'=>6,'tab'=>'general','multiple'=>true,'query'=>'
@@ -65,11 +65,11 @@
 	addfield('checkbox', 'Do you give out general ID-cards?', 'idcard', array('tab'=>'general'));
 	addfield('line','','',array('tab'=>'general'));
 
-	addfield('checkbox', 'This camp has a Free Shop?', 'market', array('tab'=>'general'));
-	addfield('checkbox', 'This camp has a food distribution programme in the Free Shop', 'food', array('tab'=>'general'));
-	addfield('checkbox', 'This camp runs a Bicycle/tools borrowing program', 'bicycle', array('tab'=>'general'));
-	addfield('checkbox', 'This camp runs a workshop for residents', 'workshop', array('tab'=>'general'));
-	addfield('checkbox', 'This camp has a laundry station for residents', 'laundry', array('tab'=>'general'));
+	addfield('checkbox', 'You have a Free Shop?', 'market', array('tab'=>'general'));
+	addfield('checkbox', 'You run a food distribution program in the Free Shop?', 'food', array('tab'=>'general'));
+	addfield('checkbox', 'You run a Bicycle/tools borrowing program?', 'bicycle', array('tab'=>'general'));
+	addfield('checkbox', 'You have a workshop for residents?', 'workshop', array('tab'=>'general'));
+	addfield('checkbox', 'You run a laundry station for residents?', 'laundry', array('tab'=>'general'));
 
 	addfield('title','Drops per cycle','',array('tab'=>'market'));
 	addfield('number', 'Drops per adult', 'dropsperadult', array('tab'=>'market','width'=>2));
