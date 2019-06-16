@@ -40,10 +40,10 @@
 	addfield('select','Level','userlevel',array('required'=>true,'query'=>'
 		SELECT id AS value, label 
 		FROM cms_usergroups_levels 
-		WHERE level < '.intval($_SESSION['usergroup']['userlevel']).'
+		WHERE level < '.intval($_SESSION['usergroup']['userlevel']).' OR '.$_SESSION['user']['is_admin'].'
 		ORDER BY level'));
 
-	addfield('select','Available camps','camps',array('multiple'=>true,'query'=>'
+	addfield('select','Available bases','camps',array('multiple'=>true,'query'=>'
 		SELECT a.id AS value, a.name AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 
 		FROM camps AS a 
 		LEFT OUTER JOIN cms_usergroups_camps AS x ON a.id = x.camp_id AND x.cms_usergroups_id = '.intval($id).' 
