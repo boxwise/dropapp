@@ -1,0 +1,4 @@
+cron:
+- description: "daily reset demo job"
+  url: /reset-demo.php
+  schedule: every 24 hours
