@@ -42,7 +42,7 @@ jobs:
       - run: |
           cd workspace
           # record version
-          echo "${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}" | tr '[:upper:]' '[:lower:]' > version.txt
+          echo "${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}" | tr '[:upper:]' '[:lower:]' > assets/version
           # generate config file
           echo "<?php
             \$settings['rootdir'] = '';
