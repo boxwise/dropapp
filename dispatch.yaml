@@ -1,7 +1,7 @@
 dispatch:
-- url: "staging.dropbox.co/*"
+- url: "staging.boxwise.co/*"
   service: default
-- url: "demo.dropbox.co/*"
+- url: "demo.boxwise.co/*"
   service: demo
-- url: "my.dropbox.co/*"
+- url: "my.boxwise.co/*"
   service: production
