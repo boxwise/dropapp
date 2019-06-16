@@ -96,7 +96,7 @@ workflows:
     - build
     - deploy:
         envVariablePrefix: BOXWISE_STAGING_
-        serviceName: staging
+        serviceName: default
         requires:
           - build
         filters:
@@ -105,6 +105,14 @@ workflows:
     - deploy:
         envVariablePrefix: BOXWISE_DEMO_
         serviceName: demo
+        requires:
+          - build
+        filters:
+          branches:
+            only: production
+    - deploy:
+        envVariablePrefix: BOXWISE_PROD_
+        serviceName: production
         requires:
           - build
         filters:

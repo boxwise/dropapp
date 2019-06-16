@@ -1,5 +1,5 @@
 - url: "staging.dropbox.co/*"
-  service: staging
+  service: default
 - url: "demo.dropbox.co/*"
   service: demo
 - url: "my.dropbox.co/*"
