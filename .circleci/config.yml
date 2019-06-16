@@ -38,7 +38,7 @@ jobs:
       - attach_workspace:
           at: workspace
       - gcp-cli/install
-      - run: sudo docker-php-ext-install pdo_mysql exif
+      - run: sudo docker-php-ext-install pdo_mysql
       - run: |
           cd workspace
           # record version
