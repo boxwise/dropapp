@@ -88,8 +88,8 @@ jobs:
           echo "Migrating << parameters.serviceName >> database"
           vendor/bin/phinx migrate -e << parameters.serviceName >>
           # deploy
-          gcloud app deploy app-<< parameters.serviceName >>.yaml cron.yaml --version ${CIRCLE_BUILD_NUM}
-
+          gcloud app deploy app-<< parameters.serviceName >>.yaml --version ${CIRCLE_BUILD_NUM}
+          gcloud app deploy cron.yaml dispatch.yaml --version ${CIRCLE_BUILD_NUM}
 workflows:
   build-and-deploy:
     jobs:

@@ -1,3 +1,4 @@
+dispatch:
 - url: "staging.dropbox.co/*"
   service: default
 - url: "demo.dropbox.co/*"
