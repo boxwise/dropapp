@@ -1,4 +1,5 @@
 cron:
-- description: "daily reset demo job"
-  url: /reset-demo.php
+- description: "daily reseed demo job"
+  url: /reseed-db.php
+  target: demo
   schedule: every 24 hours
