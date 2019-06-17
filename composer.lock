@@ -4,8 +4,124 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5f2d520b8470815fc484c6c4958dbe6",
+    "content-hash": "4a701f760d3b3bdb3b692c71f5197f4a",
     "packages": [
+        {
+            "name": "cache/adapter-common",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-cache/adapter-common.git",
+                "reference": "6320bb5f5574cb88438059b59f8708da6b6f1d32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-cache/adapter-common/zipball/6320bb5f5574cb88438059b59f8708da6b6f1d32",
+                "reference": "6320bb5f5574cb88438059b59f8708da6b6f1d32",
+                "shasum": ""
+            },
+            "require": {
+                "cache/tag-interop": "^1.0",
+                "php": "^5.6 || ^7.0",
+                "psr/cache": "^1.0",
+                "psr/log": "^1.0",
+                "psr/simple-cache": "^1.0"
+            },
+            "require-dev": {
+                "cache/integration-tests": "^0.16",
+                "phpunit/phpunit": "^5.7.21"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Cache\\Adapter\\Common\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aaron Scherer",
+                    "email": "aequasi@gmail.com",
+                    "homepage": "https://github.com/aequasi"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/nyholm"
+                }
+            ],
+            "description": "Common classes for PSR-6 adapters",
+            "homepage": "http://www.php-cache.com/en/latest/",
+            "keywords": [
+                "cache",
+                "psr-6",
+                "tag"
+            ],
+            "time": "2018-07-08T13:04:33+00:00"
+        },
+        {
+            "name": "cache/tag-interop",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-cache/tag-interop.git",
+                "reference": "c7496dd81530f538af27b4f2713cde97bc292832"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-cache/tag-interop/zipball/c7496dd81530f538af27b4f2713cde97bc292832",
+                "reference": "c7496dd81530f538af27b4f2713cde97bc292832",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5 || ^7.0",
+                "psr/cache": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Cache\\TagInterop\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/nyholm"
+                },
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com",
+                    "homepage": "https://github.com/nicolas-grekas"
+                }
+            ],
+            "description": "Framework interoperable interfaces for tags",
+            "homepage": "http://www.php-cache.com/en/latest/",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr6",
+                "tag"
+            ],
+            "time": "2017-03-13T09:14:27+00:00"
+        },
         {
             "name": "cakephp/cache",
             "version": "3.7.8",
@@ -698,6 +814,268 @@
             "time": "2019-06-03T20:07:05+00:00"
         },
         {
+            "name": "google/cloud-trace",
+            "version": "v0.14.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/google-cloud-php-trace.git",
+                "reference": "92f469488379de2ade4cb1513db6703ad2e14fce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-trace/zipball/92f469488379de2ade4cb1513db6703ad2e14fce",
+                "reference": "92f469488379de2ade4cb1513db6703ad2e14fce",
+                "shasum": ""
+            },
+            "require": {
+                "google/cloud-core": "^1.28",
+                "google/gax": "^1.0",
+                "ramsey/uuid": "~3"
+            },
+            "require-dev": {
+                "erusev/parsedown": "^1.6",
+                "phpdocumentor/reflection": "^3.0",
+                "phpunit/phpunit": "^4.8|^5.0",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "suggest": {
+                "ext-grpc": "The gRPC extension enables use of the performant gRPC transport",
+                "ext-protobuf": "Provides a significant increase in throughput over the pure PHP protobuf implementation. See https://cloud.google.com/php/grpc for installation instructions.",
+                "opencensus/opencensus": "Provides application tracing integrations."
+            },
+            "type": "library",
+            "extra": {
+                "component": {
+                    "id": "cloud-trace",
+                    "target": "googleapis/google-cloud-php-trace.git",
+                    "path": "Trace",
+                    "entry": "src/TraceClient.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Google\\Cloud\\Trace\\": "src",
+                    "GPBMetadata\\Google\\Devtools\\Cloudtrace\\": "metadata"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Stackdriver Trace Client for PHP",
+            "time": "2019-06-10T19:08:31+00:00"
+        },
+        {
+            "name": "google/common-protos",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/common-protos-php.git",
+                "reference": "13daea6a4f257f3448fbf4450860e659462e0ad5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/13daea6a4f257f3448fbf4450860e659462e0ad5",
+                "reference": "13daea6a4f257f3448fbf4450860e659462e0ad5",
+                "shasum": ""
+            },
+            "require": {
+                "google/protobuf": "^3.6.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36",
+                "sami/sami": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\": "src",
+                    "GPBMetadata\\Google\\": "metadata"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Google API Common Protos for PHP",
+            "homepage": "https://github.com/googleapis/common-protos-php",
+            "keywords": [
+                "google"
+            ],
+            "time": "2019-03-14T19:01:14+00:00"
+        },
+        {
+            "name": "google/gax",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/gax-php.git",
+                "reference": "48387fb818c6882296710a2302a0aa973b99afb2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/48387fb818c6882296710a2302a0aa973b99afb2",
+                "reference": "48387fb818c6882296710a2302a0aa973b99afb2",
+                "shasum": ""
+            },
+            "require": {
+                "google/auth": "^1.2.0",
+                "google/common-protos": "^1.0",
+                "google/grpc-gcp": "^0.1.0",
+                "google/protobuf": "^3.7.1",
+                "grpc/grpc": "^1.4",
+                "guzzlehttp/promises": "^1.3",
+                "guzzlehttp/psr7": "^1.2",
+                "php": ">=5.5"
+            },
+            "conflict": {
+                "ext-protobuf": "<3.7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36",
+                "sami/sami": "*",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\ApiCore\\": "src",
+                    "GPBMetadata\\Google\\": "metadata"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Google API Core for PHP",
+            "homepage": "https://github.com/googleapis/gax-php",
+            "keywords": [
+                "google"
+            ],
+            "time": "2019-04-23T22:57:39+00:00"
+        },
+        {
+            "name": "google/grpc-gcp",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GoogleCloudPlatform/grpc-gcp-php.git",
+                "reference": "e1ec44c0c39bd204868e2a2ed3cc87ed9006984e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GoogleCloudPlatform/grpc-gcp-php/zipball/e1ec44c0c39bd204868e2a2ed3cc87ed9006984e",
+                "reference": "e1ec44c0c39bd204868e2a2ed3cc87ed9006984e",
+                "shasum": ""
+            },
+            "require": {
+                "google/auth": "^1.3",
+                "google/protobuf": "^v3.3.0",
+                "grpc/grpc": "^v1.13.0",
+                "php": ">=5.5.0",
+                "psr/cache": "^1.0.1"
+            },
+            "require-dev": {
+                "google/cloud-spanner": "^1.7",
+                "phpunit/phpunit": "4.8.36"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Grpc\\Gcp\\": "src/",
+                    "": "src/generated/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "gRPC GCP library for channel management",
+            "time": "2019-02-14T02:21:15+00:00"
+        },
+        {
+            "name": "google/protobuf",
+            "version": "v3.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/protocolbuffers/protobuf-php.git",
+                "reference": "a257235dc1a0d45f8cfc641d0c2ad852f57396c4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/a257235dc1a0d45f8cfc641d0c2ad852f57396c4",
+                "reference": "a257235dc1a0d45f8cfc641d0c2ad852f57396c4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.8.0"
+            },
+            "suggest": {
+                "ext-bcmath": "Need to support JSON deserialization"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\Protobuf\\": "src/Google/Protobuf",
+                    "GPBMetadata\\Google\\Protobuf\\": "src/GPBMetadata/Google/Protobuf"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "proto library for PHP",
+            "homepage": "https://developers.google.com/protocol-buffers/",
+            "keywords": [
+                "proto"
+            ],
+            "time": "2019-05-29T00:06:29+00:00"
+        },
+        {
+            "name": "grpc/grpc",
+            "version": "1.19.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/grpc/grpc-php.git",
+                "reference": "0f1ffdde45bfb9257c5d9eab81695d0f042bea22"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/grpc/grpc-php/zipball/0f1ffdde45bfb9257c5d9eab81695d0f042bea22",
+                "reference": "0f1ffdde45bfb9257c5d9eab81695d0f042bea22",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "google/auth": "^v1.3.0"
+            },
+            "suggest": {
+                "ext-protobuf": "For better performance, install the protobuf C extension.",
+                "google/protobuf": "To get started using grpc quickly, install the native protobuf library."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Grpc\\": "src/lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "gRPC library for PHP",
+            "homepage": "https://grpc.io",
+            "keywords": [
+                "rpc"
+            ],
+            "time": "2019-02-27T04:47:56+00:00"
+        },
+        {
             "name": "guzzlehttp/guzzle",
             "version": "6.3.3",
             "source": {
@@ -1040,6 +1418,153 @@
             ],
             "description": "Map nested JSON structures onto PHP classes",
             "time": "2017-11-28T21:30:01+00:00"
+        },
+        {
+            "name": "opencensus/opencensus",
+            "version": "v0.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/census-instrumentation/opencensus-php.git",
+                "reference": "31dc521ba3fab9653a215a10e65d5b7fe9e2c6ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/census-instrumentation/opencensus-php/zipball/31dc521ba3fab9653a215a10e65d5b7fe9e2c6ac",
+                "reference": "31dc521ba3fab9653a215a10e65d5b7fe9e2c6ac",
+                "shasum": ""
+            },
+            "require": {
+                "cache/adapter-common": "^1.0",
+                "php": ">=5.6",
+                "psr/cache": "^1.0",
+                "psr/log": "^1.0",
+                "ramsey/uuid": "~3"
+            },
+            "conflict": {
+                "ext-opencensus": "< 0.1.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "~5.3",
+                "guzzlehttp/psr7": "~1.4",
+                "phpunit/phpunit": "^5.0",
+                "squizlabs/php_codesniffer": "2.*",
+                "symfony/yaml": "~3.3",
+                "twig/twig": "~2.0 || ~1.35"
+            },
+            "suggest": {
+                "cache/apc-adapter": "Enable QpsSampler to use apc cache.",
+                "cache/apcu-adapter": "Enable QpsSampler to use apcu cache.",
+                "cache/memcached-adapter": "Enable QpsSampler to use memcached cache.",
+                "ext-opencensus": "Enable tracing arbitrary functions.",
+                "opencensus/opencensus-exporter-jaeger": "Export data to Jaeger",
+                "opencensus/opencensus-exporter-stackdriver": "Export data to Stackdriver",
+                "opencensus/opencensus-exporter-zipkin": "Export data to Zipkin"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OpenCensus\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jeff Ching",
+                    "email": "chingor@google.com"
+                }
+            ],
+            "description": "OpenCensus Trace Client for PHP",
+            "time": "2018-09-25T20:57:09+00:00"
+        },
+        {
+            "name": "opencensus/opencensus-exporter-stackdriver",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/census-instrumentation/opencensus-php-exporter-stackdriver.git",
+                "reference": "f3017cebd5c01b212b889af7fb430921de6b45b0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/census-instrumentation/opencensus-php-exporter-stackdriver/zipball/f3017cebd5c01b212b889af7fb430921de6b45b0",
+                "reference": "f3017cebd5c01b212b889af7fb430921de6b45b0",
+                "shasum": ""
+            },
+            "require": {
+                "google/cloud-trace": "~0.4",
+                "opencensus/opencensus": "~0.4",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OpenCensus\\Trace\\Exporter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jeff Ching",
+                    "email": "chingor@google.com"
+                }
+            ],
+            "description": "OpenCensus Stackdriver Exporter for PHP",
+            "time": "2018-04-19T16:43:12+00:00"
+        },
+        {
+            "name": "paragonie/random_compat",
+            "version": "v9.99.99",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
+                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*",
+                "vimeo/psalm": "^1"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "polyfill",
+                "pseudorandom",
+                "random"
+            ],
+            "time": "2018-07-02T15:55:56+00:00"
         },
         {
             "name": "phan/phan",
@@ -1492,6 +2017,88 @@
             ],
             "description": "A polyfill for getallheaders.",
             "time": "2016-02-11T07:05:27+00:00"
+        },
+        {
+            "name": "ramsey/uuid",
+            "version": "3.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ramsey/uuid.git",
+                "reference": "d09ea80159c1929d75b3f9c60504d613aeb4a1e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/d09ea80159c1929d75b3f9c60504d613aeb4a1e3",
+                "reference": "d09ea80159c1929d75b3f9c60504d613aeb4a1e3",
+                "shasum": ""
+            },
+            "require": {
+                "paragonie/random_compat": "^1.0|^2.0|9.99.99",
+                "php": "^5.4 || ^7.0",
+                "symfony/polyfill-ctype": "^1.8"
+            },
+            "replace": {
+                "rhumsaa/uuid": "self.version"
+            },
+            "require-dev": {
+                "codeception/aspect-mock": "^1.0 | ~2.0.0",
+                "doctrine/annotations": "~1.2.0",
+                "goaop/framework": "1.0.0-alpha.2 | ^1.0 | ~2.1.0",
+                "ircmaxell/random-lib": "^1.1",
+                "jakub-onderka/php-parallel-lint": "^0.9.0",
+                "mockery/mockery": "^0.9.9",
+                "moontoast/math": "^1.1",
+                "php-mock/php-mock-phpunit": "^0.3|^1.1",
+                "phpunit/phpunit": "^4.7|^5.0|^6.5",
+                "squizlabs/php_codesniffer": "^2.3"
+            },
+            "suggest": {
+                "ext-ctype": "Provides support for PHP Ctype functions",
+                "ext-libsodium": "Provides the PECL libsodium extension for use with the SodiumRandomGenerator",
+                "ext-uuid": "Provides the PECL UUID extension for use with the PeclUuidTimeGenerator and PeclUuidRandomGenerator",
+                "ircmaxell/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
+                "moontoast/math": "Provides support for converting UUID to 128-bit integer (in string form).",
+                "ramsey/uuid-console": "A console application for generating UUIDs with ramsey/uuid",
+                "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ramsey\\Uuid\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marijn Huizendveld",
+                    "email": "marijn.huizendveld@gmail.com"
+                },
+                {
+                    "name": "Thibaud Fabre",
+                    "email": "thibaud@aztech.io"
+                },
+                {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
+                }
+            ],
+            "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
+            "homepage": "https://github.com/ramsey/uuid",
+            "keywords": [
+                "guid",
+                "identifier",
+                "uuid"
+            ],
+            "time": "2018-07-19T23:38:55+00:00"
         },
         {
             "name": "rize/uri-template",

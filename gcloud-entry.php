@@ -1,18 +1,30 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 require_once 'library/config.php';
-// register google cloud storage client
+use OpenCensus\Trace\Exporter\StackdriverExporter;
+use OpenCensus\Trace\Tracer;
 use Google\Cloud\Storage\StorageClient;
-function register_stream_wrapper($projectId)
-{   
+function registerGoogleCloudServices($projectId)
+{ 
+    global $settings;
+    
+    $exporter = new StackdriverExporter([
+        'clientConfig' => [
+            'projectId' => $projectId
+        ]
+    ]);
+    Tracer::start($exporter);
+
     $client = new StorageClient(['projectId' => $projectId]);
     $client->registerStreamWrapper();
+
+    $settings['smarty_dir'] = "gs://$projectId.appspot.com/smarty/compile";
+    $settings['upload_dir'] = "gs://$projectId.appspot.com/uploads";
 }
+
 $googleProjectId = getenv('GOOGLE_CLOUD_PROJECT');
 if ($googleProjectId) {
-    register_stream_wrapper($googleProjectId);
-    $settings['smarty_dir'] = "gs://$googleProjectId.appspot.com/smarty/compile";
-    $settings['upload_dir'] = "gs://$googleProjectId.appspot.com/uploads";
+    registerGoogleCloudServices($googleProjectId);
 } else {
     throw new Exception("GOOGLE_CLOUD_PROJECT environment variable must be set to work in GAE environment");
 }
