@@ -19,8 +19,8 @@ if (!array_key_exists('smarty_dir',$settings)) {
 }
 
 # connect to database
-if (array_key_exists('db_dsn',$settings)) {
-    $db_dsn = $settings['db_dsn'];
+if (array_key_exists('db_socket',$settings)) {
+    $db_dsn = 'mysql:dbname='.$settings['db_database'].';unix_socket='.$settings['db_socket'];
 } else {
     $db_dsn = 'mysql:host='.$settings['db_host'].';dbname='.$settings['db_database'];
 }

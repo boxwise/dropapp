@@ -7,7 +7,7 @@ error_log
 templates/templates_c/*
 .ftpquota
 uploads/*
-vendor
+/vendor
 !uploads/.gitkeep 
 phpmyadmin/*
 *.sql

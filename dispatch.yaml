@@ -1,0 +1,7 @@
+dispatch:
+- url: "staging.boxwise.co/*"
+  service: default
+- url: "demo.boxwise.co/*"
+  service: demo
+- url: "my.boxwise.co/*"
+  service: production
