@@ -2,4 +2,4 @@ cron:
 - description: "daily reseed demo job"
   url: /reseed-db.php
   target: demo
-  schedule: every 24 hours
+  schedule: every saturday 05:00
