@@ -49,7 +49,7 @@ for($i=0;$i<intval($_GET['count']);$i++) {
 	if(!$valid) trigger_error('The service that we use to create QR-codes seem to be offline. Try again in a few minutes!');
 	$pdf->Image($url, 88, 12+$y, 34, 34, 'png');
 
-	$pdf->Image($_SERVER['DOCUMENT_ROOT'].'/pdf/logo.png', 92, 107+$y, 26, 31);
+	$pdf->Image($_SERVER['DOCUMENT_ROOT'].'/pdf/logo.png', 82, 120+$y, 50, 10);
 
 	$pdf->SetFont('helvetica','',9);
 
