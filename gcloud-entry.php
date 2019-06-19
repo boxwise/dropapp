@@ -38,6 +38,7 @@ case '/index.php':
     break;
 case '/login.php':
 case '/ajax.php':
+case '/mobile.php':
 case '/pdf/workshopcard.php':
 case '/pdf/bicyclecard.php':
 case '/pdf/qr.php':
