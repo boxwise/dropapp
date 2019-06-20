@@ -34,7 +34,11 @@ if ($googleProjectId) {
 if (!array_key_exists("sentry_key",$settings)) {
     throw new Exception("sentry_key must be set to work in GAE environment");
 }
-Sentry\init(['dsn' => $settings['sentry_key']]);
+Sentry\init(
+    [
+        'dsn' => $settings['sentry_key'],
+        'environment' => $_SERVER['HTTP_HOST']
+    ]);
 
 // start session to ensure it's available when setting scope for sentry
 session_start();
