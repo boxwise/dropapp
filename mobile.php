@@ -1,7 +1,4 @@
 <?php
-	error_reporting(E_ALL);
-	ini_set('display_errors',true);
-
 	$login = true; #tell core not to check login, because we use an alternate version
 	require_once('library/core.php');
 

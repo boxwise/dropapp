@@ -1,9 +1,4 @@
 <?php
-    error_reporting(E_ALL^E_NOTICE);
-    ini_set('display_errors',1);
-
-    require_once __DIR__.'/library/config.php';
-    require_once __DIR__.'/vendor/autoload.php';
     if (!array_key_exists('HTTP_X_APPENGINE_CRON',$_SERVER))
          throw new Exception("Not called from AppEngine cron service");
          

@@ -1,9 +1,6 @@
 <?php
 require(__DIR__.'/../library/core.php');
 
-ini_set('display_errors',1);
-error_reporting(E_ALL);
-
 require($_SERVER['DOCUMENT_ROOT'].'/pdf/pdf.php');
 
 define('PDFSCRIPT',true);
