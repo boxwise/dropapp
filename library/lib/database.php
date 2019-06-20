@@ -3,15 +3,9 @@
 	function db_connect($dsn,$username,$password) {
 		global $defaultdbid;
 
-		try {
-			$defaultdbid = new PDO($dsn, $username, $password);
-			$defaultdbid->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$defaultdbid->setAttribute(PDO::ATTR_EMULATE_PREPARES,true);
-		}
-		catch(PDOException $e) {
-			echo "db_connect() niet gelukt: ".$e->getMessage();
-			die();
-		}
+		$defaultdbid = new PDO($dsn, $username, $password);
+		$defaultdbid->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$defaultdbid->setAttribute(PDO::ATTR_EMULATE_PREPARES,true);
 
 		db_query("SET CHARACTER SET utf8");
 		db_query("SET NAMES 'utf8'");
@@ -23,14 +17,8 @@
 	function db_numrows($query, $array = array(), $dbid = false) {
 		global $defaultdbid;
 		if(!$dbid) $dbid = $defaultdbid;
-		try {
-			$result = db_query($query, $array, $dbid);
-			return $result->rowCount();
-		}
-		catch(PDOException $e) {
-			trigger_error('db_numrows(): '.$e->getMessage());
-			die();
-		}
+		$result = db_query($query, $array, $dbid);
+		return $result->rowCount();
 	}
 
 	function db_row($query, $array = array(), $dbid = false) {
@@ -74,14 +62,9 @@
 	}
 
 	function db_fetch($result, $mode = PDO::FETCH_ASSOC) {
-		try {
-			if(!is_object($result)) trigger_error('db_fetch() verwacht een object');
-			return $result->fetch($mode);
-		}
-		catch(PDOException $e) {
-			trigger_error('db_fetch(): '.$e->getMessage());
-			die();
-		}
+		if(!is_object($result)) 
+			throw new Exception('db_fetch() expects an object');
+		return $result->fetch($mode);
 	}
 
 	function db_query($query, $array = array(), $dbid = false) {
@@ -94,8 +77,7 @@
 			return $ex;
 		}
 		catch(PDOException $e) {
-			trigger_error('db_query():<br />'.$query.'<br /><br />'.$e->getMessage());
-			die();
+			throw new Exception('db_query() failed: '.$query, $e->getCode(), $e);
 		}
 	}
 
@@ -103,42 +85,24 @@
 		global $defaultdbid;
 		if(!$dbid) $dbid = $defaultdbid;
 
-		try {
-			return $dbid->lastInsertId();
-		}
-		catch(PDOException $e) {
-			trigger_error('db_insertid(): '.$e->getMessage());
-			die();
-		}
+		return $dbid->lastInsertId();
 	}
 
 	function db_prepare($name, $query, $dbid = false) {
 		global $defaultdbid, $$name;
 		if(!$dbid) $dbid = $defaultdbid;
 
-		try {
-			$$name = $dbid->prepare($query);
-		}
-		catch(PDOException $e) {
-			trigger_error('db_prepare(): '.$e->getMessage());
-			die();
-		}
+		$$name = $dbid->prepare($query);
 	}
 
 	function db_use($name, $array) {
 		global $$name;
 
-		try {
-			foreach($array as $key=>$value) {
-				$$name->bindParam(':'.$key, $value, PDO::PARAM_INT);
-			}
-			$$name->execute();
-			return db_fetch($$name);
+		foreach($array as $key=>$value) {
+			$$name->bindParam(':'.$key, $value, PDO::PARAM_INT);
 		}
-		catch(PDOException $e) {
-			trigger_error('db_use(): '.$e->getMessage());
-			die();
-		}
+		$$name->execute();
+		return db_fetch($$name);
 	}
 
 	function db_escape($string, $dbid = false) {
@@ -198,6 +162,6 @@
 
 	function db_touch($table, $id) {
 		if(db_fieldexists($table,'modified')) {
-				db_query('UPDATE '.$table.' SET modified = NOW(), modified_by = :user WHERE id = :id',array('user'=>$_SESSION['user']['id'],'id'=>$id));
+			db_query('UPDATE '.$table.' SET modified = NOW(), modified_by = :user WHERE id = :id',array('user'=>$_SESSION['user']['id'],'id'=>$id));
 		}
 	}

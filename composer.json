@@ -6,6 +6,7 @@
         "robmorgan/phinx": "^0.10.7",
         "google/cloud-storage": "^1.12",
         "phan/phan": "^2.1",
-        "opencensus/opencensus-exporter-stackdriver": "^0.1.0"
+        "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
+        "sentry/sdk": "2.0.3"
     }
 }

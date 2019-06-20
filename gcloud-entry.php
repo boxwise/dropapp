@@ -28,6 +28,21 @@ if ($googleProjectId) {
 } else {
     throw new Exception("GOOGLE_CLOUD_PROJECT environment variable must be set to work in GAE environment");
 }
+
+// configure sentry
+
+if (!array_key_exists("sentry_key",$settings)) {
+    throw new Exception("sentry_key must be set to work in GAE environment");
+}
+Sentry\init(['dsn' => $settings['sentry_key']]);
+
+// start session to ensure it's available when setting scope for sentry
+session_start();
+Sentry\configureScope(function (Sentry\State\Scope $scope): void {
+    if (array_key_exists('user',$_SESSION))
+        $scope->setUser(['id' => $_SESSION['user']['id']]);
+});
+
 // The GAE environment requires a single entry point, so we're
 // doing basic routing from here
 $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];

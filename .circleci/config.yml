@@ -52,7 +52,8 @@ jobs:
             \$settings['db_database'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_user'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_pass'] = '${<< parameters.envVariablePrefix >>DBPASS}';
-            \$settings['sendgrid_key'] = '${BOXWISE_SENDGRID}';" > library/config.php
+            \$settings['sendgrid_key'] = '${BOXWISE_SENDGRID}';
+            \$settings['sentry_key'] = '${BOXWISE_SENTRY}';" > library/config.php
           echo "paths:
             migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'
             seeds: '%%PHINX_CONFIG_DIR%%/db/seeds'

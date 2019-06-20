@@ -2,7 +2,6 @@
 
 define('CORE',true);
 
-session_name('core');
 session_start();
 
 # load configuration file
