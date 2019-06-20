@@ -3,8 +3,8 @@
 	$_POST['pass'] = md5($_POST['pass']);
 
 	$row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)',array('email'=>$_POST['email']));
-
-	if($row['pass']==$_POST['pass']) { # password is correct
+	if($row) { #e-mailaddress exists in database
+		if($row['pass']==$_POST['pass']) { # password is correct
 			$success = true;
 			$message = '';
 
@@ -20,7 +20,6 @@
 				setcookie("autologin_user", null, time()-3600, '/');
 				setcookie("autologin_pass", null, time()-3600, '/');
 			}
-
 		} else { # password is not correct
 			$success = false;
 			$message = translate('cms_login_error_wrongpassword');
