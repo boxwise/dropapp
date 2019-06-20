@@ -3,5 +3,5 @@ dispatch:
   service: default
 - url: "demo.boxwise.co/*"
   service: demo
-- url: "my.boxwise.co/*"
+- url: "app.boxwise.co/*"
   service: production
