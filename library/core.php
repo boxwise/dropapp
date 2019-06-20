@@ -1,8 +1,10 @@
 <?php
 
 define('CORE',true);
-
-session_start();
+# start a session, if it's not already started from our caller (ie gcloud-entry)
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 # load configuration file
 require_once(__DIR__.'/config.php');
