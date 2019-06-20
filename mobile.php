@@ -97,6 +97,9 @@
 	$tpl->assign('data',$data);	
 	$tpl->display('mobile.tpl');
 	
+# TODO 
+# merge with checksession()
+# add last_validday and first_validday
 function checkmobilesession() {
 	global $settings;
 	
