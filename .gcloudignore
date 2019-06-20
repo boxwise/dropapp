@@ -19,5 +19,4 @@
 .docker
 phinx.yml
 docker-compose.yml
-reset.php
 build.php

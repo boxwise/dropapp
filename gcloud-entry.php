@@ -58,6 +58,7 @@ case '/index.php':
 case '/login.php':
 case '/ajax.php':
 case '/mobile.php':
+case '/reset.php':
 case '/pdf/workshopcard.php':
 case '/pdf/bicyclecard.php':
 case '/pdf/qr.php':
