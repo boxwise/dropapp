@@ -154,7 +154,7 @@
 	if($_SESSION['camp']['extraportion'] && $_SESSION['camp']['food']){
 		addfield('checkbox','Extra food due to health condition (as indicated by Red Cross)','extraportion',array('tab'=>'people'));	
 	}
-	addfield('checkbox','This person is a resident volunteer with A drop in the ocean','volunteer',array('tab'=>'people'));	
+	addfield('checkbox','This person is a resident volunteer with <i>' . $_SESSION['organisation']['label'] . '</i>','volunteer',array('tab'=>'people'));	
 
 	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']||$_SESSION['camp']['idcard']){
 		$data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg')?$id:0);

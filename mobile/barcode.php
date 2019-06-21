@@ -5,7 +5,7 @@
 
 	if($_GET['barcode'] && !db_value('SELECT id FROM qr WHERE code = :code',array('code'=>$_GET['barcode']))) {
 		$data['warning'] = true;
-		$data['message'] = 'This is not a valid QR-code for Drop In The Ocean';
+		$data['message'] = 'This is not a valid QR-code for '.$_SESSION['organisation']['label'];
 		$data['barcode'] = '';
 	} else {
 		if($_GET['boxid']) {

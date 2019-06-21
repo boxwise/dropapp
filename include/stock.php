@@ -172,7 +172,7 @@
 
 function exportstock($data) {
 	$e = new PHPExcel();
-	$e->getProperties()->setCreator("Drop in the Ocean");
+	$e->getProperties()->setCreator($_SESSION['organisation']['label']);
 	$e->getProperties()->setTitle('Boxes export '.strftime('%A %d %B %Y, %H:%M'));
 	$e->setActiveSheetIndex(0);
 

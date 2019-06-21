@@ -72,13 +72,13 @@ while($p = db_fetch($result)) {
 		} elseif($card=='id') {
 			$pdf->SetTextColor(100,0,0,0);
 			$pdf->SetFont('helvetica','B',12.5);
-			$pdf->PDFPrint(4,7,'Drop in the ocean');
+			$pdf->PDFPrint(4,7,$_SESSION['organisation']['label']);
 			$pdf->SetTextColor(0);
 			$pdf->PDFPrint(43,7,'Membership Card');
 
 			$pdf->Rotate(180,$pdf->X+42.5,$pdf->Y+82.5);
 			$pdf->SetFont('helvetica','',11);
-			$pdf->PDFPrint(4,101,'Drop In The Ocean');
+			$pdf->PDFPrint(4,101,$_SESSION['organisation']['label']);
 			$pdf->PDFPrint(4,106,'In case of emergency');
 			$pdf->SetFont('helvetica','B',11);
 			$pdf->PDFPrint(39,101,'+30 69........');
@@ -88,13 +88,13 @@ while($p = db_fetch($result)) {
 		} else {
 			$pdf->SetTextColor(100,0,0,0);
 			$pdf->SetFont('helvetica','B',12.5);
-			$pdf->PDFPrint(4,7,'Drop in the ocean');
+			$pdf->PDFPrint(4,7,$_SESSION['organisation']['label']);
 			$pdf->SetTextColor(0);
 			$pdf->PDFPrint(43,7,'Bicycle Certificate');
 
 			$pdf->Rotate(180,$pdf->X+42.5,$pdf->Y+82.5);
 			$pdf->SetFont('helvetica','',11);
-			$pdf->PDFPrint(4,106,'Drop In The Ocean');
+			$pdf->PDFPrint(4,106,$_SESSION['organisation']['label']);
 			$pdf->PDFPrint(4,101,'In case of emergency');
 			$pdf->SetFont('helvetica','B',11);
 			$pdf->PDFPrint(39,106,'+30 694 6899518');
