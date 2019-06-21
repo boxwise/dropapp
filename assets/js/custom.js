@@ -501,3 +501,13 @@ $(".delete-user").on("click", function(e) {
     }
 });
 
+//Checkboxes in Bases menu
+function toggleShop() {
+    $("#tab_market").toggleClass("hidden");
+}
+function toggleFood() {
+    $("#tab_food").toggleClass("hidden");
+}
+function toggleBikes() {
+    $("#tab_bicycle").toggleClass("hidden");
+}

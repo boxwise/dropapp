@@ -21,7 +21,7 @@
 			{if $tabs|count>1}
 				<ul class="nav nav-tabs">
 					{foreach $tabs as $key=>$value name="tabs"}
-					<li {if $smarty.foreach.tabs.first}class="active"{/if}><a href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$smarty.foreach.tabs.iteration}"> {$value}</a></li>
+					<li {if $smarty.foreach.tabs.first}class="active"{/if}><a id="tab_{$key}" href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$smarty.foreach.tabs.iteration}" {if $hiddentabs[$key]}class="hidden"{/if}> {$value}</a></li>
 					{/foreach}
 				</ul>
 			{/if}

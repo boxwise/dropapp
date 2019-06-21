@@ -36,40 +36,41 @@
 	
 	$tabs['general']='General Settings';
 	$tabs['market'] = 'Free Shop'; 
-	$tabs['bicycle'] = 'Rent Bicycles';
 	$tabs['food'] = 'Food Distribution';
-	
+	$tabs['bicycle'] = 'Rent Bicycles';
 	$cmsmain->assign('tabs',$tabs);
 
+	// Specify when tabs should be hidden
+	$hiddentabs['market'] = !$data['market']; 
+	$hiddentabs['food'] = !$data['food'];
+	$hiddentabs['bicycle'] = !$data['bicycle'];
+	$cmsmain->assign('hiddentabs',$hiddentabs);
+	
 	addfield('text','Base name','name',array('setformtitle'=>true, 'tab'=>'general','required'=>true));
 	addfield('line','','',array('tab'=>'general'));
 
-	addfield('select','Functions available for this camp','functions',array('width'=>6,'tab'=>'general','multiple'=>true,'query'=>'
+	addfield('title','Features','',array('tab'=>'general'));
+	addfield('select','Functions available for this base','functions',array('width'=>6,'tab'=>'general','multiple'=>true,'query'=>'
 		SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected 
 		FROM cms_functions AS a 
 		LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).' 
 		WHERE a.parent_id != 0 AND a.visible AND NOT a.allcamps AND NOT a.adminonly AND NOT a.allusers
 		ORDER BY seq'));
+
+	addfield('checkbox', 'You have a Free Shop?', 'market', array('tab'=>'general', 'onchange'=>'toggleShop()'));
+	addfield('checkbox', 'You run a food distribution program in the Free Shop?', 'food', array('tab'=>'general', 'onchange'=>'toggleFood()'));
+	addfield('checkbox', 'You run a Bicycle/tools borrowing program?', 'bicycle', array('tab'=>'general', 'onchange'=>'toggleBikes()'));
+	addfield('checkbox', 'You have a workshop for beneficiaries?', 'workshop', array('tab'=>'general'));
+	addfield('checkbox', 'You run a laundry station for beneficiaries?', 'laundry', array('tab'=>'general'));
 	addfield('line','','',array('tab'=>'general'));
 
-	addfield('number', 'Delete inactive residents', 'delete_inactive_users', array('tab'=>'general','width'=>2,'tooltip'=>'Residents without activity in Boxwise will be deleted. Deleted residents will remain visible in the Deleted tab in the Residents page.'));
+	addfield('title','Beneficiaries','',array('tab'=>'general'));
+	addfield('number', 'Delete inactive beneficiaries', 'delete_inactive_users', array('tab'=>'general','width'=>2,'tooltip'=>'Residents without activity in Boxwise will be deleted. Deleted residents will remain visible in the Deleted tab in the Residents page.'));
 	addfield('number', 'Days to keep deleted persons', 'daystokeepdeletedpersons', array('tab'=>'general','width'=>2,'tooltip'=>'Deleted residents will remain visible in the Deleted tab in the Residents page and will be completely deleted after a while. Here you can define how long they will remain in the Deleted list.'));
-	addfield('line','','',array('tab'=>'general'));
-
 	addfield('number', 'Adult age', 'adult_age', array('tab'=>'general','width'=>2,'tooltip'=>'For some functions we distinct between children and adults. Fill in here the lowest age considered adult for this camp.'));
-	addfield('line','','',array('tab'=>'general'));
-
-	addfield('text', 'Location identifier of residents', 'familyidentifier', array('tab'=>'general','tooltip'=>'Generally this refers to the kind of housing that people have: tent, container, house or something else.'));
-	addfield('line','','',array('tab'=>'general'));
-
+	addfield('text', 'Location identifier for beneficiaries', 'familyidentifier', array('tab'=>'general','tooltip'=>'Generally this refers to the kind of housing that people have: tent, container, house or something else.'));
 	addfield('checkbox', 'Do you give out general ID-cards?', 'idcard', array('tab'=>'general'));
 	addfield('line','','',array('tab'=>'general'));
-
-	addfield('checkbox', 'You have a Free Shop?', 'market', array('tab'=>'general'));
-	addfield('checkbox', 'You run a food distribution program in the Free Shop?', 'food', array('tab'=>'general'));
-	addfield('checkbox', 'You run a Bicycle/tools borrowing program?', 'bicycle', array('tab'=>'general'));
-	addfield('checkbox', 'You have a workshop for residents?', 'workshop', array('tab'=>'general'));
-	addfield('checkbox', 'You run a laundry station for residents?', 'laundry', array('tab'=>'general'));
 
 	addfield('title','Drops per cycle','',array('tab'=>'market'));
 	addfield('number', 'Drops per adult', 'dropsperadult', array('tab'=>'market','width'=>2));
