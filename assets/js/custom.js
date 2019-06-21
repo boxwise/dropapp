@@ -439,3 +439,65 @@ $(".check-minmax").on("input", function(ev) {
         max
     );
 });
+
+
+// Delete button in cms_profile
+$(".delete-user").on("click", function(e) {
+    var el = $(this);
+	e.preventDefault();
+	
+	var options = $.extend(
+		{
+			container: "body",
+			singleton: true,
+			popout: true,
+			trigger: "manual",
+			onConfirm: function(e, element) {
+				element.data("confirmed", true).trigger("click");
+				e.preventDefault();
+			}
+		},
+		el.data()
+	);
+	el.confirmation(options);
+
+    if (el.is(".confirm") && !el.data("confirmed")) {
+        el.confirmation("show");
+    } else if (el.data("confirmed")) {
+        el.data("confirmed", false);
+        $.ajax({
+            type: "post",
+            url: "ajax.php?file=deleteprofile",
+            // option is the selected option in a button with pulldown
+            data: {
+                cms_user_id: el.data("id")
+            },
+            dataType: "json",
+            success: function(result) {
+                if (result.message) {
+                    var n = noty({
+                        text: result.message,
+                        type: result.success ? "success" : "error"
+                    });
+                }
+                if (result.redirect) {
+                    if (result.message) {
+                        setTimeout(function() {
+                            execReload(result.redirect);
+                        }, 1500);
+                    } else {
+                        execReload(result.redirect);
+                    }
+                }
+            },
+            error: function(result) {
+                var n = noty({
+                    text:
+                        "This file cannot be found or what's being returned is not json.",
+                    type: "error"
+                });
+            }
+        });
+    }
+});
+
