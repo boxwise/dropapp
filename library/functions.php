@@ -49,3 +49,25 @@
 	function verify_deletedrecord($table,$id) {
 		if(db_value('SELECT IF(NOT deleted OR deleted IS NULL,0,1) FROM '.$table.' WHERE id = :id',array('id'=>$id))) trigger_error("This record does not exist");
 	}
+
+	function check_valid_from_until_date($valid_from, $valid_until) {
+		$today = new DateTime();
+		$success = true;
+		$message = '';
+
+		if($valid_from) {
+			$valid_firstday = new DateTime($valid_from);
+			if($today < $valid_firstday) {
+				$success = false;
+				$message = "This user account is not yet valid.";
+			}
+		}
+		if($valid_until) {
+			$valid_lastday = new DateTime($valid_until);
+			if($today > $valid_lastday) {
+				$success = false;
+				$message = "This user account is expired.";
+			}
+		}
+		return array('success'=>$success, 'message'=>$message);
+	}

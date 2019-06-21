@@ -8,14 +8,10 @@ function checksession() {
 		db_query('UPDATE cms_users SET lastaction = NOW() WHERE id = :id', array('id'=>$_SESSION['user']['id']));
 		$_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id = :id', array('id'=>$_SESSION['user']['id']));
 		
-		$today = new DateTime();
-		if($_SESSION['user']['valid_firstday']) {
-			$valid_firstday = new DateTime($_SESSION['user']['valid_firstday']);
-			if($today < $valid_firstday) trigger_error("This user account is not yet valid");
-		}
-		if($_SESSION['user']['valid_lastday']) {
-			$valid_lastday = new DateTime($_SESSION['user']['valid_lastday']);
-			if($today > $valid_lastday) trigger_error("This user account has expired");
+		# Check if account is not expired
+		$in_valid_dates = check_valid_from_until_date($row['valid_firstday'], $row['valid_lastday']);
+		if (!$in_valid_dates['success']){
+			redirect($settings['rootdir'] . $settings['cmsdir'].'/login.php?destination='.urlencode($_SERVER['REQUEST_URI']). '&warning=1&message='.$in_valid_dates['message']);
 		}
 		
 	} else { # no valid session exists

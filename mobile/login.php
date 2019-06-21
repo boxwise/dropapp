@@ -7,24 +7,11 @@ $_POST['pass'] = md5($_POST['pass']);
 $row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)', array('email' => $_POST['email']));
 if ($row) { #e-mailaddress exists in database
 	if ($row['pass'] == $_POST['pass']) { # password is correct
-		$success = true;
-		$message = '';
 
-		$today = new DateTime();
-		if ($row['valid_firstday']) {
-			$valid_firstday = new DateTime($row['valid_firstday']);
-			if ($today < $valid_firstday) {
-				$success = false;
-				$message = "This user account is not yet valid";
-			}
-		}
-		if ($row['valid_lastday']) {
-			$valid_lastday = new DateTime($row['valid_lastday']);
-			if ($today > $valid_lastday) {
-				$success = false;
-				$message = "This user account has expired";
-			}
-		}
+		# Check if account is not expired
+		$in_valid_dates = check_valid_from_until_date($row['valid_firstday'], $row['valid_lastday']);
+		$success = $in_valid_dates['success'];
+		$message = $in_valid_dates['message'];
 
 		if ($success) {
 			$_SESSION['user'] = $row;
