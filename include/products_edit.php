@@ -30,7 +30,7 @@
 
 	addfield('text','Name','name');
 	addfield('select', 'Category', 'category_id', array('required'=>true, 'width'=>3, 'multiple'=>false, 'query'=>'SELECT id AS value, label FROM product_categories ORDER BY seq'));
-	if($_SESSION['camp']['market']) addfield('text', ucwords($translate['market_coins']),'value');
+	if($_SESSION['camp']['market']) addfield('text', ucwords($_SESSION['camp']['currencyname']),'value');
 	if($_SESSION['camp']['market']) addfield('number','Estimated annual need per person','amountneeded',array('width'=>3,'required'=>true));
 
 	addfield('line','','');

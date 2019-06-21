@@ -20,7 +20,7 @@
 
 				if(isset($_POST['no_rollover']) && ($_POST['no_rollover'] == 1)) {
 					$currentdrops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :people_id',array('people_id'=>$person));
-					db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>'Reset '.$translate['market_coins_short'],'drops'=>($currentdrops * -1),'user_id'=>$_SESSION['user']['id']));
+					db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>'Reset '.$_SESSION['camp']['currencyname'],'drops'=>($currentdrops * -1),'user_id'=>$_SESSION['user']['id']));
 				}
 
 				db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>$_POST['description'],'drops'=>$drops,'user_id'=>$_SESSION['user']['id']));
@@ -40,17 +40,17 @@
 	$cmsmain->assign('include','cms_form.tpl');
 
 	// put a title above the form
-	$cmsmain->assign('title','Give '.ucwords($translate['market_coins_short']).' to selected families');
+	$cmsmain->assign('title','Give '.ucwords($_SESSION['camp']['currencyname']).' to selected families');
 
 	addfield('hidden','people','people');
 
 
 	addfield('text','Families','names',array('readonly'=>true));
 	addfield('line','','');
-	addfield('text','Give '.ucwords($translate['market_coins_short']),'dropsfamily');
+	addfield('text','Give '.ucwords($_SESSION['camp']['currencyname']),'dropsfamily');
 	addfield('line','','');
-	addfield('text','Give '.ucwords($translate['market_coins_short']).' per adult','dropsadult');
-	addfield('text','Give '.ucwords($translate['market_coins_short']).' per child','dropschild');
+	addfield('text','Give '.ucwords($_SESSION['camp']['currencyname']).' per adult','dropsadult');
+	addfield('text','Give '.ucwords($_SESSION['camp']['currencyname']).' per child','dropschild');
 	addfield('line','','');
 
 	addfield('text','Comments','description');

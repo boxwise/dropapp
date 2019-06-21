@@ -7,7 +7,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('name','market','familyidentifier','delete_inactive_users','food','bicycle','idcard','workshop','laundry','schedulestart','schedulestop','schedulebreak','schedulebreakstart','schedulebreakduration','scheduletimeslot','dropsperadult','dropsperchild','dropcapadult','dropcapchild','bicyclerenttime','adult_age','daystokeepdeletedpersons','extraportion','maxfooddrops_adult','maxfooddrops_child','bicycle_closingtime','bicycle_closingtime_saturday','organisation_id');
+		$savekeys = array('name','market','familyidentifier','delete_inactive_users','food','bicycle','idcard','workshop','laundry','schedulestart','schedulestop','schedulebreak','schedulebreakstart','schedulebreakduration','scheduletimeslot','currencyname','dropsperadult','dropsperchild','dropcapadult','dropcapchild','bicyclerenttime','adult_age','daystokeepdeletedpersons','extraportion','maxfooddrops_adult','maxfooddrops_child','bicycle_closingtime','bicycle_closingtime_saturday','organisation_id');
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('functions','cms_functions_camps','camps_id','cms_functions_id');
 
@@ -17,7 +17,7 @@
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
-
+	
 	if (!$id) {
 		$data = db_defaults($table);
 		$data['visible'] = 1;
@@ -71,13 +71,15 @@
 	addfield('checkbox', 'You have a workshop for residents?', 'workshop', array('tab'=>'general'));
 	addfield('checkbox', 'You run a laundry station for residents?', 'laundry', array('tab'=>'general'));
 
-	addfield('title','Drops per cycle','',array('tab'=>'market'));
-	addfield('number', 'Drops per adult', 'dropsperadult', array('tab'=>'market','width'=>2));
-	addfield('number', 'Drops per child', 'dropsperchild', array('tab'=>'market','width'=>2));
+	addfield('text','Currency name','currencyname',array('tab'=>'market','required'=>true, 'width'=>2, 'tooltip'=>'Will get active after first page reload'));
 	addfield('line','','',array('tab'=>'market'));
-	addfield('title','Drop capping','',array('tab'=>'market'));
-	addfield('number', 'Maximum Drops per adult', 'dropcapadult', array('tab'=>'market','width'=>2));
-	addfield('number', 'Maximum Drops per child', 'dropcapchild', array('tab'=>'market','width'=>2));
+	addfield('title',$_SESSION['camp']['currencyname'].' per cycle','',array('tab'=>'market'));
+	addfield('number',$_SESSION['camp']['currencyname'].' per adult', 'dropsperadult', array('tab'=>'market','width'=>2));
+	addfield('number', $_SESSION['camp']['currencyname'].' per child', 'dropsperchild', array('tab'=>'market','width'=>2));
+	addfield('line','','',array('tab'=>'market'));
+	addfield('title',$_SESSION['camp']['currencyname'].' capping','',array('tab'=>'market'));
+	addfield('number', 'Maximum '.$_SESSION['camp']['currencyname'].' per adult', 'dropcapadult', array('tab'=>'market','width'=>2));
+	addfield('number', 'Maximum '.$_SESSION['camp']['currencyname'].' per child', 'dropcapchild', array('tab'=>'market','width'=>2));
 	addfield('line','','',array('tab'=>'market'));
 	addfield('title','Schedule','',array('tab'=>'market'));
 	addfield('date', 'Daily start time', 'schedulestart', array('tab'=>'market','date'=>false,'time'=>true));
@@ -105,8 +107,8 @@
 	addfield('date', 'Closing time on Saturday', 'bicycle_closingtime_saturday', array('tab'=>'bicycle','date'=>false,'time'=>true));
 
 	addfield('checkbox', 'Do you give out extraportions?', 'extraportion', array('tab'=>'food'));
-	addfield('number', 'Maximum Drops for food per adult', 'maxfooddrops_adult', array('tab'=>'food'));
-	addfield('number', 'Maximum Drops for food per child', 'maxfooddrops_child', array('tab'=>'food'));
+	addfield('number', 'Maximum '.$_SESSION['camp']['currencyname'].' for food per adult', 'maxfooddrops_adult', array('tab'=>'food'));
+	addfield('number', 'Maximum '.$_SESSION['camp']['currencyname'].' for food per child', 'maxfooddrops_child', array('tab'=>'food'));
 
 	// place the form elements and data in the template
 	$cmsmain->assign('data',$data);

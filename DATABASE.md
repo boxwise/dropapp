@@ -45,7 +45,7 @@ These tables can possible be deleted
 - sizegroup (defines which set of sizes are selectable for a product, full set of records needed)
 - sizes (full set of records is required)
 - stock (Each box has a record, app functions without records)
-- transactions (give drops are recorded here and also every purchase. No records needed)
+- transactions ('Give tokens' actions are recorded here and also every purchase. No records needed)
 - x_people_languages (to record what language each resident speaks, can be empty)
 
 ### Bicycle station/sport gear tables ###
