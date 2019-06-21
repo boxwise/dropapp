@@ -60,7 +60,7 @@ while($p = db_fetch($result)) {
 	
 		$pdf->SetFont('helvetica','B',11.5);
 		if($super) $pdf->SetTextColor(0); else $pdf->SetTextColor(100,0,0,0);
-		$pdf->PDFPrint(4,7,'Drop in the ocean');
+		$pdf->PDFPrint(4,7,$_SESSION['organisation']['label']);
 		$pdf->SetTextColor(100);
 		if($super) {
 			$pdf->PDFPrint(40,7,'Workshop Supervisor');
@@ -102,7 +102,7 @@ while($p = db_fetch($result)) {
 		$pdf->SetTextColor(0);
 		$pdf->Rotate(180,$pdf->X+42.5,$pdf->Y+82.5);
 		$pdf->SetFont('helvetica','',11);
-		$pdf->PDFPrint(4,106,'Drop In The Ocean');
+		$pdf->PDFPrint(4,106,$_SESSION['organisation']['label']);
 		$pdf->PDFPrint(4,101,'In case of emergency');
 		$pdf->SetFont('helvetica','B',11);
 		$pdf->PDFPrint(39,106,'+30 694 6899518');

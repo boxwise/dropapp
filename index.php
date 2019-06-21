@@ -42,6 +42,7 @@
 	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
 	$cmsmain->assign('camps',$camplist);
 	$cmsmain->assign('currentcamp',$_SESSION['camp']);
+	$cmsmain->assign('currentOrg', $_SESSION['organisation']);
 	$cmsmain->assign('campaction',strpos($action,'_edit')?substr($action,0,-5):$action);
 	
 	$cmsmain->assign('menu',CMSmenu());

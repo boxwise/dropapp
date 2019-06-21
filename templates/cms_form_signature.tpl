@@ -10,8 +10,8 @@
 	<div class="tab-content">
 		<div class="tab-pane fade" id="languagetab_en">
 			<h3>Information about new privacy policies</h3><br />
-			<p>A Drop in the Ocean wish to reassert you that we are protecting your private information, with reference to both Norwegian laws and the new privacy policies that applies to EU/EES countries.</p>
-			<p>For refugees that receive aid/assistance/ from A Drop in the Ocean (clothes/shoes/food/other assistance or activities), the following information is retained:</p>
+			<p>{$currentOrg['label']} wish to reassert you that we are protecting your private information, with reference to both Norwegian laws and the new privacy policies that applies to EU/EES countries.</p>
+			<p>For refugees that receive aid/assistance/ from {$currentOrg['label']} (clothes/shoes/food/other assistance or activities), the following information is retained:</p>
 			<ul>
 			<li>Name</li>
 			<li>Age, (date of birth)</li>
@@ -20,15 +20,15 @@
 			<li>Telephone number (in some cases)</li>
 			<li>Gender</li>
 			</ul>
-			<p>You do on your own provide us with your personal information in conversation with representatives from A Drop in the Ocean. We need this information to ensure that you are part of our distribution and/or other services provided by the organisation, and to make sure that we have enough equipment for our beneficiaries.</p>
-			<p>A Drop in the Ocean does not share your personal information with other parties.</p>
-			<p>To access the mentioned services provided by A Drop in the Ocean, you must agree that we can continue to process and retain this information about you.</p>
-			<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree that my personal information is stored and processed as described in the Privacy Policy of A Drop in the Ocean.</p><p>I also agree that my family ́s personal information is stored and processed as described above.</p>
+			<p>You do on your own provide us with your personal information in conversation with representatives from {$currentOrg['label']}. We need this information to ensure that you are part of our distribution and/or other services provided by the organisation, and to make sure that we have enough equipment for our beneficiaries.</p>
+			<p>{$currentOrg['label']} does not share your personal information with other parties.</p>
+			<p>To access the mentioned services provided by {$currentOrg['label']}, you must agree that we can continue to process and retain this information about you.</p>
+			<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree that my personal information is stored and processed as described in the Privacy Policy of {$currentOrg['label']}.</p><p>I also agree that my family ́s personal information is stored and processed as described above.</p>
 		</div>
 		<div class="tab-pane fade" id="languagetab_fr">
 			<h3>Informations sur les nouvelles règles de confidentialité</h3><br />
-			<p>‘A Drop in the Ocean’ souhaite vous réaffirmer que nous protégeons vos données privées, conformément aux lois norvégiennes et aux nouvelles règles de confidentialité applicables aux pays de UE/EEA.</p>
-			<p>Pour les réfugiés qui reçoivent aide/assistance de ‘A Drop in the Ocean’ (vêtements/ chaussures/nourriture/autre assistance ou activités), les données suivantes sont gardées:</p>
+			<p>‘{$currentOrg['label']}’ souhaite vous réaffirmer que nous protégeons vos données privées, conformément aux lois norvégiennes et aux nouvelles règles de confidentialité applicables aux pays de UE/EEA.</p>
+			<p>Pour les réfugiés qui reçoivent aide/assistance de ‘{$currentOrg['label']}’ (vêtements/ chaussures/nourriture/autre assistance ou activités), les données suivantes sont gardées:</p>
 			<ul>
 			<li>Nom</li>
 			<li>Âge</li>
@@ -37,21 +37,15 @@
 			<li>Numéro de téléphone (dans certains cas)</li>
 			<li>Le genre (dans certain cas)</li>
 			</ul>
-			<p>Si vous choisissez de communiquer des données personnelles, vous acceptez l’utilisation de ces données par des représentants de ‘A Drop in the Ocean’. Nous avons besoin de ces données pour assurer que vous faites partie de notre distribution et/ou des autres services fournis, et pour assurer que nous avons suffisamment d'équipement pour nos bénéficiaires.</p>
-			<p>‘A Drop in the Ocean‘ ne partage pas des données personnelle avec des tierces parties.</p>
-			<p>Pour accéder aux services mentionnés fournis par ‘A Drop in the Ocean’ vous devez accepter que nous pouvons continuer à traiter et garder ces données à votre sujet.</p>
-			<p>Je suis d’accord pour que mes données personnelles soient gardées et traitées comme décrit dans les règles de confidentialité de ‘A Drop in the Ocean’.</p>
+			<p>Si vous choisissez de communiquer des données personnelles, vous acceptez l’utilisation de ces données par des représentants de ‘{$currentOrg['label']}’. Nous avons besoin de ces données pour assurer que vous faites partie de notre distribution et/ou des autres services fournis, et pour assurer que nous avons suffisamment d'équipement pour nos bénéficiaires.</p>
+			<p>‘{$currentOrg['label']}‘ ne partage pas des données personnelle avec des tierces parties.</p>
+			<p>Pour accéder aux services mentionnés fournis par ‘{$currentOrg['label']}’ vous devez accepter que nous pouvons continuer à traiter et garder ces données à votre sujet.</p>
+			<p>Je suis d’accord pour que mes données personnelles soient gardées et traitées comme décrit dans les règles de confidentialité de ‘{$currentOrg['label']}’.</p>
 			<p>J’approuve également que les données personnelles de ma famille soient stockées et traitées ainsi que décrit ci-dessus</p>
 		</div>
-		<div class="tab-pane fade" id="languagetab_ar">
-			<img src="{$settings['rootdir']}/assets/img/consent-arabic.jpg" class="signature-consent-image" />
-		</div>
-		<div class="tab-pane fade" id="languagetab_so">
-			<img src="{$settings['rootdir']}/assets/img/consent-sorani.jpg" class="signature-consent-image" />
-		</div>
-		<div class="tab-pane fade" id="languagetab_fa">
-			<img src="{$settings['rootdir']}/assets/img/consent-farsi.jpg" class="signature-consent-image" />
-		</div>
+		<div class="tab-pane fade" id="languagetab_ar" />
+			<div class="tab-pane fade" id="languagetab_so" />
+			<div class="tab-pane fade" id="languagetab_fa" />
 	</div>
 <div class="fc"></div>
 <div id="sig" ></div>
