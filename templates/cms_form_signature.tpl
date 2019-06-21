@@ -43,9 +43,12 @@
 			<p>Je suis d’accord pour que mes données personnelles soient gardées et traitées comme décrit dans les règles de confidentialité de ‘{$currentOrg['label']}’.</p>
 			<p>J’approuve également que les données personnelles de ma famille soient stockées et traitées ainsi que décrit ci-dessus</p>
 		</div>
-		<div class="tab-pane fade" id="languagetab_ar" />
-			<div class="tab-pane fade" id="languagetab_so" />
-			<div class="tab-pane fade" id="languagetab_fa" />
+		<div class="tab-pane fade" id="languagetab_ar">
+		</div>
+		<div class="tab-pane fade" id="languagetab_so">
+		</div>
+		<div class="tab-pane fade" id="languagetab_fa">
+		</div>
 	</div>
 <div class="fc"></div>
 <div id="sig" ></div>
