@@ -10,7 +10,7 @@
 	<div class="tab-content">
 		<div class="tab-pane fade" id="languagetab_en">
 			<h3>Information about new privacy policies</h3><br />
-			<p>{$currentOrg['label']} wish to reassert you that we are protecting your private information, with reference to both Norwegian laws and the new privacy policies that applies to EU/EES countries.</p>
+			<p>{$currentOrg['label']} wish to reassert you that we are protecting your private information, with reference to the new privacy policies that applies to EU/EES countries.</p>
 			<p>For refugees that receive aid/assistance/ from {$currentOrg['label']} (clothes/shoes/food/other assistance or activities), the following information is retained:</p>
 			<ul>
 			<li>Name</li>
@@ -27,7 +27,7 @@
 		</div>
 		<div class="tab-pane fade" id="languagetab_fr">
 			<h3>Informations sur les nouvelles règles de confidentialité</h3><br />
-			<p>‘{$currentOrg['label']}’ souhaite vous réaffirmer que nous protégeons vos données privées, conformément aux lois norvégiennes et aux nouvelles règles de confidentialité applicables aux pays de UE/EEA.</p>
+			<p>‘{$currentOrg['label']}’ souhaite vous réaffirmer que nous protégeons vos données privées, conformément nouvelles règles de confidentialité applicables aux pays de UE/EEA.</p>
 			<p>Pour les réfugiés qui reçoivent aide/assistance de ‘{$currentOrg['label']}’ (vêtements/ chaussures/nourriture/autre assistance ou activités), les données suivantes sont gardées:</p>
 			<ul>
 			<li>Nom</li>
