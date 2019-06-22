@@ -25,15 +25,32 @@
 								{if $button['showalways']}
 									{if $button['options']}
 										<div class="btn-group">
-											<div type="button" class="btn btn-sm btn-default dropdown-toggle">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']} <span class="caret"></span></div>
+											<div type="button" class="btn btn-sm btn-default dropdown-toggle">
+												{if $button['icon']}
+													<i class="fa {$button['icon']}"></i>
+												{/if}
+												Helo
+												{if $button['image']}
+													<img src="../assets/img/{$button['image']}" alt="not found"></img> 
+												{/if}												
+												{$button['label']} <span class="caret"></span>
+											</div>
 											<ul class="dropdown-menu pull-right button-multi" role="menu">
 												{foreach $button['options'] as $key=>$option}
-													<li><a href="#" data-operation="{$code}" data-option="{$key}" class="start-operation {if $button['confirm']}confirm{/if}">{$option}</a></li>
+													<li>
+														<a href="#" data-operation="{$code}" data-option="{$key}" class="start-operation {if $button['confirm']}confirm{/if}">
+															{$option}
+														</a>
+													</li>
 												{/foreach}
 											</ul>
 										</div>
 									{else}
-										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default" href="{if $button['link']}{$button['link']}{else}#{/if}">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']}</button>
+										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default" href="{if $button['link']}{$button['link']}{else}#{/if}">
+											{if $button['icon']}
+												<i class="fa {$button['icon']}"></i> 
+											{/if}
+											{$button['label']}</button>
 									{/if}
 								{/if}
 							{/foreach}
@@ -53,7 +70,11 @@
 								{if !$button['showalways']}
 									{if $button['options']}
 										<div class="btn-group">
-											<div type="button" class="btn btn-sm btn-default dropdown-toggle">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']} <span class="caret"></span></div>
+											<div type="button" class="btn btn-sm btn-default dropdown-toggle">
+												{if $button['icon']}
+													<i class="fa {$button['icon']}"></i>
+												{/if}
+												{$button['label']} <span class="caret"></span></div>
 											<ul class="dropdown-menu pull-right button-multi" role="menu">
 												{foreach $button['options'] as $key=>$option}
 													<li><a href="#" data-operation="{$code}" data-option="{$key}" class="start-operation {if $button['confirm']}confirm{/if}">{$option}</a></li>
@@ -61,7 +82,14 @@
 											</ul>
 										</div>
 									{else}
-										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if}" href="{if $button['link']}{$button['link']}{else}#{/if}">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']}</button>
+										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if}" href="{if $button['link']}{$button['link']}{else}#{/if}">
+											{if $button['icon']}
+												<i class="fa {$button['icon']}"></i> 
+											{/if}
+											{if $button['image']}
+												<img src="../assets/img/{$button['image']}" class="{$button['imageClass']}"></img> 
+											{/if}
+											{$button['label']}</button>
 									{/if}
 								{/if}
 							{/foreach}

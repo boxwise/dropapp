@@ -105,7 +105,7 @@
 		addcolumn('html','&nbsp;','expired');
 		if($listconfig['filtervalue']) addcolumn('datetime','Created','created');
 
-		addbutton('give','Give '.ucwords($_SESSION['camp']['currencyname']),array('icon'=>'fa-tint','oneitemonly'=>false));
+		addbutton('give','Give '.ucwords($_SESSION['camp']['currencyname']),array('image'=>'one_coin.png', 'imageClass'=>'coinsImage','oneitemonly'=>false));
 		addbutton('merge','Merge to family',array('icon'=>'fa-link','oneitemonly'=>false));
 		addbutton('detach','Detach from family',array('icon'=>'fa-unlink','oneitemonly'=>false));
 
