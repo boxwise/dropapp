@@ -4,7 +4,7 @@
 
 $_POST['pass'] = md5($_POST['pass']);
 
-$row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)', array('email' => $_POST['email']));
+$row = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)', array('email' => $_POST['email']));
 if ($row) { #e-mailaddress exists in database
 	if ($row['pass'] == $_POST['pass']) { # password is correct
 
@@ -33,7 +33,7 @@ if ($row) { #e-mailaddress exists in database
 		$success = false;
 		$message = translate('cms_login_error_wrongpassword');
 		$redirect = false;
-		logfile('Attempt to login with mobile and wrong passford for ' . $_POST['email']);
+		logfile('Attempt to login with mobile and wrong password for ' . $_POST['email']);
 	}
 } else { # user not found
 	$success = false;
