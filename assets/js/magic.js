@@ -864,7 +864,6 @@ function initiateList() {
         // Bootstrap Confirmation, more info: https://github.com/tavicu/bs-confirmation
         $(".confirm").each(function(e) {
 			var el = $(this);
-			debugger;
             var options = $.extend(
                 {
                     container: "body",
