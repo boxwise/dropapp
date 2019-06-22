@@ -33,9 +33,12 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 			$keys = array('naam', 'email', 'cms_usergroups_id', 'valid_firstday', 'valid_lastday');
 
 			$handler = new formHandler($table);
-			$handler->savePost($keys);
+			$userId = $handler->savePost($keys);
 			$row = db_row('SELECT * FROM ' . $table . ' WHERE id = :id ', array('id' => $_SESSION['user']['id']));
 			$_SESSION['user'] = array_merge($_SESSION['user'], $row);
+			if(!$existinguser){
+				sendlogindata($_POST['_origin'], array('id'=>$userId));
+			}
 			redirect('?action=' . $_POST['_origin']);
 		} else {
 			redirect('?action=' . $_POST['_origin'] . '&warning=1&message=You do not have the rights to change this user!');
