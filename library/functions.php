@@ -78,3 +78,42 @@ function check_valid_from_until_date($valid_from, $valid_until)
 	}
 	return array('success' => $success, 'message' => $message);
 }
+
+function sendlogindata($table, $ids) {
+	global $translate, $settings;
+	
+	foreach ($ids as $id) {
+		$row = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
+
+		$newpassword = createPassword();
+
+		$mail = $translate['cms_sendlogin_mail'];
+		$mail = str_ireplace('{sitename}',$translate['site_name'].' ('.$_SERVER['HTTP_HOST'].$settings['rootdir'].')',$mail);
+		$mail = str_ireplace('{password}',$newpassword,$mail);
+
+		$result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);
+		if($result) {
+			$message = $result;
+			$succes = false;
+		} else {
+			$success = true;
+			db_query('UPDATE '.$table.' SET pass = :pass WHERE id = :id',array('pass'=>md5($newpassword),'id'=>$id));
+			$message = "ahoj";
+		}
+	}
+
+	return array($success,$message);
+}
+
+function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkKLMmNnoPpQqRrSsTtUuVvWwXxYyZz!$-_@#%^*()+=') {
+	$password = "";
+	 $i = 0;
+	while ($i < $length) {
+		$char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
+		if (!strstr($password, $char)) {
+			$password .= $char;
+			$i++;
+		}
+	}
+	return $password;
+}
