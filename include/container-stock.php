@@ -3,7 +3,7 @@
 
 	initlist();
 
-	$cmsmain->assign('title','Container stock');
+	$cmsmain->assign('title','Stockroom');
 	listsetting('search', array('p.name'));
 
 	$container_stock_locations = join(',',db_simplearray('SELECT id, id FROM locations WHERE visible AND container_stock AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id'])));
