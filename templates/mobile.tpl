@@ -26,17 +26,22 @@
 		<header>
 			<strong><a href="{$settings['rootdir']}/mobile.php">{$translate['site_name']}</a></strong>
 			{if $smarty.session.user}
-		 		{if $camps|count>1}
-		 			<div id="campselect">
-						<select name="campselect" dir="rtl">
-						 		{foreach $camps as $c}
-					 				<option value="?barcode={$smarty.get.barcode|escape:'html'}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
-						 		{/foreach}
-						</select>
-		 			</div>
-		 		{elseif $camps|count==1}
-		 				{$camps[0]['name']}
-		 		{/if}
+				<div class="orgcamp">
+					{if $org}
+							{$org['label']}
+					{/if}
+					{if $camps|count>1}
+						<div id="campselect">
+							<select name="campselect" dir="rtl">
+									{foreach $camps as $c}
+										<option value="?barcode={$smarty.get.barcode|escape:'html'}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
+									{/foreach}
+							</select>
+						</div>
+					{elseif $camps|count==1}
+							{$camps[0]['name']}
+					{/if}
+				</div>
 			{/if}		
 		</header>
 		{if $data['message']}<div class="message {if $data['warning']}warning{/if}">{$data['message']}</div>{/if}

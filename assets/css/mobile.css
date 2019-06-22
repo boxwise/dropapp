@@ -162,8 +162,10 @@ a {
 	text-decoration: none;
 	color:#009DAD;
 }
-#campselect{
+.orgcamp{
 	float: right;
+}
+#campselect{
 	position: relative;
 }
 #campselect select{
@@ -179,6 +181,7 @@ a {
 }
 #campselect select option{
 	text-align: right;
+	background: #395c6b;
 }
 #campselect:after{
 	content: '';
