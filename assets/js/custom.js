@@ -1,16 +1,44 @@
 $(document).ready(function() {
+    // Notification throught the redirect command
     var parts = window.location.search.substr(1).split("&");
     var $_GET = {};
     for (var i = 0; i < parts.length; i++) {
         var temp = parts[i].split("=");
         $_GET[decodeURIComponent(temp[0])] = decodeURIComponent(temp[1]);
-	}
-	if ($_GET['warning']){
-		var n = noty({
-			text: $_GET['message'],
-			type: "error"
-		});
-	}
+    }
+    if ($_GET["warning"]) {
+        var n = noty({
+            text: $_GET["message"],
+            type: "error"
+        });
+    }
+
+    // Show users menu only if the user can see a usergroup
+    if ($(".menu_cms_users").length) {
+        $.ajax({
+            type: "post",
+            url: "ajax.php?file=checkusersmenu",
+            dataType: "json",
+            success: function(result) {
+                if (result.message) {
+                    var n = noty({
+                        text: result.message,
+                        type: result.success ? "success" : "error"
+                    });
+                }
+                if (!result.showusermenu){
+                    $(".menu_cms_users").hide();
+                }
+            },
+            error: function(result) {
+                console.log(result);
+                var n = noty({
+                    text: "This file cannot be found or what's being returned is not json.",
+                    type: "error"
+                });
+            }
+        });
+    }
 });
 
 $(function() {
@@ -440,26 +468,25 @@ $(".check-minmax").on("input", function(ev) {
     );
 });
 
-
 // Delete button in cms_profile
 $(".delete-user").on("click", function(e) {
     var el = $(this);
-	e.preventDefault();
-	
-	var options = $.extend(
-		{
-			container: "body",
-			singleton: true,
-			popout: true,
-			trigger: "manual",
-			onConfirm: function(e, element) {
-				element.data("confirmed", true).trigger("click");
-				e.preventDefault();
-			}
-		},
-		el.data()
-	);
-	el.confirmation(options);
+    e.preventDefault();
+
+    var options = $.extend(
+        {
+            container: "body",
+            singleton: true,
+            popout: true,
+            trigger: "manual",
+            onConfirm: function(e, element) {
+                element.data("confirmed", true).trigger("click");
+                e.preventDefault();
+            }
+        },
+        el.data()
+    );
+    el.confirmation(options);
 
     if (el.is(".confirm") && !el.data("confirmed")) {
         el.confirmation("show");
@@ -468,7 +495,6 @@ $(".delete-user").on("click", function(e) {
         $.ajax({
             type: "post",
             url: "ajax.php?file=deleteprofile",
-            // option is the selected option in a button with pulldown
             data: {
                 cms_user_id: el.data("id")
             },

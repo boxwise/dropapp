@@ -77,7 +77,7 @@
 			return $ex;
 		}
 		catch(PDOException $e) {
-			throw new Exception('db_query() failed: '.$query, $e->getCode(), $e);
+			throw new Exception('db_query() failed: '.$query);
 		}
 	}
 
