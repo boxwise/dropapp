@@ -33,7 +33,7 @@
 		listsetting('allowcopy',true);
 		listsetting('add', 'Add a family');
 
-		addbutton('give','Give drops',array('icon'=>'fa-copy','oneitemonly'=>false));
+		addbutton('give','Give '.$_SESSION['camp']['currencyname'],array('icon'=>'fa-copy','oneitemonly'=>false));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);

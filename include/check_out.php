@@ -51,7 +51,7 @@
 		$cmsmain->assign('title','New purchase');
 
 		addfield('select','Family','people_id',array('onchange'=>'selectFamily("people_id",false)', 'required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1'));
-		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$translate['market_coins'].')") AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
+		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
 		addfield('number', 'Number', 'count', array('onchange'=>"calcCosts('count')", 'onkeyup'=>"calcCosts('count')", 'required'=>true,'width'=>2));
 		#addfield('text','Note','description');
 		addfield('line');
@@ -111,7 +111,7 @@
 		
 		$table = 'transactions';
 		addfield('title','Today\'s Purchases');
-		addfield('list','','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count AS countupdown, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 AND DATE_FORMAT(t.transaction_date, "%Y-%m-%d") = CURDATE() ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'countupdown'=>'Amount', 'drops2'=>ucwords($translate['market_coins']), 'tdate'=>'Date'),
+		addfield('list','','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count AS countupdown, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 AND DATE_FORMAT(t.transaction_date, "%Y-%m-%d") = CURDATE() ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'countupdown'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'tdate'=>'Date'),
 			'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'check_out', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
 
 		$ajaxform->assign('data',$data);
@@ -138,6 +138,7 @@
 		$data['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1',array('id'=>$data['people_id'])),true);
 		
 		$ajaxaside->assign('data',$data);
+		$ajaxaside->assign('currency',$_SESSION['camp']['currencyname']);
 		$htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
 
 		$success = true;
