@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html {if $lan=='ar'}dir="rtl"{/if} lang="en">
   <head>
+    {include file="google_analytics.tpl"}
     <meta charset="utf-8">
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
