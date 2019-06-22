@@ -35,6 +35,7 @@
 
 	
 	$tabs['general']='General Settings';
+	$tabs['beneficiaries'] = 'Beneficiaries'; 
 	$tabs['market'] = 'Free Shop'; 
 	$tabs['food'] = 'Food Distribution';
 	$tabs['bicycle'] = 'Rent Bicycles';
@@ -64,13 +65,11 @@
 	addfield('checkbox', 'You run a laundry station for beneficiaries?', 'laundry', array('tab'=>'general'));
 	addfield('line','','',array('tab'=>'general'));
 
-	addfield('title','Beneficiaries','',array('tab'=>'general'));
-	addfield('number', 'Delete inactive beneficiaries', 'delete_inactive_users', array('tab'=>'general','width'=>2,'tooltip'=>'Residents without activity in Boxwise will be deleted. Deleted residents will remain visible in the Deleted tab in the Residents page.'));
-	addfield('number', 'Days to keep deleted persons', 'daystokeepdeletedpersons', array('tab'=>'general','width'=>2,'tooltip'=>'Deleted residents will remain visible in the Deleted tab in the Residents page and will be completely deleted after a while. Here you can define how long they will remain in the Deleted list.'));
-	addfield('number', 'Adult age', 'adult_age', array('tab'=>'general','width'=>2,'tooltip'=>'For some functions we distinct between children and adults. Fill in here the lowest age considered adult for this camp.'));
-	addfield('text', 'Location identifier for beneficiaries', 'familyidentifier', array('tab'=>'general','tooltip'=>'Generally this refers to the kind of housing that people have: tent, container, house or something else.'));
-	addfield('checkbox', 'Do you give out general ID-cards?', 'idcard', array('tab'=>'general'));
-	addfield('line','','',array('tab'=>'general'));
+	addfield('number', 'Delete inactive beneficiaries', 'delete_inactive_users', array('tab'=>'beneficiaries','width'=>2,'tooltip'=>'Residents without activity in Boxwise will be deleted. Deleted residents will remain visible in the Deleted tab in the Residents page.'));
+	addfield('number', 'Days to keep deleted persons', 'daystokeepdeletedpersons', array('tab'=>'beneficiaries','width'=>2,'tooltip'=>'Deleted residents will remain visible in the Deleted tab in the Residents page and will be completely deleted after a while. Here you can define how long they will remain in the Deleted list.'));
+	addfield('number', 'Adult age', 'adult_age', array('tab'=>'beneficiaries','width'=>2,'tooltip'=>'For some functions we distinct between children and adults. Fill in here the lowest age considered adult for this camp.'));
+	addfield('text', 'Location identifier for beneficiaries', 'familyidentifier', array('tab'=>'beneficiaries','tooltip'=>'beneficiariesly this refers to the kind of housing that people have: tent, container, house or something else.'));
+	addfield('checkbox', 'Do you give out beneficiaries ID-cards?', 'idcard', array('tab'=>'beneficiaries'));
 
 	addfield('title','Drops per cycle','',array('tab'=>'market'));
 	addfield('number', 'Drops per adult', 'dropsperadult', array('tab'=>'market','width'=>2));
