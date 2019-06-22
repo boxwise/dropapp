@@ -64,18 +64,18 @@
 
 	$data['names'] = 'All families';
 	$data['description'] = 'New cycle started '.strftime('%A %e %B %Y');
-	$translate['cms_form_submit'] = 'Give '. ucwords($translate['market_coins_short']);
+	$translate['cms_form_submit'] = 'Give '. ucwords($_SESSION['camp']['currencyname']);
 	$cmsmain->assign('translate',$translate);
 
 	// open the template
 	$cmsmain->assign('include','cms_form.tpl');
 
 	// put a title above the form
-	$cmsmain->assign('title','Give '.ucwords($translate['market_coins_short']).' to all families');
+	$cmsmain->assign('title','Give '.ucwords($_SESSION['camp']['currencyname']).' to all families');
 
 	addfield('hidden','people','people');
 
-	addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($translate['market_coins_short']).'" button on the right, you can\'t turn back anymore!</p></div>');		
+	addfield('custom','','<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($_SESSION['camp']['currencyname']).'" button on the right, you can\'t turn back anymore!</p></div>');		
 
 	addfield('text','Families','names',array('readonly'=>true));
 	addfield('line','','');
@@ -83,8 +83,8 @@
 	$data['dropsadult'] = $_SESSION['camp']['dropsperadult'];
 	$data['dropschild'] = $_SESSION['camp']['dropsperchild'];
 
-	addfield('text','Give '.ucwords($translate['market_coins_short']).' per adult','dropsadult', array('required'=>true));
-	addfield('text','Give '.ucwords($translate['market_coins_short']).' per child','dropschild', array('required'=>true));
+	addfield('text','Give '.ucwords($_SESSION['camp']['currencyname']).' per adult','dropsadult', array('required'=>true));
+	addfield('text','Give '.ucwords($_SESSION['camp']['currencyname']).' per child','dropschild', array('required'=>true));
 // 	$data['startration'] = 1;
 // 	addfield('checkbox','Reset ration period','startration');
 	addfield('line','','');

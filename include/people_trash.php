@@ -43,7 +43,7 @@
 		addcolumn('text','Gender','gender2');
 		addcolumn('text','Age','age');
 		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
-		addcolumn('text',ucwords($translate['market_coins_short']),'drops');
+		addcolumn('text',ucwords($_SESSION['camp']['currencyname']),'drops');
 		addcolumn('datetime','Last active','lastactive');
 
 		addbutton('undelete','Recover',array('icon'=>'fa-history','oneitemonly'=>false));
@@ -112,8 +112,8 @@
 		$person = db_row('SELECT * FROM people AS p WHERE id = :id',array('id'=>$id));
 
 		if($drops && $person['parent_id']) {
-			db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords($translate['market_coins_short']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
-			db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords($translate['market_coins_short']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+			db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
+			db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
 			$newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id',array('id'=>$person['parent_id']));
 			$aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
 			return $aftermove;

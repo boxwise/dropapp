@@ -5,7 +5,7 @@
 			</h1>
 			<p class="title-details">{if $adults}{$translate['adults']}: {$adults}{/if}{if $children}, {$translate['children']}: {$children}{/if}<br />
 			{if $container}{$translate['container']}: {$container}{/if}</p>
-			{if $dropcoins}<p class="dropcoins"><i class="fa fa-tint"></i> <span class="dropcoins-text"><b>{$dropcoins}</b><br />{$translate['coins']}</span></p>{/if}
+			{if $dropcoins}<p class="dropcoins"><img src="../assets/img/more_coins.png" class="coinsImage"></img> <span class="dropcoins-text"><b>{$dropcoins}</b><br />{$currentcamp['currencyname']}</span></p>{/if}
 		</div>
 	</div>
 

@@ -94,6 +94,11 @@ p#familyname{
 	border: 1px solid;
 	padding: 2px 6px;
 }
+
+.coinsImage{
+	margin-bottom: 2px;
+}
+
 #product_id_selected{
 	font-size: 1.2em;
 	padding-top: 10px;
@@ -101,6 +106,7 @@ p#familyname{
 }
 #productvalue{
 	font-weight: bold;
+	margin-left: 5px;
 }
 #not_enough_coins{
 	color: red;
