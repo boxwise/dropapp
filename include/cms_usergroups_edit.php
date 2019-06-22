@@ -35,22 +35,38 @@
 	// put a title above the form
 	$cmsmain->assign('title','User group');
 
-	addfield('text','Name','label');
+	$tabs['general']='General';
+	$tabs['bicycle'] = 'Bicycles';
+	$tabs['laundry'] = 'Laundry';
+	$cmsmain->assign('tabs',$tabs);
 
-	addfield('select','Level','userlevel',array('required'=>true,'query'=>'
+	// Specify when tabs should be hidden
+	$hidden = db_row('
+		SELECT MAX(c.bicycle) AS bicycle, MAX(c.laundry) AS laundry
+		FROM cms_usergroups ug
+		LEFT JOIN cms_usergroups_camps ugc ON ug.id = ugc.cms_usergroups_id
+		LEFT JOIN camps c ON ugc.camp_id=c.id
+		WHERE ug.id=:id', array('id'=>$id));
+	$hiddentabs['bicycle'] = !$hidden['bicycle'];
+	$hiddentabs['laundry'] = !$hidden['laundry'];
+	$cmsmain->assign('hiddentabs',$hiddentabs);
+
+	addfield('text','Name','label',array('tab'=>'general'));
+
+	addfield('select','Level','userlevel',array('tab'=>'general','required'=>true,'query'=>'
 		SELECT id AS value, label 
 		FROM cms_usergroups_levels 
 		WHERE level < '.intval($_SESSION['usergroup']['userlevel']).' OR '.$_SESSION['user']['is_admin'].'
 		ORDER BY level'));
 
-	addfield('select','Available bases','camps',array('multiple'=>true,'query'=>'
+	addfield('select','Available bases','camps',array('tab'=>'general', 'multiple'=>true,'query'=>'
 		SELECT a.id AS value, a.name AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 
 		FROM camps AS a 
 		LEFT OUTER JOIN cms_usergroups_camps AS x ON a.id = x.camp_id AND x.cms_usergroups_id = '.intval($id).' 
 		WHERE (NOT a.deleted OR a.deleted IS NULL) AND a.organisation_id = '.$_SESSION['organisation']['id'].'
 		ORDER BY seq'));
 
-	addfield('select',$translate['cms_users_access'],'cms_functions',array('multiple'=>true,'query'=>'
+	addfield('select',$translate['cms_users_access'],'cms_functions',array('tab'=>'general', 'multiple'=>true,'query'=>'
 	SELECT 
 		a.id AS value, a.title_en AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 
 	FROM cms_functions AS a 
@@ -58,12 +74,10 @@
 	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 AND a.visible
 	ORDER BY a.title_en, seq'));
 
-	addfield('line');
-	addfield('checkbox','Users can start a new laundry cycle','allow_laundry_startcycle');
-	addfield('checkbox','Users can block residents from using the laundry','allow_laundry_block');
-	addfield('line');
-	addfield('checkbox','Users can add or remove Bicycle/sport items','allow_borrow_adddelete');
+	addfield('checkbox','Users can add or remove Bicycle/sport items','allow_borrow_adddelete', array('tab'=>'bicycle'));
 	
+	addfield('checkbox','Users can start a new laundry cycle','allow_laundry_startcycle',array('tab'=>'laundry'));
+	addfield('checkbox','Users can block residents from using the laundry','allow_laundry_block',array('tab'=>'laundry'));
 
 	addfield('line','','',array('aside'=>true));
 	addfield('created','Created','created',array('aside'=>true));
