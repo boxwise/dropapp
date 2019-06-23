@@ -66,6 +66,7 @@ function listDelete($table, $ids, $uri = false)
 	try {
 		foreach ($ids as $id) {
 			if ($hasDeletefield) {
+				# ToDo check if fk table has deleted field.
 				db_simulate('DELETE FROM ' . $table . ' WHERE id = ' . $id);
 				$count += listDeleteAction($table, $id, 0, $hasTree);
 			} else {
@@ -80,7 +81,7 @@ function listDelete($table, $ids, $uri = false)
 			return (array(false, $translate['cms_list_deleteerror'], false));
 		}
 	} catch (Exception $e) {
-		return (array(false, $e->getMessage(), false));
+		return (array(false, $e->getMessage(), false, true));
 	}
 }
 
