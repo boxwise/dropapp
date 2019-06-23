@@ -382,7 +382,7 @@ function addpagemenu($code, $label, $options = array())
 function getlistdata($query, $parent = 0)
 {
 	global $table, $settings, $listconfig, $action;
-	dump($query);
+	
 	$hasTree = db_fieldexists($table, 'parent_id');
 	$hasSeq = db_fieldexists($table, 'seq');
 	$hasDeleted = db_fieldexists($table, 'deleted');
