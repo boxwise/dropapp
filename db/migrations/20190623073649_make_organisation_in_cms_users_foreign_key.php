@@ -260,19 +260,11 @@ class MakeOrganisationInCmsUsersForeignKey extends AbstractMigration
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
-            ->addColumn('organisation_id', 'integer', [
+            ->changeColumn('organisation_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'signed' => false,
                 'after' => 'naam',
-            ])
-        ->addIndex(['email'], [
-                'name' => 'email',
-                'unique' => true,
-            ])
-        ->addIndex(['organisation_id'], [
-                'name' => 'fk_organisation_id',
-                'unique' => false,
             ])
             ->save();
     }
