@@ -266,6 +266,9 @@ class MakeOrganisationInCmsUsersForeignKey extends AbstractMigration
                 'signed' => false,
                 'after' => 'naam',
             ])
+            ->addForeignKey('organisation_id', 'organisations', 'id', [
+                'delete'=>'RESTRICT', 'update'=>'CASCADE'
+            ])
             ->save();
     }
 }
