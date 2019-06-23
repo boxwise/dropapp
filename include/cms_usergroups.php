@@ -18,7 +18,7 @@
 			LEFT OUTER JOIN cms_usergroups_camps AS x ON x.cms_usergroups_id = g.id
 			LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 			LEFT OUTER JOIN camps AS c ON x.camp_id = c.id
-			WHERE (NOT c.deleted OR c.deleted IS NULL) AND g.organisation_id = '.$_SESSION['organisation']['id'].'
+			WHERE (NOT c.deleted OR c.deleted IS NULL) AND (NOT g.deleted OR g.deleted IS NULL) AND g.organisation_id = '.$_SESSION['organisation']['id'].'
 				'.(!$_SESSION['user']['is_admin']?' AND l.level < '.intval($_SESSION['usergroup']['userlevel']):'').'
 			GROUP BY g.id');
 

@@ -46,7 +46,7 @@
 		FROM cms_usergroups ug
 		LEFT JOIN cms_usergroups_camps ugc ON ug.id = ugc.cms_usergroups_id
 		LEFT JOIN camps c ON ugc.camp_id=c.id
-		WHERE ug.id=:id', array('id'=>$id));
+		WHERE ug.id=:id AND (NOT ug.deleted OR ug.deleted IS NULL)', array('id'=>$id));
 	$hiddentabs['bicycle'] = !$hidden['bicycle'];
 	$hiddentabs['laundry'] = !$hidden['laundry'];
 	$cmsmain->assign('hiddentabs',$hiddentabs);

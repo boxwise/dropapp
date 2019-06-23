@@ -11,7 +11,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 			FROM cms_users u
 			LEFT JOIN cms_usergroups ug ON ug.id=u.cms_usergroups_id
 			LEFT JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
-			WHERE (NOT deleted OR deleted = NULL) AND email = :email', array('email' => $_POST['email']));
+			WHERE (NOT u.deleted OR u.deleted = NULL) AND (NOT ug.deleted OR ug.deleted IS NULL) AND email = :email', array('email' => $_POST['email']));
 		if ($existinguser && ($existinguser['id'] != $_POST['id'])) {
 			if ($existinguser['organisation_id'] != $_SESSION['organisation']['id']) {
 				redirect('?action=cms_users&warning=1&message=This email already exists in another organisation.<br>Please ask the corresponding person to deactivate their other account!');
@@ -28,7 +28,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 			SELECT ug.organisation_id, ugl.level AS userlevel
 			FROM cms_usergroups AS ug
 			LEFT JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
-			WHERE ug.id = :id', array('id' => $_POST['cms_usergroups_id']));
+			WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', array('id' => $_POST['cms_usergroups_id']));
 		if ($_SESSION['user']['is_admin'] || (($_SESSION['organisation']['id'] != $posteduser['organisation_id']) || ($_SESSION['usergroup']['userlevel'] <= $posteduser['userlevel']))) {
 			$keys = array('naam', 'email', 'cms_usergroups_id', 'valid_firstday', 'valid_lastday');
 
@@ -54,7 +54,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		SELECT ug.organisation_id, ugl.level AS userlevel
 		FROM cms_usergroups AS ug
 		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
-		WHERE ug.id = :id', array('id' => $data['cms_usergroups_id']));
+		WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', array('id' => $data['cms_usergroups_id']));
 	if (!$_SESSION['user']['is_admin'] && ($data && ($data['is_admin'] || ($_SESSION['organisation']['id'] != $requesteduser['organisation_id']) || ($_SESSION['usergroup']['userlevel'] <= $requesteduser['userlevel'])))) {
 		redirect('?action=' . $_GET['origin']);
 	}
@@ -73,7 +73,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		SELECT ug.id AS value, ug.label 
 		FROM cms_usergroups AS ug
 		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON (ugl.id=ug.userlevel)
-		WHERE ug.organisation_id = :organisation_id AND (ugl.level < :userlevel OR :is_admin)
+		WHERE ug.organisation_id = :organisation_id AND (ugl.level < :userlevel OR :is_admin) AND (NOT ug.deleted OR ug.deleted IS NULL)
 		ORDER BY ug.label', array('organisation_id' => $_SESSION['organisation']['id'], 'userlevel' => $_SESSION['usergroup']['userlevel'], 'is_admin' => $_SESSION['user']['is_admin']));
 	addfield('select', 'Select user group', 'cms_usergroups_id', array('required' => true, 'options' => $usergroups));
 
