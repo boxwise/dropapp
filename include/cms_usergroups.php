@@ -13,12 +13,21 @@
 		listsetting('search', array('g.label'));
 
 		$data = getlistdata('
-			SELECT g.*, IFNULL(GROUP_CONCAT(c.name ORDER BY c.seq SEPARATOR ", "),"") AS camps, l.shortlabel AS userlevel 
+			SELECT g.*, 
+				IF(
+					IFNULL(
+						GROUP_CONCAT(
+							IF(c.deleted IS NULL,c.name,\'\') ORDER BY c.seq SEPARATOR
+							", "
+						),
+					"") = ",", "", IFNULL(GROUP_CONCAT( IF(c.deleted IS NULL,c.name,\'\') ORDER BY c.seq SEPARATOR ", " ), "")
+				) AS camps,
+				l.shortlabel AS userlevel 
 			FROM cms_usergroups AS g 
 			LEFT OUTER JOIN cms_usergroups_camps AS x ON x.cms_usergroups_id = g.id
 			LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 			LEFT OUTER JOIN camps AS c ON x.camp_id = c.id
-			WHERE (NOT c.deleted OR c.deleted IS NULL) AND (NOT g.deleted OR g.deleted IS NULL) AND g.organisation_id = '.$_SESSION['organisation']['id'].'
+			WHERE (NOT g.deleted OR g.deleted IS NULL) AND g.organisation_id = '.$_SESSION['organisation']['id'].'
 				'.(!$_SESSION['user']['is_admin']?' AND l.level < '.intval($_SESSION['usergroup']['userlevel']):'').'
 			GROUP BY g.id');
 
@@ -44,7 +53,8 @@
 
 		    case 'delete':
 				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listDelete($table, $ids);
+				list($success, $message, $redirect, $constraint) = listDelete($table, $ids);
+				if($constraint) $message = "There are still users in this usergroup.<br>Please move or delete them first!";
 		        break;
 
 		    case 'copy':
