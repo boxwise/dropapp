@@ -7,7 +7,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('name','gender_id', 'value', 'category_id', 'maxperadult', 'maxperchild', 'amountneeded', 'sizegroup_id', 'camp_id', 'comments');
+		$savekeys = array('name','gender_id', 'value', 'category_id', 'maxperadult', 'maxperchild', 'amountneeded', 'sizegroup_id', 'camp_id', 'comments', 'stockincontainer');
 		$id = $handler->savePost($savekeys);
 
 		redirect('?action='.$_POST['_origin']);
@@ -39,6 +39,7 @@
 	addfield('line');
 	addfield('textarea','Description','comments');
 	addfield('line');
+	if($_SESSION['camp']['market']) addfield('checkbox', 'Always show product in Stockroom?', 'stockincontainer');
 	$table = 'stock';
 	if($id) addfield('list','In Stock','stock', array('width'=>10,'query'=>'
 	SELECT stock.id AS id, stock.box_id, stock.items, stock.comments, g.label AS gender, p.name AS product, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'

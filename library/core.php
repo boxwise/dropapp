@@ -57,4 +57,4 @@ require_once('lib/formhandler.php');
 require_once('functions.php');
 
 $checksession_result = (!$login ? checksession(): array('success'=>true)); #check if a valid session exists; if none, redirect to loginpage
-if (!$ajax && !$checksession_result['success']) redirect($checksession_result['redirect'].(isset($checksession_result['message'])?'&warning=1&message='.$checksession_result['message']:''));
+if (!$ajax && !$mobile && !$checksession_result['success']) redirect($checksession_result['redirect'].(isset($checksession_result['message'])?'&warning=1&message='.$checksession_result['message']:''));
