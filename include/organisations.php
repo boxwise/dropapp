@@ -54,4 +54,5 @@
 		$return = array("success" => $success, 'message'=> $message, 'redirect'=>$redirect);
 
 		echo json_encode($return);
+		die();
 	}

@@ -84,7 +84,7 @@ function db_query($query, $array = array(), $dbid = false)
 		$ex->execute($array);
 		return $ex;
 	} catch (PDOException $e) {
-		throw new Exception('db_query() failed: ' . $query);
+		throw new Exception('db_query() failed: ' . $query . '<br>' . $e->getMessage(), $e->getCode(), $e);
 	}
 }
 
@@ -188,13 +188,13 @@ function db_simulate($query, $array = array(), $dbid = false)
 	global $defaultdbid;
 	if (!$dbid) $dbid = $defaultdbid;
 	$dbid->beginTransaction();
-	
+
 	try {
 		$ex = $dbid->exec($query);
 		$dbid->rollBack();
 		return $ex;
 	} catch (PDOException $e) {
 		$dbid->rollBack();
-		throw new Exception('db_simulate() failed: ' . $query);
+		throw new Exception('db_simulate() failed: ' . $query . '<br>' . $e->getMessage(), $e->getCode(), $e);
 	}
 }
