@@ -29,9 +29,11 @@
 	if($_SESSION['user']['is_admin']) {
 		if($_GET['organisation']) {
 			unset($_SESSION['camp']);
-			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id',array('id'=>$_GET['organisation']));
+			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)',array('id'=>$_GET['organisation']));
 		}
-		$organisations = db_array('SELECT * FROM organisations ORDER BY label');
+		$organisations = db_array('SELECT * FROM organisations 
+			WHERE (NOT organisations.deleted OR organisations.deleted IS NULL) 
+			ORDER BY label');
 		$cmsmain->assign('organisations',$organisations);
 	}
 	

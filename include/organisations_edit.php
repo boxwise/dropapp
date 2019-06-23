@@ -14,7 +14,7 @@
 		redirect('?action='.$_POST['_origin']);
 	}
 
-	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
+	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id AND (NOT '.$table.'.deleted OR '.$table.'.deleted IS NULL) ',array('id'=>$id));
 
 	if (!$id) {
 		$data['visible'] = 1;

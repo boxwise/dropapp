@@ -31,7 +31,7 @@ if ($_GET['camp']) {
 }
 
 # Set organisation
-if (!isset($_SESSION['organisation']) && $_SESSION['user']['is_admin']) $_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id=:id', array('id'=>$_SESSION['camp']['organisation_id']));
+if (!isset($_SESSION['organisation']) && $_SESSION['user']['is_admin']) $_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id=:id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', array('id'=>$_SESSION['camp']['organisation_id']));
 $tpl->assign('org', $_SESSION['organisation']);
 
 $camplist = camplist();
