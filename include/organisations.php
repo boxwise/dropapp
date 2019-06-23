@@ -4,7 +4,6 @@
 	$ajax = checkajax();
 
 	if(!$ajax) {
-
 		initlist();
 
 		$cmsmain->assign('title','Organisations');
