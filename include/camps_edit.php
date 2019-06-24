@@ -60,9 +60,9 @@
 
 	addfield('checkbox', 'You have a Free Shop?', 'market', array('tab'=>'general', 'onchange'=>'toggleShop()'));
 	addfield('checkbox', 'You run a food distribution program in the Free Shop?', 'food', array('tab'=>'general', 'onchange'=>'toggleFood()'));
-	addfield('checkbox', 'You run a Bicycle/tools borrowing program?', 'bicycle', array('tab'=>'general', 'onchange'=>'toggleBikes()'));
-	addfield('checkbox', 'You have a workshop for beneficiaries?', 'workshop', array('tab'=>'general'));
-	addfield('checkbox', 'You run a laundry station for beneficiaries?', 'laundry', array('tab'=>'general'));
+	// addfield('checkbox', 'You run a Bicycle/tools borrowing program?', 'bicycle', array('tab'=>'general', 'onchange'=>'toggleBikes()'));
+	// addfield('checkbox', 'You have a workshop for beneficiaries?', 'workshop', array('tab'=>'general'));
+	// addfield('checkbox', 'You run a laundry station for beneficiaries?', 'laundry', array('tab'=>'general'));
 	addfield('line','','',array('tab'=>'general'));
 
 	addfield('number', 'Delete inactive beneficiaries', 'delete_inactive_users', array('tab'=>'beneficiaries','width'=>2,'tooltip'=>'Residents without activity in Boxwise will be deleted. Deleted residents will remain visible in the Deleted tab in the Residents page.'));

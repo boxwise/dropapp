@@ -65,6 +65,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		LEFT OUTER JOIN cms_usergroups_camps AS x ON a.id = x.camp_id AND x.cms_usergroups_id = ' . intval($id) . '
 		LEFT OUTER JOIN cms_usergroups_camps AS y ON a.id = y.camp_id
 		WHERE (NOT a.deleted OR a.deleted IS NULL) AND a.organisation_id = ' . $_SESSION['organisation']['id'] . ($_SESSION['user']['is_admin'] ? '' : ' AND y.cms_usergroups_id = ' . $_SESSION['usergroup']['id']) . '
+		GROUP BY a.id
 		ORDER BY seq'));
 
 	addfield('select', $translate['cms_users_access'], 'cms_functions', array('tab' => 'general', 'multiple' => true, 'query' => '
@@ -74,12 +75,12 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 	LEFT OUTER JOIN cms_usergroups_functions AS x ON a.id = x.cms_functions_id AND x.cms_usergroups_id = ' . intval($id) . '
 	LEFT OUTER JOIN cms_usergroups_functions AS y ON a.id = y.cms_functions_id 
 	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 AND a.visible' . ($_SESSION['user']['is_admin'] ? '' : ' AND y.cms_usergroups_id = ' . $_SESSION['usergroup']['id']) . '
+	GROUP BY a.id
 	ORDER BY a.title_en, seq'));
 
-	addfield('checkbox', 'Users can add or remove Bicycle/sport items', 'allow_borrow_adddelete', array('tab' => 'bicycle'));
-
-	addfield('checkbox', 'Users can start a new laundry cycle', 'allow_laundry_startcycle', array('tab' => 'laundry'));
-	addfield('checkbox', 'Users can block residents from using the laundry', 'allow_laundry_block', array('tab' => 'laundry'));
+	// addfield('checkbox', 'Users can add or remove Bicycle/sport items', 'allow_borrow_adddelete', array('tab' => 'bicycle'));
+	// addfield('checkbox', 'Users can start a new laundry cycle', 'allow_laundry_startcycle', array('tab' => 'laundry'));
+	// addfield('checkbox', 'Users can block residents from using the laundry', 'allow_laundry_block', array('tab' => 'laundry'));
 
 	addfield('line', '', '', array('aside' => true));
 	addfield('created', 'Created', 'created', array('aside' => true));
