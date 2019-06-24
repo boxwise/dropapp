@@ -75,7 +75,7 @@
 
 				addcolumn('text','Gender','gender');
 				addcolumn('text','Amount','aantal');
-				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)'));
+				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' '.$_SESSION['camp']['currencyname']. ')'));
 
 			} elseif($type=='byday') {
 				
@@ -96,7 +96,7 @@
 				addcolumn('text','Sales','salesdate');
 				addcolumn('text','Amount','aantal');
 				addcolumn('text','Beneficiaries','people');
-				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' drops)',$totalvisitors));
+				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items ('.$totaldrops.' '.$_SESSION['camp']['currencyname'].')',$totalvisitors));
 
 			} elseif($type=='category') {
 				
@@ -112,7 +112,7 @@
 				addcolumn('text','Product','name');
 				addcolumn('text','Items','aantal');
 				addcolumn('text','Drops','drops');
-				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items',$totaldrops.' drops'));
+				$cmsmain->assign('listfooter',array('Total sales',$totalsales.' items',$totaldrops.' '.$_SESSION['camp']['currencyname']));
 			} else {
 				
 				# Distribution of sales by products 
@@ -126,7 +126,7 @@
 				addcolumn('text','Product','name');
 				addcolumn('text','Gender','gender');
 				addcolumn('text','Amount','aantal');
-				$cmsmain->assign('listfooter',array('Total sales','',$totalsales.' items ('.$totaldrops.' drops)'));
+				$cmsmain->assign('listfooter',array('Total sales','',$totalsales.' items ('.$totaldrops.' '.$_SESSION['camp']['currencyname'].')'));
 
 			}
 

@@ -34,7 +34,7 @@
 	addfield('hidden','','id');
 	addfield('hidden','','camp_id');
 	addfield('text','Label','label');
-	addfield('checkbox','Container stock','container_stock');
+	addfield('checkbox','Stockroom','container_stock');
 
 
 	addfield('checkbox','Visible','visible',array('aside'=>true));

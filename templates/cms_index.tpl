@@ -8,7 +8,7 @@
       <li>
           <ul class="level1">
     {foreach $item['sub'] as $subitem}
-            <li{if $subitem['active']} class="active"{/if}><a href="?action={$subitem['include']}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
+            <li{if $subitem['active']} class="active"{/if}><a class="menu_{$subitem['include']}" href="?action={$subitem['include']}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
       {/foreach}
           </ul>
       </li>
@@ -32,7 +32,7 @@
 	        <li>
 	            <ul class="level1">
 				{foreach $item['sub'] as $subitem}
-	              <li{if $subitem['active']} class="active"{/if}><a href="?action={$subitem['include']}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
+	              <li{if $subitem['active']} class="active"{/if}><a class="menu_{$subitem['include']}" href="?action={$subitem['include']}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
 				  {/foreach}
 	            </ul>
 	        </li>

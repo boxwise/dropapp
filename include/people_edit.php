@@ -154,7 +154,7 @@
 	if($_SESSION['camp']['extraportion'] && $_SESSION['camp']['food']){
 		addfield('checkbox','Extra food due to health condition (as indicated by Red Cross)','extraportion',array('tab'=>'people'));	
 	}
-	addfield('checkbox','This person is a resident volunteer with A drop in the ocean','volunteer',array('tab'=>'people'));	
+	addfield('checkbox','This person is a resident volunteer with <i>' . $_SESSION['organisation']['label'] . '</i>','volunteer',array('tab'=>'people'));	
 
 	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']||$_SESSION['camp']['idcard']){
 		$data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg')?$id:0);
@@ -212,7 +212,7 @@
 				WHERE people_id = '.$id. ' AND t.product_id != 0 
 				ORDER BY transaction_date DESC
 				LIMIT 20', 
-				'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($translate['market_coins']), 'description'=>'Note','user'=>'Purchase made by', 'tdate'=>'Date'),
+				'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'description'=>'Note','user'=>'Purchase made by', 'tdate'=>'Date'),
 		'allowedit'=>false,'allowadd'=>true, 'add'=>'New Purchase', 'addaction'=>'check_out&people_id='.intval($id),'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'allowsort'=>false, 'modal'=>false));
 
 			addfield('line','','',array('tab'=>'transaction'));
@@ -224,8 +224,8 @@
 				WHERE people_id = '.$id. ' AND t.product_id = 0 
 				ORDER BY transaction_date DESC
 				LIMIT 5', 
-				'columns'=>array('drops2'=>ucwords($translate['market_coins']), 'description'=>'Note','user'=>'Transaction made by', 'tdate'=>'Date'),
-		'allowedit'=>false,'allowadd'=>$data['allowdrops'], 'add'=>'Give '.ucwords($translate['market_coins']), 'addaction'=>'give&ids='.intval($id), 'allowsort'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'modal'=>false));
+				'columns'=>array('drops2'=>ucwords($_SESSION['camp']['currencyname']), 'description'=>'Note','user'=>'Transaction made by', 'tdate'=>'Date'),
+		'allowedit'=>false,'allowadd'=>$data['allowdrops'], 'add'=>'Give '.ucwords($_SESSION['camp']['currencyname']), 'addaction'=>'give&ids='.intval($id), 'allowsort'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'transactions', 'redirect'=>true, 'modal'=>false));
 
 			//show borrow history
 	addfield('line','','',array('tab'=>'bicycle'));

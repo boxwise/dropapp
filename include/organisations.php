@@ -4,13 +4,12 @@
 	$ajax = checkajax();
 
 	if(!$ajax) {
-
 		initlist();
 
 		$cmsmain->assign('title','Organisations');
 		listsetting('search', array('o.label'));
 
-		$data = getlistdata('SELECT * FROM organisations AS o');
+		$data = getlistdata('SELECT * FROM '.$table);
 
 		addcolumn('text','Name','label');
 
@@ -55,4 +54,5 @@
 		$return = array("success" => $success, 'message'=> $message, 'redirect'=>$redirect);
 
 		echo json_encode($return);
+		die();
 	}

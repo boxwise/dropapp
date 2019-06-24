@@ -30,7 +30,7 @@
 		$success = true;
 	} else {
 		$success = false;
-		$message = "I'm sorry, but there are not enough drops to add more items. Smile and be kind :-)";
+		$message = "I'm sorry, but there are not enough ".$_SESSION['camp']['currencyname']." to add more items. Smile and be kind :-)";
 	}
 
 	$adults = $_SESSION['camp']['maxfooddrops_adult'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 0, 1)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ',array('id'=>$data['people_id']));

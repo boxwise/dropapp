@@ -21,9 +21,11 @@
 	if($_SESSION['user']['is_admin']) {
 		if($_GET['organisation']) {
 			unset($_SESSION['camp']);
-			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id',array('id'=>$_GET['organisation']));
+			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)',array('id'=>$_GET['organisation']));
 		}
-		$organisations = db_array('SELECT * FROM organisations ORDER BY label');
+		$organisations = db_array('SELECT * FROM organisations 
+			WHERE (NOT organisations.deleted OR organisations.deleted IS NULL) 
+			ORDER BY label');
 		$cmsmain->assign('organisations',$organisations);
 	}
 	
@@ -34,6 +36,7 @@
 	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
 	$cmsmain->assign('camps',$camplist);
 	$cmsmain->assign('currentcamp',$_SESSION['camp']);
+	$cmsmain->assign('currentOrg', $_SESSION['organisation']);
 	$cmsmain->assign('campaction',strpos($action,'_edit')?substr($action,0,-5):$action);
 	
 	$cmsmain->assign('menu',CMSmenu());

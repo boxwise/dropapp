@@ -14,16 +14,17 @@
 		$camps = db_value('SELECT GROUP_CONCAT(id) FROM cms_usergroups_camps AS uc, camps AS c WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup', array('usergroup'=>$_SESSION['usergroup']['id']));
 		
 		$data = getlistdata('
-			SELECT cms_users.*, NOT is_admin AS visible, g.label AS usergroup 
-			FROM cms_users 
-			LEFT OUTER JOIN cms_usergroups AS g ON g.id = cms_users.cms_usergroups_id 
+			SELECT u.*, NOT is_admin AS visible, g.label AS usergroup 
+			FROM cms_users AS u
+			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
 			LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
 			LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 			WHERE 
 				'.(!$_SESSION['user']['is_admin']?'l.level < '.intval($_SESSION['usergroup']['userlevel']).' AND ':'').'
 				'.($_SESSION['user']['is_admin']?'':'(uc.camp_id IN ('.($camps?$camps:0).')) AND ').' 
-				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin']?' OR cms_users.is_admin':'').')
-			GROUP BY cms_users.id
+				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin']?' OR u.is_admin':'').')
+				AND (NOT g.deleted OR g.deleted IS NULL) AND (NOT u.deleted OR u.deleted IS NULL)
+			GROUP BY u.id
 		');
 
 		addcolumn('text',$translate['cms_users_naam'],'naam');
@@ -76,7 +77,7 @@
 
 		    case 'sendlogindata':
 				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = sendlogindata($table, $ids);
+				list($success, $message, $redirect) = sendlogindata($table, $ids);
 		        break;
 
 		    case 'loginasuser':
@@ -107,8 +108,8 @@
 			$_SESSION['usergroup2'] = $_SESSION['usergroup'];
 			$_SESSION['organisation2'] = $_SESSION['organisation'];
 			$_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id=:id',array('id'=>$id));
-			$_SESSION['usergroup'] = db_row('SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel FROM cms_usergroups AS ug WHERE ug.id = :id',array('id'=>$_SESSION['user']['cms_usergroups_id']));
-			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id',array('id'=>$_SESSION['usergroup']['organisation_id']));
+			$_SESSION['usergroup'] = db_row('SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel FROM cms_usergroups AS ug WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)',array('id'=>$_SESSION['user']['cms_usergroups_id']));
+			$_SESSION['organisation'] = db_row('SELECT * FROM organisations AS o WHERE id = :id AND (NOT o.deleted OR o.deleted IS NULL)',array('id'=>$_SESSION['usergroup']['organisation_id']));
 			$camplist = camplist();
 			$_SESSION['camp'] = $camplist[0];
 			$success = true;
@@ -116,43 +117,4 @@
 		}
 
 		return array($success,$message,true);
-	}
-
-	function sendlogindata($table, $ids) {
-		global $translate, $settings;
-
-        foreach ($ids as $id) {
-			$row = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
-
-			$newpassword = createPassword();
-
-			$mail = $translate['cms_sendlogin_mail'];
-			$mail = str_ireplace('{sitename}',$translate['site_name'].' ('.$_SERVER['HTTP_HOST'].$settings['rootdir'].')',$mail);
-			$mail = str_ireplace('{password}',$newpassword,$mail);
-
-			$result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);
-			if($result) {
-				$message = $result;
-				$succes = false;
-			} else {
-				$success = true;
-				db_query('UPDATE '.$table.' SET pass = :pass WHERE id = :id',array('pass'=>md5($newpassword),'id'=>$id));
-				$message = translate('cms_sendlogin_confirm');
-			}
-		}
-
-		return array($success,$message);
-	}
-
-	function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkKLMmNnoPpQqRrSsTtUuVvWwXxYyZz!$-_@#%^*()+=') {
-		$password = "";
-	 	$i = 0;
-		while ($i < $length) {
-			$char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
-			if (!strstr($password, $char)) {
-				$password .= $char;
-				$i++;
-			}
-		}
-		return $password;
 	}
