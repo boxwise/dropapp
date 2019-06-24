@@ -1,13 +1,8 @@
 <?php
+if(!DEFINED('LOADED_VIA_SINGLE_ENTRY_POINT'))
+    throw new Exception("This app must now be running through the single entry point. Is your web server config directing all php traffic to gcloud-entry.php?");
 
 define('CORE',true);
-# start a session, if it's not already started from our caller (ie gcloud-entry)
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-# load configuration file
-require_once(__DIR__.'/config.php');
 
 # load database library
 require_once('lib/database.php');
