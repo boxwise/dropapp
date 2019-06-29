@@ -537,3 +537,10 @@ function toggleFood() {
 function toggleBikes() {
     $("#tabid_bicycle").toggleClass("hidden");
 }
+
+// //Validate dates in users menu
+// function checkValidFromUntil(from, until) {
+//     if ($("#field_" + from).val() >= $("#field_" + until).val()) {
+//         $("#field_" + until).val($("#field_" + from).val()+1);
+//     }
+// }
