@@ -22,6 +22,7 @@
 
 		$template = new Zmarty;
 		$template->assign('content',$content);
+		$template->assign('boilerPlateContent',$translate['cms_email_boilerplate']);
 		$template->assign('domain',$_SERVER['HTTP_HOST']);
 
 		if($debug) {
