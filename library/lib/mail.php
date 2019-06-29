@@ -22,7 +22,9 @@
 
 		$template = new Zmarty;
 		$template->assign('content',$content);
-		$template->assign('boilerPlateContent',$translate['cms_email_boilerplate']);
+		$boilerPlateContent = $translate['cms_email_boilerplate'];
+		$boilerPlateContent = str_ireplace('{orgname}', $_SESSION['organisation']['label'], $boilerPlateContent);
+		$template->assign('boilerPlateContent', $boilerPlateContent);
 		$template->assign('domain',$_SERVER['HTTP_HOST']);
 
 		if($debug) {
