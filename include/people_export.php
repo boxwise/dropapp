@@ -1,7 +1,7 @@
 <?
 
 	header("Content-type: text/csv");
-	header("Content-Disposition: attachment; filename=All Residents ".$_SESSION['camp']['name'].".csv");
+	header("Content-Disposition: attachment; filename=All Benificiaries ".$_SESSION['camp']['name'].".csv");
 	header("Pragma: no-cache");
 	header("Expires: 0");
 
