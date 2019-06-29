@@ -16,6 +16,13 @@ Write or call Hans ([hans@boxwise.co](mailto:hans@boxwise.co) & +4917652181647) 
 
 To service the current version which is still running in three refugee camps throughout Greece. This repository makes it easy for us to work together with a bigger team even if we're not all on the same location.
 
+### Preparation for Installation
+
+- Please have a php version higher than 7.2 installed.
+- The php extensions `mbstring` and `curl` are needed.
+
+       apt install php-curl php-mbstring
+
 ### How do I get set up? ###
 
 1. You first need to install 'compose' (we suggest making it available globally)
