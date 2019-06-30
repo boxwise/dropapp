@@ -23,7 +23,13 @@ To service the current version which is still running in three refugee camps thr
 
        apt install php-curl php-mbstring
 
-### How do I get set up? ###
+### How do I get set up?
+
+(optional - ToDo Fix bug for Ubuntu users) 
+0. Clone this repo into /var/www/html.
+
+       cd /var/www
+       git clone https://github.com/boxwise/dropapp html
 
 1. You first need to install 'compose' (we suggest making it available globally)
 
@@ -61,7 +67,7 @@ After this you should be able to login to the app using email address: some.admi
 
 If you want to connect to the MySQL server from your host machine, you can do this using
 
-    docker exec -it dropapp_db_mysql_1 mysql -u root -p
+    docker exec -it html_db_mysql_1 mysql -u root -p
 
 If you want to reset it, you should stop docker, delete the files in `/.docker/data/mysql` and call `docker-compose up` again.
 
