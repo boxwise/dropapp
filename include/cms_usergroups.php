@@ -53,8 +53,7 @@
 
 		    case 'delete':
 				$ids = explode(',',$_POST['ids']);
-				list($success, $message, $redirect, $constraint) = listDelete($table, $ids);
-				if($constraint) $message = "There are still users in this usergroup.<br>Please move or delete them first!";
+				list($success, $message, $redirect) = listDelete($table, $ids);
 		        break;
 
 		    case 'copy':

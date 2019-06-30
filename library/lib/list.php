@@ -1,5 +1,7 @@
 <?php
 
+use function GuzzleHttp\json_encode;
+
 function listMove($table, $ids, $regardparent = true, $hook = '')
 {
 
@@ -66,8 +68,22 @@ function listDelete($table, $ids, $uri = false)
 	try {
 		foreach ($ids as $id) {
 			if ($hasDeletefield) {
-				# ToDo check if fk table has deleted field.
-				db_simulate('DELETE FROM ' . $table . ' WHERE id = ' . $id);
+				# Does the db have foreign keys?
+				$foreignkeys = db_referencedforeignkeys($table);
+				if (count($foreignkeys) > 0) {
+					foreach ($foreignkeys as $foreignkey) {
+						# Do the foreign keys restrict the delete?
+						if ($foreignkey['DELETE_RULE'] == 'RESTRICT') {
+							$restricted = db_array('
+							SELECT b.id' . (db_fieldexists($foreignkey['TABLE_NAME'], 'label') ? ', b.label' : (db_fieldexists($foreignkey['TABLE_NAME'], 'naam') ? ', b.naam AS label' : (db_fieldexists($foreignkey['TABLE_NAME'], 'name') ? ', b.name AS label' : ' AS label'))) . '
+							FROM ' . $table . ' a, ' . $foreignkey['TABLE_NAME'] . ' b 
+							WHERE a.' . $foreignkey['REFERENCED_COLUMN_NAME'] . ' = b.' . $foreignkey['COLUMN_NAME'] . ' AND ' . (db_fieldexists($foreignkey['TABLE_NAME'], 'deleted') ? '(NOT b.deleted OR b.deleted IS NULL) AND ' : '') . ' a.id = :id', array('id' => $id));
+							if (count($restricted)) {
+								return (array(false, 'The entry '.($restricted[0]['label']?$restricted[0]['label']:$restricted[0]['id'].' of the table '.$foreignkey['TABLE_NAME']). ' is still linked to this item.<br>Please edit or delete it first.' , false));
+							}
+						}
+					}
+				}
 				$count += listDeleteAction($table, $id, 0, $hasTree);
 			} else {
 				$result = db_query('DELETE FROM ' . $table . ' WHERE id = :id' . ($hasPrevent ? ' AND NOT preventdelete' : ''), array('id' => $id));
@@ -81,7 +97,7 @@ function listDelete($table, $ids, $uri = false)
 			return (array(false, $translate['cms_list_deleteerror'], false));
 		}
 	} catch (Exception $e) {
-		return (array(false, $e->getMessage(), false, true));
+		return (array(false, $e->getMessage(), false));
 	}
 }
 
@@ -383,7 +399,7 @@ function addpagemenu($code, $label, $options = array())
 function getlistdata($query, $parent = 0)
 {
 	global $table, $settings, $listconfig, $action;
-	
+
 	$hasTree = db_fieldexists($table, 'parent_id');
 	$hasSeq = db_fieldexists($table, 'seq');
 	$hasDeleted = db_fieldexists($table, 'deleted');
