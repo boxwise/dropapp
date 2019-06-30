@@ -92,7 +92,7 @@ function sendlogindata($table, $ids)
 		} else {
 			$success = true;
 			db_query('UPDATE ' . $table . ' SET pass = :pass WHERE id = :id', array('pass' => md5($newpassword), 'id' => $id));
-			$message = "ahoj";
+			$message = translate('cms_sendlogin_confirm');
 		}
 	}
 
