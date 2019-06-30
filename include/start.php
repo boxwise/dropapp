@@ -17,7 +17,7 @@
 		$data['children'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult_age'],array('camp_id'=>$_SESSION['camp']['id']));
 		$data['under18'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < 18',array('camp_id'=>$_SESSION['camp']['id']));
 		
-		if ($data['residents'] !== '0'){
+		if ($data['residents'] != '0'){
 			$data['menperc'] = $data['totalmen']/$data['residents']*100;
 			$data['womenperc'] = $data['totalwomen']/$data['residents']*100;
 			$data['childrenprcnt'] = $data['children']/$data['residents']*100;
