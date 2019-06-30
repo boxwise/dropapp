@@ -6,4 +6,4 @@
 		require_once('include/cms_reset2.php');
 	} else {
 		require_once('include/cms_reset.php');
-	}
+	} 
