@@ -23,7 +23,13 @@ To service the current version which is still running in three refugee camps thr
 
        apt install php-curl php-mbstring
 
-### How do I get set up? ###
+### How do I get set up?
+
+(optional - ToDo Fix bug for Ubuntu users) 
+0. Clone this repo into /var/www/html.
+
+       cd /var/www
+       git clone https://github.com/boxwise/dropapp html
 
 1. You first need to install 'compose' (we suggest making it available globally)
 
