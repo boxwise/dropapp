@@ -80,7 +80,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 
 	// addfield('checkbox', 'Users can add or remove Bicycle/sport items', 'allow_borrow_adddelete', array('tab' => 'bicycle'));
 	// addfield('checkbox', 'Users can start a new laundry cycle', 'allow_laundry_startcycle', array('tab' => 'laundry'));
-	// addfield('checkbox', 'Users can block residents from using the laundry', 'allow_laundry_block', array('tab' => 'laundry'));
+	// addfield('checkbox', 'Users can block beneficiaries from using the laundry', 'allow_laundry_block', array('tab' => 'laundry'));
 
 	addfield('line', '', '', array('aside' => true));
 	addfield('created', 'Created', 'created', array('aside' => true));
