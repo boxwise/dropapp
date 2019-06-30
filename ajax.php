@@ -1,7 +1,7 @@
 <?php
 	$ajax=true;
 	# Only if the Login form calls ajax --> $login is set true
-	$login = ($_GET['file']=='login'? true: false);
+	$login = ($_GET['file']=='login' || $_GET['file']=='reset'? true: false);
 	require_once('library/core.php');
 
 	error_reporting(0);
