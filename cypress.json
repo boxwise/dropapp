@@ -1,1 +1,10 @@
-{}
+{
+    "env": {
+        "targetDomain": "localhost:8100",
+        "testAdmin": "some.admin@boxwise.co",
+        "testCoordinator": "testCoordinator@testing.com",
+        "testUser": "testUser@testing.com",
+        "testPwd": "admin",
+        "orgName": "testOrg"
+    }
+}

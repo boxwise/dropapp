@@ -23,3 +23,42 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+
+Cypress.Commands.add("getAdminUser", () => { 
+    let testAdmin = Cypress.env('testAdmin');
+    let testPwd = Cypress.env('testPwd');
+    return {testAdmin: testAdmin, testPwd: testPwd};
+});
+
+Cypress.Commands.add("getCoordinatorUser", () => { 
+    let testCoordinator = Cypress.env('testCoordinator');
+    let testPwd = Cypress.env('testPwd');
+    return {testCoordinator: testCoordinator, testPwd: testPwd};
+});
+
+Cypress.Commands.add("getVolunteerUser", () => { 
+    let testUser = Cypress.env('testUser');
+    let testPwd = Cypress.env('testPwd');
+    return {testUser: testUser, testPwd: testPwd};
+});
+
+Cypress.Commands.add("getDomain", () => {
+    return {domain: Cypress.env('targetDomain')};
+});
+
+Cypress.Commands.add("getTestOrgName", () => {
+    return {domain: Cypress.env('orgName')};
+});
+
+Cypress.Commands.add("Login", (userMail, userPassword) => { 
+    cy.visit(Cypress.env('targetDomain') + "/login.php");
+    cy.get("input[data-testid='email']").type(`${userMail}`);
+    cy.get("input[data-testid='password']").type(`${userPassword}`);
+    cy.get("input[data-testid='signInButton']").click();
+});
+
+Cypress.Commands.add("SelectOrganisationByName", (orgName) => {
+    cy.get("a[data-testid='organisationsDropdown']").click();
+    cy.get("li[data-testid='organisationOption'] a").invoke('text').contains(orgName).click();
+});
