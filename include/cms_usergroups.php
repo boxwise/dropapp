@@ -33,7 +33,7 @@
 
 		addcolumn('text','Name','label');
 		addcolumn('text','Level','userlevel');
-		addcolumn('text','Camps','camps');
+		addcolumn('text','Bases','bases');
 
 		listsetting('allowsort',true);
 		listsetting('add', 'Add a User Group');
