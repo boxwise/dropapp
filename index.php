@@ -1,14 +1,6 @@
 <?php
 	
-	error_reporting(E_ALL^E_NOTICE);
-	ini_set('display_errors',1);
-	
 	require_once('library/core.php');
-
-	if(!DEFINED('CORE')) {
-		trigger_error('Core is not available - probably the library folder is not in the include_path');
-	}
-
 	date_default_timezone_set('Europe/Athens');
 	db_query('SET time_zone = "+'.(date('Z')/3600).':00"');
 	

@@ -4,11 +4,8 @@
 		<div class="well-center">
 			<h2>{$translate['cms_error']}</h2>
 			<p>{$error}</p>
-			{if $smarty.session.user['is_admin']}
-			<small>
-				{if $line && $file}<p>line {$line} in file {$file}</p>{/if}
-				{$backtrace}
-			</small>
+			{if isset($exception)}
+			<small><pre>{$exception}</pre></small>
 			{/if}
 		</div>
 	</div>

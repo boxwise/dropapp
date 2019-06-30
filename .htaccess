@@ -1,0 +1,10 @@
+# this .htaccess only used for local
+# docker support in apache for now
+# and so folks using MAMP etc can run this
+
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} !^/assets
+RewriteCond %{REQUEST_URI} !^/uploads
+RewriteCond %{REQUEST_URI} !^/gcloud-entry.php
+RewriteRule ^(.*)$ /gcloud-entry.php/$1 [L,QSA]
