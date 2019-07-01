@@ -11,6 +11,11 @@ $(document).ready(function() {
             text: $_GET["message"],
             type: "error"
         });
+    } else if ($_GET["message"]) {
+        var n = noty({
+            text: $_GET["message"],
+            type: "success"
+        });
     }
 
     // Show users menu only if the user can see a usergroup
