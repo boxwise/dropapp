@@ -9,7 +9,12 @@
 	<div class="form-group">
 		<label for="autologin"><input type='checkbox' name='autologin' id='autologin' value="1"> {$translate['cms_login_autologin']}</label>	
 	</div>
-	<input class="btn" type="submit" value="{$translate['cms_login_submit']}" />
+	<div class="form-group">
+		<input class="btn" type="submit" value="{$translate['cms_login_submit']}" />
+	</div>	
+	<div class="form-group">
+		<a class="forgot-password" href="{$settings['rootdir']}/reset.php">{$translate['cms_login_forgotpassword']}</a>
+	</div>		
 	<input type="hidden" name="destination" value="{$data['destination']}" />
 	<input type="hidden" name="action" value="login" />
 </label>
