@@ -24,7 +24,7 @@
 		listsetting('haspagemenu', true);
 		
 		addpagemenu('all', 'All', array('link'=>'?action=people'));
-		addpagemenu('deleted', 'Deleted', array('link'=>'?action=people_trash', 'active'=>true));		
+		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=people_trash', 'active'=>true));		
 
 		#listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
 		$data = getlistdata('SELECT IF(people.parent_id,NULL,GREATEST(COALESCE((SELECT transaction_date 
