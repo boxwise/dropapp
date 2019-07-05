@@ -14,7 +14,7 @@
 		LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
 		LEFT OUTER JOIN stock AS s ON s.product_id = products.id AND NOT s.deleted AND s.location_id IN ('.$locations.') 
 		LEFT OUTER JOIN product_categories AS pc ON products.category_id = pc.id
-		WHERE NOT products.deleted AND camp_id = '.$_SESSION['camp']['id'].'
+		WHERE (NOT products.deleted OR products.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].'
 		GROUP BY products.id ORDER BY category_id, g.seq, name
 	');
 

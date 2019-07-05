@@ -2,7 +2,7 @@
 		<input type="hidden" name="__{$element['field']}" value="date format({$element['dateformat']}) {if $element['readonly']}readonly{/if}">
 		<label for="field_{$element['field']}" class="control-label col-sm-2">{$element['label']}</label>
 		<div class="col-sm-{if $element['width']>0 and $element['width']<11}{$element['width']}{else}4{/if} input-element">
-			<div class='input-group date' data-locale="{$lan}" data-format="{$element['dateformat']}">
+			<div id="field_{$element['field']}_datepicker" class='input-group date' data-locale="{$lan}" data-format="{$element['dateformat']}">
 				<input type="text" id="field_{$element['field']}" name="{$element['field']}" 
 					class="form-control" 
 					value="{$data[$element['field']]}" 

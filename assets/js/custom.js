@@ -11,6 +11,11 @@ $(document).ready(function() {
             text: $_GET["message"],
             type: "error"
         });
+    } else if ($_GET["message"]) {
+        var n = noty({
+            text: $_GET["message"],
+            type: "success"
+        });
     }
 
     // Show users menu only if the user can see a usergroup
@@ -26,14 +31,15 @@ $(document).ready(function() {
                         type: result.success ? "success" : "error"
                     });
                 }
-                if (!result.showusermenu){
+                if (!result.showusermenu) {
                     $(".menu_cms_users").hide();
                 }
             },
             error: function(result) {
                 console.log(result);
                 var n = noty({
-                    text: "This file cannot be found or what's being returned is not json.",
+                    text:
+                        "This file cannot be found or what's being returned is not json.",
                     type: "error"
                 });
             }
@@ -73,6 +79,26 @@ $(function() {
     $("#clear").click(function() {
         $("#sig").signature("clear");
         return false;
+    });
+
+    //Validate dates in users menu
+    $("#field_valid_firstday_datepicker").datetimepicker({
+        useCurrent: false
+    });
+    $("#field_valid_lastday_datepicker").datetimepicker({
+        useCurrent: false
+    });
+    $("#field_valid_firstday_datepicker").on("dp.change", function(e) {
+        e.date._d.setDate(e.date._d.getDate()+1);
+        $("#field_valid_lastday_datepicker")
+            .data("DateTimePicker")
+            .minDate(e.date);
+    });
+    $("#field_valid_lastday_datepicker").on("dp.change", function(e) {
+        e.date._d.setDate(e.date._d.getDate()-1);
+        $("#field_valid_firstday_datepicker")
+            .data("DateTimePicker")
+            .maxDate(e.date);
     });
 });
 

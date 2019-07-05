@@ -82,8 +82,9 @@ function sendlogindata($table, $ids)
 		$newpassword = createPassword();
 
 		$mail = $translate['cms_sendlogin_mail'];
-		$mail = str_ireplace('{sitename}', $translate['site_name'] . ' (' . $_SERVER['HTTP_HOST'] . $settings['rootdir'] . ')', $mail);
+		$mail = str_ireplace('{sitename}',  $_SERVER['HTTP_HOST'] . $settings['rootdir'] , $mail);
 		$mail = str_ireplace('{password}', $newpassword, $mail);
+		$mail = str_ireplace('{orgname}', $_SESSION['organisation']['label'], $mail); 
 
 		$result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);
 		if ($result) {
@@ -92,7 +93,7 @@ function sendlogindata($table, $ids)
 		} else {
 			$success = true;
 			db_query('UPDATE ' . $table . ' SET pass = :pass WHERE id = :id', array('pass' => md5($newpassword), 'id' => $id));
-			$message = "ahoj";
+			$message = translate('cms_sendlogin_confirm');
 		}
 	}
 

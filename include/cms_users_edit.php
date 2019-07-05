@@ -78,8 +78,8 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 	addfield('select', 'Select user group', 'cms_usergroups_id', array('required' => true, 'options' => $usergroups));
 
 	addfield('line');
-	addfield('date', 'Valid from', 'valid_firstday', array('date' => true, 'time' => false));
-	addfield('date', 'Valid until', 'valid_lastday', array('date' => true, 'time' => false));
+	addfield('date', 'Valid from', 'valid_firstday', array('date' => true, 'time' => false, 'onchange'=>'checkValidFromUntil("valid_firstday","valid_lastday")'));
+	addfield('date', 'Valid until', 'valid_lastday', array('date' => true, 'time' => false, 'onchange'=>'checkValidFromUntil("valid_firstday","valid_lastday")'));
 
 	addfield('line');
 	if ($data['lastlogin'] == '0000-00-00 00:00:00') $data['lastlogin'] = '';

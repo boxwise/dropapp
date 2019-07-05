@@ -19,7 +19,7 @@
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
 			LEFT OUTER JOIN stock AS s ON s.product_id = products.id AND NOT s.deleted AND s.location_id IN ('.$locations.') 
-			WHERE NOT products.deleted AND camp_id = '.intval($_SESSION['camp']['id']).'
+			WHERE (NOT products.deleted OR products.deleted IS NULL) AND camp_id = '.intval($_SESSION['camp']['id']).'
 			GROUP BY products.id
 		');
 

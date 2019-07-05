@@ -16,5 +16,5 @@
 			<input class="btn btn-success" type="submit" value="{$translate['cms_reset2_submit']}" />
 			<a class="forgot-password" href="{$settings['rootdir']}/login.php">{$translate['cms_login_pagetitle']}</a>
 		</form>
-	</div>
+	</div> 
 {include file="cms_footer.tpl"}

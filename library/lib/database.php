@@ -198,3 +198,14 @@ function db_simulate($query, $array = array(), $dbid = false)
 		throw new Exception('db_simulate() failed: ' . $query . '<br>' . $e->getMessage(), $e->getCode(), $e);
 	}
 }
+
+function db_referencedforeignkeys($table, $column = false)
+{
+	return db_array(
+		'
+	SELECT kcu.TABLE_NAME, kcu.COLUMN_NAME, kcu.REFERENCED_COLUMN_NAME, rc.UPDATE_RULE, rc.DELETE_RULE
+	FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu, INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc, INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc 
+	WHERE kcu.REFERENCED_TABLE_NAME != kcu.TABLE_NAME AND kcu.CONSTRAINT_NAME = tc.CONSTRAINT_NAME AND kcu.CONSTRAINT_NAME = rc.CONSTRAINT_NAME AND kcu.REFERENCED_TABLE_NAME = :table AND tc.CONSTRAINT_TYPE = "FOREIGN KEY" ' . ($column ? ' AND kcu.REFERENCED_COLUMN_NAME = "' . $column . '" ' : ''),
+		array('table' => $table)
+	);
+}

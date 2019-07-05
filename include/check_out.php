@@ -51,7 +51,7 @@
 		$cmsmain->assign('title','New purchase');
 
 		addfield('select','Family','people_id',array('onchange'=>'selectFamily("people_id",false)', 'required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1'));
-		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
+		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
 		addfield('number', 'Number', 'count', array('onchange'=>"calcCosts('count')", 'onkeyup'=>"calcCosts('count')", 'required'=>true,'width'=>2));
 		#addfield('text','Note','description');
 		addfield('line');

@@ -30,7 +30,7 @@
 
 	addcolumn('text','Green bags (3)','green');
 	addcolumn('text','Red bags (1)','red');
-	addcolumn('text','Total residents','residents');
+	addcolumn('text','Total beneficiaries','beneficiaries');
 	addcolumn('text','Adults','adults');
 	addcolumn('text','Children','children');
 	addcolumn('text','Extra Portions','extraportion');

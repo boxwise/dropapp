@@ -6,10 +6,10 @@
 
 	if(!$ajax) {
 
-		if(!$_SESSION['camp']['id']) trigger_error("The list of residents is not available when there is no camp selected");
+		if(!$_SESSION['camp']['id']) trigger_error("The list of benificiaries is not available when there is no camp selected");
 		initlist();
 
-		$cmsmain->assign('title','Residents');
+		$cmsmain->assign('title','Benificiaries');
 
 		listsetting('allowcopy', false);
 		listsetting('allowmove', true);
