@@ -91,7 +91,7 @@
 				$data[$key]['expired'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
 			}
 			if($data[$key]['volunteer']) {
-				$data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This benificiary is a volunteer."></i> ';
+				$data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
 			}
 		}
 
