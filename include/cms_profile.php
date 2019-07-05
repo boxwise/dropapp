@@ -40,7 +40,7 @@
 	#addfield('line');
 	#addfield('select',$translate['cms_settings_language'],'language',array('query'=>'SELECT id AS value, name AS label FROM languages WHERE visible ORDER BY seq'));
 
-	addfield('delete_user','Delete','',array('aside'=>true));
+	addfield('delete_user','Deactivate','',array('aside'=>true));
 	addfield('created','Created','created',array('aside'=>true));
 	
 
