@@ -5,9 +5,9 @@
 			<h2>{$translate['cms_reset_pagetitle']}</h2>
 			<p>{$translate['cms_reset_description']}</p>
 			<div class="form-group">
-				<input class="form-control" type="email" name="email" id="email" placeholder="{$translate['cms_login_email']}" required autofocus />	
+				<input class="form-control" type="email" name="email" id="email" placeholder="{$translate['cms_login_email']}" data-testid="forgotPwdEmailField" required autofocus />	
 			</div>
-			<input class="btn btn-success" type="submit" value="{$translate['cms_reset_submit']}" />
+			<input class="btn btn-success" type="submit" value="{$translate['cms_reset_submit']}" data-testid="submitForgottenPwd" />
 			<a class="forgot-password" href="{$settings['rootdir']}/login.php">{$translate['cms_login_pagetitle']}</a>
 		</form>
 	</div>

@@ -35,7 +35,7 @@ context('Login tests', () => {
       //cy.visit('http://localhost:8100/login.php')
     });
 
-    /*it('Login test (Admin)', () => {
+    it('Login test (Admin)', () => {
         cy.Login(testAdmin, testPwd);
         cy.get("div[data-testid='dropapp-header']").should('be.visible');
       });
@@ -50,18 +50,30 @@ context('Login tests', () => {
           cy.Login(testUser, testPwd);
           cy.get("div[data-testid='dropapp-header']").should('be.visible');
       })
-    */
+    
 
-    /*it('Forgot password form', () => {
+    it('Forgot password form', () => {
       cy.visit(domain+'/login.php');
       cy.get("a[data-testid='forgotPassword']").click();
       cy.get("form[data-testid='resetForm']").should('be.visible');
-    });*/
+    });
 
-    it('Forgot password form', () => {
-      cy.Login(testAdmin, testPwd);
-      cy.SelectOrganisationByName(testOrg);
-      // /cy.get("form[data-testid='resetForm']").should('be.visible');
+    it('Forgot password form failure confirmation', () => {
+      cy.visit(domain+'/login.php');
+      cy.get("a[data-testid='forgotPassword']").click();
+      cy.get("form[data-testid='resetForm']").should('be.visible');
+      cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
+      cy.get("input[data-testid='submitForgottenPwd']").click();
+      cy.NotificationWithTextIsVisible("This email doesn't exist in our systems. Check your spelling and try again")
+    });
+
+    it('Forgot password form success confirmation', () => {
+      cy.visit(domain+'/login.php');
+      cy.get("a[data-testid='forgotPassword']").click();
+      cy.get("form[data-testid='resetForm']").should('be.visible');
+      cy.get("input[data-testid='forgotPwdEmailField']").type(testAdmin);
+      cy.get("input[data-testid='submitForgottenPwd']").click();
+      cy.NotificationWithTextIsVisible("Within a few minutes you will receive an e-mail with further instructions to reset your password.")
     });
 
 });

@@ -62,3 +62,7 @@ Cypress.Commands.add("SelectOrganisationByName", (orgName) => {
     cy.get("a[data-testid='organisationsDropdown']").click();
     cy.get("li[data-testid='organisationOption'] a").invoke('text').contains(orgName).click();
 });
+
+Cypress.Commands.add("NotificationWithTextIsVisible", (notificationText) => {
+    cy.get("ul[id='noty_topCenter_layout_container']").should('contain', notificationText);
+});
