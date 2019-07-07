@@ -43,6 +43,24 @@ Cypress.Commands.add("getVolunteerUser", () => {
     return {testUser: testUser, testPwd: testPwd};
 });
 
+Cypress.Commands.add("getExpiredUser", () => { 
+    let testExpiredUser = Cypress.env('testExpiredUser');
+    let testPwd = Cypress.env('testPwd');
+    return {testExpiredUser: testExpiredUser, testPwd: testPwd};
+});
+
+Cypress.Commands.add("getNotActivatedUser", () => { 
+    let testNotActivatedUser = Cypress.env('testNotActivatedUser');
+    let testPwd = Cypress.env('testPwd');
+    return {testNotActivatedUser: testNotActivatedUser, testPwd: testPwd};
+});
+
+Cypress.Commands.add("getDeletedUser", () => { 
+    let testDeletedUser = Cypress.env('testDeletedUser');
+    let testPwd = Cypress.env('testPwd');
+    return {testDeletedUser: testDeletedUser, testPwd: testPwd};
+});
+
 Cypress.Commands.add("getDomain", () => {
     return {domain: Cypress.env('targetDomain')};
 });

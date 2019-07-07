@@ -4,6 +4,9 @@
         "testAdmin": "some.admin@boxwise.co",
         "testCoordinator": "testCoordinator@testing.com",
         "testUser": "testUser@testing.com",
+        "testExpiredUser": "expired@expired.com",
+        "testNotActivatedUser": "notactivated@notactivated.com",
+        "testDeletedUser": "deleted@deleted.com",
         "testPwd": "admin",
         "orgName": "testOrg"
     }
