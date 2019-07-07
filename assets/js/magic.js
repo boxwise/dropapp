@@ -321,6 +321,9 @@ $(function() {
                 .find("input")
                 .trigger("keyup");
         });
+        const MIN_VALID_DATE = new Date('January 1, 1900 00:00:00');
+        el.datetimepicker(options).data("DateTimePicker")
+            .minDate(MIN_VALID_DATE);
     });
 
     // select2, more info: http://ivaynberg.github.io/select2/

@@ -1,3 +1,5 @@
+const MIN_VALID_DATE = new Date('January 1, 1900 00:00:00');
+
 $(document).ready(function() {
     // Notification throught the redirect command
     var parts = window.location.search.substr(1).split("&");
@@ -98,8 +100,23 @@ $(function() {
         e.date._d.setDate(e.date._d.getDate()-1);
         $("#field_valid_firstday_datepicker")
             .data("DateTimePicker")
-            .maxDate(e.date);
+            .maxDate(e.date)
+            .minDate(MIN_VALID_DATE);
     });
+});
+
+//limit date of beneficiary birth to max today
+$(document).ready(function() {
+    if ($("#field_date_of_birth_datepicker").length) {
+        var date = new Date();
+        $("#field_date_of_birth_datepicker")
+            .data("DateTimePicker")
+            .maxDate(date.toLocaleDateString());
+    }
+    //clear the input onLoad because it gets set to max value from some reason
+    if ($("#field_date_of_birth").length) {
+        $("#field_date_of_birth").val("");
+    }
 });
 
 // The function actually applying the offset
