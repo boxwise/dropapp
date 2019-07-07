@@ -84,5 +84,5 @@ Cypress.Commands.add("NotificationWithTextIsVisible", (notificationText) => {
 });
 
 Cypress.Commands.add("MobileNotificationWithTextIsVisible", (notificationText) => {
-    cy.get("div[class='message_warning']").should('contain', notificationText);
+    cy.get("div[class='message warning']").should('contain', notificationText);
 });
