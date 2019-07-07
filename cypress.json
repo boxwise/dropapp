@@ -8,6 +8,7 @@
         "testNotActivatedUser": "notactivated@notactivated.com",
         "testDeletedUser": "deleted@deleted.com",
         "testPwd": "admin",
+        "testWrongPwd": "wrongPwd",
         "orgName": "testOrg"
     }
 }

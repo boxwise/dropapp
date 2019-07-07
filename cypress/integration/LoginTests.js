@@ -6,6 +6,7 @@ context('Login tests', () => {
     let testExpiredUser;
     let testDeletedUser;
     let testPwd;
+    let testWrongPwd;
     let testOrg;
     let domain;
     
@@ -25,19 +26,12 @@ context('Login tests', () => {
           testPwd = $result.testPwd;
         });
 
-        cy.getExpiredUser().then(($result) => {
+        cy.getLoginScenarioUsers().then(($result) => {
           testExpiredUser = $result.testExpiredUser;
-          testPwd = $result.testPwd;
-        });
-
-        cy.getNotActivatedUser().then(($result) => {
           testNotActivatedUser = $result.testNotActivatedUser;
-          testPwd = $result.testPwd;
-        });
-
-        cy.getDeletedUser().then(($result) => {
           testDeletedUser = $result.testDeletedUser;
           testPwd = $result.testPwd;
+          testWrongPwd = $result.testWrongPwd;
         });
 
         cy.getDomain().then(($result) => {
@@ -82,6 +76,11 @@ context('Login tests', () => {
       cy.Login(testDeletedUser , testPwd);
       cy.NotificationWithTextIsVisible("This email does not have an active account associated with it. Please ask your coordinator to create an account for you.")
     })
+
+    it('Login with wrong password', () => {
+      cy.Login(testAdmin , testWrongPwd);
+      cy.NotificationWithTextIsVisible("Wrong password");
+  })
     
     it('Forgot password form', () => {
       cy.visit(domain+'/login.php');

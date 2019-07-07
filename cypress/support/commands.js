@@ -43,22 +43,13 @@ Cypress.Commands.add("getVolunteerUser", () => {
     return {testUser: testUser, testPwd: testPwd};
 });
 
-Cypress.Commands.add("getExpiredUser", () => { 
+Cypress.Commands.add("getLoginScenarioUsers", () => { 
     let testExpiredUser = Cypress.env('testExpiredUser');
-    let testPwd = Cypress.env('testPwd');
-    return {testExpiredUser: testExpiredUser, testPwd: testPwd};
-});
-
-Cypress.Commands.add("getNotActivatedUser", () => { 
     let testNotActivatedUser = Cypress.env('testNotActivatedUser');
-    let testPwd = Cypress.env('testPwd');
-    return {testNotActivatedUser: testNotActivatedUser, testPwd: testPwd};
-});
-
-Cypress.Commands.add("getDeletedUser", () => { 
     let testDeletedUser = Cypress.env('testDeletedUser');
     let testPwd = Cypress.env('testPwd');
-    return {testDeletedUser: testDeletedUser, testPwd: testPwd};
+    let testWrongPwd = Cypress.env('testWrongPwd');
+    return {testExpiredUser: testExpiredUser, testNotActivatedUser: testNotActivatedUser, testDeletedUser: testDeletedUser, testWrongPwd: testWrongPwd, testPwd: testPwd};
 });
 
 Cypress.Commands.add("getDomain", () => {
@@ -76,6 +67,13 @@ Cypress.Commands.add("Login", (userMail, userPassword) => {
     cy.get("input[data-testid='signInButton']").click();
 });
 
+Cypress.Commands.add("LoginMobile", (userMail, userPassword) => { 
+    cy.visit(Cypress.env('targetDomain') + "/mobile.php");
+    cy.get("input[data-testid='email']").type(`${userMail}`);
+    cy.get("input[data-testid='password']").type(`${userPassword}`);
+    cy.get("input[data-testid='signInButton']").click();
+});
+
 Cypress.Commands.add("SelectOrganisationByName", (orgName) => {
     cy.get("a[data-testid='organisationsDropdown']").click();
     cy.get("li[data-testid='organisationOption'] a").invoke('text').contains(orgName).click();
@@ -83,4 +81,8 @@ Cypress.Commands.add("SelectOrganisationByName", (orgName) => {
 
 Cypress.Commands.add("NotificationWithTextIsVisible", (notificationText) => {
     cy.get("ul[id='noty_topCenter_layout_container']").should('contain', notificationText);
+});
+
+Cypress.Commands.add("MobileNotificationWithTextIsVisible", (notificationText) => {
+    cy.get("div[class='message_warning']").should('contain', notificationText);
 });
