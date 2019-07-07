@@ -447,37 +447,12 @@ function selectFood(field_array, dist_id_fieldval){
 }
 */
 
-/*
-
-$('.checkConnectionOnSubmit').on('click', function(ev){
-	ev.preventDefault();
-	$.ajax({
-		type: 'post',
-		url: 'ajax.php?file=checkconnection',
-		success: function(){
-			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).attr('value', $(this).attr('value')).appendTo('#cms_form');
-			$('#cms_form').submit();
-		},
-		error: function(xhr, textStatus, error){
-			console.log(xhr.statusText);
-      			console.log(textStatus);
-      			console.log(error);
-			var n = noty({
-				text: 'The connection to the server is lost.',
-				type: 'error'
-			});
-		}
-	});
-});
-
-*/
-
 $(".check-minmax").on("input", function(ev) {
     var min = 0;
     var max = Number($(this).attr("placeholder"));
     var that = $(this);
     if (that.val() < min || that.val() > max) {
-        $(".checkConnectionOnSubmit").prop("disabled", true);
+        $("#form-submit").prop("disabled", true);
         that.addClass("error");
     }
     setTimeout(
@@ -485,7 +460,6 @@ $(".check-minmax").on("input", function(ev) {
             if (that.val() < min) that.val(min).removeClass("error");
             if (that.val() > max) that.val(max).removeClass("error");
             $("#form-submit").prop("disabled", false);
-            $(".checkConnectionOnSubmit").prop("disabled", false);
         },
         2000,
         that,

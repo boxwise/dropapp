@@ -1,6 +1,5 @@
 <?php
 
-$return = array("success" => TRUE, "message" => "Test");
 try {
     $showusermenu = db_value('
     SELECT COUNT(g.id)

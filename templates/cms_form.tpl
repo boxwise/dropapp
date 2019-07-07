@@ -36,7 +36,7 @@
 					
 				</div>
 				{/foreach}
-			</div>
+			</div> 
 		{/if}
 
 		<aside id="aside-container">
@@ -46,9 +46,9 @@
 						{if $element['asidetop']}{include file="cms_form_{$element['type']}.tpl"}{/if}
 					{/foreach}	
 				</div>
-				{if !$data['hidesubmit']}<button name="__action" value="" class="btn btn-submit btn-success{if $checkConnectionOnSubmit} checkConnectionOnSubmit{/if}">{$translate['cms_form_submit']}</button>{/if}
+				{if !$data['hidesubmit']}<button name="__action" value="" class="btn btn-submit btn-success">{$translate['cms_form_submit']}</button>{/if}
 				{foreach $formbuttons as $button}
-					<button name="__action" value="{$button['action']}" class="btn btn-submit btn-success{if $checkConnectionOnSubmit} checkConnectionOnSubmit{/if}">{$button['label']}</button>
+					<button name="__action" value="{$button['action']}" class="btn btn-submit btn-success">{$button['label']}</button>
 				{/foreach}
 
 				{if !$data['hidecancel']}<a href="{$settings['cmsdir']}/?action={$smarty.get.origin|escape:'html'}" class="btn btn-cancel btn-default">{$translate['cms_form_cancel']}</a>{/if}
