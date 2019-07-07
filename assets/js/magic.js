@@ -592,13 +592,15 @@ $(function() {
 });
 
 $(window).resize(function() {
-    if (
-        $(window).height() >
-        $(".nav-aside ul:first").offset().top + $(".nav-aside").height()
-    ) {
-        $(".nav-aside").addClass("fixed");
-    } else {
-        $(".nav-aside").removeClass("fixed");
+    if ($(".nav-aside").length){
+        if (
+            $(window).height() >
+            $(".nav-aside ul:first").offset().top + $(".nav-aside").height()
+        ) {
+            $(".nav-aside").addClass("fixed");
+        } else {
+            $(".nav-aside").removeClass("fixed");
+        }
     }
 });
 
