@@ -108,14 +108,13 @@ $(function() {
 //limit date of beneficiary birth to max today
 $(document).ready(function() {
     if ($("#field_date_of_birth_datepicker").length) {
+        var DateValue = $("#field_date_of_birth").val();
         var date = new Date();
         $("#field_date_of_birth_datepicker")
             .data("DateTimePicker")
-            .maxDate(date.toLocaleDateString());
-    }
-    //clear the input onLoad because it gets set to max value from some reason
-    if ($("#field_date_of_birth").length) {
-        $("#field_date_of_birth").val("");
+            .maxDate(date.toLocaleDateString())
+            .viewMode('years');
+        $("#field_date_of_birth").val(DateValue);
     }
 });
 
