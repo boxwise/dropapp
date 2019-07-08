@@ -14,18 +14,25 @@
 		$camps = db_value('SELECT GROUP_CONCAT(id) FROM cms_usergroups_camps AS uc, camps AS c WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup', array('usergroup'=>$_SESSION['usergroup']['id']));
 		
 		$data = getlistdata('
-			SELECT u.*, NOT is_admin AS visible, g.label AS usergroup 
+			SELECT u.*, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
 			LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
 			LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 			WHERE 
-				'.(!$_SESSION['user']['is_admin']?'l.level < '.intval($_SESSION['usergroup']['userlevel']).' AND ':'').'
+				'.(!$_SESSION['user']['is_admin']?'l.level <'.intval($_SESSION['usergroup']['userlevel']).' AND ':'').'
 				'.($_SESSION['user']['is_admin']?'':'(uc.camp_id IN ('.($camps?$camps:0).')) AND ').' 
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin']?' OR u.is_admin':'').')
 				AND (NOT g.deleted OR g.deleted IS NULL) AND (NOT u.deleted OR u.deleted IS NULL)
 			GROUP BY u.id
 		');
+		if (!$_SESSION['user']['is_admin']){
+			$data = array_merge($data, db_array('
+				SELECT u.*, 0 AS visible, g.label AS usergroup, 1 AS preventdelete
+				FROM cms_users AS u
+				LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
+				WHERE u.cms_usergroups_id = :usergroup AND u.id != :user', array('usergroup' => $_SESSION['usergroup']['id'], 'user' => $_SESSION['user']['id'])));
+		}
 
 		addcolumn('text',$translate['cms_users_naam'],'naam');
 		addcolumn('text',$translate['cms_users_email'],'email');
