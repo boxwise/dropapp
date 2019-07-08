@@ -64,7 +64,7 @@
 	if($data['firstname'] || $data['lastname']){
 		$cmsmain->assign('title',$data['firstname'].' '.$data['lastname']);	
 	} else {
-		$cmsmain->assign('title', 'Add a new benificiary');
+		$cmsmain->assign('title', 'Add a new beneficiary');
 	}
 	
 	$tabs['people'] = 'Personal';
