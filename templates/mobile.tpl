@@ -29,18 +29,18 @@
 			{if $smarty.session.user}
 				<div class="orgcamp">
 					{if $org}
-							{$org['label']}
+							{$org['label']} /
 					{/if}
 					{if $camps|count>1}
-						<div id="campselect">
+						<span id="campselect">&nbsp;
 							<select name="campselect" dir="rtl">
 									{foreach $camps as $c}
 										<option value="?barcode={$smarty.get.barcode|escape:'html'}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
 									{/foreach}
 							</select>
-						</div>
+						</span>
 					{elseif $camps|count==1}
-							{$camps[0]['name']}
+							&nbsp;{$camps[0]['name']}
 					{/if}
 				</div>
 			{/if}		
