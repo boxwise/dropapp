@@ -391,43 +391,91 @@ $(function() {
             submitHandler: function(form) {
                 $("#form-submit").prop("disabled", true);
                 $("body").addClass("loading");
-                if ($(form).data("ajax")) {
-                    $.ajax({
-                        type: "post",
-                        url: "ajax.php?file=" + $(form).data("action"),
-                        data: $(form).serialize(),
-                        dataType: "json",
-                        success: function(result) {
-                            $("#form-submit").prop("disabled", false);
-                            if (result.message) {
+
+                // Test internet connection
+                $.ajax({
+                    type: "post",
+                    url: "ajax.php?file=checkconnection",
+                    dataType: "json",
+                    success: function(checkresult) {
+                        console.log(checkresult);
+                        if (checkresult.success) {
+
+                            // Submit Form
+                            if ($(form).data("ajax")) {
+                                $.ajax({
+                                    type: "post",
+                                    url:
+                                        "ajax.php?file=" +
+                                        $(form).data("action"),
+                                    data: $(form).serialize(),
+                                    dataType: "json",
+                                    success: function(result) {
+                                        $("#form-submit").prop(
+                                            "disabled",
+                                            false
+                                        );
+                                        if (result.message) {
+                                            var n = noty({
+                                                text: result.message,
+                                                type: result.success
+                                                    ? "success"
+                                                    : "error"
+                                            });
+                                        }
+                                        if (result.redirect) {
+                                            if (result.message) {
+                                                setTimeout(function() {
+                                                    execReload(result.redirect);
+                                                }, 1500);
+                                            } else {
+                                                execReload(result.redirect);
+                                            }
+                                        }
+                                        $("body").removeClass("loading");
+                                    },
+                                    error: function(result) {
+                                        console.log(result);
+                                        var n = noty({
+                                            text:
+                                                "This file cannot be found or what's being returned is not json.",
+                                            type: "error"
+                                        });
+                                        $("body").removeClass("loading");
+                                    }
+                                });
+                            } else {
+                                form.submit();
+                            }
+                        } else {
+                            if (checkresult.message) {
                                 var n = noty({
-                                    text: result.message,
-                                    type: result.success ? "success" : "error"
+                                    text: checkresult.message,
+                                    type: checkresult.success
+                                        ? "success"
+                                        : "error"
                                 });
                             }
-                            if (result.redirect) {
-                                if (result.message) {
+                            if (checkresult.redirect) {
+                                if (checkresult.message) {
                                     setTimeout(function() {
-                                        execReload(result.redirect);
+                                        execReload(checkresult.redirect);
                                     }, 1500);
                                 } else {
-                                    execReload(result.redirect);
+                                    execReload(checkresult.redirect);
                                 }
                             }
-                            $("body").removeClass("loading");
-                        },
-                        error: function(result) {
-                            var n = noty({
-                                text:
-                                    "This file cannot be found or what's being returned is not json.",
-                                type: "error"
-                            });
-                            $("body").removeClass("loading");
                         }
-                    });
-                } else {
-                    form.submit();
-                }
+                        $("body").removeClass("loading");
+                    },
+                    error: function(checkresult) {
+                        var n = noty({
+                            text: "We cannot connect to the Boxwise server.<br> Do you have internet?",
+                            type: "error"
+                        });
+                        $("body").removeClass("loading");
+                    }
+                });
             },
             errorPlacement: function(error, element) {
                 if ($(error).text() != "") {
@@ -866,7 +914,7 @@ function initiateList() {
 
         // Bootstrap Confirmation, more info: https://github.com/tavicu/bs-confirmation
         $(".confirm").each(function(e) {
-			var el = $(this);
+            var el = $(this);
             var options = $.extend(
                 {
                     container: "body",
@@ -996,4 +1044,3 @@ function execReload(v) {
         location.reload();
     }
 }
-
