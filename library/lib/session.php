@@ -27,6 +27,7 @@ function checksession()
 			}
 		} else {
 			$result['success'] = false;
+			$result['message'] = "No valid session! You are redirected to the login page.";
 			$result['redirect'] =  $settings['rootdir'] . $settings['cmsdir'] . '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
 		}
 	}
