@@ -15,7 +15,7 @@
 
 		}
  		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield');
-		if($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) {
+		 if($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) {
 			$savekeys[] = 'laundryblock';
 			$savekeys[] = 'laundrycomment';
 		}
@@ -64,7 +64,7 @@
 	if($data['firstname'] || $data['lastname']){
 		$cmsmain->assign('title',$data['firstname'].' '.$data['lastname']);	
 	} else {
-		$cmsmain->assign('title', 'Add a new resident');
+		$cmsmain->assign('title', 'Add a new beneficiary');
 	}
 	
 	$tabs['people'] = 'Personal';
@@ -79,7 +79,7 @@
 	}
 	$tabs['transaction'] = 'Transactions';
 	
-	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $_SESSION['camp']['id']==1) $tabs['laundry'] = 'Laundry';
+	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $S_SESSION['camps']['laundry']) $tabs['laundry'] = 'Laundry';
 
 	$tabs['signature'] = 'Privacy declaration';
 	
@@ -154,7 +154,7 @@
 	if($_SESSION['camp']['extraportion'] && $_SESSION['camp']['food']){
 		addfield('checkbox','Extra food due to health condition (as indicated by Red Cross)','extraportion',array('tab'=>'people'));	
 	}
-	addfield('checkbox','This person is a resident volunteer with <i>' . $_SESSION['organisation']['label'] . '</i>','volunteer',array('tab'=>'people'));	
+	addfield('checkbox','This beneficiary is a volunteer with <i>' . $_SESSION['organisation']['label'] . '</i>','volunteer',array('tab'=>'people'));	
 
 	if($_SESSION['camp']['bicycle']||$_SESSION['camp']['workshop']||$_SESSION['camp']['idcard']){
 		$data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg')?$id:0);
@@ -183,8 +183,8 @@
 		addfield('date','Workshop ban until','workshopban',array('tab'=>'bicycle', 'time'=>false, 'date'=>true, 'tooltip'=>'Ban this person from the workshop until (and including) this date. Empty this field to cancel the ban.'));
 		addfield('textarea','Comment','workshopbancomment',array('tab'=>'bicycle','width'=>6,'tooltip'=>'Please always make a note with a workshop ban, stating the reason of the ban, your name and the date the ban started.'));
 	}
-	
-	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id']) {
+
+	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && (!$data['parent_id'] && $data['id']) && $_SESSION['camps']['laundry']) {
 		addfield('checkbox','This family has no access to laundry', 'laundryblock', array('tab'=>'laundry'));
 		addfield('text','Comment','laundrycomment',array('tab'=>'laundry'));
 		
