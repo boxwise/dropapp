@@ -6,10 +6,10 @@
 
 	if(!$ajax) {
 
-		if(!$_SESSION['camp']['id']) trigger_error("The list of benificiaries is not available when there is no camp selected");
+		if(!$_SESSION['camp']['id']) trigger_error("The list of beneficiaries is not available when there is no camp selected");
 		initlist();
 
-		$cmsmain->assign('title','Benificiaries');
+		$cmsmain->assign('title','Beneficiaries');
 
 		listsetting('allowcopy', false);
 		listsetting('allowmove', true);
@@ -91,7 +91,7 @@
 				$data[$key]['expired'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
 			}
 			if($data[$key]['volunteer']) {
-				$data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This is a resident volunteer."></i> ';
+				$data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
 			}
 		}
 
