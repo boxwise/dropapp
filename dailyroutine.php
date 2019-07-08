@@ -51,7 +51,7 @@ GROUP BY p.id
 		}
 	}	
 
-	// people that have not been active for a longer time will be deleted
+	// people that have not been active for a longer time will be deleted(Changed to deactivated in visible text, variables remain under the name deleted, as does the databasse)
 	// the amount of days of inactivity is set in the camp table
 	$result = db_query('SELECT p.id, p.lastname, p.created, p.modified, c.delete_inactive_users AS treshold FROM people AS p LEFT OUTER JOIN camps AS c ON c.id = p.camp_id WHERE NOT p.deleted AND p.parent_id = 0');
 	while($row = db_fetch($result)) {

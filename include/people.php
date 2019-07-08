@@ -21,7 +21,7 @@
 
 		listsetting('haspagemenu', true);
 		addpagemenu('all', 'All', array('link'=>'?action=people', 'active'=>true));
-		addpagemenu('deleted', 'Deleted', array('link'=>'?action=people_trash'));
+		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=people_trash'));
 
 		$statusarray = array('week'=>'New this week','month'=>'New this month');
 		listfilter(array('label'=>'Show all people','options'=>$statusarray,'filter'=>'"show"'));
