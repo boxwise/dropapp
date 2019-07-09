@@ -87,7 +87,6 @@
 
 		if($_GET['export']) {
 			redirect('?action=stock_export');
-			#exportstock($data);
 		}
 
 	} else {
