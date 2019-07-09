@@ -12,7 +12,7 @@
 	LEFT OUTER JOIN genders AS gen ON pro.gender_id = gen.id
 	WHERE tran.people_id = pp.id AND pp.camp_id = '.$_SESSION['camp']['id'].' AND tran.product_id > 0 AND tran.transaction_date >= "'.$start.' 00:00" AND tran.transaction_date <= "'.$end.' 23:59"
 	ORDER BY tran.id';
-
+	
 	if($_GET['export']) {
 		
 		#Download data as .csv

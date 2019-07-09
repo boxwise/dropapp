@@ -45,7 +45,8 @@
 			$cmsmain->assign('formbuttons',$formbuttons);
 
 		} else if ($type=='export') {
-				
+			
+			#redirect('?action=sales_list_export');
 			redirect('?action=sales_list_download');
 
 		} else {
