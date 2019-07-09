@@ -67,7 +67,7 @@
  		
  		listfilter2(array('label'=>'Scope','query'=>'SELECT id, label FROM need_periods ORDER BY week_min','filter'=>'scope'));
 
-		addbutton('export','Export',array('link'=>'?action=need&export=true','icon'=>'fa-file-excel-o','showalways'=>true));
+		addbutton('export','Export',array('link'=>'?action=need&export=true','icon'=>'fa-download','showalways'=>true));
 
 			
 		$weeks = db_row('SELECT week_min AS min, week_max AS max FROM need_periods WHERE id = :id',array('id'=>$_SESSION['filter2']['need']));
@@ -210,18 +210,7 @@
 			
 			$keys = array('product'=>'Product','gender'=>'Gender','size'=>'Size','ean'=>'Estimated annual need','target'=>'Target group size','stock'=>'Stock','portion'=>'Portion');
 			
-			foreach($keys as $value) {
-				echo '"'.$value.'",';
-			}
-			echo "\n";
-			foreach($data as $d) {
-				foreach($keys as $key=>$value) {
-					echo '"'.$d[$key].'",';
-				}
-				echo "\n";
-			}
-			
-			die();
+			csvexport($data, "Needs", $keys);
 		}
 		//move data to Zmarty object
 		$cmsmain->assign('title','Needed items');

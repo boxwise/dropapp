@@ -117,7 +117,7 @@
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-pointer'));
 
-		addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
+		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
