@@ -32,7 +32,13 @@ if ($_GET['camp']) {
 }
 
 # Set organisation
-if (!isset($_SESSION['organisation']) && $_SESSION['user']['is_admin']) $_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id=:id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', array('id'=>$_SESSION['camp']['organisation_id']));
+if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
+	if (!isset($_SESSION['camp']['id']) && $_GET['organisation']) {
+		$_SESSION['organisation'] = db_row('SELECT o.* FROM organisations AS o WHERE (NOT o.deleted OR o.deleted IS NULL) AND o.id = :organisation', array('organisation' => $_GET['organisation']));
+	} else {
+		$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id=:id AND (NOT deleted OR deleted IS NULL)', array('id'=>$_SESSION['camp']['organisation_id']));
+	}
+}
 $tpl->assign('org', $_SESSION['organisation']);
 
 $camplist = camplist();
@@ -53,7 +59,12 @@ if (!$checksession_result['success']) {
 	$data['destination'] = $_SERVER['REQUEST_URI'];
 	$tpl->assign('include', 'mobile_login.tpl');
 } elseif (!$_SESSION['camp']['id']) {
-	$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
+	//No organisation selected for admin
+	if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
+		require_once('mobile/selectorganisation.php');
+	} else {
+		$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
+	}
 } else { # --------------- All routing happens here
 	# Boxlabel is scanned 
 	if ($_GET['barcode'] != '' || $_GET['boxid'] != '') {

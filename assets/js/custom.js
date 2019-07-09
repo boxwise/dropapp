@@ -1,3 +1,5 @@
+const MIN_VALID_DATE = new Date('January 1, 1900 00:00:00');
+
 $(document).ready(function() {
     // Notification throught the redirect command
     var parts = window.location.search.substr(1).split("&");
@@ -98,8 +100,22 @@ $(function() {
         e.date._d.setDate(e.date._d.getDate()-1);
         $("#field_valid_firstday_datepicker")
             .data("DateTimePicker")
-            .maxDate(e.date);
+            .maxDate(e.date)
+            .minDate(MIN_VALID_DATE);
     });
+});
+
+//limit date of beneficiary birth to max today
+$(document).ready(function() {
+    if ($("#field_date_of_birth_datepicker").length) {
+        var DateValue = $("#field_date_of_birth").val();
+        var date = new Date();
+        $("#field_date_of_birth_datepicker")
+            .data("DateTimePicker")
+            .maxDate(date.toLocaleDateString())
+            .viewMode('years');
+        $("#field_date_of_birth").val(DateValue);
+    }
 });
 
 // The function actually applying the offset
@@ -447,37 +463,12 @@ function selectFood(field_array, dist_id_fieldval){
 }
 */
 
-/*
-
-$('.checkConnectionOnSubmit').on('click', function(ev){
-	ev.preventDefault();
-	$.ajax({
-		type: 'post',
-		url: 'ajax.php?file=checkconnection',
-		success: function(){
-			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).attr('value', $(this).attr('value')).appendTo('#cms_form');
-			$('#cms_form').submit();
-		},
-		error: function(xhr, textStatus, error){
-			console.log(xhr.statusText);
-      			console.log(textStatus);
-      			console.log(error);
-			var n = noty({
-				text: 'The connection to the server is lost.',
-				type: 'error'
-			});
-		}
-	});
-});
-
-*/
-
 $(".check-minmax").on("input", function(ev) {
     var min = 0;
     var max = Number($(this).attr("placeholder"));
     var that = $(this);
     if (that.val() < min || that.val() > max) {
-        $(".checkConnectionOnSubmit").prop("disabled", true);
+        $("#form-submit").prop("disabled", true);
         that.addClass("error");
     }
     setTimeout(
@@ -485,7 +476,6 @@ $(".check-minmax").on("input", function(ev) {
             if (that.val() < min) that.val(min).removeClass("error");
             if (that.val() > max) that.val(max).removeClass("error");
             $("#form-submit").prop("disabled", false);
-            $(".checkConnectionOnSubmit").prop("disabled", false);
         },
         2000,
         that,

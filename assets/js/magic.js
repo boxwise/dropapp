@@ -321,6 +321,10 @@ $(function() {
                 .find("input")
                 .trigger("keyup");
         });
+        const MIN_VALID_DATE = new Date("January 1, 1900 00:00:00");
+        el.datetimepicker(options)
+            .data("DateTimePicker")
+            .minDate(MIN_VALID_DATE);
     });
 
     // select2, more info: http://ivaynberg.github.io/select2/
@@ -388,42 +392,52 @@ $(function() {
             submitHandler: function(form) {
                 $("#form-submit").prop("disabled", true);
                 $("body").addClass("loading");
-                if ($(form).data("ajax")) {
+
+                if (
+                    ["login", "reset", "reset2"].includes(
+                        $(form).data("action")
+                    )
+                ) {
+                    AjaxFormSubmit(form);
+                } else {
+                    // Test internet connection
                     $.ajax({
                         type: "post",
-                        url: "ajax.php?file=" + $(form).data("action"),
-                        data: $(form).serialize(),
+                        url: "ajax.php?file=checkconnection",
                         dataType: "json",
-                        success: function(result) {
-                            $("#form-submit").prop("disabled", false);
-                            if (result.message) {
-                                var n = noty({
-                                    text: result.message,
-                                    type: result.success ? "success" : "error"
-                                });
-                            }
-                            if (result.redirect) {
-                                if (result.message) {
-                                    setTimeout(function() {
-                                        execReload(result.redirect);
-                                    }, 1500);
-                                } else {
-                                    execReload(result.redirect);
+                        success: function(checkresult) {
+                            if (checkresult.success) {
+                                AjaxFormSubmit(form);
+                            } else {
+                                if (checkresult.message) {
+                                    var n = noty({
+                                        text: checkresult.message,
+                                        type: checkresult.success
+                                            ? "success"
+                                            : "error"
+                                    });
+                                }
+                                if (checkresult.redirect) {
+                                    if (checkresult.message) {
+                                        setTimeout(function() {
+                                            execReload(checkresult.redirect);
+                                        }, 1500);
+                                    } else {
+                                        execReload(checkresult.redirect);
+                                    }
                                 }
                             }
                             $("body").removeClass("loading");
                         },
-                        error: function(result) {
+                        error: function(checkresult) {
                             var n = noty({
                                 text:
-                                    "This file cannot be found or what's being returned is not json.",
+                                    "We cannot connect to the Boxwise server.<br> Do you have internet?",
                                 type: "error"
                             });
                             $("body").removeClass("loading");
                         }
                     });
-                } else {
-                    form.submit();
                 }
             },
             errorPlacement: function(error, element) {
@@ -863,7 +877,7 @@ function initiateList() {
 
         // Bootstrap Confirmation, more info: https://github.com/tavicu/bs-confirmation
         $(".confirm").each(function(e) {
-			var el = $(this);
+            var el = $(this);
             var options = $.extend(
                 {
                     container: "body",
@@ -994,3 +1008,44 @@ function execReload(v) {
     }
 }
 
+// form-submit function
+function AjaxFormSubmit(form) {
+    // Submit Form
+    if ($(form).data("ajax")) {
+        $.ajax({
+            type: "post",
+            url: "ajax.php?file=" + $(form).data("action"),
+            data: $(form).serialize(),
+            dataType: "json",
+            success: function(result) {
+                $("#form-submit").prop("disabled", false);
+                if (result.message) {
+                    var n = noty({
+                        text: result.message,
+                        type: result.success ? "success" : "error"
+                    });
+                }
+                if (result.redirect) {
+                    if (result.message) {
+                        setTimeout(function() {
+                            execReload(result.redirect);
+                        }, 1500);
+                    } else {
+                        execReload(result.redirect);
+                    }
+                }
+                $("body").removeClass("loading");
+            },
+            error: function(result) {
+                var n = noty({
+                    text:
+                        "This file cannot be found or what's being returned is not json.",
+                    type: "error"
+                });
+                $("body").removeClass("loading");
+            }
+        });
+    } else {
+        form.submit();
+    }
+}

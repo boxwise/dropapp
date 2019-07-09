@@ -1,6 +1,4 @@
 <?php
-	require_once('core.php');
-	$ajax = checkajax();
-	if($ajax) {
-		echo true;
-	}
+
+echo json_encode(array("success" => true));
+
