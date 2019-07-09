@@ -42,6 +42,7 @@ require_once('lib/errorhandling.php');
 require_once('lib/session.php');
 require_once('lib/tools.php');
 require_once('lib/mail.php');
+require_once('lib/csvexport.php');
 
 # load CMS specific libraries
 require_once('lib/form.php');

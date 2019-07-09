@@ -78,7 +78,7 @@
 		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
-		addbutton('export','Export list',array('icon'=>'fa-download','showalways'=>true));
+		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
@@ -86,7 +86,7 @@
 		$cmsmain->assign('include','cms_list.tpl');
 
 		if($_GET['export']) {
-			exportstock($data);
+			redirect('?action=stock_export');
 		}
 
 	} else {

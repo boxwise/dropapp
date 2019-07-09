@@ -2,7 +2,6 @@
 
 	$table = $action;
 	$ajax = checkajax();
-
 	if(!$ajax) {
 
 		initlist();
@@ -14,7 +13,7 @@
 		if(!$locations) $locations = 0;
 		
  		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM product_categories ORDER BY seq','filter'=>'products.category_id'));
-
+		
 		$data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," '.$_SESSION['camp']['currencyname'].'") AS drops, COALESCE(SUM(s.items),0) AS items, IF(SUM(s.items),1,0) AS preventdelete FROM '.$table.'
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
@@ -32,7 +31,7 @@
 		addcolumn('text','Description','comments');
 		if($_SESSION['camp']['id']== 3) addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
 
-		addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
+		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
 
 		foreach($data as $d) {
 			$count += $d['items'];
