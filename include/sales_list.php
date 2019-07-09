@@ -45,8 +45,8 @@
 			$cmsmain->assign('formbuttons',$formbuttons);
 
 		} else if ($type=='export') {
-				
-			redirect('?action=sales_list_download');
+			
+			redirect('?action=sales_list_export');
 
 		} else {
 
@@ -161,7 +161,7 @@
 			array('value'=>'category', 'label'=>'By product category'),
 			array('value'=>'gender', 'label'=>'By gender'),
 			array('value'=>'byday', 'label'=>'Total sales by day'),
-			array('value'=>'export', 'label'=>'All sales (for Excel)'))));
+			array('value'=>'export', 'label'=>'All sales (csv)'))));
 
 		// open the template
 		$cmsmain->assign('include','cms_form.tpl');

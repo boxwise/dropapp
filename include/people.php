@@ -6,10 +6,10 @@
 
 	if(!$ajax) {
 
-		if(!$_SESSION['camp']['id']) trigger_error("The list of benificiaries is not available when there is no camp selected");
+		if(!$_SESSION['camp']['id']) trigger_error("The list of beneficiaries is not available when there is no camp selected");
 		initlist();
 
-		$cmsmain->assign('title','Benificiaries');
+		$cmsmain->assign('title','Beneficiaries');
 
 		listsetting('allowcopy', false);
 		listsetting('allowmove', true);
@@ -21,7 +21,7 @@
 
 		listsetting('haspagemenu', true);
 		addpagemenu('all', 'All', array('link'=>'?action=people', 'active'=>true));
-		addpagemenu('deleted', 'Deleted', array('link'=>'?action=people_trash'));
+		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=people_trash'));
 
 		$statusarray = array('week'=>'New this week','month'=>'New this month');
 		listfilter(array('label'=>'Show all people','options'=>$statusarray,'filter'=>'"show"'));
@@ -91,7 +91,7 @@
 				$data[$key]['expired'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
 			}
 			if($data[$key]['volunteer']) {
-				$data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This is a resident volunteer."></i> ';
+				$data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
 			}
 		}
 
@@ -117,7 +117,7 @@
 		addbutton('print','Print',array('icon'=>'fa-print','options'=>$options));
 		addbutton('touch','Touch',array('icon'=>'fa-hand-pointer'));
 
-		addbutton('export','Export',array('icon'=>'fa-file-excel-o','showalways'=>true));
+		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
@@ -224,7 +224,7 @@
 		        break;
 		    case 'export':
 				$success = true;
-		    	$redirect = '?action=people_export';
+				$redirect = '?action=people_export';
 		        break;
 		}
 
