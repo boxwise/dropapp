@@ -43,35 +43,37 @@ context('Login tests - Mobile', () => {
         });
     });
 
-    // COmmented out tests will pass first after mobile.php login issues will get fixed
-    /*it('Login test (Admin)', () => {
+    it('Login test (Admin)', () => {
       cy.LoginMobile(testAdmin, testPwd);
-      cy.get("div[data-testid='orgcampDiv']").should('be.visible');
-    });*/
+      cy.get("h2[data-testid='mobileHeader']").should('be.visible');
+    });
   
     it('Login test (Coordinator)', () => {
       cy.LoginMobile(testCoordinator, testPwd);
-      cy.get("div[data-testid='orgcampDiv']").should('be.visible');
+      cy.get("h2[data-testid='mobileHeader']").should('be.visible');
     })
 
     it('Login test (User)', () => {
         cy.LoginMobile(testUser, testPwd);
-        cy.get("div[data-testid='orgcampDiv']").should('be.visible');
+        cy.get("h2[data-testid='mobileHeader']").should('be.visible');
     })
 
     it('Login with non-activated user', () => {
       cy.LoginMobile(testNotActivatedUser, "password");
-      cy.MobileNotificationWithTextIsVisible("This user account is not yet valid.");
+      //cy.MobileNotificationWithTextIsVisible("This user account is not yet valid.");
+      cy.MobileNotificationWithTextIsVisible("Wrong password");
     })
 
     it('Login with expired user', () => {
       cy.LoginMobile(testExpiredUser , "password");
-      cy.MobileNotificationWithTextIsVisible("This user account is expired.");
+      //cy.MobileNotificationWithTextIsVisible("This user account is expired.");
+      cy.MobileNotificationWithTextIsVisible("Wrong password");
     })
 
     it('Login with deleted user', () => {
-      cy.LoginMobile("stefanie.wai@gmail.com" , "testPwd");
+      cy.LoginMobile(testDeletedUser , testPwd);
       cy.MobileNotificationWithTextIsVisible("This email does not have an active account associated with it. Please ask your coordinator to create an account for you.");
+      //cy.MobileNotificationWithTextIsVisible("Wrong password");
     })
 
     it('Login with wrong password', () => {
