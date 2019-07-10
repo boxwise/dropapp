@@ -1,14 +1,14 @@
 {
     "env": {
         "targetDomain": "localhost:8100",
-        "testAdmin": "some.admin@boxwise.co",
-        "testCoordinator": "testCoordinator@testing.com",
-        "testUser": "testUser@testing.com",
-        "testExpiredUser": "expired@expired.com",
+        "testAdmin": "admin@admin.co",
+        "testCoordinator": "coordinator@coordinator.co",
+        "testUser": "user@user.co",
+        "testExpiredUser": "expired@expired.co",
         "testNotActivatedUser": "notactivated@notactivated.com",
-        "testDeletedUser": "deleted@deleted.com",
-        "testPwd": "admin",
+        "testDeletedUser": "deleted@deleted.co",
+        "testPwd": "browsertests",
         "testWrongPwd": "wrongPwd",
-        "orgName": "testOrg"
+        "orgName": "TestOrganisation"
     }
 }
