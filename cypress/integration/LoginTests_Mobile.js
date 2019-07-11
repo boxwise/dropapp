@@ -59,21 +59,18 @@ context('Login tests - Mobile', () => {
     })
 
     it('Login with non-activated user', () => {
-      cy.LoginMobile(testNotActivatedUser, "password");
-      //cy.MobileNotificationWithTextIsVisible("This user account is not yet valid.");
-      cy.MobileNotificationWithTextIsVisible("Wrong password");
+      cy.LoginMobile(testNotActivatedUser, testPwd);
+      cy.MobileNotificationWithTextIsVisible("This user account is not yet valid.");
     })
 
     it('Login with expired user', () => {
-      cy.LoginMobile(testExpiredUser , "password");
-      //cy.MobileNotificationWithTextIsVisible("This user account is expired.");
-      cy.MobileNotificationWithTextIsVisible("Wrong password");
+      cy.LoginMobile(testExpiredUser, testPwd);
+      cy.MobileNotificationWithTextIsVisible("This user account is expired.");
     })
 
     it('Login with deleted user', () => {
-      cy.LoginMobile(testDeletedUser , testPwd);
+      cy.LoginMobile(testDeletedUser, testPwd);
       cy.MobileNotificationWithTextIsVisible("This email does not have an active account associated with it. Please ask your coordinator to create an account for you.");
-      //cy.MobileNotificationWithTextIsVisible("Wrong password");
     })
 
     it('Login with wrong password', () => {
