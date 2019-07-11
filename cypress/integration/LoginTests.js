@@ -90,7 +90,7 @@ context('Login tests', () => {
       cy.get("form[data-testid='resetForm']").should('be.visible');
       cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
       cy.get("input[data-testid='submitForgottenPwd']").click();
-      cy.NotificationWithTextIsVisible("This email doesn't exist in our systems. Check your spelling and try again")
+      cy.NotificationWithTextIsVisible("This email does not exist in our systems. Check your spelling and try again")
     });
 
     it('Forgot password form success confirmation', () => {
