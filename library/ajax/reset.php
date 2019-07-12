@@ -20,7 +20,7 @@
 		$result = sendmail($row['email'], $row['naam'], $translate['cms_reset_mailsubject'], $message);
 		if($result) {
 			$message = $result;
-			$succes = false;
+			$success = false;
 		} else {
 			$success = true;
 			$message = translate('cms_reset_confirm');
