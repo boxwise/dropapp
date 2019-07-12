@@ -33,10 +33,10 @@ These tables can possible be deleted
 
 ### Drop app core tables for stock, warehouse, shop ###
 
-- camps (App doesnt function without at least one record)
+- bases (App doesnt function without at least one record)
 - genders (Not user editable, table with all records that need to be present)
 - itemsout (Hans added this for stats reasons, not necessary for daily operations. No record necessary)
-- locations (Locations, at least one record per camp necessary)
+- locations (Locations, at least one record per base necessary)
 - need_periods (List of timing for needed items list, need to have one record at least)
 - people (List of beneficiaries, app works without records)
 - product_categories (Not user editable, full set of records need to be present)
@@ -50,7 +50,7 @@ These tables can possible be deleted
 
 ### Bicycle station/sport gear tables ###
 
-The bicycle station is not made (yet) to suppport multiple camps
+The bicycle station is not made (yet) to suppport multiple bases
 
 - borrow_categories (Not user editable, at least one record need to be present)
 - borrow_items (All lendable items, no record necessary)
