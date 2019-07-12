@@ -156,7 +156,7 @@ class AddCurrencyName extends AbstractMigration
                 'null' => true,
                 'default' => '25',
                 'limit' => MysqlAdapter::INT_REGULAR,
-                'after' => 'market',
+                'after' => 'shop',
             ])
         ->changeColumn('maxfooddrops_child', 'integer', [
                 'null' => true,

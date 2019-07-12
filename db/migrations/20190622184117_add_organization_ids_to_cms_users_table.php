@@ -104,7 +104,7 @@ class AddOrganizationIdsToCmsUsersTable extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'seq',
             ])
-        ->changeColumn('market', 'integer', [
+        ->changeColumn('shop', 'integer', [
                 'null' => false,
                 'default' => '1',
                 'limit' => MysqlAdapter::INT_TINY,
@@ -114,7 +114,7 @@ class AddOrganizationIdsToCmsUsersTable extends AbstractMigration
                 'null' => true,
                 'default' => '25',
                 'limit' => MysqlAdapter::INT_REGULAR,
-                'after' => 'market',
+                'after' => 'shop',
             ])
         ->changeColumn('maxfooddrops_child', 'integer', [
                 'null' => true,

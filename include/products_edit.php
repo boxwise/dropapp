@@ -30,8 +30,8 @@
 
 	addfield('text','Name','name');
 	addfield('select', 'Category', 'category_id', array('required'=>true, 'width'=>3, 'multiple'=>false, 'query'=>'SELECT id AS value, label FROM product_categories ORDER BY seq'));
-	if($_SESSION['camp']['market']) addfield('text', ucwords($_SESSION['camp']['currencyname']),'value');
-	if($_SESSION['camp']['market']) addfield('number','Estimated annual need per person','amountneeded',array('width'=>3,'required'=>true));
+	if($_SESSION['camp']['shop']) addfield('text', ucwords($_SESSION['camp']['currencyname']),'value');
+	if($_SESSION['camp']['shop']) addfield('number','Estimated annual need per person','amountneeded',array('width'=>3,'required'=>true));
 
 	addfield('line','','');
 	addfield('select', 'Gender', 'gender_id', array('width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM genders ORDER BY seq'));
@@ -39,7 +39,7 @@
 	addfield('line');
 	addfield('textarea','Description','comments');
 	addfield('line');
-	if($_SESSION['camp']['market']) addfield('checkbox', 'Always show product in Stockroom?', 'stockincontainer');
+	if($_SESSION['camp']['shop']) addfield('checkbox', 'Always show product in Stockroom?', 'stockincontainer');
 	$table = 'stock';
 	if($id) addfield('list','In Stock','stock', array('width'=>10,'query'=>'
 	SELECT stock.id AS id, stock.box_id, stock.items, stock.comments, g.label AS gender, p.name AS product, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'

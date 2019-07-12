@@ -1,4 +1,4 @@
-<h1>Market schedule from {$data['startdate']} to {$data['enddate']}</h1>
+<h1>Shop schedule from {$data['startdate']} to {$data['enddate']}</h1>
 
 {foreach $slots as $date=>$d}
 	<table>

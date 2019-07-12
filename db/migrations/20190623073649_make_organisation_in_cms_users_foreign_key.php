@@ -152,7 +152,7 @@ class MakeOrganisationInCmsUsersForeignKey extends AbstractMigration
                 'default' => '2019-01-01',
                 'after' => 'laundry',
             ])
-        ->changeColumn('market', 'integer', [
+        ->changeColumn('shop', 'integer', [
                 'null' => false,
                 'default' => '1',
                 'limit' => MysqlAdapter::INT_TINY,
@@ -162,7 +162,7 @@ class MakeOrganisationInCmsUsersForeignKey extends AbstractMigration
                 'null' => true,
                 'default' => '25',
                 'limit' => MysqlAdapter::INT_REGULAR,
-                'after' => 'market',
+                'after' => 'shop',
             ])
         ->changeColumn('maxfooddrops_child', 'integer', [
                 'null' => true,

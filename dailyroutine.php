@@ -91,7 +91,7 @@ GROUP BY p.id
 	$result = db_query('SELECT p2.id FROM people AS p1, people AS p2 WHERE p2.parent_id = p1.id AND p1.deleted AND NOT p2.deleted');
 	while($row = db_fetch($result)) {
 		db_query('UPDATE people SET deleted = NOW() WHERE id = :id',array('id'=>$row['id'])); 
-		simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine because family head was deleted');
+		simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine because head of family/beneficiary was deleted');
 		db_touch('people',$row['id']);
 	}
 	

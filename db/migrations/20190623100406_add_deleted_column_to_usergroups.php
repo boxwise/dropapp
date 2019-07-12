@@ -16,7 +16,7 @@ class AddDeletedColumnToUsergroups extends AbstractMigration
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
-        ->changeColumn('market', 'integer', [
+        ->changeColumn('shop', 'integer', [
                 'null' => false,
                 'default' => '1',
                 'limit' => MysqlAdapter::INT_TINY,
@@ -26,7 +26,7 @@ class AddDeletedColumnToUsergroups extends AbstractMigration
                 'null' => true,
                 'default' => '25',
                 'limit' => MysqlAdapter::INT_REGULAR,
-                'after' => 'market',
+                'after' => 'shop',
             ])
         ->changeColumn('maxfooddrops_child', 'integer', [
                 'null' => true,
