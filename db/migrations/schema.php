@@ -1401,11 +1401,11 @@ return array (
           'GENERATION_EXPRESSION' => '',
           'SRS_ID' => NULL,
         ),
-        'shop' => 
+        'market' => 
         array (
           'TABLE_CATALOG' => 'def',
           'TABLE_NAME' => 'camps',
-          'COLUMN_NAME' => 'shop',
+          'COLUMN_NAME' => 'market',
           'ORDINAL_POSITION' => '5',
           'COLUMN_DEFAULT' => '1',
           'IS_NULLABLE' => 'NO',
@@ -6886,11 +6886,11 @@ return array (
           'GENERATION_EXPRESSION' => '',
           'SRS_ID' => NULL,
         ),
-        'is_shop' => 
+        'is_market' => 
         array (
           'TABLE_CATALOG' => 'def',
           'TABLE_NAME' => 'locations',
-          'COLUMN_NAME' => 'is_shop',
+          'COLUMN_NAME' => 'is_market',
           'ORDINAL_POSITION' => '11',
           'COLUMN_DEFAULT' => '0',
           'IS_NULLABLE' => 'NO',

@@ -234,7 +234,7 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'seq',
             ])
-            ->addColumn('shop', 'integer', [
+            ->addColumn('market', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'require_qr',
@@ -244,7 +244,7 @@ class InitialSchema extends AbstractMigration
                 'limit' => 255,
                 'collation' => 'utf8_general_ci',
                 'encoding' => 'utf8',
-                'after' => 'shop',
+                'after' => 'market',
             ])
             ->addColumn('delete_inactive_users', 'integer', [
                 'null' => false,
@@ -1499,7 +1499,7 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'visible',
             ])
-            ->addColumn('is_shop', 'integer', [
+            ->addColumn('is_market', 'integer', [
                 'null' => false,
                 'default' => '0',
                 'limit' => MysqlAdapter::INT_TINY,
@@ -1509,7 +1509,7 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'default' => '0',
                 'limit' => MysqlAdapter::INT_TINY,
-                'after' => 'is_shop',
+                'after' => 'is_market',
             ])
             ->addColumn('is_lost', 'integer', [
                 'null' => false,
