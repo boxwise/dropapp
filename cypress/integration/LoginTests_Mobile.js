@@ -9,6 +9,7 @@ context('Login tests - Mobile', () => {
     let testWrongPwd;
     let incorrectLoginNotif;
     let genericErrLoginNotif;
+    let successPwdChangeNotif;
     let testOrg;
     let domain;
     
@@ -39,6 +40,7 @@ context('Login tests - Mobile', () => {
         cy.getLoginNotifications().then(($result) => {
           incorrectLoginNotif = $result.incorrectLoginNotif;
           genericErrLoginNotif = $result.genericErrLoginNotif;
+          successPwdChangeNotif = $result.successPwdChangeNotif;
         });
 
         cy.getDomain().then(($result) => {
@@ -97,7 +99,7 @@ context('Login tests - Mobile', () => {
       cy.get("form[data-testid='resetForm']").should('be.visible');
       cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
       cy.get("input[data-testid='submitForgottenPwd']").click();
-      cy.NotificationWithTextIsVisible("This email does not exist in our systems. Check your spelling and try again")
+      cy.NotificationWithTextIsVisible(genericErrLoginNotif);
     });
 
     it('Forgot password form success confirmation', () => {
@@ -106,6 +108,6 @@ context('Login tests - Mobile', () => {
       cy.get("form[data-testid='resetForm']").should('be.visible');
       cy.get("input[data-testid='forgotPwdEmailField']").type(testAdmin);
       cy.get("input[data-testid='submitForgottenPwd']").click();
-      cy.NotificationWithTextIsVisible("Within a few minutes you will receive an e-mail with further instructions to reset your password.")
+      cy.NotificationWithTextIsVisible(successPwdChangeNotif);
     });
 });

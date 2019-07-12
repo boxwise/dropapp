@@ -55,7 +55,8 @@ Cypress.Commands.add("getLoginScenarioUsers", () => {
 Cypress.Commands.add("getLoginNotifications", () => {
     return {
         incorrectLoginNotif: Cypress.env('incorrectLoginNotif'),
-        genericErrLoginNotif: Cypress.env('genericErrLoginNotif')
+        genericErrLoginNotif: Cypress.env('genericErrLoginNotif'),
+        successPwdChangeNotif: Cypress.env('successPwdChangeNotif')
     };
 });
 
