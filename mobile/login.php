@@ -31,13 +31,13 @@ if ($row) { #e-mailaddress exists in database
 		}
 	} else { # password is not correct
 		$success = false;
-		$message = translate('cms_login_error_wrongpassword');
+		$message = INCORRECT_LOGIN;
 		$redirect = false;
 		logfile('Attempt to login with mobile and wrong password for ' . $_POST['email']);
 	}
 } else { # user not found
 	$success = false;
-	$message = translate('cms_login_error_usernotfound');
+	$message = GENERIC_LOGIN_ERROR;
 	$redirect = false;
 	logfile('Attempt to login with mobile and unknown user ' . $_POST['email']);
 }
