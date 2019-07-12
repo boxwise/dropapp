@@ -60,11 +60,12 @@ if (!$checksession_result['success']) {
 	$tpl->assign('include', 'mobile_login.tpl');
 } elseif (!$_SESSION['camp']['id']) {
 	//No organisation selected for admin
-	if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
-		require_once('mobile/selectorganisation.php');
-	} else {
-		$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
-	}
+	// if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
+	// 	require_once('mobile/selectorganisation.php');
+	// } else {
+		trigger_error('You don\'t have access to this base. Ask your coordinator to correct this!');
+		//$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
+	// }
 } else { # --------------- All routing happens here
 	# Boxlabel is scanned 
 	if ($_GET['barcode'] != '' || $_GET['boxid'] != '') {
