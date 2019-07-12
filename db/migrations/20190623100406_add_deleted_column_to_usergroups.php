@@ -16,7 +16,7 @@ class AddDeletedColumnToUsergroups extends AbstractMigration
                 'comment' => '',
                 'row_format' => 'DYNAMIC',
             ])
-        ->changeColumn('shop', 'integer', [
+        ->changeColumn('market', 'integer', [
                 'null' => false,
                 'default' => '1',
                 'limit' => MysqlAdapter::INT_TINY,
