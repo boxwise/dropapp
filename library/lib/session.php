@@ -89,7 +89,7 @@ function sendlogindata($table, $ids)
 		$result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);
 		if ($result) {
 			$message = $result;
-			$succes = false;
+			$success = false;
 		} else {
 			$success = true;
 			db_query('UPDATE ' . $table . ' SET pass = :pass WHERE id = :id', array('pass' => md5($newpassword), 'id' => $id));
