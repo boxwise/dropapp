@@ -53,7 +53,7 @@ require_once('lib/formhandler.php');
 require_once('functions.php');
 
 define('GENERIC_LOGIN_ERROR',"This email either does not have an active account associated with it, or access has expired. Contact your coordinator to enable your account.");
-define('INCORRECT_LOGIN', "Incorrect login.");
+define('INCORRECT_LOGIN_ERROR', "Incorrect login.");
 
 $checksession_result = (!$login ? checksession(): array('success'=>true)); #check if a valid session exists; if none, redirect to loginpage
 if (!$ajax && !$mobile && !$checksession_result['success']) redirect($checksession_result['redirect'].(isset($checksession_result['message'])?'&warning=1&message='.$checksession_result['message']:''));

@@ -31,7 +31,7 @@ if ($row) { #e-mailaddress exists in database
 		}
 	} else { # password is not correct
 		$success = false;
-		$message = INCORRECT_LOGIN;
+		$message = INCORRECT_LOGIN_ERROR;
 		$redirect = false;
 		logfile('Attempt to login with mobile and wrong password for ' . $_POST['email']);
 	}
