@@ -7,6 +7,8 @@ context('Login tests', () => {
     let testDeletedUser;
     let testPwd;
     let testWrongPwd;
+    let incorrectLoginNotif;
+    let genericErrLoginNotif;
     let testOrg;
     let domain;
     
@@ -32,6 +34,11 @@ context('Login tests', () => {
           testDeletedUser = $result.testDeletedUser;
           testPwd = $result.testPwd;
           testWrongPwd = $result.testWrongPwd;
+        });
+
+        cy.getLoginNotifications().then(($result) => {
+          incorrectLoginNotif = $result.incorrectLoginNotif;
+          genericErrLoginNotif = $result.genericErrLoginNotif;
         });
 
         cy.getDomain().then(($result) => {
@@ -60,22 +67,22 @@ context('Login tests', () => {
 
     it('Login with non-activated user', () => {
       cy.Login(testNotActivatedUser, testPwd);
-      cy.NotificationWithTextIsVisible("This user account is not yet valid.")
+      cy.NotificationWithTextIsVisible(genericErrLoginNotif);
     })
 
     it('Login with expired user', () => {
       cy.Login(testExpiredUser , testPwd);
-      cy.NotificationWithTextIsVisible("This user account is expired.")
+      cy.NotificationWithTextIsVisible(genericErrLoginNotif);
     })
 
     it('Login with deleted user', () => {
       cy.Login(testDeletedUser , testPwd);
-      cy.NotificationWithTextIsVisible("This email does not have an active account associated with it. Please ask your coordinator to create an account for you.")
+      cy.NotificationWithTextIsVisible(genericErrLoginNotif);
     })
 
     it('Login with wrong password', () => {
       cy.Login(testAdmin , testWrongPwd);
-      cy.NotificationWithTextIsVisible("Wrong password");
+      cy.NotificationWithTextIsVisible(incorrectLoginNotif);
   })
     
     it('Forgot password form', () => {

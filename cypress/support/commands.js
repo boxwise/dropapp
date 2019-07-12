@@ -52,6 +52,13 @@ Cypress.Commands.add("getLoginScenarioUsers", () => {
     return {testExpiredUser: testExpiredUser, testNotActivatedUser: testNotActivatedUser, testDeletedUser: testDeletedUser, testWrongPwd: testWrongPwd, testPwd: testPwd};
 });
 
+Cypress.Commands.add("getLoginNotifications", () => {
+    return {
+        incorrectLoginNotif: Cypress.env('incorrectLoginNotif'),
+        genericErrLoginNotif: Cypress.env('genericErrLoginNotif')
+    };
+});
+
 Cypress.Commands.add("getDomain", () => {
     return {domain: Cypress.env('targetDomain')};
 });

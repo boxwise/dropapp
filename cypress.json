@@ -1,6 +1,7 @@
 {
     "env": {
         "targetDomain": "localhost:8100",
+        //user login
         "testAdmin": "admin@admin.co",
         "testCoordinator": "coordinator@coordinator.co",
         "testUser": "user@user.co",
@@ -9,6 +10,8 @@
         "testDeletedUser": "deleted@deleted.co",
         "testPwd": "browsertests",
         "testWrongPwd": "wrongPwd",
+        "incorrectLoginNotif": "Incorrect login.",
+        "genericErrLoginNotif": "This email either does not have an active account associated with it, or access has expired. Contact your coordinator to enable your account.",
         "orgName": "TestOrganisation"
     }
 }
