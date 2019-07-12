@@ -114,14 +114,14 @@ function check_valid_from_until_date($valid_from, $valid_until)
 		$valid_firstday = new DateTime($valid_from);
 		if ($today < $valid_firstday) {
 			$success = false;
-			$message = "This user account is not yet valid.";
+			$message = GENERIC_LOGIN_ERROR;
 		}
 	}
 	if ($valid_until && (substr($valid_until, 0, 10) != '0000-00-00')) {
 		$valid_lastday = new DateTime($valid_until);
 		if ($today > $valid_lastday) {
 			$success = false;
-			$message = "This user account is expired.";
+			$message = GENERIC_LOGIN_ERROR;
 		}
 	}
 	return array('success' => $success, 'message' => $message);
@@ -144,7 +144,7 @@ function sendlogindata($table, $ids)
 		$result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);
 		if ($result) {
 			$message = $result;
-			$succes = false;
+			$success = false;
 		} else {
 			$success = true;
 			db_query('UPDATE ' . $table . ' SET pass = :pass WHERE id = :id', array('pass' => md5($newpassword), 'id' => $id));

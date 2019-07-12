@@ -18,7 +18,7 @@
 
 	} else { # user not found
 		$success = false;
-		$message = translate('cms_login_error_usernotfound');
+		$message = GENERIC_LOGIN_ERROR;
 		logfile('Poging tot invoer nieuw wachtwoord '.join(' ',$_POST));
 	}
 

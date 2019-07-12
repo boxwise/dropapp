@@ -52,5 +52,7 @@ require_once('lib/formhandler.php');
 # functions that are app specific but need to available globally
 require_once('functions.php');
 
+require_once('lib/loginNotifications.php');
+
 $checksession_result = (!$login ? checksession(): array('success'=>true)); #check if a valid session exists; if none, redirect to loginpage
 if (!$ajax && !$mobile && !$checksession_result['success']) redirect($checksession_result['redirect'].(isset($checksession_result['message'])?'&warning=1&message='.$checksession_result['message']:''));

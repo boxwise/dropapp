@@ -20,17 +20,17 @@
 		$result = sendmail($row['email'], $row['naam'], $translate['cms_reset_mailsubject'], $message);
 		if($result) {
 			$message = $result;
-			$succes = false;
+			$success = false;
 		} else {
 			$success = true;
-			$message = translate('cms_reset_confirm');
+			$message = "Within a few minutes you will receive an e-mail with further instructions to reset your password.";
 		}
 
 		logfile('Wachtwoord reset aangevraagd voor '.$_POST['email']);
 
 	} else { # user not found
 		$success = false;
-		$message = translate('cms_login_error_usernotfound');
+		$message = GENERIC_LOGIN_ERROR;
 		$redirect = '';
 		logfile('Poging tot wachtwoord reset door onbekende gebruiker '.$_POST['email']);
 	}
