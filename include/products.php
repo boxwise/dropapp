@@ -33,8 +33,6 @@
 		IF(db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' AND locations.container_stock '))
 		{		addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
 		};
-		dump($data['warehouse']);
-		dump(db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' AND locations.container_stock '));
 
 		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
 
