@@ -25,31 +25,35 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 
-Cypress.Commands.add("getAdminUser", () => { 
-    let testAdmin = Cypress.env('testAdmin');
-    let testPwd = Cypress.env('testPwd');
-    return {testAdmin: testAdmin, testPwd: testPwd};
+Cypress.Commands.add("getAdminUser", () => {
+    return {
+        testAdmin: Cypress.env('testAdmin'),
+        testPwd: Cypress.env('testPwd')
+    };
 });
 
-Cypress.Commands.add("getCoordinatorUser", () => { 
-    let testCoordinator = Cypress.env('testCoordinator');
-    let testPwd = Cypress.env('testPwd');
-    return {testCoordinator: testCoordinator, testPwd: testPwd};
+Cypress.Commands.add("getCoordinatorUser", () => {
+    return {
+        testCoordinator: Cypress.env('testCoordinator'),
+        testPwd: Cypress.env('testPwd')
+    };
 });
 
-Cypress.Commands.add("getVolunteerUser", () => { 
-    let testUser = Cypress.env('testUser');
-    let testPwd = Cypress.env('testPwd');
-    return {testUser: testUser, testPwd: testPwd};
+Cypress.Commands.add("getVolunteerUser", () => {
+    return {
+        testUser: Cypress.env('testUser'),
+         testPwd: Cypress.env('testPwd')
+    };
 });
 
 Cypress.Commands.add("getLoginScenarioUsers", () => { 
-    let testExpiredUser = Cypress.env('testExpiredUser');
-    let testNotActivatedUser = Cypress.env('testNotActivatedUser');
-    let testDeletedUser = Cypress.env('testDeletedUser');
-    let testPwd = Cypress.env('testPwd');
-    let testWrongPwd = Cypress.env('testWrongPwd');
-    return {testExpiredUser: testExpiredUser, testNotActivatedUser: testNotActivatedUser, testDeletedUser: testDeletedUser, testWrongPwd: testWrongPwd, testPwd: testPwd};
+    return {
+        testExpiredUser: Cypress.env('testExpiredUser'),
+        testNotActivatedUser: Cypress.env('testNotActivatedUser'),
+        testDeletedUser: Cypress.env('testDeletedUser'),
+        testPwd: Cypress.env('testPwd'),
+        testWrongPwd: Cypress.env('testWrongPwd')
+    };
 });
 
 Cypress.Commands.add("getLoginNotifications", () => {
