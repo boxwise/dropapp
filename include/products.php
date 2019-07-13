@@ -53,6 +53,7 @@
 		$cmsmain->assign('listconfig',$listconfig);
 		$cmsmain->assign('listdata',$listdata);
 		$cmsmain->assign('include','cms_list.tpl');
+		dump($_SESSION);
 
 
 	} else {
