@@ -33,7 +33,7 @@ These tables can possible be deleted
 
 ### Drop app core tables for stock, warehouse, shop ###
 
-- bases (App doesnt function without at least one record)
+- camps (App doesnt function without at least one record, connected to Base menu)
 - genders (Not user editable, table with all records that need to be present)
 - itemsout (Hans added this for stats reasons, not necessary for daily operations. No record necessary)
 - locations (Locations, at least one record per base necessary)
