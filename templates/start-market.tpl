@@ -149,7 +149,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 	<span class="men">{($data['totalmen'])}</span> of our community are male (<span class="men">{$data['menperc']|round} %</span>) and <span class="women">{$data['totalwomen']}</span> are female (<span class="women">{$data['womenperc']|round}</span> %).<br />Of these people, <span class="number">{$data['children']}</span> are {$smarty.session.camp['adult_age']-1} or younger (<span class="number">{($data['childrenprcnt'])|round} %</span>).<br /><span class="number">{$data['under18']}</span> are under 18 (<span class="number">{($data['under18prcnt'])|round} %</span>).</h1>
 <hr />
 <h1 class="light">
-{if !($data['warehouse']==null)}
+{if isset($data['warehouse'])}
 We have <span class="number">{$data['items']|number_format:0:",":"."}</span> items in our warehouses, in <span class="number">{$data['boxes']|number_format:0:",":"."}</span> boxes.
 {/if}
 Already <span class="number">{$data['sold']|number_format:0:",":"."}</span> items have been sold in the market in <span class="number">{$data['marketdays']}</span> opening days. Most popular item is <span class="number">{$data['popularname']}</span> with <span class="number">{$data['popularcount']|number_format:0:",":"."}</span> items sold. All people together own <span class="number">{$data['bank']|number_format:0:",":"."}</span> {$currentcamp['currencyname']}.</h1>

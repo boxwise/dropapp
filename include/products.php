@@ -29,9 +29,9 @@
 		addcolumn('text','Items','items');
 		if($_SESSION['camp']['market']) addcolumn('text',ucfirst($_SESSION['camp']['currencyname']),'drops');
 		addcolumn('text','Description','comments');
-		if(db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' AND locations.container_stock '))
-		{		addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
-		};
+		if(db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' AND locations.container_stock ')){
+			addcolumn('toggle','In container','stockincontainer',array('do'=>'togglecontainer'));
+		}
 
 		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
 

@@ -65,7 +65,7 @@ if (!$checksession_result['success']) {
 	} else {
 		$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
 	}
-} elseif (!db_value('SELECT id FROM locations WHERE locations.camp_id = ' . intval($_SESSION['camp']['id']) . ' AND locations.container_stock ')) {
+} elseif (!db_value('SELECT id FROM locations WHERE locations.camp_id = ' . intval($_SESSION['camp']['id']) . ' LIMIT 1 ')) {
 	redirect('http://'.$_SERVER['HTTP_HOST'].$settings['rootdir'].'?action=start');
 } else { # --------------- All routing happens here
 	# Boxlabel is scanned 

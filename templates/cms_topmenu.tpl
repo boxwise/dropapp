@@ -12,7 +12,7 @@
 			{/if}
  		</div>
 		<ul class="nav navbar-nav pull-right">
-			{if !($data['warehouse']==null)}
+			{if isset($data['warehouse'])}
 			<li><a href="{$settings['rootdir']}/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
 			{/if}
 	 		{if $smarty.session.user['is_admin']}
