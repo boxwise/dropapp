@@ -86,7 +86,7 @@
 					addfield('checkbox','Rented out with lights','lights');
 				}
 			} else {
-				addfield('custom','&nbsp','<h3>Take the resident\'s ID and make sure the resident is 16 or older<br />Asure the user to bring everything back before '.sprintf('%02d:%02d', (int) $endtime, fmod($endtime, 1) * 60).'</h3>');
+				addfield('custom','&nbsp','<h3>Take the beneficiary\'s ID and make sure the beneficiary is 16 or older<br />Asure the user to bring everything back before '.sprintf('%02d:%02d', (int) $endtime, fmod($endtime, 1) * 60).'</h3>');
 				addfield('select','Find person','people_id',array('required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.firstname, " ", p.lastname, " (", p.container, ")") AS label, NOT visible AS disabled FROM people AS p WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 16 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1'));
 			}
 			

@@ -7,17 +7,17 @@
 	$cyclestart = strftime('%Y-%m-%d',strtotime('+'.$offset.' days', strtotime($_SESSION['camp']['laundry_cyclestart'])));
 
 	if($data['people_id'] == -1) {
-		$element['field'] .= '<h2 class="light"><span class="number">Laundry for the Drop Market</span></h2>';
+		$element['field'] .= '<h2 class="light"><span class="number">Laundry for the Drop Shop</span></h2>';
 	} else {
 		$adults = db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 0, 1)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ',array('id'=>$data['people_id']));
 		$children = db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 1, 0)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ',array('id'=>$data['people_id']));
 	
-		$element['field'] .= '<h2 class="light">This family has <span class="number">'.multiple($adults,'adult','adults').'</span> and <span class="number">'.multiple($children,'child','children').'</span> and is entitled to <span class="number">'.multiple(ceil((1*$adults)+(0.5*$children)),'washing machine slot','washing machine slots').'</span> every cycle.</h2>';
+		$element['field'] .= '<h2 class="light">This family/beneficiary has <span class="number">'.multiple($adults,'adult','adults').'</span> and <span class="number">'.multiple($children,'child','children').'</span> and is entitled to <span class="number">'.multiple(ceil((1*$adults)+(0.5*$children)),'washing machine slot','washing machine slots').'</span> every cycle.</h2>';
 
 	}
 
 	$data['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id',array('id'=>$data['people_id']));
-	if(!$data['approvalsigned']) $element['field'] .= "<br /><div class='warningbox2'>Please have the familyhead read and sign the approval form for storing and processing their data. The signed form need to stored carefully.</div><br />";
+	if(!$data['approvalsigned']) $element['field'] .= "<br /><div class='warningbox2'>Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data. The signed form need to stored carefully.</div><br />";
 
 	
 	$result = db_query("SELECT ls.*, lt.label, lm.label AS machine, la.noshow FROM laundry_appointments AS la, laundry_slots AS ls, laundry_times AS lt, laundry_machines AS lm WHERE lm.id = ls.machine AND lt.id = ls.time AND la.timeslot = ls.id AND la.people_id = :people_id AND la.cyclestart = :cyclestart ORDER BY timeslot",array('people_id'=>$data['people_id'],'cyclestart'=>$cyclestart));
