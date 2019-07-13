@@ -185,7 +185,7 @@
 	}
 
 	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && (!$data['parent_id'] && $data['id']) && $_SESSION['camps']['laundry']) {
-		addfield('checkbox','This family has no access to laundry', 'laundryblock', array('tab'=>'laundry'));
+		addfield('checkbox','This family/beneficiary has no access to laundry', 'laundryblock', array('tab'=>'laundry'));
 		addfield('text','Comment','laundrycomment',array('tab'=>'laundry'));
 		
 		$result = db_query("SELECT changedate, to_int, u.naam, (SELECT SUBSTR(changes,POSITION('\" to \"' IN changes)+5) FROM history WHERE tablename = 'people' AND record_id = :id AND changedate = h.changedate AND changes LIKE \"%laundrycomment%\") AS comment FROM history AS h, cms_users AS u WHERE tablename = 'people' AND record_id = :id AND changes = 'laundryblock' AND user_id = u.id ORDER BY changedate DESC",array('id'=>$data['id']));

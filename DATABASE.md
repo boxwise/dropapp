@@ -33,12 +33,12 @@ These tables can possible be deleted
 
 ### Drop app core tables for stock, warehouse, shop ###
 
-- camps (App doesnt function without at least one record)
+- camps (App doesnt function without at least one record, connected to Base menu)
 - genders (Not user editable, table with all records that need to be present)
 - itemsout (Hans added this for stats reasons, not necessary for daily operations. No record necessary)
-- locations (Locations, at least one record per camp necessary)
+- locations (Locations, at least one record per base necessary)
 - need_periods (List of timing for needed items list, need to have one record at least)
-- people (List of residents, app works without records)
+- people (List of beneficiaries, app works without records)
 - product_categories (Not user editable, full set of records need to be present)
 - products (No records needed)
 - qr (links the hash that makes the qr-code to a id that is used in the stock table, no records needed)
@@ -46,11 +46,11 @@ These tables can possible be deleted
 - sizes (full set of records is required)
 - stock (Each box has a record, app functions without records)
 - transactions ('Give tokens' actions are recorded here and also every purchase. No records needed)
-- x_people_languages (to record what language each resident speaks, can be empty)
+- x_people_languages (to record what language each beneficiaries speaks, can be empty)
 
 ### Bicycle station/sport gear tables ###
 
-The bicycle station is not made (yet) to suppport multiple camps
+The bicycle station is not made (yet) to suppport multiple bases
 
 - borrow_categories (Not user editable, at least one record need to be present)
 - borrow_items (All lendable items, no record necessary)

@@ -161,7 +161,7 @@ EOD;
 		#Table Definitions
 		addcolumn('text','Container','container');
 		addcolumn('text','Name','name');
-		addcolumn('text','Family','family');
+		addcolumn('text','Family/Beneficiary','family/beneficiary');
 		foreach($food_array as $fkey => $fval) {
 			addcolumn('input', db_value('SELECT name FROM food WHERE id='.$fval), 'portion_'.$fkey, array('food_id' => $fval));
 		}

@@ -63,7 +63,8 @@ if (!$checksession_result['success']) {
 	if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
 		require_once('mobile/selectorganisation.php');
 	} else {
-		$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
+		trigger_error('You don\'t have access to this base. Ask your coordinator to correct this!');
+		//$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
 	}
 } elseif (!db_value('SELECT id FROM locations WHERE locations.camp_id = ' . intval($_SESSION['camp']['id']) . ' AND locations.container_stock ')) {
 	redirect('http://'.$_SERVER['HTTP_HOST'].$settings['rootdir'].'?action=start');
