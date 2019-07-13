@@ -661,6 +661,12 @@ function initiateList() {
             }
 
             // toggle the action panel
+            if (selected.is(".disable-if-is-true")) {
+                parent.find(".disable-if").prop("disabled", true);
+            } else {
+                parent.find(".disable-if").prop("disabled", false);
+            }
+            
             if (
                 selected.length &&
                 !parent.find(".actions").is(".items-selected")
@@ -687,12 +693,6 @@ function initiateList() {
                 parent.find(".action-delete").prop("disabled", true);
             } else {
                 parent.find(".action-delete").prop("disabled", false);
-            }
-
-            if (selected.is(".disable-if-is-true")) {
-                parent.find(".disable-if").prop("disabled", true);
-            } else {
-                parent.find(".disable-if").prop("disabled", false);
             }
         });
         // list operations
