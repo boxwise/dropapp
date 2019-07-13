@@ -17,7 +17,7 @@
 		LEFT OUTER JOIN transactions AS t ON t.family_id = f.id
 		GROUP BY f.id');
 
-		addcolumn('text','Family name','name');
+		addcolumn('text','Family/beneficiary name','name');
 		addcolumn('text','Members','contains');
 		addcolumn('text','Credits','dropcount');
 
@@ -31,7 +31,7 @@
 
 		#listsetting('allowsort', false);
 		listsetting('allowcopy',true);
-		listsetting('add', 'Add a family');
+		listsetting('add', 'Add a family/beneficiary');
 
 		addbutton('give','Give '.$_SESSION['camp']['currencyname'],array('icon'=>'fa-copy','oneitemonly'=>false));
 

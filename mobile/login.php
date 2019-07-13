@@ -1,8 +1,7 @@
 <?php
 
-# TODO merge this with ajax/login.php
+$login = login($_POST['email'], $_POST['pass'], $_POST['autologin'], $mobile=true);
 
-$_POST['pass'] = md5($_POST['pass']);
 
 $row = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)', array('email' => $_POST['email']));
 if ($row) { #e-mailaddress exists in database
@@ -31,13 +30,13 @@ if ($row) { #e-mailaddress exists in database
 		}
 	} else { # password is not correct
 		$success = false;
-		$message = translate('cms_login_error_wrongpassword');
+		$message = INCORRECT_LOGIN_ERROR;
 		$redirect = false;
 		logfile('Attempt to login with mobile and wrong password for ' . $_POST['email']);
 	}
 } else { # user not found
 	$success = false;
-	$message = translate('cms_login_error_usernotfound');
+	$message = GENERIC_LOGIN_ERROR;
 	$redirect = false;
 	logfile('Attempt to login with mobile and unknown user ' . $_POST['email']);
 }
@@ -47,5 +46,5 @@ if ($success) {
 
 	redirect('?' . $uri);
 } else {
-	redirect('?warning=true&message=' . $message);
+	redirect('?warning=true&message=' . $login['message']);
 }

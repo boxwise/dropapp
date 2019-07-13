@@ -1,5 +1,60 @@
 <?php
 
+function login($email, $pass, $autologin, $mobile = false) 
+{
+	global $settings;
+	$pass = md5($pass);
+
+	$user = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)', array('email' => $email));
+
+	if ($user) { #e-mailaddress exists in database
+		if ($user['pass'] == $pass) { # password is correct
+	
+			# Check if account is not expired
+			$in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday']);
+			$success = $in_valid_dates['success'];
+			$message = $in_valid_dates['message'];
+	
+			if ($success) {
+				$_SESSION['user'] = $user;
+				$_SESSION['usergroup'] = db_row('SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel FROM cms_usergroups AS ug WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', array('id' => $_SESSION['user']['cms_usergroups_id']));
+				$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', array('id' => $_SESSION['usergroup']['organisation_id']));
+	
+				db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', array('id' => $_SESSION['user']['id']));
+				logfile(($mobile ? 'Mobile user ' :'User ').'logged in with ' . $_SERVER['HTTP_USER_AGENT']);
+	
+				if (isset($autologin)) {
+					setcookie("autologin_user", $email, time() + (3600 * 24 * 90), '/');
+					setcookie("autologin_pass", $pass, time() + (3600 * 24 * 90), '/');
+				} else {
+					setcookie("autologin_user", null, time() - 3600, '/');
+					setcookie("autologin_pass", null, time() - 3600, '/');
+				}
+				
+				$redirect = $settings['rootdir'] . '/?action=start';
+			}
+		} else { # password is not correct
+			$success = false;
+			$message = INCORRECT_LOGIN_ERROR;
+			$redirect = false;
+			logfile('Attempt to login with '.($mobile ? 'mobile and ' :'').' wrong password for ' . $email);
+		}
+	} else { # user not found
+		$success = false;
+		$redirect = false;
+		$deleted = db_value('SELECT email FROM cms_users WHERE email != "" AND email LIKE "'.$_POST['email'].'%" AND deleted Limit 1');
+		if ($deleted) {
+			$message = GENERIC_LOGIN_ERROR;
+			logfile('Attempt to login '.($mobile ? 'with mobile ' :'').'as deleted user ' . $email);
+		} else {
+			$message = GENERIC_LOGIN_ERROR;
+			logfile('Attempt to login '.($mobile ? 'with mobile ' :'').'as unknown user ' . $email);
+		}
+	}
+
+	return(array("success" => $success, 'message' => $message, 'redirect' => $redirect));
+}
+
 function checksession()
 {
 	global $settings;
@@ -59,14 +114,14 @@ function check_valid_from_until_date($valid_from, $valid_until)
 		$valid_firstday = new DateTime($valid_from);
 		if ($today < $valid_firstday) {
 			$success = false;
-			$message = "This user account is not yet valid.";
+			$message = GENERIC_LOGIN_ERROR;
 		}
 	}
 	if ($valid_until && (substr($valid_until, 0, 10) != '0000-00-00')) {
 		$valid_lastday = new DateTime($valid_until);
 		if ($today > $valid_lastday) {
 			$success = false;
-			$message = "This user account is expired.";
+			$message = GENERIC_LOGIN_ERROR;
 		}
 	}
 	return array('success' => $success, 'message' => $message);
@@ -89,7 +144,7 @@ function sendlogindata($table, $ids)
 		$result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);
 		if ($result) {
 			$message = $result;
-			$succes = false;
+			$success = false;
 		} else {
 			$success = true;
 			db_query('UPDATE ' . $table . ' SET pass = :pass WHERE id = :id', array('pass' => md5($newpassword), 'id' => $id));
