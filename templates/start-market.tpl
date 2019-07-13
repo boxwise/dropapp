@@ -141,7 +141,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 	
 	<h1 class="light">
 	There are currently <span class="number">{$data['residents']}</span> people living in and around {$currentcamp['name']}, <span class="number">{$data['families']}</span> families are living in <span class="number">{$data['containers']}</span> addresses.
-  {if isset($data['notregistered])}
+  {if isset($data['notregistered'])}
   <span class="number">{$data['notregistered']}</span> people live in this base unregistered.
   {/if}
   {if isset($data['residentsoutside'])}
