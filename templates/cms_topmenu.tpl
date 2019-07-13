@@ -40,6 +40,7 @@
 					<li><a href="?action=cms_profile">{$translate['cms_menu_settings']}</a></li>
 {if $smarty.session.user2}<li><a href="?action=exitloginas">{$translate['cms_menu_exitloginas']|replace:'%user%':$smarty.session.user2.naam}</a></li>{/if}
 					<li><a href="?action=logout">{$translate['cms_menu_logout']}</a></li>
+					<li><a href="http:support.boxwise.co">Help</a></li>
 				</ul>
 			</li>
 		</ul>
