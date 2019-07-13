@@ -73,7 +73,7 @@
 		listsetting('add', 'Add');
 
 		$locations = db_simplearray('SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
-		addbutton('movebox','Move',array('icon'=>'fa-arrows', 'options'=>$locations));
+		addbutton('movebox','Move',array('icon'=>'fa-truck', 'options'=>$locations));
 		addbutton('qr','Make label',array('icon'=>'fa-print'));
 		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
