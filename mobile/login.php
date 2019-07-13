@@ -1,8 +1,7 @@
 <?php
 
-# TODO merge this with ajax/login.php
+$login = login($_POST['email'], $_POST['pass'], $_POST['autologin'], $mobile=true);
 
-$_POST['pass'] = md5($_POST['pass']);
 
 $row = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)', array('email' => $_POST['email']));
 if ($row) { #e-mailaddress exists in database
@@ -47,5 +46,5 @@ if ($success) {
 
 	redirect('?' . $uri);
 } else {
-	redirect('?warning=true&message=' . $message);
+	redirect('?warning=true&message=' . $login['message']);
 }

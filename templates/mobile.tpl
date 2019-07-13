@@ -23,11 +23,11 @@
 		<link rel="icon" type="image/png" href="{$settings['rootdir']}/assets/img/favicon-16x16.png" sizes="16x16">	
    
 	</head>
-	<body class="mobile">
+	<body class="mobile" data-testid="mobileBody">
 		<header>
 			<strong><a href="{$settings['rootdir']}/mobile.php">{$translate['site_name']}</a></strong>
 			{if $smarty.session.user}
-				<div class="orgcamp">
+				<div class="orgcamp" data-testid="orgcampDiv">
 					{if $org}
 							{$org['label']} /
 					{/if}
