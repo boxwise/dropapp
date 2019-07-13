@@ -14,4 +14,4 @@ $query = db_query('SELECT pro.name AS product, gen.label AS gender, tran.count A
 	ORDER BY tran.id');
 
 $keys = array("product"=>"Product", "gender"=>"Gender", "amount"=>"Quantity", "price"=>$_SESSION['camp']['currencyname'], "transaction_date"=>"Transaction Date");
-csvexport($query, "Sales", $keys);
+csvexport($query, "Sales_from".$start."_until_".$end, $keys);

@@ -4,7 +4,7 @@ function csvexport($data, $filename, $keys)
 {
 
     header("Content-type: text/csv");
-    header("Content-Disposition: attachment; filename=$filename" . ".csv");
+    header("Content-Disposition: attachment; filename=$filename"."_" . date("Y-m-d_his").".csv");
     header("Pragma: no-cache");
     header("Expires: 0");
 
