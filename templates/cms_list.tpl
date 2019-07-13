@@ -82,7 +82,7 @@
 											</ul>
 										</div>
 									{else}
-										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if}" href="{if $button['link']}{$button['link']}{else}#{/if}">
+										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if} {if $button['disableif']}disable-if{/if}" href="{if $button['link']}{$button['link']}{else}#{/if}">
 											{if $button['icon']}
 												<i class="fa {$button['icon']}"></i> 
 											{/if}
@@ -142,6 +142,7 @@
 							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}" class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
 								{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit']))}item-clickable{/if}
 								{if $row['preventdelete']}item-nondeletable{/if}
+								{if $row['disableifistrue']}disable-if-is-true{/if}
 								{if $listconfig['allowmove'] && $row['level']>=$listconfig['allowmovefrom'] && $row['level']<=$listconfig['allowmoveto']}item-zortable{/if}
 								{if ($listconfig['allowselect']|is_array && $listconfig['allowselect'][$row['level']]) or (!$listconfig['allowselect']|is_array && $listconfig['allowselect'])}item-selectable{/if}">
 								{foreach $listdata as $key=>$column name="rows"}

@@ -686,6 +686,12 @@ function initiateList() {
             } else {
                 parent.find(".action-delete").prop("disabled", false);
             }
+
+            if (selected.is(".disable-if-is-true")) {
+                parent.find(".disable-if").prop("disabled", true);
+            } else {
+                parent.find(".disable-if").prop("disabled", false);
+            }
         });
         // list operations
         $(".start-operation").on("click", function(e) {
