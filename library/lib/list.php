@@ -289,8 +289,13 @@ function initlist()
 
 	$listconfig['thisfile'] = $thisfile;
 
+	// HACK: because we access DB tables based on file names - action name matches table name (e.g. cms_users.php affects cms_users DB table)
+	// and list tabs have their own page, action needs to be edited to match DB table name
+	// origin stays the same so after confirm, user gets navigated back to the tab he came from
+	$replaceArray = array("_deactivated", "_trash");
+	$editedaction = str_ireplace($replaceArray, '', $action);
 	$listconfig['origin'] = $action;
-	$listconfig['edit'] = $action . '_edit';
+	$listconfig['edit'] = $editedaction . '_edit';
 	$listconfig['add'] = $translate['cms_list_add'];
 	$listconfig['delete'] = $translate['cms_list_delete'];
 	$listconfig['copy'] = $translate['cms_list_copy'];
