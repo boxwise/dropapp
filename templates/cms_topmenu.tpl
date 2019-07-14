@@ -12,7 +12,9 @@
 			{/if}
  		</div>
 		<ul class="nav navbar-nav pull-right">
+			{if isset($data['warehouse'])}
 			<li><a href="{$settings['rootdir']}/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
+			{/if}
 	 		{if $smarty.session.user['is_admin']}
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-testid="organisationsDropdown" data-toggle="dropdown"><i class="fa fa-globe visible-xs"></i><span class="hidden-xs">{if $smarty.session.organisation['label']}{$smarty.session.organisation['label']}{else}Choose organisation{/if} </span><b class="caret"></b></a>
