@@ -36,7 +36,7 @@ if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
 	if (!isset($_SESSION['camp']['id']) && $_GET['organisation']) {
 		$_SESSION['organisation'] = db_row('SELECT o.* FROM organisations AS o WHERE (NOT o.deleted OR o.deleted IS NULL) AND o.id = :organisation', array('organisation' => $_GET['organisation']));
 	} else {
-		$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id=:id AND (NOT deleted OR deleted IS NULL)', array('id'=>$_SESSION['camp']['organisation_id']));
+		$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id=:id AND (NOT deleted OR deleted IS NULL)', array('id' => $_SESSION['camp']['organisation_id']));
 	}
 }
 $tpl->assign('org', $_SESSION['organisation']);
@@ -66,6 +66,8 @@ if (!$checksession_result['success']) {
 		trigger_error('You don\'t have access to this base. Ask your coordinator to correct this!');
 		//$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
 	}
+} elseif (!db_value('SELECT id FROM locations WHERE locations.camp_id = ' . intval($_SESSION['camp']['id']) . ' LIMIT 1 ')) {
+	redirect('http://'.$_SERVER['HTTP_HOST'].$settings['rootdir'].'?action=start');
 } else { # --------------- All routing happens here
 	# Boxlabel is scanned 
 	if ($_GET['barcode'] != '' || $_GET['boxid'] != '') {

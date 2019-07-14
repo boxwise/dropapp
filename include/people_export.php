@@ -6,4 +6,4 @@ $result = db_query('
 	WHERE camp_id = :campid AND NOT deleted', array('campid' => $_SESSION['camp']['id']));
 $keys = array("container" => $_SESSION['camp']['familyidentifier'], "firstname" => "Firstname", "lastname" => 'Lastname', "gender" => "Gender", "age" => "Age");
 
-csvexport($result, "Beneficiaries " . $_SESSION['camp']['name'], $keys);
+csvexport($result, "Beneficiaries_" . $_SESSION['camp']['name'], $keys);

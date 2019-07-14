@@ -55,9 +55,9 @@
 				$data[$key]['oldbox'] ='<span class="hide">0</span>';
 			}
 			if($data[$key]['ordered']) {
-				$data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the market by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
+				$data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['ordered'])).'"></i>';
 			} elseif($data[$key]['picked']) {
-				$data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the market by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
+				$data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the shop by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y',strtotime($data[$key]['picked'])).'"></i>';
 			} else {
 				$data[$key]['order'] = '<span class="hide">0</span>';
 			}
@@ -81,7 +81,7 @@
 		listsetting('allowselectinvisible',false);
 
 		$locations = db_simplearray('SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
-		addbutton('movebox','Move',array('icon'=>'fa-arrows', 'options'=>$locations));
+		addbutton('movebox','Move',array('icon'=>'fa-truck', 'options'=>$locations));
 		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
@@ -119,7 +119,7 @@
 				$ids = explode(',',$_POST['ids']);
 				foreach($ids as $id) {
 					db_query('UPDATE stock SET ordered = NOW(), ordered_by = :user, picked = NULL, picked_by = NULL WHERE id = '.intval($id), array('user'=>$_SESSION['user']['id']));
-					simpleSaveChangeHistory('stock', intval($id), 'Box ordered to market ');
+					simpleSaveChangeHistory('stock', intval($id), 'Box ordered to shop ');
 					$message = 'Boxes are marked as ordered for you!';
 					$success = true;
 					$redirect = true;
