@@ -15,7 +15,7 @@
 		
 		$data = getlistdata('
 			SELECT u.*, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete,
-			IF((u.valid_lastday < NOW() AND u.valid_lastday <> "0000-00-00") OR (u.valid_firstday > NOW()), 1, 0) as disableifistrue
+			IF((u.valid_lastday < NOW() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) OR (u.valid_firstday > NOW()), 1, 0) as disableifistrue
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
 			LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
