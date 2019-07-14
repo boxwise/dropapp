@@ -679,7 +679,7 @@ function initiateList() {
                 parent.find(".actions").removeClass("items-selected");
             } else if (selected.length > 1) {
                 parent.find(".one-item-only").prop("disabled", true);
-            } else if (selected.length < 2 && parent.find(".one-item-only").length === 0) {
+            } else if (selected.length < 2 && parent.find(".disable-if-is-true").length === 0) {
                 parent.find(".one-item-only").prop("disabled", false);
             }
 
