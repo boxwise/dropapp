@@ -678,15 +678,9 @@ function initiateList() {
             ) {
                 parent.find(".actions").removeClass("items-selected");
             } else if (selected.length > 1) {
-                parent
-                    .find(".actions")
-                    .find(".one-item-only")
-                    .attr("disabled", "disabled");
-            } else if (selected.length < 2) {
-                parent
-                    .find(".actions")
-                    .find(".one-item-only")
-                    .removeAttr("disabled");
+                parent.find(".one-item-only").prop("disabled", true);
+            } else if (selected.length < 2 && parent.find(".one-item-only").length === 0) {
+                parent.find(".one-item-only").prop("disabled", false);
             }
 
             if (selected.is(".item-nondeletable")) {
