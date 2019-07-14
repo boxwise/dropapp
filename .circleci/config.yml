@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   gcp-cli: circleci/gcp-cli@1.5.0
+  cypress: cypress-io/cypress@1.8.0
 jobs:
   build:
     docker:
@@ -86,7 +87,7 @@ jobs:
           # wait for cloud sql proxy to initialize
           sleep 1s
           cd workspace
-          # apply db changes
+          # apply db changes 
           echo "Migrating << parameters.serviceName >> database"
           vendor/bin/phinx migrate -e << parameters.serviceName >>
           # deploy
@@ -96,6 +97,12 @@ workflows:
   build-and-deploy:
     jobs:
     - build
+    # baseUrl is set in cypress.json (currently staging.boxwise.co)
+    - cypress/run:
+        yarn: true
+        record: true
+        requires:
+          - build
     - deploy:
         envVariablePrefix: BOXWISE_STAGING_
         serviceName: default
