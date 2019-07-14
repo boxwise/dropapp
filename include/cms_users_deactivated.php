@@ -1,6 +1,6 @@
 <?php
 
-	$table = $action;
+    $table = 'cms_users';
 	$ajax = checkajax();
 
 	if($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')){
@@ -14,7 +14,7 @@
 		$camps = db_value('SELECT GROUP_CONCAT(id) FROM cms_usergroups_camps AS uc, camps AS c WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup', array('usergroup'=>$_SESSION['usergroup']['id']));
 		
 		$data = getlistdata('
-			SELECT u.*, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete
+			SELECT u.*, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete, 1 as disableifistrue
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
 			LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
@@ -23,15 +23,18 @@
 				'.(!$_SESSION['user']['is_admin']?'l.level <'.intval($_SESSION['usergroup']['userlevel']).' AND ':'').'
 				'.($_SESSION['user']['is_admin']?'':'(uc.camp_id IN ('.($camps?$camps:0).')) AND ').' 
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin']?' OR u.is_admin':'').')
-				AND (NOT g.deleted OR g.deleted IS NULL) AND (NOT u.deleted OR u.deleted IS NULL)
+                AND (NOT g.deleted OR g.deleted IS NULL) AND (NOT u.deleted OR u.deleted IS NULL)
+                AND (u.valid_lastday < NOW() AND u.valid_lastday <> "0000-00-00") OR (u.valid_firstday > NOW())
 			GROUP BY u.id
 		');
 		if (!$_SESSION['user']['is_admin']){
 			$data = array_merge($data, db_array('
-				SELECT u.*, 0 AS visible, g.label AS usergroup, 1 AS preventdelete
+				SELECT u.*, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 1 as disableifistrue
 				FROM cms_users AS u
 				LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
-				WHERE u.cms_usergroups_id = :usergroup AND u.id != :user', array('usergroup' => $_SESSION['usergroup']['id'], 'user' => $_SESSION['user']['id'])));
+                WHERE u.cms_usergroups_id = :usergroup
+                AND (u.valid_lastday < NOW() AND u.valid_lastday <> "0000-00-00") OR (u.valid_firstday > NOW())
+                AND u.id != :user', array('usergroup' => $_SESSION['usergroup']['id'], 'user' => $_SESSION['user']['id'])));
 		}
 
 		addcolumn('text',$translate['cms_users_naam'],'naam');
@@ -45,12 +48,12 @@
 		listsetting('allowsort', true);
 
 		listsetting('haspagemenu', true);
-		addpagemenu('all', 'All', array('link'=>'?action=cms_users', 'active'=>true));
-		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=cms_users_deactivated'));
-
-		addbutton('sendlogindata',$translate['cms_users_sendlogin'],array('icon'=>'fa-user','confirm'=>true));
+		addpagemenu('all', 'All', array('link'=>'?action=cms_users'));
+		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=cms_users_deactivated', 'active'=>true));
+		
+		addbutton('sendlogindata',$translate['cms_users_sendlogin'],array('icon'=>'fa-user','confirm'=>true, 'disableif'=>true));
 		if($_SESSION['user']['is_admin'] && !$_SESSION['user2']) {
-			addbutton('loginasuser',$translate['cms_users_loginas'],array('icon'=>'fa-users','confirm'=>true,'oneitemonly'=>true));
+			addbutton('loginasuser',$translate['cms_users_loginas'],array('icon'=>'fa-users','confirm'=>true,'oneitemonly'=>true, 'disableif'=>true));
 		}
 
 		$cmsmain->assign('data',$data);
