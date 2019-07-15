@@ -21,7 +21,6 @@ if ($_POST && $_POST['action'] == 'login') {
 	require_once('mobile/login.php');
 }
 
-
 /* new: fill the camp selection menu -------------------------------------------- */
 if ($_GET['camp']) {
 	if ($_SESSION['user']['is_admin']) {
@@ -42,7 +41,7 @@ if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
 $tpl->assign('org', $_SESSION['organisation']);
 
 $camplist = camplist();
-if (!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
+if (!isset($_SESSION['camp'])) $_SESSION['camp'] = reset($camplist);
 $tpl->assign('camps', $camplist);
 $tpl->assign('currentcamp', $_SESSION['camp']);
 /* end of the camp menu addition -------------------------------------------- */
