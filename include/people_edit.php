@@ -47,8 +47,11 @@
 			unlink($settings['upload_dir'].'/people/'.$postid.'.jpg');
 		}
 		
+		$message=$_POST['firstname']. ($_POST['firstname']? ' ' . $_POST['firstname']:'') . ' was added.<br>' . $_SESSION['camp']['familyidentifier'] . ' is '. $_POST['container'] . '.';
+		// routing after submit
 		if($_POST['__action']=='submitandedit') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$handler->id);
-		redirect('?action='.$_POST['_origin']);
+		elseif($_POST['__action']=='submitandnew') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&message='.$message);
+		else redirect('?action='.$_POST['_origin'].'&message='.$message);
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
@@ -243,8 +246,8 @@
 	}
 	addfield('created','Created','created',array('aside'=>true));
 
-
 	if ($id) addformbutton('submitandedit',$translate['cms_form_save']);
+	else addformbutton('submitandnew',"Save and new");
 
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
