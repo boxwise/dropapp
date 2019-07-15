@@ -70,24 +70,6 @@
 		$cmsmain->assign('title', 'Add a new beneficiary');
 	}
 	
-	$tabs['people'] = 'Personal';
-	if ($_SESSION['camp']['bicycle'] && $_SESSION['camp']['workshop']) {
-		$tabs['bicycle'] = 'Bicycle & Workshop';
-	} elseif($_SESSION['camp']['bicycle']) {
-		$tabs['bicycle'] = 'Bicycle';
-	} elseif($_SESSION['camp']['workshop']) {
-		$tabs['bicycle'] = 'Workshop';
-	} elseif($_SESSION['camp']['idcard']) {
-		$tabs['bicycle'] = 'ID Card';
-	}
-	$tabs['transaction'] = 'Transactions';
-	
-	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $S_SESSION['camps']['laundry']) $tabs['laundry'] = 'Laundry';
-
-	$tabs['signature'] = 'Privacy declaration';
-	
-	$cmsmain->assign('tabs',$tabs);
-
 	$data['allowdrops'] = allowGiveDrops();
 
 	if($id){
@@ -249,6 +231,26 @@
 	if ($id) addformbutton('submitandedit',$translate['cms_form_save']);
 	else addformbutton('submitandnew',"Save and new");
 
+
+	// Tabs
+	$tabs['people'] = 'Personal';
+	if ($_SESSION['camp']['bicycle'] && $_SESSION['camp']['workshop']) {
+		$tabs['bicycle'] = 'Bicycle & Workshop';
+	} elseif($_SESSION['camp']['bicycle']) {
+		$tabs['bicycle'] = 'Bicycle';
+	} elseif($_SESSION['camp']['workshop']) {
+		$tabs['bicycle'] = 'Workshop';
+	} elseif($_SESSION['camp']['idcard']) {
+		$tabs['bicycle'] = 'ID Card';
+	}
+		
+	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $S_SESSION['camps']['laundry']) $tabs['laundry'] = 'Laundry';
+
+	if(!$data['parent_id'] && $data['id']) $tabs['transaction']='Transactions';
+
+	$tabs['signature'] = 'Privacy declaration';
+
+	$cmsmain->assign('tabs',$tabs);
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
