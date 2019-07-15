@@ -1,9 +1,9 @@
 <?php
 
 $row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" 
-AND email = :email 
-AND ((valid_firstday < NOW() AND valid_lastday > NOW()) OR UNIX_TIMESTAMP(valid_lastday) = 0)
-AND NOT deleted ',array('email'=>$_POST['email']));
+	AND email = :email 
+	AND ((valid_firstday < NOW() AND valid_lastday > NOW()) OR UNIX_TIMESTAMP(valid_lastday) = 0)
+	AND (NOT deleted OR deleted IS NULL)',array('email'=>$_POST['email']));
 
 	if($row) { #e-mailaddress exists in database
 
