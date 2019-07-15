@@ -385,13 +385,33 @@ $(function() {
         }
     });
 
+    // Event Listener to figure out which submit button is used
+    // Related to fix of jQuery validate https://github.com/jquery-validation/jquery-validation/issues/309
+    $("button[name=__action]").click(function() {
+        var el = $(this);
+        $("#submitaction").val(el.val());
+    });
+
+    // form submit 
     $(".form").each(function() {
         var el = $(this);
+
+        // Fix for super annoying bug from jQuery validate https://github.com/jquery-validation/jquery-validation/issues/309
+        $("<input>")
+            .attr({
+                id : "submitaction",
+                type: "hidden",
+                name: "__action",
+                value: ""
+            })
+            .appendTo(el);
+
         $(".form").validate({
+            // https://jqueryvalidation.org/
             ignore: ".no-validate",
             submitHandler: function(form) {
-                $("#form-submit").prop("disabled", true);
-                $("body").addClass("loading");
+                // $("#form-submit").prop("disabled", true);
+                // $("body").addClass("loading");
 
                 if (
                     ["login", "reset", "reset2"].includes(

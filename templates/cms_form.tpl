@@ -7,8 +7,8 @@
 	</div>
 
 	<form id="cms_form" class="form form-horizontal areyousure" method="post" enctype="multipart/form-data"> 
-		<input type="text" style="display:none" name="fakeloginautofill" />
-		<input type="password" style="display:none" name="fakepassautofill" />
+		<!--<input type="text" style="display:none" name="fakeloginautofill" />
+		<input type="password" style="display:none" name="fakepassautofill" />-->
 
 		<input type="hidden" name="id" value="{$data['id']}" />
 		<input type="hidden" name="seq" value="{$data['seq']}" />
@@ -46,7 +46,9 @@
 						{if $element['asidetop']}{include file="cms_form_{$element['type']}.tpl"}{/if}
 					{/foreach}	
 				</div>
-				{if !$data['hidesubmit']}<button name="__action" value="" class="btn btn-submit btn-success">{$translate['cms_form_submit']}</button>{/if}
+				{if !$data['hidesubmit']}
+					<button name="__action" value="" class="btn btn-submit btn-success">{$translate['cms_form_submit']}</button>
+				{/if}
 				{foreach $formbuttons as $button}
 					<button name="__action" value="{$button['action']}" class="btn btn-submit btn-success">{$button['label']}</button>
 				{/foreach}
