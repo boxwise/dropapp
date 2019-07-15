@@ -1,4 +1,4 @@
-<form id="login" class="well-center login-reset-form form" data-ajax="1" data-action="login" method="post">
+<form id="login" class="well-center login-reset-form form" method="post">
 	<h2>{$translate['cms_login_pagetitle']}</h2>
 	<div class="form-group">
 		<input class="form-control" type="email" name="email" id="email" placeholder="{$translate['cms_login_email']}" required autofocus/>	
