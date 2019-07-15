@@ -125,7 +125,7 @@
 			$camplist = camplist();
 			$_SESSION['camp'] = reset($camplist);
 			$success = true;
-			$message = 'Loged in as '.$_SESSION['user']['naam'];
+			$message = 'Logged in as '.$_SESSION['user']['naam'];
 		}
 
 		return array($success,$message,true);
