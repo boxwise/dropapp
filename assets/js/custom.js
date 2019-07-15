@@ -62,6 +62,9 @@ $(function() {
     });
 
     old = $("#signaturefield").val();
+    // Set old for new beneficiaries
+    if (old==="") old={"lines":[]};
+    
     $("#sig").signature({
         change: function(event, ui) {
             $("#field_approvalsigned").prop(
@@ -112,7 +115,7 @@ $(document).ready(function() {
         var date = new Date();
         $("#field_date_of_birth_datepicker")
             .data("DateTimePicker")
-            .maxDate(date.toLocaleDateString())
+            .maxDate(date.toLocaleDateString('en-GB'))
             .viewMode('years');
         $("#field_date_of_birth").val(DateValue);
     }
