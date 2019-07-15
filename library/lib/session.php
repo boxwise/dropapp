@@ -16,7 +16,6 @@ function login($email, $pass, $autologin, $mobile = false)
 			$message = $in_valid_dates['message'];
 	
 			if ($success) {
-				$_SESSION['user'] = $user;
 				loadSessionData($user);
 	
 				db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', array('id' => $_SESSION['user']['id']));
@@ -169,6 +168,7 @@ function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkK
 }
 
 function loadSessionData($user) {
+	$_SESSION['user'] = $user;
 	$_SESSION['usergroup'] = db_row('
 		SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel 
 		FROM cms_usergroups AS ug 
