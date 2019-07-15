@@ -74,7 +74,6 @@ function checksession()
 		if (isset($_COOKIE['autologin_user'])) { # a autologin cookie exists
 			$user = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND pass = :pass', array('email' => $_COOKIE['autologin_user'], 'pass' => $_COOKIE['autologin_pass']));
 			if ($user) {
-				$_SESSION['user'] = $user;
 				loadSessionData($user);
 				db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', array('id' => $_SESSION['user']['id']));
 			}
