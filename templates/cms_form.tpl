@@ -7,8 +7,8 @@
 	</div>
 
 	<form id="cms_form" class="form form-horizontal areyousure" method="post" enctype="multipart/form-data"> 
-		<!--<input type="text" style="display:none" name="fakeloginautofill" />
-		<input type="password" style="display:none" name="fakepassautofill" />-->
+		<input type="text" style="display:none" name="fakeloginautofill" />
+		<input type="password" style="display:none" name="fakepassautofill" />
 
 		<input type="hidden" name="id" value="{$data['id']}" />
 		<input type="hidden" name="seq" value="{$data['seq']}" />
