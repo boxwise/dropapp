@@ -318,6 +318,12 @@ function selectFamily(field, reload) {
     }
 }
 
+function selectFamilyhead(field, targetfield) {
+    console.log($("#field_"+field).data("value2"));
+    debugger;
+    $("#field_"+targetfield).val();
+}
+
 function getProductValue(field) {
     value = $("#field_" + field).val();
     if (value) {
