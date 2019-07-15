@@ -53,7 +53,7 @@
 		// routing after submit
 		if($_POST['__action']=='submitandedit') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$handler->id);
 		elseif($_POST['__action']=='submitandnew') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&message='.$message);
-		else redirect('?action='.$_POST['_origin'].'&message='.$message);
+		else redirect('?action='.$_POST['_origin'].($_POST['id']?'':'&message='.$message));
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
@@ -124,8 +124,8 @@
 		WHERE parent_id = 0 AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
 		GROUP BY p.id 
 		ORDER BY label'));
-	addfield('text','Lastname','lastname',array('tab'=>'people'));
 	addfield('text','Firstname','firstname',array('tab'=>'people','required'=>true));
+	addfield('text','Lastname','lastname',array('tab'=>'people'));
 	addfield('text',$_SESSION['camp']['familyidentifier'],'container',array('tab'=>'people','required'=>true,'onchange'=>'capitalize("container")'));
 	addfield('select','Gender','gender',array('tab'=>'people',
 	'options'=>array(array('value'=>'M', 'label'=>'Male'), array('value'=>'F', 'label'=>'Female'))));
