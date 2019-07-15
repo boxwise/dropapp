@@ -11,7 +11,7 @@
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('functions','cms_functions_camps','camps_id','cms_functions_id');
 
-		getcampdata($_SESSION['camp']['id']);
+		$_SESSION['camp'] = getcampdata($_SESSION['camp']['id']);
 		
 		redirect('?action='.$_POST['_origin']);
 	}

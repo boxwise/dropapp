@@ -34,7 +34,7 @@ if ($row) { #e-mailaddress exists in database
 		$success = false;
 		$message = INCORRECT_LOGIN_ERROR;
 		$redirect = false;
-		logfile('Attempt to login with wrong passford for ' . $_POST['email']);
+		logfile('Attempt to login with wrong password for ' . $_POST['email']);
 	}
 } else { # user not found
 	$success = false;

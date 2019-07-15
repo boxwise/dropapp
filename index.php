@@ -30,10 +30,9 @@
 	}
 	
 	# This fills the camp menu in the top bar (only if the user has access to more than 1 camp
-	if($_GET['camp']) getcampdata($_GET['camp']);
-	
 	$camplist = camplist();
-	if(!isset($_SESSION['camp'])) $_SESSION['camp'] = $camplist[0];
+	if($_GET['camp']) $_SESSION['camp'] = $camplist[$_GET['camp']];
+	elseif(!isset($_SESSION['camp'])) $_SESSION['camp'] = reset($camplist);
 	$cmsmain->assign('camps',$camplist);
 	$cmsmain->assign('currentcamp',$_SESSION['camp']);
 	$cmsmain->assign('currentOrg', $_SESSION['organisation']);

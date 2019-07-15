@@ -124,7 +124,7 @@
 			$_SESSION['usergroup'] = db_row('SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel FROM cms_usergroups AS ug WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)',array('id'=>$_SESSION['user']['cms_usergroups_id']));
 			$_SESSION['organisation'] = db_row('SELECT * FROM organisations AS o WHERE id = :id AND (NOT o.deleted OR o.deleted IS NULL)',array('id'=>$_SESSION['usergroup']['organisation_id']));
 			$camplist = camplist();
-			$_SESSION['camp'] = $camplist[0];
+			$_SESSION['camp'] = reset($camplist);
 			$success = true;
 			$message = 'Nu ingelogd als '.$_SESSION['user']['naam'];
 		}
