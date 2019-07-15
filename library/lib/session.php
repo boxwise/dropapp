@@ -17,8 +17,7 @@ function login($email, $pass, $autologin, $mobile = false)
 	
 			if ($success) {
 				$_SESSION['user'] = $user;
-				$_SESSION['usergroup'] = db_row('SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel FROM cms_usergroups AS ug WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', array('id' => $_SESSION['user']['cms_usergroups_id']));
-				$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', array('id' => $_SESSION['usergroup']['organisation_id']));
+				loadSessionData($user);
 	
 				db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', array('id' => $_SESSION['user']['id']));
 				logfile(($mobile ? 'Mobile user ' :'User ').'logged in with ' . $_SERVER['HTTP_USER_AGENT']);
@@ -76,8 +75,8 @@ function checksession()
 		if (isset($_COOKIE['autologin_user'])) { # a autologin cookie exists
 			$user = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND pass = :pass', array('email' => $_COOKIE['autologin_user'], 'pass' => $_COOKIE['autologin_pass']));
 			if ($user) {
-				// TODO check if usergroups and organisation needs to be loaded
 				$_SESSION['user'] = $user;
+				loadSessionData($user);
 				db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', array('id' => $_SESSION['user']['id']));
 			}
 		} else {
@@ -167,4 +166,15 @@ function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkK
 		}
 	}
 	return $password;
+}
+
+function loadSessionData($user) {
+	$_SESSION['usergroup'] = db_row('
+		SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel 
+		FROM cms_usergroups AS ug 
+		WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', array('id' => $user['cms_usergroups_id']));
+	$_SESSION['organisation'] = db_row('
+		SELECT * 
+		FROM organisations 
+		WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', array('id' => $_SESSION['usergroup']['organisation_id']));
 }
