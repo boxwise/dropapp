@@ -410,8 +410,8 @@ $(function() {
             // https://jqueryvalidation.org/
             ignore: ".no-validate",
             submitHandler: function(form) {
-                // $("#form-submit").prop("disabled", true);
-                // $("body").addClass("loading");
+                $("#form-submit").prop("disabled", true);
+                $("body").addClass("loading");
 
                 if (
                     ["login", "reset", "reset2"].includes(
