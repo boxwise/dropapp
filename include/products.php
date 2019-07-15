@@ -26,7 +26,7 @@
 		addcolumn('text','Product name','name');
 		addcolumn('text','Gender','gender');
 		addcolumn('text','Sizegroup','sizegroup');
-		if (db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' LIMIT 1 ')) addcolumn('text','Items','items');
+		if (db_value('SELECT id FROM locations WHERE camp_id = '.intval($_SESSION['camp']['id']).' AND visible LIMIT 1 ')) addcolumn('text','Items','items');
 		if($_SESSION['camp']['market']) addcolumn('text',ucfirst($_SESSION['camp']['currencyname']),'drops');
 		addcolumn('text','Description','comments');
 		if(db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' AND locations.container_stock ')){
