@@ -34,7 +34,7 @@
 	if($_SESSION['camp']['market']) addfield('number','Estimated annual need per person','amountneeded',array('width'=>3,'required'=>true));
 
 	addfield('line','','');
-	addfield('select', 'Gender', 'gender_id', array('width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM genders ORDER BY seq'));
+	addfield('select', 'Gender', 'gender_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM genders ORDER BY seq'));
 	addfield('select', 'Sizegroup', 'sizegroup_id', array('required'=>true,'width'=>2, 'multiple'=>false, 'query'=>'SELECT *, id AS value FROM sizegroup ORDER BY seq'));
 	addfield('line');
 	addfield('textarea','Description','comments');
