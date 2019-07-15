@@ -319,9 +319,12 @@ function selectFamily(field, reload) {
 }
 
 function selectFamilyhead(field, targetfield) {
-    console.log($("#field_"+field).data("value2"));
-    debugger;
-    $("#field_"+targetfield).val();
+    value = $("#field_" + field).val();
+    if (value === "") {
+        $("#field_"+targetfield).val("");
+    } else {
+        $("#field_"+targetfield).val($("#field_"+field+ " option[value=" + value + "]").data("value2"));
+    }
 }
 
 function getProductValue(field) {
