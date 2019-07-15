@@ -14,7 +14,6 @@
 
 		$cmsmain->assign('title','Boxes for: '.db_value('SELECT name FROM products WHERE id = :id',array('id'=>$product)).', '.db_value('SELECT label FROM genders WHERE id = :id',array('id'=>$gender)).', '.db_value('SELECT label FROM sizes WHERE id = :id',array('id'=>$size)).' <div class="need-indicator need-'.$color.'"><i class="fa fa-'.($color=='red'?'sign-in':($color=='blue'?'sign-out':'check')).'"></i>&nbsp;'.($color!='green'?$overunder:'').'</div>');
 
-
 		$data = getlistdata('
 			SELECT 
 				stock.*, 
@@ -26,6 +25,7 @@
 				l.camp_id = '.$_SESSION['camp']['id'].' AS visible,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventdelete,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit,
+				IF(l.visible = 0 OR ordered !=0 OR l.label = "Stockroom",True,False) AS disableifistrue,
 				IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox
 			FROM 
 				(products AS p, 
@@ -82,7 +82,7 @@
 
 		$locations = db_simplearray('SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
 		addbutton('movebox','Move',array('icon'=>'fa-truck', 'options'=>$locations));
-		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
+		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart','disableif'=>true));
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
 		#$locations = db_simplearray('SELECT id, label FROM locations ORDER BY seq');
