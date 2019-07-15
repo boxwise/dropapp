@@ -8,11 +8,13 @@ function allowgivedrops()
 
 function camplist($short = false)
 {
-	if ($_SESSION['user']['is_admin']) {
-		$camplist = db_array('SELECT c.* FROM camps AS c WHERE (NOT c.deleted OR c.deleted IS NULL) AND organisation_id = :organisation_id ORDER BY c.seq', array('organisation_id' => $_SESSION['organisation']['id']));
-	} else {
-		$camplist = db_array('SELECT c.* FROM camps AS c, cms_usergroups_camps AS x WHERE (NOT c.deleted OR c.deleted IS NULL) AND c.organisation_id = :organisation_id AND x.camp_id = c.id AND x.cms_usergroups_id = :usergroup ORDER BY c.seq', array('usergroup' => $_SESSION['usergroup']['id'], 'organisation_id' => $_SESSION['organisation']['id']));
-	}
+	$parameters = array('organisation_id' => $_SESSION['organisation']['id']);
+	if (!$_SESSION['user']['is_admin']) $parameters['usergroup_id'] = $_SESSION['usergroup']['id'];
+	$camplist = db_array('
+		SELECT c.* 
+		FROM camps AS c' . ($_SESSION['user']['is_admin']?'':', cms_usergroups_camps AS x').'
+		WHERE (NOT c.deleted OR c.deleted IS NULL) AND c.organisation_id = :organisation_id'. ($_SESSION['user']['is_admin']?'':' AND x.camp_id = c.id AND x.cms_usergroups_id = :usergroup_id').'
+		ORDER BY c.seq', $parameters, false, true);
 	if ($short) {
 		foreach ($camplist as $c) $list[] = $c['id'];
 		return $list;
