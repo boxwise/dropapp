@@ -17,7 +17,8 @@
 		listsetting('allowmoveto', 1);
  		listsetting('allowsort',false);
  		listsetting('allowshowhide',false); 		
- 		listsetting('allowdelete',false); 		
+		listsetting('allowdelete',false); 
+		listsetting('allowedit',false);		
  		#listsetting('allowselect',array(1));
 		listsetting('search', array('firstname','lastname', 'container'));
 		listsetting('allowadd', false);
