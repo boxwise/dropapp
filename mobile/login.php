@@ -14,8 +14,7 @@ if ($row) { #e-mailaddress exists in database
 
 		if ($success) {
 			$_SESSION['user'] = $row;
-			$_SESSION['usergroup'] = db_row('SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel FROM cms_usergroups AS ug WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', array('id' => $_SESSION['user']['cms_usergroups_id']));
-			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', array('id' => $_SESSION['usergroup']['organisation_id']));
+			loadSessionData($row);
 
 			db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', array('id' => $_SESSION['user']['id']));
 			logfile('Mobile user logged in with ' . $_SERVER['HTTP_USER_AGENT']);
