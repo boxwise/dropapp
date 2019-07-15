@@ -12,7 +12,7 @@
 			{/if}
  		</div>
 		<ul class="nav navbar-nav pull-right">
-			{if isset($data['warehouse'])}
+			{if $haswarehouse}
 			<li><a href="{$settings['rootdir']}/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
 			{/if}
 	 		{if $smarty.session.user['is_admin']}
@@ -41,8 +41,8 @@
 				<ul class="dropdown-menu dropdown-menu-right">
 					<li><a href="?action=cms_profile">{$translate['cms_menu_settings']}</a></li>
 {if $smarty.session.user2}<li><a href="?action=exitloginas">{$translate['cms_menu_exitloginas']|replace:'%user%':$smarty.session.user2.naam}</a></li>{/if}
-					<li><a href="?action=logout">{$translate['cms_menu_logout']}</a></li>
 					<li><a href="http://helpme.boxwise.co">Help</a></li>
+					<li><a href="?action=logout">{$translate['cms_menu_logout']}</a></li>
 				</ul>
 			</li>
 		</ul>
