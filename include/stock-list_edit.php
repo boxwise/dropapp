@@ -25,7 +25,7 @@
 				l.camp_id = '.$_SESSION['camp']['id'].' AS visible,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventdelete,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit,
-				IF(l.visible = 0 OR ordered !=0 OR l.label = "Stockroom",True,False) AS disableifistrue,
+				IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue,
 				IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox
 			FROM 
 				(products AS p, 

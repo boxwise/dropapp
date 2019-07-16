@@ -25,7 +25,7 @@
 		listsetting('manualquery',true);
 		
 		$data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox ,
-		IF(l.visible = 0 OR ordered !=0 OR l.label = "Stockroom",True,False) AS disableifistrue  
+		IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
 		FROM '.$table.'
 			LEFT OUTER JOIN cms_users AS cu ON cu.id = stock.ordered_by
 			LEFT OUTER JOIN cms_users AS cu2 ON cu2.id = stock.picked_by
