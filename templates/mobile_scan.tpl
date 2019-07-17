@@ -1,7 +1,7 @@
 		<h2 class="page-header">Box {$box['box_id']}</h2>
 		Contains <strong>{$box['items']} {$box['product']}</strong><br />
 		{if $box['comment']}
-		<div style="color:red ">
+		<div >
 		<strong>{$box['comment']}</strong>
 		</div>
 		{/if}
