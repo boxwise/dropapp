@@ -1,10 +1,18 @@
 		<h2 class="page-header">Box {$box['box_id']}</h2>
-		Contains <strong>{$box['items']} {$box['product']}</strong><br />Move this box from <strong>{$box['location']}</strong> to:</p>
+		Contains <strong>{$box['items']} {$box['product']}</strong><br />
+		{if $box['comment']}
+		<div style="color:red ">
+		<strong>{$box['comment']}</strong>
+		</div>
+		{/if}
+		Move this box from wherever <strong>{$box['location']}</strong> to:</p>
+		
 		<div class="btn-list">
 			{foreach $locations as $value=>$location}
 				<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>
 			{/foreach}
 		</div>
+		
 {if !$data['othercamp']}
 		<hr></hr>
 		<p>I took items out of this box to the shop:</p>

@@ -1,5 +1,5 @@
 <?php
-	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :box_id',array('box_id'=>$_GET['saveamount']));
+	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product,s.comments as comment, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :box_id',array('box_id'=>$_GET['saveamount']));
 	
 	$newitems = max(0,$box['items'] - intval($_GET['items']));
 
