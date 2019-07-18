@@ -181,7 +181,7 @@ var chart2 = AmCharts.makeChart("chartdiv2", {
 {if $smarty.session.camp['id']==1}
 	There {if $data['residentscamp']==1} is {else} are {/if} currently <span class="number">{$data['residentscamp']}</span> {if $data['residentscamp']==1} person {else} people {/if} living in {$currentcamp['name']}. <span class="number">{$data['notregistered']}</span> {if $data['notregistered']==1} person lives {else} people live {/if} in this base unregistered.<br /> <span class="number">{$data['residentsoutside']}</span> {if $data['residentsoutside']==1} person lives {else} people live {/if} outside.
 {else}
-	There are currently <span class="number">{$data['residents']}</span> people living in {$currentcamp['name']}.
+	There {if $data['residents']==1} is {else} are {/if} currently <span class="number">{$data['residents']}</span> {if $data['residents']==1} person {else} people {/if} living in {$currentcamp['name']}.
 {/if}
 
 
