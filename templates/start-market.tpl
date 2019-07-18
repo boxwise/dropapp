@@ -141,15 +141,16 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 	
 	{if $smarty.session.camp['market']}
 		<h1 class="light">
-			There are currently <span class="number">{$data['residents']}</span> people living in and around {$currentcamp['name']}, <span class="number">{$data['families']}</span> families are living in <span class="number">{$data['containers']}</span> addresses.
+			There are currently <span class="number">{$data['residents']}</span> {if $data['residents']==1} person {else} people {/if} living in and around {$currentcamp['name']}.
  			{if isset($data['notregistered'])}
-  				<span class="number">{$data['notregistered']}</span> people live in this base unregistered.
+  				<span class="number">{$data['notregistered']}</span> {if $data['notregistered']==1} person lives {else} people live {/if} in this base unregistered.
   			{/if}
   			{if isset($data['residentsoutside'])}
-   				<span class="number">{$data['residentsoutside']}</span> people live outside, in <span class="number">{$data['containersoutside']}</span> locations.<br />
+   				<span class="number">{$data['residentsoutside']}</span> {if $data['residentsoutside']==1} person lives {else} people live {/if} outside.<br />
    			{/if}
-			{$data['weeklabel']} week {if $data['newpeople']}<span class="number">{$data['newpeople']}</span>{else}no{/if} new beneficiaries of the base have been registered by us.<br />
-			<span class="men">{($data['totalmen'])}</span> of our community are male (<span class="men">{$data['menperc']|round} %</span>) and <span class="women">{$data['totalwomen']}</span> are female (<span class="women">{$data['womenperc']|round}</span> %).<br />Of these people, <span class="number">{$data['children']}</span> are {$smarty.session.camp['adult_age']-1} or younger (<span class="number">{($data['childrenprcnt'])|round} %</span>).<br /><span class="number">{$data['under18']}</span> are under 18 (<span class="number">{($data['under18prcnt'])|round} %</span>).
+			{$data['weeklabel']} week {if $data['newpeople']}<span class="number">{$data['newpeople']}</span>{else}no{/if} new {if $data['newpeople']==1} beneficiary {else} beneficiaries {/if} of the base have been registered by us.<br />
+			<span class="men">{($data['totalmen'])}</span> of our community {if $data['totalmen']==1} is {else} are {/if} male (<span class="men">{$data['menperc']|round} %</span>) and <span class="women">{$data['totalwomen']}</span> {if $data['totalwomen']==1} is {else} are {/if} female (<span class="women">{$data['womenperc']|round}</span> %).
+      <br /> <span class="number">{$data['children']}</span> {if $data['children']==1}person is {else} people are {/if} {$smarty.session.camp['adult_age']-1} or younger (<span class="number">{($data['childrenprcnt'])|round} %</span>).<br /><span class="number">{$data['under18']}</span> {if $data['under18']==1} person is {else} people are {/if} under 18 (<span class="number">{($data['under18prcnt'])|round} %</span>).
 		</h1>
 	{/if}
 <hr />
