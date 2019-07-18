@@ -385,9 +385,29 @@ $(function() {
         }
     });
 
+    // Event Listener to figure out which submit button is used
+    // Related to fix of jQuery validate https://github.com/jquery-validation/jquery-validation/issues/309
+    $("button[name=__action]").click(function() {
+        var el = $(this);
+        $("#submitaction").val(el.val());
+    });
+
+    // form submit 
     $(".form").each(function() {
         var el = $(this);
+
+        // Fix for super annoying bug from jQuery validate https://github.com/jquery-validation/jquery-validation/issues/309
+        $("<input>")
+            .attr({
+                id : "submitaction",
+                type: "hidden",
+                name: "__action",
+                value: ""
+            })
+            .appendTo(el);
+
         $(".form").validate({
+            // https://jqueryvalidation.org/
             ignore: ".no-validate",
             submitHandler: function(form) {
                 $("#form-submit").prop("disabled", true);
@@ -606,13 +626,15 @@ $(function() {
 });
 
 $(window).resize(function() {
-    if (
-        $(window).height() >
-        $(".nav-aside ul:first").offset().top + $(".nav-aside").height()
-    ) {
-        $(".nav-aside").addClass("fixed");
-    } else {
-        $(".nav-aside").removeClass("fixed");
+    if ($(".nav-aside").length){
+        if (
+            $(window).height() >
+            $(".nav-aside ul:first").offset().top + $(".nav-aside").height()
+        ) {
+            $(".nav-aside").addClass("fixed");
+        } else {
+            $(".nav-aside").removeClass("fixed");
+        }
     }
 });
 
@@ -659,6 +681,12 @@ function initiateList() {
             }
 
             // toggle the action panel
+            if (selected.is(".disable-if-is-true")) {
+                parent.find(".disable-if").prop("disabled", true);
+            } else {
+                parent.find(".disable-if").prop("disabled", false);
+            }
+            
             if (
                 selected.length &&
                 !parent.find(".actions").is(".items-selected")
@@ -670,15 +698,9 @@ function initiateList() {
             ) {
                 parent.find(".actions").removeClass("items-selected");
             } else if (selected.length > 1) {
-                parent
-                    .find(".actions")
-                    .find(".one-item-only")
-                    .attr("disabled", "disabled");
-            } else if (selected.length < 2) {
-                parent
-                    .find(".actions")
-                    .find(".one-item-only")
-                    .removeAttr("disabled");
+                parent.find(".one-item-only").prop("disabled", true);
+            } else if (selected.length < 2 && parent.find(".disable-if-is-true").length === 0) {
+                parent.find(".one-item-only").prop("disabled", false);
             }
 
             if (selected.is(".item-nondeletable")) {

@@ -45,13 +45,19 @@ function db_value($query, $array = array(), $dbid = false)
 	return $row[0];
 }
 
-function db_array($query, $array = array(), $dbid = false)
+function db_array($query, $array = array(), $dbid = false, $idaskey=false)
 {
 	global $defaultdbid;
 	if (!$dbid) $dbid = $defaultdbid;
 
 	$result = db_query($query, $array, $dbid);
-	while ($row = db_fetch($result)) $resultarray[] = $row;
+	while ($row = db_fetch($result)) {
+		if($idaskey && $row['id']) { 
+			$resultarray[$row['id']] = $row;
+		} else {
+			$resultarray[] = $row;
+		}
+	}
 
 	return $resultarray;
 }

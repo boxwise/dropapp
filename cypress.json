@@ -1,0 +1,17 @@
+{
+    "env": {
+        "targetDomain": "localhost:8100",
+        "testAdmin": "admin@admin.co",
+        "testCoordinator": "coordinator@coordinator.co",
+        "testUser": "user@user.co",
+        "testExpiredUser": "expired@expired.co",
+        "testNotActivatedUser": "notactivated@notactivated.com",
+        "testDeletedUser": "deleted@deleted.co",
+        "testPwd": "browsertests",
+        "testWrongPwd": "wrongPwd",
+        "incorrectLoginNotif": "Incorrect login.",
+        "genericErrLoginNotif": "This email either does not have an active account associated with it, or access has expired. Contact your coordinator to enable your account.",
+        "successPwdChangeNotif": "Within a few minutes you will receive an e-mail with further instructions to reset your password.",
+        "orgName": "TestOrganisation"
+    }
+}

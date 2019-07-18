@@ -15,6 +15,7 @@ class ClearMinimalDb extends AbstractSeed
         $this->execute("DELETE FROM `borrow_categories`");
         $this->execute("DELETE FROM `borrow_items`");
         $this->execute("DELETE FROM `borrow_locations`");
+        $this->execute("DELETE FROM `cms_users`");
         $this->execute("DELETE FROM `camps`");
         $this->execute("DELETE FROM `cms_functions`");
         $this->execute("DELETE FROM `cms_functions_camps`");
@@ -23,7 +24,6 @@ class ClearMinimalDb extends AbstractSeed
         $this->execute("DELETE FROM `cms_usergroups_camps`");
         $this->execute("DELETE FROM `cms_usergroups_functions`");
         $this->execute("DELETE FROM `cms_usergroups_levels`");
-        $this->execute("DELETE FROM `cms_users`");
         $this->execute("DELETE FROM `genders`");
         $this->execute("DELETE FROM `history`");
         $this->execute("DELETE FROM `languages`");

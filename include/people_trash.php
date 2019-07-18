@@ -10,7 +10,7 @@
 
 		initlist();
 
-		$cmsmain->assign('title','Residents');
+		$cmsmain->assign('title','Beneficiaries');
 
 		listsetting('allowcopy', false);
 		listsetting('allowmove', false);
