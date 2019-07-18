@@ -9,7 +9,7 @@
 		$data['barcode'] = '';
 	} else {
 		if($_GET['boxid']) {
-			$box = db_row('SELECT s.*, c.id AS camp_id, c.name AS campname, CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product,s.comments as comment, l.label AS location FROM stock AS s
+			$box = db_row('SELECT s.*, c.id AS camp_id, c.name AS campname, CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product, l.label AS location FROM stock AS s
 		LEFT OUTER JOIN products AS p ON p.id = s.product_id
 		LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
 		LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
@@ -19,7 +19,7 @@
 		WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id',array('id'=>$_GET['boxid']));
 		
 		} else {
-			$box = db_row('SELECT s.*, c.id AS camp_id, c.name AS campname, CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product,s.comments as comment, l.label AS location FROM stock AS s
+			$box = db_row('SELECT s.*, c.id AS camp_id, c.name AS campname, CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product, l.label AS location FROM stock AS s
 		LEFT OUTER JOIN products AS p ON p.id = s.product_id
 		LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
 		LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id

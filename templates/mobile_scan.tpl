@@ -1,8 +1,8 @@
 		<h2 class="page-header">Box {$box['box_id']}</h2>
 		Contains <strong>{$box['items']} {$box['product']}</strong><br />
-		{if $box['comment']}
-		<div >
-		<strong>{$box['comment']}</strong>
+		{if {$box['comments']}}
+		<div color:blue>
+		<strong>Box-comment:{$box['comments']}</strong>
 		</div>
 		{/if}
 		Move this box from wherever <strong>{$box['location']}</strong> to:</p>

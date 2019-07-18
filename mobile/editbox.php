@@ -1,5 +1,5 @@
 <?php
-	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label)AS product,s.comments as comment, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id',array('id'=>$_GET['editbox']));
+	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label)AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id',array('id'=>$_GET['editbox']));
 
 	if(!is_null($box['deleted']) && $box['deleted']!='0000-00-00 00:00:00') {
 		unset($box['location_id']);
