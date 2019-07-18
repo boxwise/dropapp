@@ -1,29 +1,30 @@
-		<h2 class="page-header">Box {$box['box_id']}</h2>
-		
-		<div class='container-fluid'>
-		<div class = 'row'>
-		<div class = 'col-xs-3 text-center' style='font-size:50px; padding-left:0; padding-right:0'>
-		<strong>{$box['items']}</strong><br />
+<h2 class="page-header">Box {$box['box_id']}</h2>
+	<div id ="box-info" class="container-fluid">
+		<div id="box-info-content" class = "row">
+				<div id="box-info-product" class = "col-xs-12">
+					<strong>{$box['items']}x {$box['product2']}</strong>
+				</div>
+				<div id="box-info-gender" class = "col-xs-6">
+					<strong>{$box['gender']}</strong>
+				</div>
+				<div id="box-info-size" class = "col-xs-6">
+					<strong>{$box['size']}</strong>
+				</div>
+
 		</div>
-		<div class = 'col-xs-9' style='padding-left:0'>
-		{$box['product']}
-		</div>
-		</div>
-		<div class='row'>
-		<div class='col-xs-3' style='padding-left:0; padding-right:0'>
-		</div>
-		<div class = 'col-xs-9' style='padding-left:0; padding-right:0'>
-		{if {$box['comments']}}
-		Comment:{$box['comments']}
+		{if $box['comments']}
+			<div id="box-info-comment" class="row">
+					{$box['comments']}
+			</div>
 		{/if}
 		</div>
-		</div>
-		Move this box from wherever <strong>{$box['location']}</strong> to:</p>
-		<div class="btn-list">
-			{foreach $locations as $value=>$location}
-				<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>
-			{/foreach}
-		</div>
+	</div>
+	Move this box from wherever <strong>{$box['location']}</strong> to:</p>
+	<div class="btn-list">
+		{foreach $locations as $value=>$location}
+			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>
+		{/foreach}
+	</div>
 		
 {if !$data['othercamp']}
 		<hr></hr>
