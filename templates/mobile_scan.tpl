@@ -1,12 +1,24 @@
 		<h2 class="page-header">Box {$box['box_id']}</h2>
-		Contains <strong>{$box['items']} {$box['product']}</strong><br />
-		{if {$box['comments']}}
-		<div color:blue>
-		<strong>Box-comment:{$box['comments']}</strong>
-		</div>
-		{/if}
-		Move this box from wherever <strong>{$box['location']}</strong> to:</p>
 		
+		<div class='container-fluid'>
+		<div class = 'row'>
+		<div class = 'col-xs-3 text-center' style='font-size:50px; padding-left:0; padding-right:0'>
+		<strong>{$box['items']}</strong><br />
+		</div>
+		<div class = 'col-xs-9' style='padding-left:0'>
+		{$box['product']}
+		</div>
+		</div>
+		<div class='row'>
+		<div class='col-xs-3' style='padding-left:0; padding-right:0'>
+		</div>
+		<div class = 'col-xs-9' style='padding-left:0; padding-right:0'>
+		{if {$box['comments']}}
+		Comment:{$box['comments']}
+		{/if}
+		</div>
+		</div>
+		Move this box from wherever <strong>{$box['location']}</strong> to:</p>
 		<div class="btn-list">
 			{foreach $locations as $value=>$location}
 				<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>
