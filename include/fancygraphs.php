@@ -45,10 +45,6 @@ FROM people AS p WHERE camp_id = :camp_id AND UNIX_TIMESTAMP(date_of_birth) != 0
 		$data['totalwomen'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND gender = "F" AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
 		$data['womenperc'] = $data['totalwomen']/$data['residents']*100;
 	
-		$data['containers'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
-		$data['containerscamp'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = :camp_id AND LEFT(container,2) != "PK"',array('camp_id'=>$_SESSION['camp']['id']));
-		$data['containersoutside'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = :camp_id AND LEFT(container,2) = "PK"',array('camp_id'=>$_SESSION['camp']['id']));
-
 	$data['adults'] = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult_age'],array('camp_id'=>$_SESSION['camp']['id']));
 	$data['children'] = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult_age'],array('camp_id'=>$_SESSION['camp']['id']));
 	$data['under18'] = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND visible AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 < 18',array('camp_id'=>$_SESSION['camp']['id']));
