@@ -24,10 +24,6 @@ if (isset($_SESSION['camp']['id'])) {
 		$data['menperc'] = $data['womenperc'] = $data['childrenprcnt'] = $data['under18prcnt'] = 0;
 	}
 
-	$data['containers'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id', array('camp_id' => $_SESSION['camp']['id']));
-	$data['containerscamp'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE NOT deleted AND visible AND camp_id = :camp_id AND LEFT(container,2) != "PK"', array('camp_id' => $_SESSION['camp']['id']));
-	$data['containersoutside'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE NOT deleted AND visible AND camp_id = :camp_id AND LEFT(container,2) = "PK"', array('camp_id' => $_SESSION['camp']['id']));
-
 	$data['adults'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND camp_id = :camp_id AND NOT deleted AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= ' . $_SESSION['camp']['adult_age'], array('camp_id' => $_SESSION['camp']['id']));
 	$data['sold'] = db_value('SELECT SUM(count) FROM transactions AS t, people AS p WHERE t.people_id = p.id AND p.camp_id = :camp_id', array('camp_id' => $_SESSION['camp']['id']));
 	$data['marketdays'] = db_value('SELECT COUNT(DISTINCT(DATE_FORMAT(transaction_date,"%d-%m-%Y"))) FROM transactions AS t, people AS p WHERE t.people_id = p.id AND p.camp_id = :camp_id', array('camp_id' => $_SESSION['camp']['id']));
