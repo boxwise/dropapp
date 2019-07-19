@@ -82,6 +82,8 @@
 		#$formdata = $formbuttons = '';
 		$side['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', array('id'=>$id));
 
+		$side['allowdrops'] = allowGiveDrops();
+
 		$side['name'] = db_row('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = '. $sideid);
 
 		$side['children'] = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) < '.$_SESSION['camp']['adult_age'].' AND visible AND NOT deleted',array('id'=>$sideid));
@@ -107,7 +109,7 @@
 
 		$side['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1',array('id'=>$sideid)),true);
 
-
+		$ajaxaside->assign('currency',$_SESSION['camp']['currencyname']);
 		$ajaxaside->assign('data',$side);
 		$htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
 
