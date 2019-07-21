@@ -20,9 +20,9 @@
 		listsetting('width', 12);
 		listsetting('allowsort', true);
 
-		addbutton('sendlogindata',$translate['cms_users_sendlogin'],array('icon'=>'fa-user','confirm'=>true));
+		addbutton('sendlogindata',$translate['cms_users_sendlogin'],array('icon'=>'fa-user','confirm'=>true,'disableif'=>true));
 		if($_SESSION['user']['is_admin'] && !$_SESSION['user2']) {
-			addbutton('loginasuser',$translate['cms_users_loginas'],array('icon'=>'fa-users','confirm'=>true,'oneitemonly'=>true));
+			addbutton('loginasuser',$translate['cms_users_loginas'],array('icon'=>'fa-users','confirm'=>true,'oneitemonly'=>true,'disableif'=>true));
 		}
 
 		$cmsmain->assign('data',$data);
