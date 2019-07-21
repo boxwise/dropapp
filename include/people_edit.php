@@ -14,7 +14,7 @@
 			verify_deletedrecord($table,$_POST['id']);
 
 		}
- 		$savekeys = array('firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield');
+ 		$savekeys = array('parent_id','firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield');
 		 if($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) {
 			$savekeys[] = 'laundryblock';
 			$savekeys[] = 'laundrycomment';
@@ -22,14 +22,15 @@
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
-		if($_POST['id'] && $oldcontainer != $_POST['container']) {
-			if($_POST['parent_id']) {
-				$parentcontainer = db_value('SELECT container FROM people WHERE parent_id = :id',array('id'=>$_POST['id']));
-				if($parentcontainer != $_POST['container']) db_query('UPDATE people SET parent_id = 0 WHERE id = :id', array('id'=>$_POST['id']));
-			} else {
-				db_query('UPDATE people SET container = :container WHERE parent_id = :id', array('id'=>$_POST['id'], 'container'=>$_POST['container']));
-			}
-		}
+		// Set parent_id =0 if a family does not have the same container ID
+		// if($_POST['id'] && $oldcontainer != $_POST['container']) {
+		// 	if($_POST['parent_id']) {
+		// 		$parentcontainer = db_value('SELECT container FROM people WHERE parent_id = :id',array('id'=>$_POST['id']));
+		// 		if($parentcontainer != $_POST['container']) db_query('UPDATE people SET parent_id = 0 WHERE id = :id', array('id'=>$_POST['id']));
+		// 	} else {
+		// 		db_query('UPDATE people SET container = :container WHERE parent_id = :id', array('id'=>$_POST['id'], 'container'=>$_POST['container']));
+		// 	}
+		// }
 		
 		$postid = ($_POST['id']?$_POST['id']:$id);
 		if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
@@ -47,8 +48,12 @@
 			unlink($settings['upload_dir'].'/people/'.$postid.'.jpg');
 		}
 		
+		$message=$_POST['firstname']. ($_POST['firstname']? ' ' . $_POST['lastname']:'') . ' was added.<br>' . $_SESSION['camp']['familyidentifier'] . ' is '. $_POST['container'] . '.';
+		
+		// routing after submit
 		if($_POST['__action']=='submitandedit') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$handler->id);
-		redirect('?action='.$_POST['_origin']);
+		elseif($_POST['__action']=='submitandnew') redirect('?action='.$action.'&origin='.$_POST['_origin'].'&message='.$message);
+		else redirect('?action='.$_POST['_origin'].($_POST['id']?'':'&message='.$message));
 	}
 
 	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
@@ -67,24 +72,6 @@
 		$cmsmain->assign('title', 'Add a new beneficiary');
 	}
 	
-	$tabs['people'] = 'Personal';
-	if ($_SESSION['camp']['bicycle'] && $_SESSION['camp']['workshop']) {
-		$tabs['bicycle'] = 'Bicycle & Workshop';
-	} elseif($_SESSION['camp']['bicycle']) {
-		$tabs['bicycle'] = 'Bicycle';
-	} elseif($_SESSION['camp']['workshop']) {
-		$tabs['bicycle'] = 'Workshop';
-	} elseif($_SESSION['camp']['idcard']) {
-		$tabs['bicycle'] = 'ID Card';
-	}
-	$tabs['transaction'] = 'Transactions';
-	
-	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $S_SESSION['camps']['laundry']) $tabs['laundry'] = 'Laundry';
-
-	$tabs['signature'] = 'Privacy declaration';
-	
-	$cmsmain->assign('tabs',$tabs);
-
 	$data['allowdrops'] = allowGiveDrops();
 
 	if($id){
@@ -94,6 +81,8 @@
 
 		#$formdata = $formbuttons = '';
 		$side['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', array('id'=>$id));
+
+		$side['allowdrops'] = allowGiveDrops();
 
 		$side['name'] = db_row('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = '. $sideid);
 
@@ -120,7 +109,7 @@
 
 		$side['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1',array('id'=>$sideid)),true);
 
-
+		$ajaxaside->assign('currency',$_SESSION['camp']['currencyname']);
 		$ajaxaside->assign('data',$side);
 		$htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
 
@@ -128,14 +117,17 @@
 
 	}
 
-
 	addfield('line','','',array('aside'=>true));
 
-
 	addfield('hidden','camp_id','camp_id');
-	addfield('hidden','parent_id','parent_id');
-	addfield('text','Lastname','lastname',array('tab'=>'people'));
+	addfield('select','Familyhead','parent_id',array('multiple'=>false, 'tab'=>'people', 'onchange'=>'selectFamilyhead("parent_id","container")', 'query'=>'
+		SELECT p.id AS value, p.container AS value2, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled 
+		FROM people AS p 
+		WHERE parent_id = 0 AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
+		GROUP BY p.id 
+		ORDER BY label'));
 	addfield('text','Firstname','firstname',array('tab'=>'people','required'=>true));
+	addfield('text','Lastname','lastname',array('tab'=>'people'));
 	addfield('text',$_SESSION['camp']['familyidentifier'],'container',array('tab'=>'people','required'=>true,'onchange'=>'capitalize("container")'));
 	addfield('select','Gender','gender',array('tab'=>'people',
 	'options'=>array(array('value'=>'M', 'label'=>'Male'), array('value'=>'F', 'label'=>'Female'))));
@@ -243,9 +235,29 @@
 	}
 	addfield('created','Created','created',array('aside'=>true));
 
-
 	if ($id) addformbutton('submitandedit',$translate['cms_form_save']);
+	else addformbutton('submitandnew',"Save and new");
 
+
+	// Tabs
+	$tabs['people'] = 'Personal';
+	if ($_SESSION['camp']['bicycle'] && $_SESSION['camp']['workshop']) {
+		$tabs['bicycle'] = 'Bicycle & Workshop';
+	} elseif($_SESSION['camp']['bicycle']) {
+		$tabs['bicycle'] = 'Bicycle';
+	} elseif($_SESSION['camp']['workshop']) {
+		$tabs['bicycle'] = 'Workshop';
+	} elseif($_SESSION['camp']['idcard']) {
+		$tabs['bicycle'] = 'ID Card';
+	}
+		
+	if(($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $S_SESSION['camps']['laundry']) $tabs['laundry'] = 'Laundry';
+
+	if(!$data['parent_id'] && $data['id']) $tabs['transaction']='Transactions';
+
+	$tabs['signature'] = 'Privacy declaration';
+
+	$cmsmain->assign('tabs',$tabs);
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);

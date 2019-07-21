@@ -24,7 +24,9 @@
 
 		listsetting('manualquery',true);
 		
-		$data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox FROM '.$table.'
+		$data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox ,
+		IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
+		FROM '.$table.'
 			LEFT OUTER JOIN cms_users AS cu ON cu.id = stock.ordered_by
 			LEFT OUTER JOIN cms_users AS cu2 ON cu2.id = stock.picked_by
 			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
@@ -75,7 +77,7 @@
 		$locations = db_simplearray('SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
 		addbutton('movebox','Move',array('icon'=>'fa-truck', 'options'=>$locations));
 		addbutton('qr','Make label',array('icon'=>'fa-print'));
-		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart'));
+		addbutton('order','Order from warehouse',array('icon'=>'fa-shopping-cart','disableif'=>true));
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
 		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));

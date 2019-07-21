@@ -1,14 +1,14 @@
 <div class="col-md-8 col-sm-12 col-md-offset-2 signature-text">
 	<ul class="nav nav-tabs">
-		<li><a href="#languagetab_en" data-toggle="tab">English</a></li>
+		<li class = "active"><a href="#languagetab_en" data-toggle="tab">English</a></li>
 		<li><a href="#languagetab_fr" data-toggle="tab">Français</a></li>
-		<li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
+		<!-- <li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
 		<li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li>
-		<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li>
+		<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li> -->
 	</ul>
 
 	<div class="tab-content">
-		<div class="tab-pane fade" id="languagetab_en">
+		<div class="tab-pane fade in active" id="languagetab_en">
 			<h3>Information about new privacy policies</h3><br />
 			<p>{$currentOrg['label']} wish to reassert you that we are protecting your private information, with reference to the new privacy policies that applies to EU/EES countries.</p>
 			<p>For refugees that receive aid/assistance/ from {$currentOrg['label']} (clothes/shoes/food/other assistance or activities), the following information is retained:</p>

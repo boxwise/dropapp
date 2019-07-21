@@ -11,7 +11,7 @@
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('functions','cms_functions_camps','camps_id','cms_functions_id');
 
-		getcampdata($_SESSION['camp']['id']);
+		$_SESSION['camp'] = getcampdata($_SESSION['camp']['id']);
 		
 		redirect('?action='.$_POST['_origin']);
 	}
@@ -67,7 +67,7 @@
 
 	addfield('number', 'Deactivate inactive beneficiaries', 'delete_inactive_users', array('tab'=>'beneficiaries','width'=>2,'tooltip'=>'Beneficiaries without activity in Boxwise will be deactivated. Deactivated beneficiaries will remain visible in the Deactivated tab in the Beneficiaries page.'));
 	addfield('number', 'Days to keep deactivated persons', 'daystokeepdeletedpersons', array('tab'=>'beneficiaries','width'=>2,'tooltip'=>'Deactivate beneficiaries will remain visible in the Deactivated tab in the beneficiaries page and will be completely deleted after a while. Here you can define how long they will remain in the Deactivated list.'));
-	addfield('number', 'Adult age', 'adult_age', array('tab'=>'beneficiaries','width'=>2,'tooltip'=>'For some functions we distinct between children and adults. Fill in here the lowest age considered adult for this camp.'));
+	addfield('number', 'Adult age', 'adult_age', array('tab'=>'beneficiaries','width'=>2,'tooltip'=>'For some functions we distinct between children and adults. Fill in here the lowest age considered adult for this base.'));
 	addfield('text', 'Location identifier for beneficiaries', 'familyidentifier', array('tab'=>'beneficiaries','tooltip'=>'beneficiariesly this refers to the kind of housing that people have: tent, container, house or something else.'));
 	addfield('checkbox', 'Do you give out beneficiaries ID-cards?', 'idcard', array('tab'=>'beneficiaries'));
 
