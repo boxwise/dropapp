@@ -37,6 +37,11 @@
 
 				$currentdrops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :people_id',array('people_id'=>$person));
 				
+				if($_SESSION['camp']['resettokens']){
+					db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>"Reset of remaining tokens before new cycle",'drops'=>(-1) * $currentdrops,'user_id'=>$_SESSION['user']['id']));
+					$currentdrops = 0;
+				}
+
 				if(!$volunteers) {
 					$max = $adults * $_SESSION['camp']['dropcapadult'] + $children * $_SESSION['camp']['dropcapchild'];
 					$cap = -($currentdrops+$drops)+$max;
