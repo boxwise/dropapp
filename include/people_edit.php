@@ -189,11 +189,11 @@
 		$data['log'] = join("\n",$log);
 		addfield('textarea','Log','log',array('tab'=>'laundry','readonly'=>true));
 	}
-	addfield('checkbox','Form signed','approvalsigned', array('tab'=>'signature','hidden'=>true));
+	
 	addfield('date','Date Signature','date_of_signature', array('tab'=>'signature','hidden'=>true));
 	addfield('signature','Signature','signaturefield',array('tab'=>'signature'));
-	dump($side["date_of_signature"]);
-
+	addfield('checkbox','Form signed','approvalsigned', array('tab'=>'signature','hidden'=>true));
+	
 	if($data['parent_id'] == 0){
 		if($id){
 			$table = 'transactions';
