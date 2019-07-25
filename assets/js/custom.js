@@ -73,6 +73,29 @@ $(function() {
             );
         }
     });
+
+    $("#sig").signature({
+        change: function(event, ui) {
+            var date = new Date();
+            $("#field_date_of_signature").val((new Date()).toISOString().slice(0, 19).replace('T', ' '));
+        }
+        
+    });
+/*
+    $(document).ready(function() {
+        if ($("#field_date_of_birth_datepicker").length) {
+            var DateValue = $("#field_date_of_birth").val();
+            var date = new Date();
+            $("#field_date_of_birth_datepicker")
+                .data("DateTimePicker")
+                .maxDate(date.toLocaleDateString('en-GB'))
+                .viewMode('years');
+            $("#field_date_of_birth").val(DateValue);
+        }
+    });
+ */   
+
+
     $("#sig").signature({
         color: "#0000ff",
         guideline: true,

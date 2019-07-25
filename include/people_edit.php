@@ -14,7 +14,7 @@
 			verify_deletedrecord($table,$_POST['id']);
 
 		}
- 		$savekeys = array('parent_id','firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield');
+ 		$savekeys = array('parent_id','firstname','lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield','date_of_signature');
 		 if($_SESSION['usergroup']['allow_laundry_block']||$_SESSION['user']['is_admin']) {
 			$savekeys[] = 'laundryblock';
 			$savekeys[] = 'laundrycomment';
@@ -81,7 +81,8 @@
 
 		#$formdata = $formbuttons = '';
 		$side['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', array('id'=>$id));
-
+		$side['date_of_signature'] = db_value('SELECT date_of_signature FROM people WHERE id = :id', array('id'=>$id));
+		dump($side['date_of_signature']);
 		$side['allowdrops'] = allowGiveDrops();
 
 		$side['name'] = db_row('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = '. $sideid);
@@ -189,9 +190,11 @@
 		$data['log'] = join("\n",$log);
 		addfield('textarea','Log','log',array('tab'=>'laundry','readonly'=>true));
 	}
-	
+	addfield('checkbox','Form signed','approvalsigned', array('tab'=>'signature','hidden'=>true));
+	addfield('date','Date Signature','date_of_signature', array('tab'=>'signature','hidden'=>true));
 	addfield('signature','Signature','signaturefield',array('tab'=>'signature'));
- 	addfield('checkbox','Form signed','approvalsigned', array('tab'=>'signature','hidden'=>true));
+	dump($side["approvalsigned"]);
+	dump($side["date_of_signature"]);
 
 	if($data['parent_id'] == 0){
 		if($id){
