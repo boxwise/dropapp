@@ -38,7 +38,7 @@
 				$currentdrops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :people_id',array('people_id'=>$person));
 				
 				if($_SESSION['camp']['resettokens']){
-					db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>"Reset of remaining tokens before new cycle",'drops'=>(-1) * $currentdrops,'user_id'=>$_SESSION['user']['id']));
+					db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>"Organisation: ".$_SESSION['organisation']['label'].", camp: " .$_SESSION['camp']['name'].", description: Reset of remaining tokens (cycle description - " . $_POST['description'] . ")",'drops'=>(-1) * $currentdrops,'user_id'=>$_SESSION['user']['id']));
 					$currentdrops = 0;
 				}
 
@@ -52,7 +52,7 @@
 					
 				}
 
-				db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>$_POST['description'],'drops'=>$drops,'user_id'=>$_SESSION['user']['id']));
+				db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)',array('people_id'=>$person,'description'=>"Organisation: ".$_SESSION['organisation']['label'].", camp: " .$_SESSION['camp']['name'].", description: ".$_POST['description'],'drops'=>$drops,'user_id'=>$_SESSION['user']['id']));
 
 			}
 		}
