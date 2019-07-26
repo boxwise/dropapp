@@ -1,6 +1,6 @@
 
 <div class="col-md-8 col-sm-12 col-md-offset-2 signature-text">
-	{if {$currentOrg['label']}=='IHA'}<div id="IHA-tab">
+	{if {$currentOrg['label']}=='IHA'}<div id="IHA">
 			<h3> Privacy declaration of IHA </h3><br />
 			<p>IHA collects personal data needed for you to participate in our distributions and activities. This includes:</p>
 			<ul>
