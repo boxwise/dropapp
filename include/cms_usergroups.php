@@ -11,7 +11,7 @@
 
 		$cmsmain->assign('title','User groups');
 		listsetting('search', array('g.label'));
-
+		
 		$data = getlistdata('
 			SELECT g.*, 
 				IF(
@@ -30,11 +30,22 @@
 			WHERE (NOT g.deleted OR g.deleted IS NULL) AND g.organisation_id = '.$_SESSION['organisation']['id'].'
 				'.(!$_SESSION['user']['is_admin']?' AND l.level < '.intval($_SESSION['usergroup']['userlevel']):'').'
 			GROUP BY g.id');
+			
+		$num_camps=db_value('
+		SELECT 
+			COUNT(c.name)
+		FROM cms_usergroups_camps AS x
+		INNER JOIN cms_usergroups AS g ON x.cms_usergroups_id = g.id
+		INNER JOIN cms_users AS us ON (us.cms_usergroups_id = g.id) OR us.id = 1
+		INNER JOIN camps as c ON c.id = x.camp_id 
+		WHERE us.id = '.$_SESSION['user']['id'].' ');
+		
 
 		addcolumn('text','Name','label');
 		addcolumn('text','Level','userlevel');
-		addcolumn('text','Bases','camps');
-
+		if ($num_camps>1 OR $_SESSION['user']['is_admin']){
+		addcolumn('text','Bases','camps');}
+		
 		listsetting('allowsort',true);
 		listsetting('add', 'Add a User Group');
 
