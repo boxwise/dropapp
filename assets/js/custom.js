@@ -18,6 +18,11 @@ $(document).ready(function() {
         // Save cart
         function saveCart() {
             sessionStorage.setItem('shoppingCart', JSON.stringify(cart));
+            cartValue = 0
+            for(var i in cart) {
+                cartValue = cartValue + cart[i].price * cart[i].count
+            }
+            sessionStorage.setItem('cartValue', cartValue);
         }
         
           // Load cart
@@ -80,6 +85,16 @@ $(document).ready(function() {
           }
           saveCart();
         }
+
+        // Update quantity of one product in cart
+        obj.updateItemQuantityInCart = function(id, newQuantity) {
+            for(var item in cart) {
+                if(cart[item].id === id) {
+                    cart[item].count = newQuantity;
+                }
+            }
+            saveCart();
+          }
       
         // Clear cart
         obj.clearCart = function() {
@@ -137,19 +152,16 @@ $(document).ready(function() {
 
     function renderCart(){
         $("#shopping_cart").find("tr:gt(0)").remove();
-        var sum = 0
         cart.forEach((item) => {
             $('#shopping_cart')
               .append("<tr class='shoppingCartRow'><td>"
                   + item.name +'</td><td>'
-                  + item.count +'</td><td>'
+                  + "<input type='number' step='1' min='1' productId='"+item.id+"' class='changeQuantity' value='"+ item.count +"'></input></td><td>"
                   + item.price +'</td><td>'
                   + item.count * item.price +'</td><td>'
                   +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')>Delete</button></td></tr>");
-            sum = sum + item.count * item.price;
         });
-        debugger;
-        $('#cartWorth')[0].innerText = sum;
+        $('#cartWorth')[0].innerText = sessionStorage.getItem('cartValue');
     }
 
     $("#add-to-cart-button").click(function(e) {
@@ -164,11 +176,21 @@ $(document).ready(function() {
         renderCart();
     });
 
-    $(document).on("click",'.deleteFromCart', function(event){
+    $(document).on("click",'.deleteFromCart', function(e){
         var productId = event.target.getAttribute('productId');
         shoppingCart.removeItemFromCartAll(productId);
         renderCart();
     });
+
+    $(document).on("change",'.changeQuantity', function(e){
+        e.preventDefault();
+        var productId = event.target.getAttribute('productId');
+        var newQuantity = event.target.value;
+        shoppingCart.updateItemQuantityInCart(productId, newQuantity);
+        renderCart();
+        $('#cartWorth')[0].innerText = sessionStorage.getItem('cartValue');
+    });
+    
 });
 
 $(document).ready(function() {
@@ -542,10 +564,14 @@ function getProductValue(field) {
     }
 }
 function calcCosts(field) {
+    debugger;
     amount = $("#field_" + field).val() ? $("#field_" + field).val() : 1;
     productvalue = $("#ajax-aside").data("productValue");
     dropcredit = $("#dropcredit").data("dropCredit");
     totalprice = amount * productvalue;
+    if (Number.isNaN(totalprice)) {
+        totalprice = 0;
+    }
     $("#productvalue").text(totalprice);
     $("#product_id_selected").removeClass("hidden");
 
