@@ -112,7 +112,7 @@
 		
 		// Shopping cart
 		addfield('title','Shopping cart');
-		addfield('shopping_cart','', 'purch', array('width'=>10, 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'drops3'=>ucwords($_SESSION['camp']['currencyname']).' together', 'delete'=>'Delete')));
+		addfield('shopping_cart','', 'purch', array('width'=>15, 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'drops3'=>ucwords($_SESSION['camp']['currencyname']).' together', 'delete'=>'Delete')));
 
 		$table = 'transactions';
 		// addfield('title','Today\'s Purchases');

@@ -839,6 +839,9 @@ tr.level-10 td:first-child{
 .list-tree .level-0 {
 	font-weight: bold;
 }
+.shoppingCartRow{
+	text-align: center; 
+}
 
 /*-------------- controls ---------------------*/
 
