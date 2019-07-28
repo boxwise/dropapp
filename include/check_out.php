@@ -53,6 +53,7 @@
 		addfield('select','Family/Beneficiary','people_id',array('onchange'=>'selectFamily("people_id",false)', 'required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1'));
 		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
 		addfield('number', 'Number', 'count', array('onchange'=>"calcCosts('count')", 'onkeyup'=>"calcCosts('count')", 'required'=>true,'width'=>2));
+		addfield('custom','','<button id="add-to-cart-button" type="button" class="btn btn-success">Add to cart</button>');
 		#addfield('text','Note','description');
 		addfield('line');
 
@@ -109,10 +110,14 @@
 		// This can be a warning that is given based on certain shopping actions in the past.
 // 		$data['shoeswarning'] = db_value('SELECT COUNT(id) FROM transactions WHERE people_id = :id AND product_id IN (63,709) AND transaction_date >= "2017-11-13 00:00"', array('id'=>$data['people_id']));
 		
+		// Shopping cart
+		addfield('title','Shopping cart');
+		addfield('shopping_cart','', 'purch', array('width'=>10, 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']))));
+
 		$table = 'transactions';
-		addfield('title','Today\'s Purchases');
-		addfield('list','','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 AND DATE_FORMAT(t.transaction_date, "%Y-%m-%d") = CURDATE() ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'tdate'=>'Date'),
-			'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'check_out', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
+		// addfield('title','Today\'s Purchases');
+		// addfield('list','','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 AND DATE_FORMAT(t.transaction_date, "%Y-%m-%d") = CURDATE() ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'tdate'=>'Date'),
+		// 	'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'check_out', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
 
 		$ajaxform->assign('data',$data);
 		$ajaxform->assign('formelements',$formdata);
