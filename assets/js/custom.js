@@ -18,20 +18,6 @@ $(document).ready(function() {
         // Save cart
         function saveCart() {
             sessionStorage.setItem('shoppingCart', JSON.stringify(cart));
-            renderCart();
-        }
-
-        function renderCart(){
-            $("#shopping_cart").find("tr:gt(0)").remove();
-            cart.forEach((item) => {
-              $('#shopping_cart')
-                  .append("<tr class='shoppingCartRow'><td>"
-                      + item.name +'</td><td>'
-                      + item.count +'</td><td>'
-                      + item.price +'</td><td>'
-                      + item.count * item.price +'</td><td>'
-                      +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')>Delete</button></td></tr>");
-            });
         }
         
           // Load cart
@@ -52,12 +38,12 @@ $(document).ready(function() {
         obj.addItemToCart = function(id, name, price, count) {
           for(var item in cart) {
             if(cart[item].name === name) {
-              cart[item].count ++;
-              saveCart();
-              return;
+                cart[item].count = cart[item].count + count ;
+                saveCart();
+                return;
             }
           }
-          var item = new Item(id, name, price, count);
+          var item = new Item(id, name, count, price);
           cart.push(item);
           saveCart();
         }
@@ -149,20 +135,39 @@ $(document).ready(function() {
         return obj;
     })();
 
+    function renderCart(){
+        $("#shopping_cart").find("tr:gt(0)").remove();
+        var sum = 0
+        cart.forEach((item) => {
+            $('#shopping_cart')
+              .append("<tr class='shoppingCartRow'><td>"
+                  + item.name +'</td><td>'
+                  + item.count +'</td><td>'
+                  + item.price +'</td><td>'
+                  + item.count * item.price +'</td><td>'
+                  +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')>Delete</button></td></tr>");
+            sum = sum + item.count * item.price;
+        });
+        debugger;
+        $('#cartWorth')[0].innerText = sum;
+    }
+
     $("#add-to-cart-button").click(function(e) {
         e.preventDefault();
         var availableTokens = $("#dropcredit").data("dropCredit");
         var count = $(this).closest("form").find("input[name='count']").val();
         var productId = $("#field_product_id").val();
         var productName = $("#select2-chosen-2")[0].innerText;
-        var productvalue = $("#ajax-aside").data("productValue");
-        var totalprice = count * productvalue;
-        shoppingCart.addItemToCart(productId, productName, count, productvalue);
+        var price = $("#ajax-aside").data("productValue");
+        var totalprice = count * price;
+        shoppingCart.addItemToCart(productId, productName, parseInt(price), parseInt(count));
+        renderCart();
     });
 
     $(document).on("click",'.deleteFromCart', function(event){
         var productId = event.target.getAttribute('productId');
         shoppingCart.removeItemFromCartAll(productId);
+        renderCart();
     });
 });
 
