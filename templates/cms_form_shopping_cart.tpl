@@ -3,9 +3,8 @@
     <thead>
         <tr>
         {foreach $element['columns'] as $key=>$column}
-            <th {if $column['width']} width="{$column['width']}{/if}" data-rowname="{$key}">{$column}</th>
+            <th {if $column['width']} width="{$column['width']}{/if}" data-rowname="{$key}" class="shoppingCartRow">{$column}</th>
         {/foreach}
-            <th width="50" data-rowname="Delete">Delete</th>
         </tr>
     </thead>
     </table>
