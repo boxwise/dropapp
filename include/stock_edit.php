@@ -39,7 +39,7 @@
 	$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id',array('id'=>$_GET['created_id']));
 	$smarty->assign('box',$box);
 	$htmlaside = $smarty->fetch('stock_confirm_new.tpl');
-	addfield('html', 'Box created', $htmlaside);
+	addfield('html', 'Confirmation', $htmlaside);
 
 	}
 
