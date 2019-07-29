@@ -157,11 +157,19 @@ $(document).ready(function() {
               .append("<tr class='shoppingCartRow'><td>"
                   + item.name +'</td><td>'
                   + "<input type='number' step='1' min='1' productId='"+item.id+"' class='changeQuantity' value='"+ item.count +"'></input></td><td>"
-                  + item.price +'</td><td>'
+                  + item.price +"</td><td id='totalSum_" + item.id +"'>"
                   + item.count * item.price +'</td><td>'
                   +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')>Delete</button></td></tr>");
         });
         $('#cartWorth')[0].innerText = sessionStorage.getItem('cartValue');
+    }
+
+    function updatePriceInRow(){
+        cart.forEach((item) => {
+            var id = "totalSum_" + item.id;
+            var totalPriceCell = $("#"+id)[0];
+            totalPriceCell.innerText = item.price * item.count;
+        });
     }
 
     $("#add-to-cart-button").click(function(e) {
@@ -187,7 +195,7 @@ $(document).ready(function() {
         var productId = event.target.getAttribute('productId');
         var newQuantity = event.target.value;
         shoppingCart.updateItemQuantityInCart(productId, newQuantity);
-        renderCart();
+        updatePriceInRow();
         $('#cartWorth')[0].innerText = sessionStorage.getItem('cartValue');
     });
     
