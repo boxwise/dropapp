@@ -104,6 +104,9 @@ p#familyname{
 	padding-top: 10px;
 	color: #000;
 }
+#selectedProductPrice{
+	margin-top: -30px;
+}
 #productvalue{
 	font-weight: bold;
 	margin-left: 5px;
