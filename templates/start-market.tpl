@@ -141,29 +141,29 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 	
 	{if $smarty.session.camp['market']}
 		<h1 class="light">
-			There {if $data['residents']==1} is {else} are {/if} currently <span class="number">{$data['residents']}</span> {if $data['residents']==1} person {else} people {/if} living in and around {$currentcamp['name']}.
+			There {if $data['residents']==1} is {else} are {/if} currently <span class="number">{$data['residents']}</span> {if $data['residents']==1} person {else} people {/if} living in <span class="number">{$data['families']}</span> {if $data['families']==1} familiy {else} families {/if} in {$currentcamp['name']}.
+      <span class="men">{($data['totalmen'])}</span> {if $data['totalmen']==1} is {else} are {/if} male (<span class="men">{$data['menperc']|round} %</span>) and <span class="women">{$data['totalwomen']}</span> {if $data['totalwomen']==1} is {else} are {/if} female (<span class="women">{$data['womenperc']|round}</span> %).
+      <span class="number">{$data['children']}</span> {if $data['children']==1}person is {else} people are {/if} {$smarty.session.camp['adult_age']-1} or younger (<span class="number">{($data['childrenprcnt'])|round} %</span>).
+      <br>
+    </h1>
+    <h1 class = "light">
+    <hr />
+      {$data['weeklabel']} week, {if $data['newpeople']}<span class="number">{$data['newpeople']}</span>{else}no{/if} new {if $data['newpeople']==1} beneficiary was {else} beneficiaries were {/if} registered in {$currentcamp['name']}.
  			{if isset($data['notregistered'])}
-  				<span class="number">{$data['notregistered']}</span> {if $data['notregistered']==1} person lives {else} people live {/if} in this base unregistered.
+  				Additionaly there {if $data['nonregistered']==1}is {else} are {/if} <span class="number">{$data['notregistered']}</span> unregistered {if $data['notregistered']==1} person {else} people {/if}.
   			{/if}
-  			{if isset($data['residentsoutside'])}
-   				<span class="number">{$data['residentsoutside']}</span> {if $data['residentsoutside']==1} person lives {else} people live {/if} outside.<br />
-   			{/if}
-			{$data['weeklabel']} week {if $data['newpeople']}<span class="number">{$data['newpeople']}</span>{else}no{/if} new {if $data['newpeople']==1} beneficiary {else} beneficiaries {/if} of the base have been registered by us.<br />
-			<span class="men">{($data['totalmen'])}</span> of our community {if $data['totalmen']==1} is {else} are {/if} male (<span class="men">{$data['menperc']|round} %</span>) and <span class="women">{$data['totalwomen']}</span> {if $data['totalwomen']==1} is {else} are {/if} female (<span class="women">{$data['womenperc']|round}</span> %).
-      <br /> <span class="number">{$data['children']}</span> {if $data['children']==1}person is {else} people are {/if} {$smarty.session.camp['adult_age']-1} or younger (<span class="number">{($data['childrenprcnt'])|round} %</span>).<br /><span class="number">{$data['under18']}</span> {if $data['under18']==1} person is {else} people are {/if} under 18 (<span class="number">{($data['under18prcnt'])|round} %</span>).
 		</h1>
 	{/if}
 <hr />
 
 <h1 class="light">
-{if isset($data['warehouse'])}
-	We have <span class="number">{$data['items']|number_format:0:",":"."}</span> items in our warehouses, in <span class="number">{$data['boxes']|number_format:0:",":"."}</span> boxes.
-{/if}
 {if $smarty.session.camp['market']}
-	Already <span class="number">{$data['sold']|number_format:0:",":"."}</span> items have been sold in the shop in <span class="number">{$data['marketdays']}</span> opening days. Most popular item is <span class="number">{$data['popularname']}</span> with <span class="number">{$data['popularcount']|number_format:0:",":"."}</span> items sold. All people together own <span class="number">{$data['bank']|number_format:0:",":"."}</span> {$currentcamp['currencyname']}.</h1>
+  All beneficiaries together own <span class="number">{$data['bank']|number_format:0:",":"."}</span> {$currentcamp['currencyname']}.
+	Already <span class="number">{$data['sold']|number_format:0:",":"."}</span> items have been sold in the shop in <span class="number">{$data['marketdays']}</span> opening days. Most popular item is <span class="number">{$data['popularname']}</span>, with <span class="number">{$data['popularcount']|number_format:0:",":"."}</span> items sold.</h1>
 {/if}
 
 {if $smarty.session.camp['bicycle']}<hr />
+<hr  /> 
 <h1 class="light">{$data['weeklabel']} week {if $data['newcardsM']+$data['newcardsF']}<span class="number">{$data['newcardsM']+$data['newcardsF']}</span>{else}no{/if} new Bicycle Certificates were made{if $data['newcardsM']+$data['newcardsF']}, <span class="men">{$data['newcardsM']}</span> for men and <span class="women">{$data['newcardsF']}</span> for women{/if}. In total <span class="number">{$data['totalcardsM']+$data['totalcardsF']}</span> Bicycle Certificates are active (Of which <span class="women">{$data['totalcardsF']}</span> for women). So <span class="men">{($data['cardsM'])}%</span> of male and <span class="women">{($data['cardsF'])}%</span> of the female beneficiaries have a bicycle card.</h1>
 {/if}
 
@@ -176,6 +176,11 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 
 <h1 class="light">The last completed laundry cycle contained <span class="number">{$data['laundry_prev_appointments']}</span> appointments, using <span class="number">{($data['laundry_prev_appointments']/$data['laundry_slots']*100)|number_format:0:",":"."}%</span> of the capacity. We had <span class="number">{$data['laundry_prev_noshow']}</span> no-shows (<span class="number">{($data['laundry_prev_noshow']/$data['laundry_prev_appointments']*100)|number_format:0:",":"."}%</span>). We did serve <span class="number">{$data['laundry_prev_beneficiaries']|intval}</span> beneficiaries.</h1>
 {/if}
+<h1 class="light">
+{if isset($data['warehouse'])}
+	We have <span class="number">{$data['items']|number_format:0:",":"."}</span> items in our warehouses, in <span class="number">{$data['boxes']|number_format:0:",":"."}</span> boxes.
+{/if}
+</h1>
 
 <hr />
 {if $data['sales']}<h1>Sales in the last 21 days</h1>

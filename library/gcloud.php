@@ -1,7 +1,8 @@
 <?php
-
-use OpenCensus\Trace\Exporter\StackdriverExporter;
 use OpenCensus\Trace\Tracer;
+use OpenCensus\Trace\Exporter\StackdriverExporter;
+use OpenCensus\Trace\Integrations\PDO;
+use OpenCensus\Trace\Integrations\Mysql;
 use Google\Cloud\Storage\StorageClient;
 function registerGoogleCloudServices($projectId)
 { 
@@ -13,6 +14,8 @@ function registerGoogleCloudServices($projectId)
         ]
     ]);
     Tracer::start($exporter);
+    Mysql::load();
+    PDO::load();
 
     $client = new StorageClient(['projectId' => $projectId]);
     $client->registerStreamWrapper();

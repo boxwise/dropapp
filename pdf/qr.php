@@ -34,11 +34,15 @@ for($i=0;$i<intval($_GET['count']);$i++) {
 
 	if($labels[$i]) {
 		$box = db_row('SELECT s.box_id, p.name AS product, s.items, s2.label AS size, g.label AS gender, s.qr_id, qr.code FROM stock AS s LEFT OUTER JOIN products AS p ON s.product_id = p.id LEFT OUTER JOIN sizes AS s2 ON s.size_id = s2.id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id LEFT OUTER JOIN qr ON s.qr_id = qr.id WHERE s.id = :id',array('id'=>$labels[$i]));
+	} 
+
+	if($box['code']) {
 		$hash = $box['code'];
 	} else {
 		$id = db_value('SELECT id FROM qr ORDER BY id DESC LIMIT 1')+1;
 		$hash = md5($id);
 		db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$hash.'",NOW())');
+		if ($labels[$i]) db_query('UPDATE stock SET qr_id = :qr_id WHERE id = :id', array('id'=>$labels[$i], 'qr_id'=>$id));
 	}
 	
 	$url = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].$settings['rootdir'].'/mobile.php?barcode='.$hash;
