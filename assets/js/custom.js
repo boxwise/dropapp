@@ -18,11 +18,6 @@ $(document).ready(function() {
         // Save cart
         function saveCart() {
             sessionStorage.setItem('shoppingCart', JSON.stringify(cart));
-            cartValue = 0
-            for(var i in cart) {
-                cartValue = cartValue + cart[i].price * cart[i].count
-            }
-            sessionStorage.setItem('cartValue', cartValue);
         }
         
           // Load cart
@@ -42,13 +37,13 @@ $(document).ready(function() {
         // Add to cart
         obj.addItemToCart = function(id, name, price, count) {
           for(var item in cart) {
-            if(cart[item].name === name) {
-                cart[item].count = cart[item].count + count ;
+            if(cart[item].id === id) {
+                cart[item].count = parseInt(cart[item].count) + parseInt(count);
                 saveCart();
                 return;
             }
           }
-          var item = new Item(id, name, count, price);
+          var item = new Item(id, name, parseInt(count), parseInt(price));
           cart.push(item);
           saveCart();
         }
@@ -161,7 +156,7 @@ $(document).ready(function() {
                   + item.count * item.price +'</td><td>'
                   +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')>Delete</button></td></tr>");
         });
-        $('#cartWorth')[0].innerText = sessionStorage.getItem('cartValue');
+        $('#cartWorth')[0].innerText = shoppingCart.totalCart();
     }
 
     function updatePriceInRow(){
@@ -196,7 +191,11 @@ $(document).ready(function() {
         var newQuantity = event.target.value;
         shoppingCart.updateItemQuantityInCart(productId, newQuantity);
         updatePriceInRow();
-        $('#cartWorth')[0].innerText = sessionStorage.getItem('cartValue');
+        $('#cartWorth')[0].innerText = shoppingCart.totalCart();
+    });
+
+    $(document).on("keydown keyup keypress",'.changeQuantity', function(e){
+        if (e.which == 13) e.preventDefault();
     });
     
 });
@@ -532,7 +531,6 @@ function selectFamilyhead(field, targetfield) {
 }
 
 function getProductValue(field) {
-    debugger;
     value = $("#field_" + field).val();
     if (value) {
         $("#form-submit").prop("disabled", true);
@@ -572,7 +570,6 @@ function getProductValue(field) {
     }
 }
 function calcCosts(field) {
-    debugger;
     amount = $("#field_" + field).val() ? $("#field_" + field).val() : 1;
     productvalue = $("#ajax-aside").data("productValue");
     dropcredit = $("#dropcredit").data("dropCredit");
@@ -580,7 +577,8 @@ function calcCosts(field) {
     if (Number.isNaN(totalprice)) {
         totalprice = 0;
     }
-    $("#productvalue").text(totalprice);
+    $("#productvalue_aside").text(totalprice);
+    $("#productvalue_cart").text(totalprice);
     $("#product_id_selected").removeClass("hidden");
 
     if (dropcredit >= totalprice) {
