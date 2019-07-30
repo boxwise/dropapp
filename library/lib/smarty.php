@@ -18,7 +18,7 @@ class Zmarty extends Smarty {
     public function fetch($template = NULL, $cache_id = NULL, $compile_id = NULL, $parent = NULL) {
         return Tracer::inSpan(
             ['name' => 'fetchTemplate:'.$template],
-            function() {
+            function() use ($template,$cache_id,$compile_id,$parent) {
                 return parent::fetch($template, $cache_id, $compile_id, $parent);
             }
         );
