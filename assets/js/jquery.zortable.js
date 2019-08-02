@@ -85,7 +85,7 @@
 					        	// fix width of table
 					        	$(ui.helper).width(currentTarget.width())
 					        					        	
-										// hide all dragged items and open space below
+								// hide all dragged items and open space below
 					        	draggedItems.addClass('cloned').filter(':last').next().find('td').css({height: ($(ui.helper).height() + 1)}).addClass('hover');
 					        	
 					        	// cancel drag/drop with ESC
@@ -94,7 +94,7 @@
 					        			$this.find('.ui-droppable.hover').droppable('disable')
 						        		draggedItems.trigger('mouseup')
 						        		
-						        		// close all dropzones
+						        // close all dropzones
 		       			        $('.inbetween .hover').removeClass('hover').css({height: 1})
 		       			        $('tr.hover').removeClass('hover').find('.parent-indent').css({height: 1})
 				       			        
@@ -105,34 +105,34 @@
 					        		}
 					        	})
 
-										// disable dropping depending on the amount of levels
-					      //   	if($this.data('zortable').maxlevel >= 0){
-						     //    	var currentLevel = currentTarget.data('level');
-						     //    	var levels = 0;
+								// disable dropping depending on the amount of levels
+					        	if($this.data('zortable').maxlevel >= 0){
+						        	var currentLevel = currentTarget.data('level');
+						        	var levels = 0;
 
-						     //    	//made this to prevent being able to drag items with children to levels beyond what's allowed, but buggy, for now disabled
-						     //    	draggedItems.each(function(){
-						     //    		var el = $(this)
-						     //    		if(el.data('level') > currentLevel){
-						     //    			currentLevel = el.data('level');
-						     //    			levels++;
-						     //    		}
-						     //    	})
+						        	//made this to prevent being able to drag items with children to levels beyond what's allowed, but buggy, for now disabled
+						        	draggedItems.each(function(){
+										var el = $(this)
+						        		if(el.data('level') > currentLevel){
+						        			currentLevel = el.data('level');
+						        			levels++;
+						        		}
+						        	})
 
-						     //  		$this.find('tr').each(function(){
-							    //   		var el = $(this);
+						      		$this.find('tr').each(function(){
+							      		var el = $(this);
 							        		
-											// 	// disable childing
-											// 	if(el.data('level') + levels >= $this.data('zortable').maxlevel && el.is('.ui-droppable')){
-											// 		el.droppable('disable')
-											// 	}
+												// disable childing
+												if(el.data('level') + levels >= $this.data('zortable').maxlevel && el.is('.ui-droppable')){
+													el.droppable('disable')
+												}
 												
-											// 	// disable siblinging
-											// 	if(el.data('level') + levels > $this.data('zortable').maxlevel){
-											// 		el.find('.ui-droppable').droppable('disable')
-											// 	}
-											// })
-					      //   	}
+												// disable siblinging
+												if(el.data('level') + levels > $this.data('zortable').maxlevel){
+													el.find('.ui-droppable').droppable('disable')
+												}
+											})
+					        	}
 							},
 							stop: function(e, ui){
 								$(e.target).data('draggedItems').removeClass('cloned')
@@ -335,7 +335,7 @@
 
 			})
 		},
-		save : function (){
+		save: function (){
 			return this.each(function(){
 				var $this = $(this);
 				var tableparent = $this.closest('.table-parent');
