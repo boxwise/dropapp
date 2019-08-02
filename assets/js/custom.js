@@ -36,6 +36,7 @@ $(document).ready(function() {
         
         // Add to cart
         obj.addItemToCart = function(id, name, price, count) {
+          loadCart();
           for(var item in cart) {
             if(cart[item].id === id) {
                 cart[item].count = parseInt(cart[item].count) + parseInt(count);
@@ -177,6 +178,9 @@ $(document).ready(function() {
         var totalprice = count * price;
         shoppingCart.addItemToCart(productId, productName, parseInt(price), parseInt(count));
         renderCart();
+
+        //reset form
+        $("#field_count").val(1);
     });
 
     $(document).on("click",'.deleteFromCart', function(e){
@@ -197,7 +201,53 @@ $(document).ready(function() {
     $(document).on("keydown keyup keypress",'.changeQuantity', function(e){
         if (e.which == 13) e.preventDefault();
     });
-    
+
+    $(document).on("click",'#submitShoppingCart', function(e){
+        var cart = shoppingCart.listCart();
+        var family_id = $("#field_people_id").val();
+        $.ajax({
+            type: "post",
+            url: "ajax.php?file=check_out",
+            data: {
+                cart: JSON.stringify(cart),
+                family_id: family_id
+            },
+            dataType: "json",
+            success: function(result) {
+                shoppingCart.clearCart();
+                renderCart();
+                if (result.success) {
+
+                }
+                if (result.success) {
+                    $("#ajax-aside").html(result.htmlaside);
+                    $(".not_enough_coins").removeClass("not_enough_coins");
+                    if ($("#field_product_id").val()) {
+                        calcCosts("count");
+                    }
+                    row.find(".data-field-countupdown-value").html(
+                        result.amount
+                    );
+                    row.find(".data-field-drops2").html(result.drops);
+                }
+                $("#field_people_id").prop("disabled", false);
+                $("body").removeClass("loading");
+                if (result.message) {
+                    var n = noty({
+                        text: result.message,
+                        type: result.success ? "success" : "error"
+                    });
+                }
+            },
+            error: function(result) {
+                var n = noty({
+                    text:
+                        "Something went wrong, maybe the internet connection is a bit choppyyyy",
+                    type: "error"
+                });
+            }
+        });
+    });    
 });
 
 $(document).ready(function() {
@@ -519,6 +569,9 @@ function selectFamily(field, reload) {
         }
         $("#people_id_selected").addClass("hidden");
     }
+
+    //clear cart
+    sessionStorage.setItem('shoppingCart', JSON.stringify([]));
 }
 
 function selectFamilyhead(field, targetfield) {
@@ -567,6 +620,8 @@ function getProductValue(field) {
         });
     } else {
         $("#field_" + field).prop("disabled", false);
+        $("#productvalue_cart")[0].innerText = "0";
+        $("#product_id_selected").addClass("hidden");
     }
 }
 function calcCosts(field) {

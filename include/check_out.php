@@ -25,7 +25,7 @@
 
 			redirect('?action=check_out&people_id='.$_POST['people_id'][0]);
 		}
-
+		
 		$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 
 		if (!$id) {
@@ -58,7 +58,7 @@
 		#addfield('text','Note','description');
 		addfield('line');
 
-		addfield('custom','','<button name="__action" id="form-submit" value="" class="btn btn-submit btn-success">Save & next purchase</button>',array('aside'=>true, 'asidetop'=>true, ));
+		addfield('custom','','<button type="button" id="submitShoppingCart" value="" class="btn btn-submit btn-success">Save & next purchase</button>',array('aside'=>true, 'asidetop'=>true, ));
 		addfield('ajaxstart','', '', array('id'=>'ajax-content'));
 		addfield('ajaxend');
 
@@ -74,7 +74,6 @@
 		$cmsmain->assign('formbuttons',$formbuttons);
 
 	} else {
-
 		if($_POST['do']){
 			switch ($_POST['do']) {
 
@@ -91,17 +90,28 @@
 			    case 'show':
 					$ids = explode(',',$_POST['ids']);
 			    	list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-			        break;
+					break;
 			}
 
 			$return = array("success" => $success, 'message'=> $message, 'redirect'=>false, 'action'=>"$('#field_people_id').trigger('change')");
-
+			
 			echo json_encode($return);
 			die();
 		}
 
-		$ajaxform = new Zmarty;
+		if($_POST['cart']){		
+			$handler = new formHandler($table);
+			$cart = json_decode($_POST['cart'], true);
+			foreach ($cart as $item) {
+				db_query('INSERT INTO transactions (people_id, product_id, count, drops, transaction_date, user_id) VALUES (:people_id, :product_id, :count, :drops, NOW(), :user_id)',
+						array('people_id'=>intval($_POST['family_id']), 'product_id'=>intval($item['id']), 'count'=>intval($item['count']), 'drops'=>$item['price']*intval($item['count'])*(-1), 'user_id'=> intval($_SESSION['user']['id'])));
+			}
+			$message ="Shopping cart successfully submitted";
+			
+		}
 
+		$ajaxform = new Zmarty;
+		
 		/* vanaf hier */
 
 		$data['people_id'] = intval($_POST['people_id']);
@@ -113,12 +123,13 @@
 		
 		// Shopping cart
 		addfield('title',"Shopping cart: <img src='../assets/img/more_coins.png' class='coinsImage'></img><span id='cartWorth'>0</span> {$currency}");
-		addfield('shopping_cart','', 'purch', array('width'=>15, 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'drops3'=>ucwords($_SESSION['camp']['currencyname']).' together', 'delete'=>'Delete')));
-
+		addfield('shopping_cart','', '', array('width'=>15, 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'drops3'=>ucwords($_SESSION['camp']['currencyname']).' together', 'delete'=>'Delete')));
+		addfield('line');
+		
 		$table = 'transactions';
-		// addfield('title','Today\'s Purchases');
-		// addfield('list','','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 AND DATE_FORMAT(t.transaction_date, "%Y-%m-%d") = CURDATE() ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'tdate'=>'Date'),
-		// 	'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'check_out', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
+		addfield('title','Today\'s Purchases');
+		addfield('list','','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 AND DATE_FORMAT(t.transaction_date, "%Y-%m-%d") = CURDATE() ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'tdate'=>'Date'),
+		'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'check_out', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
 
 		$ajaxform->assign('data',$data);
 		$ajaxform->assign('formelements',$formdata);
