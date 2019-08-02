@@ -2,15 +2,18 @@
 
 function bootstrap_exception_handler(\Throwable $ex)
 {
-	if (isset($_SESSION['user'])) {
-		Sentry\configureScope(function (Sentry\State\Scope $scope): void {
+	Sentry\configureScope(function (Sentry\State\Scope $scope): void {
+		if (isset($_SESSION['user'])) {
 			$scope->setTag('logged in', 'true');
 			$scope->setUser([
 				'id' => $_SESSION['user']['id'],
 			]);
-			$scope->setExtra('session', $_SESSION);
-		});
-	} 
+		} else {
+			$scope->setTag('logged in', 'false');
+		}
+		$scope->setExtra('session', $_SESSION);
+	});
+
 	Sentry\captureException($ex);
 	$eventId = Sentry\State\Hub::getCurrent()->getLastEventId();
 
