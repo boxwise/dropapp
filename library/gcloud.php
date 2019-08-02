@@ -3,6 +3,8 @@ use OpenCensus\Trace\Tracer;
 use OpenCensus\Trace\Exporter\StackdriverExporter;
 use OpenCensus\Trace\Integrations\PDO;
 use OpenCensus\Trace\Integrations\Mysql;
+use OpenCensus\Trace\Sampler\AlwaysSampleSampler;
+use OpenCensus\Trace\Sampler\NeverSampleSampler;
 use Google\Cloud\Storage\StorageClient;
 function registerGoogleCloudServices($projectId)
 { 
@@ -13,7 +15,13 @@ function registerGoogleCloudServices($projectId)
             'projectId' => $projectId
         ]
     ]);
-    Tracer::start($exporter);
+    // opentrace seems to have a 1+ second overhead right now
+    // so only trace when specifically requested
+    $sampler = isset($_GET['trace']) ? new AlwaysSampleSampler() : new NeverSampleSampler();
+
+    Tracer::start($exporter, [
+        'sampler' => $sampler
+    ]);
     Mysql::load();
     PDO::load();
 
