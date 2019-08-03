@@ -17,7 +17,8 @@
 					{if $option['disabled']}disabled{/if}
 					{if isset($option['level'])} data-level="{($option['level'])+1}" {/if}
 					{if $option['value2']} data-value2="{$option['value2']}" {/if}
-					value="{$option['value']}">{$option['label']}
+					{if $option['price']} price="{$option['price']}"{/if}
+					value="{$option['value']}" >{$option['label']}
 				</option> 
 			{/foreach}
 			</select>				            	
