@@ -25,7 +25,7 @@
 
 			redirect('?action=check_out&people_id='.$_POST['people_id'][0]);
 		}
-		
+
 		$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 
 		if (!$id) {
@@ -51,14 +51,14 @@
 		$cmsmain->assign('title','New purchase');
 
 		addfield('select','Family/Beneficiary','people_id',array('onchange'=>'selectFamily("people_id",false)', 'required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1'));
-		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
+		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label, p.value as price FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
 		addfield('number', 'Number', 'count', array('onchange'=>"calcCosts('count')", 'onkeyup'=>"calcCosts('count')", 'required'=>true,'width'=>2));
 		addfield('custom','',"<p id='selectedProductPrice'>Price: <img src='../assets/img/more_coins.png' class='coinsImage'></img><span id='productvalue_cart'>0</span> {$currency}</p>");
-		addfield('custom','','<button id="add-to-cart-button" type="button" class="btn btn-success">Add to cart</button>');
+		addfield('custom','','<button id="add-to-cart-button" type="button" class="btn btn-success" disabled>Add to cart</button>');
 		#addfield('text','Note','description');
 		addfield('line');
 
-		addfield('custom','','<button type="button" id="submitShoppingCart" value="" class="btn btn-submit btn-success">Save & next purchase</button>',array('aside'=>true, 'asidetop'=>true, ));
+		addfield('custom','','<button type="button" id="submitShoppingCart" value="" class="btn btn-submit btn-success" disabled>Save & next purchase</button>',array('aside'=>true, 'asidetop'=>true, ));
 		addfield('ajaxstart','', '', array('id'=>'ajax-content'));
 		addfield('ajaxend');
 
@@ -94,7 +94,7 @@
 			}
 
 			$return = array("success" => $success, 'message'=> $message, 'redirect'=>false, 'action'=>"$('#field_people_id').trigger('change')");
-			
+
 			echo json_encode($return);
 			die();
 		}

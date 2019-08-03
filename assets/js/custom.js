@@ -157,7 +157,14 @@ $(document).ready(function() {
                   + item.count * item.price +'</td><td>'
                   +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')>Delete</button></td></tr>");
         });
+        updateCartRelatedElements();
+    }
+
+    function updateCartRelatedElements(){
         $('#cartWorth')[0].innerText = shoppingCart.totalCart();
+        //not the same as totalCart worth zero! some items can be free of charge
+        var isCartEmpty = shoppingCart.totalCount() == 0;
+        $('#submitShoppingCart').prop("disabled", isCartEmpty);
     }
 
     function updatePriceInRow(){
@@ -477,9 +484,11 @@ function updateLaundry(field, offset) {
     }
 }
 
-function selectFamily(field, reload) {
+function selectFamily(field,  reload) {
     value = $("#field_" + field).val();
+    product =  $("#field_product_id").val();
 
+    $("#add-to-cart-button").prop("disabled", !(product && value));
     var queryDict = {};
     location.search
         .substr(1)
@@ -566,39 +575,18 @@ function selectFamilyhead(field, targetfield) {
 
 function getProductValue(field) {
     value = $("#field_" + field).val();
-    if (value) {
+    var productValue = $("#field_" + field).children(":selected").attr("price");
+    family =  $("#field_family_id").val();
+
+    $("#add-to-cart-button").prop("disabled", !(family && value));
+    if (productValue) {
         $("#form-submit").prop("disabled", true);
         $("#field_" + field).prop("disabled", true);
         $("body").addClass("loading");
-        $.ajax({
-            type: "post",
-            url: "ajax.php?file=getproductvalue",
-            data: {
-                product_id: value
-            },
-            dataType: "json",
-            success: function(result) {
-                if (result.success) {
-                    $("#ajax-aside").data({ productValue: result.drops });
-                    calcCosts("count");
-                    $("#field_" + field).prop("disabled", false);
-                    $("body").removeClass("loading");
-                }
-                if (result.message) {
-                    var n = noty({
-                        text: result.message,
-                        type: result.success ? "success" : "error"
-                    });
-                }
-            },
-            error: function(result) {
-                var n = noty({
-                    text:
-                        "Something went wrong, maybe the internet connection is a bit choppy",
-                    type: "error"
-                });
-            }
-        });
+        $("#ajax-aside").data({ productValue: parseInt(productValue) });
+        calcCosts("count");
+        $("#field_" + field).prop("disabled", false);
+        $("body").removeClass("loading");
     } else {
         $("#field_" + field).prop("disabled", false);
         $("#productvalue_cart")[0].innerText = "0";
