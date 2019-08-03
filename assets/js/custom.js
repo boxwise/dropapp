@@ -150,7 +150,7 @@ $(document).ready(function() {
         $("#shopping_cart").find("tr:gt(0)").remove();
         cart.forEach((item) => {
             $('#shopping_cart')
-              .append("<tr class='shoppingCartRow'><td>"
+              .append("<tr><td>"
                   + item.name +'</td><td>'
                   + "<input type='number' step='1' min='1' productId='"+item.id+"' class='changeQuantity' value='"+ item.count +"'></input></td><td>"
                   + item.price +"</td><td id='totalSum_" + item.id +"'>"
@@ -217,26 +217,7 @@ $(document).ready(function() {
                 shoppingCart.clearCart();
                 renderCart();
                 if (result.success) {
-
-                }
-                if (result.success) {
-                    $("#ajax-aside").html(result.htmlaside);
-                    $(".not_enough_coins").removeClass("not_enough_coins");
-                    if ($("#field_product_id").val()) {
-                        calcCosts("count");
-                    }
-                    row.find(".data-field-countupdown-value").html(
-                        result.amount
-                    );
-                    row.find(".data-field-drops2").html(result.drops);
-                }
-                $("#field_people_id").prop("disabled", false);
-                $("body").removeClass("loading");
-                if (result.message) {
-                    var n = noty({
-                        text: result.message,
-                        type: result.success ? "success" : "error"
-                    });
+                    window.location = "?action=check_out&people_id=" + family_id;
                 }
             },
             error: function(result) {
