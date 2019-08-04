@@ -6,7 +6,7 @@ class Zmarty extends Smarty {
         global $settings, $translate, $lan;
 
         parent::__construct();
-        if (parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) != "localhost") {
+        if (parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST) != "localhost") {
             $this->debugging = false;
             $this->compile_check = Smarty::COMPILECHECK_OFF;
         }

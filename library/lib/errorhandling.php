@@ -19,7 +19,7 @@ function bootstrap_exception_handler(\Throwable $ex)
 
 	$error = new Zmarty;
 	$error->assign('error', "Sorry, an unexpected error occured and has been reported. Please quote Sentry #$eventId.");
-	if (@parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) == "localhost") {
+	if (@parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST) == "localhost") {
 		$error->assign('exception', $ex);
 	}
 	$error->display('cms_error.tpl');
