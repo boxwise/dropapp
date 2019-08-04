@@ -33,9 +33,6 @@ mb_internal_encoding("UTF-8");
 # load translate library
 require_once('lib/translate.php');
 
-# load Smarty (depends on database and translate)
-require_once('smarty/libs/Smarty.class.php');
-
 # load other libraries
 require_once('lib/smarty.php');
 require_once('lib/errorhandling.php');
