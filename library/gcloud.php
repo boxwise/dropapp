@@ -18,7 +18,6 @@ function registerGoogleCloudServices($projectId)
     // opentrace seems to have a 1+ second overhead right now
     // so only trace when specifically requested
     $sampler = isset($_GET['trace']) ? new AlwaysSampleSampler() : new NeverSampleSampler();
-
     Tracer::start($exporter, [
         'sampler' => $sampler
     ]);
@@ -27,9 +26,10 @@ function registerGoogleCloudServices($projectId)
 
     $client = new StorageClient(['projectId' => $projectId]);
     $client->registerStreamWrapper();
-
-    $settings['smarty_dir'] = "gs://$projectId.appspot.com/smarty/compile";
-    $settings['upload_dir'] = "gs://$projectId.appspot.com/uploads";
+    
+    $hostName = @parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
+    $settings['smarty_dir'] = "gs://$projectId.appspot.com/$hostName/smarty/compile";
+    $settings['upload_dir'] = "gs://$projectId.appspot.com/$/uploads";
 }
 
 $googleProjectId = getenv('GOOGLE_CLOUD_PROJECT');
