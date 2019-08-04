@@ -29,7 +29,7 @@ function registerGoogleCloudServices($projectId)
     
     $hostName = @parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
     $settings['smarty_dir'] = "gs://$projectId.appspot.com/$hostName/smarty/compile";
-    $settings['upload_dir'] = "gs://$projectId.appspot.com/$/uploads";
+    $settings['upload_dir'] = "gs://$projectId.appspot.com/$hostName/uploads";
 }
 
 $googleProjectId = getenv('GOOGLE_CLOUD_PROJECT');
