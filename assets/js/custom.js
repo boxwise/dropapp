@@ -77,10 +77,8 @@ $(function() {
     $("#sig").signature({
         change: function(event, ui) {
             if (!$("#sig").signature("isEmpty")) {$("#field_date_of_signature").val((new Date()).toISOString().slice(0, 19).replace('T', ' '));}
-            else {{$("#field_date_of_signature").val(0);}}
-        }
-    });
-
+            else {$("#field_date_of_signature").val(0);}
+        } });
 
     $("#sig").signature({
         color: "#0000ff",
