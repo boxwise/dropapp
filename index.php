@@ -1,12 +1,15 @@
 <?php
-	
+	$login = false;
+	$ajax = false;
+	$mobile = false;
+
 	require_once('library/core.php');
 	date_default_timezone_set('Europe/Athens');
 	db_query('SET time_zone = "+'.(date('Z')/3600).':00"');
 	
 	# action set by POST will override GET
 	$action = (isset($_POST['action'])?$_POST['action']:(isset($_GET['action'])?$_GET['action']:'start'));
-	$id = intval($_GET['id']);
+	$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 	if ($action == 'logout') logout();
 
 	// dailyroutine is performed when the last action of any user is not of today
@@ -19,7 +22,7 @@
 
 	/* make an organisation menu, if the user is system admin */
 	if($_SESSION['user']['is_admin']) {
-		if($_GET['organisation']) {
+		if(isset($_GET['organisation'])) {
 			unset($_SESSION['camp']);
 			$_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)',array('id'=>$_GET['organisation']));
 		}
@@ -31,7 +34,7 @@
 	
 	# This fills the camp menu in the top bar (only if the user has access to more than 1 camp
 	$camplist = camplist();
-	if($_GET['camp']) $_SESSION['camp'] = $camplist[$_GET['camp']];
+	if(isset($_GET['camp'])) $_SESSION['camp'] = $camplist[$_GET['camp']];
 	elseif(!isset($_SESSION['camp'])) $_SESSION['camp'] = reset($camplist);
 	$cmsmain->assign('camps',$camplist);
 	$cmsmain->assign('currentcamp',$_SESSION['camp']);

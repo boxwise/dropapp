@@ -49,7 +49,7 @@ function db_array($query, $array = array(), $dbid = false, $idaskey=false)
 {
 	global $defaultdbid;
 	if (!$dbid) $dbid = $defaultdbid;
-
+	$resultarray = [];
 	$result = db_query($query, $array, $dbid);
 	while ($row = db_fetch($result)) {
 		if($idaskey && $row['id']) { 
