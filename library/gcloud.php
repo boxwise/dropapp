@@ -27,7 +27,7 @@ function registerGoogleCloudServices($projectId)
     $client = new StorageClient(['projectId' => $projectId]);
     $client->registerStreamWrapper();
     
-    $hostName = @parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST);
+    $hostName = @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST);
     $settings['smarty_dir'] = "gs://$projectId.appspot.com/$hostName/smarty/compile";
     $settings['upload_dir'] = "gs://$projectId.appspot.com/$hostName/uploads";
 }
