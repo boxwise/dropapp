@@ -80,8 +80,6 @@
 		$ajaxaside = new Zmarty;
 
 		#$formdata = $formbuttons = '';
-		$side['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', array('id'=>$id));
-		$side['date_of_signature'] = db_value('SELECT date_of_signature FROM people WHERE id = :id', array('id'=>$id));
 		$side['approvalsigned'] = $side['date_of_signature'] = db_row('SELECT approvalsigned, date_of_signature FROM people WHERE id = :id', array('id'=>$id));
 		$side['allowdrops'] = allowGiveDrops();
 
