@@ -5,8 +5,12 @@ class Zmarty extends Smarty {
 	public function __construct() {
 		global $settings, $translate, $lan;
 
-		parent::__construct();
-        $this->debugging = false;
+        parent::__construct();
+        if (parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) != "localhost") {
+            $this->debugging = false;
+            $this->compile_check = false;
+            echo "disable";
+        }
         $this->setCompileDir($settings['smarty_dir']);
 		$this->addTemplateDir($_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/templates');
 		$this->assign('lan',$lan);
