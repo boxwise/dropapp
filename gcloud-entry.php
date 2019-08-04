@@ -18,7 +18,7 @@ Tracer::inSpan(
         // we have to declare every possible global variable usage
         // ideally we wouldn't be using globals at all, but that's for another day :) 
         global $settings,$translate,$action,$lan,$pdf,$_txt;
-        global $error,$listdata,$data,$table,$listconfig,$thisfile;
+        global $error,$listdata,$data,$table,$listconfig,$thisfile,$formdata;
         switch ($parsedUrl) {
         case '/':
         case '/index.php':
