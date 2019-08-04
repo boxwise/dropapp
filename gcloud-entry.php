@@ -35,6 +35,8 @@ Tracer::inSpan(
         case '/reseed-db.php':
             require substr($parsedUrl,1); // trim /
             break;
+        case '/config':
+            echo $settings['smarty_dir'].','.@parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST).','.$_SERVER['HTTP_HOST'];
         default:
             http_response_code(404);
             exit('Not Found');
