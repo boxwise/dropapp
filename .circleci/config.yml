@@ -13,7 +13,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
-      - run: composer install -n --prefer-dist
+      - run: composer install -n --optimize-autoloader --no-dev
       # save composer cache
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
