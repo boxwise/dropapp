@@ -20,10 +20,3 @@ Tracer::inSpan(
         ]);
     }
 );
-
-// start session to ensure it's available when setting scope for sentry
-session_start();
-Sentry\configureScope(function (Sentry\State\Scope $scope): void {
-    if (array_key_exists('user',$_SESSION))
-        $scope->setUser(['id' => $_SESSION['user']['id']]);
-});
