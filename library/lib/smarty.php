@@ -8,8 +8,7 @@ class Zmarty extends Smarty {
         parent::__construct();
         if (parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) != "localhost") {
             $this->debugging = false;
-            $this->compile_check = false;
-            echo "disable";
+            $this->compile_check = Smarty::COMPILECHECK_OFF;
         }
         $this->setCompileDir($settings['smarty_dir']);
         $this->addTemplateDir($_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/templates');
