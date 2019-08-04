@@ -17,7 +17,6 @@ class Zmarty extends Smarty {
         $this->addTemplateDir($_SERVER['DOCUMENT_ROOT'].'/templates');
         $this->assign('lan',$lan);
         $this->assign('modal',isset($_GET['modal']));
-        $this->assign('settings',$settings);
         $this->assign('translate',$translate);
     }
 
