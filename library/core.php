@@ -3,6 +3,7 @@ if(!DEFINED('LOADED_VIA_SINGLE_ENTRY_POINT'))
     throw new Exception("This app must now be running through the single entry point. Is your web server config directing all php traffic to gcloud-entry.php?");
 
 define('CORE',true);
+session_start();
 
 # load database library
 require_once('lib/database.php');
