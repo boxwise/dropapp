@@ -9,4 +9,4 @@
 	unset($_SESSION['usergroup2']);
 	unset($_SESSION['organisation2']);
 
-	redirect($settings['rootdir'].'/');
+	redirect('/');

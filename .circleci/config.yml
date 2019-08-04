@@ -47,7 +47,6 @@ jobs:
           Git hash: ${CIRCLE_SHA1}" > assets/version.txt
           # generate config file
           echo "<?php
-            \$settings['rootdir'] = '';
             \$settings['db_socket'] = '/cloudsql/${BOXWISE_PRIMARYDB_SOCKET}';
             \$settings['db_database'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_user'] = '${<< parameters.envVariablePrefix >>DBNAME}';

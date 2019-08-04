@@ -14,7 +14,7 @@ class Zmarty extends Smarty {
             $this->debugging = true;
         }
         $this->setCompileDir($settings['smarty_dir']);
-        $this->addTemplateDir($_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/templates');
+        $this->addTemplateDir($_SERVER['DOCUMENT_ROOT'].'/templates');
         $this->assign('lan',$lan);
         $this->assign('modal',isset($_GET['modal']));
         $this->assign('settings',$settings);
