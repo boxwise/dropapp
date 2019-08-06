@@ -32,7 +32,19 @@ function showHistory($table,$id) {
 	while($row = db_fetch($result)) {
 		$row['changedate'] = strftime('%A %d %B %Y, %H:%M',strtotime($row['changedate']));
 		$row['changes'] = strip_tags($row['changes']);
-		if(!(is_null($row['to_int']) && is_null($row['to_float']))) {
+		if ($row['changes'] == 'items') {$row['changes'] = "changed the number of items from ".$row['from_int']." to ".$row['to_int'];}
+		else if ($row['changes'] == 'location_id') {
+			$loc_ids = array($row['from_int'],$row['to_int']);
+			$loc_names = db_array('SELECT locations.label,locations.seq FROM locations WHERE (locations.seq = :id_orig OR locations.seq = :id_dest)',array('id_orig'=>$loc_ids[0],'id_dest'=>$loc_ids[1]));
+			$row['changes'] = "changed box location from ".$loc_names[0]['label']." to ".$loc_names[1]['label'];}
+		else if ($row['changes'] == 'Record created'){
+			$row['changes'] = " created the box";}
+		else if (trim($row['changes']) == 'Box ordered to shop') {
+			$row['changes'] = " ordered the box to the shop";}
+		else if (trim($row['changes']) == 'Box order made undone'){
+			$row['changes'] = " canceled the box order";
+		}
+		/*if(!(is_null($row['to_int']) && is_null($row['to_float']))) {
 		       	$row['changes'] .= ' changed'; 
 			if(!is_null($row['from_int'])) {
 				$row['changes'] .= ' from '.$row['from_int'];
@@ -44,8 +56,8 @@ function showHistory($table,$id) {
 			} else if(!is_null($row['to_float'])){
 				$row['changes'] .= ' to '.$row['to_float'];
 			}
-			$row['changes'] .= '; ';
-		}
+			}*/
+		$row['changes'] .= '; ';
 		$row['truncate'] = strlen($row['changes']) > 300;
 		$history[] = $row;
 	}
