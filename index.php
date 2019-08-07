@@ -40,6 +40,7 @@
 	$cmsmain->assign('haswarehouse',db_value('SELECT id FROM locations WHERE camp_id = ' . intval($_SESSION['camp']['id']) . ' LIMIT 1 '));
 
 	$cmsmain->assign('menu',CMSmenu());
+	
 	# checks if the requested action is allowed for the user's usergroup and camp
 	$allowed = db_numrows('SELECT f.id, f.title_en, IF(f2.parent_id != 0,"3","2") FROM cms_functions AS f 
 LEFT OUTER JOIN cms_usergroups_functions AS uf ON uf.cms_functions_id = f.id
