@@ -1,5 +1,5 @@
 cron:
-- description: "daily reseed demo job"
-  url: /reseed-db.php
-  target: demo
-  schedule: every saturday 05:00
+# - description: "daily reseed demo job"
+#   url: /reseed-db.php
+#   target: demo
+#   schedule: every saturday 05:00

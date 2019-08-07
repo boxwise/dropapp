@@ -13,7 +13,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
-      - run: composer install -n --prefer-dist
+      - run: composer install -n --optimize-autoloader --no-dev
       # save composer cache
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
@@ -47,7 +47,7 @@ jobs:
           Git hash: ${CIRCLE_SHA1}" > assets/version.txt
           # generate config file
           echo "<?php
-            \$settings['rootdir'] = '';
+            \$settings['version'] = '${CIRCLE_BUILD_NUM}';
             \$settings['db_socket'] = '/cloudsql/${BOXWISE_PRIMARYDB_SOCKET}';
             \$settings['db_database'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_user'] = '${<< parameters.envVariablePrefix >>DBNAME}';

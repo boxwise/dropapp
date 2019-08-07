@@ -1,8 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', true);
-
 # Check session
 $mobile = true;
 require_once('library/core.php');
@@ -13,7 +10,7 @@ db_query('SET time_zone = "+02:00"');
 $tpl = new Zmarty;
 
 if ($_GET['logout'] != '') {
-	logout($settings['rootdir'] . '/mobile.php');
+	logout('/mobile.php');
 }
 
 # Hangle login form
@@ -60,7 +57,7 @@ if (!$checksession_result['success']) {
 		//$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
 	}
 } elseif (!db_value('SELECT id FROM locations WHERE locations.camp_id = ' . intval($_SESSION['camp']['id']) . ' LIMIT 1 ')) {
-	redirect('http://'.$_SERVER['HTTP_HOST'].$settings['rootdir'].'?action=start');
+	redirect('http://'.$_SERVER['HTTP_HOST'].'?action=start');
 } else { # --------------- All routing happens here
 	# Boxlabel is scanned 
 	if ($_GET['barcode'] != '' || $_GET['boxid'] != '') {

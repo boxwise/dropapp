@@ -8,9 +8,6 @@ handlers:
   static_dir: assets
 - url: /uploads
   static_dir: uploads
-- url: /.*
+- url: .*
   script: auto
   secure: always
-
-
-  

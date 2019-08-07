@@ -2,7 +2,7 @@
 	<div class="header-top-inner container-fluid" data-testid="dropapp-header">
  		<div class="pull-left">
 			<a href="#" class="menu-btn visible-xs">&#9776;</a>
-			<a href="{$settings['rootdir']}/" class="brand">{$translate['site_name']}</a>
+			<a href="/" class="brand">{$translate['site_name']}</a>
 			{if $smarty.session.organisation.label}{$smarty.session.organisation.label}
 	 		{if $camps|count<1}
 	 			/ No camp
@@ -13,7 +13,7 @@
  		</div>
 		<ul class="nav navbar-nav pull-right">
 			{if $haswarehouse}
-			<li><a href="{$settings['rootdir']}/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
+			<li><a href="/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
 			{/if}
 	 		{if $smarty.session.user['is_admin']}
 				<li class="dropdown">

@@ -1,12 +1,18 @@
 {
+    "config": {
+        "platform": {
+            "php": "7.2.19"
+        }
+    },
     "require-dev": {
-        "odan/phinx-migrations-generator": "^4.0"
+        "odan/phinx-migrations-generator": "^4.0",
+        "phan/phan": "^2.2"
     },
     "require": {
         "robmorgan/phinx": "^0.10.7",
         "google/cloud-storage": "^1.12",
-        "phan/phan": "^2.1",
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
-        "sentry/sdk": "2.0.3"
+        "sentry/sdk": "2.0.3",
+        "smarty/smarty": "^3.1"
     }
 }

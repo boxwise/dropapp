@@ -3,6 +3,7 @@ if(!DEFINED('LOADED_VIA_SINGLE_ENTRY_POINT'))
     throw new Exception("This app must now be running through the single entry point. Is your web server config directing all php traffic to gcloud-entry.php?");
 
 define('CORE',true);
+session_start();
 
 # load database library
 require_once('lib/database.php');
@@ -11,7 +12,7 @@ if (!array_key_exists('upload_dir',$settings)) {
     $settings['upload_dir'] = $_SERVER['DOCUMENT_ROOT'].'/uploads';
 }
 if (!array_key_exists('smarty_dir',$settings)) {
-    $settings['smarty_dir'] = $_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/templates/templates_c';
+    $settings['smarty_dir'] = $_SERVER['DOCUMENT_ROOT'].'/templates/templates_c';
 }
 
 # connect to database
@@ -32,9 +33,6 @@ mb_internal_encoding("UTF-8");
 
 # load translate library
 require_once('lib/translate.php');
-
-# load Smarty (depends on database and translate)
-require_once('smarty/libs/Smarty.class.php');
 
 # load other libraries
 require_once('lib/smarty.php');
