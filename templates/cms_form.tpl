@@ -53,7 +53,7 @@
 					<button name="__action" value="{$button['action']}" class="btn btn-submit btn-success">{$button['label']}</button>
 				{/foreach}
 
-				{if !$data['hidecancel']}<a href="{$settings['cmsdir']}/?action={$smarty.get.origin|escape:'html'}" class="btn btn-cancel btn-default">{$translate['cms_form_cancel']}</a>{/if}
+				{if !$data['hidecancel']}<a href="/?action={$smarty.get.origin|escape:'html'}" class="btn btn-cancel btn-default">{$translate['cms_form_cancel']}</a>{/if}
 				
 				<div class="aside-form">
 					{foreach $formelements as $element}		

@@ -13,7 +13,7 @@
 		<input class="btn" type="submit" data-testid="signInButton" value="{$translate['cms_login_submit']}" />
 	</div>	
 	<div class="form-group">
-		<a class="forgot-password" data-testid="forgotPassword" href="{$settings['rootdir']}/reset.php">{$translate['cms_login_forgotpassword']}</a>
+		<a class="forgot-password" data-testid="forgotPassword" href="/reset.php">{$translate['cms_login_forgotpassword']}</a>
 	</div>		
 	<input type="hidden" name="destination" value="{$data['destination']}" />
 	<input type="hidden" name="action" value="login" />

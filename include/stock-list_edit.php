@@ -140,7 +140,7 @@
 				$boxid = db_value('SELECT box_id FROM stock WHERE id = :id',array('id'=>$id));
 				$success = true;
 				$message = '';
-				$redirect = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://'.$_SERVER['HTTP_HOST'].$settings['rootdir'].'/mobile.php?barcode='.$boxid;
+				$redirect = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$boxid;
 				break;
 		    case 'move':
 				$ids = json_decode($_POST['ids']);

@@ -32,7 +32,7 @@
 			redirect('?editbox='.$box['id']);
 		} elseif($box['camp_id']!=$_SESSION['camp']['id'] && $box['campname']) {
 			$tpl->assign('include','mobile_newbox.tpl');
-			redirect('?editbox='.$box['id'].'&warning=true&message=Oops!! This box is registered in '.$box['campname'].', are you sure this is what you were looking for?<br /><br /> No? <a href="'.$settings['rootdir'].'/mobile.php">Search again!</a><br /><br /> Yes? Edit and save this box to transfer it to '.$_SESSION['camp']['name'].'.');
+			redirect('?editbox='.$box['id'].'&warning=true&message=Oops!! This box is registered in '.$box['campname'].', are you sure this is what you were looking for?<br /><br /> No? <a href="/mobile.php">Search again!</a><br /><br /> Yes? Edit and save this box to transfer it to '.$_SESSION['camp']['name'].'.');
 		} else {
 			if($box['id']) {
 				$orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', array('camp'=>$_SESSION['camp']['id']));

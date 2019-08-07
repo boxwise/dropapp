@@ -2,21 +2,24 @@
 
 function bootstrap_exception_handler(\Throwable $ex)
 {
-	if (isset($_SESSION['user'])) {
-		Sentry\configureScope(function (Sentry\State\Scope $scope): void {
+	Sentry\configureScope(function (Sentry\State\Scope $scope): void {
+		if (isset($_SESSION['user'])) {
 			$scope->setTag('logged in', 'true');
 			$scope->setUser([
 				'id' => $_SESSION['user']['id'],
 			]);
-			$scope->setExtra('session', $_SESSION);
-		});
-	} 
+		} else {
+			$scope->setTag('logged in', 'false');
+		}
+		$scope->setExtra('session', $_SESSION);
+	});
+
 	Sentry\captureException($ex);
 	$eventId = Sentry\State\Hub::getCurrent()->getLastEventId();
 
 	$error = new Zmarty;
 	$error->assign('error', "Sorry, an unexpected error occured and has been reported. Please quote Sentry #$eventId.");
-	if (substr($_SERVER['HTTP_HOST'], 0, strlen("localhost")) === "localhost") {
+	if (@parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST) == "localhost") {
 		$error->assign('exception', $ex);
 	}
 	$error->display('cms_error.tpl');
