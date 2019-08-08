@@ -35,8 +35,9 @@ function showHistory($table,$id) {
 		if ($row['changes'] == 'items') {$row['changes'] = "changed the number of items from ".$row['from_int']." to ".$row['to_int'];}
 		else if ($row['changes'] == 'location_id') {
 			$loc_ids = array($row['from_int'],$row['to_int']);
-			$loc_names = db_array('SELECT locations.label,locations.seq FROM locations WHERE (locations.seq = :id_orig OR locations.seq = :id_dest)',array('id_orig'=>$loc_ids[0],'id_dest'=>$loc_ids[1]));
-			$row['changes'] = "changed box location from ".$loc_names[0]['label']." to ".$loc_names[1]['label'];}
+			$loc_orig = db_row('SELECT locations.label FROM locations WHERE locations.id = :id_orig',array('id_orig'=>$loc_ids[0]));
+			$loc_dest = db_row('SELECT locations.label FROM locations WHERE locations.id = :id_dest',array('id_dest'=>$loc_ids[1]));
+			$row['changes'] = "changed box location from ".$loc_orig['label']." to ".$loc_dest['label'];}
 		else if ($row['changes'] == 'Record created'){
 			$row['changes'] = " created the box";}
 		else if (trim($row['changes']) == 'Box ordered to shop') {
