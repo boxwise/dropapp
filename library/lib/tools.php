@@ -45,20 +45,8 @@ function showHistory($table,$id) {
 		else if (trim($row['changes']) == 'Box order made undone'){
 			$row['changes'] = " canceled the box order";
 		}
-		/*if(!(is_null($row['to_int']) && is_null($row['to_float']))) {
-		       	$row['changes'] .= ' changed'; 
-			if(!is_null($row['from_int'])) {
-				$row['changes'] .= ' from '.$row['from_int'];
-			} else if(!is_null($row['from_float'])){
-				$row['changes'] .= ' from '.$row['from_float'];
-			}
-			if(!is_null($row['to_int'])) {
-				$row['changes'] .= ' to '.$row['to_int'];
-			} else if(!is_null($row['to_float'])){
-				$row['changes'] .= ' to '.$row['to_float'];
-			}
-			}*/
-		$row['changes'] .= '; ';
+
+			$row['changes'] .= '; ';
 		$row['truncate'] = strlen($row['changes']) > 300;
 		$history[] = $row;
 	}
