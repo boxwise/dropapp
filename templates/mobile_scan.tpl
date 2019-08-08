@@ -39,9 +39,9 @@
 		<hr></hr>	
 		<p>Or change the contents of the box</p>
 		<a class="btn" href="?editbox={$box['id']}">Edit the box</a>
-		<p><a href="#" class="toggle-do">View Edit History</a></p>
-		<div class="toggle-me hide" id="history">
-			{$history}	
+		<p>  <center>Box history</center></p>
+		<div id="history">
+			<center>{$history}</center>
 		</div>
 		
 {/if}
