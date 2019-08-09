@@ -60,6 +60,11 @@
 			}
 		}
 
+		foreach ($data as $key => $d) {
+			$totalboxes += $d['boxes'];
+			$totalitems += $d['items'];
+		}
+
 		addcolumn('text','Box ID','box_id');
 		addcolumn('text','Product','product');
 		addcolumn('text','Gender','gender');
@@ -81,6 +86,9 @@
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
 		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
+
+
+		$cmsmain->assign('listfooter', array('Total boxes/items', '', '','','', $totalitems, '',''));
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
