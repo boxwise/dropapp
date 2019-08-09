@@ -129,13 +129,13 @@
 					  		<th><div {if $column['width']}style="width:{$column['width']}px;"{/if}>{$column['label']}</div></th>
 						{/foreach}
 					  	</tr>
-					</thead>
-					<tbody>
 					  	<tr class="firstline">
 						{foreach $firstline as $column}
 					  		<th><div>{$column}</div></th>
 						{/foreach}
 					  	</tr>
+					</thead>
+					<tbody>
 				    {foreach $data as $row}
 				    	{if $prevlevel > $row['level'] && $listconfig['allowmove']}
 				    		{while $prevlevel > $row['level']}
