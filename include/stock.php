@@ -23,7 +23,7 @@
 		listfilter3(array('label'=>'Gender','options'=>$genders,'filter'=>'"s.gender_id"'));
 
 		$itemlist = db_simplearray('SELECT p.id, p.name FROM products AS p INNER JOIN stock ON stock.product_id = p.id WHERE (camp_id = '.$_SESSION['camp']['id'].') AND (stock.items > 0) AND (NOT stock.deleted)');
-		listfilter4(array('lable'=>"Product",'options'=>$itemlist,'filter'=>'p.id'));
+		listfilter4(array('label'=>"Product",'options'=>$itemlist,'filter'=>'p.id'));
 		listsetting('manualquery',true);
 
 		#dump($listconfig);
@@ -45,9 +45,9 @@
 		
 		($_SESSION['filter3']['stock']?' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')':'').
 
-		($_SESSION['filter']['stock']?' AND (stock.location_id = '.$_SESSION['filter']['stock'].')':''));
+		($_SESSION['filter']['stock']?' AND (stock.location_id = '.$_SESSION['filter']['stock'].')':'').
 
-		#($_SESSION['filter4']['stock']?' AND (products.id = '.$_SESSION['filter4'][''].')':''));
+		($_SESSION['filter4']['stock']?' AND (p.id = '.$_SESSION['filter4']['stock'].')':''));
 		
 			
 		foreach($data as $key=>$value) {

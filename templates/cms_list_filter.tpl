@@ -72,7 +72,7 @@
 {if $listconfig['filter4']}
 	<li>
 		<div class="btn-group">
-			<div type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+			<div type="button" title="Chose among Products existing in boxes" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
 				{if $listconfig['filtervalue4']}
 					{$listconfig['filter4']['options'][$listconfig['filtervalue4']]}
 				{else}
