@@ -7,25 +7,6 @@
 
 	if(!$ajax) {
 
-		if($_POST) {
-
-			if($_POST['id']) {
-				verify_campaccess_people($_POST['id']);
-				verify_deletedrecord($table,$_POST['id']);
-			}
-
-			$_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
-			$_POST['user_id'] = $_SESSION['user']['id'];
-			$_POST['drops'] = -intval($_POST['count']) * db_value('SELECT value FROM products WHERE id = :id', array('id'=>$_POST['product_id'][0]));
-
-			$handler = new formHandler($table);
-
-			$savekeys = array('people_id', 'product_id', 'count', 'description', 'drops', 'transaction_date', 'user_id','size_id');
-			$id = $handler->savePost($savekeys);
-
-			redirect('?action=check_out&people_id='.$_POST['people_id'][0]);
-		}
-
 		$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 
 		if (!$id) {
@@ -99,14 +80,31 @@
 			die();
 		}
 
+		// Ajax POST request of shopping cart
 		if($_POST['cart']){		
-			$handler = new formHandler($table);
+
+			$_POST['people_id'] = $_POST['family_id'];	//ToDo Rename family_id in custom.js
+			verify_campaccess_people($_POST['people_id']);
+			verify_deletedrecord('people',$_POST['people_id']);
+
+			$_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
+			$_POST['user_id'] = $_SESSION['user']['id'];
+
 			$cart = json_decode($_POST['cart'], true);
+			$savekeys = array('people_id', 'product_id', 'count', 'drops', 'transaction_date', 'user_id');
 			foreach ($cart as $item) {
-				db_query('INSERT INTO transactions (people_id, product_id, count, drops, transaction_date, user_id) VALUES (:people_id, :product_id, :count, :drops, NOW(), :user_id)',
-						array('people_id'=>intval($_POST['family_id']), 'product_id'=>intval($item['id']), 'count'=>intval($item['count']), 'drops'=>$item['price']*intval($item['count'])*(-1), 'user_id'=> intval($_SESSION['user']['id'])));
+				$_POST['product_id'] = intval($item['id']);
+				$_POST['count'] = intval($item['count']);
+				$_POST['drops'] = $item['price']*intval($item['count'])*(-1);
+	
+				$handler = new formHandler($table);
+				$id = $handler->savePost($savekeys);
 			}
-			$message ="Shopping cart successfully submitted";
+			
+			$return = array("success" => true, 'message'=> "Shopping cart successfully submitted", 'redirect'=>'?action=check_out');
+
+			echo json_encode($return);
+			die();
 		}
 
 		$ajaxform = new Zmarty;
