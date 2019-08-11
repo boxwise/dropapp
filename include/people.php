@@ -16,7 +16,7 @@
 		listsetting('allowmoveto', 1);
  		listsetting('allowsort',false);
  		listsetting('allowshowhide',false); 		
-		listsetting('search', array('firstname','lastname', 'container'));
+		listsetting('search', array('firstname','lastname', 'container', 'comments'));
 		listsetting('add', 'New person');
 
 		listsetting('haspagemenu', true);
@@ -43,7 +43,8 @@
 			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
 			IF(gender="M","Male",IF(gender="F","Female","")) AS gender2, 
 			IF(people.parent_id,"",SUM(t2.drops)) AS drops,  
-			IF(notregistered,"NR","") AS nr
+			IF(notregistered,"NR","") AS nr,
+			comments
 		FROM people 
 		LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
 		WHERE 
@@ -55,13 +56,15 @@
 			(lastname LIKE "%'.$search.'%" OR 
 			 firstname LIKE "%'.$search.'%" OR 
 			 container = "'.$search.'" OR 
+			 comments LIKE "%'.$search.'%" OR 
 			 (SELECT 
 			 	COUNT(id) 
 			 FROM people AS p 
 			 WHERE 
 			 	(lastname LIKE "%'.$search.'%" OR 
 			 	 firstname LIKE "%'.$search.'%" OR 
-			 	 container = "'.$search.'") AND 
+				  container = "'.$search.'" OR 
+				  comments LIKE "%'.$search.'%") AND 
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			':' ')
@@ -99,9 +102,10 @@
 		addcolumn('text','Firstname','firstname');
 		addcolumn('text','Gender','gender2');
 		addcolumn('text','Age','age');
-		addcolumn('text','NR','nr');
+		//addcolumn('text','NR','nr');
 		addcolumn('text',$_SESSION['camp']['familyidentifier'],'container');
 		addcolumn('text', ucwords($_SESSION['camp']['currencyname']),'drops');
+		addcolumn('text', 'Comments','comments');
 		addcolumn('html','&nbsp;','expired');
 		if($listconfig['filtervalue']) addcolumn('datetime','Created','created');
 
