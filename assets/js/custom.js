@@ -155,13 +155,13 @@ $(document).ready(function() {
                   + "<input type='number' step='1' min='1' productId='"+item.id+"' class='changeQuantity' value='"+ item.count +"'></input></td><td>"
                   + item.price +"</td><td id='totalSum_" + item.id +"'>"
                   + item.count * item.price +'</td><td>'
-                  +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')>Delete</button></td></tr>");
+                  +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')><i class='fa fa-trash-o'></i></button></td></tr>");
         });
         updateCartRelatedElements();
     }
 
     function updateCartRelatedElements(){
-        $('#cartWorth')[0].innerText = shoppingCart.totalCart();
+        $('#cartvalue_aside')[0].innerText = shoppingCart.totalCart();
         //not the same as totalCart worth zero! some items can be free of charge
         var isCartEmpty = shoppingCart.totalCount() == 0;
         $('#submitShoppingCart').prop("disabled", isCartEmpty);
@@ -202,7 +202,7 @@ $(document).ready(function() {
         var newQuantity = event.target.value;
         shoppingCart.updateItemQuantityInCart(productId, newQuantity);
         updatePriceInRow();
-        $('#cartWorth')[0].innerText = shoppingCart.totalCart();
+        $('#cartvalue_aside')[0].innerText = shoppingCart.totalCart();
     });
 
     $(document).on("keydown keyup keypress",'.changeQuantity', function(e){
@@ -589,7 +589,6 @@ function getProductValue(field) {
         $("body").removeClass("loading");
     } else {
         $("#field_" + field).prop("disabled", false);
-        $("#productvalue_cart")[0].innerText = "0";
         $("#product_id_selected").addClass("hidden");
     }
 }
@@ -601,8 +600,6 @@ function calcCosts(field) {
     if (Number.isNaN(totalprice)) {
         totalprice = 0;
     }
-    $("#productvalue_aside").text(totalprice);
-    $("#productvalue_cart").text(totalprice);
     $("#product_id_selected").removeClass("hidden");
 
     if (dropcredit >= totalprice) {
