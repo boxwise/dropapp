@@ -236,8 +236,10 @@
 	addfield('created','Created','created',array('aside'=>true));
 
 	if ($id) addformbutton('submitandedit',$translate['cms_form_save']);
-	else addformbutton('submitandnew',"Save and new");
-
+	// weird bug addformbutton helper function does not anything to $formbuttons
+	// THIS IS JUST A WORK AROUND
+	// else addformbutton('submitandnew',"Save and new");
+	else $formbuttons[]=array('label'=> 'Submit and new', 'action'=> 'submitandnew');
 
 	// Tabs
 	$tabs['people'] = 'Personal';
@@ -256,7 +258,6 @@
 	if(!$data['parent_id'] && $data['id']) $tabs['transaction']='Transactions';
 
 	$tabs['signature'] = 'Privacy declaration';
-
 	$cmsmain->assign('tabs',$tabs);
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
