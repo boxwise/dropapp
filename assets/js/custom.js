@@ -187,6 +187,7 @@ $(document).ready(function() {
         renderCart();
 
         //reset form
+        $('#field_product_id').val(null).trigger('change');
         $("#field_count").val(1);
     });
 
