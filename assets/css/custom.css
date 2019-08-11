@@ -99,7 +99,7 @@ p#familyname{
 	margin-bottom: 2px;
 }
 
-#product_id_selected{
+#cart_value{
 	font-size: 1.2em;
 	padding-top: 10px;
 	color: #000;
@@ -753,6 +753,6 @@ td.list-level-0.list-column-ean_print div a:hover {
 	color:#ccc;
 	text-decoration: line-through;
 }
-.shopping_cart_outer_div{
+.shopping_cart_table{
 	float: right;
 }
