@@ -103,7 +103,14 @@ workflows:
         record: true
         requires:
           - build
+        #uncomment once PR is passing
+        #requires:
+        #  - deploy-staging
+        #filters:
+        #  branches:
+        #    only: master
     - deploy:
+        name: deploy-staging
         envVariablePrefix: BOXWISE_STAGING_
         serviceName: default
         requires:
@@ -112,6 +119,7 @@ workflows:
           branches:
             only: master
     - deploy:
+        name: deploy-demo
         envVariablePrefix: BOXWISE_DEMO_
         serviceName: demo
         requires:
@@ -120,6 +128,7 @@ workflows:
           branches:
             only: production
     - deploy:
+        name: deploy-prod
         envVariablePrefix: BOXWISE_PROD_
         serviceName: production
         requires:
