@@ -72,7 +72,7 @@
 	if($data['qr_id']){
 		$qr = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$data['qr_id']));
 
-		addfield('html', '', '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$qr.'" /><br /><br />', array('aside'=>true, 'asidetop'=>true));
+		addfield('html', '', '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$qr.'" /><br /><br />', array('aside'=>true, 'asidetop'=>true));
 	}
 
 	addfield('line');
