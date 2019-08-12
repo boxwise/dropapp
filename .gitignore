@@ -11,3 +11,4 @@ uploads/*
 phpmyadmin/*
 *.sql
 config.php.production
+node_modules
