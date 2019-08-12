@@ -77,6 +77,13 @@ We're using [Phinx](https://phinx.org/) and [phinx-migrations-generator](https:/
 
 Will generate a new migration based on the diff of /db/migrations/schema.php.
 
+### Debugging
+
+We have enabled XDebug remote debugging in the default Docker configuration, so you
+can step through your code.
+
+If you're using VS Code, if you install the [PHP Debug](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug) extension and start the 'Listen for XDebug' configuration, you can then set breakpoints in your code.
+
 ### Contribution guidelines ###
 
 You gotta be awesome and kind
