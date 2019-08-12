@@ -97,12 +97,11 @@ workflows:
   build-and-deploy:
     jobs:
     - build
-    # baseUrl is set in cypress.json (currently staging.boxwise.co)
+    # baseUrl for cypress is set in cypress.json (currently staging.boxwise.co)
     - cypress/run:
         yarn: true
         record: true
-        requires:
-          - build
+        wait-on: 'https://staging.boxwise.co/'
         #uncomment once PR is passing
         #requires:
         #  - deploy-staging
