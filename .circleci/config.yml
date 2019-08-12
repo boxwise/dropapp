@@ -103,12 +103,11 @@ workflows:
         record: true
         wait-on: 'https://staging.boxwise.co/'
         no-workspace: true
-        #uncomment once PR is passing
-        #requires:
-        #  - deploy-staging
-        #filters:
-        #  branches:
-        #    only: master
+        requires:
+          - deploy-staging
+        filters:
+          branches:
+            only: master
     - deploy:
         name: deploy-staging
         envVariablePrefix: BOXWISE_STAGING_
