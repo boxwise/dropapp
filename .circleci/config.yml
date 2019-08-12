@@ -102,6 +102,7 @@ workflows:
         yarn: true
         record: true
         wait-on: 'https://staging.boxwise.co/'
+        no-workspace: true
         #uncomment once PR is passing
         #requires:
         #  - deploy-staging
