@@ -11,7 +11,6 @@ context('Login tests - Mobile', () => {
     let genericErrLoginNotif;
     let successPwdChangeNotif;
     let testOrg;
-    let domain;
     
     before(function() {
         cy.getAdminUser().then(($result) => {
@@ -41,10 +40,6 @@ context('Login tests - Mobile', () => {
           incorrectLoginNotif = $result.incorrectLoginNotif;
           genericErrLoginNotif = $result.genericErrLoginNotif;
           successPwdChangeNotif = $result.successPwdChangeNotif;
-        });
-
-        cy.getDomain().then(($result) => {
-          domain = $result.domain;
         });
 
         cy.getTestOrgName().then(($result) => {
@@ -88,13 +83,13 @@ context('Login tests - Mobile', () => {
     })
     
     it('Forgot password form', () => {
-      cy.visit(domain+'/mobile.php');
+      cy.visit('/mobile.php');
       cy.get("a[data-testid='forgotPassword']").click();
       cy.get("form[data-testid='resetForm']").should('be.visible');
     });
 
     it('Forgot password form - nonexistent user', () => {
-      cy.visit(domain+'/mobile.php');
+      cy.visit('/mobile.php');
       cy.get("a[data-testid='forgotPassword']").click();
       cy.get("form[data-testid='resetForm']").should('be.visible');
       cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
@@ -103,7 +98,7 @@ context('Login tests - Mobile', () => {
     });
 
     it('Forgot password form success confirmation', () => {
-      cy.visit(domain+'/mobile.php');
+      cy.visit('/mobile.php');
       cy.get("a[data-testid='forgotPassword']").click();
       cy.get("form[data-testid='resetForm']").should('be.visible');
       cy.get("input[data-testid='forgotPwdEmailField']").type(testAdmin);
