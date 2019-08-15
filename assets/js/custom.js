@@ -64,6 +64,7 @@ $(function() {
     old = $("#signaturefield").val();
     // Set old for new beneficiaries
     if (old==="") old={"lines":[]};
+
     
     $("#sig").signature({
         change: function(event, ui) {
@@ -72,7 +73,6 @@ $(function() {
                 !$("#sig").signature("isEmpty")
             );
             if (!$("#sig").signature("isEmpty")) {$("#field_date_of_signature").val((new Date()).toISOString().slice(0, 19).replace('T', ' '));}
-            else {$("#field_date_of_signature").val(0);}
         }
     });
 
@@ -86,6 +86,13 @@ $(function() {
         syncFormat: "JSON"
     });
     $("#sig").signature("draw", old);
+
+    $("#sig").signature(). 
+    bind('signaturechange', function(event, ui) { 
+        alert('The signature has changed'); 
+    });
+    
+    
 
     $("#clear").click(function() {
         $("#sig").signature("clear");
