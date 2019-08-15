@@ -28,6 +28,7 @@ function showHistory($table,$id) {
 	$smarty = new Zmarty;
 	$history = array();
 
+	
 	$result = db_query('SELECT h.*, u.naam FROM history AS h LEFT OUTER JOIN cms_users AS u ON h.user_id = u.id WHERE tablename = :table AND record_id = :id ORDER BY changedate DESC',array('table'=>$table,'id'=>$id));
 	while($row = db_fetch($result)) {
 		$row['changedate'] = strftime('%A %d %B %Y, %H:%M',strtotime($row['changedate']));
@@ -43,13 +44,43 @@ function showHistory($table,$id) {
 		else if (trim($row['changes']) == 'Box ordered to shop') {
 			$row['changes'] = " ordered the box to the shop";}
 		else if (trim($row['changes']) == 'Box order made undone'){
-			$row['changes'] = " canceled the box order";
-		}
+			$row['changes'] = " canceled the box order";}
+		else
+			if(!(is_null($row['to_int']) && is_null($row['to_float']))) {
+					$row['changes'] .= ' changed'; 
+			if(!is_null($row['from_int'])) {
+				$row['changes'] .= ' from '.$row['from_int'];
+			} else if(!is_null($row['from_float'])){
+				$row['changes'] .= ' from '.$row['from_float'];
+			}
+			if(!is_null($row['to_int'])) {
+				$row['changes'] .= ' to '.$row['to_int'];
+			} else if(!is_null($row['to_float'])){
+				$row['changes'] .= ' to '.$row['to_float'];
+			} }
 
 			$row['changes'] .= '; ';
 		$row['truncate'] = strlen($row['changes']) > 300;
 		$history[] = $row;
 	}
+
+
+
+		if(!(is_null($row['to_int']) && is_null($row['to_float']))) {
+		       	$row['changes'] .= ' changed'; 
+			if(!is_null($row['from_int'])) {
+				$row['changes'] .= ' from '.$row['from_int'];
+			} else if(!is_null($row['from_float'])){
+				$row['changes'] .= ' from '.$row['from_float'];
+			}
+			if(!is_null($row['to_int'])) {
+				$row['changes'] .= ' to '.$row['to_int'];
+			} else if(!is_null($row['to_float'])){
+				$row['changes'] .= ' to '.$row['to_float'];
+			}
+			$row['changes'] .= '; ';
+		}
+
 	$smarty->assign('row',$history);
 	return $smarty->fetch('cms_form_history.tpl', true);
 
