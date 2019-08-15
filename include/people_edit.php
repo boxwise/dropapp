@@ -71,7 +71,6 @@
 	} else {
 		$cmsmain->assign('title', 'Add a new beneficiary');
 	}
-	
 	$data['allowdrops'] = allowGiveDrops();
 
 	if($id){
@@ -80,9 +79,8 @@
 		$ajaxaside = new Zmarty;
 
 		#$formdata = $formbuttons = '';
-		$output = db_row('SELECT approvalsigned, date_of_signature FROM people WHERE id = :id', array('id'=>$id));
-		$side['approvalsigned'] = $output['approvalsigned'];
-		$side['date_of_signature'] = $output['date_of_signature'];
+		$side['approvalsigned'] = $data['approvalsigned'];
+		$side['date_of_signature'] = $data['date_of_signature'];
 		$side['allowdrops'] = allowGiveDrops();
 
 		$side['name'] = db_row('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = '. $sideid);
@@ -191,7 +189,7 @@
 		addfield('textarea','Log','log',array('tab'=>'laundry','readonly'=>true));
 	}
 	
-	addfield('date','Date Signature','date_of_signature', array('tab'=>'signature','hidden'=>true));
+	addfield('hidden','Date Signature','date_of_signature');
 	addfield('signature','Signature','signaturefield',array('tab'=>'signature'));
 	addfield('checkbox','Form signed','approvalsigned', array('tab'=>'signature','hidden'=>true));
 	
@@ -236,7 +234,6 @@
 
 	}
 	addfield('created','Created','created',array('aside'=>true));
-
 	if ($id) addformbutton('submitandedit',$translate['cms_form_save']);
 	else addformbutton('submitandnew',"Save and new");
 

@@ -71,9 +71,7 @@ $(function() {
             $("#field_approvalsigned").prop(
                 "checked",
                 !$("#sig").signature("isEmpty")
-            );
-            if (!$("#sig").signature("isEmpty")) {$("#field_date_of_signature").val((new Date()).toISOString().slice(0, 19).replace('T', ' '));}
-        }
+            );        }
     });
 
 
@@ -89,15 +87,18 @@ $(function() {
 
     $("#sig").signature(). 
     bind('signaturechange', function(event, ui) { 
-        alert('The signature has changed'); 
+        if (!$("#sig").signature("isEmpty") && ($('#field_date_of_signature').val() == '0000-00-00 00:00:00')) 
+        {$("#field_date_of_signature").val((new Date()).toISOString().slice(0, 19).replace('T', ' '));}
     });
     
     
 
     $("#clear").click(function() {
         $("#sig").signature("clear");
+        $("#field_date_of_signature").val('0000-00-00 00:00:00')
         return false;
     });
+
 
     //Validate dates in users menu
     $("#field_valid_firstday_datepicker").datetimepicker({
