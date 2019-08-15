@@ -39,7 +39,7 @@ function showHistory($table,$id) {
 			$loc_dest = db_row('SELECT locations.label FROM locations WHERE locations.id = :id_dest',array('id_dest'=>$loc_ids[1]));
 			$row['changes'] = "changed box location from ".$loc_orig['label']." to ".$loc_dest['label'];}
 		else if ($row['changes'] == 'Record created'){
-			$row['changes'] = " created the box";}
+			$row['changes'] = " created the record";}
 		else if (trim($row['changes']) == 'Box ordered to shop') {
 			$row['changes'] = " ordered the box to the shop";}
 		else if (trim($row['changes']) == 'Box order made undone'){
