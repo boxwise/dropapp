@@ -15,7 +15,7 @@ class Zmarty extends Smarty {
         }
         $this->merge_compiled_includes = true;
         $this->setCompileDir(__DIR__.'/../../templates/templates_c');
-        $this->addTemplateDir(__DIR__.'/../../templates');
+        $this->setTemplateDir(__DIR__.'/../../templates');
         $this->assign('lan',$lan);
         $this->assign('modal',isset($_GET['modal']));
         $this->assign('translate',$translate);
