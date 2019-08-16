@@ -36,7 +36,7 @@
 			COUNT(c.name)
 		FROM cms_usergroups_camps AS x
 		INNER JOIN cms_usergroups AS g ON x.cms_usergroups_id = g.id
-		INNER JOIN cms_users AS us ON (us.cms_usergroups_id = g.id) OR us.id = 1
+		INNER JOIN cms_users AS us ON (us.cms_usergroups_id = g.id)
 		INNER JOIN camps as c ON c.id = x.camp_id 
 		WHERE us.id = '.$_SESSION['user']['id'].' ');
 		
