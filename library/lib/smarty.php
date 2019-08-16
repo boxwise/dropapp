@@ -1,6 +1,6 @@
 <?php
-
 use OpenCensus\Trace\Tracer;
+
 class Zmarty extends Smarty {
     public function __construct() {
         global $settings, $translate, $lan;
@@ -14,8 +14,8 @@ class Zmarty extends Smarty {
             $this->debugging = true;
         }
         $this->merge_compiled_includes = true;
-        $this->setCompileDir($settings['smarty_dir']);
-        $this->addTemplateDir($_SERVER['DOCUMENT_ROOT'].'/templates');
+        $this->setCompileDir(__DIR__.'/../../templates/templates_c');
+        $this->addTemplateDir(__DIR__.'/../../templates');
         $this->assign('lan',$lan);
         $this->assign('modal',isset($_GET['modal']));
         $this->assign('translate',$translate);
