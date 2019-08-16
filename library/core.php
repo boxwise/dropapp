@@ -11,9 +11,6 @@ require_once('lib/database.php');
 if (!array_key_exists('upload_dir',$settings)) {
     $settings['upload_dir'] = $_SERVER['DOCUMENT_ROOT'].'/uploads';
 }
-if (!array_key_exists('smarty_dir',$settings)) {
-    $settings['smarty_dir'] = $_SERVER['DOCUMENT_ROOT'].'/templates/templates_c';
-}
 
 # connect to database
 if (array_key_exists('db_socket',$settings)) {
