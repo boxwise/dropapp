@@ -13,15 +13,14 @@
 		listsetting('haspagemenu', true);
 		addpagemenu('all', 'Active', array('link'=>'?action=cms_users'));
 		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=cms_users_deactivated', 'active'=>true));
-		addpagemenu('deleted', 'Deleted', array('link'=>'?action=cms_users_deleted'));
 		
 		// because we access DB tables based on file names - action name matches table name (e.g. cms_users.php affects cms_users DB table)
 		// and list tabs have their own page, action needs to be edited to match DB table name
 		// origin stays the same so after confirm, user gets navigated back to the tab he came from
 		$replaceArray = array("_deactivated");
 		$editedaction = str_ireplace($replaceArray, '', $action);
-		$listconfig['edit'] = $editedaction . '_edit';
-		$listconfig['hasPredefinedEdit'] = true;
+		listsetting('edit', $editedaction . '_edit');
+		listsetting('hasPredefinedEdit', true);
 
 		$cms_users_admin_query = 'SELECT u.*, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete, 1 as disableifistrue
 			FROM cms_users AS u

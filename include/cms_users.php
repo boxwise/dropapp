@@ -10,7 +10,6 @@
 		listsetting('add', $translate['cms_users_new']);
 		addpagemenu('all', 'Active', array('link'=>'?action=cms_users', 'active'=>true));
 		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=cms_users_deactivated'));
-		addpagemenu('deleted', 'Deleted', array('link'=>'?action=cms_users_deleted'));
 		
 		$cms_users_admin_query = '
 			SELECT u.*, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete
