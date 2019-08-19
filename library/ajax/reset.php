@@ -15,9 +15,9 @@ $row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != ""
 		$message = str_ireplace('{sitename}',$translate['site_name'].' ('.$_SERVER['HTTP_HOST'].')',$message);
 
 		if($row['usertype']=='family') {
-			$message = str_ireplace('{link}','http://'.$_SERVER['HTTP_HOST'].'/reset.php?peopleid='.$row['id'].'&hash='.$hash,$message);
+			$message = str_ireplace('{link}','https://'.$_SERVER['HTTP_HOST'].'/reset.php?peopleid='.$row['id'].'&hash='.$hash,$message);
 		} else {
-			$message = str_ireplace('{link}','http://'.$_SERVER['HTTP_HOST'].'/reset.php?userid='.$row['id'].'&hash='.$hash,$message);
+			$message = str_ireplace('{link}','https://'.$_SERVER['HTTP_HOST'].'/reset.php?userid='.$row['id'].'&hash='.$hash,$message);
 		}
 
 		$result = sendmail($row['email'], $row['naam'], $translate['cms_reset_mailsubject'], $message);

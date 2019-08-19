@@ -7,25 +7,6 @@
 
 	if(!$ajax) {
 
-		if($_POST) {
-
-			if($_POST['id']) {
-				verify_campaccess_people($_POST['id']);
-				verify_deletedrecord($table,$_POST['id']);
-			}
-
-			$_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
-			$_POST['user_id'] = $_SESSION['user']['id'];
-			$_POST['drops'] = -intval($_POST['count']) * db_value('SELECT value FROM products WHERE id = :id', array('id'=>$_POST['product_id'][0]));
-
-			$handler = new formHandler($table);
-
-			$savekeys = array('people_id', 'product_id', 'count', 'description', 'drops', 'transaction_date', 'user_id','size_id');
-			$id = $handler->savePost($savekeys);
-
-			redirect('?action=check_out&people_id='.$_POST['people_id'][0]);
-		}
-
 		$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
 
 		if (!$id) {
@@ -51,12 +32,13 @@
 		$cmsmain->assign('title','New purchase');
 
 		addfield('select','Family/Beneficiary','people_id',array('onchange'=>'selectFamily("people_id",false)', 'required'=>true, 'multiple'=>false, 'query'=>'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1'));
-		addfield('select','Product','product_id',array('onchange'=>'getProductValue("product_id");','required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
-		addfield('number', 'Number', 'count', array('onchange'=>"calcCosts('count')", 'onkeyup'=>"calcCosts('count')", 'required'=>true,'width'=>2));
+		addfield('select','Product','product_id',array('required'=>true,'multiple'=>false,'query'=>'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label, p.value as price FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name'));
+		addfield('number', 'Number', 'count', array('required'=>true,'width'=>2));
+		addfield('custom','','<button id="add-to-cart-button" type="button" class="btn btn-success" disabled>Add to cart</button>');
 		#addfield('text','Note','description');
 		addfield('line');
 
-		addfield('custom','','<button name="__action" id="form-submit" value="" class="btn btn-submit btn-success">Save & next purchase</button>',array('aside'=>true, 'asidetop'=>true, ));
+		addfield('custom','','<button type="button" id="submitShoppingCart" value="" class="btn btn-submit btn-success" disabled>Save & next purchase</button>',array('aside'=>true, 'asidetop'=>true, ));
 		addfield('ajaxstart','', '', array('id'=>'ajax-content'));
 		addfield('ajaxend');
 
@@ -72,7 +54,6 @@
 		$cmsmain->assign('formbuttons',$formbuttons);
 
 	} else {
-
 		if($_POST['do']){
 			switch ($_POST['do']) {
 
@@ -89,7 +70,7 @@
 			    case 'show':
 					$ids = explode(',',$_POST['ids']);
 			    	list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-			        break;
+					break;
 			}
 
 			$return = array("success" => $success, 'message'=> $message, 'redirect'=>false, 'action'=>"$('#field_people_id').trigger('change')");
@@ -98,8 +79,35 @@
 			die();
 		}
 
-		$ajaxform = new Zmarty;
+		// Ajax POST request of shopping cart
+		if($_POST['cart']){		
 
+			$_POST['people_id'] = $_POST['family_id'];	//ToDo Rename family_id in custom.js
+			verify_campaccess_people($_POST['people_id']);
+			verify_deletedrecord('people',$_POST['people_id']);
+
+			$_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
+			$_POST['user_id'] = $_SESSION['user']['id'];
+
+			$cart = json_decode($_POST['cart'], true);
+			$savekeys = array('people_id', 'product_id', 'count', 'drops', 'transaction_date', 'user_id');
+			foreach ($cart as $item) {
+				$_POST['product_id'] = intval($item['id']);
+				$_POST['count'] = intval($item['count']);
+				$_POST['drops'] = $item['price']*intval($item['count'])*(-1);
+	
+				$handler = new formHandler($table);
+				$id = $handler->savePost($savekeys);
+			}
+			
+			$return = array("success" => true, 'message'=> "Shopping cart successfully submitted", 'redirect'=>'?action=check_out');
+
+			echo json_encode($return);
+			die();
+		}
+
+		$ajaxform = new Zmarty;
+		
 		/* vanaf hier */
 
 		$data['people_id'] = intval($_POST['people_id']);
@@ -109,10 +117,13 @@
 		// This can be a warning that is given based on certain shopping actions in the past.
 // 		$data['shoeswarning'] = db_value('SELECT COUNT(id) FROM transactions WHERE people_id = :id AND product_id IN (63,709) AND transaction_date >= "2017-11-13 00:00"', array('id'=>$data['people_id']));
 		
+		// Shopping cart
+		addfield('shopping_cart','', '', array('width'=>15, 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'drops3'=>ucwords($_SESSION['camp']['currencyname']).' together', 'delete'=>'')));
+		
 		$table = 'transactions';
-		addfield('title','Today\'s Purchases');
-		addfield('list','','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 AND DATE_FORMAT(t.transaction_date, "%Y-%m-%d") = CURDATE() ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'tdate'=>'Date'),
-			'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'check_out', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
+		addfield('title','All Purchases');
+		addfield('list','','purch', array('width'=>10,'query'=>'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id']. ' AND t.product_id != 0 ORDER BY t.transaction_date DESC', 'columns'=>array('product'=>'Product', 'count'=>'Amount', 'drops2'=>ucwords($_SESSION['camp']['currencyname']), 'tdate'=>'Date'),
+		'allowedit'=>false,'allowadd'=>false,'allowselect'=>true,'allowselectall'=>false, 'action'=>'check_out', 'redirect'=>false, 'allowsort'=>false, 'listid'=>$data['people_id']));
 
 		$ajaxform->assign('data',$data);
 		$ajaxform->assign('formelements',$formdata);
