@@ -7,9 +7,6 @@
 	} else{
 		initlist();
 		listsetting('allowadd', false);
-		listsetting('allowdelete', true);
-		listsetting('allowselectall', true);
-		listsetting('allowselect', true);
 		listsetting('haspagemenu', true);
 		addpagemenu('all', 'Active', array('link'=>'?action=cms_users'));
 		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=cms_users_deactivated', 'active'=>true));
@@ -20,7 +17,6 @@
 		$replaceArray = array("_deactivated");
 		$editedaction = str_ireplace($replaceArray, '', $action);
 		listsetting('edit', $editedaction . '_edit');
-		listsetting('hasPredefinedEdit', true);
 
 		$cms_users_admin_query = 'SELECT u.*, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete, 1 as disableifistrue
 			FROM cms_users AS u

@@ -179,11 +179,9 @@ function loadSessionData($user) {
 }
 
 function loginasuser($table,$ids) {
-	dump($ids[0]);
 	$id = $ids[0];
 	if($_SESSION['user2'] or !$_SESSION['user']['is_admin']) {
-		$success = false;
-		$message = '"Login als" is alleen voor admingebruikers';
+		throw new Exception('You don\'t have access. Either you are not a Boxwise God or you are already logged in as a different user!');
 	} else {
 		$_SESSION['user2'] = $_SESSION['user'];
 		$_SESSION['camp2'] = $_SESSION['camp'];

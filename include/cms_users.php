@@ -6,8 +6,8 @@
 		require_once('cms_users_handle_ajax_operations.php');
 	} else {
 		initlist();
-		listsetting('haspagemenu', true);
 		listsetting('add', $translate['cms_users_new']);
+		listsetting('haspagemenu', true);
 		addpagemenu('all', 'Active', array('link'=>'?action=cms_users', 'active'=>true));
 		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=cms_users_deactivated'));
 		

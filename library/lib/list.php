@@ -290,10 +290,7 @@ function initlist()
 	$listconfig['thisfile'] = $thisfile;
 
 	$listconfig['origin'] = $action;
-	if (!$listconfig['hasPredefinedEdit']) {
-		$listconfig['edit'] = $action . '_edit';
-	}
-	$listconfig['hasPredefinedEdit'] = false;
+	$listconfig['edit'] = $action . '_edit';
 	$listconfig['add'] = $translate['cms_list_add'];
 	$listconfig['delete'] = $translate['cms_list_delete'];
 	$listconfig['copy'] = $translate['cms_list_copy'];
