@@ -1,18 +1,73 @@
 
 <div class="col-md-8 col-sm-12 col-md-offset-2 signature-text">
-	{if {$currentOrg['label']}=='IHA'}<div id="IHA">
-			<h3> Privacy declaration of IHA </h3><br />
-			<p>IHA collects personal data needed for you to participate in our distributions and activities. This includes:</p>
-			<ul>
-			<li>Name</li>
-			<li>Date of Birth</li>
-			<li>Nationality </li>
-			<li>Address  </li>
-			<li>Gender</li>
+	{if {$currentOrg['label']}=='IHA'}
+		<div id="IHA">
+			<ul class="nav nav-tabs">
+				<li class = "active"><a href="#languagetab_en" data-toggle="tab">English</a></li>
+				<li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
+				<li><a href="#languagetab_km" data-toggle="tab">Kurmancî</a></li>
+				<!-- <li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li>
+				<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li> -->
 			</ul>
-			<p>We are committed to protecting your privacy rights. You have the right to access, delete or change your personal data at any time. You can learn more about our privacy policies here: <a href="url"> www.iha.help/en/data-privacy</a></p>
-			<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree to my personal data being collected and processed for this purpose.<br />
-			I also agree that my family ́s personal data is being collected and processed.</p>
+			<div class="tab-content">
+				<div class="tab-pane fade in active" id="languagetab_en">
+					<h3> Privacy declaration of IHA </h3><br />
+					<p>IHA collects personal data needed for you to participate in our distributions and activities. This includes:</p>
+					<ul>
+						<li>Name</li>
+						<li>Date of Birth</li>
+						<li>Nationality </li>
+						<li>Address  </li>
+						<li>Gender</li>
+					</ul>
+					<p>We are committed to protecting your privacy rights. You have the right to access, delete or change your personal data at any time. You can learn more about our privacy policies here: <a href="https://www.iha.help/en/data-privacy"> www.iha.help/en/data-privacy</a></p>
+					<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree to my personal data being collected and processed for this purpose.<br />
+					I also agree that my family's personal data is being collected and processed.</p>
+				</div>
+				<div class="tab-pane fade" id="languagetab_ar">
+					<p>
+	تجمع IHA البيانات الشخصية اللازمة لكي تشارك في عمليات التوزيع والأنشطة الخاصة بنا.
+	هذا يشمل:
+					</p>
+					<ul>
+						<li>
+	اسم
+						</li>
+						<li>
+	تاريخ الولادة
+						</li>
+						<li>
+	جنسية
+						</li>
+						<li>
+	عنوان
+						</li>
+						<li>
+	ذكر أو أنثى 
+						</li>
+					</ul>
+					<p>
+	نحن ملتزمون بحماية حقوق الخصوصية الخاصة بك.  لديك الحق في الوصول إلى أو حذف أو تغيير بياناتك الشخصية في أي وقت.  يمكنك معرفة المزيد حول سياسات الخصوصية الخاصة بنا هنا: <a href="https://www.iha.help/ar/data-privacy"> www.iha.help/ar/data-privacy</a>
+					</p>
+					<p>
+	أوافق (الاسم) على جمع بياناتي الشخصية ومعالجتها لهذا الغرض.
+	أوافق أيضًا على أن البيانات الشخصية لعائلتي يتم جمعها ومعالجتها.
+					</p>
+				</div>
+				<div class="tab-pane fade" id="languagetab_km">
+					<p>IHA daneyên kesane yên ku ji bo beşdarî di belavkirin û çalakiyên me de hewce dike kom dike. Ev tê de ye: </p>
+					<ul>
+						<li>Nav</li>
+						<li>Dîroka jidayikbûnê</li>
+						<li>Netewbûn</li>
+						<li>Navnîşan</li>
+						<li>Seks</li>
+					</ul>
+					<p>Em soz didin ku mafê we yê nepenî biparêzin.  Mafê we heye ku di her kêliyê de bigihîje, jêbirin an biguhezin daneyên kesane.  Hûn dikarin di derheqê polîtîkayên nepeniya me de bêtir fêr bibin: <a href="https://www.iha.help/en/data-privacy"> www.iha.help/en/data-privacy</a></p>
+					<p>Ez razî me, <strong>{$data['firstname']} {$data['lastname']}</strong>, da ku ji bo vê armancê daneyên kesane yên min kom bike û Armanc bike. </br>
+					Ez di heman demê de bipejirînim ku daneyên kesane yên malbata min hatine komkirin û pêvajoyê ne.</p>
+				</div>
+			</div>
 		</div>
 	{else}
 	<ul class="nav nav-tabs">

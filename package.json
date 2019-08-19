@@ -1,0 +1,26 @@
+{
+  "name": "dropapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "http://github.com/jamescrowley/dropapp/",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^3.4.1",
+    "wait-on": "^3.3.0"
+  },
+  "scripts": {
+    "cypress": "CYPRESS_baseUrl=http://localhost:8100 cypress"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

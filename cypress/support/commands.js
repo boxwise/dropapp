@@ -64,23 +64,19 @@ Cypress.Commands.add("getLoginNotifications", () => {
     };
 });
 
-Cypress.Commands.add("getDomain", () => {
-    return {domain: Cypress.env('targetDomain')};
-});
-
 Cypress.Commands.add("getTestOrgName", () => {
     return {domain: Cypress.env('orgName')};
 });
 
 Cypress.Commands.add("Login", (userMail, userPassword) => { 
-    cy.visit(Cypress.env('targetDomain') + "/login.php");
+    cy.visit("/login.php");
     cy.get("input[data-testid='email']").type(`${userMail}`);
     cy.get("input[data-testid='password']").type(`${userPassword}`);
     cy.get("input[data-testid='signInButton']").click();
 });
 
 Cypress.Commands.add("LoginMobile", (userMail, userPassword) => { 
-    cy.visit(Cypress.env('targetDomain') + "/mobile.php");
+    cy.visit("/mobile.php");
     cy.get("input[data-testid='email']").type(`${userMail}`);
     cy.get("input[data-testid='password']").type(`${userPassword}`);
     cy.get("input[data-testid='signInButton']").click();

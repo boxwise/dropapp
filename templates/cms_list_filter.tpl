@@ -21,6 +21,7 @@
 		</div>
 	</li>
 {/if}
+
 {if $listconfig['filter2']}
 	<li>
 		<div class="btn-group">
@@ -62,6 +63,30 @@
 			<ul class="dropdown-menu pull-right" role="menu">
 				{foreach $listconfig['filter3']['options'] as $key=>$option}
 					<li><a href="?action={$listconfig['origin']}&filter3={$key}">{$option}</a></li></li> 
+				{/foreach}
+			</ul>
+		</div>
+	</li>
+{/if}
+
+{if $listconfig['filter4']}
+	<li>
+		<div class="btn-group">
+			<div type="button" title="Chose among Products existing in boxes" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+				{if $listconfig['filtervalue4']}
+					{$listconfig['filter4']['options'][$listconfig['filtervalue4']]}
+				{else}
+					{$listconfig['filter4']['label']}
+				{/if}
+				{if $listconfig['filtervalue4']}
+					<a class="fa fa-times form-control-feedback" href="?action={$listconfig['origin']}&resetfilter4=true"></a>
+				{else}
+					<span class="caret"></span>
+				{/if}
+			</div>
+			<ul class="dropdown-menu pull-right" role="menu">
+				{foreach $listconfig['filter4']['options'] as $key=>$option}
+					<li><a href="?action={$listconfig['origin']}&filter4={$key}">{$option}</a></li></li> 
 				{/foreach}
 			</ul>
 		</div>

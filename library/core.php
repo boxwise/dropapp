@@ -11,9 +11,6 @@ require_once('lib/database.php');
 if (!array_key_exists('upload_dir',$settings)) {
     $settings['upload_dir'] = $_SERVER['DOCUMENT_ROOT'].'/uploads';
 }
-if (!array_key_exists('smarty_dir',$settings)) {
-    $settings['smarty_dir'] = $_SERVER['DOCUMENT_ROOT'].'/templates/templates_c';
-}
 
 # connect to database
 if (array_key_exists('db_socket',$settings)) {
@@ -53,4 +50,7 @@ require_once('functions.php');
 require_once('lib/loginNotifications.php');
 
 $checksession_result = (!$login ? checksession(): array('success'=>true)); #check if a valid session exists; if none, redirect to loginpage
-if (!$ajax && !$mobile && !$checksession_result['success']) redirect($checksession_result['redirect'].(isset($checksession_result['message'])?'&warning=1&message='.$checksession_result['message']:''));
+if (!$ajax && !$mobile && !$checksession_result['success'])  {
+	# WARNING, this is an open redirect (security issue)
+    redirect($checksession_result['redirect'].(isset($checksession_result['message'])?'&warning=1&message='.$checksession_result['message']:''));
+}

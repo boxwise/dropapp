@@ -121,6 +121,21 @@
 				$data['modified_by'] = getCMSuser($data['modified_by']);
 			}
 		}
+
+		if ($type=="shopping_cart") {
+			$formdata[$field]['allowshowhide'] = false;
+			$formdata[$field]['orderby'] = false;
+			$formdata[$field]['allowmove'] = false;
+			$formdata[$field]['allowsort'] = false;
+			$formdata[$field]['allowadd'] = false;
+			$formdata[$field]['allowdelete'] = false;
+			$formdata[$field]['allowselectall'] = false;
+			$formdata[$field]['allowselect'] = false;
+
+			foreach($array as $key=>$value) {
+				$formdata[$field][$key] = $value;
+			}
+		}
 	}
 
 	function addformbutton($action,$label) {
