@@ -22,7 +22,7 @@ use OpenCensus\Trace\Tracer;
 
 		listsetting('haspagemenu', true);
 		addpagemenu('all', 'All', array('link'=>'?action=people', 'active'=>true));
-		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=people_trash'));
+		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=people_deactivated'));
 
 		$statusarray = array('week'=>'New this week','month'=>'New this month');
 		listfilter(array('label'=>'Show all people','options'=>$statusarray,'filter'=>'"show"'));
