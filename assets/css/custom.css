@@ -357,8 +357,7 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 	background-color: #f8f8f8 !important;
 }
 .table .firstline th {
-	border-top: 1px solid #999 !important;
-	border-bottom: none !important;
+	border-bottom: 1px solid #999 !important;
 	background-color: #f8f8f8 !important;
 }
 .cp-spinner{width:48px;height:48px;display:inline-block;box-sizing:border-box;position:relative;top: 50%;transform: translateY(-50%);}
