@@ -78,7 +78,6 @@
 		$side['person'] = $id;
 		$ajaxaside = new Zmarty;
 
-		#$formdata = $formbuttons = '';
 		$side['approvalsigned'] = $data['approvalsigned'];
 		$side['date_of_signature'] = $data['date_of_signature'];
 		$side['allowdrops'] = allowGiveDrops();
@@ -130,15 +129,9 @@
 	addfield('text',$_SESSION['camp']['familyidentifier'],'container',array('tab'=>'people','required'=>true,'onchange'=>'capitalize("container")'));
 	addfield('select','Gender','gender',array('tab'=>'people',
 	'options'=>array(array('value'=>'M', 'label'=>'Male'), array('value'=>'F', 'label'=>'Female'))));
-
- 	addfield('date','Date of birth','date_of_birth', array('tab'=>'people', 'date'=>true, 'time'=>false));
- 	#addfield('checkbox','Approval form for storing personal data is signed (also for family members)','approvalsigned', array('tab'=>'people'));
- 	
- 	
+ 	addfield('date','Date of birth','date_of_birth', array('tab'=>'people', 'date'=>true, 'time'=>false)); 	
 	addfield('line','','',array('tab'=>'people'));
 	addfield('select','Language(s)','languages',array('tab'=>'people','multiple'=>true,'query'=>'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible'));
-
-
  	addfield('textarea','Comments','comments',array('tab'=>'people'));
 	addfield('line','','',array('tab'=>'people'));
 	addfield('checkbox','This person is not officially registered in camp','notregistered',array('tab'=>'people'));	
@@ -189,7 +182,7 @@
 		addfield('textarea','Log','log',array('tab'=>'laundry','readonly'=>true));
 	}
 	
-	addfield('hidden','Date Signature','date_of_signature');
+	addfield('hidden','Date Signature','date_of_signature',array('tab'=>'signature'));
 	addfield('signature','Signature','signaturefield',array('tab'=>'signature'));
 	addfield('checkbox','Form signed','approvalsigned', array('tab'=>'signature','hidden'=>true));
 	
@@ -230,13 +223,10 @@
 			}			
 
 		}
-
-
 	}
 	addfield('created','Created','created',array('aside'=>true));
 	if ($id) addformbutton('submitandedit',$translate['cms_form_save']);
 	else addformbutton('submitandnew',"Save and new");
-
 
 	// Tabs
 	$tabs['people'] = 'Personal';
