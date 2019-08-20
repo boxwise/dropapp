@@ -129,7 +129,7 @@
 					  		<th><div {if $column['width']}style="width:{$column['width']}px;"{/if}>{$column['label']}</div></th>
 						{/foreach}
 					  	</tr>
-						<tr class="pager sorter-false firstline">
+						<tr class="sorter-false firstline">
 							{foreach $firstline as $column}
 					  			<th><div>{$column}</div></th>
 							{/foreach}
