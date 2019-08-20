@@ -29,7 +29,7 @@ function login($email, $pass, $autologin, $mobile = false)
 					setcookie("autologin_pass", null, time() - 3600, '/');
 				}
 				
-				$redirect = $settings['rootdir'] . '/?action=start';
+				$redirect = '/?action=start';
 			}
 		} else { # password is not correct
 			$success = false;
@@ -67,7 +67,7 @@ function checksession()
 		$in_valid_dates = check_valid_from_until_date($row['valid_firstday'], $row['valid_lastday']);
 		if (!$in_valid_dates['success']) {
 			$result['success'] = false;
-			$result['redirect'] =  $settings['rootdir'] . $settings['cmsdir'] . '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
+			$result['redirect'] =  '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
 			$result['message'] = $in_valid_dates['message'];
 		}
 	} else { # no valid session exists
@@ -79,7 +79,7 @@ function checksession()
 			}
 		} else {
 			$result['success'] = false;
-			$result['redirect'] =  $settings['rootdir'] . $settings['cmsdir'] . '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
+			$result['redirect'] = '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
 		}
 	}
 	return $result;
@@ -134,7 +134,7 @@ function sendlogindata($table, $ids)
 		$newpassword = createPassword();
 
 		$mail = $translate['cms_sendlogin_mail'];
-		$mail = str_ireplace('{sitename}',  $_SERVER['HTTP_HOST'] . $settings['rootdir'] , $mail);
+		$mail = str_ireplace('{sitename}',  $_SERVER['HTTP_HOST'], $mail);
 		$mail = str_ireplace('{password}', $newpassword, $mail);
 		$mail = str_ireplace('{orgname}', $_SESSION['organisation']['label'], $mail); 
 
@@ -176,4 +176,24 @@ function loadSessionData($user) {
 		SELECT * 
 		FROM organisations 
 		WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', array('id' => $_SESSION['usergroup']['organisation_id']));
+}
+
+function loginasuser($table,$ids) {
+	$id = $ids[0];
+	if($_SESSION['user2'] or !$_SESSION['user']['is_admin']) {
+		throw new Exception('You don\'t have access. Either you are not a Boxwise God or you are already logged in as a different user!');
+	} else {
+		$_SESSION['user2'] = $_SESSION['user'];
+		$_SESSION['camp2'] = $_SESSION['camp'];
+		$_SESSION['usergroup2'] = $_SESSION['usergroup'];
+		$_SESSION['organisation2'] = $_SESSION['organisation'];
+		$_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id=:id',array('id'=>$id));
+		loadSessionData($_SESSION['user']);
+		$camplist = camplist();
+		$_SESSION['camp'] = reset($camplist);
+		$success = true;
+		$message = 'Logged in as '.$_SESSION['user']['naam'];
+	}
+
+	return array($success,$message,true);
 }

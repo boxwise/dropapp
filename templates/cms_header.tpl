@@ -9,9 +9,9 @@
     <title>{if isset($title)}{$title|strip_tags:false} - {/if}{$translate['site_name']}</title>
 
     <!-- Bootstrap -->
-    <link href="{$settings['rootdir']}/assets/css/minified.css" rel="stylesheet">
-    <link href="{$settings['rootdir']}/assets/css/custom.css?v=7" rel="stylesheet">    
-    <link href="{$settings['rootdir']}/assets/css/print.css" rel="stylesheet" media="print">
+    <link href="/assets/css/minified.css" rel="stylesheet">
+    <link href="/assets/css/custom.css?v=7" rel="stylesheet">    
+    <link href="/assets/css/print.css" rel="stylesheet" media="print">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -21,9 +21,9 @@
 
 {* <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script> *}
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{$settings['rootdir']}/assets/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" href="{$settings['rootdir']}/assets/img/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="{$settings['rootdir']}/assets/img/favicon-16x16.png" sizes="16x16">	
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/assets/img/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/assets/img/favicon-16x16.png" sizes="16x16">	
    
   </head>
 

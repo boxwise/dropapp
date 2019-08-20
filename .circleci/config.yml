@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   gcp-cli: circleci/gcp-cli@1.5.0
+  cypress: cypress-io/cypress@1.8.0
 jobs:
   build:
     docker:
@@ -13,7 +14,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
-      - run: composer install -n --prefer-dist
+      - run: composer install -n --optimize-autoloader --no-dev
       # save composer cache
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
@@ -47,7 +48,7 @@ jobs:
           Git hash: ${CIRCLE_SHA1}" > assets/version.txt
           # generate config file
           echo "<?php
-            \$settings['rootdir'] = '';
+            \$settings['version'] = '${CIRCLE_BUILD_NUM}';
             \$settings['db_socket'] = '/cloudsql/${BOXWISE_PRIMARYDB_SOCKET}';
             \$settings['db_database'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_user'] = '${<< parameters.envVariablePrefix >>DBNAME}';
@@ -86,7 +87,7 @@ jobs:
           # wait for cloud sql proxy to initialize
           sleep 1s
           cd workspace
-          # apply db changes
+          # apply db changes 
           echo "Migrating << parameters.serviceName >> database"
           vendor/bin/phinx migrate -e << parameters.serviceName >>
           # deploy
@@ -96,7 +97,19 @@ workflows:
   build-and-deploy:
     jobs:
     - build
+    # baseUrl for cypress is set in cypress.json (currently staging.boxwise.co)
+    - cypress/run:
+        yarn: true
+        record: true
+        wait-on: 'https://staging.boxwise.co/'
+        no-workspace: true
+        requires:
+          - deploy-staging
+        filters:
+          branches:
+            only: master
     - deploy:
+        name: deploy-staging
         envVariablePrefix: BOXWISE_STAGING_
         serviceName: default
         requires:
@@ -105,6 +118,7 @@ workflows:
           branches:
             only: master
     - deploy:
+        name: deploy-demo
         envVariablePrefix: BOXWISE_DEMO_
         serviceName: demo
         requires:
@@ -113,6 +127,7 @@ workflows:
           branches:
             only: production
     - deploy:
+        name: deploy-prod
         envVariablePrefix: BOXWISE_PROD_
         serviceName: production
         requires:

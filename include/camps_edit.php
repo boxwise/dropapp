@@ -7,7 +7,7 @@
 
 		$handler = new formHandler($table);
 
-		$savekeys = array('name','market','familyidentifier','delete_inactive_users','food','bicycle','idcard','workshop','laundry','schedulestart','schedulestop','schedulebreak','schedulebreakstart','schedulebreakduration','scheduletimeslot','currencyname','dropsperadult','dropsperchild','dropcapadult','dropcapchild','bicyclerenttime','adult_age','daystokeepdeletedpersons','extraportion','maxfooddrops_adult','maxfooddrops_child','bicycle_closingtime','bicycle_closingtime_saturday','organisation_id');
+		$savekeys = array('name','market','familyidentifier','delete_inactive_users','food','bicycle','idcard','workshop','laundry','schedulestart','schedulestop','schedulebreak','schedulebreakstart','schedulebreakduration','scheduletimeslot','currencyname','dropsperadult','dropsperchild','dropcapadult','dropcapchild','bicyclerenttime','adult_age','daystokeepdeletedpersons','extraportion','maxfooddrops_adult','maxfooddrops_child','bicycle_closingtime','bicycle_closingtime_saturday','organisation_id','resettokens');
 		$id = $handler->savePost($savekeys);
 		$handler->saveMultiple('functions','cms_functions_camps','camps_id','cms_functions_id');
 
@@ -76,6 +76,7 @@
 	addfield('title',$_SESSION['camp']['currencyname'].' per cycle','',array('tab'=>'market'));
 	addfield('number',$_SESSION['camp']['currencyname'].' per adult', 'dropsperadult', array('tab'=>'market','width'=>2));
 	addfield('number', $_SESSION['camp']['currencyname'].' per child', 'dropsperchild', array('tab'=>'market','width'=>2));
+	addfield('checkbox', 'Reset tokens on cycle restart', 'resettokens', array('tab'=>'market'));
 	addfield('line','','',array('tab'=>'market'));
 	addfield('title',$_SESSION['camp']['currencyname'].' capping','',array('tab'=>'market'));
 	addfield('number', 'Maximum '.$_SESSION['camp']['currencyname'].' per adult', 'dropcapadult', array('tab'=>'market','width'=>2));

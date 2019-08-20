@@ -3,15 +3,13 @@ if(!DEFINED('LOADED_VIA_SINGLE_ENTRY_POINT'))
     throw new Exception("This app must now be running through the single entry point. Is your web server config directing all php traffic to gcloud-entry.php?");
 
 define('CORE',true);
+session_start();
 
 # load database library
 require_once('lib/database.php');
 
 if (!array_key_exists('upload_dir',$settings)) {
     $settings['upload_dir'] = $_SERVER['DOCUMENT_ROOT'].'/uploads';
-}
-if (!array_key_exists('smarty_dir',$settings)) {
-    $settings['smarty_dir'] = $_SERVER['DOCUMENT_ROOT'].$settings['rootdir'].'/templates/templates_c';
 }
 
 # connect to database
@@ -33,9 +31,6 @@ mb_internal_encoding("UTF-8");
 # load translate library
 require_once('lib/translate.php');
 
-# load Smarty (depends on database and translate)
-require_once('smarty/libs/Smarty.class.php');
-
 # load other libraries
 require_once('lib/smarty.php');
 require_once('lib/errorhandling.php');
@@ -55,4 +50,7 @@ require_once('functions.php');
 require_once('lib/loginNotifications.php');
 
 $checksession_result = (!$login ? checksession(): array('success'=>true)); #check if a valid session exists; if none, redirect to loginpage
-if (!$ajax && !$mobile && !$checksession_result['success']) redirect($checksession_result['redirect'].(isset($checksession_result['message'])?'&warning=1&message='.$checksession_result['message']:''));
+if (!$ajax && !$mobile && !$checksession_result['success'])  {
+	# WARNING, this is an open redirect (security issue)
+    redirect($checksession_result['redirect'].(isset($checksession_result['message'])?'&warning=1&message='.$checksession_result['message']:''));
+}

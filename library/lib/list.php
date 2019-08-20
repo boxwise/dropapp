@@ -64,7 +64,7 @@ function listDelete($table, $ids, $uri = false)
 	$hasDeletefield = db_fieldexists($table, 'deleted');
 	$hasPrevent = db_fieldexists($table, 'preventdelete');
 	$hasTree = db_fieldexists($table, 'parent_id');
-
+	
 	try {
 		foreach ($ids as $id) {
 			if ($hasDeletefield) {
@@ -350,6 +350,23 @@ function listfilter($options = array())
 	}
 }
 
+
+function listfilter4($options = array())
+{
+	global $listconfig, $action;
+
+	if ($options['query']) $options['options'] = db_simplearray($options['query']);
+	listsetting('filter4', $options);
+
+	if ($_GET['resetfilter4']) unset($_SESSION['filter4'][$action]);
+	if ($_GET['filter4']) {
+		$listconfig['filtervalue4'] = $_GET['filter4'];
+		$_SESSION['filter4'][$action] = $listconfig['filtervalue4'];
+	} elseif ($_SESSION['filter4'][$action]) {
+		$listconfig['filtervalue4'] = $_SESSION['filter4'][$action];
+	}
+}
+
 function listfilter2($options = array())
 {
 	global $listconfig, $action;
@@ -407,6 +424,7 @@ function getlistdata($query, $parent = 0)
 	$hasFilter = $listconfig['filtervalue'];
 	$hasFilter2 = $listconfig['filtervalue2'];
 	$hasFilter3 = $listconfig['filtervalue3'];
+	$hasFilter4 = $listconfig['filtervalue4'];
 
 	$hasSubtable = db_tableexists($table . '_content');
 
@@ -435,6 +453,8 @@ function getlistdata($query, $parent = 0)
 		$query = insertwhere($query, $listconfig['filter2']['filter'] . '=' . db_escape($hasFilter2));
 	if ($hasFilter3 && !$listconfig['manualquery'])
 		$query = insertwhere($query, $listconfig['filter3']['filter'] . '=' . db_escape($hasFilter3));
+	if ($hasFilter4 && !$listconfig['manualquery'])
+		$query = insertwhere($query, $listconfig['filter4']['filter'] . '=' . db_escape($hasFilter4));
 
 
 	if ($listconfig['searchvalue'] && !$listconfig['manualquery']) {

@@ -936,9 +936,7 @@ function initiateList() {
                     if (result.success) {
                         $("#ajax-aside").html(result.htmlaside);
                         $(".not_enough_coins").removeClass("not_enough_coins");
-                        if ($("#field_product_id").val()) {
-                            calcCosts("count");
-                        }
+
                         row.find(".data-field-countupdown-value").html(
                             result.amount
                         );

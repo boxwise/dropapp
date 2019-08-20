@@ -1,13 +1,12 @@
 <div class="created light small">
-{if $data['created']}
-	{$translate['cms_form_createdby']} {if $data['created_by']}{$data['created_by']}{else}<em>{$translate['cms_form_createdunknown']}</em>{/if}<br />{$translate['cms_form_ondate']} {$data['created']} <br /><br />
-{/if}
-{if $data['modified']}
-	{$translate['cms_form_modifiedby']} {if $data['modified_by']}{$data['modified_by']}{else}<em>{$translate['cms_form_createdunknown']}</em>{/if}<br />{$translate['cms_form_ondate']} {$data['modified']} 
-{/if}
-
-	{if $data['date_of_signature']}
-	<br /> <br /> Last signature: {$data['date_of_signature']}
+	{if $data['created']}
+		{$translate['cms_form_createdby']} {if $data['created_by']}{$data['created_by']}{else}<em>{$translate['cms_form_createdunknown']}</em>{/if}<br />{$translate['cms_form_ondate']} {$data['created']} <br /><br />
 	{/if}
-	<br /> <br /><i class="fa fa-history"></i> <a href="{$settings['rootdir']}/ajax.php?file=history&table={if $table}{$table}{else}{$smarty.get.action|escape:'html'}{/if}&id={$data['id']}" class="fancybox" data-fancybox-type="ajax">{$translate['cms_form_view_modified']}</a>
+	{if $data['modified']}
+		{$translate['cms_form_modifiedby']} {if $data['modified_by']}{$data['modified_by']}{else}<em>{$translate['cms_form_createdunknown']}</em>{/if}<br />{$translate['cms_form_ondate']} {$data['modified']} 
+	{/if}
+	{if $data['date_of_signature']}
+		<br /> <br /> Last signature: {$data['date_of_signature']}
+	{/if}
+		<br /> <br /><i class="fa fa-history"></i> <a href="/ajax.php?file=history&table={if $table}{$table}{else}{$smarty.get.action|escape:'html'}{/if}&id={$data['id']}" class="fancybox" data-fancybox-type="ajax">{$translate['cms_form_view_modified']}</a>
 </div>

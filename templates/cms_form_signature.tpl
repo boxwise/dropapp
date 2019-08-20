@@ -1,4 +1,75 @@
+
 <div class="col-md-8 col-sm-12 col-md-offset-2 signature-text">
+	{if {$currentOrg['label']}=='IHA'}
+		<div id="IHA">
+			<ul class="nav nav-tabs">
+				<li class = "active"><a href="#languagetab_en" data-toggle="tab">English</a></li>
+				<li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
+				<li><a href="#languagetab_km" data-toggle="tab">Kurmancî</a></li>
+				<!-- <li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li>
+				<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li> -->
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane fade in active" id="languagetab_en">
+					<h3> Privacy declaration of IHA </h3><br />
+					<p>IHA collects personal data needed for you to participate in our distributions and activities. This includes:</p>
+					<ul>
+						<li>Name</li>
+						<li>Date of Birth</li>
+						<li>Nationality </li>
+						<li>Address  </li>
+						<li>Gender</li>
+					</ul>
+					<p>We are committed to protecting your privacy rights. You have the right to access, delete or change your personal data at any time. You can learn more about our privacy policies here: <a href="https://www.iha.help/en/data-privacy"> www.iha.help/en/data-privacy</a></p>
+					<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree to my personal data being collected and processed for this purpose.<br />
+					I also agree that my family's personal data is being collected and processed.</p>
+				</div>
+				<div class="tab-pane fade" id="languagetab_ar">
+					<p>
+	تجمع IHA البيانات الشخصية اللازمة لكي تشارك في عمليات التوزيع والأنشطة الخاصة بنا.
+	هذا يشمل:
+					</p>
+					<ul>
+						<li>
+	اسم
+						</li>
+						<li>
+	تاريخ الولادة
+						</li>
+						<li>
+	جنسية
+						</li>
+						<li>
+	عنوان
+						</li>
+						<li>
+	ذكر أو أنثى 
+						</li>
+					</ul>
+					<p>
+	نحن ملتزمون بحماية حقوق الخصوصية الخاصة بك.  لديك الحق في الوصول إلى أو حذف أو تغيير بياناتك الشخصية في أي وقت.  يمكنك معرفة المزيد حول سياسات الخصوصية الخاصة بنا هنا: <a href="https://www.iha.help/ar/data-privacy"> www.iha.help/ar/data-privacy</a>
+					</p>
+					<p>
+	أوافق (الاسم) على جمع بياناتي الشخصية ومعالجتها لهذا الغرض.
+	أوافق أيضًا على أن البيانات الشخصية لعائلتي يتم جمعها ومعالجتها.
+					</p>
+				</div>
+				<div class="tab-pane fade" id="languagetab_km">
+					<p>IHA daneyên kesane yên ku ji bo beşdarî di belavkirin û çalakiyên me de hewce dike kom dike. Ev tê de ye: </p>
+					<ul>
+						<li>Nav</li>
+						<li>Dîroka jidayikbûnê</li>
+						<li>Netewbûn</li>
+						<li>Navnîşan</li>
+						<li>Seks</li>
+					</ul>
+					<p>Em soz didin ku mafê we yê nepenî biparêzin.  Mafê we heye ku di her kêliyê de bigihîje, jêbirin an biguhezin daneyên kesane.  Hûn dikarin di derheqê polîtîkayên nepeniya me de bêtir fêr bibin: <a href="https://www.iha.help/en/data-privacy"> www.iha.help/en/data-privacy</a></p>
+					<p>Ez razî me, <strong>{$data['firstname']} {$data['lastname']}</strong>, da ku ji bo vê armancê daneyên kesane yên min kom bike û Armanc bike. </br>
+					Ez di heman demê de bipejirînim ku daneyên kesane yên malbata min hatine komkirin û pêvajoyê ne.</p>
+				</div>
+			</div>
+		</div>
+	{else}
 	<ul class="nav nav-tabs">
 		<li class = "active"><a href="#languagetab_en" data-toggle="tab">English</a></li>
 		<li><a href="#languagetab_fr" data-toggle="tab">Français</a></li>
@@ -6,7 +77,6 @@
 		<li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li>
 		<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li> -->
 	</ul>
-
 	<div class="tab-content">
 		<div class="tab-pane fade in active" id="languagetab_en">
 			<h3>Information about new privacy policies</h3><br />
@@ -26,23 +96,24 @@
 			<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree that my personal information is stored and processed as described in the Privacy Policy of {$currentOrg['label']}.</p><p>I also agree that my family ́s personal information is stored and processed as described above.</p>
 		</div>
 		<div class="tab-pane fade" id="languagetab_fr">
-			<h3>Informations sur les nouvelles règles de confidentialité</h3><br />
-			<p>‘{$currentOrg['label']}’ souhaite vous réaffirmer que nous protégeons vos données privées, conformément nouvelles règles de confidentialité applicables aux pays de UE/EEA.</p>
-			<p>Pour les réfugiés qui reçoivent aide/assistance de ‘{$currentOrg['label']}’ (vêtements/ chaussures/nourriture/autre assistance ou activités), les données suivantes sont gardées:</p>
+			<h3>Informations sur les nouvelles règles de confidentialité</h3><br />
+			<p>‘{$currentOrg['label']}’ souhaite vous réaffirmer que nous protégeons vos données privées, conformément nouvelles règles de confidentialité applicables aux pays de UE/EEA.</p>
+			<p>Pour les réfugiés qui reçoivent aide/assistance de ‘{$currentOrg['label']}’ (vêtements/ chaussures/nourriture/autre assistance ou activités), les données suivantes sont gardées:</p>
 			<ul>
 			<li>Nom</li>
 			<li>Âge</li>
-			<li>Nationalité</li>
-			<li>Adresse (par exemple: numéro de conteneur dans le camp de réfugiés)</li>
-			<li>Numéro de téléphone (dans certains cas)</li>
+			<li>Nationalité</li>
+			<li>Adresse (par exemple: numéro de conteneur dans le camp de réfugiés)</li>
+			<li>Numéro de téléphone (dans certains cas)</li>
 			<li>Le genre (dans certain cas)</li>
 			</ul>
-			<p>Si vous choisissez de communiquer des données personnelles, vous acceptez l’utilisation de ces données par des représentants de ‘{$currentOrg['label']}’. Nous avons besoin de ces données pour assurer que vous faites partie de notre distribution et/ou des autres services fournis, et pour assurer que nous avons suffisamment d'équipement pour nos bénéficiaires.</p>
-			<p>‘{$currentOrg['label']}‘ ne partage pas des données personnelle avec des tierces parties.</p>
-			<p>Pour accéder aux services mentionnés fournis par ‘{$currentOrg['label']}’ vous devez accepter que nous pouvons continuer à traiter et garder ces données à votre sujet.</p>
-			<p>Je suis d’accord pour que mes données personnelles soient gardées et traitées comme décrit dans les règles de confidentialité de ‘{$currentOrg['label']}’.</p>
-			<p>J’approuve également que les données personnelles de ma famille soient stockées et traitées ainsi que décrit ci-dessus</p>
+			<p>Si vous choisissez de communiquer des données personnelles, vous acceptez l’utilisation de ces données par des représentants de ‘{$currentOrg['label']}’. Nous avons besoin de ces données pour assurer que vous faites partie de notre distribution et/ou des autres services fournis, et pour assurer que nous avons suffisamment d'équipement pour nos bénéficiaires.</p>
+			<p>‘{$currentOrg['label']}‘ ne partage pas des données personnelle avec des tierces parties.</p>
+			<p>Pour accéder aux services mentionnés fournis par ‘{$currentOrg['label']}’ vous devez accepter que nous pouvons continuer à traiter et garder ces données à votre sujet.</p>
+			<p>Je suis d’accord pour que mes données personnelles soient gardées et traitées comme décrit dans les règles de confidentialité de ‘{$currentOrg['label']}’.</p>
+			<p>J’approuve également que les données personnelles de ma famille soient stockées et traitées ainsi que décrit ci-dessus</p>
 		</div>
+		
 		<div class="tab-pane fade" id="languagetab_ar">
 		</div>
 		<div class="tab-pane fade" id="languagetab_so">
@@ -50,10 +121,11 @@
 		<div class="tab-pane fade" id="languagetab_fa">
 		</div>
 	</div>
-<div class="fc"></div>
-<div id="sig" ></div>
-<p style="clear: both;">
-	<button id="clear">Clear</button> 
-</p>
-<textarea name="signaturefield" id="signaturefield" class="hidden">{$data[$element['field']]}</textarea>
-</div>
+	{/if}
+	<div class="fc"></div>
+	<div id="sig" ></div>
+	<p style="clear: both;">
+		<button id="clear">Clear</button> 
+	</p>
+	<textarea name="signaturefield" id="signaturefield" class="hidden">{$data[$element['field']]}</textarea>
+	</div>

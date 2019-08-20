@@ -1,6 +1,4 @@
 <?php
-    // cms settings
-    $settings['rootdir'] = '';
     // api key for sending email
     $settings['sendgrid_key'] = '';
     $settings['sentry_key'] = '';

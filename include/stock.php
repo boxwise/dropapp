@@ -22,8 +22,11 @@
 		$genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
 		listfilter3(array('label'=>'Gender','options'=>$genders,'filter'=>'"s.gender_id"'));
 
+		$itemlist = db_simplearray('SELECT p.id, p.name FROM products AS p INNER JOIN stock ON stock.product_id = p.id WHERE (camp_id = '.$_SESSION['camp']['id'].') AND (stock.items > 0) AND (NOT stock.deleted)');
+		listfilter4(array('label'=>"Product",'options'=>$itemlist,'filter'=>'p.id'));
 		listsetting('manualquery',true);
-		
+
+		#dump($listconfig);
 		$data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox ,
 		IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
 		FROM '.$table.'
@@ -34,14 +37,18 @@
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
 			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id 
 		WHERE l.camp_id = '.$_SESSION['camp']['id'].
-		
+
 		($listconfig['searchvalue']?' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")':'').
+		
 		
 		($_SESSION['filter2']['stock']=='ordered'?' AND (stock.ordered OR stock.picked) AND l.visible':($_SESSION['filter2']['stock']=='dispose'?' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible':(!$_SESSION['filter2']['stock']?' AND l.visible':''))).
 		
 		($_SESSION['filter3']['stock']?' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')':'').
 
-		($_SESSION['filter']['stock']?' AND (stock.location_id = '.$_SESSION['filter']['stock'].')':''));
+		($_SESSION['filter']['stock']?' AND (stock.location_id = '.$_SESSION['filter']['stock'].')':'').
+
+		($_SESSION['filter4']['stock']?' AND (p.id = '.$_SESSION['filter4']['stock'].')':''));
+		
 			
 		foreach($data as $key=>$value) {
 /*
@@ -58,6 +65,11 @@
 			} else {
 				$data[$key]['order'] = '<span class="hide">0</span>';
 			}
+		}
+
+		foreach ($data as $key => $d) {
+			$totalboxes += $d['boxes'];
+			$totalitems += $d['items'];
 		}
 
 		addcolumn('text','Box ID','box_id');
@@ -81,6 +93,11 @@
 		addbutton('undo-order','Undo order',array('icon'=>'fa-undo'));
 
 		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
+
+
+		$cmsmain->assign('listfooter', array('Total boxes/items', '', '','','', $totalitems, '',''));
+
+		#dump($data);
 
 		$cmsmain->assign('data',$data);
 		$cmsmain->assign('listconfig',$listconfig);
