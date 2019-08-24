@@ -77,6 +77,9 @@ function checksession()
 				loadSessionData($user);
 				db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', array('id' => $_SESSION['user']['id']));
 				return $result;
+			} else {
+				setcookie("autologin_user", null, time() - 3600, '/');
+				setcookie("autologin_pass", null, time() - 3600, '/');
 			}
 		}
 		$result['success'] = false;
