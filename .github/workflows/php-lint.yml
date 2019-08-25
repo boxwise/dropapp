@@ -1,8 +1,9 @@
 name: PHP Linting
-on: pull_request
+on: [pull_request]
 
 jobs:
   php-lint:
     steps:
-      - uses: michaelw90/php-lint@master
       - name: PHP Lint
+        uses: michaelw90/php-lint@master
+      
