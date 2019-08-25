@@ -36,7 +36,7 @@ while($p = db_fetch($result)) {
 		$settings['upload_dir'].'/people/'.intval($p['id']).'.jpg':'');
 		
 	
-	if($p['bicycletraining']) {
+	// if($p['bicycletraining']) {
 	
 		if(!$picture) $picture = $_SERVER['DOCUMENT_ROOT'].'/assets/img/no-picture.jpg';
 		$exif = exif_read_data($picture);
@@ -140,7 +140,7 @@ while($p = db_fetch($result)) {
 		$pdf->Rotate(0);
 	}
 
-}
+// }
 
 	
 $pdf->Output('I','Bicycle Cards.pdf');

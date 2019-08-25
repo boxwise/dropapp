@@ -30,6 +30,7 @@ Tracer::inSpan(
         case '/reset.php':
         case '/pdf/workshopcard.php':
         case '/pdf/bicyclecard.php':
+        case '/pdf/idcard.php':
         case '/pdf/qr.php':
         case '/pdf/dryfood.php':
         case '/reseed-db.php':
