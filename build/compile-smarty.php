@@ -14,7 +14,6 @@ $deploymentRootFolder = '/srv';
 # The hash was reverse engineered from smarty_internal_resource_file.php
 $smarty = new Zmarty;
 precompileTemplates($smarty);
-echo "Re-mapping templates from '$originalTemplateDir' to '$deployedTemplateDir'\n";
 rewriteAllTemplateHashes($smarty, $deploymentRootFolder);
 
 function precompileTemplates($smarty) {
@@ -27,6 +26,7 @@ function rewriteAllTemplateHashes($smarty, $deploymentRootFolder) {
     $originalTemplateDir = $smarty->getTemplateDir()[0];
     # swap out the root of originalTemplateDir for the new deployment path
     $deployedTemplateDir = $deploymentRootFolder.str_replace($rootDir,'',$originalTemplateDir);
+    echo "Re-mapping templates from '$originalTemplateDir' to '$deployedTemplateDir'\n";
 
     $it = new FilesystemIterator($smarty->getCompileDir(),);
     foreach (glob($smarty->getCompileDir().'*.tpl.php') as $fileName) {
@@ -44,14 +44,14 @@ function rewriteTemplateHash($smarty, $templateFileName, $originalTemplateDir, $
     $originalTemplatePath = $originalTemplateDir . $originalTemplateName;
     # work out what we expect the current hash to be, to ensure it matches
     # if not, the algorithm has somehow changed, so we'll abort
-    $currentHashInput = $originalTemplatePath.$originalTemplateDir;
-    $currentHash = sha1($currentHashInput);
-    # 0 if merge_compiled_includes is off, 1 if merge_compiled_includes is on
-    # technically we don't rewrite the files correctly with this setting on
-    # as we don't re-hash the embedded templates but it seems to be good 'enough'
-    $suffix = $smarty->merge_compiled_includes ? "_1" : "_0";
-    if ($currentHash . "_1" != $originalTemplateHash)
-        throw new Exception("Failed to anticipate current hash for $templateFileName\nHashed input: $currentHashInput\nCalculated hash: $currentHash\nActual hash: $originalTemplateHash");
+    $computedHashInput = $originalTemplatePath.$originalTemplateDir;
+    $computedHash = sha1($computedHashInput);
+    # the _0/_1/_3 suffix on the first component of the file name appears to 
+    # vary based on Smarty configuration. We just extract it from the existing
+    # file name to save us working that bit out
+    $computedHashWithSuffix = $computedHash . "_" . explode("_",$originalTemplateHash)[1];
+    if ($computedHashWithSuffix != $originalTemplateHash)
+        throw new Exception("Failed to anticipate current hash for $templateFileName\nHashed input: $computedHashInput\nCalculated hash: $computedHashWithSuffix\nActual hash: $originalTemplateHash");
     # 
     $newTemplatePath = $deployedTemplateDir . $originalTemplateName;
     # we want to
@@ -60,9 +60,9 @@ function rewriteTemplateHash($smarty, $templateFileName, $originalTemplateDir, $
     # (b) rename the template so it uses the new hash
     $newHash = sha1($newTemplatePath.$deployedTemplateDir);
     $currentTemplate = file_get_contents($templateFileName);
-    $newTemplate = str_replace($currentHash,$newHash,$currentTemplate);
+    $newTemplate = str_replace($computedHash,$newHash,$currentTemplate);
     $newTemplate = str_replace($originalTemplatePath,$newTemplatePath,$newTemplate);
-    $newTemplateCompiledPath = str_replace($currentHash,$newHash,$templateFileName);
+    $newTemplateCompiledPath = str_replace($computedHash,$newHash,$templateFileName);
     echo "Saving new template to $newTemplateCompiledPath and deleting the original\n";
     file_put_contents($newTemplateCompiledPath,$newTemplate);
     unlink($templateFileName);
