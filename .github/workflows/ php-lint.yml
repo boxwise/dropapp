@@ -1,0 +1,15 @@
+name: PHP Lint Checks
+on: [pull_request]
+
+jobs:
+  php-static:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Psalm static analysis
+        uses: mickaelandrieu/psalm-ga@master
+  php-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PHP Lint
+        uses: michaelw90/php-lint@master
+      
