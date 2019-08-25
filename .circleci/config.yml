@@ -18,6 +18,7 @@ jobs:
       # build static assets
       - run: php build.php
       # run linting
+      - run: vendor/bin/parallel-lint --exclude vendor .
       - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose
       # install again, but with no dev dependencies this time (for deploy)
       - run: composer install -n --optimize-autoloader --no-dev
