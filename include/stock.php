@@ -95,7 +95,7 @@
 		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
 
 
-		$cmsmain->assign('listfooter', array('Total boxes/items', '', '','','', $totalitems, '',''));
+		$cmsmain->assign('listfooter', array('Total', '', '','',$totalboxes.' boxes', $totalitems.' items', '',''));
 
 		#dump($data);
 
