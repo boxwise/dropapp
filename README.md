@@ -79,10 +79,21 @@ Will generate a new migration based on the diff of /db/migrations/schema.php.
 
 ### Debugging
 
-We have enabled XDebug remote debugging in the default Docker configuration, so you
-can step through your code.
+We have enabled XDebug remote debugging in the default Docker configuration, so you can step through your code. Please run `docker-compose up --build` next time you start up your server to update your docker image.
 
 If you're using VS Code, if you install the [PHP Debug](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug) extension and start the 'Listen for XDebug' configuration, you can then set breakpoints in your code.
+
+#### For linux users 
+
+Docker containers running on linux cannot resolve the address `host.docker.internal` to an ip-address. To use Xdebug on linux you have to specify the internal ip-address of the docker container in `docker-compose.yaml`.
+To find out your internal docker address run 
+
+        docker inspect -f '{{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}' <NAME OF YOUR DOCKER CONTAINER>
+
+Enter the address in `docker-compose.yaml` here:
+
+        environment:
+            XDEBUG_CONFIG: remote_host=172.19.0.1 
 
 ### Contribution guidelines ###
 
