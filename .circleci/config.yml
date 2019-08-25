@@ -22,6 +22,8 @@ jobs:
             - vendor
       # build static assets
       - run: php build.php
+      # run linting
+      - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose
       # save output
       - persist_to_workspace:
           root: ~/project
