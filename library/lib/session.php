@@ -64,7 +64,7 @@ function checksession()
 		$_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id = :id', array('id' => $_SESSION['user']['id']));
 
 		# Check if account is not expired
-		$in_valid_dates = check_valid_from_until_date($row['valid_firstday'], $row['valid_lastday']);
+		$in_valid_dates = check_valid_from_until_date($_SESSION['user']['valid_firstday'], $_SESSION['user']['valid_lastday']);
 		if (!$in_valid_dates['success']) {
 			$result['success'] = false;
 			$result['redirect'] =  '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
@@ -76,11 +76,14 @@ function checksession()
 			if ($user) {
 				loadSessionData($user);
 				db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', array('id' => $_SESSION['user']['id']));
+				return $result;
+			} else {
+				setcookie("autologin_user", null, time() - 3600, '/');
+				setcookie("autologin_pass", null, time() - 3600, '/');
 			}
-		} else {
-			$result['success'] = false;
-			$result['redirect'] = '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
 		}
+		$result['success'] = false;
+		$result['redirect'] = '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
 	}
 	return $result;
 }
@@ -176,4 +179,24 @@ function loadSessionData($user) {
 		SELECT * 
 		FROM organisations 
 		WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', array('id' => $_SESSION['usergroup']['organisation_id']));
+}
+
+function loginasuser($table,$ids) {
+	$id = $ids[0];
+	if($_SESSION['user2'] or !$_SESSION['user']['is_admin']) {
+		throw new Exception('You don\'t have access. Either you are not a Boxwise God or you are already logged in as a different user!');
+	} else {
+		$_SESSION['user2'] = $_SESSION['user'];
+		$_SESSION['camp2'] = $_SESSION['camp'];
+		$_SESSION['usergroup2'] = $_SESSION['usergroup'];
+		$_SESSION['organisation2'] = $_SESSION['organisation'];
+		$_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id=:id',array('id'=>$id));
+		loadSessionData($_SESSION['user']);
+		$camplist = camplist();
+		$_SESSION['camp'] = reset($camplist);
+		$success = true;
+		$message = 'Logged in as '.$_SESSION['user']['naam'];
+	}
+
+	return array($success,$message,true);
 }

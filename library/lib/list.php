@@ -64,7 +64,7 @@ function listDelete($table, $ids, $uri = false)
 	$hasDeletefield = db_fieldexists($table, 'deleted');
 	$hasPrevent = db_fieldexists($table, 'preventdelete');
 	$hasTree = db_fieldexists($table, 'parent_id');
-
+	
 	try {
 		foreach ($ids as $id) {
 			if ($hasDeletefield) {

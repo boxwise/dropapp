@@ -327,28 +327,39 @@ $(function() {
         $(".icon-open-" + i).toggleClass("hidden");
     });
 
+    // Signature handling
+    // http://keith-wood.name/signature.html
     old = $("#signaturefield").val();
-    // Set old for new beneficiaries
+    // Set old for beneficiaries without a signature
     if (old==="") old={"lines":[]};
-    
+    // disable signature field if old signature exis
+   
     $("#sig").signature({
         change: function(event, ui) {
-            $("#field_approvalsigned").prop(
-                "checked",
-                !$("#sig").signature("isEmpty")
-            );
+            //change hidden approvalsigned field
+            $("#field_approvalsigned").prop("checked", !$("#sig").signature("isEmpty"));
+            // field for signature date
+            if (!$("#sig").signature("isEmpty") && ($('#field_date_of_signature').val() == '0000-00-00 00:00:00')) {
+                $("#field_date_of_signature").val((new Date()).toISOString().slice(0, 19).replace('T', ' '));
+            }
         }
     });
+
     $("#sig").signature({
         color: "#0000ff",
         guideline: true,
         syncField: "#signaturefield",
         syncFormat: "JSON"
     });
+
     $("#sig").signature("draw", old);
 
+    $("#sig").signature({disabled: !$("#sig").signature("isEmpty")});
+
     $("#clear").click(function() {
+        $("#sig").signature('enable');
         $("#sig").signature("clear");
+        $("#field_date_of_signature").val('0000-00-00 00:00:00')
         return false;
     });
 

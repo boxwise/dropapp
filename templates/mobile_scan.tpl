@@ -19,7 +19,7 @@
 		{/if}
 		</div>
 	</div>
-	Move this box from wherever <strong>{$box['location']}</strong> to:</p>
+	Move this box from <strong>{$box['location']}</strong> to:</p>
 	<div class="btn-list">
 		{foreach $locations as $value=>$location}
 			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>
