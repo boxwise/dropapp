@@ -14,16 +14,18 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
+      - run: composer install -n
+      # build static assets
+      - run: php build.php
+      # run linting
+      - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose
+      # install again, but with no dev dependencies this time (for deploy)
       - run: composer install -n --optimize-autoloader --no-dev
       # save composer cache
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
             - vendor
-      # build static assets
-      - run: php build.php
-      # run linting
-      - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose
       # save output
       - persist_to_workspace:
           root: ~/project
