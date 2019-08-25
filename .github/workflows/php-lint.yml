@@ -1,10 +1,9 @@
 name: PHP Linting
 on: [pull_request]
 
-runs-on: ubuntu-latest
-
 jobs:
   php-lint:
+    runs-on: ubuntu-latest
     steps:
       - name: PHP Lint
         uses: michaelw90/php-lint@master
