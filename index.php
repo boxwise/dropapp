@@ -67,4 +67,5 @@ AND (f.allusers OR (f2.parent_id = 0 AND uf.cms_usergroups_id = :usergroup AND (
     }
 
     $cmsmain->assign('action', $action);
+    $cmsmain->assign('identifyUserToAnalytics', shouldIdentifyUserToAnalytics());
     $cmsmain->display('cms_index.tpl');
