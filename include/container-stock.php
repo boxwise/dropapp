@@ -36,6 +36,11 @@ if ($container_stock_locations) {
 	HAVING COUNT(s2.id) > 0 OR p.stockincontainer
 	ORDER BY stock DESC, boxes DESC, name, gender, size');
 
+	foreach ($data as $key => $d) {
+		$totalboxes += $d['boxes'];
+		$totalitems += $d['stock'];
+	}
+
 	listsetting('allowcopy', false);
 	listsetting('allowadd', false);
 	listsetting('allowdelete', false);
