@@ -13,6 +13,7 @@
         "google/cloud-storage": "^1.12",
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
         "sentry/sdk": "2.0.3",
-        "smarty/smarty": "^3.1"
+        "smarty/smarty": "^3.1",
+        "sendgrid/sendgrid": "^7.3"
     }
 }
