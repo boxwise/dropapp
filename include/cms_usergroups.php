@@ -31,20 +31,23 @@
 				'.(!$_SESSION['user']['is_admin']?' AND l.level < '.intval($_SESSION['usergroup']['userlevel']):'').'
 			GROUP BY g.id');
 			
-		$num_camps=db_value('
-		SELECT 
-			COUNT(c.name)
-		FROM cms_usergroups_camps AS x
-		INNER JOIN cms_usergroups AS g ON x.cms_usergroups_id = g.id
-		INNER JOIN cms_users AS us ON (us.cms_usergroups_id = g.id)
-		INNER JOIN camps as c ON c.id = x.camp_id 
-		WHERE us.id = '.$_SESSION['user']['id'].' ');
-		
 
 		addcolumn('text','Name','label');
 		addcolumn('text','Level','userlevel');
-		if ($num_camps>1 OR $_SESSION['user']['is_admin']){
-		addcolumn('text','Bases','camps');}
+
+		$num_camps_user_can_access = db_value('
+			SELECT 
+				COUNT(c.name)
+			FROM cms_usergroups_camps AS x
+			INNER JOIN cms_usergroups AS g ON x.cms_usergroups_id = g.id
+			INNER JOIN cms_users AS us ON (us.cms_usergroups_id = g.id)
+			INNER JOIN camps as c ON c.id = x.camp_id 
+			WHERE us.id = '.$_SESSION['user']['id'].' ');
+			
+		if ($num_camps_user_can_access>1 OR $_SESSION['user']['is_admin'])
+		{
+			addcolumn('text','Bases','camps');
+		}
 		
 		listsetting('allowsort',true);
 		listsetting('add', 'Add a User Group');
