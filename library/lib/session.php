@@ -76,11 +76,14 @@ function checksession()
 			if ($user) {
 				loadSessionData($user);
 				db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', array('id' => $_SESSION['user']['id']));
+				return $result;
+			} else {
+				setcookie("autologin_user", null, time() - 3600, '/');
+				setcookie("autologin_pass", null, time() - 3600, '/');
 			}
-		} else {
-			$result['success'] = false;
-			$result['redirect'] = '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
 		}
+		$result['success'] = false;
+		$result['redirect'] = '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
 	}
 	return $result;
 }
