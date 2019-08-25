@@ -64,7 +64,7 @@ function checksession()
 		$_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id = :id', array('id' => $_SESSION['user']['id']));
 
 		# Check if account is not expired
-		$in_valid_dates = check_valid_from_until_date($row['valid_firstday'], $row['valid_lastday']);
+		$in_valid_dates = check_valid_from_until_date($_SESSION['user']['valid_firstday'], $_SESSION['user']['valid_lastday']);
 		if (!$in_valid_dates['success']) {
 			$result['success'] = false;
 			$result['redirect'] =  '/login.php?destination=' . urlencode($_SERVER['REQUEST_URI']);
