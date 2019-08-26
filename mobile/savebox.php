@@ -1,5 +1,10 @@
 <?php
 
+if (!isset($_POST)) {
+	redirect('?warning=1&message=Something went wrong! Please try again!');
+	return;
+}
+
 	if(!intval($_POST['box_id'])) {
 		$new = true;
 		do {
@@ -7,13 +12,17 @@
 		} while(db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id',array('box_id'=>$_POST['box_id'])));
 	}
 
-	db_query('UPDATE stock SET deleted = "0000-00-00 00:00" WHERE id = :id',array('id'=>$_POST['id']));
-
 	$box = db_row('SELECT * FROM stock WHERE id = :id',array('id'=>$_POST['id']));
 	if($box && $box['location_id']!=$_POST['location_id'][0]) {
 		db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL WHERE id = :id',array('id'=>$box['id']));
 		db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');						
 	}
+
+	# Undelete a box if it is scanned
+	if($box && ($box['deleted']!="0000-00-00 00:00:00" && !is_null($box['deleted']))) db_query('UPDATE stock SET deleted = "0000-00-00 00:00" WHERE id = :id',array('id'=>$_POST['id']));
+
+	# Validate QR-code
+	if(!$_POST['qr_id']) redirect('?warning=1&message=Something went wrong! Please try again!');	
 
 	$handler = new formHandler('stock');
 
@@ -32,4 +41,4 @@
 
 	$data['barcode'] = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$box['qr_id']));
 
-	redirect('?barcode='.$data['barcode'].'&message='.$message);	
+	redirect('?barcode='.$data['barcode'].'&message='.$message);
