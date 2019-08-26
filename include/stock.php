@@ -19,7 +19,6 @@
 		$genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
 		listfilter3(array('label'=>'Gender','options'=>$genders,'filter'=>'"s.gender_id"'));
 
-		$itemlist = db_simplearray('SELECT p.id, p.name FROM products AS p INNER JOIN stock ON stock.product_id = p.id WHERE (camp_id = '.$_SESSION['camp']['id'].') AND (stock.items > 0) AND (NOT stock.deleted)');
 		$itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
 		listfilter4(array('label'=>"Product",'options'=>$itemlist,'filter'=>'p.category_id'));
 		listsetting('manualquery',true);
