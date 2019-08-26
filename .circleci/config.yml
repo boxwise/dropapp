@@ -17,7 +17,8 @@ jobs:
       - run: composer install -n
       # run linting (before we generate templates)
       - run: vendor/bin/parallel-lint --exclude vendor .
-      - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose
+      # these rules match the ones enabled by default by the "fterrag.vscode-php-cs-fixer" vs code extension
+      - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose --rules @PhpCsFixer
       # build static assets including templates
       - run: php build.php
       # install again, but with no dev dependencies this time (for deploy)
