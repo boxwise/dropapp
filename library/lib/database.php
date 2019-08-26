@@ -84,14 +84,9 @@ function db_query($query, $array = array(), $dbid = false)
 {
 	global $defaultdbid;
 	if (!$dbid) $dbid = $defaultdbid;
-
-	try {
-		$ex = $dbid->prepare($query);
-		$ex->execute($array);
-		return $ex;
-	} catch (PDOException $e) {
-		throw new Exception('db_query() failed: ' . $query . '<br>' . $e->getMessage(), $e->getCode(), $e);
-	}
+	$ex = $dbid->prepare($query);
+	$ex->execute($array);
+	return $ex;
 }
 
 function db_insertid($dbid = false)
