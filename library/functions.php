@@ -1,5 +1,20 @@
 <?
 
+# Generate random box id
+function generateBoxID($length = 6, $possible = '0123456789')
+{
+	$password = "";
+	$i = 0;
+	while ($i < $length) {
+		$char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
+		if (!strstr($password, $char)) {
+			$password .= $char;
+			$i++;
+		}
+	}
+	return $password;
+}
+
 # returns true if the current user is allowed to give drops (he is allowed when his usergroup has access to Give Drops to all function)
 function allowgivedrops()
 {
