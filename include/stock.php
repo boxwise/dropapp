@@ -68,7 +68,7 @@
 		}
 
 		foreach ($data as $key => $d) {
-			$totalboxes += $d['boxes'];
+			$totalboxes += 1;
 			$totalitems += $d['items'];
 		}
 
