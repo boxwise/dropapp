@@ -77,6 +77,21 @@ We're using [Phinx](https://phinx.org/) and [phinx-migrations-generator](https:/
 
 Will generate a new migration based on the diff of /db/migrations/schema.php.
 
+### Linting / Auto formatting
+
+So we don't have to think/argue over code conventions, we're using the [php-cs-fixer](https://github.com/FriendsOfPhp/PHP-CS-Fixer) automatic code formatter.
+
+CircleCI will *fail* if there is any code requiring linting fixes. 
+
+If you're using VSCode, the `vscode-php-cs-fixer` extension will be suggested automatically and apply 
+auto format on save. 
+
+Alternatively, you can run
+
+     php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --rules @PhpCsFixer
+
+in the root manually. 
+
 ### Debugging
 
 We have enabled XDebug remote debugging in the default Docker configuration, so you can step through your code. Please run `docker-compose up --build` next time you start up your server to update your docker image.
