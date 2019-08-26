@@ -85,9 +85,11 @@
 	addfield('text','Old gender','_gender',array('readonly'=>true));
 	addfield('text','Old size','_size',array('readonly'=>true));
 */
-
 	addfield('line','','',array('aside'=>true));
 	addfield('created','Created','created',array('aside'=>true));
+	$htmlaside = showHistory('stock',$data['id']);
+	addfield('line');
+	addfield('html', 'Box History', $htmlaside,array('Top'=>True));
 
 	addformbutton('submitandnew','Save and new item');
 
@@ -95,6 +97,10 @@
 	$cmsmain->assign('data',$data);
 	$cmsmain->assign('formelements',$formdata);
 	$cmsmain->assign('formbuttons',$formbuttons);
+
+
+	
+
 
 	function generateBoxID($length = 6, $possible = '0123456789') {
 		$password = "";
