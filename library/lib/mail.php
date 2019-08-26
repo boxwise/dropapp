@@ -1,5 +1,4 @@
 <?php
-	require(__DIR__."/../sendgrid-php/sendgrid-php.php");
 	function sendmail($to_email, $to_name, $subject, $content, $email_template = 'cms_email.tpl', $from_email = '', $from_name = '', $debug = false) {
 
 		global $settings, $translate;
