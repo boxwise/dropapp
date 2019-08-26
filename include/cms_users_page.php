@@ -4,13 +4,12 @@
 
 		$cmsmain->assign('title',$translate['cms_users']);
 		
-		$camps = db_value('SELECT GROUP_CONCAT(id) FROM cms_usergroups_camps AS uc, camps AS c WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup', array('usergroup'=>$_SESSION['usergroup']['id']));
-		
-		$data = getlistdata($cms_users_admin_query);
+		$data = getlistdata($cms_users_lower_level_query );
 		if (!$_SESSION['user']['is_admin']){
-			$data = array_merge($data, db_array($cms_users_nonadmin_query));
+			$data2 = db_array($cms_users_same_level_query, array('user'=>$_SESSION['user']['id'], 'usergroup'=>$_SESSION['usergroup']['id']) );
+			if (!empty($data2))  $data = array_merge($data, $data2);
 		}
-		
+
 		addcolumn('text',$translate['cms_users_naam'],'naam');
 		addcolumn('text',$translate['cms_users_email'],'email');
 		addcolumn('text','Role','usergroup');
