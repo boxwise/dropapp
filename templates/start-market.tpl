@@ -191,12 +191,11 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 <div id="chartdiv2"></div>
 {/if}
 
-	
 	<aside id="aside-container" class="noprint">
 		<div class="affix aside-content">
 		<div class="tipofday">
 			<h3>💡 Tip of the day: {$data['tip']['title']}</h3>
-			<p>{$data['tip']['content']}</p>
+			<p>{$data['tip']['content'] nofilter}</p>
 		</div>
 		</div>
 	</aside>
