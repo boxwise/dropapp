@@ -13,6 +13,7 @@ class Zmarty extends Smarty {
         if (isset($_GET["smartydebug"])) {
             $this->debugging = true;
         }
+        $this->escape_html = true;
         $this->merge_compiled_includes = true;
         $this->setCompileDir(__DIR__.'/../../templates/templates_c');
         $this->setTemplateDir(__DIR__.'/../../templates');
