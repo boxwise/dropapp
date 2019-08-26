@@ -20,7 +20,8 @@
 		listfilter3(array('label'=>'Gender','options'=>$genders,'filter'=>'"s.gender_id"'));
 
 		$itemlist = db_simplearray('SELECT p.id, p.name FROM products AS p INNER JOIN stock ON stock.product_id = p.id WHERE (camp_id = '.$_SESSION['camp']['id'].') AND (stock.items > 0) AND (NOT stock.deleted)');
-		listfilter4(array('label'=>"Product",'options'=>$itemlist,'filter'=>'p.id'));
+		$itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
+		listfilter4(array('label'=>"Product",'options'=>$itemlist,'filter'=>'p.category_id'));
 		listsetting('manualquery',true);
 
 		#dump($listconfig);
@@ -32,7 +33,8 @@
 			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
 			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
-			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id 
+			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id
+			LEFT OUTER JOIN product_categories AS pc ON p.category_id = pc.id
 		WHERE l.camp_id = '.$_SESSION['camp']['id'].
 
 		($listconfig['searchvalue']?' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")':'').
@@ -44,7 +46,7 @@
 
 		($_SESSION['filter']['stock']?' AND (stock.location_id = '.$_SESSION['filter']['stock'].')':'').
 
-		($_SESSION['filter4']['stock']?' AND (p.id = '.$_SESSION['filter4']['stock'].')':''));
+		($_SESSION['filter4']['stock']?' AND (p.category_id = '.$_SESSION['filter4']['stock'].')':''));
 		
 			
 		foreach($data as $key=>$value) {
@@ -91,7 +93,7 @@
 
 		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
 
-
+		$cmsmain->assign('firstline', array('Total boxes/items', '', '','', $totalboxes.' boxes', $totalitems. ' items', '', ''));
 		$cmsmain->assign('listfooter', array('Total', '', '','',$totalboxes.' boxes', $totalitems.' items', '',''));
 
 		#dump($data);
