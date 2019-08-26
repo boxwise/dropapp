@@ -1,5 +1,6 @@
 <?php
 
+if (isset($_POST)) {
 	if(!intval($_POST['box_id'])) {
 		$new = true;
 		do {
@@ -37,3 +38,6 @@
 	$data['barcode'] = db_value('SELECT code FROM qr WHERE id = :id',array('id'=>$box['qr_id']));
 
 	redirect('?barcode='.$data['barcode'].'&message='.$message);	
+} else {
+	redirect('?warning=1&message=Something went wrong! Please try again!');
+}
