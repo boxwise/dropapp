@@ -15,11 +15,11 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
       - run: composer install -n
-      # build static assets
-      - run: php build.php
-      # run linting
+      # run linting (before we generate templates)
       - run: vendor/bin/parallel-lint --exclude vendor .
       - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose
+      # build static assets including templates
+      - run: php build.php
       # install again, but with no dev dependencies this time (for deploy)
       - run: composer install -n --optimize-autoloader --no-dev
       # save composer cache
