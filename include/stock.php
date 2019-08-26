@@ -3,9 +3,6 @@
 	$table = $action;
 	$ajax = checkajax();
 
-	require_once($_SERVER['DOCUMENT_ROOT'].'/library/lib/PHPExcel.php');
-	require_once($_SERVER['DOCUMENT_ROOT'].'/library/lib/PHPExcel/Writer/Excel2007.php');
-
 	if(!$ajax) {
 
 		initlist();
@@ -188,31 +185,3 @@
 		echo json_encode($return);
 		die();
 	}
-
-function exportstock($data) {
-	$e = new PHPExcel();
-	$e->getProperties()->setCreator($_SESSION['organisation']['label']);
-	$e->getProperties()->setTitle('Boxes export '.strftime('%A %d %B %Y, %H:%M'));
-	$e->setActiveSheetIndex(0);
-
-	$keys = array('box_id'=>'Box number', 'product'=>'Product', 'gender'=>'Gender', 'size'=>'Size', 'location'=>'Location');
-	
-	$i=0;
-	foreach($keys as $key=>$name) {
-		$columns[$i] = $name;
-		$e->getActiveSheet()->setCellValueByColumnAndRow($i,1,$name);
-		$i++;
-	}
-
-		header('Content-type: application/vnd.ms-excel');
-	header('Content-Disposition: attachment;filename="Bestellingen.xlsx"');
-	header('Cache-Control: max-age=0');
-
-	$objWriter = PHPExcel_IOFactory::createWriter($e, 'Excel2007');
-	$tmp = sys_get_temp_dir().'/'.md5(time());
-	$objWriter->save($tmp);
-	readfile($tmp);
-	unlink($tmp);
-
-
-}
