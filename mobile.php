@@ -115,4 +115,5 @@ if (!$checksession_result['success']) {
 }
 
 $tpl->assign('data', $data);
+$tpl->assign('identifyUserToAnalytics', shouldIdentifyUserToAnalytics());
 $tpl->display('mobile.tpl');
