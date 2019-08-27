@@ -1,42 +1,44 @@
 <?php
-	$table = $action;
-	$ajax = checkajax();
+    $table = $action;
+    $ajax = checkajax();
 
-	if ($ajax) {
-		require_once('cms_users_handle_ajax_operations.php');
-	} else {
-		initlist();
-		listsetting('add', $translate['cms_users_new']);
-		listsetting('haspagemenu', true);
-		addpagemenu('all', 'Active', array('link'=>'?action=cms_users', 'active'=>true));
-		addpagemenu('deactivated', 'Deactivated', array('link'=>'?action=cms_users_deactivated'));
+    if ($ajax) {
+        require_once 'cms_users_handle_ajax_operations.php';
+    } else {
+        initlist();
+        listsetting('add', $translate['cms_users_new']);
+        listsetting('haspagemenu', true);
+        addpagemenu('all', 'Active', ['link' => '?action=cms_users', 'active' => true]);
+        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
 
-		$camps = db_value('
+        $camps = db_value(
+            '
 			SELECT GROUP_CONCAT(c.id) 
 			FROM cms_usergroups_camps AS uc, camps AS c 
-			WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup', 
-			array('usergroup'=>$_SESSION['usergroup']['id']));
-		
-		// Execution of queries in cms_users_page.php
-		$cms_users_lower_level_query = '
+			WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup',
+            ['usergroup' => $_SESSION['usergroup']['id']]
+        );
+
+        // Execution of queries in cms_users_page.php
+        $cms_users_lower_level_query = '
 			SELECT u.*, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete, 0 as disableifistrue
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
 			LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
 			LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 			WHERE 
-				'.(!$_SESSION['user']['is_admin']?'l.level <'.intval($_SESSION['usergroup']['userlevel']).' AND ':'').'
-				'.($_SESSION['user']['is_admin']?'':'(uc.camp_id IN ('.($camps?$camps:0).')) AND ').' 
-				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin']?' OR u.is_admin':'').')
+				'.(!$_SESSION['user']['is_admin'] ? 'l.level <'.intval($_SESSION['usergroup']['userlevel']).' AND ' : '').'
+				'.($_SESSION['user']['is_admin'] ? '' : '(uc.camp_id IN ('.($camps ? $camps : 0).')) AND ').' 
+				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL) AND (NOT u.deleted OR u.deleted IS NULL)
 				AND NOT (
 					(u.valid_lastday < NOW() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
 					OR (u.valid_firstday > NOW())
 				)
 			GROUP BY u.id';
-	
-		// Do not forget to specify :usergroup and :user in the db call later
-		$cms_users_same_level_query  = '
+
+        // Do not forget to specify :usergroup and :user in the db call later
+        $cms_users_same_level_query = '
 			SELECT u.*, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 0 as disableifistrue
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
@@ -44,6 +46,6 @@
 			AND NOT (
 				(u.valid_lastday < NOW() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
 				OR (u.valid_firstday > NOW())
-			)';	
-	}
-	require_once('cms_users_page.php');
+			)';
+    }
+    require_once 'cms_users_page.php';

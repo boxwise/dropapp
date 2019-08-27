@@ -1,82 +1,83 @@
 <?php
 
-	$table = 'library';
-	$ajax = checkajax();
+    $table = 'library';
+    $ajax = checkajax();
 
-	if(!$ajax) {
+    if (!$ajax) {
+        initlist();
 
-		initlist();
+        $cmsmain->assign('title', 'Library');
+        listsetting('search', ['code', 'booktitle_en', 'booktitle_ar', 'author']);
 
-		$cmsmain->assign('title','Library');
-		listsetting('search', array('code', 'booktitle_en', 'booktitle_ar', 'author'));
-		
-  		listfilter(array('label'=>'By category','query'=>'SELECT id, label FROM library_type ORDER BY label','filter'=>'library.type_id'));
+        listfilter(['label' => 'By category', 'query' => 'SELECT id, label FROM library_type ORDER BY label', 'filter' => 'library.type_id']);
 
-		$data = getlistdata('SELECT * FROM library WHERE camp_id = '.intval($_SESSION['camp']['id']));
-		
-		addcolumn('text','Code','code');
-		addcolumn('text','English title','booktitle_en');
-		addcolumn('html','Original title','booktitle_ar');
-		addcolumn('text','Author','author');
+        $data = getlistdata('SELECT * FROM library WHERE camp_id = '.intval($_SESSION['camp']['id']));
 
-		listsetting('allowsort',true);
-		listsetting('allowcopy',false);
-		listsetting('allowshowhide',true);
-		listsetting('add', 'Add a book');
-		listsetting('delete', 'Delete');
-		listsetting('show', 'Available');
-		listsetting('hide', 'Not available');
+        addcolumn('text', 'Code', 'code');
+        addcolumn('text', 'English title', 'booktitle_en');
+        addcolumn('html', 'Original title', 'booktitle_ar');
+        addcolumn('text', 'Author', 'author');
 
-		addbutton('libraryhistory','View history',array('icon'=>'fa-history','oneitemonly'=>true));
+        listsetting('allowsort', true);
+        listsetting('allowcopy', false);
+        listsetting('allowshowhide', true);
+        listsetting('add', 'Add a book');
+        listsetting('delete', 'Delete');
+        listsetting('show', 'Available');
+        listsetting('hide', 'Not available');
 
-		$cmsmain->assign('data',$data);
-		$cmsmain->assign('listconfig',$listconfig);
-		$cmsmain->assign('listdata',$listdata);
-		$cmsmain->assign('include','cms_list.tpl');
+        addbutton('libraryhistory', 'View history', ['icon' => 'fa-history', 'oneitemonly' => true]);
 
-	} else {
-		switch ($_POST['do']) {
-			case 'libraryhistory':
-				$id = intval($_POST['ids']);
-				$success = true;
-				$redirect = '?action=libraryhistory&id='.$id;
-				break;
-		    case 'move':
-				$ids = json_decode($_POST['ids']);
-		    	list($success, $message, $redirect) = listMove($table, $ids);
-		        break;
+        $cmsmain->assign('data', $data);
+        $cmsmain->assign('listconfig', $listconfig);
+        $cmsmain->assign('listdata', $listdata);
+        $cmsmain->assign('include', 'cms_list.tpl');
+    } else {
+        switch ($_POST['do']) {
+            case 'libraryhistory':
+                $id = intval($_POST['ids']);
+                $success = true;
+                $redirect = '?action=libraryhistory&id='.$id;
 
-		    case 'delete':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listDelete($table, $ids);
-		        break;
+                break;
+            case 'move':
+                $ids = json_decode($_POST['ids']);
+                list($success, $message, $redirect) = listMove($table, $ids);
 
-		    case 'copy':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
-		        break;
+                break;
+            case 'delete':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listDelete($table, $ids);
 
-		    case 'hide':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-		        break;
+                break;
+            case 'copy':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
 
-		    case 'show':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-		        break;
+                break;
+            case 'hide':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
-		    case 'togglecontainer':
-		    	list($success, $message, $redirect, $newvalue) = listSwitch($table, 'stockincontainer', $_POST['id']);
-		        break;
-		    case 'export':
-				$success = true;
-		    	$redirect = '?action=products_export';
-		        break;
-		}
+                break;
+            case 'show':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
-		$return = array("success" => $success, 'message'=> $message, 'redirect'=>$redirect, 'newvalue'=>$newvalue);
+                break;
+            case 'togglecontainer':
+                list($success, $message, $redirect, $newvalue) = listSwitch($table, 'stockincontainer', $_POST['id']);
 
-		echo json_encode($return);
-		die();
-	}
+                break;
+            case 'export':
+                $success = true;
+                $redirect = '?action=products_export';
+
+                break;
+        }
+
+        $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'newvalue' => $newvalue];
+
+        echo json_encode($return);
+        die();
+    }

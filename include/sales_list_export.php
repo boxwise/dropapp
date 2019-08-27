@@ -10,8 +10,8 @@ $query = db_query('SELECT pro.name AS product, gen.label AS gender, tran.count A
 	FROM (transactions AS tran, people AS pp)
 	LEFT OUTER JOIN products AS pro ON tran.product_id = pro.id
 	LEFT OUTER JOIN genders AS gen ON pro.gender_id = gen.id
-	WHERE tran.people_id = pp.id AND pp.camp_id = ' . $_SESSION['camp']['id'] . ' AND tran.product_id > 0 AND tran.transaction_date >= "' . $start . ' 00:00" AND tran.transaction_date <= "' . $end . ' 23:59"
+	WHERE tran.people_id = pp.id AND pp.camp_id = '.$_SESSION['camp']['id'].' AND tran.product_id > 0 AND tran.transaction_date >= "'.$start.' 00:00" AND tran.transaction_date <= "'.$end.' 23:59"
 	ORDER BY tran.id');
 
-$keys = array("product"=>"Product", "gender"=>"Gender", "amount"=>"Quantity", "price"=>$_SESSION['camp']['currencyname'], "transaction_date"=>"Transaction Date");
-csvexport($query, "Sales_from_".$start."_until_".$end, $keys);
+$keys = ['product' => 'Product', 'gender' => 'Gender', 'amount' => 'Quantity', 'price' => $_SESSION['camp']['currencyname'], 'transaction_date' => 'Transaction Date'];
+csvexport($query, 'Sales_from_'.$start.'_until_'.$end, $keys);

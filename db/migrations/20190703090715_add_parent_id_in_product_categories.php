@@ -7,11 +7,12 @@ class AddParentIdInProductCategories extends AbstractMigration
     public function change()
     {
         $this->table('product_categories')
-        ->addColumn('parent_id', 'integer', [
-            'signed' => false,
-            'null' => true,
-            'default' => NULL,
-        ])
-        ->save();
+            ->addColumn('parent_id', 'integer', [
+                'signed' => false,
+                'null' => true,
+                'default' => null,
+            ])
+            ->save()
+        ;
     }
 }

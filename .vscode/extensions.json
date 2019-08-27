@@ -5,7 +5,8 @@
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
 		"felixfbecker.php-debug",
-		"bmewburn.vscode-intelephense-client"
+		"bmewburn.vscode-intelephense-client",
+		"fterrag.vscode-php-cs-fixer"
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [

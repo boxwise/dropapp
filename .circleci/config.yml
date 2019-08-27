@@ -14,14 +14,20 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "composer.lock" }}
+      - run: composer install -n
+      # run linting (before we generate templates)
+      - run: vendor/bin/parallel-lint --exclude vendor .
+      # these rules match the ones enabled by default by the "fterrag.vscode-php-cs-fixer" vs code extension
+      - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose --rules @PhpCsFixer
+      # build static assets including templates
+      - run: php build.php
+      # install again, but with no dev dependencies this time (for deploy)
       - run: composer install -n --optimize-autoloader --no-dev
       # save composer cache
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
             - vendor
-      # build static assets
-      - run: php build.php
       # save output
       - persist_to_workspace:
           root: ~/project

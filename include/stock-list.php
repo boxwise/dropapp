@@ -1,16 +1,16 @@
 <?php
 
-	$table = 'stock';
-	$action = 'stock-list';
+    $table = 'stock';
+    $action = 'stock-list';
 
-	initlist();
+    initlist();
 
-	$cmsmain->assign('title','General stock');
-	listsetting('search', array('p.name'));
+    $cmsmain->assign('title', 'General stock');
+    listsetting('search', ['p.name']);
 
- 	$camps = db_simplearray('SELECT id, name FROM camps WHERE (NOT deleted OR deleted IS NULL) AND id != :camp_id',array('camp_id'=>$_SESSION['camp']['id']));
+    $camps = db_simplearray('SELECT id, name FROM camps WHERE (NOT deleted OR deleted IS NULL) AND id != :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
 
-	$query = 'SELECT CONCAT(p.id,"-",g.id,"-",IFNULL(s.id,"")) AS id,
+    $query = 'SELECT CONCAT(p.id,"-",g.id,"-",IFNULL(s.id,"")) AS id,
 		SUM(p.camp_id = '.$_SESSION['camp']['id'].') AS visible,
 		p.camp_id,
 		p.name AS product,
@@ -23,45 +23,46 @@
 		(IF(g.adult,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0>='.$_SESSION['camp']['adult_age'].',0) OR IF(g.baby,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0<2,0) OR IF(g.child,DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 BETWEEN 2 AND '.$_SESSION['camp']['adult_age'].',0)))*IFNULL(s.portion,100)/100) AS target,
 		p.amountneeded ';
 
-	foreach($camps as $key=>$camp) {
-		$insert[] = ', (SELECT SUM(items) FROM stock AS st, locations AS l, products AS p2 WHERE st.product_id = p2.id AND st.location_id = l.id AND l.visible AND (NOT st.deleted OR st.deleted IS NULL) AND p.name = p2.name AND p2.gender_id = g.id AND st.size_id = s.id AND l.camp_id = '.$key.') AS "camp'.$key.'"';
-	} 
-	$query .= join(',',$insert);
+    foreach ($camps as $key => $camp) {
+        $insert[] = ', (SELECT SUM(items) FROM stock AS st, locations AS l, products AS p2 WHERE st.product_id = p2.id AND st.location_id = l.id AND l.visible AND (NOT st.deleted OR st.deleted IS NULL) AND p.name = p2.name AND p2.gender_id = g.id AND st.size_id = s.id AND l.camp_id = '.$key.') AS "camp'.$key.'"';
+    }
+    $query .= join(',', $insert);
 
-	$query .= 'FROM sizegroup AS sg, products AS p,	genders AS g, sizes AS s
+    $query .= 'FROM sizegroup AS sg, products AS p,	genders AS g, sizes AS s
 		WHERE p.gender_id = g.id AND p.sizegroup_id = sg.id AND s.sizegroup_id = sg.id AND (NOT p.deleted OR p.deleted IS NULL)
 		GROUP BY p.name, g.id, s.label
 		ORDER BY p.name, g.seq, s.seq';
-	
-	$data = getlistdata($query);
 
-	foreach($data as $key=>$d) {
-		$data[$key]['result'] = ($d['stock']/$d['target']*$d['amountneeded']/10);
-		if(!$data[$key]['target']) $data[$key]['target'] = '';
-	}
+    $data = getlistdata($query);
 
-	listsetting('allowcopy', false);
-	listsetting('allowadd', false);
-	listsetting('allowdelete', false);
-	listsetting('allowselect', false);
-	listsetting('allowselectall', false);
-	listsetting('allowsort', true);
+    foreach ($data as $key => $d) {
+        $data[$key]['result'] = ($d['stock'] / $d['target'] * $d['amountneeded'] / 10);
+        if (!$data[$key]['target']) {
+            $data[$key]['target'] = '';
+        }
+    }
 
-	addcolumn('text','Product','product');
-	addcolumn('text','Gender','gender');
-	addcolumn('text','Size','size');
-	addcolumn('text','Items','stock');
-	if(db_value('SELECT market FROM camps WHERE id = :camp', array('camp'=>$_SESSION['camp']['id']))) {
-		addcolumn('text','People','target');
-#		addcolumn('text','','result');
-		addcolumn('bar','Score','result2');
-	}
-	foreach($camps as $key=>$camp) {
-		addcolumn('text',$camp,'camp'.$key);
-	}
-	
-	$cmsmain->assign('data',$data);
-	$cmsmain->assign('listconfig',$listconfig);
-	$cmsmain->assign('listdata',$listdata);
-	$cmsmain->assign('include','cms_list.tpl');
+    listsetting('allowcopy', false);
+    listsetting('allowadd', false);
+    listsetting('allowdelete', false);
+    listsetting('allowselect', false);
+    listsetting('allowselectall', false);
+    listsetting('allowsort', true);
 
+    addcolumn('text', 'Product', 'product');
+    addcolumn('text', 'Gender', 'gender');
+    addcolumn('text', 'Size', 'size');
+    addcolumn('text', 'Items', 'stock');
+    if (db_value('SELECT market FROM camps WHERE id = :camp', ['camp' => $_SESSION['camp']['id']])) {
+        addcolumn('text', 'People', 'target');
+        //		addcolumn('text','','result');
+        addcolumn('bar', 'Score', 'result2');
+    }
+    foreach ($camps as $key => $camp) {
+        addcolumn('text', $camp, 'camp'.$key);
+    }
+
+    $cmsmain->assign('data', $data);
+    $cmsmain->assign('listconfig', $listconfig);
+    $cmsmain->assign('listdata', $listdata);
+    $cmsmain->assign('include', 'cms_list.tpl');
