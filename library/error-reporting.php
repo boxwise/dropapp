@@ -2,7 +2,7 @@
 
 use OpenCensus\Trace\Tracer;
 
-if (@parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) == "localhost") {
+if ('localhost' == @parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST)) {
     // report all errors in local development
     error_reporting(E_ALL);
     // dump errors to stderr (you can see in console)
@@ -16,8 +16,8 @@ if (@parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) == "localhost") {
 }
 
 // configure sentry
-if (!array_key_exists("sentry_key", $settings)) {
-    throw new Exception("sentry_key must be set to work in GAE environment");
+if (!array_key_exists('sentry_key', $settings)) {
+    throw new Exception('sentry_key must be set to work in GAE environment');
 }
 
 Tracer::inSpan(
@@ -28,7 +28,7 @@ Tracer::inSpan(
             [
                 'dsn' => $settings['sentry_key'],
                 'environment' => $_SERVER['HTTP_HOST'],
-                'error_types' => error_reporting()
+                'error_types' => error_reporting(),
             ]
         );
     }

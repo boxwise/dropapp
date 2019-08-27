@@ -1,73 +1,73 @@
 <?php
 
-	$table = 'cms_settings';
-	$ajax = checkajax();
+    $table = 'cms_settings';
+    $ajax = checkajax();
 
-	if(!$ajax) {
+    if (!$ajax) {
+        initlist();
 
-		initlist();
+        $cmsmain->assign('title', $translate['cms_settings']);
 
-		$cmsmain->assign('title',$translate['cms_settings']);
+        $hasBilanguage = db_fieldexists($table, 'description_nl');
 
-		$hasBilanguage = db_fieldexists($table,'description_nl');
+        if ($hasBilanguage) {
+            listsetting('search', ['code', 'description_'.$lan]);
+        } else {
+            listsetting('search', ['code', 'description']);
+        }
 
-		if($hasBilanguage) {
-			listsetting('search', array('code','description_'.$lan));
-		} else {
-			listsetting('search', array('code','description'));
-		}
+        $data = getlistdata('SELECT t.* FROM '.$table.' AS t');
 
-		$data = getlistdata('SELECT t.* FROM '.$table.' AS t');
+        if ($hasBilanguage) {
+            addcolumn('text', $translate['cms_settings_description'], 'description_'.$lan, ['width' => '33%']);
+        } else {
+            addcolumn('text', $translate['cms_settings_description'], 'description', ['width' => '33%']);
+        }
+        addcolumn('text', $translate['cms_settings_value'], 'value', ['width' => '33%']);
+        if ($_SESSION['user']['is_admin']) {
+            addcolumn('text', $translate['cms_settings_code'], 'code', ['width' => '33%']);
+        }
 
-		if($hasBilanguage) {
-			addcolumn('text',$translate['cms_settings_description'],'description_'.$lan,array('width'=>'33%'));
-		} else {
-			addcolumn('text',$translate['cms_settings_description'],'description',array('width'=>'33%'));
-		}
-		addcolumn('text',$translate['cms_settings_value'],'value',array('width'=>'33%'));
-		if($_SESSION['user']['is_admin']) addcolumn('text',$translate['cms_settings_code'],'code',array('width'=>'33%'));
+        listsetting('add', $translate['cms_settings_new']);
+        listsetting('allowdelete', $_SESSION['user']['is_admin']);
+        listsetting('allowadd', $_SESSION['user']['is_admin']);
+        listsetting('allowcopy', $_SESSION['user']['is_admin']);
 
-		listsetting('add', $translate['cms_settings_new']);
-		listsetting('allowdelete', $_SESSION['user']['is_admin']);
-		listsetting('allowadd', $_SESSION['user']['is_admin']);
-		listsetting('allowcopy', $_SESSION['user']['is_admin']);
+        $cmsmain->assign('data', $data);
+        $cmsmain->assign('listconfig', $listconfig);
+        $cmsmain->assign('listdata', $listdata);
+        $cmsmain->assign('include', 'cms_list.tpl');
+    } else {
+        switch ($_POST['do']) {
+            case 'move':
+                $ids = json_decode($_POST['ids']);
+                list($success, $message, $redirect) = listMove($table, $ids);
 
-		$cmsmain->assign('data',$data);
-		$cmsmain->assign('listconfig',$listconfig);
-		$cmsmain->assign('listdata',$listdata);
-		$cmsmain->assign('include','cms_list.tpl');
+                break;
+            case 'delete':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listDelete($table, $ids);
 
+                break;
+            case 'copy':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listCopy($table, $ids, 'code');
 
-	} else {
-		switch ($_POST['do']) {
-		    case 'move':
-				$ids = json_decode($_POST['ids']);
-		    	list($success, $message, $redirect) = listMove($table, $ids);
-		        break;
+                break;
+            case 'hide':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
-		    case 'delete':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listDelete($table, $ids);
-		        break;
+                break;
+            case 'show':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
-		    case 'copy':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listCopy($table, $ids, 'code');
-		        break;
+                break;
+        }
 
-		    case 'hide':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-		        break;
+        $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
-		    case 'show':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-		        break;
-		}
-
-		$return = array("success" => $success, 'message'=> $message, 'redirect'=>$redirect);
-
-		echo json_encode($return);
-		die();
-	}
+        echo json_encode($return);
+        die();
+    }

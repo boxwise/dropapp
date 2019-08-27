@@ -1,38 +1,35 @@
 <?php
 
-	$table = 'organisations';
-	$action = 'organisations_edit';
+    $table = 'organisations';
+    $action = 'organisations_edit';
 
-	if($_POST) {
+    if ($_POST) {
+        $handler = new formHandler($table);
 
+        $savekeys = ['label'];
+        $id = $handler->savePost($savekeys);
 
-		$handler = new formHandler($table);
+        redirect('?action='.$_POST['_origin']);
+    }
 
-		$savekeys = array('label');
-		$id = $handler->savePost($savekeys);
+    $data = db_row('SELECT * FROM '.$table.' WHERE id = :id AND (NOT '.$table.'.deleted OR '.$table.'.deleted IS NULL) ', ['id' => $id]);
 
-		redirect('?action='.$_POST['_origin']);
-	}
+    if (!$id) {
+        $data['visible'] = 1;
+    }
 
-	$data = db_row('SELECT * FROM '.$table.' WHERE id = :id AND (NOT '.$table.'.deleted OR '.$table.'.deleted IS NULL) ',array('id'=>$id));
+    // open the template
+    $cmsmain->assign('include', 'cms_form.tpl');
 
-	if (!$id) {
-		$data['visible'] = 1;
-	}
+    // put a title above the form
+    $cmsmain->assign('title', 'Organisation');
 
-	// open the template
-	$cmsmain->assign('include','cms_form.tpl');
+    addfield('text', 'Name', 'label');
 
-	// put a title above the form
-	$cmsmain->assign('title','Organisation');
+    addfield('line', '', '', ['aside' => true]);
+    addfield('created', 'Created', 'created', ['aside' => true]);
 
-	addfield('text','Name','label');
-
-	addfield('line','','',array('aside'=>true));
-	addfield('created','Created','created',array('aside'=>true));
-
-
-	// place the form elements and data in the template
-	$cmsmain->assign('data',$data);
-	$cmsmain->assign('formelements',$formdata);
-	$cmsmain->assign('formbuttons',$formbuttons);
+    // place the form elements and data in the template
+    $cmsmain->assign('data', $data);
+    $cmsmain->assign('formelements', $formdata);
+    $cmsmain->assign('formbuttons', $formbuttons);

@@ -8,8 +8,9 @@ class AllowNullForProductDeletedTable extends AbstractMigration
     {
         $this->table('products')
             ->changeColumn('deleted', 'datetime', [
-                'null'=>true
+                'null' => true,
             ])
-            ->save();
+            ->save()
+        ;
     }
 }

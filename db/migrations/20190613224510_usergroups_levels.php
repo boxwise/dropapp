@@ -1,37 +1,38 @@
 <?php
 
-use Phinx\Migration\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
+use Phinx\Migration\AbstractMigration;
 
 class UsergroupsLevels extends AbstractMigration
 {
     public function change()
     {
         $this->table('cms_usergroups', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('userlevel', 'integer', [
                 'null' => false,
                 'default' => '0',
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'allow_borrow_adddelete',
             ])
-            ->save();
+            ->save()
+        ;
         $this->table('cms_usergroups_levels', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -57,21 +58,23 @@ class UsergroupsLevels extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'label',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('laundry_stations', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('camp_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'access',
             ])
-            ->save();
+            ->save()
+        ;
     }
 }

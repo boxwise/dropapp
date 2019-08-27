@@ -1,21 +1,21 @@
 <?php
 
-use Phinx\Migration\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
+use Phinx\Migration\AbstractMigration;
 
 class InitialSchema extends AbstractMigration
 {
     public function change()
     {
         $this->table('borrow_categories', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -29,16 +29,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('borrow_items', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -100,16 +101,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified_by',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('borrow_locations', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -128,16 +130,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'camp_id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('borrow_transactions', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -201,16 +204,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'helmet',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('camps', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -360,15 +364,16 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'dropcapchild',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_access', [
-                'id' => false,
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('cms_users_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -378,16 +383,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'cms_users_id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_functions', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_bin',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_bin',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -461,15 +467,16 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'visible',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_functions_camps', [
-                'id' => false,
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('cms_functions_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -479,16 +486,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'cms_functions_id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_users', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_bin',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_bin',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -571,15 +579,16 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'deleted',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_users_camps', [
-                'id' => false,
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('cms_users_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -589,16 +598,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'cms_users_id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('food', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -672,16 +682,17 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'after' => 'visible',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('food_distributions', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -752,16 +763,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('food_transactions', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -804,16 +816,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('genders', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -893,16 +906,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'baby',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('history', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -962,16 +976,17 @@ class InitialSchema extends AbstractMigration
                 'null' => true,
                 'after' => 'from_float',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('itemsout', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1007,16 +1022,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'from_location',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('languages', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1074,16 +1090,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'seq',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('laundry_appointments', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1147,16 +1164,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'collected',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('laundry_machines', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1170,16 +1188,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('laundry_slots', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1201,16 +1220,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'time',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('laundry_stations', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1231,16 +1251,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'label',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('laundry_times', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1254,16 +1275,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('library', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1346,16 +1368,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified_by',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('library_transactions', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1408,16 +1431,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'modified_by',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('library_type', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1437,16 +1461,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'label',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('locations', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1517,16 +1542,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'is_donated',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('log', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1558,16 +1584,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'ip',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('need_periods', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1591,16 +1618,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'week_min',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('numbers', [
-                'id' => false,
-                'primary_key' => ['value'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['value'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('value', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1613,16 +1641,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'value',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('pagetree', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -1788,16 +1817,17 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'after' => 'adwords',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('people', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2028,28 +2058,29 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'approvalsigned',
             ])
-        ->addIndex(['parent_id'], [
+            ->addIndex(['parent_id'], [
                 'name' => 'parent_id',
                 'unique' => false,
             ])
-        ->addIndex(['container'], [
+            ->addIndex(['container'], [
                 'name' => 'container',
                 'unique' => false,
             ])
-        ->addIndex(['camp_id'], [
+            ->addIndex(['camp_id'], [
                 'name' => 'camp_id',
                 'unique' => false,
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('product_categories', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2069,16 +2100,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'label',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('products', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2176,15 +2208,16 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'after' => 'comments',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('products_prices', [
-                'id' => false,
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('product_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2199,16 +2232,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'camp_id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('qr', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2226,16 +2260,17 @@ class InitialSchema extends AbstractMigration
                 'null' => true,
                 'after' => 'code',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('redirect', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2274,16 +2309,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('settings', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2355,20 +2391,21 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-        ->addIndex(['code'], [
+            ->addIndex(['code'], [
                 'name' => 'code',
                 'unique' => true,
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('settings_categories', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2394,16 +2431,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'name',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('sizegroup', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2422,16 +2460,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'label',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('sizes', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2477,16 +2516,17 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('stock', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2596,32 +2636,33 @@ class InitialSchema extends AbstractMigration
                 'after' => 'picked_by',
                 'default' => '0000-00-00 00:00:00',
             ])
-        ->addIndex(['box_id'], [
+            ->addIndex(['box_id'], [
                 'name' => 'box_id',
                 'unique' => false,
             ])
-        ->addIndex(['location_id'], [
+            ->addIndex(['location_id'], [
                 'name' => 'location_id',
                 'unique' => false,
             ])
-        ->addIndex(['product_id'], [
+            ->addIndex(['product_id'], [
                 'name' => 'product_id',
                 'unique' => false,
             ])
-        ->addIndex(['size_id'], [
+            ->addIndex(['size_id'], [
                 'name' => 'size_id',
                 'unique' => false,
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('tipofday', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2642,16 +2683,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'title',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('transactions', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2717,24 +2759,25 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-        ->addIndex(['people_id'], [
+            ->addIndex(['people_id'], [
                 'name' => 'people_id',
                 'unique' => false,
             ])
-        ->addIndex(['transaction_date'], [
+            ->addIndex(['transaction_date'], [
                 'name' => 'transaction_date',
                 'unique' => false,
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('translate', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2817,16 +2860,17 @@ class InitialSchema extends AbstractMigration
                 'null' => false,
                 'after' => 'modified_by',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('translate_categories', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2840,16 +2884,17 @@ class InitialSchema extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('units', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2892,15 +2937,16 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('x_people_languages', [
-                'id' => false,
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('people_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -2910,6 +2956,7 @@ class InitialSchema extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'people_id',
             ])
-            ->create();
+            ->create()
+        ;
     }
 }

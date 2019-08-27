@@ -1,5 +1,5 @@
 <?php
-	setlocale(LC_ALL, 'nl_NL');
+    setlocale(LC_ALL, 'nl_NL');
 
-	$smarty = new Zmarty;
-	$smarty->display('cms_reset.tpl');
+    $smarty = new Zmarty();
+    $smarty->display('cms_reset.tpl');

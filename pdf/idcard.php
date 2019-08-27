@@ -1,5 +1,5 @@
 <?php
-	
-	$card = 'id';
-	
-	require('bicyclecard.php');
+
+    $card = 'id';
+
+    require 'bicyclecard.php';

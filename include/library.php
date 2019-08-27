@@ -1,15 +1,14 @@
 <?php
 
-	$table = 'library_transactions';
-	$ajax = checkajax();
+    $table = 'library_transactions';
+    $ajax = checkajax();
 
-	if(!$ajax) {
+    if (!$ajax) {
+        initlist();
 
-		initlist();
+        $cmsmain->assign('title', 'Library');
 
-		$cmsmain->assign('title','Library');
-
-		$data = getlistdata('
+        $data = getlistdata('
 		SELECT
 			l.id,
 			CONCAT(code," - ",booktitle_en,IF(booktitle_ar!="",CONCAT(" - ",booktitle_ar),""),IF(author!="",CONCAT(" (",author,")"),"")) AS title, 
@@ -21,66 +20,66 @@
 			camp_id = '.intval($_SESSION['camp']['id']).' AND
 			(SELECT status FROM library_transactions AS lt WHERE lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) = "out"');
 
-		foreach($data as $key=>$d) {
-			$data[$key]['duration'] = ceil($data[$key]['duration']/86400).' days ';
-		}
-		addcolumn('text','Book','title');
-		addcolumn('html','Rented out to','name');
-		addcolumn('html','Phone','phone');
-		addcolumn('html','Duration','duration');
+        foreach ($data as $key => $d) {
+            $data[$key]['duration'] = ceil($data[$key]['duration'] / 86400).' days ';
+        }
+        addcolumn('text', 'Book', 'title');
+        addcolumn('html', 'Rented out to', 'name');
+        addcolumn('html', 'Phone', 'phone');
+        addcolumn('html', 'Duration', 'duration');
 
-		
-		listsetting('allowsort', true);
-		listsetting('allowdelete', false);
-		listsetting('allowshowhide', false);
-		listsetting('allowadd', true);
-		listsetting('allowselect', false);
-		listsetting('allowselectall', false);
-		
-		listsetting('add', 'Borrow out a new book');
+        listsetting('allowsort', true);
+        listsetting('allowdelete', false);
+        listsetting('allowshowhide', false);
+        listsetting('allowadd', true);
+        listsetting('allowselect', false);
+        listsetting('allowselectall', false);
 
-		
-		$cmsmain->assign('data',$data);
-		$cmsmain->assign('listconfig',$listconfig);
-		$cmsmain->assign('listdata',$listdata);
-		$cmsmain->assign('include','cms_list.tpl');
+        listsetting('add', 'Borrow out a new book');
 
-	} else {
-		switch ($_POST['do']) {
-		    case 'move':
-				$ids = json_decode($_POST['ids']);
-		    	list($success, $message, $redirect) = listMove($table, $ids);
-		        break;
+        $cmsmain->assign('data', $data);
+        $cmsmain->assign('listconfig', $listconfig);
+        $cmsmain->assign('listdata', $listdata);
+        $cmsmain->assign('include', 'cms_list.tpl');
+    } else {
+        switch ($_POST['do']) {
+            case 'move':
+                $ids = json_decode($_POST['ids']);
+                list($success, $message, $redirect) = listMove($table, $ids);
 
-		    case 'delete':
-				$ids = explode(',',$_POST['ids']);
-				foreach($ids as $id) {
-					if($id) db_query('DELETE FROM borrow_transactions WHERE id = :id',array('id'=>$id));
-				}
-				$message = 'Transactions cancelled';
-				$success = true;
-				$redirect = true;
-		        break;
+                break;
+            case 'delete':
+                $ids = explode(',', $_POST['ids']);
+                foreach ($ids as $id) {
+                    if ($id) {
+                        db_query('DELETE FROM borrow_transactions WHERE id = :id', ['id' => $id]);
+                    }
+                }
+                $message = 'Transactions cancelled';
+                $success = true;
+                $redirect = true;
 
-		    case 'copy':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
-		        break;
+                break;
+            case 'copy':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
 
-		    case 'hide':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-		    	$message = $_POST['ids'];
-		        break;
+                break;
+            case 'hide':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
+                $message = $_POST['ids'];
 
-		    case 'show':
-				$ids = explode(',',$_POST['ids']);
-		    	list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-		        break;
-		}
+                break;
+            case 'show':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
-		$return = array("success" => $success, 'message'=> $message, 'redirect'=>$redirect);
+                break;
+        }
 
-		echo json_encode($return);
-		die();
-	}
+        $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
+
+        echo json_encode($return);
+        die();
+    }
