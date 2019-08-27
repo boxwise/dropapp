@@ -20,7 +20,7 @@
 		listfilter3(array('label'=>'Gender','options'=>$genders,'filter'=>'"s.gender_id"'));
 
 		$itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
-		listfilter4(array('label'=>"Product",'options'=>$itemlist,'filter'=>'p.category_id'));
+		listfilter4(array('label'=>"Category",'options'=>$itemlist,'filter'=>'p.category_id'));
 		listsetting('manualquery',true);
 
 		#dump($listconfig);
@@ -33,7 +33,6 @@
 			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
 			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id
-			LEFT OUTER JOIN product_categories AS pc ON p.category_id = pc.id
 		WHERE l.camp_id = '.$_SESSION['camp']['id'].
 
 		($listconfig['searchvalue']?' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")':'').
@@ -92,7 +91,7 @@
 
 		addbutton('export','Export',array('icon'=>'fa-download','showalways'=>true));
 
-		$cmsmain->assign('firstline', array('Total boxes/items', '', '','', $totalboxes.' boxes', $totalitems. ' items', '', ''));
+		$cmsmain->assign('firstline', array('Total', '', '','', $totalboxes.' boxes', $totalitems. ' items', '', ''));
 		$cmsmain->assign('listfooter', array('Total', '', '','',$totalboxes.' boxes', $totalitems.' items', '',''));
 
 		#dump($data);
