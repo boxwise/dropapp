@@ -150,7 +150,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
     <hr />
       {$data['weeklabel']} week, {if $data['newpeople']}<span class="number">{$data['newpeople']}</span>{else}no{/if} new {if $data['newpeople']==1} beneficiary was {else} beneficiaries were {/if} registered in {$currentcamp['name']}.
  			{if isset($data['notregistered'])}
-  				Additionally there {if $data['notregistered']==1}is {else} are {/if} <span class="number">{$data['notregistered']}</span> unregistered {if $data['notregistered']==1} person{else} people{/if}.
+  				Additionally there {if $data['nonregistered']==1}is {else} are {/if} <span class="number">{$data['notregistered']}</span> unregistered {if $data['notregistered']==1} person{else} people{/if}.
   			{/if}
 		</h1>
 	{/if}
@@ -183,11 +183,11 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 </h1>
 
 <hr />
-{if isset($data['sales'])}<h1>Sales in the last 21 days</h1>
+{if $data['sales']}<h1>Sales in the last 21 days</h1>
 <div id="chartdiv"></div>
 {/if}
 <hr />
-{if isset($data['borrow']) && isset($smarty.session.camp['bicycle'])}<h1>Items lent out in the last 21 days</h1>
+{if $data['borrow'] && $smarty.session.camp['bicycle']}<h1>Items lent out in the last 21 days</h1>
 <div id="chartdiv2"></div>
 {/if}
 

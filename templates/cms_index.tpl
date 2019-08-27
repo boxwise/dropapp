@@ -8,7 +8,7 @@
       <li>
           <ul class="level1">
     {foreach $item['sub'] as $subitem}
-            <li{if isset($subitem['active'])} class="active"{/if}><a class="menu_{$subitem['include']|default:''}" href="?action={$subitem['include']|default:''}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
+            <li{if $subitem['active']} class="active"{/if}><a class="menu_{$subitem['include']}" href="?action={$subitem['include']}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
       {/foreach}
           </ul>
       </li>
@@ -32,7 +32,7 @@
 	        <li>
 	            <ul class="level1">
 				{foreach $item['sub'] as $subitem}
-	              <li{if isset($subitem['active'])} class="active"{/if}><a class="menu_{$subitem['include']|default:''}" href="?action={$subitem['include']|default:''}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
+	              <li{if $subitem['active']} class="active"{/if}><a class="menu_{$subitem['include']}" href="?action={$subitem['include']}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
 				  {/foreach}
 	            </ul>
 	        </li>
@@ -41,8 +41,8 @@
 	    </div>
 	{/if}
     <div class="content">
-	    {if isset($include)}{include file="{$include}"}{/if}
-	    {if isset($include2)}{include file="{$include2}"}{/if}
+	    {if $include}{include file="{$include}"}{/if}
+	    {if $include2}{include file="{$include2}"}{/if}
     </div>
   </div>
 </div>
