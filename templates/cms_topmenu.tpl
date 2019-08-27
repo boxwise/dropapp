@@ -37,7 +37,7 @@
 	 		{/if}
 			
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user visible-xs"></i><span class="hidden-xs">{$smarty.session.user.naam} {if isset($smarty.session.user2)}({$smarty.session.user2.naam}){/if}</span><b class="caret"></b></a>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user visible-xs"></i><span class="hidden-xs">{$smarty.session.user.naam} {if $smarty.session.user2}({$smarty.session.user2.naam}){/if}</span><b class="caret"></b></a>
 				<ul class="dropdown-menu dropdown-menu-right">
 					<li><a href="?action=cms_profile">{$translate['cms_menu_settings']}</a></li>
 {if $smarty.session.user2}<li><a href="?action=exitloginas">{$translate['cms_menu_exitloginas']|replace:'%user%':$smarty.session.user2.naam}</a></li>{/if}
