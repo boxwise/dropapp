@@ -1,125 +1,118 @@
 <?php
 
-	$ajax = checkajax();
+    $ajax = checkajax();
 
-	$table = 'transactions';
-	$action = 'check_in';
+    $table = 'transactions';
+    $action = 'check_in';
 
-	if(!$ajax) {
+    if (!$ajax) {
+        if ($_POST) {
+            if ($_POST['id']) {
+                verify_campaccess_people($_POST['id']);
+                verify_deletedrecord($table, $_POST['id']);
+            }
 
-		if($_POST) {
+            $_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
+            $_POST['user_id'] = $_SESSION['user']['id'];
+            $_POST['drops'] = -intval($_POST['count']) * db_value('SELECT value FROM products WHERE id = :id', ['id' => $_POST['product_id'][0]]);
 
-			if($_POST['id']) {
-				verify_campaccess_people($_POST['id']);
-				verify_deletedrecord($table,$_POST['id']);
-			}
+            $handler = new formHandler($table);
 
-			$_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
-			$_POST['user_id'] = $_SESSION['user']['id'];
-			$_POST['drops'] = -intval($_POST['count']) * db_value('SELECT value FROM products WHERE id = :id', array('id'=>$_POST['product_id'][0]));
+            $savekeys = ['people_id', 'product_id', 'count', 'description', 'drops', 'transaction_date', 'user_id', 'size_id'];
+            $id = $handler->savePost($savekeys);
 
-			$handler = new formHandler($table);
+            redirect('?action=check_in&people_id='.$_POST['people_id'][0]);
+        }
 
-			$savekeys = array('people_id', 'product_id', 'count', 'description', 'drops', 'transaction_date', 'user_id','size_id');
-			$id = $handler->savePost($savekeys);
+        $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
+        if (!$id) {
+            $data['visible'] = 1;
+            $data['count'] = 1;
+            $data['people_id'] = intval($_GET['people_id']);
+        }
 
-			redirect('?action=check_in&people_id='.$_POST['people_id'][0]);
-		}
+        verify_campaccess_people($data['people_id']);
+        verify_deletedrecord('people', $data['people_id']);
 
-		$data = db_row('SELECT * FROM '.$table.' WHERE id = :id',array('id'=>$id));
-		if (!$id) {
-			$data['visible'] = 1;
-			$data['count'] = 1;
-			$data['people_id'] = intval($_GET['people_id']);
-		}
+        $translate['cms_form_submit'] = 'Edit';
+        $cmsmain->assign('translate', $translate);
 
-		verify_campaccess_people($data['people_id']);
-		verify_deletedrecord('people',$data['people_id']);
+        // open the template
+        $cmsmain->assign('include', 'cms_form.tpl');
+        addfield('hidden', '', 'id');
 
-		$translate['cms_form_submit'] = 'Edit';
-		$cmsmain->assign('translate',$translate);
+        $data['hidesubmit'] = true;
+        // put a title above the form
+        $cmsmain->assign('title', 'Check In');
 
-		// open the template
-		$cmsmain->assign('include','cms_form.tpl');
-		addfield('hidden','','id');
-		
-		$data['hidesubmit'] = true;
-		// put a title above the form
-		$cmsmain->assign('title','Check In');
-
-		addfield('select','Find '.$_SESSION['camp']['familyidentifier'],'people_id',array('onchange'=>'selectFamily("people_id",false)', 'required'=>true, 'multiple'=>false, 'query'=>'
+        addfield('select', 'Find '.$_SESSION['camp']['familyidentifier'], 'people_id', ['onchange' => 'selectFamily("people_id",false)', 'required' => true, 'multiple' => false, 'query' => '
 			SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled 
 			FROM people AS p 
 			WHERE parent_id = 0 AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
 			GROUP BY p.id 
-			ORDER BY label'));
+			ORDER BY label']);
 
-		addfield('ajaxstart','', '', array('aside'=>true, 'asidetop'=>true, 'id'=>'ajax-aside'));
-		addfield('ajaxend','', '', array('aside'=>true));
+        addfield('ajaxstart', '', '', ['aside' => true, 'asidetop' => true, 'id' => 'ajax-aside']);
+        addfield('ajaxend', '', '', ['aside' => true]);
 
-		#addfield('created','Created','created',array('aside'=>true));
+        //addfield('created','Created','created',array('aside'=>true));
 
+        // place the form elements and data in the template
+        $cmsmain->assign('data', $data);
+        $cmsmain->assign('formelements', $formdata);
+        $cmsmain->assign('formbuttons', $formbuttons);
+    } else {
+        if ($_POST['do']) {
+            switch ($_POST['do']) {
+                case 'delete':
+                    $ids = explode(',', $_POST['ids']);
+                    list($success, $message, $redirect) = listDelete($table, $ids);
 
-		// place the form elements and data in the template
-		$cmsmain->assign('data',$data);
-		$cmsmain->assign('formelements',$formdata);
-		$cmsmain->assign('formbuttons',$formbuttons);
+                    break;
+                case 'hide':
+                    $ids = explode(',', $_POST['ids']);
+                    list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
-	} else {
+                    break;
+                case 'show':
+                    $ids = explode(',', $_POST['ids']);
+                    list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
-		if($_POST['do']){
-			switch ($_POST['do']) {
+                    break;
+            }
 
-			    case 'delete':
-					$ids = explode(',',$_POST['ids']);
-			    	list($success, $message, $redirect) = listDelete($table, $ids);
-			        break;
+            $return = ['success' => $success, 'message' => $message, 'redirect' => false, 'action' => "$('#field_people_id').trigger('change')"];
 
-			    case 'hide':
-					$ids = explode(',',$_POST['ids']);
-			    	list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-			        break;
+            echo json_encode($return);
+            die();
+        }
 
-			    case 'show':
-					$ids = explode(',',$_POST['ids']);
-			    	list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-			        break;
-			}
+        $ajaxform = new Zmarty();
 
-			$return = array("success" => $success, 'message'=> $message, 'redirect'=>false, 'action'=>"$('#field_people_id').trigger('change')");
+        // vanaf hier
 
-			echo json_encode($return);
-			die();
-		}
+        $data['people_id'] = intval($_POST['people_id']);
+        $data['allowdrops'] = allowGiveDrops();
 
-		$ajaxform = new Zmarty;
+        $table = 'transactions';
 
-		/* vanaf hier */
+        $ajaxform->assign('data', $data);
+        $ajaxform->assign('formelements', $formdata);
+        $ajaxform->assign('formbuttons', $formbuttons);
+        $htmlcontent = $ajaxform->fetch('cms_form_ajax.tpl');
 
-		$data['people_id'] = intval($_POST['people_id']);
-		$data['allowdrops'] = allowGiveDrops();
-		
-		$table = 'transactions';
+        // the aside
+        $ajaxaside = new Zmarty();
 
-		$ajaxform->assign('data',$data);
-		$ajaxform->assign('formelements',$formdata);
-		$ajaxform->assign('formbuttons',$formbuttons);
-		$htmlcontent = $ajaxform->fetch('cms_form_ajax.tpl');
+        $data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = :id OR parent_id = :id AND visible AND NOT deleted ORDER BY parent_id, seq', ['id' => $data['people_id']]);
 
-		// the aside
-		$ajaxaside = new Zmarty;
+        $data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => $data['people_id']]);
+        $data['givedropsurl'] = '?action=give&ids='.$data['people_id'];
 
+        $ajaxaside->assign('data', $data);
+        $htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
 
-		$data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = :id OR parent_id = :id AND visible AND NOT deleted ORDER BY parent_id, seq',array('id'=>$data['people_id']));
-
-		$data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id',array('id'=>$data['people_id']));
-		$data['givedropsurl'] = '?action=give&ids='.$data['people_id'];
-
-
-		$ajaxaside->assign('data',$data);
-		$htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
-
-		$success = true;
-		$return = array("success" => $success, 'htmlcontent' => $htmlcontent, 'htmlaside' => $htmlaside, 'message'=> $message);
-		echo json_encode($return);
-	}
+        $success = true;
+        $return = ['success' => $success, 'htmlcontent' => $htmlcontent, 'htmlaside' => $htmlaside, 'message' => $message];
+        echo json_encode($return);
+    }

@@ -1,34 +1,34 @@
 <?php
 
-use Phinx\Migration\AbstractMigration;
 use Phinx\Db\Adapter\MysqlAdapter;
+use Phinx\Migration\AbstractMigration;
 
 class NewUserMgmt extends AbstractMigration
 {
     public function change()
     {
         $this->table('camps', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('organisation_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'id',
             ])
-        ->changeColumn('name', 'string', [
+            ->changeColumn('name', 'string', [
                 'null' => true,
                 'limit' => 255,
                 'collation' => 'utf8_general_ci',
                 'encoding' => 'utf8',
                 'after' => 'organisation_id',
             ])
-        ->changeColumn('seq', 'integer', [
+            ->changeColumn('seq', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'name',
@@ -102,17 +102,18 @@ class NewUserMgmt extends AbstractMigration
                 'after' => 'modified',
             ])
             ->removeColumn('require_qr')
-            ->save();
+            ->save()
+        ;
         $this->table('cms_functions', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_bin',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
-        ->changeColumn('allusers', 'integer', [
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_bin',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
+            ->changeColumn('allusers', 'integer', [
                 'null' => false,
                 'default' => '0',
                 'limit' => MysqlAdapter::INT_TINY,
@@ -129,16 +130,17 @@ class NewUserMgmt extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'allcamps',
             ])
-            ->save();
+            ->save()
+        ;
         $this->table('cms_settings', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -210,20 +212,21 @@ class NewUserMgmt extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-        ->addIndex(['code'], [
+            ->addIndex(['code'], [
                 'name' => 'code',
                 'unique' => true,
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_usergroups', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -277,15 +280,16 @@ class NewUserMgmt extends AbstractMigration
                 'limit' => MysqlAdapter::INT_TINY,
                 'after' => 'allow_laundry_block',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_usergroups_camps', [
-                'id' => false,
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('cms_usergroups_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -295,15 +299,16 @@ class NewUserMgmt extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'cms_usergroups_id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_usergroups_functions', [
-                'id' => false,
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('cms_usergroups_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -313,33 +318,35 @@ class NewUserMgmt extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'cms_usergroups_id',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_users', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_bin',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_bin',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('cms_usergroups_id', 'integer', [
                 'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'deleted',
             ])
             ->removeColumn('coordinator')
-            ->save();
+            ->save()
+        ;
         $this->table('laundry_stations', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
-        ->changeColumn('access', 'string', [
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
+            ->changeColumn('access', 'string', [
                 'null' => false,
                 'default' => 'TRUE',
                 'limit' => 255,
@@ -347,16 +354,17 @@ class NewUserMgmt extends AbstractMigration
                 'encoding' => 'utf8',
                 'after' => 'label',
             ])
-            ->save();
+            ->save()
+        ;
         $this->table('organisations', [
-                'id' => false,
-                'primary_key' => ['id'],
-                'engine' => 'InnoDB',
-                'encoding' => 'utf8',
-                'collation' => 'utf8_general_ci',
-                'comment' => '',
-                'row_format' => 'DYNAMIC',
-            ])
+            'id' => false,
+            'primary_key' => ['id'],
+            'engine' => 'InnoDB',
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'comment' => '',
+            'row_format' => 'DYNAMIC',
+        ])
             ->addColumn('id', 'integer', [
                 'null' => false,
                 'limit' => MysqlAdapter::INT_REGULAR,
@@ -388,7 +396,8 @@ class NewUserMgmt extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-            ->create();
+            ->create()
+        ;
         $this->table('cms_access')->drop()->save();
         $this->table('cms_users_camps')->drop()->save();
         $this->table('food')->drop()->save();

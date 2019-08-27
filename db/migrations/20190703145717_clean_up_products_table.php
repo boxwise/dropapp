@@ -9,8 +9,9 @@ class CleanUpProductsTable extends AbstractMigration
         $this->table('products')
             ->removeColumn('groupname')
             ->changeColumn('value', 'integer', [
-                'default'=>0
+                'default' => 0,
             ])
-            ->save();
+            ->save()
+        ;
     }
 }
