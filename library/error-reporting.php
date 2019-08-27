@@ -2,17 +2,14 @@
 
 use OpenCensus\Trace\Tracer;
 
-if ('localhost' == @parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST)) {
+// report errors, but ignore E_STRICT and E_NOTICE
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_WARNING);
+
+// this behaviour is disabled by default, but can be turned
+// on if you want to see the warnings
+if ('localhost' == @parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) && false) {
     // report all errors in local development
     error_reporting(E_ALL);
-    // dump errors to stderr (you can see in console)
-    // this is so it doesn't interfere with the app interaction
-    ini_set('display_errors', 'stderr');
-    // as we're dumping to stderr, don't show the errors as html
-    ini_set('html_errors', '0');
-} else {
-    // report errors, but ignore E_STRICT and E_NOTICE
-    error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_WARNING);
 }
 
 // configure sentry
