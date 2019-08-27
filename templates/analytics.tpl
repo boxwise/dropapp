@@ -34,7 +34,14 @@
     {/literal}
 {/if}
 <script>
-    const heapProjectId = "{($smarty.server.HTTP_HOST == 'app.boxwise.co') ? '1677886010' : ($smarty.server.HTTP_HOST == 'staging.boxwise.co' ? '17989829' : '') }}";
+{if $smarty.server.HTTP_HOST == 'app.boxwise.co'}
+    const heapProjectId = '1677886010';
+{elseif $smarty.server.HTTP_HOST == 'staging.boxwise.co'}
+    const heapProjectId = '17989829';
+{else}
+    const heapProjectId = '';
+{/if}
+
     const userId = "{$smarty.session.user.id}";
     const organisationId = "{$smarty.session.organisation.label}";
     const isAdmin = "{$smarty.session.user.is_admin}";
