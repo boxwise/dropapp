@@ -86,16 +86,19 @@
 
             $cart = json_decode($_POST['cart'], true);
             $savekeys = ['people_id', 'product_id', 'count', 'drops', 'transaction_date', 'user_id'];
+            $notificationText = '<b>Shopping cart successfully submitted!</b> </br><p>Items bought:</p> <ul>';
             foreach ($cart as $item) {
                 $_POST['product_id'] = intval($item['id']);
                 $_POST['count'] = intval($item['count']);
                 $_POST['drops'] = $item['price'] * intval($item['count']) * (-1);
 
+                $notificationText = $notificationText.'<li>'.$item['count'].'x '.$item['nameWithoutPrice'].' - '.$_POST['drops'] * (-1).' '.$_SESSION['camp']['currencyname'].'</li>';
+
                 $handler = new formHandler($table);
                 $id = $handler->savePost($savekeys);
             }
-
-            $return = ['success' => true, 'message' => 'Shopping cart successfully submitted', 'redirect' => '?action=check_out'];
+            $notificationText = $notificationText.'</ul> </br> <b>Thanks for helping!</b>';
+            $return = ['success' => true, 'message' => $notificationText, 'redirect' => '?action=check_out'];
 
             echo json_encode($return);
             die();

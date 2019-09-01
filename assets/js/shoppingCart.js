@@ -6,9 +6,10 @@ $(document).ready(function() {
         cart = [];
         
         // Constructor
-        function Item(id, name, count, price) {
+        function Item(id, name, nameWithoutPrice, count, price) {
           this.id = id;
           this.name = name;
+          this.nameWithoutPrice = nameWithoutPrice;
           this.price = price;
           this.count = count;
         }
@@ -42,9 +43,10 @@ $(document).ready(function() {
                 return;
             }
           }
-          var item = new Item(id, name, parseInt(count), parseInt(price));
+          var nameWithoutPrice= name.substr(0, name.indexOf('('));
+          var item = new Item(id, name, nameWithoutPrice, parseInt(count), parseInt(price));
           cart.push(item);
-          saveCart();
+          saveCart();nameWithoutPrice
         }
         // Set count from item
         obj.setCountForItem = function(name, count) {
@@ -156,7 +158,7 @@ $(document).ready(function() {
             $('#shopping_cart')
               .append("<tr><td>"
                   + item.name +'</td><td>'
-                  + "<input type='number' step='1' min='1' productId='"+item.id+"' class='changeQuantity' value='"+ item.count +"'></input></td><td>"
+                  + "<input type='number' class='form-control valid changeQuantity' step='1' min='1' productId='"+item.id+"' value='"+ item.count +"'></input></td><td>"
                   + item.price +"</td><td id='totalSum_" + item.id +"'>"
                   + item.count * item.price +'</td><td>'
                   +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')><i class='fa fa-trash-o'></i></button></td></tr>");
@@ -193,6 +195,7 @@ $(document).ready(function() {
             var totalPriceCell = $("#"+id)[0];
             totalPriceCell.innerText = item.price * item.count;
         });
+        updateCartRelatedElements();
     }
 
     $("#field_product_id").on('change', function(e) {
@@ -200,6 +203,16 @@ $(document).ready(function() {
             people_id =  $("#field_people_id").val();
             $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
     });
+
+    $("#field_people_id").on('change', function(e) {
+        people_id =  $("#field_people_id").val();
+        if (people_id === ""){
+            $("[id=ajax-content]").hide();
+        } else {
+            $("[id=ajax-content]").show();
+        }
+    });
+
 
     $("#add-to-cart-button").click(function(e) {
         e.preventDefault();
@@ -218,6 +231,10 @@ $(document).ready(function() {
 
     $(document).on("click",'.deleteFromCart', function(e){
         var productId = e.target.getAttribute('productId');
+        if (!productId) {
+            // event triggered by the trash icon rather than button itself
+            var productId = e.target.parentElement.getAttribute('productId');
+        }
         shoppingCart.removeItemFromCartAll(productId);
         renderCart();
     });
@@ -228,7 +245,6 @@ $(document).ready(function() {
         var newQuantity = event.target.value;
         shoppingCart.updateItemQuantityInCart(productId, newQuantity);
         updatePriceInRow();
-        renderCart();
     });
 
     $(document).on("keydown keyup keypress",'.changeQuantity', function(e){
@@ -250,7 +266,16 @@ $(document).ready(function() {
                 shoppingCart.clearCart();
                 renderCart();
                 if (result.success) {
-                    window.location = "?action=check_out&people_id=" + people_id;
+                    if (result.message) {
+                        noty({
+                            text: result.message,
+                            type: result.success ? "success" : "error"
+                        });
+                        // give notification a bit of time to be read
+                        setTimeout(function(){
+                            window.location = "?action=check_out";
+                        }, 3000);
+                    }          
                 }
             },
             error: function(result) {

@@ -752,6 +752,14 @@ td.list-level-0.list-column-ean_print div a:hover {
 	color:#ccc;
 	text-decoration: line-through;
 }
-.shopping_cart_table{
-	float: right;
+@media (max-width: 1260px){
+	.shopping_cart_table{
+		float: left;
+	}
+}
+
+@media (min-width: 1260px){
+	.shopping_cart_table{
+		float: right;
+	}
 }
