@@ -108,7 +108,7 @@
 
         $data['people_id'] = intval($_POST['people_id']);
         $data['allowdrops'] = allowGiveDrops();
-        $data['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', ['id' => $data['people_id']]);
+        //$data['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', ['id' => $data['people_id']]);
 
         // This can be a warning that is given based on certain shopping actions in the past.
         // 		$data['shoeswarning'] = db_value('SELECT COUNT(id) FROM transactions WHERE people_id = :id AND product_id IN (63,709) AND transaction_date >= "2017-11-13 00:00"', array('id'=>$data['people_id']));

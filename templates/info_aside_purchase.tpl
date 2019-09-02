@@ -5,7 +5,6 @@
 	{/foreach}
 	</ul>
 
-	{if !$data['approvalsigned']}<p class="warningbox 2">Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data.</p>{/if}
 	{if $data['shoeswarning']}<p class="warningbox">This beneficiary has already bought<br />winter shoes or light shoes for men in this or the previous cycle.</p>{/if}
 
 	<p class="familycredit"><img src="../assets/img/more_coins.png" class="coinsImage"></img> <span id="dropcredit" data-drop-credit="{$data['dropcoins']}">{$data['dropcoins']}</span> {$currency} {if $data['allowdrops']}<a class="btn btn-sm" href="{$data['givedropsurl']}"><img src="../assets/img/one_coin.png" class="coinsImage"></img> <span>Give {$currency}</span></a>{/if}<br /><br /><span class="small">Last purchase: {$data['lasttransaction']}</span>

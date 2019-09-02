@@ -139,6 +139,10 @@
         addfield('checkbox', 'Extra food due to health condition (as indicated by Red Cross)', 'extraportion', ['tab' => 'people']);
     }
     addfield('checkbox', 'This beneficiary is a volunteer with <i>'.$_SESSION['organisation']['label'].'</i>', 'volunteer', ['tab' => 'people']);
+    $smarty = new Zmarty();
+    $smarty->assign('data', $data);
+    $warning = $smarty->fetch('cms_approval_signed.tpl');
+    addfield('html', '', $warning);
 
     if ($_SESSION['camp']['bicycle'] || $_SESSION['camp']['workshop'] || $_SESSION['camp']['idcard']) {
         $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);

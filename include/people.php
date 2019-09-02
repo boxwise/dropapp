@@ -116,7 +116,9 @@ $table = $action;
                 addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
                 addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
                 addcolumn('text', 'Comments', 'comments');
+                addcolumn('text', 'Signed', 'approvalsigned');
                 addcolumn('html', '&nbsp;', 'expired');
+                //dump($data);
                 if ($listconfig['filtervalue']) {
                     addcolumn('datetime', 'Created', 'created');
                 }
