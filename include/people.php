@@ -74,35 +74,40 @@ $table = $action;
 
         $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
-        Tracer::inSpan(
-            ['name' => ('people.php:addhtmldata')],
-            function () use ($data) {
-                foreach ($data as $key => $value) {
-                    if ($data[$key]['expired']) {
-                        $data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
-                    } else {
-                        $data[$key]['expired'] = '';
-                    }
-                    if (0 == $data[$key]['parent_id'] && !$data[$key]['approvalsigned']) {
-                        $data[$key]['expired'] .= '<i class="fa fa-pencil-square warning tooltip-this" title="This family didn\'t sign the privacy declaration"></i> ';
-                    }
-
-                    if ($data[$key]['bicycletraining'] && $_SESSION['camp']['bicycle']) {
-                        $data[$key]['expired'] .= '<i class="fa fa-bicycle tooltip-this" title="This person has a bicycle certificate."></i> ';
-                    }
-                    if ($data[$key]['workshoptraining'] && $_SESSION['camp']['workshop']) {
-                        $data[$key]['expired'] .= '<i class="fa fa-wrench tooltip-this '.($data[$key]['workshopsupervisor'] ? 'blue' : '').'" title="This person has a workshop certificate."></i> ';
-                    }
-
-                    if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
-                        $data[$key]['expired'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
-                    }
-                    if ($data[$key]['volunteer']) {
-                        $data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
-                    }
-                }
+        // Tracer::inSpan(
+        // ['name' => ('people.php:addhtmldata')],
+        // function () use ($data) {
+        foreach ($data as $key => $value) {
+            if ($data[$key]['expired']) {
+                $data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
+            } else {
+                $data[$key]['expired'] = '';
             }
-        );
+            if ($data[$key]['approvalsigned']) {
+                $data[$key]['approvalsigned'] = '<i class="fa fa-edit tooltip-this" title="This family didn\'t sign the privacy declaration"></i> ';
+            } else {
+                $data[$key]['approvalsigned'] = ' ';
+            }
+            if (0 == $data[$key]['parent_id'] && !$data[$key]['approvalsigned']) {
+                $data[$key]['expired'] .= '<i class="fa fa-pencil-square warning tooltip-this" title="This family didn\'t sign the privacy declaration"></i> ';
+            }
+
+            if ($data[$key]['bicycletraining'] && $_SESSION['camp']['bicycle']) {
+                $data[$key]['expired'] .= '<i class="fa fa-bicycle tooltip-this" title="This person has a bicycle certificate."></i> ';
+            }
+            if ($data[$key]['workshoptraining'] && $_SESSION['camp']['workshop']) {
+                $data[$key]['expired'] .= '<i class="fa fa-wrench tooltip-this '.($data[$key]['workshopsupervisor'] ? 'blue' : '').'" title="This person has a workshop certificate."></i> ';
+            }
+
+            if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
+                $data[$key]['expired'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
+            }
+            if ($data[$key]['volunteer']) {
+                $data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
+            }
+        }
+        // }
+        // );
 
         Tracer::inSpan(
             ['name' => ('people.php:addtemplatedata')],
@@ -116,7 +121,7 @@ $table = $action;
                 addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
                 addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
                 addcolumn('text', 'Comments', 'comments');
-                addcolumn('text', 'Signed', 'approvalsigned');
+                addcolumn('html', '&nbsp;', 'approvalsigned');
                 addcolumn('html', '&nbsp;', 'expired');
                 if ($listconfig['filtervalue']) {
                     addcolumn('datetime', 'Created', 'created');
@@ -143,6 +148,7 @@ $table = $action;
                 addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer']);
 
                 addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => true]);
+
                 $cmsmain->assign('data', $data);
                 $cmsmain->assign('listconfig', $listconfig);
                 $cmsmain->assign('listdata', $listdata);
@@ -206,6 +212,11 @@ $table = $action;
                 $redirect = '?action=give&ids='.$ids;
 
                 break;
+            case 'approval_signed':
+                $ids = ($_POST['ids']);
+                $success = true;
+                $redirect = '?action=people';
+                break;
             case 'move':
                 $ids = json_decode($_POST['ids']);
                 list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
@@ -241,6 +252,9 @@ $table = $action;
                 $message = 'Selected people have been touched';
                 $redirect = true;
 
+                break;
+            case 'Show up':
+                $message = 'FInally';
                 break;
             case 'print':
                 $success = true;

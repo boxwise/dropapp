@@ -24,7 +24,7 @@ services:
       # WARNING: you do *not* want these environment variables set
       # in a production environment, as they enable remote
       # debugging
-      XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_enable=1 idekey=IDEA_DEBUG profiler_enable=1 profiler_output_dir=/tmp/xdebug-profiler
+      XDEBUG_CONFIG: remote_host=172.19.0.1 remote_port=9000 remote_enable=1 idekey=IDEA_DEBUG profiler_enable=1 profiler_output_dir=/tmp/xdebug-profiler
     stdin_open: true
     tty: true
 

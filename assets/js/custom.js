@@ -184,6 +184,8 @@ $(document).ready(function() {
             $(".aside-form").addClass("not_enough_coins");
         }
 
+        approvalsigned = $("#approvalsigned").data("approvalsigned");
+
         //not the same as totalCart worth zero! some items can be free of charge
         var isCartEmpty = shoppingCart.totalCount() == 0;
         $('#submitShoppingCart').prop("disabled", isCartEmpty || !enough_tokens);
@@ -523,7 +525,7 @@ function updateLaundry(field, offset) {
     }
 }
 
-function selectFamily(field,  reload) {
+function selectFamily(field,  reload, target) {
     value = $("#field_" + field).val();
     product =  $("#field_product_id").val();
 
@@ -538,7 +540,7 @@ function selectFamily(field,  reload) {
 
     if (value) {
         if (queryDict["people_id"] != value && reload)
-            window.location = "?action=check_out&people_id=" + value;
+            window.location = "?action="+target+"&people_id=" + value;
 
         if (value != $("#div_purch").data("listid")) {
             $("#div_purch").hide();
@@ -548,12 +550,13 @@ function selectFamily(field,  reload) {
         $("body").addClass("loading");
         $.ajax({
             type: "post",
-            url: "ajax.php?file=check_out",
+            url: "ajax.php?file="+target,
             data: {
                 people_id: value
             },
             dataType: "json",
             success: function(result) {
+                console.log(result);
                 var url = window.location;
                 var action = $("body").data("action");
                 window.history.pushState(

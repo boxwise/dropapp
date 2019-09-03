@@ -6,24 +6,6 @@
     $action = 'check_in';
 
     if (!$ajax) {
-        if ($_POST) {
-            if ($_POST['id']) {
-                verify_campaccess_people($_POST['id']);
-                verify_deletedrecord($table, $_POST['id']);
-            }
-
-            $_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
-            $_POST['user_id'] = $_SESSION['user']['id'];
-            $_POST['drops'] = -intval($_POST['count']) * db_value('SELECT value FROM products WHERE id = :id', ['id' => $_POST['product_id'][0]]);
-
-            $handler = new formHandler($table);
-
-            $savekeys = ['people_id', 'product_id', 'count', 'description', 'drops', 'transaction_date', 'user_id', 'size_id'];
-            $id = $handler->savePost($savekeys);
-
-            redirect('?action=check_in&people_id='.$_POST['people_id'][0]);
-        }
-
         $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
         if (!$id) {
             $data['visible'] = 1;
@@ -45,7 +27,7 @@
         // put a title above the form
         $cmsmain->assign('title', 'Check In');
 
-        addfield('select', 'Find '.$_SESSION['camp']['familyidentifier'], 'people_id', ['onchange' => 'selectFamily("people_id",false)', 'required' => true, 'multiple' => false, 'query' => '
+        addfield('select', 'Find '.$_SESSION['camp']['familyidentifier'], 'people_id', ['onchange' => 'selectFamily("people_id",false,"check_in")', 'required' => true, 'multiple' => false, 'query' => '
 			SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled 
 			FROM people AS p 
 			WHERE parent_id = 0 AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
@@ -54,6 +36,7 @@
 
         addfield('ajaxstart', '', '', ['aside' => true, 'asidetop' => true, 'id' => 'ajax-aside']);
         addfield('ajaxend', '', '', ['aside' => true]);
+        //addfield('approval_signed', '', '');
 
         //addfield('created','Created','created',array('aside'=>true));
 
@@ -62,31 +45,6 @@
         $cmsmain->assign('formelements', $formdata);
         $cmsmain->assign('formbuttons', $formbuttons);
     } else {
-        if ($_POST['do']) {
-            switch ($_POST['do']) {
-                case 'delete':
-                    $ids = explode(',', $_POST['ids']);
-                    list($success, $message, $redirect) = listDelete($table, $ids);
-
-                    break;
-                case 'hide':
-                    $ids = explode(',', $_POST['ids']);
-                    list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-
-                    break;
-                case 'show':
-                    $ids = explode(',', $_POST['ids']);
-                    list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-
-                    break;
-            }
-
-            $return = ['success' => $success, 'message' => $message, 'redirect' => false, 'action' => "$('#field_people_id').trigger('change')"];
-
-            echo json_encode($return);
-            die();
-        }
-
         $ajaxform = new Zmarty();
 
         // vanaf hier
@@ -108,8 +66,11 @@
 
         $data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => $data['people_id']]);
         $data['givedropsurl'] = '?action=give&ids='.$data['people_id'];
+        $data['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', ['id' => $data['people_id']]);
+        $data['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $data['people_id']]), true);
 
         $ajaxaside->assign('data', $data);
+        $ajaxaside->assign('currency', $_SESSION['camp']['currencyname']);
         $htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
 
         $success = true;
