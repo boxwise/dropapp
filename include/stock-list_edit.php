@@ -100,7 +100,9 @@
                     $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $id]);
 
                     db_query('UPDATE stock SET modified = NOW(), modified_by = '.$_SESSION['user']['id'].', ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id', ['location' => $_POST['option'], 'id' => $id]);
-                    simpleSaveChangeHistory('stock', $id, 'Box moved from '.db_value('SELECT label FROM locations WHERE id = :id', ['id' => $box['location_id']]).' to '.db_value('SELECT label FROM locations WHERE id = :id', ['id' => $_POST['option']]));
+                    $from['int'] = $box['location_id'];
+                    $to['int'] = $_POST['option'];
+                    simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
 
                     if ($box['location_id'] != $_POST['option']) {
                         db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');

@@ -48,8 +48,18 @@ function showHistory($table, $id)
             $row['changes'] = ' ordered the box to the shop';
         } elseif ('Box order made undone' == trim($row['changes'])) {
             $row['changes'] = ' canceled the box order';
+        } elseif (trim($row['changes']) == 'product_id') {
+            $prod_ids = [$row['from_int'], $row['to_int']];
+            $prod_orig = db_row('SELECT products.name FROM products WHERE products.id = :id_orig', ['id_orig' => $prod_ids[0]]);
+            $prod_new = db_row('SELECT products.name FROM products WHERE products.id = :id_new', ['id_new' => $prod_ids[1]]);
+            $row['changes'] = 'changed product type from '.$prod_orig['name'].' to '.$prod_new['name'];
+        } elseif (trim($row['changes']) == 'size_id') {
+            $size_ids = [$row['from_int'], $row['to_int']];
+            $size_orig = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_orig', ['id_orig' => $size_ids[0]]);
+            $size_new = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_new', ['id_new' => $size_ids[1]]);
+            $row['changes'] = 'changed size from '.$size_orig['label'].' to '.$size_new['label'];
         } elseif (!(is_null($row['to_int']) && is_null($row['to_float']))) {
-            $row['changes'] .= ' changed';
+            $row['changes'] = ' changed' + $row['changes'];
             if (!is_null($row['from_int'])) {
                 $row['changes'] .= ' from '.$row['from_int'];
             } elseif (!is_null($row['from_float'])) {
@@ -68,7 +78,7 @@ function showHistory($table, $id)
     }
 
     if (!(is_null($row['to_int']) && is_null($row['to_float']))) {
-        $row['changes'] .= ' changed';
+        $row['changes'] = ' changed' + $row['changes'];
         if (!is_null($row['from_int'])) {
             $row['changes'] .= ' from '.$row['from_int'];
         } elseif (!is_null($row['from_float'])) {

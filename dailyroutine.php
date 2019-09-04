@@ -75,7 +75,7 @@ GROUP BY p.id
 
             if ($row['diff'] > $row['treshold']) {
                 db_query('UPDATE people SET deleted = NOW() WHERE id = :id', ['id' => $row['id']]);
-                simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine');
+                simple('people', $row['id'], 'Record deleted by daily routine');
                 db_touch('people', $row['id']);
             }
         }
