@@ -36,7 +36,6 @@
 
         addfield('ajaxstart', '', '', ['aside' => true, 'asidetop' => true, 'id' => 'ajax-aside']);
         addfield('ajaxend', '', '', ['aside' => true]);
-        //addfield('approval_signed', '', '');
 
         //addfield('created','Created','created',array('aside'=>true));
 

@@ -184,8 +184,6 @@ $(document).ready(function() {
             $(".aside-form").addClass("not_enough_coins");
         }
 
-        approvalsigned = $("#approvalsigned").data("approvalsigned");
-
         //not the same as totalCart worth zero! some items can be free of charge
         var isCartEmpty = shoppingCart.totalCount() == 0;
         $('#submitShoppingCart').prop("disabled", isCartEmpty || !enough_tokens);

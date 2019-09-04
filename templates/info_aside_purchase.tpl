@@ -7,7 +7,7 @@
 
 	{if $data['shoeswarning']}<p class="warningbox">This beneficiary has already bought<br />winter shoes or light shoes for men in this or the previous cycle.</p>{/if}
 
-	{if ((isset($data['approvalsigned']) || {$smarty.get.origin} == "start") && {$data['approvalsigned']} == FALSE)}<a class="btn btn-danger" type="button" ><span class="fa fa-edit" href="?action=people_edit&amp;id={$person['id']}"> </span> Privacy declaration</a>{/if}
+	{if ((isset($data['approvalsigned']) || {$smarty.get.origin} == "start") && {$data['approvalsigned']} == FALSE)}<a class="btn btn-danger" type="button" onclick="location.href='?action=people_edit&amp;id={$person['id']}'" ><span class="fa fa-edit"  id={$person['id']}"> </span> Privacy declaration</a>{/if}
 
 
 	<p class="familycredit"><img src="../assets/img/more_coins.png" class="coinsImage"></img> <span id="dropcredit" data-drop-credit="{$data['dropcoins']}">{$data['dropcoins']}</span> {$currency} {if $data['allowdrops']}<a class="btn btn-sm" href="{$data['givedropsurl']}"><img src="../assets/img/one_coin.png" class="coinsImage"></img> <span>Give {$currency}</span></a>{/if}<br /><br /><span class="small">Last purchase: {$data['lasttransaction']}</span>
