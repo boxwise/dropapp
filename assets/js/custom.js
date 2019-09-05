@@ -288,7 +288,6 @@ function selectFamily(field,  reload, target) {
             },
             dataType: "json",
             success: function(result) {
-                console.log(result);
                 var url = window.location;
                 var action = $("body").data("action");
                 window.history.pushState(
