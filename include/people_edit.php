@@ -114,9 +114,10 @@
 
         addfield('html', '', $htmlaside, ['aside' => true, 'asidetop' => true]);
     } else {
-        $cmsmain->assign('currency', $_SESSION['camp']['currencyname']);
-        $cmsmain->assign('data', $side);
-        $htmlaside = $cmsmain->fetch('info_aside_purchase.tpl');
+        $ajaxaside = new Zmarty();
+        $ajaxaside->assign('currency', $_SESSION['camp']['currencyname']);
+        $ajaxaside->assign('data', $side);
+        $htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
 
         addfield('html', '', $htmlaside, ['aside' => true, 'asidetop' => true]);
     }
