@@ -78,7 +78,6 @@
 
         // Ajax POST request of shopping cart
         if ($_POST['cart']) {
-            $_POST['people_id'] = $_POST['family_id'];	//ToDo Rename family_id in custom.js
             verify_campaccess_people($_POST['people_id']);
             verify_deletedrecord('people', $_POST['people_id']);
 
@@ -87,16 +86,19 @@
 
             $cart = json_decode($_POST['cart'], true);
             $savekeys = ['people_id', 'product_id', 'count', 'drops', 'transaction_date', 'user_id'];
+            $notificationText = '<b>Shopping cart successfully submitted!</b> </br><p>Items bought:</p> <ul>';
             foreach ($cart as $item) {
                 $_POST['product_id'] = intval($item['id']);
                 $_POST['count'] = intval($item['count']);
                 $_POST['drops'] = $item['price'] * intval($item['count']) * (-1);
 
+                $notificationText = $notificationText.'<li>'.$item['count'].'x '.$item['nameWithoutPrice'].' - '.$_POST['drops'] * (-1).' '.$_SESSION['camp']['currencyname'].'</li>';
+
                 $handler = new formHandler($table);
                 $id = $handler->savePost($savekeys);
             }
-
-            $return = ['success' => true, 'message' => 'Shopping cart successfully submitted', 'redirect' => '?action=check_out'];
+            $notificationText = $notificationText.'</ul> </br> <b>Thanks for helping!</b>';
+            $return = ['success' => true, 'message' => $notificationText, 'redirect' => '?action=check_out'];
 
             echo json_encode($return);
             die();
@@ -113,11 +115,19 @@
         // 		$data['shoeswarning'] = db_value('SELECT COUNT(id) FROM transactions WHERE people_id = :id AND product_id IN (63,709) AND transaction_date >= "2017-11-13 00:00"', array('id'=>$data['people_id']));
 
         // Shopping cart
-        addfield('shopping_cart', '', '', ['width' => 15, 'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'drops3' => ucwords($_SESSION['camp']['currencyname']).' together', 'delete' => '']]);
+        addfield('shopping_cart', '', '', ['columns' => ['product' => ['name' => 'Product'], 'count' => ['name' => 'Amount', 'width' => '25%'], 'drops2' => ['name' => 'Price', 'width' => '15%'], 'drops3' => ['name' => 'Total Price', 'width' => '15%'], 'delete' => ['name' => '']]]);
 
         $table = 'transactions';
-        addfield('title', 'All Purchases');
-        addfield('list', '', 'purch', ['width' => 10, 'query' => 'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product FROM transactions AS t LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id LEFT OUTER JOIN products AS p ON p.id = t.product_id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE people_id = '.$data['people_id'].' AND t.product_id != 0 ORDER BY t.transaction_date DESC', 'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'tdate' => 'Date'],
+        addfield('title', 'Last Purchases', '', ['labelindent' => true]);
+        addfield('list', '', 'purch', ['width' => 10, 'query' => 'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
+            FROM transactions AS t 
+            LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
+            LEFT OUTER JOIN products AS p ON p.id = t.product_id 
+            LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
+            WHERE people_id = '.$data['people_id'].' 
+            AND t.product_id != 0 
+            AND CAST(transaction_date as Date)=(SELECT CAST(MAX(transaction_date) as Date) FROM transactions WHERE people_id = '.$data['people_id'].' AND product_id != 0)
+            ORDER BY t.transaction_date DESC', 'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'tdate' => 'Date'],
             'allowedit' => false, 'allowadd' => false, 'allowselect' => true, 'allowselectall' => false, 'action' => 'check_out', 'redirect' => false, 'allowsort' => false, 'listid' => $data['people_id'], ]);
 
         $ajaxform->assign('data', $data);
