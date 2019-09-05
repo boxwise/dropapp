@@ -35,12 +35,6 @@ function grammarRealign($row)
     return $new_sentence;
 }
 
-function Firstword($row)
-{
-    $parts = explode(' ', $row);
-
-    return in_array($parts[0]);
-}
 function showHistory($table, $id)
 {
     global $translate;
