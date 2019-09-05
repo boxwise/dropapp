@@ -2,16 +2,18 @@
 
 // Standard Login method for all tests
 Cypress.Commands.add("LoginAjax", (userMail, userPassword, autologin) => {
-    cy.visit('/'); //not sure if needed. Somehow it does not work without it.
-    Cypress.$.ajax({
-        type: "post",
-        url: "/ajax.php?file=login",
-        data: {
-            email: userMail,
-            pass: userPassword,
-            autologin: autologin
+    cy.request({
+        method: "POST",
+        url: '/ajax.php?file=login',
+        body: {
+            email: Cypress.env("testAdmin"),
+            pass: Cypress.env("testPwd")
         },
-        dataType: "json"
+        form: true
+    }).then(response => {
+        expect(response.status).to.eq(200);
+        expect(response.body.message).to.be.empty;
+        expect(response.body.success).to.be.true;
     });
 });
 
