@@ -52,7 +52,7 @@ function listRealDelete($table, $ids, $uri = false)
         $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
         $count += $result->rowCount();
         if ($result->rowCount()) {
-            simpleSaveChangeHistory($table, $id, 'Record deleted without undelete');
+            simpleSaveChangeHistory($table, $id, 'deleted the Record permanently');
         }
     }
 
@@ -95,7 +95,7 @@ function listDelete($table, $ids, $uri = false)
                 $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
                 $count += $result->rowCount();
                 if ($result->rowCount()) {
-                    simpleSaveChangeHistory($table, $id, 'Record deleted');
+                    simpleSaveChangeHistory($table, $id, 'deleted the Record');
                 }
             }
         }
@@ -116,7 +116,7 @@ function listDeleteAction($table, $id, $count = 0, $recursive = false)
     $result = db_query('UPDATE '.$table.' SET deleted = NOW(), modified = NOW(), modified_by = :user_id WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id, 'user_id' => $_SESSION['user']['id']]);
     $count += $result->rowCount();
     if ($result->rowCount()) {
-        simpleSaveChangeHistory($table, $id, 'Record deleted');
+        simpleSaveChangeHistory($table, $id, 'deleted the Record');
     }
 
     if ($recursive) {
@@ -155,7 +155,7 @@ function listUnDeleteAction($table, $id, $count = 0, $recursive = false)
     $result = db_query('UPDATE '.$table.' SET deleted = 0, modified = NOW(), modified_by = :user_id WHERE id = :id', ['id' => $id, 'user_id' => $_SESSION['user']['id']]);
     $count += $result->rowCount();
     if ($result->rowCount()) {
-        simpleSaveChangeHistory($table, $id, 'Record recovered');
+        simpleSaveChangeHistory($table, $id, 'recovered the Record');
     }
 
     if ($recursive) {

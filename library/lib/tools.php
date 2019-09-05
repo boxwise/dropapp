@@ -44,10 +44,20 @@ function showHistory($table, $id)
             $row['changes'] = 'changed box location from '.$loc_orig['label'].' to '.$loc_dest['label'];
         } elseif ('Record created' == $row['changes']) {
             $row['changes'] = ' created the record';
+        } elseif ('Record recovered' == $row['changes']) {
+            $row['changes'] = 'recovered the Record';
+        } elseif ('Record deleted' == $row['changes']) {
+            $row['changes'] = ' deleted the record';
+        } elseif ('Record deleted by daily routine' == $row['changes']) {
+            $row['changes'] = ' deleted the record automatically via daily routine';
+        } elseif ('Record deleted by daily routine because head of family/beneficiary was deleted' == $row['changes']) {
+            $row['changes'] = ' deleted the Record automatically via daily routine because the head of family/beneficiary was deleted';
         } elseif ('Box ordered to shop' == trim($row['changes'])) {
             $row['changes'] = ' ordered the box to the shop';
         } elseif ('Box order made undone' == trim($row['changes'])) {
             $row['changes'] = ' canceled the box order';
+        } elseif ('Box picked from warehouse ' == $row['changes']) {
+            $row['changes'] = 'picked the Box from the warehouse';
         } elseif (trim($row['changes']) == 'product_id') {
             $prod_ids = [$row['from_int'], $row['to_int']];
             $prod_orig = db_row('SELECT products.name FROM products WHERE products.id = :id_orig', ['id_orig' => $prod_ids[0]]);
