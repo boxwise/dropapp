@@ -51,13 +51,13 @@ function showHistory($table, $id)
         } elseif ('Record deleted by daily routine' == $row['changes']) {
             $row['changes'] = ' deleted the record automatically via daily routine';
         } elseif ('Record deleted by daily routine because head of family/beneficiary was deleted' == $row['changes']) {
-            $row['changes'] = ' deleted the Record automatically via daily routine because the head of family/beneficiary was deleted';
+            $row['changes'] = ' deleted the record automatically via daily routine because the head of family/beneficiary was deleted';
         } elseif ('Box ordered to shop' == trim($row['changes'])) {
             $row['changes'] = ' ordered the box to the shop';
         } elseif ('Box order made undone' == trim($row['changes'])) {
-            $row['changes'] = ' canceled the box order';
+            $row['changes'] = ' canceled the order';
         } elseif ('Box picked from warehouse ' == $row['changes']) {
-            $row['changes'] = 'picked the Box from the warehouse';
+            $row['changes'] = 'picked the box from the warehouse';
         } elseif (trim($row['changes']) == 'product_id') {
             $prod_ids = [$row['from_int'], $row['to_int']];
             $prod_orig = db_row('SELECT products.name FROM products WHERE products.id = :id_orig', ['id_orig' => $prod_ids[0]]);
@@ -68,6 +68,10 @@ function showHistory($table, $id)
             $size_orig = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_orig', ['id_orig' => $size_ids[0]]);
             $size_new = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_new', ['id_new' => $size_ids[1]]);
             $row['changes'] = 'changed size from '.$size_orig['label'].' to '.$size_new['label'];
+        } elseif (explode(' ', $row['changes'])[0] == 'comments') {
+            $row['changes'] = 'changed comments';
+        } elseif (explode(' ', trim($row['changes']))[0] == 'signaturefield') {
+            $row['changes'] = 'changed signature';
         } elseif (!(is_null($row['to_int']) && is_null($row['to_float']))) {
             $row['changes'] = ' changed' + $row['changes'];
             if (!is_null($row['from_int'])) {
