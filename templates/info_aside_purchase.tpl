@@ -14,6 +14,6 @@
 	</p>
 	{if $smarty.session.camp['food']}<p class="familycredit{if $data['fooddrops']<=0} warningbox{/if}">Max food: <img src="../assets/img/more_coins.png" class="coinsImage"></img></i> <span id="foodcredit"  data-food-credit="{$data['fooddrops']}">{$data['fooddrops']}</span> {$currency} <span class="people-comment">This is the amount of {$currency} that this family can spend on food items.</span></p>
 	{/if}
-	<p id="cart_value" class="hidden">Cart value: <img src="../assets/img/more_coins.png" class="coinsImage"> </img><span id="cartvalue_aside">0</span> {$currency}</p>
+	<p id="cart_value" class="hidden">Cart value: <img src="../assets/img/more_coins.png" class="coinsImage"> </img><span id="cartvalue_aside">0</span> {$currency}<br/>Remaining credit: <img src="../assets/img/more_coins.png" class="coinsImage"> </img><span id="creditvalue_aside">{$data['dropcoins']}</span> {$currency}</p>
 	<p id="not_enough_coins" class="hidden">This family has not enough {$currency} to make this purchase.</p>
 </div>

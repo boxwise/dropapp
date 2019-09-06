@@ -100,9 +100,17 @@ p#familyname{
 }
 
 #cart_value{
-	font-size: 1.2em;
-	padding-top: 10px;
-	color: #000;
+	margin-top: 20px;
+	color: #333;
+	text-align: right;
+}
+
+#cartvalue_aside{
+	font-weight: bold;
+}
+
+#creditvalue_aside{
+	font-weight: bold;
 }
 
 #productvalue{
