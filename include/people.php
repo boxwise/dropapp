@@ -76,7 +76,7 @@ $table = $action;
 
         Tracer::inSpan(
             ['name' => ('people.php:addhtmldata')],
-            function () use ($data) {
+            function () use (&$data) {
                 foreach ($data as $key => $value) {
                     if ($data[$key]['expired']) {
                         $data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
@@ -84,9 +84,8 @@ $table = $action;
                         $data[$key]['expired'] = '';
                     }
                     if (0 == $data[$key]['parent_id'] && !$data[$key]['approvalsigned']) {
-                        $data[$key]['expired'] .= '<i class="fa fa-pencil-square warning tooltip-this" title="This family didn\'t sign the privacy declaration"></i> ';
+                        $data[$key]['expired'] .= '<i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i> ';
                     }
-
                     if ($data[$key]['bicycletraining'] && $_SESSION['camp']['bicycle']) {
                         $data[$key]['expired'] .= '<i class="fa fa-bicycle tooltip-this" title="This person has a bicycle certificate."></i> ';
                     }
@@ -140,8 +139,8 @@ $table = $action;
 
                 addbutton('print', 'Print', ['icon' => 'fa-print', 'options' => $options]);
                 addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer']);
-
                 addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => true]);
+
                 $cmsmain->assign('data', $data);
                 $cmsmain->assign('listconfig', $listconfig);
                 $cmsmain->assign('listdata', $listdata);
