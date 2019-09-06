@@ -428,24 +428,6 @@ $(function() {
                         success: function(checkresult) {
                             if (checkresult.success) {
                                 AjaxFormSubmit(form);
-                            } else {
-                                if (checkresult.message) {
-                                    var n = noty({
-                                        text: checkresult.message,
-                                        type: checkresult.success
-                                            ? "success"
-                                            : "error"
-                                    });
-                                }
-                                if (checkresult.redirect) {
-                                    if (checkresult.message) {
-                                        setTimeout(function() {
-                                            execReload(checkresult.redirect);
-                                        }, 1500);
-                                    } else {
-                                        execReload(checkresult.redirect);
-                                    }
-                                }
                             }
                             $("body").removeClass("loading");
                         },
