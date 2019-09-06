@@ -167,8 +167,11 @@ $(document).ready(function() {
     }
 
     function updateCartRelatedElements(){
-        // Calculate cart value
-        $('#cartvalue_aside')[0].innerText = shoppingCart.totalCart();
+        dropcredit = $("#dropcredit").data("dropCredit");
+
+        // Calculate cart value and remaining credit
+        $("#cartvalue_aside")[0].innerText = shoppingCart.totalCart();
+        $("#creditvalue_aside")[0].innerText = dropcredit - shoppingCart.totalCart();
         if (shoppingCart.totalCart()) {
             $('#cart_value').removeClass('hidden');
         } else {
@@ -176,7 +179,6 @@ $(document).ready(function() {
         }
 
         // Check if beneficiary has enough tokens
-        dropcredit = $("#dropcredit").data("dropCredit");
         var enough_tokens = dropcredit >= shoppingCart.totalCart();
         if (enough_tokens) {
             $(".aside-form").removeClass("not_enough_coins");
