@@ -30,9 +30,8 @@ function grammarRealign($row)
     $new_order = $parts;
     $new_order[0] = strtolower($parts[1]);
     $new_order[1] = strtolower($parts[0]);
-    $new_sentence = join(' ', $new_order);
 
-    return $new_sentence;
+    return join(' ', $new_order);
 }
 
 function showHistory($table, $id)
@@ -58,12 +57,12 @@ function showHistory($table, $id)
                 $loc_orig = db_row('SELECT locations.label FROM locations WHERE locations.id = :id_orig', ['id_orig' => $loc_ids[0]]);
                 $loc_dest = db_row('SELECT locations.label FROM locations WHERE locations.id = :id_dest', ['id_dest' => $loc_ids[1]]);
                 $change = 'changed box location from '.$loc_orig['label'].' to '.$loc_dest['label'];
-            } elseif (trim($change) == 'product_id') {
+            } elseif ('product_id' == trim($change)) {
                 $prod_ids = [$row['from_int'], $row['to_int']];
                 $prod_orig = db_row('SELECT products.name FROM products WHERE products.id = :id_orig', ['id_orig' => $prod_ids[0]]);
                 $prod_new = db_row('SELECT products.name FROM products WHERE products.id = :id_new', ['id_new' => $prod_ids[1]]);
                 $change = 'changed product type from '.$prod_orig['name'].' to '.$prod_new['name'];
-            } elseif (trim($change) == 'size_id') {
+            } elseif ('size_id' == trim($change)) {
                 $size_ids = [$row['from_int'], $row['to_int']];
                 $size_orig = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_orig', ['id_orig' => $size_ids[0]]);
                 $size_new = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_new', ['id_new' => $size_ids[1]]);
@@ -73,7 +72,7 @@ function showHistory($table, $id)
         elseif (in_array(explode(' ', $change)[0], ['Box', 'Record', 'comments', 'signaturefield'])) {
             //special cases first
             $change = trim(grammarRealign($change));
-            if ($change == 'order box made undone') {
+            if ('order box made undone' == $change) {
                 $change = 'canceled order';
             }
         } // old default cases if there exist still old messages that are uncovered by above handling
