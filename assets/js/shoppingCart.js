@@ -271,19 +271,21 @@ $(document).ready(function() {
                     if (result.message) {
                         noty({
                             text: result.message,
-                            type: result.success ? "success" : "error"
+                            type: result.success ? "success" : "error",
+                            closeWith: ['click'],
+                            timeout: 5000,
+                            callback: {
+                                afterClose: function() {
+                                    execReload(result.redirect);
+                                }
+                            }
                         });
-                        // give notification a bit of time to be read
-                        setTimeout(function(){
-                            window.location = "?action=check_out";
-                        }, 3000);
                     }          
                 }
             },
             error: function(result) {
                 var n = noty({
-                    text:
-                        "Something went wrong, maybe the internet connection is a bit choppyyyy",
+                    text: "We cannot connect to the Boxwise server.<br> Do you have internet?",
                     type: "error"
                 });
             }
