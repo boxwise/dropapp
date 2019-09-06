@@ -95,10 +95,6 @@
         $cmsmain->assign('listconfig', $listconfig);
         $cmsmain->assign('listdata', $listdata);
         $cmsmain->assign('include', 'cms_list.tpl');
-
-        if ($_GET['export']) {
-            redirect('?action=stock_export');
-        }
     } else {
         switch ($_POST['do']) {
             case 'movebox':
@@ -175,7 +171,7 @@
 
                 break;
             case 'export':
-                list($success, $message, $redirect) = [true, '', '?action=stock&export=true'];
+                list($success, $message, $redirect) = [true, '', '?action=stock_export'];
 
                 break;
         }
