@@ -21,15 +21,16 @@ Write or call Hans ([hans@boxwise.co](mailto:hans@boxwise.co) & +4917652181647) 
 ### How do I get set up?
 
 (optional - ToDo Fix bug for Ubuntu users) 
-0. Clone this repo into /var/www/html.
+0. Clone this repo into /var/www/html. Also make sure to allow write permissions on templates folder. 
 
        cd /var/www
        git clone https://github.com/boxwise/dropapp html
+       chmod -R 777 html/templates (not generally recommended - ToDo Fix bug for Ubuntu users) 
 
 1. You first need to install 'compose' (we suggest making it available globally)
 
-       curl -s https://getcomposer.org/installer | php`
-       mv composer.phar /usr/local/bin/composer`
+       curl -s https://getcomposer.org/installer | php
+       mv composer.phar /usr/local/bin/composer
 
 2. You can install the required dependencies then using
 
@@ -71,6 +72,8 @@ We're using [Phinx](https://phinx.org/) and [phinx-migrations-generator](https:/
     vendor/bin/phinx-migrations generate
 
 Will generate a new migration based on the diff of /db/migrations/schema.php.
+
+To connect to the DB, use mysql user `root` with password `dropapp_root`.
 
 ### Linting / Auto formatting
 
