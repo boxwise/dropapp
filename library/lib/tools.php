@@ -48,9 +48,8 @@ function showHistory($table, $id)
         $row['changes'] = strip_tags($row['changes']);
         $change = $row['changes'];
         $change = str_replace(';', '', $change);
-        $keys = ['Box', 'Record', 'comments', 'signaturefield'];
-        //cases for properly created change-messages(location_id, product_id,items...)
 
+        //cases for properly created change-messages(location_id, product_id,items...)
         if (in_array($change, ['location_id', 'product_id', 'items', 'size_id'])) {
             if ('items' == $change) {
                 $change = 'changed the number of items from '.$row['from_int'].' to '.$row['to_int'];
@@ -71,11 +70,11 @@ function showHistory($table, $id)
                 $change = 'changed size from '.$size_orig['label'].' to '.$size_new['label'];
             }
         }   //Cases where the grammar has to be realigned to make it readable
-        elseif (in_array(explode(' ', $change)[0], $keys)) {
+        elseif (in_array(explode(' ', $change)[0], ['Box', 'Record', 'comments', 'signaturefield'])) {
             //special cases first
             $change = trim(grammarRealign($change));
             if ($change == 'order box made undone') {
-                $change = 'order canceled';
+                $change = 'canceled order';
             }
         } // old default cases if there exist still old messages that are uncovered by above handling
         elseif (!(is_null($row['to_int']) && is_null($row['to_float']))) {
