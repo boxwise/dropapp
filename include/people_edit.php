@@ -77,7 +77,8 @@
 
     if ($id) {
         $sideid = ($data['parent_id'] ? $data['parent_id'] : $id);
-        $side['person'] = $id;
+        $side['people_id'] = $id;
+        $side['parent_id'] = $data['parent_id'];
         $ajaxaside = new Zmarty();
 
         $side['approvalsigned'] = $data['approvalsigned'];
@@ -108,13 +109,6 @@
 
         $side['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $sideid]), true);
 
-        $ajaxaside->assign('currency', $_SESSION['camp']['currencyname']);
-        $ajaxaside->assign('data', $side);
-        $htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
-
-        addfield('html', '', $htmlaside, ['aside' => true, 'asidetop' => true]);
-    } else {
-        $ajaxaside = new Zmarty();
         $ajaxaside->assign('currency', $_SESSION['camp']['currencyname']);
         $ajaxaside->assign('data', $side);
         $htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');

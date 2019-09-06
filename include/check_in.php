@@ -61,6 +61,7 @@
         // the aside
         $ajaxaside = new Zmarty();
 
+        $data['parent_id']=db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $data['people_id']]);
         $data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = :id OR parent_id = :id AND visible AND NOT deleted ORDER BY parent_id, seq', ['id' => $data['people_id']]);
 
         $data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => $data['people_id']]);
