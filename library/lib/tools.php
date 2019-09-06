@@ -24,6 +24,16 @@ function checkURL($url)
     return (bool) preg_match('#^HTTP/.*\s+[(200|301|302)]+\s#i', $headers);
 }
 
+function grammarRealign($row)
+{
+    $parts = explode(' ', $row);
+    $new_order = $parts;
+    $new_order[0] = strtolower($parts[1]);
+    $new_order[1] = strtolower($parts[0]);
+
+    return join(' ', $new_order);
+}
+
 function showHistory($table, $id)
 {
     global $translate;
@@ -35,51 +45,70 @@ function showHistory($table, $id)
     while ($row = db_fetch($result)) {
         $row['changedate'] = strftime('%A %d %B %Y, %H:%M', strtotime($row['changedate']));
         $row['changes'] = strip_tags($row['changes']);
-        if ('items' == $row['changes']) {
-            $row['changes'] = 'changed the number of items from '.$row['from_int'].' to '.$row['to_int'];
-        } elseif ('location_id' == $row['changes']) {
-            $loc_ids = [$row['from_int'], $row['to_int']];
-            $loc_orig = db_row('SELECT locations.label FROM locations WHERE locations.id = :id_orig', ['id_orig' => $loc_ids[0]]);
-            $loc_dest = db_row('SELECT locations.label FROM locations WHERE locations.id = :id_dest', ['id_dest' => $loc_ids[1]]);
-            $row['changes'] = 'changed box location from '.$loc_orig['label'].' to '.$loc_dest['label'];
-        } elseif ('Record created' == $row['changes']) {
-            $row['changes'] = ' created the record';
-        } elseif ('Box ordered to shop' == trim($row['changes'])) {
-            $row['changes'] = ' ordered the box to the shop';
-        } elseif ('Box order made undone' == trim($row['changes'])) {
-            $row['changes'] = ' canceled the box order';
-        } elseif (!(is_null($row['to_int']) && is_null($row['to_float']))) {
-            $row['changes'] .= ' changed';
+        $change = $row['changes'];
+        $change = str_replace(';', '', $change);
+
+        //cases for properly created change-messages(location_id, product_id,items...)
+        if (in_array($change, ['location_id', 'product_id', 'items', 'size_id'])) {
+            if ('items' == $change) {
+                $change = 'changed the number of items from '.$row['from_int'].' to '.$row['to_int'];
+            } elseif ('location_id' == $change) {
+                $loc_ids = [$row['from_int'], $row['to_int']];
+                $loc_orig = db_row('SELECT locations.label FROM locations WHERE locations.id = :id_orig', ['id_orig' => $loc_ids[0]]);
+                $loc_dest = db_row('SELECT locations.label FROM locations WHERE locations.id = :id_dest', ['id_dest' => $loc_ids[1]]);
+                $change = 'changed box location from '.$loc_orig['label'].' to '.$loc_dest['label'];
+            } elseif ('product_id' == trim($change)) {
+                $prod_ids = [$row['from_int'], $row['to_int']];
+                $prod_orig = db_row('SELECT products.name FROM products WHERE products.id = :id_orig', ['id_orig' => $prod_ids[0]]);
+                $prod_new = db_row('SELECT products.name FROM products WHERE products.id = :id_new', ['id_new' => $prod_ids[1]]);
+                $change = 'changed product type from '.$prod_orig['name'].' to '.$prod_new['name'];
+            } elseif ('size_id' == trim($change)) {
+                $size_ids = [$row['from_int'], $row['to_int']];
+                $size_orig = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_orig', ['id_orig' => $size_ids[0]]);
+                $size_new = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_new', ['id_new' => $size_ids[1]]);
+                $change = 'changed size from '.$size_orig['label'].' to '.$size_new['label'];
+            }
+        }   //Cases where the grammar has to be realigned to make it readable
+        elseif (in_array(explode(' ', $change)[0], ['Box', 'Record', 'comments', 'signaturefield'])) {
+            //special cases first
+            $change = trim(grammarRealign($change));
+            if ('order box made undone' == $change) {
+                $change = 'canceled order';
+            }
+        } // old default cases if there exist still old messages that are uncovered by above handling
+        elseif (!(is_null($row['to_int']) && is_null($row['to_float']))) {
+            $change = ' changed' + $change;
             if (!is_null($row['from_int'])) {
-                $row['changes'] .= ' from '.$row['from_int'];
+                $change .= ' from '.$row['from_int'];
             } elseif (!is_null($row['from_float'])) {
-                $row['changes'] .= ' from '.$row['from_float'];
+                $change .= ' from '.$row['from_float'];
             }
             if (!is_null($row['to_int'])) {
-                $row['changes'] .= ' to '.$row['to_int'];
+                $change .= ' to '.$row['to_int'];
             } elseif (!is_null($row['to_float'])) {
-                $row['changes'] .= ' to '.$row['to_float'];
+                $change .= ' to '.$row['to_float'];
             }
         }
 
-        $row['changes'] .= '; ';
-        $row['truncate'] = strlen($row['changes']) > 300;
+        $change .= '; ';
+        $row['truncate'] = strlen($change) > 300;
+        $row['changes'] = $change;
         $history[] = $row;
     }
 
     if (!(is_null($row['to_int']) && is_null($row['to_float']))) {
-        $row['changes'] .= ' changed';
+        $change = ' changed' + $change;
         if (!is_null($row['from_int'])) {
-            $row['changes'] .= ' from '.$row['from_int'];
+            $change .= ' from '.$row['from_int'];
         } elseif (!is_null($row['from_float'])) {
-            $row['changes'] .= ' from '.$row['from_float'];
+            $change .= ' from '.$row['from_float'];
         }
         if (!is_null($row['to_int'])) {
-            $row['changes'] .= ' to '.$row['to_int'];
+            $change .= ' to '.$row['to_int'];
         } elseif (!is_null($row['to_float'])) {
-            $row['changes'] .= ' to '.$row['to_float'];
+            $change .= ' to '.$row['to_float'];
         }
-        $row['changes'] .= '; ';
+        $change .= '; ';
     }
 
     $smarty->assign('row', $history);
