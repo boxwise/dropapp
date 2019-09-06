@@ -73,6 +73,8 @@ We're using [Phinx](https://phinx.org/) and [phinx-migrations-generator](https:/
 
 Will generate a new migration based on the diff of /db/migrations/schema.php.
 
+To connect to the DB, use mysql user `root` with password `dropapp_root`.
+
 ### Linting / Auto formatting
 
 So we don't have to think/argue over code conventions, we're using the [php-cs-fixer](https://github.com/FriendsOfPhp/PHP-CS-Fixer) automatic code formatter.
