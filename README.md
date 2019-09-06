@@ -25,7 +25,7 @@ Write or call Hans ([hans@boxwise.co](mailto:hans@boxwise.co) & +4917652181647) 
 
        cd /var/www
        git clone https://github.com/boxwise/dropapp html
-       chmod -R 777 html/templates (ToDo Fix bug for Ubuntu users - not generally recommended) 
+       chmod -R 777 html/templates (not generally recommended - ToDo Fix bug for Ubuntu users) 
 
 1. You first need to install 'compose' (we suggest making it available globally)
 
