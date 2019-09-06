@@ -95,7 +95,6 @@
         $cmsmain->assign('listconfig', $listconfig);
         $cmsmain->assign('listdata', $listdata);
         $cmsmain->assign('include', 'cms_list.tpl');
-
     } else {
         switch ($_POST['do']) {
             case 'movebox':
