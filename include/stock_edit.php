@@ -75,20 +75,11 @@
 
     addfield('line');
     addfield('textarea', 'Comments', 'comments');
-
-/*
-    #these where added for the conversion from the google sheet
     addfield('line');
-    addfield('text','Old type','_type',array('readonly'=>true));
-    addfield('text','Old gender','_gender',array('readonly'=>true));
-    addfield('text','Old size','_size',array('readonly'=>true));
-*/
+    addfield('html', 'Box History', showHistory('stock', $data['id']), ['width' => 10]);
+
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);
-    $htmlaside = showHistory('stock', $data['id']);
-    addfield('line');
-    addfield('html', 'Box History', $htmlaside, ['Top' => true]);
-
     addformbutton('submitandnew', 'Save and new item');
 
     // place the form elements and data in the template
