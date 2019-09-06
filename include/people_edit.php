@@ -77,7 +77,8 @@
 
     if ($id) {
         $sideid = ($data['parent_id'] ? $data['parent_id'] : $id);
-        $side['person'] = $id;
+        $side['people_id'] = $id;
+        $side['parent_id'] = $data['parent_id'];
         $ajaxaside = new Zmarty();
 
         $side['approvalsigned'] = $data['approvalsigned'];

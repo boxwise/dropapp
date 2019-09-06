@@ -30,7 +30,7 @@
         // put a title above the form
         $cmsmain->assign('title', 'New purchase');
 
-        addfield('select', 'Family/Beneficiary', 'people_id', ['onchange' => 'selectFamily("people_id",false)', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1']);
+        addfield('select', 'Family/Beneficiary', 'people_id', ['onchange' => 'selectFamily("people_id",false,"check_out")', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1']);
         addfield('select', 'Product', 'product_id', ['required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label, p.value as price FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name']);
         addfield('number', 'Number', 'count', ['required' => true, 'width' => 2]);
         addfield('custom', '', '<button id="add-to-cart-button" type="button" class="btn btn-success" disabled>Add to cart</button>');
@@ -110,7 +110,6 @@
 
         $data['people_id'] = intval($_POST['people_id']);
         $data['allowdrops'] = allowGiveDrops();
-        $data['approvalsigned'] = db_value('SELECT approvalsigned FROM people WHERE id = :id', ['id' => $data['people_id']]);
 
         // This can be a warning that is given based on certain shopping actions in the past.
         // 		$data['shoeswarning'] = db_value('SELECT COUNT(id) FROM transactions WHERE people_id = :id AND product_id IN (63,709) AND transaction_date >= "2017-11-13 00:00"', array('id'=>$data['people_id']));
