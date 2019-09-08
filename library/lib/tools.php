@@ -73,7 +73,7 @@ function showHistory($table, $id)
             //special cases first
             $change = trim(grammarRealign($change));
             if ('order box made undone' == $change) {
-                $change = 'canceled order';
+                $change = 'canceled the order';
             }
         } // old default cases if there exist still old messages that are uncovered by above handling
         elseif (!(is_null($row['to_int']) && is_null($row['to_float']))) {
