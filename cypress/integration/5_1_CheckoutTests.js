@@ -1,16 +1,8 @@
-describe('Login tests - Mobile', () => {
+describe('Checkout tests', () => {
   let testAdmin;
   let testCoordinator;
   let testUser;
-  let testNotActivatedUser;
-  let testExpiredUser;
-  let testDeletedUser;
   let testPwd;
-  let testWrongPwd;
-  let incorrectLoginNotif;
-  let genericErrLoginNotif;
-  let successPwdChangeNotif;
-  let testOrg;
   
   before(function() {
       cy.getAdminUser().then(($result) => {
@@ -26,24 +18,6 @@ describe('Login tests - Mobile', () => {
       cy.getVolunteerUser().then(($result) => {
         testUser = $result.testUser;
         testPwd = $result.testPwd;
-      });
-
-      cy.getLoginScenarioUsers().then(($result) => {
-          testExpiredUser = $result.testExpiredUser;
-          testNotActivatedUser = $result.testNotActivatedUser;
-          testDeletedUser = $result.testDeletedUser;
-          testPwd = $result.testPwd;
-          testWrongPwd = $result.testWrongPwd;
-      });
-
-      cy.getLoginNotifications().then(($result) => {
-        incorrectLoginNotif = $result.incorrectLoginNotif;
-        genericErrLoginNotif = $result.genericErrLoginNotif;
-        successPwdChangeNotif = $result.successPwdChangeNotif;
-      });
-
-      cy.getTestOrgName().then(($result) => {
-        testOrg = $result.orgName;
       });
   });
 
