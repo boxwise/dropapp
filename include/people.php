@@ -247,7 +247,7 @@ $table = $action;
                 break;
             case 'export':
                 $success = true;
-                $redirect = '?action=people_export';
+                $redirect = '?action=people_export&ids='.$_POST['ids'];
 
                 break;
         }
