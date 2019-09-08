@@ -88,6 +88,11 @@ describe('Login tests - Mobile', () => {
     return itemsCountInCart;
   }
 
+  function selectProductWorthZero(){
+    cy.get("div[id='s2id_field_product_id']").click();
+    cy.get("ul[class='select2-results'] li").contains("Diapers Unisex Baby").click();
+  }
+
   function clickAddToCartButton(){
     cy.get("button[data-testid='add-to-cart-button']").click();
   }
@@ -106,6 +111,11 @@ describe('Login tests - Mobile', () => {
 
   function clickCheckoutSubmitButton(){
     cy.get("button[data-testid='submitShoppingCart']").click();
+  }
+
+  function selectFamilyWithZeroTokens(){
+    cy.get("div[id='s2id_field_people_id']").click();
+    cy.get("ul[class='select2-results'] li").contains("WithoutTokens").click();
   }
 
   it('Left panel navigation', () => {
@@ -298,10 +308,47 @@ describe('Login tests - Mobile', () => {
   //     }
   //   })
   // });
+  
 
-  it('Submit cart success', () => {
+  it('Add non-zero value products & submit cart', () => {
     navigateToCheckout();
     randomizeCartContent();
+    clickCheckoutSubmitButton();
+    // visible notification
+    cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
+    // dropdowns are empty again
+    cy.get("body").then($body => {
+      expect($body.find("select[data-placeholder='Please select']").length).to.equal(2);
+    });
+  });
+
+  it('Add zero value product & submit cart', () => {
+    navigateToCheckout();
+    selectRandomFamily();
+    selectProductWorthZero();
+    let randomCount = Math.floor(Math.random() * 10 - 1) + 1;
+    typeProductQuantity(randomCount);
+    // add to cart should be enabled even if product has 0 tokens value
+    cy.get("button[data-testid='add-to-cart-button']").should('not.be.disabled');
+    clickAddToCartButton();
+    clickCheckoutSubmitButton();
+    // visible notification
+    cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
+    // dropdowns are empty again
+    cy.get("body").then($body => {
+      expect($body.find("select[data-placeholder='Please select']").length).to.equal(2);
+    });
+  });
+
+  it('Completely tokenless market (product & families have no tokens)', () => {
+    navigateToCheckout();
+    selectFamilyWithZeroTokens();
+    selectProductWorthZero();
+    let randomCount = Math.floor(Math.random() * 10) + 1;
+    typeProductQuantity(randomCount);
+    // add to cart should be enabled even if family has zero tokens
+    cy.get("button[data-testid='add-to-cart-button']").should('not.be.disabled');
+    clickAddToCartButton();
     clickCheckoutSubmitButton();
     // visible notification
     cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
