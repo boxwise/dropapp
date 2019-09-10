@@ -155,13 +155,61 @@ $(document).ready(function() {
 
         $("#shopping_cart").find("tr:gt(0)").remove();
         cart.forEach((item) => {
-            $('#shopping_cart')
-              .append("<tr><td>"
-                  + item.name +'</td><td>'
-                  + "<input type='number' class='form-control valid changeQuantity' step='1' min='1' productId='"+item.id+"' value='"+ item.count +"'></input></td><td>"
-                  + item.price +"</td><td id='totalSum_" + item.id +"'>"
-                  + item.count * item.price +'</td><td>'
-                  +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')><i class='fa fa-trash-o'></i></button></td></tr>");
+          let tableRef = document.getElementById("shopping_cart");
+          // product name cell
+          let tr = document.createElement("tr");
+          let td = document.createElement("td");
+          let newText = document.createTextNode(item.name);
+          td.appendChild(newText);
+          tr.appendChild(td);
+  
+          // product quantity cell
+          td = document.createElement("td");
+          let input = document.createElement("input");
+          input.setAttribute("type", "number");
+          input.setAttribute("class", "form-control valid changeQuantity");
+          input.setAttribute("data-testid", "changeQuantity");
+          input.setAttribute("step", "1");
+          input.setAttribute("min", "1");
+          input.setAttribute("productId", item.id);
+          input.setAttribute("value", item.count);
+          input.setAttribute("min", "1");
+          newText = document.createTextNode(item.count);
+          input.appendChild(newText);
+          td.appendChild(input);
+          tr.appendChild(td);
+  
+          // price per all units of product
+          td = document.createElement("td");
+          td.setAttribute("data-testid", "totalPrice");
+          td.setAttribute("id", "totalSum_" + item.id);
+          newText = document.createTextNode(item.price * item.count);
+          td.appendChild(newText);
+          tr.appendChild(td);
+  
+          // price per one unit
+          td = document.createElement("td");
+          td.setAttribute("data-testid", "price");
+          newText = document.createTextNode(item.price);
+          td.appendChild(newText);
+          td.appendChild(newText);
+          tr.appendChild(td);
+  
+          // delete from cart button cell
+          td = document.createElement("td");
+          let button = document.createElement("button");
+          button.setAttribute("type", "button");
+          button.setAttribute("class", "btn btn-sm btn-danger deleteFromCart");
+          button.setAttribute("data-testid", "deleteFromCart");
+          button.setAttribute("productId", item.id);
+          button.setAttribute("min", "1");
+          let buttonIcon = document.createElement("i");
+          buttonIcon.setAttribute("class", "fa fa-trash-o");
+          button.appendChild(buttonIcon);
+          td.appendChild(button);
+          tr.appendChild(td);
+  
+          tableRef.appendChild(tr);
         });
         updateCartRelatedElements();
     }
