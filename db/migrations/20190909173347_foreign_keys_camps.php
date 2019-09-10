@@ -5,7 +5,7 @@ use Phinx\Migration\AbstractMigration;
 class ForeignKeysCamps extends AbstractMigration
 {
     public function change()
-    {/*
+    {
         $this->table('people')
             ->changeColumn('camp_id', 'integer', [
                 'signed' => false,
@@ -15,7 +15,7 @@ class ForeignKeysCamps extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;*/
+    ;
         $this->table('laundry_stations')
             ->changeColumn('camp_id', 'integer', [
                 'signed' => false,
@@ -25,7 +25,7 @@ class ForeignKeysCamps extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ; /*
+    ;
         $this->table('locations')
             ->changeColumn('camp_id', 'integer', [
                 'signed' => false,
@@ -35,7 +35,7 @@ class ForeignKeysCamps extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;*/
+    ;
         $this->table('library_type')
             ->changeColumn('camp_id', 'integer', [
                 'signed' => false,
