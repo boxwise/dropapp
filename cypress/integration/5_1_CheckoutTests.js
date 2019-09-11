@@ -147,10 +147,10 @@ describe('Checkout tests', () => {
     getDropdownOptions().first().find("div").invoke('text').then((text) => {
       getDropdownOptions().first().click();
       // name should be visibly selected
-      getFamilyCredit().contains(text.trim()).should('be.visible');
+      cy.get("span[id='select2-chosen-1']").contains(text.trim()).should('be.visible');
     });
     // information container on the side with family credit should be shown
-    cy.get("div[class='info-aside'] p[class='familycredit']").should('be.visible');
+    getFamilyCredit().should('be.visible');
     //add button should be disabled
     getAddToCartButton().should('be.disabled');
   });
