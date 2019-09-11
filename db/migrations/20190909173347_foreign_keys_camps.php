@@ -29,7 +29,8 @@ class ForeignKeysCamps extends AbstractMigration
         $this->table('locations')
             ->changeColumn('camp_id', 'integer', [
                 'signed' => false,
-                'null' => false, ])
+                'null' => false,
+                'default' => null, ])
 
             ->addForeignKey('camp_id', 'camps', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
@@ -59,7 +60,8 @@ class ForeignKeysCamps extends AbstractMigration
         $this->table('borrow_locations')
             ->changeColumn('camp_id', 'integer', [
                 'signed' => false,
-                 'null' => false, ])
+                 'null' => false,
+                 'default' => null, ])
 
             ->addForeignKey('camp_id', 'camps', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
