@@ -3,6 +3,7 @@ context("5_2_Add_Beneficiary_Test",()=>
     let Test_user;
     let Test_passwd;
     let Test_firstname = "John";
+    let Test_firstname2 = "Jim";
     let Test_lastname = "Smith";
     let Test_case_id  = "IO";
     let Test_gender = "Female";
@@ -18,13 +19,6 @@ context("5_2_Add_Beneficiary_Test",()=>
     beforeEach(function() {
         cy.LoginAjax(Test_user,Test_passwd,true);
         cy.visit('/');
-
-        /* Navigate dropdown for admins
-        cy.get("a[data-testid='organisationsDropdown']").click();
-        cy.get("li[data-testid='organisationOption'] a")
-        .invoke('text').get('a').contains(Test_Organ).click();
-        */
-
         cy.get("a[class=menu_people]").last().click();
         cy.get("a[class=menu_people_add").last().click();
     })
@@ -52,7 +46,10 @@ context("5_2_Add_Beneficiary_Test",()=>
     function FillForm(firstname,lastname,case_id,gender)
     {cy.get("input[id = 'field_firstname']").type(firstname);
     cy.get("input[id = 'field_lastname']").type(lastname);
-    cy.get("input[id='field_container']").type(case_id);
+    cy.get("input[id='field_container']").should("be.empty")
+    cy.get("input[id='field_container']").should("be.empty").then(() => {
+        cy.get("input[id='field_container']").type(case_id);
+    })
     cy.get("span[id='select2-chosen-2']").click()
     cy.get("input[id='s2id_autogen2_search']").click().type(gender);
     cy.get("div[class='select2-result-label']").first().click();
@@ -70,9 +67,7 @@ context("5_2_Add_Beneficiary_Test",()=>
 
     })
     it("5_2_2 Prevent emtpy submit",() => {
-        //check all the forms 
-        //cy.get("span[id='select2-chosen-1']").click();
-        //cy.get("input[id=s2id_autogen1_search").type(Test_familyhead);
+
         cy.get("button").contains("Save and close").click();
         cy.get("div[id='qtip-0-content']").should("be.visible");
         cy.get("div[id='qtip-1-content']").should("be.visible");
@@ -81,10 +76,6 @@ context("5_2_Add_Beneficiary_Test",()=>
     it("5_2_3 Prevent emtpy submit from signature-tab",() => {
         cy.get("a[id='tabid_signature']").click();
         cy.get("button").contains("Save and close").click();
-        
-        // Specification was to display empty personal form but this is not curren state of the app
-        //cy.get("div[id='qtip-0-content']").should("be.visible");
-        //cy.get("div[id='qtip-1-content']").should("be.visible");
         
         //Instead check if tabs are visible;
         cy.get("a[id='tabid_bicycle']").should("be.visible");
@@ -98,12 +89,20 @@ context("5_2_Add_Beneficiary_Test",()=>
         cy.wait(500);
         cy.get("div").contains(Test_firstname+" "+Test_lastname + " was added").should("be.visible");
         cy.get("div").contains(Test_case_id).should("be.visible");
+        cy.wait(2000);
         // Check for the familyhead after adding it above
         cy.get("span[id='select2-chosen-1']").click();
         cy.get("input[id='s2id_autogen1_search']").click().type(Test_case_id +" "+ Test_firstname);
         cy.get("div[class='select2-result-label']").contains(Test_case_id + " "+ Test_firstname+ " "+ Test_lastname).should("be.visible")
-        cy.get("div[class='select2-result-label']").first().click();
-        cy.get("abbr[class='select2-search-choice-close']").first().click();
-        CheckEmptyForm();
+        cy.get("div[class='select2-result-label']").contains(Test_case_id + " "+ Test_firstname+ " "+ Test_lastname).click();
+        FillForm(Test_firstname2,Test_lastname,Test_case_id,Test_gender)
+        cy.get("button").contains("Save and new").click();
+    })
+
+    it("5_2_4 Check Manage beneficiaries",()=>{
+        cy.get("a[class='menu_people']").last().click( )
+        cy.get("tr[data-level='1").contains(Test_firstname2)
+
+
     })
 })
