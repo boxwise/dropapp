@@ -31,18 +31,18 @@ describe('Checkout tests', () => {
   }
 
   function selectRandomProduct(){
-    cy.get("div[id='s2id_field_product_id']").click();
+    clickProductsDropdown();
     cy.get("body").then($body => {
       let randomOption = Math.floor(Math.random() * ($body.find("ul[class='select2-results'] li").length - 1)) + 1;
-      cy.get("ul[class='select2-results'] li").eq(randomOption).click();
+      getDropdownOptions().eq(randomOption).click();
     });
   }
 
   function selectRandomFamily(){
-    cy.get("div[id='s2id_field_people_id']").click();
+    getFamilyDropdown().click();
     cy.get("body").then($body => {
       let randomOption = Math.floor(Math.random() * ($body.find("ul[class='select2-results'] li").length - 1)) + 1;
-      cy.get("ul[class='select2-results'] li").eq(randomOption).click();
+      getDropdownOptions().eq(randomOption).click();
     });
   }
 
@@ -63,12 +63,12 @@ describe('Checkout tests', () => {
   }
 
   function selectProductWorthZero(){
-    cy.get("div[id='s2id_field_product_id']").click();
-    cy.get("ul[class='select2-results'] li").contains("Diapers Unisex Baby").click();
+    clickProductsDropdown();
+    getDropdownOptions().contains("Diapers Unisex Baby").click();
   }
 
   function clickAddToCartButton(){
-    cy.get("button[data-testid='add-to-cart-button']").click();
+    getAddToCartButton().click();
   }
 
   function typeProductQuantity(quantity){
@@ -80,7 +80,7 @@ describe('Checkout tests', () => {
   }
 
   function getFamilyTokens(){
-    return cy.get("span[data-testid='dropcredit']").invoke("text");
+    return getFamilyTokensSpan().invoke("text");
   }
 
   function clickCheckoutSubmitButton(){
@@ -88,8 +88,44 @@ describe('Checkout tests', () => {
   }
 
   function selectFamilyWithZeroTokens(){
-    cy.get("div[id='s2id_field_people_id']").click();
-    cy.get("ul[class='select2-results'] li").contains("WithoutTokens").click();
+    getFamilyDropdown().click();
+    getDropdownOptions().contains("WithoutTokens").click();
+  }
+
+  function getFamilyDropdown(){
+    return cy.get("div[id='s2id_field_people_id']");
+  }
+
+  function getDropdownOptions(){
+    return cy.get("ul[class='select2-results'] li");
+  }
+
+  function clickProductsDropdown(){
+    cy.get("div[id='s2id_field_product_id']").click();
+  }
+
+  function getSelectedProduct(){
+    return cy.get("span[id='select2-chosen-2']");
+  }
+
+  function getChangeQuantityCartInputs(){
+    return cy.get("input[data-testid='changeQuantity']");
+  }
+
+  function getAddToCartButton(){
+    return cy.get("button[data-testid='add-to-cart-button']");
+  }
+
+  function getDeleteFromCartButtons(){
+    return cy.get("button[data-testid='deleteFromCart']");
+  }
+
+  function getFamilyTokensSpan(){
+    return cy.get("span[data-testid='dropcredit']");
+  }
+
+  function getFamilyCredit(){
+    return cy.get("div[class='info-aside'] p[class='familycredit']");
   }
 
   it('Left panel navigation', () => {
@@ -106,44 +142,44 @@ describe('Checkout tests', () => {
 
   it('Select family in dropdown', () => {
     navigateToCheckout();
-    cy.get("div[id='s2id_field_people_id']").click();
+    getFamilyDropdown().click();
     // get name of first beneficiary before clicking it
-    cy.get("ul[class='select2-results'] li").first().find("div").invoke('text').then((text) => {
-      cy.get("ul[class='select2-results'] li").first().click();
+    getDropdownOptions().first().find("div").invoke('text').then((text) => {
+      getDropdownOptions().first().click();
       // name should be visibly selected
-      cy.get("span[id='select2-chosen-1']").contains(text.trim()).should('be.visible');
+      getFamilyCredit().contains(text.trim()).should('be.visible');
     });
     // information container on the side with family credit should be shown
     cy.get("div[class='info-aside'] p[class='familycredit']").should('be.visible');
     //add button should be disabled
-    cy.get("button[data-testid='add-to-cart-button']").should('be.disabled');
+    getAddToCartButton().should('be.disabled');
   });
 
   it('Select product in dropdown', () => {
     navigateToCheckout();
-    cy.get("div[id='s2id_field_product_id']").click();
+    clickProductsDropdown();
     // get name of last product before clicking it
-    cy.get("ul[class='select2-results'] li").last().find("div").invoke('text').then((selectedProduct) => {
-      cy.get("ul[class='select2-results'] li").last().click();
+    getDropdownOptions().last().find("div").invoke('text').then((selectedProduct) => {
+      getDropdownOptions().last().click();
       // name should be visibly selected
-      cy.get("span[id='select2-chosen-2']").contains(selectedProduct.trim()).should('be.visible');
+      getSelectedProduct().contains(selectedProduct.trim()).should('be.visible');
     });
     // information container on the side with family credit should not be shown
-    cy.get("div[class='info-aside'] p[class='familycredit']").should('not.be.visible');
+    getFamilyCredit().should('not.be.visible');
     //add button should be disabled
-    cy.get("button[data-testid='add-to-cart-button']").should('be.disabled');
+    getAddToCartButton().should('be.disabled');
   });
 
   it('Add first item to cart', () => {
     navigateToCheckout();
     selectCheckoutDropdowns();
-      cy.get("span[id='select2-chosen-2']").invoke('text').then((selectedProduct) => {
+    getSelectedProduct().invoke('text').then((selectedProduct) => {
       typeProductQuantity(5);
       clickAddToCartButton();
       // product dropdown gets cleared after adding item to cart
-      cy.get("span[id='select2-chosen-2']").contains("Please select").should('exist');
+      getSelectedProduct().contains("Please select").should('exist');
       // shopping cart value should exist
-      cy.get("span[data-testid='dropcredit']").should('exist');  // isn't necessarily visible in mobile version 
+      getFamilyTokensSpan().should('exist');  // isn't necessarily visible in mobile version 
       // shopping cart header should appear
       cy.contains("h2","Shopping cart");
       // shopping cart has 2 rows (header and one product)
@@ -154,14 +190,6 @@ describe('Checkout tests', () => {
       cy.contains("td",selectedProduct.trim()).should('exist');
     });
   });
-
-  it('Prevent adding negative count of items', () => {
-    navigateToCheckout();
-    selectCheckoutDropdowns();
-    cy.get("button[data-testid='add-to-cart-button']").should('not.be.disabled');
-    typeProductQuantity(-1);
-    cy.get("button[data-testid='add-to-cart-button']").should('be.disabled');
-  }); 
   
   it('Adding multiple products to cart', () => {
     navigateToCheckout();
@@ -178,9 +206,9 @@ describe('Checkout tests', () => {
     let expectedCartPrice;
     navigateToCheckout();
     randomizeCartContent();
-    cy.get("div[id='s2id_field_product_id']").click();
-    cy.get("ul[class='select2-results'] li").last().click();
-    cy.get("span[id='select2-chosen-2']").invoke('text').then((selectedProduct) => {
+    clickProductsDropdown();
+    getDropdownOptions().last().click();
+    getSelectedProduct().invoke('text').then((selectedProduct) => {
       return cy.contains("option",selectedProduct.trim())
     })
     .then($selectedOption => {
@@ -209,7 +237,7 @@ describe('Checkout tests', () => {
     })
     .then(prevCartValue => {
       expectedCartPrice =  parseInt(prevCartValue) - loweredPriceBy;
-      cy.get("button[data-testid='deleteFromCart']").first().click();
+      getDeleteFromCartButtons().first().click();
       getCartValue();
     })
     .then(currentCartValue => {
@@ -228,10 +256,10 @@ describe('Checkout tests', () => {
     })
     .then(prevCartValue => {
       expectedCartPrice =  parseInt(prevCartValue) + increasedPriceBy;
-      return cy.get("input[data-testid='changeQuantity']").first().invoke("val");;
+      return getChangeQuantityCartInputs().first().invoke("val");;
     })
     .then(currentQuantity => {
-      cy.get("input[data-testid='changeQuantity']").first().clear().type(parseInt(currentQuantity)+1);
+      getChangeQuantityCartInputs().first().clear().type(parseInt(currentQuantity)+1);
       cy.contains("h2","Shopping cart").click(); //trick to submit previous field onBlur
       getCartValue();
     })
@@ -251,10 +279,10 @@ describe('Checkout tests', () => {
     })
     .then(prevCartValue => {
       expectedCartPrice =  parseInt(prevCartValue) - increasedPriceBy;
-      return cy.get("input[data-testid='changeQuantity']").last().invoke("val");;
+      return getChangeQuantityCartInputs().last().invoke("val");;
     })
     .then(currentQuantity => {
-      cy.get("input[data-testid='changeQuantity']").last().clear().type(parseInt(currentQuantity)-1);
+      getChangeQuantityCartInputs().last().clear().type(parseInt(currentQuantity)-1);
       cy.contains("h2","Shopping cart").click(); //trick to submit previous field
       getCartValue();
     })
@@ -275,8 +303,8 @@ describe('Checkout tests', () => {
   //   .then(familyTokens => {
   //     while(parseInt(familyTokens)>currentCartValue){
   //       // debugger;
-  //       // cy.get("div[id='s2id_field_product_id']").click();
-  //       // cy.get("ul[class='select2-results'] li").first().click();
+  //          clickProductsDropdown();
+  //       // getDropdownOptions().first().click();
   //       // typeProductQuantity(10);
   //       // clickAddToCartButton();
   //     }
@@ -303,7 +331,7 @@ describe('Checkout tests', () => {
     let randomCount = Math.floor(Math.random() * 10 - 1) + 1;
     typeProductQuantity(randomCount);
     // add to cart should be enabled even if product has 0 tokens value
-    cy.get("button[data-testid='add-to-cart-button']").should('not.be.disabled');
+    getAddToCartButton().should('not.be.disabled');
     clickAddToCartButton();
     clickCheckoutSubmitButton();
     // visible notification
@@ -321,7 +349,7 @@ describe('Checkout tests', () => {
     let randomCount = Math.floor(Math.random() * 10) + 1;
     typeProductQuantity(randomCount);
     // add to cart should be enabled even if family has zero tokens
-    cy.get("button[data-testid='add-to-cart-button']").should('not.be.disabled');
+    getAddToCartButton().should('not.be.disabled');
     clickAddToCartButton();
     clickCheckoutSubmitButton();
     // visible notification
@@ -335,11 +363,11 @@ describe('Checkout tests', () => {
   // // NOT FINISHED YET
   // it('Give tokens', () => {
   //   navigateToCheckout();
-  //   cy.get("div[id='s2id_field_people_id']").click();
-  //   cy.get("ul[class='select2-results'] li").first().find("div").invoke('text').then((text) => {
+  //   getFamilyDropdown().click();
+  //   getDropdownOptions().first().find("div").invoke('text').then((text) => {
   //     let familyName = text.trim();
   //     debugger;
-  //     cy.get("ul[class='select2-results'] li").first().click();
+  //     getDropdownOptions().first().click();
   //     // cy.get("span[data-testid='giveTokensButton']").click().then(() => {
   //     //   cy.get("input[type='text']").contains(familyName);
   //     // });
