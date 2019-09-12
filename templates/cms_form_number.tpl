@@ -16,6 +16,7 @@
 	 			{/if}
 	 			onblur="{$element['onblur']|escape:'quotes'};" 
 				{if $element['minlength']}minlength="{$element['minlength']}"{/if}
+				{if $element['min']}min="{$element['min']}"{/if}
 				{if $element['readonly'] || $element['locked']}readonly{/if} 
 				{if $element['required']}required{/if} 
 			>
