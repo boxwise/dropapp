@@ -15,6 +15,7 @@
 	 			onblur="{$element['onblur']|escape:'quotes'};" 
 				{if $element['minlength']}minlength="{$element['minlength']}"{/if}
 				{if $element['required']}required{/if} readonly
+				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 			>
 			{if !$data['url_locked']}
 				<span class="input-group-btn"><button class="btn btn-default unlock" type="button"><span class="fa"></span></button></span></div>

@@ -10,6 +10,7 @@
 					{if $element['onblur']}onblur="{$element['onblur']|escape};"{/if}
 					{if $element['onchange']}onchange="{$element['onchange']|escape};"{/if}
 					{if $element['onkeyup']}onkeyup="{$element['onkeyup']|escape};"{/if}
+					{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 				/>
 				<span class="input-group-addon"><span class="fa {if $element['date']}fa-calendar{else}fa-clock-o{/if}"></span></span>
 			</div>

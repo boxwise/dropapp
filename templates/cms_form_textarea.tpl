@@ -8,8 +8,7 @@
  				{if $element['onblur']}onblur="{$element['onblur']|escape};"{/if}
  				{if $element['onchange']}onchange="{$element['onchange']|escape};"{/if}
  				{if $element['onkeyup']}onkeyup="{$element['onkeyup']|escape};"{/if}
-
-
+				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 				>{$data[$element['field']]}</textarea>
 			{if $element['maxlength']}<p class="counter-parent safe"><span class="counter">{$element['maxlength']}</span> {$translate['cms_form_charactersleft']|replace:'%n':$element['maxlength']}</p>{/if}
 			{if $element['tooltip']}{include file="cms_tooltip.tpl" valign=" middle"}{/if}
