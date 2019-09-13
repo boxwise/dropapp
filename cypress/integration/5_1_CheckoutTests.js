@@ -128,9 +128,12 @@ describe('Checkout tests', () => {
     return cy.get("div[class='info-aside'] p[class='familycredit']");
   }
 
+  function selectFamilyDropdownValue(){
+    return cy.get("span[id='select2-chosen-1']");
+  }
+
   it('Left panel navigation', () => {
       navigateToCheckout();
-      // shopping cart elements
       cy.get("button[data-testid='submitShoppingCart']").should("be.visible");
       // correct side panel navigation
       cy.get("a[class='menu_check_out']").last().parent().should("have.class","active");
@@ -147,11 +150,9 @@ describe('Checkout tests', () => {
     getDropdownOptions().first().find("div").invoke('text').then((text) => {
       getDropdownOptions().first().click();
       // name should be visibly selected
-      cy.get("span[id='select2-chosen-1']").contains(text.trim()).should('be.visible');
+      selectFamilyDropdownValue().contains(text.trim()).should('be.visible');
     });
-    // information container on the side with family credit should be shown
     getFamilyCredit().should('be.visible');
-    //add button should be disabled
     getAddToCartButton().should('be.disabled');
   });
 
@@ -164,9 +165,7 @@ describe('Checkout tests', () => {
       // name should be visibly selected
       getSelectedProduct().contains(selectedProduct.trim()).should('be.visible');
     });
-    // information container on the side with family credit should not be shown
     getFamilyCredit().should('not.be.visible');
-    //add button should be disabled
     getAddToCartButton().should('be.disabled');
   });
 
@@ -176,11 +175,8 @@ describe('Checkout tests', () => {
     getSelectedProduct().invoke('text').then((selectedProduct) => {
       typeProductQuantity(5);
       clickAddToCartButton();
-      // product dropdown gets cleared after adding item to cart
       getSelectedProduct().contains("Please select").should('exist');
-      // shopping cart value should exist
-      getFamilyTokensSpan().should('exist');  // isn't necessarily visible in mobile version 
-      // shopping cart header should appear
+      getFamilyTokensSpan().should('exist');  // isn't necessarily visible in mobile version
       cy.contains("h2","Shopping cart");
       // shopping cart has 2 rows (header and one product)
       cy.get("body").then($body => {
@@ -316,7 +312,6 @@ describe('Checkout tests', () => {
     navigateToCheckout();
     randomizeCartContent();
     clickCheckoutSubmitButton();
-    // visible notification
     cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
     // dropdowns are empty again
     cy.get("body").then($body => {
@@ -330,11 +325,9 @@ describe('Checkout tests', () => {
     selectProductWorthZero();
     let randomCount = Math.floor(Math.random() * 10 - 1) + 1;
     typeProductQuantity(randomCount);
-    // add to cart should be enabled even if product has 0 tokens value
     getAddToCartButton().should('not.be.disabled');
     clickAddToCartButton();
     clickCheckoutSubmitButton();
-    // visible notification
     cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
     // dropdowns are empty again
     cy.get("body").then($body => {
@@ -348,11 +341,9 @@ describe('Checkout tests', () => {
     selectProductWorthZero();
     let randomCount = Math.floor(Math.random() * 10) + 1;
     typeProductQuantity(randomCount);
-    // add to cart should be enabled even if family has zero tokens
     getAddToCartButton().should('not.be.disabled');
     clickAddToCartButton();
     clickCheckoutSubmitButton();
-    // visible notification
     cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
     // dropdowns are empty again
     cy.get("body").then($body => {
