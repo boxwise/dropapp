@@ -1,5 +1,4 @@
 import './session'
-import './getcredentials'
 import './notifications'
 
 Cypress.on('uncaught:exception', (err, runnable) => {
