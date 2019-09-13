@@ -8,6 +8,7 @@
 				{if $element['required']}required{/if} 
 				{if $element['formatlist']} data-format-list="{$element['formatlist']}"{/if}
 				{if isset($element['onchange'])}onchange="{$element['onchange']|escape};"{/if}
+				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 			>
 			<option></option>
 			{foreach $element['options'] as $option}
