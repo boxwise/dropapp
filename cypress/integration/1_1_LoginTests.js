@@ -32,22 +32,22 @@ context('Login tests', () => {
 
   it('Login with non-activated user', () => {
     loginUsing(config.testNotActivatedUser, config.testPwd);
-    cy.NotificationWithTextIsVisible(config.genericErrLoginNotif);
+    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
   })
 
   it('Login with expired user', () => {
     loginUsing(config.testExpiredUser, config.testPwd);
-    cy.NotificationWithTextIsVisible(config.genericErrLoginNotif);
+    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
   })
 
   it('Login with deleted user', () => {
     loginUsing(config.testDeletedUser, config.testPwd);
-    cy.NotificationWithTextIsVisible(config.genericErrLoginNotif);
+    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
   })
 
   it('Login with wrong password', () => {
     loginUsing(config.testAdmin, config.testWrongPwd);
-    cy.NotificationWithTextIsVisible(config.incorrectLoginNotif);
+    cy.notificationWithTextIsVisible(config.incorrectLoginNotif);
   })
 
   it('Forgot password form', () => {
@@ -62,7 +62,7 @@ context('Login tests', () => {
     cy.get("form[data-testid='resetForm']").should('be.visible');
     cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
     cy.get("input[data-testid='submitForgottenPwd']").click();
-    cy.NotificationWithTextIsVisible(config.genericErrLoginNotif)
+    cy.notificationWithTextIsVisible(config.genericErrLoginNotif)
   });
 
   it('Forgot password form success confirmation', () => {
@@ -71,6 +71,6 @@ context('Login tests', () => {
     cy.get("form[data-testid='resetForm']").should('be.visible');
     cy.get("input[data-testid='forgotPwdEmailField']").type(config.testAdmin);
     cy.get("input[data-testid='submitForgottenPwd']").click();
-    cy.NotificationWithTextIsVisible(config.successPwdChangeNotif)
+    cy.notificationWithTextIsVisible(config.successPwdChangeNotif)
   });
 });
