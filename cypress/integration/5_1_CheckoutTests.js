@@ -1,3 +1,16 @@
+const FAMILY1 = "McGregor";
+const FAMILY2 = "Tonon";
+const FAMILY3 = "Gracie";
+const FAMILY_WITHOUT_TOKENS = "Without";
+
+const PRODUCT1 = "Shampoo";
+const PRODUCT2 = "Rice";
+const PRODUCT3 = "Jeans";
+const PRODUCT4 = "Trainers";
+const PRODUCT5 = "T-Shirt";
+const PRODUCT6 = "Sleeping Bag";
+const PRODUCT_FREE = "Diapers";
+
 describe('Checkout tests', () => {
   let testAdmin;
   let testCoordinator;
@@ -30,84 +43,22 @@ describe('Checkout tests', () => {
       cy.get("a[class='menu_check_out']").last().contains("Checkout").click();
   }
 
-  function selectRandomProduct(){
-    clickProductsDropdown();
-    cy.get("body").then($body => {
-      let randomOption = Math.floor(Math.random() * ($body.find("ul[class='select2-results'] li").length - 1)) + 1;
-      getDropdownOptions().eq(randomOption).click();
-    });
-  }
-
-  function selectRandomFamily(){
-    getFamilyDropdown().click();
-    cy.get("body").then($body => {
-      let randomOption = Math.floor(Math.random() * ($body.find("ul[class='select2-results'] li").length - 1)) + 1;
-      getDropdownOptions().eq(randomOption).click();
-    });
-  }
-
-  function selectCheckoutDropdowns(){
-    selectRandomFamily();
-    selectRandomProduct();            
-  }
-
-  function randomizeCartContent(){
-    selectRandomFamily();
-    let itemsCountInCart = Math.floor(Math.random() * 5) + 1;
-    for (let i=1; i<= itemsCountInCart; i++){
-      selectRandomProduct();
-      typeProductQuantity(i);
-      clickAddToCartButton();
-    }
-    return itemsCountInCart;
-  }
-
-  function selectProductWorthZero(){
-    clickProductsDropdown();
-    getDropdownOptions().contains("Diapers Unisex Baby").click();
-  }
-
   function clickAddToCartButton(){
     getAddToCartButton().click();
   }
 
   function typeProductQuantity(quantity){
-    cy.get("input[id='field_count'").clear().type(quantity);
+    cy.get("input[data-testid='productQuantityInput'").clear().type(quantity);
   }
 
   function getCartValue(){
     return cy.get("span[data-testid='cartvalue_aside']").invoke("text");
   }
 
-  function getFamilyTokens(){
-    return getFamilyTokensSpan().invoke("text");
-  }
-
   function clickCheckoutSubmitButton(){
     cy.get("button[data-testid='submitShoppingCart']").click();
   }
-
-  function selectFamilyWithZeroTokens(){
-    getFamilyDropdown().click();
-    getDropdownOptions().contains("WithoutTokens").click();
-  }
-
-  function getFamilyDropdown(){
-    return cy.get("div[id='s2id_field_people_id']");
-  }
-
-  function getDropdownOptions(){
-    return cy.get("ul[class='select2-results'] li");
-  }
-
-  function clickProductsDropdown(){
-    cy.get("div[id='s2id_field_product_id']").click();
-  }
-
-  function getSelectedProduct(){
-    return cy.get("span[id='select2-chosen-2']");
-  }
-
+  
   function getChangeQuantityCartInputs(){
     return cy.get("input[data-testid='changeQuantity']");
   }
@@ -128,242 +79,229 @@ describe('Checkout tests', () => {
     return cy.get("div[class='info-aside'] p[class='familycredit']");
   }
 
-  function selectFamilyDropdownValue(){
-    return cy.get("span[id='select2-chosen-1']");
+  function checkoutFormIsResetted(){
+    cy.get("body").then($body => {
+      expect($body.find("select[data-placeholder='Please select']").length).to.equal(2);
+    });
   }
 
   it('Left panel navigation', () => {
       navigateToCheckout();
       cy.get("button[data-testid='submitShoppingCart']").should("be.visible");
-      // correct side panel navigation
-      cy.get("a[class='menu_check_out']").last().parent().should("have.class","active");
-      // empty dropdowns
-      cy.get("body").then($body => {
-          expect($body.find("select[data-placeholder='Please select']").length).to.equal(2);
-      });
+      cy.verifyActiveSideMenuNavigation('menu_check_out');
+      cy.getSelectedValueInDropDown("people_id").contains("Please select").should('exist');
+      cy.getSelectedValueInDropDown("product_id").contains("Please select").should('exist');
   });
 
   it('Select family in dropdown', () => {
     navigateToCheckout();
-    getFamilyDropdown().click();
-    // get name of first beneficiary before clicking it
-    getDropdownOptions().first().find("div").invoke('text').then((text) => {
-      getDropdownOptions().first().click();
-      // name should be visibly selected
-      selectFamilyDropdownValue().contains(text.trim()).should('be.visible');
-    });
+    cy.selectOptionByText("people_id",FAMILY1);
+    cy.getSelectedValueInDropDown("people_id").contains(FAMILY1).should('exist');
     getFamilyCredit().should('be.visible');
     getAddToCartButton().should('be.disabled');
   });
 
   it('Select product in dropdown', () => {
     navigateToCheckout();
-    clickProductsDropdown();
-    // get name of last product before clicking it
-    getDropdownOptions().last().find("div").invoke('text').then((selectedProduct) => {
-      getDropdownOptions().last().click();
-      // name should be visibly selected
-      getSelectedProduct().contains(selectedProduct.trim()).should('be.visible');
-    });
+    cy.selectOptionByText("product_id",PRODUCT1);
+    cy.getSelectedValueInDropDown("product_id").contains(PRODUCT1).should('exist');
     getFamilyCredit().should('not.be.visible');
     getAddToCartButton().should('be.disabled');
   });
 
   it('Add first item to cart', () => {
     navigateToCheckout();
-    selectCheckoutDropdowns();
-    getSelectedProduct().invoke('text').then((selectedProduct) => {
-      typeProductQuantity(5);
-      clickAddToCartButton();
-      getSelectedProduct().contains("Please select").should('exist');
-      getFamilyTokensSpan().should('exist');  // isn't necessarily visible in mobile version
-      cy.contains("h2","Shopping cart");
-      // shopping cart has 2 rows (header and one product)
-      cy.get("body").then($body => {
-        expect($body.find("table[data-testid='shopping_cart'] tr").length).to.equal(2);
-      });
-      // shopping cart should contain a table cell row with the product
-      cy.contains("td",selectedProduct.trim()).should('exist');
+    cy.selectOptionByText("people_id", FAMILY3);
+    cy.selectOptionByText("product_id", PRODUCT6);
+    typeProductQuantity(5);
+    clickAddToCartButton();
+    // family should stay selected
+    cy.getSelectedValueInDropDown("people_id").contains(FAMILY3).should('exist');
+    // product dropdown should get resetted
+    cy.getSelectedValueInDropDown("product_id").contains("Please select").should('exist');
+    getFamilyTokensSpan().should('exist');  // isn't necessarily visible in mobile version
+    cy.contains("h2","Shopping cart");
+    cy.get("body").then($body => {
+      expect($body.find("table[data-testid='shopping_cart'] tr").length).to.equal(2);
     });
+    cy.contains("td",PRODUCT6).should('exist');
   });
   
-  it('Adding multiple products to cart', () => {
+  it('Adding several products to cart', () => {
     navigateToCheckout();
-    let addedProductsCount = randomizeCartContent();
+    cy.selectOptionByText("people_id", FAMILY2);
+    cy.selectOptionByText("product_id", PRODUCT6);
+    typeProductQuantity(2);
+    clickAddToCartButton();
+    cy.selectOptionByText("product_id", PRODUCT2);
+    typeProductQuantity(4);
+    clickAddToCartButton();
+    cy.selectOptionByText("product_id", PRODUCT4);
+    typeProductQuantity(1);
+    clickAddToCartButton();
+    getFamilyTokensSpan().should('exist');  // isn't necessarily visible in mobile version
+    cy.contains("h2","Shopping cart");
+    cy.get("body").then($body => {
+      expect($body.find("table[data-testid='shopping_cart'] tr").length).to.equal(4);
+    });
+    cy.contains("td",PRODUCT6).should('exist');
+    cy.contains("td",PRODUCT2).should('exist');
+    cy.contains("td",PRODUCT4).should('exist');
     cy.get("body").then($body => {
       // number of rows in table should match number of added products
-      assert.isAtLeast($body.find("table[data-testid='shopping_cart'] tr").length,addedProductsCount)
-      //expect($body.find("table[data-testid='shopping_cart'] tr").length).to.equal(addedProductsCount+1);
+      assert.isAtLeast($body.find("table[data-testid='shopping_cart'] tr").length,3)
+      //expect($body.find("table[data-testid='shopping_cart'] tr").length).to.equal(4);
     });
   }); 
 
   it('Cart value - adding one more product', () => {
-    let productPrice;
-    let expectedCartPrice;
+    let initialCartPrice = 100;
+    let finalCartPrice = 200;
     navigateToCheckout();
-    randomizeCartContent();
-    clickProductsDropdown();
-    getDropdownOptions().last().click();
-    getSelectedProduct().invoke('text').then((selectedProduct) => {
-      return cy.contains("option",selectedProduct.trim())
-    })
-    .then($selectedOption => {
-      productPrice = $selectedOption.data("price");
-      getCartValue();
-    })
-    .then((previousCartValue) =>{
+    cy.selectOptionByText("people_id", FAMILY2);
+    cy.selectOptionByText("product_id", PRODUCT2);
+    typeProductQuantity(4);
+    clickAddToCartButton();
+    getCartValue().then(cartValue => {
+      expect(parseInt(cartValue)).to.equal(initialCartPrice);
+      cy.selectOptionByText("product_id", PRODUCT4);
       typeProductQuantity(1);
       clickAddToCartButton();
-      expectedCartPrice = parseInt(previousCartValue) + productPrice;
       getCartValue();
     })
     .then(currentCartValue => {
-      expect(parseInt(currentCartValue)).to.equal(expectedCartPrice);
+      expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
     });
   });
 
   it('Cart value - deleting one whole product', () => {
+    let testFamily = "McGregor";
+    let initialCartPrice = 250;
+    let finalCartPrice = 200;
     navigateToCheckout();
-    randomizeCartContent();
-    let loweredPriceBy;
-    let expectedCartPrice;
-    cy.get("td[data-testid='totalPrice']").first().invoke("text").then(totalProductPrice => {
-      loweredPriceBy = parseInt(totalProductPrice);
-      getCartValue();
-    })
-    .then(prevCartValue => {
-      expectedCartPrice =  parseInt(prevCartValue) - loweredPriceBy;
+    cy.selectOptionByText("people_id", testFamily);
+    cy.selectOptionByText("product_id", PRODUCT2);
+    typeProductQuantity(2);
+    clickAddToCartButton();
+    cy.selectOptionByText("product_id", PRODUCT4);
+    typeProductQuantity(2);
+    clickAddToCartButton();
+    getCartValue().then(cartValue => {
+      expect(parseInt(cartValue)).to.equal(initialCartPrice);
       getDeleteFromCartButtons().first().click();
       getCartValue();
     })
     .then(currentCartValue => {
-      expect(parseInt(currentCartValue)).to.equal(expectedCartPrice);
+      expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
     });
   });  
 
   it('Cart value - incrementing product count', () => {
+    let initialCartPrice = 60;
+    let finalCartPrice = 90;
     navigateToCheckout();
-    randomizeCartContent();
-    let increasedPriceBy;
-    let expectedCartPrice;
-    cy.get("td[data-testid='price']").first().invoke("text").then(pricePerItem => {
-      increasedPriceBy = parseInt(pricePerItem);
-      getCartValue();
-    })
-    .then(prevCartValue => {
-      expectedCartPrice =  parseInt(prevCartValue) + increasedPriceBy;
-      return getChangeQuantityCartInputs().first().invoke("val");;
-    })
-    .then(currentQuantity => {
-      getChangeQuantityCartInputs().first().clear().type(parseInt(currentQuantity)+1);
+    cy.selectOptionByText("people_id", FAMILY2);
+    cy.selectOptionByText("product_id", PRODUCT5);
+    typeProductQuantity(2);
+    clickAddToCartButton();
+    getCartValue().then(prevCartValue => {
+      expect(parseInt(prevCartValue)).to.equal(initialCartPrice);
+      getChangeQuantityCartInputs().first().clear().type(3);
       cy.contains("h2","Shopping cart").click(); //trick to submit previous field onBlur
       getCartValue();
     })
     .then(currentCartValue => {
-      expect(parseInt(currentCartValue)).to.equal(expectedCartPrice);
+      expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
     });
   });
 
   it('Cart value - decrementing product count', () => {
+    let initialCartPrice = 60;
+    let finalCartPrice = 40;
     navigateToCheckout();
-    randomizeCartContent();
-    let increasedPriceBy;
-    let expectedCartPrice;
-    cy.get("td[data-testid='price']").last().invoke("text").then(pricePerItem => {
-      increasedPriceBy = parseInt(pricePerItem);
-      getCartValue();
-    })
-    .then(prevCartValue => {
-      expectedCartPrice =  parseInt(prevCartValue) - increasedPriceBy;
-      return getChangeQuantityCartInputs().last().invoke("val");;
-    })
-    .then(currentQuantity => {
-      getChangeQuantityCartInputs().last().clear().type(parseInt(currentQuantity)-1);
-      cy.contains("h2","Shopping cart").click(); //trick to submit previous field
+    cy.selectOptionByText("people_id", FAMILY2);
+    cy.selectOptionByText("product_id", PRODUCT1);
+    typeProductQuantity(3);
+    clickAddToCartButton();
+    getCartValue().then(prevCartValue => {
+      expect(parseInt(prevCartValue)).to.equal(initialCartPrice);
+      getChangeQuantityCartInputs().first().clear().type(2);
+      cy.contains("h2","Shopping cart").click(); //trick to submit previous field onBlur
       getCartValue();
     })
     .then(currentCartValue => {
-      expect(parseInt(currentCartValue)).to.equal(expectedCartPrice);
+      expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
     });
   });
 
-  // NOT FINISHED 
-  // it('Cart value bigger than family tokens', () => {
-  //   let currentCartValue;
-  //   navigateToCheckout();
-  //   randomizeCartContent();
-  //   getCartValue().then(cartValue => {
-  //     currentCartValue = parseInt(cartValue);
-  //     getFamilyTokens();
-  //   })
-  //   .then(familyTokens => {
-  //     while(parseInt(familyTokens)>currentCartValue){
-  //       // debugger;
-  //          clickProductsDropdown();
-  //       // getDropdownOptions().first().click();
-  //       // typeProductQuantity(10);
-  //       // clickAddToCartButton();
-  //     }
-  //   })
-  // });
+  // // NOT FINISHED 
+  // // it('Cart value bigger than family tokens', () => {
+  // //   let currentCartValue;
+  // //   navigateToCheckout();
+  // //   randomizeCartContent();
+  // //   getCartValue().then(cartValue => {
+  // //     currentCartValue = parseInt(cartValue);
+  // //     getFamilyTokens();
+  // //   })
+  // //   .then(familyTokens => {
+  // //     while(parseInt(familyTokens)>currentCartValue){
+  // //       // debugger;
+  // //          clickProductsDropdown();
+  // //       // getDropdownOptions().first().click();
+  // //       // typeProductQuantity(10);
+  // //       // clickAddToCartButton();
+  // //     }
+  // //   })
+  // // });
   
-
   it('Add non-zero value products & submit cart', () => {
     navigateToCheckout();
-    randomizeCartContent();
+    cy.selectOptionByText("people_id", FAMILY1);
+    cy.selectOptionByText("product_id", PRODUCT3);
+    typeProductQuantity(2);
+    clickAddToCartButton();
     clickCheckoutSubmitButton();
     cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
-    // dropdowns are empty again
-    cy.get("body").then($body => {
-      expect($body.find("select[data-placeholder='Please select']").length).to.equal(2);
-    });
+    checkoutFormIsResetted();
   });
 
   it('Add zero value product & submit cart', () => {
     navigateToCheckout();
-    selectRandomFamily();
-    selectProductWorthZero();
-    let randomCount = Math.floor(Math.random() * 10 - 1) + 1;
-    typeProductQuantity(randomCount);
+    cy.selectOptionByText("people_id", FAMILY3);
+    cy.selectOptionByText("product_id", PRODUCT_FREE);
+    typeProductQuantity(10);
     getAddToCartButton().should('not.be.disabled');
     clickAddToCartButton();
     clickCheckoutSubmitButton();
     cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
-    // dropdowns are empty again
-    cy.get("body").then($body => {
-      expect($body.find("select[data-placeholder='Please select']").length).to.equal(2);
-    });
+    checkoutFormIsResetted();
   });
 
   it('Completely tokenless market (product & families have no tokens)', () => {
     navigateToCheckout();
-    selectFamilyWithZeroTokens();
-    selectProductWorthZero();
-    let randomCount = Math.floor(Math.random() * 10) + 1;
-    typeProductQuantity(randomCount);
+    cy.selectOptionByText("people_id", FAMILY_WITHOUT_TOKENS);
+    cy.selectOptionByText("product_id", PRODUCT_FREE);
+    typeProductQuantity(15);
     getAddToCartButton().should('not.be.disabled');
     clickAddToCartButton();
     clickCheckoutSubmitButton();
     cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
-    // dropdowns are empty again
-    cy.get("body").then($body => {
-      expect($body.find("select[data-placeholder='Please select']").length).to.equal(2);
-    });
+    checkoutFormIsResetted();
   });
 
-  // // NOT FINISHED YET
-  // it('Give tokens', () => {
-  //   navigateToCheckout();
-  //   getFamilyDropdown().click();
-  //   getDropdownOptions().first().find("div").invoke('text').then((text) => {
-  //     let familyName = text.trim();
-  //     debugger;
-  //     getDropdownOptions().first().click();
-  //     // cy.get("span[data-testid='giveTokensButton']").click().then(() => {
-  //     //   cy.get("input[type='text']").contains(familyName);
-  //     // });
-  //     // name should be in families field (doesn't work tho)
-  //     cy.get("input[type='text']").contains(familyName);
-  //   });
-  // });
+  // // // NOT FINISHED YET
+  // // it('Give tokens', () => {
+  // //   navigateToCheckout();
+  // //   getFamilyDropdown().click();
+  // //   getDropdownOptions().first().find("div").invoke('text').then((text) => {
+  // //     let familyName = text.trim();
+  // //     debugger;
+  // //     getDropdownOptions().first().click();
+  // //     // cy.get("span[data-testid='giveTokensButton']").click().then(() => {
+  // //     //   cy.get("input[type='text']").contains(familyName);
+  // //     // });
+  // //     // name should be in families field (doesn't work tho)
+  // //     cy.get("input[type='text']").contains(familyName);
+  // //   });
+  // // });
 });
