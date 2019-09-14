@@ -15,8 +15,7 @@ describe('Checkout tests', () => {
 
   function navigateToCheckout() {
     cy.loginAsVolunteer(testAdmin, testPwd, true);
-    cy.visit('/');
-    cy.get("a[class='menu_check_out']").last().contains("Checkout").click();
+    cy.visit('/?action=check_out');
   }
 
   function clickAddToCartButton() {
