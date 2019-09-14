@@ -12,66 +12,66 @@ const PRODUCT6 = "Sleeping Bag";
 const PRODUCT_FREE = "Diapers";
 
 describe('Checkout tests', () => {
-  
+
   function navigateToCheckout() {
-      cy.loginAsVolunteer(testAdmin, testPwd, true);
-      cy.visit('/');
-      cy.get("a[class='menu_check_out']").last().contains("Checkout").click();
+    cy.loginAsVolunteer(testAdmin, testPwd, true);
+    cy.visit('/');
+    cy.get("a[class='menu_check_out']").last().contains("Checkout").click();
   }
 
-  function clickAddToCartButton(){
+  function clickAddToCartButton() {
     getAddToCartButton().click();
   }
 
-  function typeProductQuantity(quantity){
+  function typeProductQuantity(quantity) {
     cy.get("input[data-testid='productQuantityInput'").clear().type(quantity);
   }
 
-  function getCartValue(){
+  function getCartValue() {
     return cy.get("span[data-testid='cartvalue_aside']").invoke("text");
   }
 
-  function clickCheckoutSubmitButton(){
+  function clickCheckoutSubmitButton() {
     cy.get("button[data-testid='submitShoppingCart']").click();
   }
-  
-  function getChangeQuantityCartInputs(){
+
+  function getChangeQuantityCartInputs() {
     return cy.get("input[data-testid='changeQuantity']");
   }
 
-  function getAddToCartButton(){
+  function getAddToCartButton() {
     return cy.get("button[data-testid='add-to-cart-button']");
   }
 
-  function getDeleteFromCartButtons(){
+  function getDeleteFromCartButtons() {
     return cy.get("button[data-testid='deleteFromCart']");
   }
 
-  function getFamilyTokensSpan(){
+  function getFamilyTokensSpan() {
     return cy.get("span[data-testid='dropcredit']");
   }
 
-  function getFamilyCredit(){
+  function getFamilyCredit() {
     return cy.get("div[class='info-aside'] p[class='familycredit']");
   }
 
-  function checkoutFormIsResetted(){
+  function checkoutFormIsResetted() {
     cy.get("body").then($body => {
       expect($body.find("select[data-placeholder='Please select']").length).to.equal(2);
     });
   }
 
   it('Left panel navigation', () => {
-      navigateToCheckout();
-      cy.get("button[data-testid='submitShoppingCart']").should("be.visible");
-      cy.verifyActiveSideMenuNavigation('menu_check_out');
-      cy.getSelectedValueInDropDown("people_id").contains("Please select").should('exist');
-      cy.getSelectedValueInDropDown("product_id").contains("Please select").should('exist');
+    navigateToCheckout();
+    cy.get("button[data-testid='submitShoppingCart']").should("be.visible");
+    cy.verifyActiveSideMenuNavigation('menu_check_out');
+    cy.getSelectedValueInDropDown("people_id").contains("Please select").should('exist');
+    cy.getSelectedValueInDropDown("product_id").contains("Please select").should('exist');
   });
 
   it('Select family in dropdown', () => {
     navigateToCheckout();
-    cy.selectOptionByText("people_id",FAMILY1);
+    cy.selectOptionByText("people_id", FAMILY1);
     cy.getSelectedValueInDropDown("people_id").contains(FAMILY1).should('exist');
     getFamilyCredit().should('be.visible');
     getAddToCartButton().should('be.disabled');
@@ -79,7 +79,7 @@ describe('Checkout tests', () => {
 
   it('Select product in dropdown', () => {
     navigateToCheckout();
-    cy.selectOptionByText("product_id",PRODUCT1);
+    cy.selectOptionByText("product_id", PRODUCT1);
     cy.getSelectedValueInDropDown("product_id").contains(PRODUCT1).should('exist');
     getFamilyCredit().should('not.be.visible');
     getAddToCartButton().should('be.disabled');
@@ -96,13 +96,13 @@ describe('Checkout tests', () => {
     // product dropdown should get resetted
     cy.getSelectedValueInDropDown("product_id").contains("Please select").should('exist');
     getFamilyTokensSpan().should('exist');  // isn't necessarily visible in mobile version
-    cy.contains("h2","Shopping cart");
+    cy.contains("h2", "Shopping cart");
     cy.get("body").then($body => {
       expect($body.find("table[data-testid='shopping_cart'] tr").length).to.equal(2);
     });
-    cy.contains("td",PRODUCT6).should('exist');
+    cy.contains("td", PRODUCT6).should('exist');
   });
-  
+
   it('Adding several products to cart', () => {
     navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY2);
@@ -116,19 +116,19 @@ describe('Checkout tests', () => {
     typeProductQuantity(1);
     clickAddToCartButton();
     getFamilyTokensSpan().should('exist');  // isn't necessarily visible in mobile version
-    cy.contains("h2","Shopping cart");
+    cy.contains("h2", "Shopping cart");
     cy.get("body").then($body => {
       expect($body.find("table[data-testid='shopping_cart'] tr").length).to.equal(4);
     });
-    cy.contains("td",PRODUCT6).should('exist');
-    cy.contains("td",PRODUCT2).should('exist');
-    cy.contains("td",PRODUCT4).should('exist');
+    cy.contains("td", PRODUCT6).should('exist');
+    cy.contains("td", PRODUCT2).should('exist');
+    cy.contains("td", PRODUCT4).should('exist');
     cy.get("body").then($body => {
       // number of rows in table should match number of added products
-      assert.isAtLeast($body.find("table[data-testid='shopping_cart'] tr").length,3)
+      assert.isAtLeast($body.find("table[data-testid='shopping_cart'] tr").length, 3)
       //expect($body.find("table[data-testid='shopping_cart'] tr").length).to.equal(4);
     });
-  }); 
+  });
 
   it('Cart value - adding one more product', () => {
     let initialCartPrice = 100;
@@ -145,9 +145,9 @@ describe('Checkout tests', () => {
       clickAddToCartButton();
       getCartValue();
     })
-    .then(currentCartValue => {
-      expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
-    });
+      .then(currentCartValue => {
+        expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
+      });
   });
 
   it('Cart value - deleting one whole product', () => {
@@ -167,10 +167,10 @@ describe('Checkout tests', () => {
       getDeleteFromCartButtons().first().click();
       getCartValue();
     })
-    .then(currentCartValue => {
-      expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
-    });
-  });  
+      .then(currentCartValue => {
+        expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
+      });
+  });
 
   it('Cart value - incrementing product count', () => {
     let initialCartPrice = 60;
@@ -183,12 +183,12 @@ describe('Checkout tests', () => {
     getCartValue().then(prevCartValue => {
       expect(parseInt(prevCartValue)).to.equal(initialCartPrice);
       getChangeQuantityCartInputs().first().clear().type(3);
-      cy.contains("h2","Shopping cart").click(); //trick to submit previous field onBlur
+      cy.contains("h2", "Shopping cart").click(); //trick to submit previous field onBlur
       getCartValue();
     })
-    .then(currentCartValue => {
-      expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
-    });
+      .then(currentCartValue => {
+        expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
+      });
   });
 
   it('Cart value - decrementing product count', () => {
@@ -202,12 +202,12 @@ describe('Checkout tests', () => {
     getCartValue().then(prevCartValue => {
       expect(parseInt(prevCartValue)).to.equal(initialCartPrice);
       getChangeQuantityCartInputs().first().clear().type(2);
-      cy.contains("h2","Shopping cart").click(); //trick to submit previous field onBlur
+      cy.contains("h2", "Shopping cart").click(); //trick to submit previous field onBlur
       getCartValue();
     })
-    .then(currentCartValue => {
-      expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
-    });
+      .then(currentCartValue => {
+        expect(parseInt(currentCartValue)).to.equal(finalCartPrice);
+      });
   });
 
   // NOT FINISHED 
@@ -229,7 +229,7 @@ describe('Checkout tests', () => {
   //     }
   //   })
   // });
-  
+
   it('Add non-zero value products & submit cart', () => {
     navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY1);
