@@ -12,33 +12,9 @@ const PRODUCT6 = "Sleeping Bag";
 const PRODUCT_FREE = "Diapers";
 
 describe('Checkout tests', () => {
-  let testAdmin;
-  let testCoordinator;
-  let testUser;
-  let testPwd;
   
-  before(function() {
-      cy.getAdminUser().then(($result) => {
-        testAdmin = $result.testAdmin;
-        testPwd = $result.testPwd;
-      });
-
-      cy.getCoordinatorUser().then(($result) => {
-        testCoordinator = $result.testCoordinator;
-        testPwd = $result.testPwd;
-      });
-
-      cy.getVolunteerUser().then(($result) => {
-        testUser = $result.testUser;
-        testPwd = $result.testPwd;
-      });
-  });
-
-  beforeEach(function(){
-  });
-
-  function navigateToCheckout(){
-      cy.LoginAjax(testAdmin, testPwd, true);
+  function navigateToCheckout() {
+      cy.loginAsVolunteer(testAdmin, testPwd, true);
       cy.visit('/');
       cy.get("a[class='menu_check_out']").last().contains("Checkout").click();
   }
@@ -234,25 +210,25 @@ describe('Checkout tests', () => {
     });
   });
 
-  // // NOT FINISHED 
-  // // it('Cart value bigger than family tokens', () => {
-  // //   let currentCartValue;
-  // //   navigateToCheckout();
-  // //   randomizeCartContent();
-  // //   getCartValue().then(cartValue => {
-  // //     currentCartValue = parseInt(cartValue);
-  // //     getFamilyTokens();
-  // //   })
-  // //   .then(familyTokens => {
-  // //     while(parseInt(familyTokens)>currentCartValue){
-  // //       // debugger;
-  // //          clickProductsDropdown();
-  // //       // getDropdownOptions().first().click();
-  // //       // typeProductQuantity(10);
-  // //       // clickAddToCartButton();
-  // //     }
-  // //   })
-  // // });
+  // NOT FINISHED 
+  // it('Cart value bigger than family tokens', () => {
+  //   let currentCartValue;
+  //   navigateToCheckout();
+  //   randomizeCartContent();
+  //   getCartValue().then(cartValue => {
+  //     currentCartValue = parseInt(cartValue);
+  //     getFamilyTokens();
+  //   })
+  //   .then(familyTokens => {
+  //     while(parseInt(familyTokens)>currentCartValue){
+  //       // debugger;
+  //          clickProductsDropdown();
+  //       // getDropdownOptions().first().click();
+  //       // typeProductQuantity(10);
+  //       // clickAddToCartButton();
+  //     }
+  //   })
+  // });
   
   it('Add non-zero value products & submit cart', () => {
     navigateToCheckout();
@@ -289,19 +265,19 @@ describe('Checkout tests', () => {
     checkoutFormIsResetted();
   });
 
-  // // // NOT FINISHED YET
-  // // it('Give tokens', () => {
-  // //   navigateToCheckout();
-  // //   getFamilyDropdown().click();
-  // //   getDropdownOptions().first().find("div").invoke('text').then((text) => {
-  // //     let familyName = text.trim();
-  // //     debugger;
-  // //     getDropdownOptions().first().click();
-  // //     // cy.get("span[data-testid='giveTokensButton']").click().then(() => {
-  // //     //   cy.get("input[type='text']").contains(familyName);
-  // //     // });
-  // //     // name should be in families field (doesn't work tho)
-  // //     cy.get("input[type='text']").contains(familyName);
-  // //   });
-  // // });
+  // // NOT FINISHED YET
+  // it('Give tokens', () => {
+  //   navigateToCheckout();
+  //   getFamilyDropdown().click();
+  //   getDropdownOptions().first().find("div").invoke('text').then((text) => {
+  //     let familyName = text.trim();
+  //     debugger;
+  //     getDropdownOptions().first().click();
+  //     // cy.get("span[data-testid='giveTokensButton']").click().then(() => {
+  //     //   cy.get("input[type='text']").contains(familyName);
+  //     // });
+  //     // name should be in families field (doesn't work tho)
+  //     cy.get("input[type='text']").contains(familyName);
+  //   });
+  // });
 });
