@@ -13,10 +13,10 @@ const PRODUCT_FREE = "Diapers";
 
 describe('Checkout tests', () => {
 
-  function navigateToCheckout() {
-    cy.loginAsVolunteer(testAdmin, testPwd, true);
+  beforeEach(() => {
+    cy.loginAsVolunteer();
     cy.visit('/?action=check_out');
-  }
+  });
 
   function clickAddToCartButton() {
     getAddToCartButton().click();
@@ -61,7 +61,8 @@ describe('Checkout tests', () => {
   }
 
   it('Left panel navigation', () => {
-    navigateToCheckout();
+	  cy.visit('/');
+	  cy.get("a[class='menu_check_out']").last().contains("Checkout").click();
     cy.get("button[data-testid='submitShoppingCart']").should("be.visible");
     cy.verifyActiveSideMenuNavigation('menu_check_out');
     cy.getSelectedValueInDropDown("people_id").contains("Please select").should('exist');
@@ -69,7 +70,6 @@ describe('Checkout tests', () => {
   });
 
   it('Select family in dropdown', () => {
-    navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY1);
     cy.getSelectedValueInDropDown("people_id").contains(FAMILY1).should('exist');
     getFamilyCredit().should('be.visible');
@@ -77,7 +77,6 @@ describe('Checkout tests', () => {
   });
 
   it('Select product in dropdown', () => {
-    navigateToCheckout();
     cy.selectOptionByText("product_id", PRODUCT1);
     cy.getSelectedValueInDropDown("product_id").contains(PRODUCT1).should('exist');
     getFamilyCredit().should('not.be.visible');
@@ -85,7 +84,6 @@ describe('Checkout tests', () => {
   });
 
   it('Add first item to cart', () => {
-    navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY3);
     cy.selectOptionByText("product_id", PRODUCT6);
     typeProductQuantity(5);
@@ -103,7 +101,6 @@ describe('Checkout tests', () => {
   });
 
   it('Adding several products to cart', () => {
-    navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY2);
     cy.selectOptionByText("product_id", PRODUCT6);
     typeProductQuantity(2);
@@ -132,7 +129,6 @@ describe('Checkout tests', () => {
   it('Cart value - adding one more product', () => {
     let initialCartPrice = 100;
     let finalCartPrice = 200;
-    navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY2);
     cy.selectOptionByText("product_id", PRODUCT2);
     typeProductQuantity(4);
@@ -153,7 +149,6 @@ describe('Checkout tests', () => {
     let testFamily = "McGregor";
     let initialCartPrice = 250;
     let finalCartPrice = 200;
-    navigateToCheckout();
     cy.selectOptionByText("people_id", testFamily);
     cy.selectOptionByText("product_id", PRODUCT2);
     typeProductQuantity(2);
@@ -174,7 +169,6 @@ describe('Checkout tests', () => {
   it('Cart value - incrementing product count', () => {
     let initialCartPrice = 60;
     let finalCartPrice = 90;
-    navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY2);
     cy.selectOptionByText("product_id", PRODUCT5);
     typeProductQuantity(2);
@@ -193,7 +187,6 @@ describe('Checkout tests', () => {
   it('Cart value - decrementing product count', () => {
     let initialCartPrice = 60;
     let finalCartPrice = 40;
-    navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY2);
     cy.selectOptionByText("product_id", PRODUCT1);
     typeProductQuantity(3);
@@ -212,7 +205,6 @@ describe('Checkout tests', () => {
   // NOT FINISHED 
   // it('Cart value bigger than family tokens', () => {
   //   let currentCartValue;
-  //   navigateToCheckout();
   //   randomizeCartContent();
   //   getCartValue().then(cartValue => {
   //     currentCartValue = parseInt(cartValue);
@@ -230,7 +222,6 @@ describe('Checkout tests', () => {
   // });
 
   it('Add non-zero value products & submit cart', () => {
-    navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY1);
     cy.selectOptionByText("product_id", PRODUCT3);
     typeProductQuantity(2);
@@ -241,7 +232,6 @@ describe('Checkout tests', () => {
   });
 
   it('Add zero value product & submit cart', () => {
-    navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY3);
     cy.selectOptionByText("product_id", PRODUCT_FREE);
     typeProductQuantity(10);
@@ -253,7 +243,6 @@ describe('Checkout tests', () => {
   });
 
   it('Completely tokenless market (product & families have no tokens)', () => {
-    navigateToCheckout();
     cy.selectOptionByText("people_id", FAMILY_WITHOUT_TOKENS);
     cy.selectOptionByText("product_id", PRODUCT_FREE);
     typeProductQuantity(15);
@@ -266,7 +255,6 @@ describe('Checkout tests', () => {
 
   // // NOT FINISHED YET
   // it('Give tokens', () => {
-  //   navigateToCheckout();
   //   getFamilyDropdown().click();
   //   getDropdownOptions().first().find("div").invoke('text').then((text) => {
   //     let familyName = text.trim();
