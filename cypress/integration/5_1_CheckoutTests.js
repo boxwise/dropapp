@@ -227,7 +227,7 @@ describe('Checkout tests', () => {
     typeProductQuantity(2);
     clickAddToCartButton();
     clickCheckoutSubmitButton();
-    cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
+    cy.notificationWithTextIsVisible("Shopping cart successfully submitted!");
     checkoutFormIsResetted();
   });
 
@@ -238,7 +238,7 @@ describe('Checkout tests', () => {
     getAddToCartButton().should('not.be.disabled');
     clickAddToCartButton();
     clickCheckoutSubmitButton();
-    cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
+    cy.notificationWithTextIsVisible("Shopping cart successfully submitted!");
     checkoutFormIsResetted();
   });
 
@@ -249,7 +249,7 @@ describe('Checkout tests', () => {
     getAddToCartButton().should('not.be.disabled');
     clickAddToCartButton();
     clickCheckoutSubmitButton();
-    cy.NotificationWithTextIsVisible("Shopping cart successfully submitted!");
+    cy.notificationWithTextIsVisible("Shopping cart successfully submitted!");
     checkoutFormIsResetted();
   });
 
