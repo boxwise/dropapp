@@ -158,10 +158,10 @@ $(document).ready(function() {
             $('#shopping_cart')
               .append("<tr><td>"
                   + item.name +'</td><td>'
-                  + "<input type='number' class='form-control valid changeQuantity' step='1' min='1' productId='"+item.id+"' value='"+ item.count +"'></input></td><td>"
-                  + item.price +"</td><td id='totalSum_" + item.id +"'>"
+                  + "<input type='number' class='form-control valid changeQuantity' data-testid='changeQuantity' step='1' min='1' productId='"+item.id+"' value='"+ item.count +"'></input></td><td data-testid='price'>"
+                  + item.price +"</td><td id='totalSum_" + item.id +"' data-testid='totalPrice'>"
                   + item.count * item.price +'</td><td>'
-                  +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')><i class='fa fa-trash-o'></i></button></td></tr>");
+                  +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' data-testid='deleteFromCart' productId='"+item.id+"')><i class='fa fa-trash-o'></i></button></td></tr>");
         });
         updateCartRelatedElements();
     }

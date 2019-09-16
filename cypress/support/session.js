@@ -1,41 +1,36 @@
-// Everything regarding SESSION data
+import { getLoginConfiguration } from '../config';
 
 // Standard Login method for all tests
-Cypress.Commands.add("LoginAjax", (userMail, userPassword, autologin) => {
-    cy.visit('/'); //not sure if needed. Somehow it does not work without it.
-    Cypress.$.ajax({
-        type: "post",
-        url: "/ajax.php?file=login",
-        data: {
+function loginWithAjax(userMail, userPassword) {
+    cy.request({
+        method: "POST",
+        url: '/ajax.php?file=login',
+        body: {
             email: userMail,
-            pass: userPassword,
-            autologin: autologin
+            pass: userPassword
         },
-        dataType: "json"
+        form: true
+    }).then(response => {
+        expect(response.status).to.eq(200);
+        expect(response.body.message).to.be.empty;
+        expect(response.body.success).to.be.true;
     });
+};
+
+// these are shortcuts to sign in via ajax, as we
+// don't need to test the full login flow for most
+// tests
+Cypress.Commands.add("loginAsVolunteer", () => {
+    let config = getLoginConfiguration();
+    loginWithAjax(config.testVolunteer, config.testPwd);
 });
 
-// Login commands trhough login page
-Cypress.Commands.add("Login", (userMail, userPassword) => {
-    cy.visit("/login.php");
-    cy.get("input[data-testid='email']").type(`${userMail}`);
-    cy.get("input[data-testid='password']").type(`${userPassword}`);
-    cy.get("input[data-testid='signInButton']").click();
+Cypress.Commands.add("loginAsAdmin", () => {
+    let config = getLoginConfiguration();
+    loginWithAjax(config.testAdmin, config.testPwd);
 });
 
-Cypress.Commands.add("LoginMobile", (userMail, userPassword) => {
-    cy.visit("/mobile.php");
-    cy.get("input[data-testid='email']").type(`${userMail}`);
-    cy.get("input[data-testid='password']").type(`${userPassword}`);
-    cy.get("input[data-testid='signInButton']").click();
+Cypress.Commands.add("loginAsCoordinator", () => {
+    let config = getLoginConfiguration();
+    loginWithAjax(config.testCoordinator, config.testPwd);
 });
-
-// For Boxwise Gods to select organisation
-Cypress.Commands.add("SelectOrganisationByName", orgName => {
-    cy.get("a[data-testid='organisationsDropdown']").click();
-    cy.get("li[data-testid='organisationOption'] a")
-        .invoke("text")
-        .contains(orgName)
-        .click();
-});
-

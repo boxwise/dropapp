@@ -171,7 +171,7 @@
 
                 break;
             case 'export':
-                list($success, $message, $redirect) = [true, '', '?action=stock_export'];
+                list($success, $message, $redirect) = [true, '', '?action=stock_export&ids='.$_POST['ids']];
 
                 break;
         }

@@ -16,8 +16,10 @@
 	 			{/if}
 	 			onblur="{$element['onblur']|escape:'quotes'};" 
 				{if $element['minlength']}minlength="{$element['minlength']}"{/if}
+				{if $element['min']}min="{$element['min']}"{/if}
 				{if $element['readonly'] || $element['locked']}readonly{/if} 
-				{if $element['required']}required{/if} 
+				{if $element['required']}required{/if}
+				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 			>
 			{if $element['locked']}<span class="input-group-btn"><button class="btn btn-default unlock" type="button"><span class="fa"></span></button></span></div>{/if}
 			{if $element['maxlength']}<p class="counter-parent safe"><span class="counter">{$element['maxlength']}</span> tekens over van {$element['maxlength']}</p>{/if}

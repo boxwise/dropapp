@@ -1,4 +1,4 @@
-Cypress.Commands.add("NotificationWithTextIsVisible", notificationText => {
+Cypress.Commands.add("notificationWithTextIsVisible", notificationText => {
     cy.get("ul[id='noty_topCenter_layout_container']").should(
         "contain",
         notificationText
@@ -6,7 +6,7 @@ Cypress.Commands.add("NotificationWithTextIsVisible", notificationText => {
 });
 
 Cypress.Commands.add(
-    "MobileNotificationWithTextIsVisible",
+    "mobileNotificationWithTextIsVisible",
     notificationText => {
         cy.get("div[class='message warning']").should(
             "contain",
