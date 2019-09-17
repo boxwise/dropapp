@@ -1,108 +1,76 @@
+
+import { getLoginConfiguration } from '../config';
+
 context('Login tests', () => {
-    let testAdmin;
-    let testCoordinator;
-    let testUser;
-    let testNotActivatedUser;
-    let testExpiredUser;
-    let testDeletedUser;
-    let testPwd;
-    let testWrongPwd;
-    let incorrectLoginNotif;
-    let genericErrLoginNotif;
-    let successPwdChangeNotif;
-    let testOrg;
-    
-    before(function() {
-        cy.getAdminUser().then(($result) => {
-          testAdmin = $result.testAdmin;
-          testPwd = $result.testPwd;
-        });
+  let config = getLoginConfiguration();
 
-        cy.getCoordinatorUser().then(($result) => {
-          testCoordinator = $result.testCoordinator;
-          testPwd = $result.testPwd;
-        });
+  // Login commands trhough login page
+  function loginUsing(userMail, userPassword) {
+    cy.visit("/login.php");
+    cy.get("input[data-testid='email']").type(`${userMail}`);
+    cy.get("input[data-testid='password']").type(`${userPassword}`);
+    cy.get("input[data-testid='signInButton']").click();
+  };
 
-        cy.getVolunteerUser().then(($result) => {
-          testUser = $result.testUser;
-          testPwd = $result.testPwd;
-        });
+  it('Login test (Admin)', () => {
+    console.log(config.testAdmin);
 
-        cy.getLoginScenarioUsers().then(($result) => {
-          testExpiredUser = $result.testExpiredUser;
-          testNotActivatedUser = $result.testNotActivatedUser;
-          testDeletedUser = $result.testDeletedUser;
-          testPwd = $result.testPwd;
-          testWrongPwd = $result.testWrongPwd;
-        });
+    console.log(config);
+    loginUsing(config.testAdmin, config.testPwd);
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
+  });
 
-        cy.getLoginNotifications().then(($result) => {
-          incorrectLoginNotif = $result.incorrectLoginNotif;
-          genericErrLoginNotif = $result.genericErrLoginNotif;
-          successPwdChangeNotif = $result.successPwdChangeNotif;
-        });
-
-        cy.getTestOrgName().then(($result) => {
-          testOrg = $result.orgName;
-        });
-    });
-
-    it('Login test (Admin)', () => {
-      cy.Login(testAdmin, testPwd);
-      cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    });
-  
-    it('Login test (Coordinator)', () => {
-      cy.Login(testCoordinator, testPwd);
-      cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    })
-
-    it('Login test (User)', () => {
-        cy.Login(testUser, testPwd);
-        cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    })
-
-    it('Login with non-activated user', () => {
-      cy.Login(testNotActivatedUser, testPwd);
-      cy.NotificationWithTextIsVisible(genericErrLoginNotif);
-    })
-
-    it('Login with expired user', () => {
-      cy.Login(testExpiredUser , testPwd);
-      cy.NotificationWithTextIsVisible(genericErrLoginNotif);
-    })
-
-    it('Login with deleted user', () => {
-      cy.Login(testDeletedUser , testPwd);
-      cy.NotificationWithTextIsVisible(genericErrLoginNotif);
-    })
-
-    it('Login with wrong password', () => {
-      cy.Login(testAdmin , testWrongPwd);
-      cy.NotificationWithTextIsVisible(incorrectLoginNotif);
+  it('Login test (Coordinator)', () => {
+    loginUsing(config.testCoordinator, config.testPwd);
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
   })
-    
-    it('Forgot password form', () => {
-      cy.visit('/login.php');
-      cy.get("a[data-testid='forgotPassword']").click();
-      cy.get("form[data-testid='resetForm']").should('be.visible');
-    });
 
-    it('Forgot password form - nonexistent user', () => {
-      cy.visit('/login.php');
-      cy.get("a[data-testid='forgotPassword']").click();
-      cy.get("form[data-testid='resetForm']").should('be.visible');
-      cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
-      cy.get("input[data-testid='submitForgottenPwd']").click();
-      cy.NotificationWithTextIsVisible(genericErrLoginNotif)
-    });
+  it('Login test (Volunteer)', () => {
+    loginUsing(config.testVolunteer, config.testPwd);
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
+  })
 
-    it('Forgot password form success confirmation', () => {
-      cy.visit('/login.php');
-      cy.get("a[data-testid='forgotPassword']").click();
-      cy.get("form[data-testid='resetForm']").should('be.visible');
-      cy.get("input[data-testid='forgotPwdEmailField']").type(testAdmin);
-      cy.get("input[data-testid='submitForgottenPwd']").click();
-      cy.NotificationWithTextIsVisible(successPwdChangeNotif)
-    });
+  it('Login with non-activated user', () => {
+    loginUsing(config.testNotActivatedUser, config.testPwd);
+    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
+  })
+
+  it('Login with expired user', () => {
+    loginUsing(config.testExpiredUser, config.testPwd);
+    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
+  })
+
+  it('Login with deleted user', () => {
+    loginUsing(config.testDeletedUser, config.testPwd);
+    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
+  })
+
+  it('Login with wrong password', () => {
+    loginUsing(config.testAdmin, config.testWrongPwd);
+    cy.notificationWithTextIsVisible(config.incorrectLoginNotif);
+  })
+
+  it('Forgot password form', () => {
+    cy.visit('/login.php');
+    cy.get("a[data-testid='forgotPassword']").click();
+    cy.get("form[data-testid='resetForm']").should('be.visible');
+  });
+
+  it('Forgot password form - nonexistent user', () => {
+    cy.visit('/login.php');
+    cy.get("a[data-testid='forgotPassword']").click();
+    cy.get("form[data-testid='resetForm']").should('be.visible');
+    cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
+    cy.get("input[data-testid='submitForgottenPwd']").click();
+    cy.notificationWithTextIsVisible(config.genericErrLoginNotif)
+  });
+
+  it('Forgot password form success confirmation', () => {
+    cy.visit('/login.php');
+    cy.get("a[data-testid='forgotPassword']").click();
+    cy.get("form[data-testid='resetForm']").should('be.visible');
+    cy.get("input[data-testid='forgotPwdEmailField']").type(config.testAdmin);
+    cy.get("input[data-testid='submitForgottenPwd']").click();
+    cy.notificationWithTextIsVisible(config.successPwdChangeNotif)
+  });
 });
