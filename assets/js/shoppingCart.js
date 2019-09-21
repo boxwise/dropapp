@@ -163,12 +163,12 @@ $(document).ready(function() {
           let tr = jQuery('<tr/>', {
           }).appendTo(tableRef);
 
-          let nameCell = jQuery('<td>'+item.name+'</td>', {
+          jQuery('<td>'+item.name+'</td>', {
           }).appendTo(tr);
 
           let amountCell = jQuery('<td/>', {
           }).appendTo(tr);
-          let amountCellInput = jQuery('<input/>', {
+          jQuery('<input/>', {
             type: "number",
             "class": "form-control valid changeQuantity",
             'data-testid': "changeQuantity",
@@ -178,33 +178,15 @@ $(document).ready(function() {
             'value': item.count,
           }).appendTo(amountCell);
 
-          // // price per all units of product
-          // td = document.createElement("td");
-          // td.setAttribute("data-testid", "totalPrice");
-          // td.setAttribute("id", "totalSum_" + item.id);
-          // newText = document.createTextNode(item.price * item.count);
-          // td.appendChild(newText);
-          // tr.appendChild(td);
-  
-          // // price per one unit
-          // td = document.createElement("td");
-          // td.setAttribute("data-testid", "price");
-          // newText = document.createTextNode(item.price);
-          // td.appendChild(newText);
-          // td.appendChild(newText);
-          // tr.appendChild(td);
-  
-
+          // there seems to be bug in jQuery - it doesn't add attributes to table cell DOMs using .appendTo syntax (therefore we have to add it later with .attr)
           let priceCell = jQuery('<td>'+item.price+'</td>', {
-            'data-testid': "price"
           }).appendTo(tr);
+          priceCell.attr("data-testid", "price")
 
           let totalPriceCell = jQuery('<td>'+item.price * item.count+'</td>', {
-            "id": "totalSum_" + item.id,
-            'data-testid': "price"
           }).appendTo(tr);
-          // totalPriceCell.setAttribute("id", "totalSum_" + item.id);
-          // totalPriceCell.setAttribute('data-testid', "totalPrice");
+          totalPriceCell.attr("id", "totalSum_" + item.id,)
+          totalPriceCell.attr("data-testid", "totalPrice")
 
           let deleteCell = jQuery('<td/>', {
           }).appendTo(tr);
@@ -214,64 +196,9 @@ $(document).ready(function() {
             'data-testid': "deleteFromCart",
             'productid': item.id,
           }).appendTo(deleteCell);
-          let deleteCellButtonIcon = jQuery('<i/>', {
+          jQuery('<i/>', {
             "class": "fa fa-trash-o"
           }).appendTo(deleteCellButton);
-
-          // product name cell
-          // let tr = document.createElement("tr");
-          // let td = document.createElement("td");
-          // let newText = document.createTextNode(item.name);
-          // td.appendChild(newText);
-          // tr.appendChild(td);
-  
-          // // product quantity cell
-          // td = document.createElement("td");
-          // let input = document.createElement("input");
-          // input.setAttribute("type", "number");
-          // input.setAttribute("class", "form-control valid changeQuantity");
-          // input.setAttribute("data-testid", "changeQuantity");
-          // input.setAttribute("step", "1");
-          // input.setAttribute("min", "1");
-          // input.setAttribute("productId", item.id);
-          // input.setAttribute("value", item.count);
-          // input.setAttribute("min", "1");
-          // newText = document.createTextNode(item.count);
-          // input.appendChild(newText);
-          // td.appendChild(input);
-          // tr.appendChild(td);
-  
-          // // price per all units of product
-          // td = document.createElement("td");
-          // td.setAttribute("data-testid", "totalPrice");
-          // td.setAttribute("id", "totalSum_" + item.id);
-          // newText = document.createTextNode(item.price * item.count);
-          // td.appendChild(newText);
-          // tr.appendChild(td);
-  
-          // // price per one unit
-          // td = document.createElement("td");
-          // td.setAttribute("data-testid", "price");
-          // newText = document.createTextNode(item.price);
-          // td.appendChild(newText);
-          // td.appendChild(newText);
-          // tr.appendChild(td);
-  
-          // // delete from cart button cell
-          // td = document.createElement("td");
-          // let button = document.createElement("button");
-          // button.setAttribute("type", "button");
-          // button.setAttribute("class", "btn btn-sm btn-danger deleteFromCart");
-          // button.setAttribute("data-testid", "deleteFromCart");
-          // button.setAttribute("productId", item.id);
-          // button.setAttribute("min", "1");
-          // let buttonIcon = document.createElement("i");
-          // buttonIcon.setAttribute("class", "fa fa-trash-o");
-          // button.appendChild(buttonIcon);
-          // td.appendChild(button);
-          // tr.appendChild(td);
-  
-          // tableRef.appendChild(tr);
         });
         updateCartRelatedElements();
     }
@@ -303,7 +230,6 @@ $(document).ready(function() {
 
     function updatePriceInRow(){
         cart.forEach((item) => {
-            debugger;
             var id = "totalSum_" + item.id;
             var totalPriceCell = $("#"+id)[0];
             totalPriceCell.innerText = item.price * item.count;
