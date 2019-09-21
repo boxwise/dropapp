@@ -407,7 +407,13 @@ function getlistdata($query)
 {
     return db_array(buildlistdataquery($query));
 }
+function gettreedata($query)
+{
+    $query = buildlistdataquery($query);
+    $dataById = db_array($query, [], false, true);
 
+    return convertListDataToTreeData($dataById);
+}
 function buildlistdataquery($query)
 {
     global $table, $listconfig;
@@ -454,6 +460,88 @@ function buildlistdataquery($query)
     }
 
     return $query;
+}
+
+// this returns data for tables that have an adjacency model with parent_id
+// the data is sorted such that after any parent all its children immediately follow
+// this is a stable sort, so any other sorting criteria will be preserved
+
+// in addition to the normal row data, the following additional data items are added:
+// for each row, record :
+//   - a 'level' / depth, indexed from 0.
+//       Typically used by the UI components.
+//   - a 'path' of IDs to the ultimate parent, delimited by a /
+//       This is just for visualization/debugging purposes
+//   - a 'path' of to the ultimate parent, but using the original sort order index rather than the Id
+//       this is what we will sort on so we have a stable sort, but ordered such that
+//       after any parent all its children immediately follow
+function convertListDataToTreeData($dataById)
+{
+    // Fetch the data into an associative array, so we can lookup by id
+    // Also record the original row index so we can preserve the sort order
+    function addOriginalIndexToData($dataById)
+    {
+        $index = 0;
+        foreach ($dataById as &$row) {
+            $row['original_index'] = ++$index;
+        }
+
+        return $dataById;
+    }
+    // we need to 'pad' the number so it's sortable as a string
+    function padNumberAsString($num)
+    {
+        return sprintf('%08d', $num);
+    }
+    // build up the
+    function appendToRowMetaData($metaData, $row)
+    {
+        return [
+            level => $metaData[level] + 1,
+            path => '/'.$row['id'].$metaData[path],
+            original_index_path => '/'.padNumberAsString($row['original_index']).$metaData['original_index_path'],
+        ];
+    }
+
+    function buildRowMetaData($id, $dataById)
+    {
+        $metaData = [
+            level => -1,
+            path => '',
+            original_index_path => '', ];
+        $depth = 0;
+        // we recurse 'up' the tree for as long as the parent_id exists
+        // but prevent deep recursion and bomb out at 10 in case there is a cycle
+        // and also prevent recursion where the parent_id = parent_id
+        do {
+            $row = $dataById[$id];
+            $metaData = appendToRowMetaData($metaData, $row);
+            $previous_id = $id;
+            $id = $row['parent_id'];
+            ++$depth;
+        } while ($id !== '0'
+            && $previous_id !== $id
+            && array_key_exists($id, $dataById)
+            && $depth < 10);
+
+        return $metaData;
+    }
+
+    $dataById = addOriginalIndexToData($dataById);
+
+    // Ideally we'd use a CTE for this, but Google Cloud SQL doesn't support
+    // MySQL 8 yet (which is when this became supported) so instead we'll do
+    // a poor man's version here and compute on the fly
+    foreach ($dataById as &$row) {
+        $metadata = buildRowMetaData($row['id'], $dataById);
+        $row = array_merge($row, $metadata);
+    }
+    // sort the data
+    usort($dataById, function ($item1, $item2) {
+        return $item1['original_index_path'] <=> $item2['original_index_path'];
+    });
+
+    return $dataById;
 }
 
 // inserts a where element into a new query or adds a new  element to an existing where-chain

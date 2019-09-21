@@ -32,7 +32,7 @@ $table = $action;
 
         $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
 
-        $data = getlistdata('
+        $data = gettreedata('
 		SELECT 
 			IF(DATEDIFF(NOW(),
 			IF(people.parent_id,NULL,GREATEST(COALESCE((SELECT transaction_date 
