@@ -172,69 +172,15 @@ function listCopy($table, $ids, $field)
 {
     global $translate;
 
-    $hasSubtable = db_tableexists($table.'_content');
     $fieldexists = db_fieldexists($table, $field);
-    $hasChildren = db_fieldexists($table, 'parent_id');
 
     if (!$fieldexists) {
         return [false, $translate['cms_list_copyfailure'], true];
     }
 
-    if ($hasSubtable) {
-        listCopy_multilanguage($ids, $table, $field);
-    } else {
-        listCopy_single($ids, $table, $field);
-    }
+    listCopy_single($ids, $table, $field);
 
     return [true, $translate['cms_list_copysuccess'], true];
-}
-
-function listCopy_multilanguage($ids, $table, $field = false, $newparent = false)
-{
-    global $translate;
-
-    foreach ($ids as $id) {
-        $row = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
-
-        array_shift($row);
-        $keys = array_keys($row);
-        $keys2 = [];
-
-        if (in_array('seq', $keys)) {
-            $row['seq'] = intval(db_value('SELECT seq FROM '.$table.' ORDER BY seq DESC LIMIT 1')) + 1;
-        }
-        if ($newparent) {
-            $row['parent_id'] = $newparent;
-        }
-        foreach ($keys as $key) {
-            $keys2[] = ':'.$key;
-        }
-
-        db_query('INSERT INTO '.$table.' ('.join(',', $keys).') VALUES ('.join(',', $keys2).')', $row);
-        $new = db_insertid();
-
-        $result = db_query('SELECT * FROM '.$table.'_content WHERE table_id = :id', ['id' => $id]);
-        while ($subrow = db_fetch($result)) {
-            array_shift($subrow);
-            $subkeys = array_keys($subrow);
-            $subkeys2 = [];
-            $subrow['table_id'] = $new;
-            foreach ($subkeys as $subkey) {
-                $subkeys2[] = ':'.$subkey;
-            }
-            if ($field) {
-                $subrow[$field] .= ' '.$translate['cms_list_copy_suffix'];
-            }
-            db_query('INSERT INTO '.$table.'_content ('.join(',', $subkeys).') VALUES ('.join(',', $subkeys2).')', $subrow);
-        }
-
-        $result = db_query('SELECT * FROM '.$table.' WHERE parent_id = :id', ['id' => $id]);
-        while ($child = db_fetch($result)) {
-            listCopy_multilanguage([$child['id']], $table, $field, $new);
-        }
-    }
-
-    return $newids;
 }
 
 function listCopy_single($ids, $table, $field = false)
@@ -457,7 +403,7 @@ function addpagemenu($code, $label, $options = [])
 
 function getlistdata($query, $parent = 0)
 {
-    global $table, $settings, $listconfig, $action;
+    global $table, $listconfig;
 
     $hasTree = db_fieldexists($table, 'parent_id');
     $hasSeq = db_fieldexists($table, 'seq');
@@ -467,23 +413,6 @@ function getlistdata($query, $parent = 0)
     $hasFilter2 = $listconfig['filtervalue2'];
     $hasFilter3 = $listconfig['filtervalue3'];
     $hasFilter4 = $listconfig['filtervalue4'];
-
-    $hasSubtable = db_tableexists($table.'_content');
-
-    $lan = $settings['languages'][0]['id'];
-
-    if ($hasSubtable) {
-        $subfields = db_listfields($table.'_content');
-        array_shift($subfields);
-
-        $pos = stripos($query, ' FROM '.$table) + strlen(' FROM '.$table);
-        $subquery = '
-				LEFT OUTER JOIN '.$table.'_content
-					ON '.$table.'_content.table_id = '.$table.'.id
-					AND '.$table.'_content.lan = '.$lan;
-
-        $query = 'SELECT '.$table.'.*, '.$table.'_content.'.join(',', $subfields).' FROM '.$table.' '.$subquery.' '.substr($query, $pos);
-    }
 
     if ($hasTree) {
         $query = insertwhere($query, 'parent_id = :parent_id');

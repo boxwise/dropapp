@@ -160,34 +160,10 @@
         $formbuttons[] = ['action' => $action, 'label' => $label];
     }
 
-    function getmultilanguagedata($table, $id)
-    {
-        global $settings;
-
-        $hasSubtable = in_array($table.'_content', db_listtables());
-
-        $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
-
-        if ($hasSubtable) {
-            foreach ($settings['languages'] as $language) {
-                $row2 = db_row('SELECT pc.* FROM '.$table.' AS p, '.$table.'_content AS pc, languages AS l WHERE pc.lan = l.id AND pc.table_id = p.id AND table_id = '.$id.' AND l.code = "'.$language['code'].'"');
-                $data2 = [];
-                foreach ($row2 as $key => $value) {
-                    $data2[$language['code'].'['.$key.']'] = $value;
-                }
-
-                $data = array_merge($data, $data2);
-            }
-        }
-
-        return $data;
-    }
-
     function getParentarray($table, $minlevel, $maxlevel, $field, $level = 0, $parent = 0)
     {
         global $settings, $translate;
 
-        $hasSubtable = in_array($table.'_content', db_listtables($table));
         $hasDeleted = in_array('deleted', db_listfields($table));
         $hasSeq = in_array('seq', db_listfields($table));
 
@@ -197,11 +173,7 @@
             $parentarray[] = ['value' => 0, 'label' => $translate['cms_form_selectroot'], 'level' => $level, 'disabled' => ($minlevel > 0)];
         }
 
-        if ($hasSubtable) {
-            $result = db_query('SELECT a.id, b.'.$field.' FROM '.$table.' AS a, '.$table.'_content AS b WHERE b.lan = :lan AND b.table_id = a.id AND a.parent_id = '.$parent.($hasDeleted ? ' AND NOT a.deleted' : '').' ORDER BY '.($hasSeq ? 'a.seq' : 'a.menutitle ASC'), ['lan' => $lan]);
-        } else {
-            $result = db_query('SELECT a.id, a.'.$field.', a.parent_id FROM '.$table.' AS a WHERE a.parent_id = '.$parent.($hasDeleted ? ' AND NOT a.deleted' : '').' ORDER BY '.($hasSeq ? 'a.seq' : 'a.menutitle ASC'));
-        }
+        $result = db_query('SELECT a.id, a.'.$field.', a.parent_id FROM '.$table.' AS a WHERE a.parent_id = '.$parent.($hasDeleted ? ' AND NOT a.deleted' : '').' ORDER BY '.($hasSeq ? 'a.seq' : 'a.menutitle ASC'));
 
         while ($row = db_fetch($result)) {
             if ($level < $maxlevel) {
