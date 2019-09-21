@@ -401,11 +401,17 @@ function addpagemenu($code, $label, $options = [])
     }
 }
 
-function getlistdata($query, $parent = 0)
+// this is a huge SQL injection risk, as we're forcing consumers
+// to pass $query with all parameters already supplied. WHY?
+function getlistdata($query)
+{
+    return db_array(buildlistdataquery($query));
+}
+
+function buildlistdataquery($query)
 {
     global $table, $listconfig;
 
-    $hasTree = db_fieldexists($table, 'parent_id');
     $hasSeq = db_fieldexists($table, 'seq');
     $hasDeleted = db_fieldexists($table, 'deleted');
 
@@ -413,10 +419,6 @@ function getlistdata($query, $parent = 0)
     $hasFilter2 = $listconfig['filtervalue2'];
     $hasFilter3 = $listconfig['filtervalue3'];
     $hasFilter4 = $listconfig['filtervalue4'];
-
-    if ($hasTree) {
-        $query = insertwhere($query, 'parent_id = :parent_id');
-    }
 
     if ($hasDeleted && !stripos($query, 'DELETED')) {
         $query = insertwhere($query, '(NOT '.$table.'.deleted OR '.$table.'.deleted IS NULL)');
@@ -451,9 +453,7 @@ function getlistdata($query, $parent = 0)
         $query .= ' ORDER BY '.$listconfig['orderby'];
     }
 
-    $data = listdataquery($query, 0, $parent);
-
-    return $data;
+    return $query;
 }
 
 // inserts a where element into a new query or adds a new  element to an existing where-chain
@@ -488,31 +488,6 @@ function insertwhere($query, $where)
 function query_insert($str, $pos, $insert)
 {
     return substr($str, 0, $pos).$insert.' '.substr($str, $pos);
-}
-
-function listdataquery($query, $level = 0, $parent = 0)
-{
-    global $table;
-    $hasTree = db_fieldexists($table, 'parent_id');
-
-    $result = db_query($query, ($hasTree ? ['parent_id' => $parent] : []));
-
-    while ($row = db_fetch($result)) {
-        $row['level'] = $level;
-        $data[] = $row;
-
-        if ($hasTree) {
-            $rowcount = db_value('SELECT COUNT(1) FROM '.$table.' WHERE parent_id = '.$row['id']);
-            if ($rowcount > 0) {
-                $sub = listdataquery($query, $level + 1, $row['id']);
-                foreach ($sub as $field) {
-                    array_push($data, $field);
-                }
-            }
-        }
-    }
-
-    return $data;
 }
 
 function addcolumn($type, $label = false, $field = false, $array = [])
