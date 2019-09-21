@@ -169,17 +169,17 @@ $(document).ready(function() {
 
           let amountCell = jQuery('<td/>').appendTo(tr);
           jQuery('<input/>', {
-            type: "number",
-            "class": "form-control valid changeQuantity",
-            'data-testid': "changeQuantity",
-            'step': "1",
-            'min': "1",
+            'type': 'number',
+            'class': 'form-control valid changeQuantity',
+            'data-testid': 'changeQuantity',
+            'step': '1',
+            'min': '1',
             'productid': item.id,
             'value': item.count,
           }).appendTo(amountCell);
 
           jQuery('<td />', {
-            "data-testid": "price"
+            'data-testid': 'price'
           })
             .text(item.price)
             .appendTo(tr);
@@ -194,13 +194,13 @@ $(document).ready(function() {
           let deleteCell = jQuery('<td/>')
             .appendTo(tr);
           let deleteCellButton = jQuery('<button/>', {
-            type: "button",
-            "class": "btn btn-sm btn-danger deleteFromCart",
-            'data-testid': "deleteFromCart",
+            'type': 'button',
+            'class': 'btn btn-sm btn-danger deleteFromCart',
+            'data-testid': 'deleteFromCart',
             'productid': item.id,
           }).appendTo(deleteCell);
           jQuery('<i/>', {
-            "class": "fa fa-trash-o"
+            'class': 'fa fa-trash-o'
           }).appendTo(deleteCellButton);
         });
         updateCartRelatedElements();
