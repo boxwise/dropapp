@@ -160,14 +160,14 @@ $(document).ready(function() {
           // jQuery('<tr><td>Rice (1kg) - (25 Tokens)</td><td><input type="number" class="form-control valid changeQuantity" data-testid="changeQuantity" step="1" min="1" productid="1164" value="1"></td><td data-testid="totalPrice" id="totalSum_1164">25</td><td data-testid="price">25</td><td><button type="button" class="btn btn-sm btn-danger deleteFromCart" data-testid="deleteFromCart" productid="1164" min="1"><i class="fa fa-trash-o"></i></button></td></tr>', {
           // }).appendTo(tableRef);
 
-          let tr = jQuery('<tr/>', {
-          }).appendTo(tableRef);
+          let tr = jQuery('<tr/>')
+            .appendTo(tableRef);
 
-          jQuery('<td>'+item.name+'</td>', {
-          }).appendTo(tr);
+          jQuery('<td />')
+            .text(item.name)
+            .appendTo(tr);
 
-          let amountCell = jQuery('<td/>', {
-          }).appendTo(tr);
+          let amountCell = jQuery('<td/>').appendTo(tr);
           jQuery('<input/>', {
             type: "number",
             "class": "form-control valid changeQuantity",
@@ -178,18 +178,21 @@ $(document).ready(function() {
             'value': item.count,
           }).appendTo(amountCell);
 
-          // there seems to be bug in jQuery - it doesn't add attributes to table cell DOMs using .appendTo syntax (therefore we have to add it later with .attr)
-          let priceCell = jQuery('<td>'+item.price+'</td>', {
-          }).appendTo(tr);
-          priceCell.attr("data-testid", "price")
+          jQuery('<td />', {
+            "data-testid": "price"
+          })
+            .text(item.price)
+            .appendTo(tr);
 
-          let totalPriceCell = jQuery('<td>'+item.price * item.count+'</td>', {
-          }).appendTo(tr);
-          totalPriceCell.attr("id", "totalSum_" + item.id,)
-          totalPriceCell.attr("data-testid", "totalPrice")
+          jQuery('<td />', {
+            'id': 'totalSum_' + item.id,
+            'data-testid': 'totalPrice'
+          })
+            .text(item.price * item.count)
+            .appendTo(tr);
 
-          let deleteCell = jQuery('<td/>', {
-          }).appendTo(tr);
+          let deleteCell = jQuery('<td/>')
+            .appendTo(tr);
           let deleteCellButton = jQuery('<button/>', {
             type: "button",
             "class": "btn btn-sm btn-danger deleteFromCart",
@@ -238,9 +241,9 @@ $(document).ready(function() {
     }
 
     $("#field_product_id").on('change', function(e) {
-            product_id = $("#field_product_id").val();
-            people_id =  $("#field_people_id").val();
-            $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
+        product_id = $("#field_product_id").val();
+        people_id =  $("#field_people_id").val();
+        $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
     });
 
     $("#field_people_id").on('change', function(e) {
