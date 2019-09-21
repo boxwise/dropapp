@@ -407,6 +407,7 @@ function getlistdata($query)
 {
     return db_array(buildlistdataquery($query));
 }
+
 function gettreedata($query)
 {
     $query = buildlistdataquery($query);
@@ -414,6 +415,7 @@ function gettreedata($query)
 
     return convertListDataToTreeData($dataById);
 }
+
 function buildlistdataquery($query)
 {
     global $table, $listconfig;
@@ -493,42 +495,31 @@ function convertListDataToTreeData($dataById)
     {
         return sprintf('%08d', $num);
     }
-    // build up the
-    function appendToRowMetaData($metaData, $row)
-    {
-        return [
-            level => $metaData[level] + 1,
-            path => '/'.$row['id'].$metaData[path],
-            original_index_path => '/'.padNumberAsString($row['original_index']).$metaData['original_index_path'],
-        ];
-    }
 
     function buildRowMetaData($id, $dataById)
     {
-        $metaData = [
-            level => -1,
-            path => '',
-            original_index_path => '', ];
-        $depth = 0;
+        $level = -1;
+        $path = '';
+        $original_index_path = '';
         // we recurse 'up' the tree for as long as the parent_id exists
         // but prevent deep recursion and bomb out at 10 in case there is a cycle
         // and also prevent recursion where the parent_id = parent_id
         do {
             $row = $dataById[$id];
-            $metaData = appendToRowMetaData($metaData, $row);
+            ++$level;
+            $path = '/'.$row['id'].$path;
+            $original_index_path = '/'.padNumberAsString($row['original_index']).$original_index_path;
             $previous_id = $id;
             $id = $row['parent_id'];
-            ++$depth;
-        } while ($id !== '0'
+        } while ('0' !== $id
             && $previous_id !== $id
             && array_key_exists($id, $dataById)
-            && $depth < 10);
+            && $level < 10);
 
-        return $metaData;
+        return [level => $level, path => $path, original_index_path => $original_index_path];
     }
 
     $dataById = addOriginalIndexToData($dataById);
-
     // Ideally we'd use a CTE for this, but Google Cloud SQL doesn't support
     // MySQL 8 yet (which is when this became supported) so instead we'll do
     // a poor man's version here and compute on the fly
