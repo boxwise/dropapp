@@ -105,25 +105,5 @@ describe('QR labels tests - user without rights', () => {
   
     it('Generate QR labels page empty', () => {
         labelsCountInputDoesntExist();
-    });
-
-    // Doesn't work even with user who has rights to generate QR
-    // it('Request to generate QR codes rejected', () => {
-    //     cy.visit('/?action=qr');
-    //     cy.request({
-    //         method: "POST",
-    //         url: '/?action=qr',
-    //         body: {
-    //             __fullabel: "checkbox",
-    //             fullabel: 1,
-    //             __count: "text",
-    //             count: "2"
-    //         },
-    //         form: true
-    //     }).then(response => {
-    //         debugger;
-    //         // ?
-    //     });
-    // });
-    
+    });    
   });
