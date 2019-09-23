@@ -4,7 +4,6 @@ context("5_2_Add_Beneficiary_Test",()=>
     let Test_firstname2 = "Jim";
     let Test_lastname = "Smith";
     let Test_case_id  = "IO";
-    let Test_gender = "Female";
 
     
     beforeEach(function() {
@@ -38,17 +37,16 @@ context("5_2_Add_Beneficiary_Test",()=>
     if (case_id != ""){
         cy.get("input[data-testid='container_id']").type(case_id);
     }
-    cy.selectOptionByText("gender", gender)
 
     }
-
+    
     it("5_2_1 Fill form, Save and close",() => {
         CheckEmptyForm();
         //check all the forms 
-        FillForm(Test_firstname,Test_lastname,Test_case_id,Test_gender);
+        FillForm(Test_firstname,Test_lastname,Test_case_id);
         cy.get("button").contains("Save and close").click();
-        cy.wait(500);
-        cy.get("span[class='noty_text']").contains(Test_firstname+" "+Test_lastname + " was added").should("be.visible");
+        cy.notificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added")
+        //cy.get("span[class='noty_text']").contains(Test_firstname+" "+Test_lastname + " was added").should("be.visible");
         cy.get("div").contains(Test_case_id).should("be.visible");
 
     })
@@ -65,21 +63,23 @@ context("5_2_Add_Beneficiary_Test",()=>
 
     it("5_2_4 Save and new check if new person in familyhead-dropdown + check if empty",() => {
         //check all the forms 
-        FillForm(Test_firstname,Test_lastname,Test_case_id,Test_gender);
+        FillForm(Test_firstname,Test_lastname,Test_case_id);
         cy.get("button").contains("Save and new").click();
-        cy.wait(500);
+        cy.get()
         cy.get("span[class='noty_text']").contains(Test_firstname+" "+Test_lastname + " was added").should("be.visible");
         cy.get("span[class='noty_text']").contains(Test_case_id).should("be.visible");
-        cy.wait(2000);
+
         // Check for the familyhead after adding it above
         cy.get("span[id='select2-chosen-1']").click();
         cy.get("input[id='s2id_autogen1_search']").click().type(Test_case_id +" "+ Test_firstname);
         cy.get("div[class='select2-result-label']").contains(Test_case_id + " "+ Test_firstname+ " "+ Test_lastname).click();
-        FillForm(Test_firstname2,Test_lastname,"",Test_gender)
+        FillForm(Test_firstname2,Test_lastname,"")
         cy.get("button").contains("Save and new").click();
-        cy.wait(500);
+
         cy.get("a[class='menu_people']").last().click( )
-        cy.get("tr[data-level='1").contains(Test_firstname2)
+        cy.get("td").contains(Test_lastname).parents().should('contain',Test_firstname2)
+        //cy.get("td").contains(Test_lastname).parents().contains(Test_firstname2).prev()
+        //cy.get("tr").contains(Test_firstname2).prev().should('contain',Test_case_id)
 
 
     })
