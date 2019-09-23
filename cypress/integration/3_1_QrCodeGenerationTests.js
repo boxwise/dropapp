@@ -31,6 +31,7 @@ describe('QR labels tests - user with rights', () => {
     beforeEach(() => {
         cy.loginAsVolunteer();
         cy.visit('/?action=qr');
+        Cypress.config('chromeWebSecurity',true);
     });
     
 
@@ -46,10 +47,9 @@ describe('QR labels tests - user with rights', () => {
         typeNumberOfLabels(numberOfQrs);
         uncheckBigLabelsCheckbox();
         clickMakeLabelsButton();
-        cy.wait(4000);  //no idea how to wait for QRs being generated
-        cy.get("body").then($body => {
-            expect($body.find("div[data-testid='boxlabel-small']").length).to.equal(numberOfQrs);
-        });
+        cy.get("div[data-testid='boxlabel-small']").then($smallLabels => {
+            expect($smallLabels.length).to.equal(numberOfQrs);
+        })
     });
 
     it('(Desktop) Generate 10 QR codes - big', () => {
@@ -67,10 +67,9 @@ describe('QR labels tests - user with rights', () => {
         typeNumberOfLabels(numberOfQrs);
         uncheckBigLabelsCheckbox();
         clickMakeLabelsButton();
-        cy.wait(4000);  //no idea how to wait for QRs being generated
-        cy.get("body").then($body => {
-            expect($body.find("div[data-testid='boxlabel-small']").length).to.equal(numberOfQrs);
-        });
+        cy.get("div[data-testid='boxlabel-small']").then($smallLabels => {
+            expect($smallLabels.length).to.equal(numberOfQrs);
+        })
     });
 
     it('(iPhone 6 viewport) Generate 10 QR codes - big', () => {
