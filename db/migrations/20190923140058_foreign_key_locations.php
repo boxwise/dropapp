@@ -32,19 +32,19 @@ class ForeignKeyLocations extends AbstractMigration
     public function change()
     {
         $this->table('itemsout')
-        ->changeColumn('from_location', 'integer', [
-            'null' => false,
-        ])
-        ->changeColumn('to_location', 'integer', [
-            'null' => false,
-        ])
-        ->addForeignKey('from_location', 'locations', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-        ->addForeignKey('to_location', 'locations', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-        ->save()
+            ->changeColumn('from_location', 'integer', [
+                'null' => false,
+            ])
+            ->changeColumn('to_location', 'integer', [
+                'null' => false,
+            ])
+            ->addForeignKey('from_location', 'locations', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->addForeignKey('to_location', 'locations', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->save()
 ;
     }
 }
