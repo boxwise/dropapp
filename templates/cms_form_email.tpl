@@ -7,8 +7,9 @@
  				{if $element['onchange']}onchange="{$element['onchange']|escape};"{/if}
 	 			onkeyup="setExternalText(this, '#test');{$element['onkeyup']|escape};" 
 	 			onblur="setExternalInput(this, '#test');{$element['onblur']|escape};" 
-			{if $element['readonly'] || $element['locked']}readonly{/if} 
-			{if $element['required']}required{/if} 
+				{if $element['readonly'] || $element['locked']}readonly{/if} 
+				{if $element['required']}required{/if}
+				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 			>
 			{if $element['locked']}<span class="input-group-btn"><button class="btn btn-default unlock" type="button"><span class="fa"></span></button></span></div>{/if}
 			{if $element['tooltip']}{include file="cms_tooltip.tpl"}{/if}

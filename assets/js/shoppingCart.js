@@ -155,13 +155,53 @@ $(document).ready(function() {
 
         $("#shopping_cart").find("tr:gt(0)").remove();
         cart.forEach((item) => {
-            $('#shopping_cart')
-              .append("<tr><td>"
-                  + item.name +'</td><td>'
-                  + "<input type='number' class='form-control valid changeQuantity' step='1' min='1' productId='"+item.id+"' value='"+ item.count +"'></input></td><td>"
-                  + item.price +"</td><td id='totalSum_" + item.id +"'>"
-                  + item.count * item.price +'</td><td>'
-                  +"<button type='button' class='btn btn-sm btn-danger deleteFromCart' productId='"+item.id+"')><i class='fa fa-trash-o'></i></button></td></tr>");
+          let tableRef = document.getElementById("shopping_cart");
+
+          // jQuery('<tr><td>Rice (1kg) - (25 Tokens)</td><td><input type="number" class="form-control valid changeQuantity" data-testid="changeQuantity" step="1" min="1" productid="1164" value="1"></td><td data-testid="totalPrice" id="totalSum_1164">25</td><td data-testid="price">25</td><td><button type="button" class="btn btn-sm btn-danger deleteFromCart" data-testid="deleteFromCart" productid="1164" min="1"><i class="fa fa-trash-o"></i></button></td></tr>', {
+          // }).appendTo(tableRef);
+
+          let tr = jQuery('<tr/>')
+            .appendTo(tableRef);
+
+          jQuery('<td />')
+            .text(item.name)
+            .appendTo(tr);
+
+          let amountCell = jQuery('<td/>').appendTo(tr);
+          jQuery('<input/>', {
+            'type': 'number',
+            'class': 'form-control valid changeQuantity',
+            'data-testid': 'changeQuantity',
+            'step': '1',
+            'min': '1',
+            'productid': item.id,
+            'value': item.count,
+          }).appendTo(amountCell);
+
+          jQuery('<td />', {
+            'data-testid': 'price'
+          })
+            .text(item.price)
+            .appendTo(tr);
+
+          jQuery('<td />', {
+            'id': 'totalSum_' + item.id,
+            'data-testid': 'totalPrice'
+          })
+            .text(item.price * item.count)
+            .appendTo(tr);
+
+          let deleteCell = jQuery('<td/>')
+            .appendTo(tr);
+          let deleteCellButton = jQuery('<button/>', {
+            'type': 'button',
+            'class': 'btn btn-sm btn-danger deleteFromCart',
+            'data-testid': 'deleteFromCart',
+            'productid': item.id,
+          }).appendTo(deleteCell);
+          jQuery('<i/>', {
+            'class': 'fa fa-trash-o'
+          }).appendTo(deleteCellButton);
         });
         updateCartRelatedElements();
     }
@@ -201,9 +241,9 @@ $(document).ready(function() {
     }
 
     $("#field_product_id").on('change', function(e) {
-            product_id = $("#field_product_id").val();
-            people_id =  $("#field_people_id").val();
-            $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
+        product_id = $("#field_product_id").val();
+        people_id =  $("#field_people_id").val();
+        $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
     });
 
     $("#field_people_id").on('change', function(e) {

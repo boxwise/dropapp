@@ -5,7 +5,7 @@
   "env": {
     "testAdmin": "admin@admin.co",
     "testCoordinator": "coordinator@coordinator.co",
-    "testUser": "user@user.co",
+    "testVolunteer": "user@user.co",
     "testExpiredUser": "expired@expired.co",
     "testNotActivatedUser": "notactivated@notactivated.com",
     "testDeletedUser": "deleted@deleted.co",
