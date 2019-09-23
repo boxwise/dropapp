@@ -1,6 +1,6 @@
 {
   "projectId": "tip3z9",
-  "baseUrl": "http://localhost:8100",
+  "baseUrl": "https://staging.boxwise.co",
   "chromeWebSecurity": false,
   "env": {
     "testAdmin": "admin@admin.co",
