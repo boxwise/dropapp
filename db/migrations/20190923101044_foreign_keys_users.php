@@ -32,29 +32,29 @@ class ForeignKeysUsers extends AbstractMigration
     public function change()
     {
         $this->table('history')
-        ->changeColumn('user_id', 'integer', [
-            'null' => false,
-        ])
-        ->addForeignKey('user_id', 'cms_users', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-        ->save()
+            ->changeColumn('user_id', 'integer', [
+                'null' => false,
+            ])
+            ->addForeignKey('user_id', 'cms_users', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->save()
     ;
 
         $this->table('transactions')
-        ->addForeignKey('user_id', 'cms_users', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-        ->save()
+            ->addForeignKey('user_id', 'cms_users', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->save()
     ;
         $this->table('log')
-        ->changeColumn('user', 'integer', [
-            'null' => false,
-        ])
-        ->addForeignKey('user', 'cms_users', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-        ->save()
+            ->changeColumn('user', 'integer', [
+                'null' => false,
+            ])
+            ->addForeignKey('user', 'cms_users', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->save()
     ;
     }
 }
