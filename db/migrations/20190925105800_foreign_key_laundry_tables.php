@@ -32,38 +32,38 @@ class ForeignKeyLaundryTables extends AbstractMigration
     public function change()
     {
         $this->table('laundry_slots')
-        ->changeColumn('machine', 'integer', [
-            'signed' => false,
-            'null' => false,
-        ])
-        ->changeColumn('time', 'integer', [
-            'signed' => false,
-        ])
-        ->addForeignKey('machine', 'laundry_machines', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-        ->addForeignKey('time', 'laundry_times', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-        ->save()
+            ->changeColumn('machine', 'integer', [
+                'signed' => false,
+                'null' => false,
+            ])
+            ->changeColumn('time', 'integer', [
+                'signed' => false,
+            ])
+            ->addForeignKey('machine', 'laundry_machines', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->addForeignKey('time', 'laundry_times', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->save()
     ;
         $this->table('laundry_appointments')
-        ->changeColumn('timeslot', 'integer', [
-            'signed' => false,
-        ])
-        ->addForeignKey('timeslot', 'laundry_slots', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-        ->save()
+            ->changeColumn('timeslot', 'integer', [
+                'signed' => false,
+            ])
+            ->addForeignKey('timeslot', 'laundry_slots', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->save()
     ;
         $this->table('laundry_machines')
-        ->changeColumn('station', 'integer', [
-            'signed' => false,
-        ])
-        ->addForeignKey('station', 'laundry_stations', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-        ->save()
+            ->changeColumn('station', 'integer', [
+                'signed' => false,
+            ])
+            ->addForeignKey('station', 'laundry_stations', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->save()
     ;
     }
 }
