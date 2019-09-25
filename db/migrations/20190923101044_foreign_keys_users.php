@@ -47,14 +47,5 @@ class ForeignKeysUsers extends AbstractMigration
             ])
             ->save()
     ;
-        $this->table('log')
-            ->changeColumn('user', 'integer', [
-                'null' => false,
-            ])
-            ->addForeignKey('user', 'cms_users', 'id', [
-                'delete' => 'RESTRICT', 'update' => 'CASCADE',
-            ])
-            ->save()
-    ;
     }
 }
