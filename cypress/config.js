@@ -8,7 +8,6 @@ export function getLoginConfiguration() {
         testPwd: Cypress.env("testPwd"),
         testAdmin: Cypress.env("testAdmin"),
         testVolunteer: Cypress.env("testVolunteer"),
-        testVolunteerWithNoPermissions: Cypress.env("testVolunteerWithNoPermissions"),
         testCoordinator: Cypress.env("testCoordinator"),
         testExpiredUser: Cypress.env("testExpiredUser"),
         testNotActivatedUser: Cypress.env("testNotActivatedUser"),

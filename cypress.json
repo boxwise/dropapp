@@ -1,12 +1,10 @@
 {
   "projectId": "tip3z9",
   "baseUrl": "https://staging.boxwise.co",
-  "chromeWebSecurity": false,
   "env": {
     "testAdmin": "admin@admin.co",
     "testCoordinator": "coordinator@coordinator.co",
     "testVolunteer": "user@user.co",
-    "testVolunteerWithNoPermissions": "noPermissions@noPermissions.co",
     "testExpiredUser": "expired@expired.co",
     "testNotActivatedUser": "notactivated@notactivated.com",
     "testDeletedUser": "deleted@deleted.co",

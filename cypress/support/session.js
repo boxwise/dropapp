@@ -25,11 +25,6 @@ Cypress.Commands.add("loginAsVolunteer", () => {
     loginWithAjax(config.testVolunteer, config.testPwd);
 });
 
-Cypress.Commands.add("loginAsVolunteerWithNoPermissions", () => {
-    let config = getLoginConfiguration();
-    loginWithAjax(config.testVolunteerWithNoPermissions, config.testPwd);
-});
-
 Cypress.Commands.add("loginAsAdmin", () => {
     let config = getLoginConfiguration();
     loginWithAjax(config.testAdmin, config.testPwd);
