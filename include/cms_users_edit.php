@@ -65,8 +65,8 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     $cmsmain->assign('title', $translate['cms_user']);
 
     // define tabs
-    addfield('text', $translate['cms_users_naam'], 'naam', ['required' => true]);
-    addfield('email', $translate['cms_users_email'], 'email', ['required' => true, 'tooltip' => $translate['cms_users_email_tooltip']]);
+    addfield('text', $translate['cms_users_naam'], 'naam', ['required' => true, 'testid' => 'name_id']);
+    addfield('email', $translate['cms_users_email'], 'email', ['required' => true, 'testid' => 'email_id', 'tooltip' => $translate['cms_users_email_tooltip']]);
 
     $usergroups = db_array('
 		SELECT ug.id AS value, ug.label 
@@ -77,8 +77,8 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     addfield('select', 'Select user group', 'cms_usergroups_id', ['required' => true, 'options' => $usergroups]);
 
     addfield('line');
-    addfield('date', 'Valid from', 'valid_firstday', ['date' => true, 'time' => false]);
-    addfield('date', 'Valid until', 'valid_lastday', ['date' => true, 'time' => false]);
+    addfield('date', 'Valid from', 'valid_firstday', ['date' => true, 'time' => false, 'testid' => 'valid_from_id']);
+    addfield('date', 'Valid until', 'valid_lastday', ['date' => true, 'time' => false, 'testid' => 'valid_to_id']);
 
     addfield('line');
     if ('0000-00-00 00:00:00' == $data['lastlogin']) {
