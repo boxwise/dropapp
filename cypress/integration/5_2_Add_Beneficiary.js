@@ -10,6 +10,11 @@ context("5_2_Add_Beneficiary_Test",()=>
         cy.loginAsVolunteer();
         cy.visit('/?action=people_edit&origin=people');
     })
+    function DeleteTested(firstname) {
+        cy.get("tr").contains(firstname).parent("td").parent("tr").children().first().children().first().children('label').click()
+        cy.get("button[data-operation='delete']").click()
+        cy.get("a[data-apply='confirmation']").click()
+    }
 
 
     function CheckEmptyForm() {
@@ -39,15 +44,14 @@ context("5_2_Add_Beneficiary_Test",()=>
     }
 
     }
-    /*
     it("5_2_1 Fill form, Save and close",() => {
         CheckEmptyForm();
         //check all the forms 
         FillForm(Test_firstname,Test_lastname,Test_case_id);
         cy.get("button").contains("Save and close").click();
         cy.notificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added")
-        //cy.get("span[class='noty_text']").contains(Test_firstname+" "+Test_lastname + " was added").should("be.visible");
         cy.get("div").contains(Test_case_id).should("be.visible");
+        DeleteTested(Test_firstname)
 
     })
     
@@ -58,7 +62,6 @@ context("5_2_Add_Beneficiary_Test",()=>
         cy.get("div[id='qtip-1-content']").should("be.visible");
 
     })
-    */
 
 
     it("5_2_4 Save and new check if new person in familyhead-dropdown + check if empty",() => {
@@ -73,14 +76,10 @@ context("5_2_Add_Beneficiary_Test",()=>
         cy.get("input[id='s2id_autogen1_search']").click().type(Test_case_id +" "+ Test_firstname);
         cy.get("div[class='select2-result-label']").contains(Test_case_id + " "+ Test_firstname+ " "+ Test_lastname).click();
         FillForm(Test_firstname2,Test_lastname,"")
-        cy.get("button").contains("Save and new").click();
+        cy.get("button").contains("Save and close").click();
         cy.notificationWithTextIsVisible(Test_firstname2+" "+Test_lastname + " was added")
-        cy.get("a[class='menu_people']").last().click( )
-        cy.get("tbody").find("tr").contains(Test_firstname2)
-        //cy.get("tr").contains(Test_lastname).contains(Test_firstname2).prev()
-           // cy.prev()
-           // cy.get("tr[data-level='1']").contains(Test_lastname).contains(Test_firstname2).prev()
-
-
+        cy.get("tr").contains(Test_firstname2).parent("td").parent("tr").prev().prev().should('contain',Test_firstname)
+        DeleteTested(Test_firstname)
     })
+
 })
