@@ -76,14 +76,10 @@ context("5_2_Add_Beneficiary_Test",()=>
         cy.get("button").contains("Save and new").click();
         cy.notificationWithTextIsVisible(Test_firstname2+" "+Test_lastname + " was added")
         cy.get("a[class='menu_people']").last().click( )
-        cy.get("tr").contains(Test_lastname).invoke('index').then((i) => {
-            console.log(i)
-            cy.get("tr").eq(i).should('contain',Test_lastname)
-            //cy.get("td").eq(i).contains(Test_firstname2)
-            //cy.get("td").eq(i).contains(Test_case_id)
-        })
-        //cy.get("td").contains(Test_lastname).parents().contains(Test_firstname2)
-        //cy.get("tr").contains(Test_firstname2).prev().should('contain',Test_case_id)
+        cy.get("tbody").find("tr").contains(Test_firstname2)
+        //cy.get("tr").contains(Test_lastname).contains(Test_firstname2).prev()
+           // cy.prev()
+           // cy.get("tr[data-level='1']").contains(Test_lastname).contains(Test_firstname2).prev()
 
 
     })
