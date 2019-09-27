@@ -24,6 +24,20 @@ context("User creation text", () => {
         
     })
 
+    it("2_4_0 Check empty form + empty submit",() => {
+        cy.get("input[data-testid='name_id']").should("be.visible")
+        cy.get("input[data-testid='email_id']").should("be.visible")
+        cy.get("span[id='select2-chosen-1']").should("be.visible")
+        cy.get("input[data-testid='valid_from_id']").should("be.visible")
+        cy.get("input[data-testid='valid_to_id']").should("be.visible")
+        cy.get("button").contains("Save and close").should('be.visible')
+        cy.get("a").contains("Cancel").should('be.visible')
+        cy.get("button").contains("Save and close").click()
+        cy.get("div[id='qtip-1-content']").should('be.visible')
+        cy.get("div[id='qtip-2-content']").should('be.visible')
+        cy.get("div[id='qtip-3-content']").should('be.visible')
+    })
+
     it("2_4_1 Create New User without axpiry date", () => {
         FillForm(Testname,Testaddress,Testgroup)
         cy.get("button").contains("Save and close").click()

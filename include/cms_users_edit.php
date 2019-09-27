@@ -74,7 +74,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON (ugl.id=ug.userlevel)
 		WHERE ug.organisation_id = :organisation_id AND (ugl.level < :userlevel OR :is_admin) AND (NOT ug.deleted OR ug.deleted IS NULL)
 		ORDER BY ug.label', ['organisation_id' => $_SESSION['organisation']['id'], 'userlevel' => $_SESSION['usergroup']['userlevel'], 'is_admin' => $_SESSION['user']['is_admin']]);
-    addfield('select', 'Select user group', 'cms_usergroups_id', ['required' => true, 'options' => $usergroups]);
+    addfield('select', 'Select user group', 'cms_usergroups_id', ['required' => true, 'options' => $usergroups, 'testid' => 'group_id']);
 
     addfield('line');
     addfield('date', 'Valid from', 'valid_firstday', ['date' => true, 'time' => false, 'testid' => 'valid_from_id']);
