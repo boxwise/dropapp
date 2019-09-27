@@ -24,7 +24,7 @@ context("User creation text", () => {
         
     })
 
-    it("2_4_0 Check empty form + empty submit",() => {
+    it("2_4_0_A Check empty form + empty submit",() => {
         cy.get("input[data-testid='name_id']").should("be.visible")
         cy.get("input[data-testid='email_id']").should("be.visible")
         cy.get("span[id='select2-chosen-1']").should("be.visible")
@@ -36,6 +36,13 @@ context("User creation text", () => {
         cy.get("div[id='qtip-1-content']").should('be.visible')
         cy.get("div[id='qtip-2-content']").should('be.visible')
         cy.get("div[id='qtip-3-content']").should('be.visible')
+    })
+
+    it("2_4_0_B Create New user",() => {
+        FillForm(Testname,Testaddress,Testgroup)
+        cy.get("button").contains("Save and close").click()
+        cy.get("tr").contains(Testaddress).should("be.visible")
+        DeleteTestUser(Testaddress)
     })
 
     it("2_4_1 Create New User without axpiry date", () => {
