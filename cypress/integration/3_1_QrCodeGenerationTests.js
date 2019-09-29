@@ -31,7 +31,6 @@ describe('QR labels tests - user with rights', () => {
     beforeEach(() => {
         cy.loginAsVolunteer();
         cy.visit('/?action=qr');
-        Cypress.config('chromeWebSecurity',true);
     });
     
 
