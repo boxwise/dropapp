@@ -13,6 +13,7 @@ export function getLoginConfiguration() {
         testNotActivatedUser: Cypress.env("testNotActivatedUser"),
         testDeletedUser: Cypress.env("testDeletedUser"),
         testPwd: Cypress.env("testPwd"),
-        testWrongPwd: Cypress.env("testWrongPwd")
+        testWrongPwd: Cypress.env("testWrongPwd"),
+        orgName: Cypress.env("orgName")
      };
 };
