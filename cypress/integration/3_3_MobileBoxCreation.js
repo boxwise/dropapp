@@ -101,15 +101,16 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
             createBoxFormIsVisible();
             // filling out new box form
             let itemsCount = 100;
+            let size = "7-12 months"
             selectProduct(PRODUCT1);
-            selectSize("7-12 months");
+            selectSize(size);
             selectLocation(LOCATION3);
             defineItemsCount(itemsCount);
             clickNewBoxButton();
             // assertions
             cy.mobileNotificationWithTextIsVisible('contains ' + itemsCount + ' ' + PRODUCT1);
             cy.mobileNotificationWithTextIsVisible('located in ' + LOCATION3);
-            checkBoxContent(PRODUCT1, "7-12 months", LOCATION3, itemsCount);
+            checkBoxContent(PRODUCT1, size, LOCATION3, itemsCount);
         });
     });
 
@@ -135,18 +136,21 @@ describe('Mobile box creation using QR scanning (logged-out user)', () => {
 
     it('Scan QR code with associated box (same organisation)', () => {
         cy.visit('/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
+        cy.viewport('iphone-6');
         fillLoginForm(); 
         checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
     });
 
     it('Scan QR code without associated box (same organisation)', () => {
         cy.visit('/mobile.php?barcode=' + SAME_ORG_QR_URL_WITHOUT_BOX);
+        cy.viewport('iphone-6');
         fillLoginForm(); 
         createBoxFormIsVisible();
     });
 
     it('Scan QR code with associated box (diff organisation)', () => {
         cy.visit('/mobile.php?barcode=' + DIFFERENT_ORG_QR_URL);
+        cy.viewport('iphone-6');
         fillLoginForm(); 
         cy.mobileWarningNotificationWithTextIsVisible("Oops!! This box is registered in");
     });
@@ -160,6 +164,7 @@ describe('Mobile box creation using QR scanning (logged-out user)', () => {
 
     it('Scan non-existent QR code (diff organisation)', () => {
         cy.visit('/mobile.php?barcode=' + NON_EXISTENT_QR_ULR);
+        cy.viewport('iphone-6');
         fillLoginForm(); 
         cy.mobileWarningNotificationWithTextIsVisible("This is not a valid QR-code for " + config.orgName);
     });    
