@@ -59,7 +59,7 @@
             $data['count'] = 2;
             addfield('number', 'Number of labels', 'count', ['min' => 0, 'max' => 999]);
         }
-        addfield('checkbox', 'Make big labels including fields for box number and contents', 'fulllabel');
+        addfield('checkbox', 'Make big labels including fields for box number and contents', 'fulllabel', ['testid' => 'field_fulllabel']);
 
         // place the form elements and data in the template
         $cmsmain->assign('data', $data);
