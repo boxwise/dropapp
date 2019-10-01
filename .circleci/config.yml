@@ -33,6 +33,43 @@ jobs:
           root: ~/project
           paths:
             - .
+  run-tests:
+    docker:
+      - image: boxwise/dropapp-php:latest
+      - image: circleci/mysql:8.0.4
+        # same as docker-compose.yml
+        environment:
+          MYSQL_ROOT_PASSWORD: dropapp_root
+          MYSQL_DATABASE: dropapp_dev
+          MYSQL_ROOT_HOST: '%'
+    steps:
+      - attach_workspace:
+          at: workspace
+      - run: 
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for db
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+      - run:
+          name: use default app config
+          command: |
+            cd workspace
+            cp library/config.php.default library/config.php
+      - run: 
+          name: create db
+          command: |
+            cd workspace
+            echo "Migrating database"
+            vendor/bin/phinx migrate -e development
+            echo "Seeding database
+            vendor/bin/phinx seed:run -e development
+      - run: 
+          name: run tests
+          command: |
+            yarn cypress run
   deploy:
     parameters:
       serviceName:
@@ -103,6 +140,10 @@ workflows:
   build-and-deploy:
     jobs:
     - build
+    - run-tests:
+        requires:
+          - build
+    # deployment steps for staging (master) & production
     # baseUrl for cypress is set in cypress.json (currently staging.boxwise.co)
     - cypress/run:
         yarn: true
