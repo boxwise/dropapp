@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class ForeignKeySizes extends AbstractMigration
+class ForeignKeyPeopleId extends AbstractMigration
 {
     /**
      * Change Method.
