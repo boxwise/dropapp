@@ -68,7 +68,7 @@ jobs:
             cd workspace
             echo "Migrating database"
             vendor/bin/phinx migrate -e development
-            echo "Seeding database
+            echo "Seeding database"
             vendor/bin/phinx seed:run -e development
       - run: 
           name: run tests
