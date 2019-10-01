@@ -19,7 +19,7 @@ environments:
         name: dropapp_dev
         user: root
         pass: dropapp_root
-        port: 9906
+        port: 3306
         charset: utf8
         mysql_attr_init_command: "SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO'"
 

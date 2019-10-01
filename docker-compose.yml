@@ -11,7 +11,7 @@ services:
     volumes:
       - ./.docker/data/mysql:/var/lib/mysql
     ports:
-      - "9906:3306"
+      - "3306:3306"
   web:
     build: .docker/php 
     depends_on:
