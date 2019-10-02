@@ -3,7 +3,7 @@
         throw new Exception('Not called from AppEngine cron service');
     }
     $permittedDatabases = ['dropapp_demo', 'dropapp_staging'];
-    if (!in_array($settings['db_database'], permittedDatabases)) {
+    if (!in_array($settings['db_database'], $permittedDatabases)) {
         throw new Exception('Not permitting a reset of '.$settings['db_database']);
     }
     use Phinx\Config\Config;
