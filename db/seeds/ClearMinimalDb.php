@@ -12,6 +12,7 @@ class ClearMinimalDb extends AbstractSeed
         // /INSERT INTO `([^`]*)`.*/g
         // and replacement pattern:
         // $this->execute("DELETE FROM `$1`");\n
+        $this->execute('SET FOREIGN_KEY_CHECKS=0;');
         $this->execute('DELETE FROM `borrow_categories`');
         $this->execute('DELETE FROM `borrow_items`');
         $this->execute('DELETE FROM `borrow_locations`');
@@ -46,5 +47,6 @@ class ClearMinimalDb extends AbstractSeed
         $this->execute('DELETE FROM `translate`');
         $this->execute('DELETE FROM `genders`');
         $this->execute('DELETE FROM `units`');
+        $this->execute('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
