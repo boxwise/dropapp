@@ -5,13 +5,13 @@
         }
     },
     "require-dev": {
-        "odan/phinx-migrations-generator": "^4.0",
+        "odan/phinx-migrations-generator": "^4.3.0",
         "phan/phan": "^2.2",
         "friendsofphp/php-cs-fixer": "^2.15",
         "jakub-onderka/php-parallel-lint": "^1.0"
     },
     "require": {
-        "robmorgan/phinx": "^0.10.7",
+        "robmorgan/phinx": "^0.11.1",
         "google/cloud-storage": "^1.12",
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
         "sentry/sdk": "2.0.4",
