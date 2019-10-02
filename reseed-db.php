@@ -19,9 +19,10 @@
             'seeds' => './db/seeds',
         ],
         'environments' => [
-            'demo' => [
+            'current' => [
                 'adapter' => 'mysql',
                 'unix_socket' => $settings['db_socket'],
+                'host' => $settings['db_host'],
                 'name' => $settings['db_database'],
                 'user' => $settings['db_user'],
                 'pass' => $settings['db_pass'],
@@ -30,8 +31,9 @@
             ],
         ],
     ];
+    // don't output anything here, this will ensure
+    // any exception will trigger the error page with
+    // a 500 status so Google will mark the job as failed
     $config = new Config($configArray);
     $manager = new Manager($config, new StringInput(' '), new NullOutput());
-    echo 'Resetting seed data';
-    $manager->seed('demo');
-    echo 'Successfully reset data';
+    $manager->seed('current');

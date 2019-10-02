@@ -15,7 +15,7 @@ function bootstrap_exception_handler(Throwable $ex)
     });
     Sentry\captureException($ex);
     $eventId = Sentry\State\Hub::getCurrent()->getLastEventId();
-
+    // this will only work if there hasn't already been response output
     http_response_code(500);
     $error = new Zmarty();
     $error->assign('error', "Sorry, an unexpected error occured and has been reported. Please quote Sentry #{$eventId}.");
