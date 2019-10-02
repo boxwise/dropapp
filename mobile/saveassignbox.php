@@ -1,4 +1,5 @@
 <?php
+
     $qrid = db_value('SELECT id FROM qr WHERE code = :barcode', ['barcode' => $_GET['saveassignbox']]);
 
     if (!intval($_GET['box'])) {

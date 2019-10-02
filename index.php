@@ -1,4 +1,5 @@
 <?php
+
     $login = false;
     $ajax = false;
     $mobile = false;
