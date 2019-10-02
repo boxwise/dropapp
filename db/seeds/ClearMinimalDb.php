@@ -47,6 +47,8 @@ class ClearMinimalDb extends AbstractSeed
         $this->execute('DELETE FROM `translate`');
         $this->execute('DELETE FROM `genders`');
         $this->execute('DELETE FROM `units`');
+        $this->execute('DELETE FROM `sizes`');
+        $this->execute('DELETE FROM `x_people_languages`');
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
