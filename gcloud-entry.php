@@ -39,6 +39,7 @@ Tracer::inSpan(
         case '/pdf/qr.php':
         case '/pdf/dryfood.php':
         case '/reseed-db.php':
+        case '/fake-error.php':
             require substr($parsedUrl, 1); // trim /
             break;
         default:
