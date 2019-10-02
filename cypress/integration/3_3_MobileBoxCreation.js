@@ -97,7 +97,7 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         getQrCode().then($qr => {
             cy.viewport('iphone-6');
             let qrUrl = $qr[0].src.split('data=https://')[1];
-            cy.visit(qrUrl);
+            cy.visit('https://' + qrUrl);
             createBoxFormIsVisible();
             // filling out new box form
             let itemsCount = 100;
@@ -118,7 +118,7 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         getQrCode().then($qr => {
             cy.viewport('iphone-6');
             let qrUrl = $qr[0].src.split('data=https://')[1];
-            cy.visit(qrUrl);
+            cy.visit('https://' + qrUrl);
             clickNewBoxButton();
             checkRequiredFieldsErrors()
         })
