@@ -13,10 +13,10 @@ function bootstrap_exception_handler(Throwable $ex)
         }
         $scope->setExtra('session', $_SESSION);
     });
-
     Sentry\captureException($ex);
     $eventId = Sentry\State\Hub::getCurrent()->getLastEventId();
 
+    http_response_code(500);
     $error = new Zmarty();
     $error->assign('error', "Sorry, an unexpected error occured and has been reported. Please quote Sentry #{$eventId}.");
     if ('localhost' == @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST)) {

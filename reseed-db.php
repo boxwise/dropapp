@@ -1,4 +1,7 @@
 <?php
+    require_once __DIR__.'/library/lib/smarty.php';
+    require_once __DIR__.'/library/lib/errorhandling.php';
+
     if (!array_key_exists('HTTP_X_APPENGINE_CRON', $_SERVER)) {
         throw new Exception('Not called from AppEngine cron service');
     }
