@@ -14,7 +14,7 @@
         "robmorgan/phinx": "^0.10.7",
         "google/cloud-storage": "^1.12",
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
-        "sentry/sdk": "2.0.3",
+        "sentry/sdk": "2.0.4",
         "smarty/smarty": "^3.1",
         "sendgrid/sendgrid": "^7.3",
         "google/cloud-logging": "^1.18",
