@@ -1,7 +1,15 @@
 <?php
 
+use Google\Cloud\ErrorReporting\Bootstrap;
+
 function bootstrap_exception_handler(Throwable $ex)
 {
+    if (getenv('GOOGLE_CLOUD_PROJECT')) {
+        // report to google stackdriver
+        Bootstrap::init();
+        Bootstrap::exceptionHandler($ex);
+    }
+    // report to sentry
     Sentry\configureScope(function (Sentry\State\Scope $scope): void {
         if (isset($_SESSION['user'])) {
             $scope->setTag('logged in', 'true');

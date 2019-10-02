@@ -16,6 +16,8 @@
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
         "sentry/sdk": "2.0.3",
         "smarty/smarty": "^3.1",
-        "sendgrid/sendgrid": "^7.3"
+        "sendgrid/sendgrid": "^7.3",
+        "google/cloud-logging": "^1.18",
+        "google/cloud-error-reporting": "^0.15.0"
     }
 }

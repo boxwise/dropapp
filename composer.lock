@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec28ec93d93a6ca0a1c1f42d2f16341a",
+    "content-hash": "133f829466c9468a3ce817c916f2c565",
     "packages": [
         {
             "name": "cache/adapter-common",
@@ -667,6 +667,109 @@
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "time": "2019-08-21T17:32:44+00:00"
+        },
+        {
+            "name": "google/cloud-error-reporting",
+            "version": "v0.15.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/google-cloud-php-errorreporting.git",
+                "reference": "e4b81dcbb3597d2cfd91bd41974ace230d3a1449"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-errorreporting/zipball/e4b81dcbb3597d2cfd91bd41974ace230d3a1449",
+                "reference": "e4b81dcbb3597d2cfd91bd41974ace230d3a1449",
+                "shasum": ""
+            },
+            "require": {
+                "google/cloud-logging": "^1.16",
+                "google/gax": "^1.1"
+            },
+            "require-dev": {
+                "google/cloud-core": "^1.31",
+                "phpdocumentor/reflection": "^3.0",
+                "phpunit/phpunit": "^4.8|^5.0"
+            },
+            "suggest": {
+                "ext-grpc": "The gRPC extension allows more granular control over Error Reporting",
+                "ext-protobuf": "Provides a significant increase in throughput over the pure PHP protobuf implementation. See https://cloud.google.com/php/grpc for installation instructions."
+            },
+            "type": "library",
+            "extra": {
+                "component": {
+                    "id": "cloud-error-reporting",
+                    "target": "googleapis/google-cloud-php-errorreporting.git",
+                    "path": "ErrorReporting",
+                    "entry": null
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Google\\Cloud\\ErrorReporting\\": "src",
+                    "GPBMetadata\\Google\\Devtools\\Clouderrorreporting\\": "metadata"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Stackdriver Error Reporting Client for PHP",
+            "time": "2019-08-07T20:57:43+00:00"
+        },
+        {
+            "name": "google/cloud-logging",
+            "version": "v1.18.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/google-cloud-php-logging.git",
+                "reference": "e50214e9dba163b7666eda2f915c62742dc834d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-logging/zipball/e50214e9dba163b7666eda2f915c62742dc834d3",
+                "reference": "e50214e9dba163b7666eda2f915c62742dc834d3",
+                "shasum": ""
+            },
+            "require": {
+                "google/cloud-core": "^1.31",
+                "google/gax": "^1.1"
+            },
+            "require-dev": {
+                "erusev/parsedown": "^1.6",
+                "google/cloud-bigquery": "^1.0",
+                "google/cloud-pubsub": "^1.0",
+                "google/cloud-storage": "^1.3",
+                "opis/closure": "^3",
+                "phpdocumentor/reflection": "^3.0",
+                "phpunit/phpunit": "^4.8|^5.0",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "suggest": {
+                "ext-grpc": "The gRPC extension enables use of the performant gRPC transport",
+                "ext-protobuf": "Provides a significant increase in throughput over the pure PHP protobuf implementation. See https://cloud.google.com/php/grpc for installation instructions."
+            },
+            "type": "library",
+            "extra": {
+                "component": {
+                    "id": "cloud-logging",
+                    "target": "googleapis/google-cloud-php-logging.git",
+                    "path": "Logging",
+                    "entry": "src/LoggingClient.php"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Google\\Cloud\\Logging\\": "src",
+                    "GPBMetadata\\Google\\Logging\\": "metadata"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Stackdriver Logging Client for PHP",
+            "time": "2019-08-29T21:08:15+00:00"
         },
         {
             "name": "google/cloud-storage",
