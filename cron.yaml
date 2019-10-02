@@ -5,5 +5,5 @@ cron:
   schedule: every 99999 hours
 - description: "reseed demo job"
   url: /reseed-db.php
-  target: staging
+  target: demo
   schedule: every 99999 hours
