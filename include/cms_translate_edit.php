@@ -1,4 +1,5 @@
 <?php
+
     $table = 'translate';
     $hasdescription = db_fieldexists($table, 'description');
 

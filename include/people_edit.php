@@ -1,4 +1,5 @@
 <?php
+
     $table = 'people';
     $action = 'people_edit';
 

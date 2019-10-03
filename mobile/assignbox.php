@@ -1,4 +1,5 @@
 <?php
+
     $data['barcode'] = $_GET['assignbox'];
 
     $data['stock'] = db_array('SELECT s.id, CONCAT(s.box_id," - ",s.items,"x ",IFNULL(p.name,"")," ",IFNULL(g.label,""),IF(s2.label IS NULL,"",CONCAT(" (",s2.label,")"))) AS label 

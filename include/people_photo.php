@@ -1,4 +1,5 @@
 <?php
+
     // TODO: Important!!! Need to review cross-org access to these photos
     // and people in general, as I don't believe there are any controls here yet
     $fileName = $settings['upload_dir'].'/people/'.$id.'.jpg';

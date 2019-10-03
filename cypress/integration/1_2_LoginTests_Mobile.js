@@ -27,22 +27,22 @@ context('Login tests - Mobile', () => {
 
   it('Login with non-activated user', () => {
     loginUsing(config.testNotActivatedUser, config.testPwd);
-    cy.mobileNotificationWithTextIsVisible(config.genericErrLoginNotif);
+    cy.mobileWarningNotificationWithTextIsVisible(config.genericErrLoginNotif);
   })
 
   it('Login with expired user', () => {
     loginUsing(config.testExpiredUser, config.testPwd);
-    cy.mobileNotificationWithTextIsVisible(config.genericErrLoginNotif);
+    cy.mobileWarningNotificationWithTextIsVisible(config.genericErrLoginNotif);
   })
 
   it('Login with deleted user', () => {
     loginUsing(config.testDeletedUser, config.testPwd);
-    cy.mobileNotificationWithTextIsVisible(config.genericErrLoginNotif);
+    cy.mobileWarningNotificationWithTextIsVisible(config.genericErrLoginNotif);
   })
 
   it('Login with wrong password', () => {
     loginUsing(config.testAdmin, config.testWrongPwd);
-    cy.mobileNotificationWithTextIsVisible(config.incorrectLoginNotif);
+    cy.mobileWarningNotificationWithTextIsVisible(config.incorrectLoginNotif);
   })
 
   it('Forgot password form', () => {

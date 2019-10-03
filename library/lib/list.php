@@ -401,11 +401,25 @@ function addpagemenu($code, $label, $options = [])
     }
 }
 
-function getlistdata($query, $parent = 0)
+// this is a huge SQL injection risk, as we're forcing consumers
+// to pass $query with all parameters already supplied. WHY?
+function getlistdata($query)
+{
+    return db_array(buildlistdataquery($query));
+}
+
+function gettreedata($query)
+{
+    $query = buildlistdataquery($query);
+    $dataById = db_array($query, [], false, true);
+
+    return convertListDataToTreeData($dataById);
+}
+
+function buildlistdataquery($query)
 {
     global $table, $listconfig;
 
-    $hasTree = db_fieldexists($table, 'parent_id');
     $hasSeq = db_fieldexists($table, 'seq');
     $hasDeleted = db_fieldexists($table, 'deleted');
 
@@ -413,10 +427,6 @@ function getlistdata($query, $parent = 0)
     $hasFilter2 = $listconfig['filtervalue2'];
     $hasFilter3 = $listconfig['filtervalue3'];
     $hasFilter4 = $listconfig['filtervalue4'];
-
-    if ($hasTree) {
-        $query = insertwhere($query, 'parent_id = :parent_id');
-    }
 
     if ($hasDeleted && !stripos($query, 'DELETED')) {
         $query = insertwhere($query, '(NOT '.$table.'.deleted OR '.$table.'.deleted IS NULL)');
@@ -451,9 +461,78 @@ function getlistdata($query, $parent = 0)
         $query .= ' ORDER BY '.$listconfig['orderby'];
     }
 
-    $data = listdataquery($query, 0, $parent);
+    return $query;
+}
 
-    return $data;
+// this returns data for tables that have an adjacency model with parent_id
+// the data is sorted such that after any parent all its children immediately follow
+// this is a stable sort, so any other sorting criteria will be preserved
+
+// in addition to the normal row data, the following additional data items are added:
+// for each row, record :
+//   - a 'level' / depth, indexed from 0.
+//       Typically used by the UI components.
+//   - a 'path' of IDs to the ultimate parent, delimited by a /
+//       This is just for visualization/debugging purposes
+//   - a 'path' of to the ultimate parent, but using the original sort order index rather than the Id
+//       this is what we will sort on so we have a stable sort, but ordered such that
+//       after any parent all its children immediately follow
+function convertListDataToTreeData($dataById)
+{
+    // Fetch the data into an associative array, so we can lookup by id
+    // Also record the original row index so we can preserve the sort order
+    function addOriginalIndexToData($dataById)
+    {
+        $index = 0;
+        foreach ($dataById as &$row) {
+            $row['original_index'] = ++$index;
+        }
+
+        return $dataById;
+    }
+    // we need to 'pad' the number so it's sortable as a string
+    function padNumberAsString($num)
+    {
+        return sprintf('%08d', $num);
+    }
+
+    function buildRowMetaData($id, $dataById)
+    {
+        $level = -1;
+        $path = '';
+        $original_index_path = '';
+        // we recurse 'up' the tree for as long as the parent_id exists
+        // but prevent deep recursion and bomb out at 10 in case there is a cycle
+        // and also prevent recursion where the parent_id = parent_id
+        do {
+            $row = $dataById[$id];
+            ++$level;
+            $path = '/'.$row['id'].$path;
+            $original_index_path = '/'.padNumberAsString($row['original_index']).$original_index_path;
+            $previous_id = $id;
+            $id = $row['parent_id'];
+        } while ('0' !== $id
+            && $previous_id !== $id
+            && array_key_exists($id, $dataById)
+            && $level < 10);
+
+        return [level => $level, path => $path, original_index_path => $original_index_path];
+    }
+
+    $dataById = addOriginalIndexToData($dataById);
+    // Ideally we'd use a CTE for this, but Google Cloud SQL doesn't support
+    // MySQL 8 yet (which is when this became supported) so instead we'll do
+    // a poor man's version here and compute on the fly
+    foreach ($dataById as &$row) {
+        $metadata = buildRowMetaData($row['id'], $dataById);
+        $row = array_merge($row, $metadata);
+    }
+    // sort the data
+    usort($dataById, function ($item1, $item2) {
+        return $item1['original_index_path'] <=> $item2['original_index_path'];
+    });
+
+    return $dataById;
 }
 
 // inserts a where element into a new query or adds a new  element to an existing where-chain
@@ -488,31 +567,6 @@ function insertwhere($query, $where)
 function query_insert($str, $pos, $insert)
 {
     return substr($str, 0, $pos).$insert.' '.substr($str, $pos);
-}
-
-function listdataquery($query, $level = 0, $parent = 0)
-{
-    global $table;
-    $hasTree = db_fieldexists($table, 'parent_id');
-
-    $result = db_query($query, ($hasTree ? ['parent_id' => $parent] : []));
-
-    while ($row = db_fetch($result)) {
-        $row['level'] = $level;
-        $data[] = $row;
-
-        if ($hasTree) {
-            $rowcount = db_value('SELECT COUNT(1) FROM '.$table.' WHERE parent_id = '.$row['id']);
-            if ($rowcount > 0) {
-                $sub = listdataquery($query, $level + 1, $row['id']);
-                foreach ($sub as $field) {
-                    array_push($data, $field);
-                }
-            }
-        }
-    }
-
-    return $data;
 }
 
 function addcolumn($type, $label = false, $field = false, $array = [])
