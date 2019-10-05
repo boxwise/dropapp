@@ -10,7 +10,8 @@ class ForeignKeyRemainder extends AbstractMigration
             ->changeColumn('size_id', 'integer', [
                 'null' => true,
             ])
-            ->save();
+            ->save()
+        ;
         $this->execute('UPDATE stock SET size_id = null where size_id = 0');
 
         $this->table('stock')
@@ -27,7 +28,8 @@ class ForeignKeyRemainder extends AbstractMigration
             ->changeColumn('parent_id', 'integer', [
                 'null' => true,
             ])
-            ->save();
+            ->save()
+        ;
         $this->execute('UPDATE people SET parent_id = null where parent_id = 0');
 
         $this->table('people')
