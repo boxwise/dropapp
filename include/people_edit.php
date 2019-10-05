@@ -18,7 +18,7 @@
             $savekeys[] = 'laundryblock';
             $savekeys[] = 'laundrycomment';
         }
-        $id = $handler->savePost($savekeys);
+        $id = $handler->savePost($savekeys, ['parent_id']);
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
         // Set parent_id IS NULL if a family does not have the same container ID

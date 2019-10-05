@@ -9,8 +9,9 @@ class formHandler
         $this->table = $table;
     }
 
-    public function savePost($keys)
+    public function savePost($keys, $nullIfEmptyKeys = [])
     {
+        $this->nullIfEmpty = array_fill_keys($nullIfEmptyKeys, null);
         $this->keys = $keys;
         $this->saveCreatedModified();
 
@@ -98,6 +99,9 @@ class formHandler
             }
 
             $value = stripslashes($value);
+            if (array_key_exists($key, $this->nullIfEmpty) && $value == '') {
+                $value = null;
+            }
 
             if ($lan) {
                 $this->post[$lan][$key] = $value;
