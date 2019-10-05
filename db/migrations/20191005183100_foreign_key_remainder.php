@@ -13,6 +13,7 @@ class ForeignKeyRemainder extends AbstractMigration
             ->save()
         ;
         $this->execute('UPDATE stock SET size_id = null where size_id = 0');
+        $this->execute('UPDATE stock SET product_id = null where product_id = 0');
 
         $this->table('stock')
             ->addForeignKey('size_id', 'sizes', 'id', [
