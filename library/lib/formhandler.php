@@ -219,21 +219,6 @@ class formHandler
 
     public function saveCreatedModified()
     {
-        $fields = db_listfields($this->table);
-
-        if (!db_fieldexists($this->table, 'created')) {
-            db_query('ALTER TABLE '.$this->table.' ADD `created` datetime');
-        }
-        if (!db_fieldexists($this->table, 'created_by')) {
-            db_query('ALTER TABLE '.$this->table.' ADD `created_by` int');
-        }
-        if (!db_fieldexists($this->table, 'modified')) {
-            db_query('ALTER TABLE '.$this->table.' ADD `modified` datetime');
-        }
-        if (!db_fieldexists($this->table, 'modified_by')) {
-            db_query('ALTER TABLE '.$this->table.' ADD `modified_by` int');
-        }
-
         if (!$this->id) {
             array_push($this->keys, 'created', 'created_by');
             $this->post['created'] = strftime('%Y-%m-%d %H:%M:%S');
