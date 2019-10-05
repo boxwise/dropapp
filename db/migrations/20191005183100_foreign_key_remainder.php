@@ -10,6 +10,9 @@ class ForeignKeyRemainder extends AbstractMigration
             ->changeColumn('size_id', 'integer', [
                 'null' => true,
             ])
+            ->changeColumn('product_id', 'integer', [
+                'null' => true,
+            ])
             ->save()
         ;
         $this->execute('UPDATE stock SET size_id = null where size_id = 0');
