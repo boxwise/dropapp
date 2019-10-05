@@ -36,7 +36,8 @@ class ForeignKeyQr extends AbstractMigration
                 'signed' => false,
                 'null' => true,
             ])
-            ->save();
+            ->save()
+        ;
         $this->execute('UPDATE stock SET qr_id = NULL WHERE qr_id = 0');
         $this->table('stock')
             ->addForeignKey('qr_id', 'qr', 'id', [
