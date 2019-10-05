@@ -30,14 +30,14 @@
         // put a title above the form
         $cmsmain->assign('title', 'New purchase');
 
-        addfield('select', 'Family/Beneficiary', 'people_id', ['onchange' => 'selectFamily("people_id",false,"check_out")', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1']);
+        addfield('select', 'Family/Beneficiary', 'people_id', ['testid' => 'familyDropdown', 'onchange' => 'selectFamily("people_id",false,"check_out")', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id = 0 AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1']);
         addfield('select', 'Product', 'product_id', ['required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label, p.value as price FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name']);
-        addfield('number', 'Number', 'count', ['required' => true, 'width' => 2]);
-        addfield('custom', '', '<button id="add-to-cart-button" type="button" class="btn btn-success" disabled>Add to cart</button>');
+        addfield('number', 'Number', 'count', ['required' => true, 'width' => 2, 'min' => 1, 'testid' => 'productQuantityInput']);
+        addfield('custom', '', '<button id="add-to-cart-button" type="button" class="btn btn-success" data-testid="add-to-cart-button" disabled>Add to cart</button>');
         //addfield('text','Note','description');
         addfield('line');
 
-        addfield('custom', '', '<button type="button" id="submitShoppingCart" value="" class="btn btn-submit btn-success" disabled>Save & next purchase</button>', ['aside' => true, 'asidetop' => true]);
+        addfield('custom', '', '<button type="button" id="submitShoppingCart" data-testid="submitShoppingCart" value="" class="btn btn-submit btn-success" disabled>Save & next purchase</button>', ['aside' => true, 'asidetop' => true]);
         addfield('ajaxstart', '', '', ['id' => 'ajax-content']);
         addfield('ajaxend');
 

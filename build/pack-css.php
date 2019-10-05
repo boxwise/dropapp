@@ -1,4 +1,5 @@
 <?php
+
     $outputFile = 'assets/css/minified.css';
     $inputPath = 'assets/css';
     $macro = [];

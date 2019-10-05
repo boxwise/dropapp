@@ -1,7 +1,15 @@
 <?php
 
+use Google\Cloud\ErrorReporting\Bootstrap;
+
 function bootstrap_exception_handler(Throwable $ex)
 {
+    if (getenv('GOOGLE_CLOUD_PROJECT')) {
+        // report to google stackdriver
+        Bootstrap::init();
+        Bootstrap::exceptionHandler($ex);
+    }
+    // report to sentry
     Sentry\configureScope(function (Sentry\State\Scope $scope): void {
         if (isset($_SESSION['user'])) {
             $scope->setTag('logged in', 'true');
@@ -13,10 +21,10 @@ function bootstrap_exception_handler(Throwable $ex)
         }
         $scope->setExtra('session', $_SESSION);
     });
-
     Sentry\captureException($ex);
     $eventId = Sentry\State\Hub::getCurrent()->getLastEventId();
-
+    // this will only work if there hasn't already been response output
+    http_response_code(500);
     $error = new Zmarty();
     $error->assign('error', "Sorry, an unexpected error occured and has been reported. Please quote Sentry #{$eventId}.");
     if ('localhost' == @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST)) {

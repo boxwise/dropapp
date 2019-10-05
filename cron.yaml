@@ -1,5 +1,9 @@
 cron:
-# - description: "daily reseed demo job"
-#   url: /reseed-db.php
-#   target: demo
-#   schedule: every saturday 05:00
+- description: "reseed staging job"
+  url: /reseed-db.php
+  target: staging
+  schedule: every 99999 hours
+- description: "reseed demo job"
+  url: /reseed-db.php
+  target: demo
+  schedule: every 99999 hours

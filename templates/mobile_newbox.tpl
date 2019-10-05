@@ -16,7 +16,7 @@
 			</select>
 		</div>
 		<div class="form-group">
-			<select name="size_id" id="field_size_id" class="form-control" required>
+			<select name="size_id" id="field_size_id" class="form-control" data-testid="size_id" required>
 				{if $data['sizes']}
 					<option value="">Select a size</option>
 					{foreach $data['sizes'] as $s}
@@ -33,14 +33,14 @@
 			{/foreach}
 		</div>
 		<div class="form-group">
-			<select name="location_id" class="form-control" required>
+			<select name="location_id" class="form-control" data-testid="location_id" required>
 				<option value="">Select a location</option>
 				{foreach $data['locations'] as $l}<option value="{$l['value']}" {if $l['value']==$box['location_id']}selected{/if}>{$l['label']}</option>
 				{/foreach}
 			</select>
 		</div>
-		<div class="form-group"><input type="number" name="items" pattern="\d*" placeholder="Number of items" value="{$box['items']}" class="form-control" min="1" required></div>
+		<div class="form-group"><input type="number" name="items" pattern="\d*" placeholder="Number of items" value="{$box['items']}" class="form-control" min="1" data-testid="items_count" required></div>
 		<div class="form-group"><input type="text" name="comments" placeholder="Comments for this box" value="{$box['comments']}" class="form-control"></div>
-		<input type="submit" name="submitbutton" class="btn" value="Save">
+		<input type="submit" name="submitbutton" class="btn" value="Save" data-testid="submit_new_box">
 	</form>
 {* 	<script>{if $box['product_id']}getSizes({$box['size_id']});{/if}</script> *}

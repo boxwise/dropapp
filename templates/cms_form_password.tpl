@@ -13,7 +13,8 @@
 				{if $element['disableautocomplete']}autocomplete="new-password"{/if}
 				
 				{if $element['readonly'] || $element['locked']}readonly{/if} 
-				{if $element['required']}required{/if}>
+				{if $element['required']}required{/if}
+				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}>
 			{if $element['tooltip']}{include file="cms_tooltip.tpl"}{/if}
 		</div>
 	</div>

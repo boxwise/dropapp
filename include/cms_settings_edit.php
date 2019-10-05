@@ -1,4 +1,5 @@
 <?php
+
     $table = 'cms_settings';
 
     if ($_POST) {

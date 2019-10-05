@@ -26,7 +26,7 @@ class AddForeignKeysInUserMgmt extends AbstractMigration
             ->changeColumn('userlevel', 'integer', [
                 'signed' => false,
             ])
-            ->addForeignKey('userlevel', 'cms_usergroups', 'id', [
+            ->addForeignKey('userlevel', 'cms_usergroups_levels', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()

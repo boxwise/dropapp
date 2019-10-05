@@ -132,92 +132,10 @@ class NewUserMgmt extends AbstractMigration
             ])
             ->save()
         ;
-        $this->table('cms_settings', [
-            'id' => false,
-            'primary_key' => ['id'],
-            'engine' => 'InnoDB',
-            'encoding' => 'utf8',
-            'collation' => 'utf8_general_ci',
-            'comment' => '',
-            'row_format' => 'DYNAMIC',
-        ])
-            ->addColumn('id', 'integer', [
-                'null' => false,
-                'limit' => MysqlAdapter::INT_REGULAR,
-                'signed' => false,
-                'identity' => 'enable',
-            ])
-            ->addColumn('category_id', 'integer', [
-                'null' => false,
-                'limit' => MysqlAdapter::INT_REGULAR,
-                'signed' => false,
-                'after' => 'id',
-            ])
-            ->addColumn('type', 'string', [
-                'null' => true,
-                'limit' => 20,
-                'collation' => 'utf8_general_ci',
-                'encoding' => 'utf8',
-                'after' => 'category_id',
-            ])
-            ->addColumn('code', 'string', [
-                'null' => false,
-                'limit' => 255,
-                'collation' => 'utf8_general_ci',
-                'encoding' => 'utf8',
-                'after' => 'type',
-            ])
-            ->addColumn('description', 'string', [
-                'null' => true,
-                'limit' => 255,
-                'collation' => 'utf8_general_ci',
-                'encoding' => 'utf8',
-                'after' => 'code',
-            ])
-            ->addColumn('options', 'string', [
-                'null' => true,
-                'limit' => 255,
-                'collation' => 'utf8_general_ci',
-                'encoding' => 'utf8',
-                'after' => 'description',
-            ])
-            ->addColumn('value', 'text', [
-                'null' => true,
-                'limit' => 65535,
-                'collation' => 'utf8_general_ci',
-                'encoding' => 'utf8',
-                'after' => 'options',
-            ])
-            ->addColumn('hidden', 'integer', [
-                'null' => false,
-                'default' => '0',
-                'limit' => MysqlAdapter::INT_TINY,
-                'after' => 'value',
-            ])
-            ->addColumn('created', 'datetime', [
-                'null' => true,
-                'after' => 'hidden',
-            ])
-            ->addColumn('created_by', 'integer', [
-                'null' => true,
-                'limit' => MysqlAdapter::INT_REGULAR,
-                'after' => 'created',
-            ])
-            ->addColumn('modified', 'datetime', [
-                'null' => true,
-                'after' => 'created_by',
-            ])
-            ->addColumn('modified_by', 'integer', [
-                'null' => true,
-                'limit' => MysqlAdapter::INT_REGULAR,
-                'after' => 'modified',
-            ])
-            ->addIndex(['code'], [
-                'name' => 'code',
-                'unique' => true,
-            ])
-            ->create()
-        ;
+        $this->table('settings')
+            ->rename('cms_settings')
+            ->save()
+            ;
         $this->table('cms_usergroups', [
             'id' => false,
             'primary_key' => ['id'],
@@ -406,7 +324,6 @@ class NewUserMgmt extends AbstractMigration
         $this->table('pagetree')->drop()->save();
         $this->table('products_prices')->drop()->save();
         $this->table('redirect')->drop()->save();
-        $this->table('settings')->drop()->save();
         $this->table('settings_categories')->drop()->save();
     }
 }
