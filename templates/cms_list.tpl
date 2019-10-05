@@ -25,7 +25,7 @@
 								{if $button['showalways']}
 									{if $button['options']}
 										<div class="btn-group">
-											<div type="button" class="btn btn-sm btn-default dropdown-toggle">
+											<div type="button" class="btn btn-sm btn-default dropdown-toggle" {if isset($button['testid'])}data-testid="{$button['testid']}"{/if} >
 												{if $button['icon']}
 													<i class="fa {$button['icon']}"></i>
 												{/if}
@@ -46,7 +46,7 @@
 											</ul>
 										</div>
 									{else}
-										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default" href="{if $button['link']}{$button['link']}{else}#{/if}">
+										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default" href="{if $button['link']}{$button['link']}{else}#{/if}" {if isset($button['testid'])}data-testid="{$button['testid']}"{/if}>
 											{if $button['icon']}
 												<i class="fa {$button['icon']}"></i> 
 											{/if}
@@ -70,7 +70,7 @@
 								{if !$button['showalways']}
 									{if $button['options']}
 										<div class="btn-group">
-											<div type="button" class="btn btn-sm btn-default dropdown-toggle">
+											<div type="button" class="btn btn-sm btn-default dropdown-toggle" {if isset($button['testid'])}data-testid="{$button['testid']}"{/if}>
 												{if $button['icon']}
 													<i class="fa {$button['icon']}"></i>
 												{/if}
@@ -82,7 +82,7 @@
 											</ul>
 										</div>
 									{else}
-										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if} {if $button['disableif']}disable-if{/if}" href="{if $button['link']}{$button['link']}{else}#{/if}">
+										<button data-operation="{if $button['link']}none{else}{$code}{/if}" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if} {if $button['disableif']}disable-if{/if}" href="{if $button['link']}{$button['link']}{else}#{/if}" {if isset($button['testid'])}data-testid="{$button['testid']}"{/if}>
 											{if $button['icon']}
 												<i class="fa {$button['icon']}"></i> 
 											{/if}
