@@ -50,7 +50,7 @@ class ForeignKeyQr extends AbstractMigration
                 'signed' => false,
                 'null' => true,
             ])->save();
-        $this->execute('update translate SET category_id = NULL WHERE category_id not in (select id from translate_categories)');
+        $this->execute('update translate SET category_id = NULL WHERE category_id = 0');
         $this->table('translate')
             ->addForeignKey('category_id', 'translate_categories', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',

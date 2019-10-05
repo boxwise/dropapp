@@ -43,7 +43,7 @@ class ForeignKeySizes extends AbstractMigration
             ])
             ->save()
         ;
-        $this->execute('UPDATE transactions SET size_id = null not in (select id from sizes);');
+        $this->execute('UPDATE transactions SET size_id = null where size_id = 0');
         $this->table('transactions')
             ->addForeignKey('size_id', 'sizes', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',

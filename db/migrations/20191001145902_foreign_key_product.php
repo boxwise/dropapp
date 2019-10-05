@@ -43,7 +43,7 @@ class ForeignKeyProduct extends AbstractMigration
             ])
             ->save()
         ;
-        $this->execute('UPDATE transactions SET product_id = null where product_id not in (select id from products);');
+        $this->execute('UPDATE transactions SET product_id = null where product_id = 0');
 
         $this->table('transactions')
             ->addForeignKey('product_id', 'products', 'id', [
