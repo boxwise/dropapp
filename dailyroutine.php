@@ -63,7 +63,7 @@ GROUP BY p.id
          */
         $row['touch'] = db_value('SELECT GREATEST(COALESCE((SELECT transaction_date 
 					FROM transactions AS t 
-					WHERE t.people_id = people.id AND people.parent_id IS NULL AND product_id != 0 
+					WHERE t.people_id = people.id AND people.parent_id IS NULL AND product_id IS NOT NULL 
 					ORDER BY transaction_date DESC LIMIT 1),0), 
 					COALESCE(people.modified,0),COALESCE(people.created,0))
 				FROM people

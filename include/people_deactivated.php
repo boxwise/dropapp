@@ -29,7 +29,7 @@
         //listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
         $data = getlistdata('SELECT IF(people.parent_id,NULL,GREATEST(COALESCE((SELECT transaction_date 
 					FROM transactions AS t 
-					WHERE t.people_id = people.id AND people.parent_id IS NULL AND product_id != 0 
+					WHERE t.people_id = people.id AND people.parent_id IS NULL AND product_id IS NOT NULL 
 					ORDER BY transaction_date DESC LIMIT 1),0), COALESCE(people.created,0))) AS lastactive, 
 				people.*, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, IF(gender="M","Male","Female") AS gender2, IF(people.parent_id,"",SUM(t2.drops)) AS drops 
 				FROM people 

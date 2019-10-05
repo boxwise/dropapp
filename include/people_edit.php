@@ -195,7 +195,7 @@
 				LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
 				LEFT OUTER JOIN products AS p ON p.id = t.product_id 
 				LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
-				WHERE people_id = '.$id.' AND t.product_id != 0 
+				WHERE people_id = '.$id.' AND t.product_id IS NOT NULL 
 				ORDER BY transaction_date DESC
 				LIMIT 20',
                 'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Purchase made by', 'tdate' => 'Date'],
