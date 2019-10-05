@@ -34,7 +34,7 @@ class ForeignKeysLanguage extends AbstractMigration
         $this->table('cms_users')
             ->changeColumn('language', 'integer', [
                 'signed' => false,
-                'null' => false,
+                'null' => true, // production data has rows that are null
             ])
             ->addForeignKey('language', 'languages', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
