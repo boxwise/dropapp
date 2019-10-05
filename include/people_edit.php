@@ -207,7 +207,7 @@
             addfield('list', 'Transactions', 'trans', ['tab' => 'transaction', 'width' => 10, 'query' => 'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate 
 				FROM transactions AS t 
 				LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
-				WHERE people_id = '.$id.' AND t.product_id = 0 
+				WHERE people_id = '.$id.' AND t.product_id IS NULL 
 				ORDER BY transaction_date DESC
 				LIMIT 5',
                 'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
