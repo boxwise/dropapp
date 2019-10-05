@@ -1,4 +1,5 @@
 <?php
+
     require_once 'jsmin-1.1.1.php';
 
     $outputFile = 'assets/js/minified.js';

@@ -1,4 +1,5 @@
 <?php
+
     if (!isset($_SESSION['laundrystation'])) {
         $_SESSION['laundrystation'] = db_value('SELECT id FROM laundry_stations ORDER BY id LIMIT 1');
     }

@@ -263,7 +263,7 @@ class AddOrganizationIdsToCmsUsersTable extends AbstractMigration
             'row_format' => 'DYNAMIC',
         ])
             ->addColumn('organisation_id', 'integer', [
-                'null' => false,
+                'null' => true,
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'signed' => false,
                 'after' => 'valid_lastday',

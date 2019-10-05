@@ -21,7 +21,7 @@
 					FROM transactions AS t, people AS p 
 					WHERE t.people_id = p.id AND p.camp_id = :camp_id AND t.product_id > 0 AND DATE_FORMAT(t.transaction_date,"%Y-%m-%d") = :date',
                     ['date' => $date, 'camp_id' => $_SESSION['camp']['id']]
-                        );
+                );
 
                 if ($sales) {
                     $test = db_simplearray('SELECT c.label AS gender, SUM(t.count) 

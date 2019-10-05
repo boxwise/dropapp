@@ -35,8 +35,6 @@ mb_internal_encoding('UTF-8');
 require_once 'lib/translate.php';
 
 // load other libraries
-require_once 'lib/smarty.php';
-require_once 'lib/errorhandling.php';
 require_once 'lib/session.php';
 require_once 'lib/tools.php';
 require_once 'lib/mail.php';

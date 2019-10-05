@@ -43,12 +43,14 @@ $table = $action;
 			)) > (SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
 			people.*, 
 			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
-			IF(gender="M","Male",IF(gender="F","Female","")) AS gender2, 
+			IF(people.gender="M","Male",IF(people.gender="F","Female","")) AS gender2, 
 			IF(people.parent_id,"",SUM(t2.drops)) AS drops,  
-			IF(notregistered,"NR","") AS nr,
-			comments
-		FROM people 
-		LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
+			IF(people.notregistered,"NR","") AS nr,
+            people.comments,
+            IF(people.parent_id,1,0) AS level
+        FROM people 
+        LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
+        LEFT OUTER JOIN people AS parent ON parent.id = people.parent_id
 		WHERE 
 			NOT people.deleted AND 
 			'.('week' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") AND' : '').
@@ -60,7 +62,7 @@ $table = $action;
 			 container = "'.$search.'" OR 
 			 comments LIKE "%'.$search.'%" OR 
 			 (SELECT 
-			 	COUNT(id) 
+			 	COUNT(id)
 			 FROM people AS p 
 			 WHERE 
 			 	(lastname LIKE "%'.$search.'%" OR 
@@ -70,7 +72,7 @@ $table = $action;
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			' : ' ')
-        .'GROUP BY people.id ORDER BY people.seq');
+        .'GROUP BY people.id ORDER BY IF(people.parent_id,parent.seq + (people.seq / 100000), people.seq)');
 
         $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 

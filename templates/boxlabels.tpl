@@ -19,7 +19,7 @@
 	
 </div>
 {else}
-<div class="boxlabel-small">
+<div class="boxlabel-small" data-testid="boxlabel-small">
 	<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://{$smarty.server.HTTP_HOST}/mobile.php?barcode={$d['hash']}" />
 </div>
 {/if}
