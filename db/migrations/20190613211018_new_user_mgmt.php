@@ -314,11 +314,6 @@ class NewUserMgmt extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'modified',
             ])
-            ->addColumn('deleted', 'datetime', [
-                'null' => true,
-                'after' => 'modified_by',
-                'default' => null,
-            ])
             ->create()
         ;
         $this->table('cms_access')->drop()->save();

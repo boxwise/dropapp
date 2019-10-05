@@ -204,54 +204,6 @@ class formHandler
         }
     }
 
-    public function saveMultilanguage($keys)
-    {
-        global $settings;
-
-        array_unshift($keys, 'table_id');
-        array_unshift($keys, 'lan');
-
-        foreach ($settings['languages'] as $language) {
-            $this->post[$language['code']]['lan'] = db_value('SELECT id FROM languages WHERE code = :code', ['code' => $language['code']]);
-            $this->modifyData($keys, $language['code']);
-
-            $updatequery = 'UPDATE '.$this->table.'_content SET ';
-            $insertquery = 'INSERT INTO '.$this->table.'_content';
-
-            $this->post[$language['code']]['table_id'] = $this->id;
-
-            $subid = intval($this->post[$language['code']]['id']);
-
-            unset($updatequeryfields, $insertqueryfields, $insertqueryfields2, $queryvalues);
-
-            foreach ($keys as $key) {
-                $updatequeryfields[] = $key.' = :'.$key;
-                $insertqueryfields[] = $key;
-                $insertqueryfields2[] = ':'.$key;
-                $queryvalues[$key] = $this->post[$language['code']][$key];
-            }
-
-            $updatequery .= join(', ', $updatequeryfields).' WHERE id = '.$subid;
-            $insertquery .= ' ('.join(', ', $insertqueryfields).') VALUES ('.join(', ', $insertqueryfields2).')';
-
-            if ($subid > 0) {
-                if ($this->debug) {
-                    dump(join(',', $queryvalues));
-                    dump($updatequery);
-                } else {
-                    db_query($updatequery, $queryvalues);
-                }
-            } else {
-                if ($this->debug) {
-                    dump(join(',', $queryvalues));
-                    dump($insertquery);
-                } else {
-                    db_query($insertquery, $queryvalues);
-                }
-            }
-        }
-    }
-
     public function saveMultiple($field, $table, $here, $there)
     {
         db_query('DELETE FROM '.$table.' WHERE '.$here.' = :'.$here, [$here => $this->id]);
@@ -350,46 +302,6 @@ class formHandler
         if ($exists) {
             $url = $base.'-'.($nr + 1);
             $url = $this->makeURL_suffix($url);
-        }
-
-        return $url;
-    }
-
-    public function makeURL_multilanguage($field)
-    {
-        global $settings;
-
-        foreach ($settings['languages'] as $language) {
-            $value = $this->post[$language['code']][$field];
-            if ($value) {
-                $url = safestring(trim($value));
-                $url = $this->makeURL_multilanguage_suffix($language['code'], $url);
-                if (!$this->post[$language['code']]['url']) {
-                    $this->post[$language['code']]['url'] = $url;
-                }
-            }
-        }
-    }
-
-    public function makeURL_multilanguage_suffix($language, $url)
-    {
-        $lanid = db_value('SELECT id FROM languages WHERE code = :code', ['code' => $language]);
-        $fields = db_listfields($this->table);
-        if (in_array('deleted', $fields)) {
-            $deleted = true;
-        }
-
-        $nr = intval(preg_replace('^([a-zA-Z0-9_-]*)-([0-9]*)^', '\\2', $url));
-        $base = preg_replace('^([a-zA-Z0-9_-]*)-([0-9]*)^', '\\1', $url);
-        if (!intval($nr)) {
-            $nr = '';
-            $base = $url;
-        }
-
-        $exists = db_numrows('SELECT url FROM '.$this->table.' AS p, '.$this->table.'_content AS p2 WHERE p2.table_id = p.id AND lan = :lanid AND p2.id != '.intval($this->post[$language]['id']).' AND url = "'.$url.'"'.($deleted ? ' AND NOT deleted' : ''), ['lanid' => $lanid]);
-        if ($exists) {
-            $url = $base.'-'.($nr + 1);
-            $url = $this->makeURL_multilanguage_suffix($language, $url);
         }
 
         return $url;

@@ -1,13 +1,13 @@
 <h2 class="page-header">Box {$box['box_id']}</h2>
-	<div id ="box-info" class="container-fluid">
+	<div id ="box-info" class="container-fluid" data-testid="box-info">
 		<div id="box-info-content" class = "row">
-				<div id="box-info-product" class = "col-xs-12">
+				<div id="box-info-product" class = "col-xs-12" data-testid="box-info-product">
 					<strong>{$box['items']}x {$box['product2']}</strong>
 				</div>
-				<div id="box-info-gender" class = "col-xs-6">
+				<div id="box-info-gender" class = "col-xs-6" data-testid="box-info-gender">
 					<strong>{$box['gender']}</strong>
 				</div>
-				<div id="box-info-size" class = "col-xs-6">
+				<div id="box-info-size" class = "col-xs-6" data-testid="box-info-size">
 					<strong>{$box['size']}</strong>
 				</div>
 
@@ -19,7 +19,9 @@
 		{/if}
 		</div>
 	</div>
+	<div data-testid="moveBoxDiv">
 	Move this box from <strong>{$box['location']}</strong> to:</p>
+	</div>
 	<div class="btn-list">
 		{foreach $locations as $value=>$location}
 			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>

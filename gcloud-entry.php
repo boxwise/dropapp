@@ -7,6 +7,9 @@ require_once 'library/config.php';
 require_once 'library/gcloud.php';
 // load error handling as soon as possible
 require_once 'library/error-reporting.php';
+require_once 'library/lib/smarty.php';
+require_once 'library/lib/errorhandling.php';
+
 // The GAE environment requires a single entry point, so we're
 // doing basic routing from here
 use OpenCensus\Trace\Tracer;
@@ -36,6 +39,7 @@ Tracer::inSpan(
         case '/pdf/qr.php':
         case '/pdf/dryfood.php':
         case '/reseed-db.php':
+        case '/fake-error.php':
             require substr($parsedUrl, 1); // trim /
             break;
         default:

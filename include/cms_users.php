@@ -1,4 +1,5 @@
 <?php
+
     $table = $action;
     $ajax = checkajax();
 

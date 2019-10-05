@@ -1,4 +1,5 @@
 <?php
+
     $table = 'cms_users';
 
     if ($_POST) {

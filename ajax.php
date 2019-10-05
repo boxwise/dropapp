@@ -1,4 +1,5 @@
 <?php
+
     $ajax = true;
     // Only if the Login form calls ajax --> $login is set true
     $login = (('login' == $_GET['file']) || ('reset' == $_GET['file']) || ('reset2' == $_GET['file']) ? true : false);
