@@ -99,7 +99,7 @@ class formHandler
             }
 
             $value = stripslashes($value);
-            if (array_key_exists($key, $this->nullIfEmpty) && $value == '') {
+            if (array_key_exists($key, $this->nullIfEmpty) && '' == $value) {
                 $value = null;
             }
 
