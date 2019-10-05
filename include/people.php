@@ -57,22 +57,22 @@ $table = $action;
             ('month' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") AND' : '').'
 			people.camp_id = '.$_SESSION['camp']['id'].
             ($listconfig['searchvalue'] ? ' AND
-			(lastname LIKE "%'.$search.'%" OR 
-			 firstname LIKE "%'.$search.'%" OR 
-			 container = "'.$search.'" OR 
-			 comments LIKE "%'.$search.'%" OR 
+			(people.lastname LIKE "%'.$search.'%" OR 
+			 people.firstname LIKE "%'.$search.'%" OR 
+			 people.container = "'.$search.'" OR 
+			 people.comments LIKE "%'.$search.'%" OR 
 			 (SELECT 
 			 	COUNT(id)
 			 FROM people AS p 
 			 WHERE 
-			 	(lastname LIKE "%'.$search.'%" OR 
-			 	 firstname LIKE "%'.$search.'%" OR 
-				  container = "'.$search.'" OR 
-				  comments LIKE "%'.$search.'%") AND 
+			 	(p.lastname LIKE "%'.$search.'%" OR 
+                 p.firstname LIKE "%'.$search.'%" OR 
+                 p.container = "'.$search.'" OR 
+                 p.comments LIKE "%'.$search.'%") AND 
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			' : ' ')
-        .'GROUP BY people.id ORDER BY IF(people.parent_id,parent.seq + (people.seq / 100000), people.seq)');
+        .'GROUP BY people.id ORDER BY IF(people.parent_id,parent.seq + (people.seq / 100000), people.seq), IF(people.parent_id,1,0)');
 
         $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
