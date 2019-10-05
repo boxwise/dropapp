@@ -18,7 +18,7 @@
 	WHERE
 		p.visible AND
 		NOT p.deleted AND
-		parent_id = 0
+		parent_id IS NULL
 	ORDER BY SUBSTRING(container, 1,1), SUBSTRING(container, 2, 10)*1');
 
     while ($row = db_fetch($result)) {

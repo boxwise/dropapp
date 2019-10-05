@@ -21,11 +21,11 @@
         $id = $handler->savePost($savekeys);
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
-        // Set parent_id =0 if a family does not have the same container ID
+        // Set parent_id IS NULL if a family does not have the same container ID
         // if($_POST['id'] && $oldcontainer != $_POST['container']) {
         // 	if($_POST['parent_id']) {
         // 		$parentcontainer = db_value('SELECT container FROM people WHERE parent_id = :id',array('id'=>$_POST['id']));
-        // 		if($parentcontainer != $_POST['container']) db_query('UPDATE people SET parent_id = 0 WHERE id = :id', array('id'=>$_POST['id']));
+        // 		if($parentcontainer != $_POST['container']) db_query('UPDATE people SET parent_id IS NULL WHERE id = :id', array('id'=>$_POST['id']));
         // 	} else {
         // 		db_query('UPDATE people SET container = :container WHERE parent_id = :id', array('id'=>$_POST['id'], 'container'=>$_POST['container']));
         // 	}
@@ -123,7 +123,7 @@
     addfield('select', 'Familyhead', 'parent_id', ['multiple' => false, 'tab' => 'people', 'onchange' => 'selectFamilyhead("parent_id","container")', 'query' => '
 		SELECT p.id AS value, p.container AS value2, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled 
 		FROM people AS p 
-		WHERE parent_id = 0 AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
+		WHERE parent_id IS NULL AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
 		GROUP BY p.id 
 		ORDER BY label']);
     addfield('text', 'Firstname', 'firstname', ['tab' => 'people', 'required' => true]);
