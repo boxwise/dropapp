@@ -122,7 +122,7 @@
 				<div class="fc"></div>
 			</div>
 			<div class="sticky-header-container">
-				<table class="table list-{$listconfig['origin']}" {if $listconfig['sortlist']}data-sortlist="{$listconfig['sortlist']}"{/if}>
+				<table class="table list-{$listconfig['origin']}" {if $listconfig['sortlist']}data-sortlist="{$listconfig['sortlist']}"{/if} data-testid="table-{$listconfig['origin']}">
 				  	<thead>
 					  	<tr>
 						{foreach $listdata as $key=>$column}

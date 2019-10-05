@@ -1,13 +1,13 @@
-<div class="info-aside" id="people_id_selected">{$data['test']}
+<div class="info-aside" id="people_id_selected" data-testid="info-aside">{$data['test']}
 	<ul class="people-list">
 	{foreach $data['people'] as $person}
-		<li {if $person['id']==$data['people_id']}class="parent"{/if}><a href="?action=people_edit&amp;id={$person['id']}">{$person['firstname']} {$person['lastname']} ({$person['age']} yr, {$person['gender']})</a>{if $person['comments']}<span class="people-comment">{$person['comments']}</span>{/if}</li>
+		<li {if $person['id']==$data['people_id']}class="parent"{/if}><a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{$person['firstname']} {$person['lastname']} ({$person['age']} yr, {$person['gender']})</a>{if $person['comments']}<span class="people-comment">{$person['comments']}</span>{/if}</li>
 	{/foreach}
 	</ul>
 
 	{if $data['shoeswarning']}<p class="warningbox">This beneficiary has already bought<br />winter shoes or light shoes for men in this or the previous cycle.</p>{/if}
 
-	{if isset($data['approvalsigned']) && !$data['approvalsigned'] && $data['parent_id']==0} <a class="btn btn-danger tooltip-this" data-toggle="tooltip" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data." href="?action=people_edit&id={$data['people_id']}" ><span class="fa fa-edit"></span> No signature</a>{/if}
+	{if isset($data['approvalsigned']) && !$data['approvalsigned'] && $data['parent_id']==0} <a class="btn btn-danger tooltip-this" data-toggle="tooltip" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data." href="?action=people_edit&id={$data['people_id']}" data-testid="privacyDeclarationMissingButton" ><span class="fa fa-edit"></span> No signature</a>{/if}
 
 
 	<p class="familycredit"><img src="../assets/img/more_coins.png" class="coinsImage" /> <span id="dropcredit" data-drop-credit="{$data['dropcoins']}" data-testid="dropcredit">{$data['dropcoins']}</span> {$currency} {if $data['allowdrops']}<a class="btn btn-sm" href="{$data['givedropsurl']}"><img src="../assets/img/one_coin.png" class="coinsImage" /> <span data-testid='giveTokensButton'>Give {$currency}</span></a>{/if}<br /><br /><span class="small">Last purchase: {$data['lasttransaction']}</span>
