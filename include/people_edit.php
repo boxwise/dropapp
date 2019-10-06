@@ -18,14 +18,14 @@
             $savekeys[] = 'laundryblock';
             $savekeys[] = 'laundrycomment';
         }
-        $id = $handler->savePost($savekeys);
+        $id = $handler->savePost($savekeys, ['parent_id']);
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
-        // Set parent_id =0 if a family does not have the same container ID
+        // Set parent_id IS NULL if a family does not have the same container ID
         // if($_POST['id'] && $oldcontainer != $_POST['container']) {
         // 	if($_POST['parent_id']) {
         // 		$parentcontainer = db_value('SELECT container FROM people WHERE parent_id = :id',array('id'=>$_POST['id']));
-        // 		if($parentcontainer != $_POST['container']) db_query('UPDATE people SET parent_id = 0 WHERE id = :id', array('id'=>$_POST['id']));
+        // 		if($parentcontainer != $_POST['container']) db_query('UPDATE people SET parent_id IS NULL WHERE id = :id', array('id'=>$_POST['id']));
         // 	} else {
         // 		db_query('UPDATE people SET container = :container WHERE parent_id = :id', array('id'=>$_POST['id'], 'container'=>$_POST['container']));
         // 	}
@@ -123,7 +123,7 @@
     addfield('select', 'Familyhead', 'parent_id', ['multiple' => false, 'tab' => 'people', 'onchange' => 'selectFamilyhead("parent_id","container")', 'query' => '
 		SELECT p.id AS value, p.container AS value2, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled 
 		FROM people AS p 
-		WHERE parent_id = 0 AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
+		WHERE parent_id IS NULL AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
 		GROUP BY p.id 
 		ORDER BY label']);
     addfield('text', 'Firstname', 'firstname', ['tab' => 'people', 'required' => true]);
@@ -195,7 +195,7 @@
 				LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
 				LEFT OUTER JOIN products AS p ON p.id = t.product_id 
 				LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
-				WHERE people_id = '.$id.' AND t.product_id != 0 
+				WHERE people_id = '.$id.' AND t.product_id IS NOT NULL 
 				ORDER BY transaction_date DESC
 				LIMIT 20',
                 'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Purchase made by', 'tdate' => 'Date'],
@@ -207,7 +207,7 @@
             addfield('list', 'Transactions', 'trans', ['tab' => 'transaction', 'width' => 10, 'query' => 'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate 
 				FROM transactions AS t 
 				LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
-				WHERE people_id = '.$id.' AND t.product_id = 0 
+				WHERE people_id = '.$id.' AND t.product_id IS NULL 
 				ORDER BY transaction_date DESC
 				LIMIT 5',
                 'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],

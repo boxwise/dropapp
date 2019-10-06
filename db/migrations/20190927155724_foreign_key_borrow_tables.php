@@ -40,7 +40,8 @@ class ForeignKeyBorrowTables extends AbstractMigration
             ->changeColumn('location_id', 'integer', [
                 'signed' => false,
             ])
-            ->save();
+            ->save()
+        ;
         $this->execute('UPDATE borrow_items SET category_id = NULL WHERE category_id = 0');
         $this->table('borrow_items')
             ->addForeignKey('category_id', 'borrow_categories', 'id', [
@@ -60,7 +61,8 @@ class ForeignKeyBorrowTables extends AbstractMigration
             ->changeColumn('bicycle_id', 'integer', [
                 'signed' => false,
             ])
-            ->save();
+            ->save()
+        ;
         $this->execute('UPDATE borrow_transactions SET location_id = NULL WHERE location_id = 0');
         $this->table('borrow_transactions')
             ->addForeignKey('location_id', 'borrow_locations', 'id', [
