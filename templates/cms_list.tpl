@@ -108,11 +108,11 @@
 							<form method="post">
 								<div class="input-group form-inline search-group">
 									<div class="has-feedback">
-										<input type="text" class="form-control input-sm" name="search" value="{$listconfig['searchvalue']}">
+										<input type="text" class="form-control input-sm" data-testid='box-search' name="search" value="{$listconfig['searchvalue']}">
 										{if $listconfig['searchvalue']}<a class="fa fa-times-circle form-control-feedback" href="?action={$listconfig['origin']}&resetsearch=true"></a>{/if}
 									</div>
 									<span class="input-group-btn">
-										<button class="btn btn-sm btn-default" type="submit"><span class="fa fa-search"></span></button>
+										<button class="btn btn-sm btn-default" data-testid = "search-button" type="submit"><span  class="fa fa-search"></span></button>
 									</span>
 								</div>
 							</form>
@@ -155,7 +155,7 @@
 										<td class="controls-front list-level-{$row['level']} list-column-{$key}">
 											<div class="td-content">
 												<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-												<label class="item-select-label"><input class="item-select" type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}></label>
+												<label class="item-select-label"><input class="item-select" data-testid='select-id' type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}></label>
 													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
 														<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
 													{else}
