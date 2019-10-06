@@ -16,7 +16,7 @@ environments:
     development:
         adapter: mysql
         host: 127.0.0.1
-        name: dropapp_dih2
+        name: dropapp_dev
         user: root
         pass: dropapp_root
         port: 9906
