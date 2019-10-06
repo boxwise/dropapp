@@ -55,24 +55,44 @@ context("Box_creation_tests", () => {
         cy.get("input[data-testid='select-id").click()
         cy.get("i[class='fa fa-print']").click();
     }
-    
-    function CheckEmpty(){
-        cy.get("span[id='select2-chosen-1']").contains("Please select").should("be.visible")
-        cy.get("span[id='select2-chosen-2']").contains("Please select").should("be.visible")
-        cy.get("span[id='select2-chosen-3']").contains("Please select").should("be.visible")
-        cy.get("input[id='field_items']").should("be.empty");
-        cy.get("textarea[id='field_comments']").should("be.empty");
-        //Check buttons
-        cy.get("button").contains("Save and close").should("be.visible")
-        cy.get("button").contains("Save and new").should("be.visible")
+    function CheckInput(Field_id){
+        cy.get("input[data-testid = '" + Field_id + "']").should("be.empty")
+    }
+    function CheckSaveButton(buttonname){
+        cy.get("button").contains(buttonname).should("be.visible")
+    }
+    function CheckCancelButton(){
         cy.get("a").contains("Cancel").should("be.visible")
     }
+    function CheckQtip(qtip_id){
+        cy.get("div[id='"+ qtip_id + "']").should("be.visible")
+    }
+    function CheckCommentField(){
+        cy.get("textarea[data-testid='comments_id']").should("be.empty")
+    }
+    function CheckUrl(Text){
+        cy.url().should('contain',Text)
+    }
+    
+    function CheckEmpty(){
+        cy.getSelectedValueInDropDown("product_id").contains("Please select").should('exist')
+        cy.getSelectedValueInDropDown("size_id").contains("Please select").should('exist')
+        cy.getSelectedValueInDropDown("location_id").contains("Please select").should('exist')
+        CheckInput("items_id")
+        CheckCommentField()
+        //Check buttons
+        CheckSaveButton("Save and close")
+        CheckSaveButton("Save and new")
+        CheckCancelButton()
+    }
+    
+
     it('3_2_1 Prevent box creation without data', () => {
         CheckEmpty();
         SaveAndProgress("Save and close")
-        cy.get("div[id='qtip-1-content']").should("be.visible");
-        cy.get("div[id='qtip-2-content']").should("be.visible");
-        cy.get("div[id='qtip-3-content']").should("be.visible");
+        CheckQtip('qtip-1-content')
+        CheckQtip('qtip-2-content')
+        CheckQtip('qtip-3-content')
     })
 
     it('3_2_2 Create Box with data', () => {
@@ -109,8 +129,8 @@ context("Box_creation_tests", () => {
             ContinueToMenu()
             SearchBoxById(Test_id)
             CreateQR()
-            cy.url().should('contain','pdf');
-            cy.url().should('contain','label');
+            CheckUrl('pdf')
+            CheckUrl('label')
             cy.visit('/?action=stock');
             DeleteTested()
     })
