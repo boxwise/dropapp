@@ -37,11 +37,14 @@ context("5_2_Add_Beneficiary_Test",()=>
         cy.get("tr").contains(name2).parent("td").parent("tr").prev().prev().should('contain',name)
     }
 
-    function CheckLanguageField(){
+    function CheckCommentField(){
         cy.get("textarea[data-testid='comments_id']").should("be.empty")
     }
     function CheckCancelButton(){
         cy.get("a").contains("Cancel").should("be.visible")
+    }
+    function CheckLanguageField(){
+        cy.get("input[id='s2id_autogen3']").should("be.empty")
     }
 
     function CheckEmptyForm() {
@@ -53,9 +56,8 @@ context("5_2_Add_Beneficiary_Test",()=>
     CheckInput("date_of_birth_id")
     CheckInput("volunteer_id")
     CheckInput("registered_id")
-    //cy.getSelectedValueInDropDown("languages").contains("Please select").should('exist')
-    cy.get("input[id='s2id_autogen3']").should("be.empty")
     CheckLanguageField()
+    CheckCommentField()
     Checktab("tabid_bicycle")
     Checktab('tabid_signature')
     CheckSaveButton("Save and close")
