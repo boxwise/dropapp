@@ -126,8 +126,8 @@
 		WHERE parent_id IS NULL AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
 		GROUP BY p.id 
 		ORDER BY label']);
-    addfield('text', 'Firstname', 'firstname', ['tab' => 'people', 'required' => true]);
-    addfield('text', 'Lastname', 'lastname', ['tab' => 'people']);
+    addfield('text', 'Firstname', 'firstname', ['tab' => 'people', 'required' => true, 'testid' => 'firstNameEditInput']);
+    addfield('text', 'Lastname', 'lastname', ['tab' => 'people', 'testid' => 'lastNameEditInput']);
     addfield('text', $_SESSION['camp']['familyidentifier'], 'container', ['tab' => 'people', 'required' => true, 'onchange' => 'capitalize("container")']);
     addfield('select', 'Gender', 'gender', ['tab' => 'people',
         'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);

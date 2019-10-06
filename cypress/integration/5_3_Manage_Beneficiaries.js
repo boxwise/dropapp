@@ -1,7 +1,7 @@
 const FAMILY1 = "McGregor";
 const FAMILY2 = "Tonon";
 const FAMILY3 = "Gracie";
-const FAMILY_WITHOUT_TOKENS = "Without";
+const FAMILY_WITHOUT_APPROVAL = "WithoutApproval";
 
 describe('Manage beneficiaries', () => {
 
@@ -15,9 +15,9 @@ describe('Manage beneficiaries', () => {
     }
 
     function getExportButton(){
-        return cy.get("button").contains("Export");
+        return cy.get("button[data-testid='exportBeneficiariesButton']");
     }
-
+    
     function getNewPersonButton(){
         return cy.get("a").contains("New person");
     }
@@ -34,7 +34,10 @@ describe('Manage beneficiaries', () => {
         cy.get("h1").contains(familyName).should('be.visible'); 
     }
 
-    function beneficiaryDataFormIsVisible(familyName){}
+    function beneficiaryDataFormIsVisible(familyName){
+        cy.get("input[data-testid='firstNameEditInput']").should('be.visible');
+        cy.get("input[data-testid='lastNameEditInput']").contains(familyName).should('be.visible');
+    }
 
     function beneficiaryInfoAsideIsVisible(familyName){
         cy.get("div[data-testid='info-aside']").should('be.visible'); 
@@ -44,6 +47,17 @@ describe('Manage beneficiaries', () => {
 
     function getPrivacyDeclarationButton(){
         return cy.get("a[data-testid='privacyDeclarationMissingButton']");
+    }
+
+    function getBeneficiaryRow(familyName){
+        return cy.get('tr').contains(familyName);
+    }
+
+    function tableRowIsShowingMissingApprovalIcon(familyName){
+        cy.get('tr').contains(familyName).then($familyRow => {
+            debugger;
+            expect($familyRow.parent().parent().parent().find("i[data-hasqtip='1']").length).to.equal(1);
+        });
     }
 
     // it('Navigation, page elements and list visibility', () => {
@@ -58,16 +72,27 @@ describe('Manage beneficiaries', () => {
     //     cy.get("h1").contains("Beneficiaries").should('be.visible');
     // });
 
-    it('Select beneficiary with privacy declaration', () => {
-        selectBeneficiaryFromTableByName(FAMILY1);
-        beneficiaryNameIsVisible(FAMILY1);
-        beneficiaryDataFormIsVisible(FAMILY1);
-        beneficiaryInfoAsideIsVisible(FAMILY1);
-    });
+    it('Missing signed approval sign shown in list', () => {
+        tableRowIsShowingMissingApprovalIcon(FAMILY_WITHOUT_APPROVAL);
+    })
 
-    it('Select beneficiary without privacy declaration', () => {
-        selectBeneficiaryFromTableByName(FAMILY1);
-        beneficiaryDataFormIsVisible(FAMILY1);
-        getPrivacyDeclarationButton().should('be.visible');
-    });
+    // it('Select beneficiary with privacy declaration', () => {
+    //     selectBeneficiaryFromTableByName(FAMILY1);
+    //     beneficiaryNameIsVisible(FAMILY1);
+    //     beneficiaryDataFormIsVisible(FAMILY1);
+    //     beneficiaryInfoAsideIsVisible(FAMILY1);
+    //     getPrivacyDeclarationButton().should('not.be.visible');
+    // });
+
+    // it('Select beneficiary without privacy declaration', () => {
+    //     selectBeneficiaryFromTableByName(FAMILY_WITHOUT_APPROVAL);
+    //     beneficiaryDataFormIsVisible(FAMILY_WITHOUT_APPROVAL);
+    //     getPrivacyDeclarationButton().should('be.visible');
+    // });
+
+    // it('Delete beneficiary', () => {
+    //     selectBeneficiaryFromTableByName(FAMILY_WITHOUT_APPROVAL);
+    //     beneficiaryDataFormIsVisible(FAMILY_WITHOUT_APPROVAL);
+    //     getPrivacyDeclarationButton().should('be.visible');
+    // });
 });

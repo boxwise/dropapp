@@ -141,7 +141,7 @@ $table = $action;
 
                 addbutton('print', 'Print', ['icon' => 'fa-print', 'options' => $options]);
                 addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer']);
-                addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'test']);
+                addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportBeneficiariesButton']);
 
                 $cmsmain->assign('data', $data);
                 $cmsmain->assign('listconfig', $listconfig);
