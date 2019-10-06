@@ -16,70 +16,99 @@ context("5_2_Add_Beneficiary_Test",()=>
         cy.get("a[data-apply='confirmation']").click()
     }
 
+    function SaveAndProgress(buttonname) {
+        cy.get("button").contains(buttonname).click()
+    }
+
+    function CheckInput(Field_id){
+        cy.get("input[data-testid = '" + Field_id + "']").should("be.empty")
+    }
+    function Checktab(Tab_id){
+        cy.get("a[id='"+ Tab_id + "']").should("be.visible")
+    }
+    function CheckSaveButton(buttonname){
+        cy.get("button").contains(buttonname).should("be.visible")
+    }
+    function CheckNotyText(Text) {
+        cy.get("span[class='noty_text']").contains(Text).should("be.visible");
+
+    }
+    function CheckAssociation(name,name2){
+        cy.get("tr").contains(name2).parent("td").parent("tr").prev().prev().should('contain',name)
+    }
+
+    function CheckLanguageField(){
+        cy.get("textarea[data-testid='comments_id']").should("be.empty")
+    }
+    function CheckCancelButton(){
+        cy.get("a").contains("Cancel").should("be.visible")
+    }
 
     function CheckEmptyForm() {
-    cy.get("span[id='select2-chosen-1']").contains('Please select').should("be.visible")
-    cy.get("input[data-testid = 'firstname_id']").should("be.empty")
-    cy.get("input[data-testid = 'lastname_id']").should("be.empty")
-    cy.get("input[data-testid = 'container_id']").should("be.empty")
-    cy.get("span[id='select2-chosen-2']").contains('Please select').should("be.visible")
-    cy.get("input[data-testid='date_of_birth_id']").should("be.empty")
+    cy.getSelectedValueInDropDown("parent_id").contains("Please select").should('exist')
+    CheckInput("firstname_id")
+    CheckInput("lastname_id")
+    CheckInput("container_id")
+    cy.getSelectedValueInDropDown("gender").contains("Please select").should('exist')
+    CheckInput("date_of_birth_id")
+    CheckInput("volunteer_id")
+    CheckInput("registered_id")
+    //cy.getSelectedValueInDropDown("languages").contains("Please select").should('exist')
     cy.get("input[id='s2id_autogen3']").should("be.empty")
-    cy.get("textarea[data-testid='comments_id']").should("be.empty")
-    cy.get("input[data-testid='volunteer_id']").should("be.empty")
-    cy.get("input[data-testid='registered_id']").should("be.empty")
-    cy.get("a[id='tabid_bicycle']").should("be.visible")
-    cy.get("a[id='tabid_signature']").should("be.visible")
-    //Check buttons
-    cy.get("button").contains("Save and close").should("be.visible")
-    cy.get("button").contains("Save and new").should("be.visible")
-    cy.get("a").contains("Cancel").should("be.visible")
+    CheckLanguageField()
+    Checktab("tabid_bicycle")
+    Checktab('tabid_signature')
+    CheckSaveButton("Save and close")
+    CheckSaveButton("Save and new")
+    CheckCancelButton()
     }
 
-    function FillForm(firstname,lastname,case_id,gender)
-    {cy.get("input[data-testid = 'firstname_id']").type(firstname);
-    cy.get("input[data-testid = 'lastname_id']").type(lastname);
+    function InputFill( Field_id, Field_input){
+    cy.get("input[data-testid = '" + Field_id + "']").type(Field_input)
+}
+    function FillForm(firstname,lastname,case_id)
+    {InputFill("firstname_id",firstname)
+    InputFill("lastname_id",lastname)
     if (case_id != ""){
-        cy.get("input[data-testid='container_id']").type(case_id);
+        InputFill("container_id",case_id)
     }
+}
+    function CheckQtip(qtip_id){
+        cy.get("div[id='"+ qtip_id + "']").should("be.visible")
 
     }
+
+
     it("5_2_1 Fill form, Save and close",() => {
         CheckEmptyForm();
         //check all the forms 
         FillForm(Test_firstname,Test_lastname,Test_case_id);
-        cy.get("button").contains("Save and close").click();
+        SaveAndProgress("Save and close")
         cy.notificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added")
-        cy.get("div").contains(Test_case_id).should("be.visible");
         DeleteTested(Test_firstname)
 
     })
     
     it("5_2_2 Prevent emtpy submit",() => {
-
-        cy.get("button").contains("Save and close").click();
-        cy.get("div[id='qtip-0-content']").should("be.visible");
-        cy.get("div[id='qtip-1-content']").should("be.visible");
-
+        SaveAndProgress("Save and close")
+        CheckQtip("qtip-0-content")
+        CheckQtip("qtip-1-content")
     })
-
+    
 
     it("5_2_4 Save and new check if new person in familyhead-dropdown + check if empty",() => {
         //check all the forms 
         FillForm(Test_firstname,Test_lastname,Test_case_id);
-        cy.get("button").contains("Save and new").click();
-        cy.get("span[class='noty_text']").contains(Test_firstname+" "+Test_lastname + " was added").should("be.visible");
-        cy.get("span[class='noty_text']").contains(Test_case_id).should("be.visible");
-
+        SaveAndProgress("Save and new")
+        CheckNotyText(Test_firstname+" "+Test_lastname + " was added")
+        CheckNotyText(Test_case_id);
         // Check for the familyhead after adding it above
-        cy.get("span[id='select2-chosen-1']").click();
-        cy.get("input[id='s2id_autogen1_search']").click().type(Test_case_id +" "+ Test_firstname);
-        cy.get("div[class='select2-result-label']").contains(Test_case_id + " "+ Test_firstname+ " "+ Test_lastname).click();
+        cy.selectOptionByText("parent_id",Test_case_id +" "+ Test_firstname)
         FillForm(Test_firstname2,Test_lastname,"")
-        cy.get("button").contains("Save and close").click();
+        SaveAndProgress("Save and close")
         cy.notificationWithTextIsVisible(Test_firstname2+" "+Test_lastname + " was added")
-        cy.get("tr").contains(Test_firstname2).parent("td").parent("tr").prev().prev().should('contain',Test_firstname)
+        CheckAssociation(Test_firstname,Test_firstname2)
         DeleteTested(Test_firstname)
     })
-
 })
+
