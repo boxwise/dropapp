@@ -57,7 +57,7 @@
         redirect('?action=people');
     }
 
-    $result = db_query('SELECT * FROM people WHERE camp_id = :camp_id AND visible AND parent_id = 0 AND NOT deleted', ['camp_id' => $_SESSION['camp']['id']]);
+    $result = db_query('SELECT * FROM people WHERE camp_id = :camp_id AND visible AND parent_id IS NULL AND NOT deleted', ['camp_id' => $_SESSION['camp']['id']]);
     while ($row = db_fetch($result)) {
         $ids[] = $row['id'];
     }

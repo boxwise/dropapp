@@ -1,4 +1,5 @@
 <?php
+
     $login = true;
     require_once 'library/core.php';
 

@@ -1,4 +1,5 @@
 <?php
+
     $row = db_row('SELECT * FROM cms_users WHERE resetpassword != "" AND resetpassword = :hash AND id = :userid AND NOT deleted', ['hash' => $_POST['hash'], 'userid' => $_POST['userid']]);
 
     if ($row) { //e-mailaddress exists in database

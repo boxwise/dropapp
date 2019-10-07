@@ -37,40 +37,42 @@ $table = $action;
 			IF(DATEDIFF(NOW(),
 			IF(people.parent_id,NULL,GREATEST(COALESCE((SELECT transaction_date 
 				FROM transactions AS t 
-				WHERE t.people_id = people.id AND people.parent_id = 0 AND product_id != 0 
+				WHERE t.people_id = people.id AND people.parent_id IS NULL AND product_id IS NOT NULL 
 				ORDER BY transaction_date DESC LIMIT 1),0),
 				COALESCE(people.modified,0),COALESCE(people.created,0))
 			)) > (SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
 			people.*, 
 			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
-			IF(gender="M","Male",IF(gender="F","Female","")) AS gender2, 
+			IF(people.gender="M","Male",IF(people.gender="F","Female","")) AS gender2, 
 			IF(people.parent_id,"",SUM(t2.drops)) AS drops,  
-			IF(notregistered,"NR","") AS nr,
-			comments
-		FROM people 
-		LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
+			IF(people.notregistered,"NR","") AS nr,
+            people.comments,
+            IF(people.parent_id,1,0) AS level
+        FROM people 
+        LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
+        LEFT OUTER JOIN people AS parent ON parent.id = people.parent_id
 		WHERE 
 			NOT people.deleted AND 
 			'.('week' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") AND' : '').
             ('month' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") AND' : '').'
 			people.camp_id = '.$_SESSION['camp']['id'].
             ($listconfig['searchvalue'] ? ' AND
-			(lastname LIKE "%'.$search.'%" OR 
-			 firstname LIKE "%'.$search.'%" OR 
-			 container = "'.$search.'" OR 
-			 comments LIKE "%'.$search.'%" OR 
+			(people.lastname LIKE "%'.$search.'%" OR 
+			 people.firstname LIKE "%'.$search.'%" OR 
+			 people.container = "'.$search.'" OR 
+			 people.comments LIKE "%'.$search.'%" OR 
 			 (SELECT 
-			 	COUNT(id) 
+			 	COUNT(id)
 			 FROM people AS p 
 			 WHERE 
-			 	(lastname LIKE "%'.$search.'%" OR 
-			 	 firstname LIKE "%'.$search.'%" OR 
-				  container = "'.$search.'" OR 
-				  comments LIKE "%'.$search.'%") AND 
+			 	(p.lastname LIKE "%'.$search.'%" OR 
+                 p.firstname LIKE "%'.$search.'%" OR 
+                 p.container = "'.$search.'" OR 
+                 p.comments LIKE "%'.$search.'%") AND 
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			' : ' ')
-        .'GROUP BY people.id ORDER BY people.seq');
+        .'GROUP BY people.id ORDER BY IF(people.parent_id,parent.seq + (people.seq / 100000), people.seq), IF(people.parent_id,1,0)');
 
         $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
@@ -191,7 +193,7 @@ $table = $action;
                     $success = false;
                 } else {
                     foreach ($ids as $id) {
-                        db_query('UPDATE people SET parent_id = 0 WHERE id = :id', ['id' => $id]);
+                        db_query('UPDATE people SET parent_id IS NULL WHERE id = :id', ['id' => $id]);
                     }
                     $redirect = true;
                     $success = true;

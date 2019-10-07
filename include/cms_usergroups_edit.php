@@ -72,7 +72,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 	FROM cms_functions AS a 
 	LEFT OUTER JOIN cms_usergroups_functions AS x ON a.id = x.cms_functions_id AND x.cms_usergroups_id = '.intval($id).'
 	LEFT OUTER JOIN cms_usergroups_functions AS y ON a.id = y.cms_functions_id 
-	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id != 0 AND a.visible'.($_SESSION['user']['is_admin'] ? '' : ' AND y.cms_usergroups_id = '.$_SESSION['usergroup']['id']).'
+	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id IS NOT NULL AND a.visible'.($_SESSION['user']['is_admin'] ? '' : ' AND y.cms_usergroups_id = '.$_SESSION['usergroup']['id']).'
 	GROUP BY a.id
 	ORDER BY a.title_en, seq']);
 

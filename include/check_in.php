@@ -30,7 +30,7 @@
         addfield('select', 'Find '.$_SESSION['camp']['familyidentifier'], 'people_id', ['onchange' => 'selectFamily("people_id",false,"check_in")', 'required' => true, 'multiple' => false, 'query' => '
 			SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled 
 			FROM people AS p 
-			WHERE parent_id = 0 AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
+			WHERE parent_id IS NULL AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
 			GROUP BY p.id 
 			ORDER BY label']);
 
