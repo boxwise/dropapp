@@ -10,7 +10,7 @@
         }
 
         $handler = new formHandler($table);
-        $handler->savePost($keys);
+        $handler->savePost($keys, ['language']);
 
         $row = db_row('SELECT * FROM '.$table.' WHERE id = :id ', ['id' => $_SESSION['user']['id']]);
         $_SESSION['user'] = array_merge($_SESSION['user'], $row);
