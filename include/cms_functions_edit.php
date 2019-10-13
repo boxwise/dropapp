@@ -5,8 +5,8 @@
     if ($_POST) {
         $handler = new formHandler($table);
         //$handler->debug = true;
-        $keys = [];
-        $handler->savePost(array_merge($keys, ['title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps']));
+        $keys = ['title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps'];
+        $handler->savePost($keys, ['parent_id']);
 
         redirect('?action='.$_POST['_origin']);
     }
