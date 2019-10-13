@@ -4,7 +4,7 @@
 			<div class="col-sm-12">
 				<h1>{$title}</h1>
 				{if $listconfig['haspagemenu']}
-					<ul class="pagemenu list-unstyled">
+					<ul class="pagemenu list-unstyled" data-testid="listTab">
 					{foreach $listconfig['pagemenu'] as $code=>$pagemenu}
 						<li><a class="{if $pagemenu['active']}active{/if}" href="{$pagemenu['link']}">{$pagemenu['label']}</a>
 					{/foreach}

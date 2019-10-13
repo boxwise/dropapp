@@ -55,9 +55,41 @@ describe('Manage beneficiaries', () => {
 
     function tableRowIsShowingMissingApprovalIcon(familyName){
         cy.get('tr').contains(familyName).then($familyRow => {
-            debugger;
-            expect($familyRow.parent().parent().parent().find("i[data-hasqtip='1']").length).to.equal(1);
+            expect($familyRow.parent().parent().parent().find("i[class='fa fa-edit warning tooltip-this']").length).to.equal(1);
         });
+    }
+
+    function checkBeneficiaryCheckboxByName(familyName){
+        cy.get('tr').contains(familyName).parent().parent().parent().within(() => {
+            cy.get("input[type='checkbox']").check();
+        });
+    }
+
+    function addDropsToFamily(tokensCount){
+        cy.get("input[data-testid='dropsfamily']").type(tokensCount);
+    }
+
+    function clickGiveTokensButton(tokensCount){
+        cy.get("button[data-testid='giveTokensListButton']").click();
+    }
+
+    function giveTokensPageIsVisible(){
+        cy.get("input[data-testid='dropsfamily']").should('be.visible');
+        cy.get("input[data-testid='dropsadult']").should('be.visible');
+        cy.get("input[data-testid='dropschild']").should('be.visible');
+    }
+
+    function selectDeactivatedTab(){
+        cy.get("ul[data-testid='listTab'] a").contains("Deactivated").click();
+        
+    }
+
+    function selectAllTab(){
+        cy.get("ul[data-testid='listTab'] a").contains("All").click();
+    }
+
+    function selectFilterOption(option){
+        cy.get("div[data-testId='filter1Button']").click();
     }
 
     // it('Navigation, page elements and list visibility', () => {
@@ -72,9 +104,9 @@ describe('Manage beneficiaries', () => {
     //     cy.get("h1").contains("Beneficiaries").should('be.visible');
     // });
 
-    it('Missing signed approval sign shown in list', () => {
-        tableRowIsShowingMissingApprovalIcon(FAMILY_WITHOUT_APPROVAL);
-    })
+    // it('Missing signed approval sign shown in list', () => {
+    //     tableRowIsShowingMissingApprovalIcon(FAMILY_WITHOUT_APPROVAL);
+    // })
 
     // it('Select beneficiary with privacy declaration', () => {
     //     selectBeneficiaryFromTableByName(FAMILY1);
@@ -90,9 +122,26 @@ describe('Manage beneficiaries', () => {
     //     getPrivacyDeclarationButton().should('be.visible');
     // });
 
-    // it('Delete beneficiary', () => {
-    //     selectBeneficiaryFromTableByName(FAMILY_WITHOUT_APPROVAL);
-    //     beneficiaryDataFormIsVisible(FAMILY_WITHOUT_APPROVAL);
-    //     getPrivacyDeclarationButton().should('be.visible');
+    // DOESNT WORK YET!
+    // it('Give tokens', () => {
+    //     checkBeneficiaryCheckboxByName(FAMILY2);
+    //     clickGiveTokensButton();
+    //     giveTokensPageIsVisible();
+    //     addDropsToFamily(100);
     // });
+
+    // DOESNT WORK YET!
+    // it('Load deactivated beneficiaries', () => {
+    //     selectDeactivatedTab();
+    // });
+
+    // DOESNT WORK YET!
+    // it('Recover deactivated beneficiaries', () => {
+    //     selectDeactivatedTab();
+    // });
+
+    // DOESNT WORK YET!
+    it('Filter beneficiaries', () => {
+        selectFilterOption();
+    });
 });

@@ -44,10 +44,10 @@
 
     addfield('text', 'Families', 'names', ['readonly' => true]);
     addfield('line', '', '');
-    addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']), 'dropsfamily');
+    addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']), 'dropsfamily', ['testid' => 'dropsfamily']);
     addfield('line', '', '');
-    addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per adult', 'dropsadult');
-    addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per child', 'dropschild');
+    addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per adult', 'dropsadult', ['testid' => 'dropsadult']);
+    addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per child', 'dropschild', ['testid' => 'dropschild']);
     addfield('line', '', '');
 
     addfield('text', 'Comments', 'description');

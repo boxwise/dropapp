@@ -122,7 +122,7 @@ $table = $action;
                     addcolumn('datetime', 'Created', 'created');
                 }
 
-                addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false]);
+                addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
                 addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false]);
                 addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false]);
 
