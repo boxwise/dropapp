@@ -19,7 +19,7 @@ function listMove($table, $ids, $regardparent = true, $hook = '')
         ++$seq[$level];
 
         if ($hasParent) {
-            $parent_id = ($level ? $parent[$level - 1] : 0);
+            $parent_id = ($level ? $parent[$level - 1] : null);
             db_query('UPDATE '.$table.' SET parent_id = :parent_id, seq = :seq WHERE id = :id', ['parent_id' => $parent_id, 'seq' => $seq[$level], 'id' => $id]);
             if ($hook) {
                 $result = $hook($id);
