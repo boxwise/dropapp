@@ -160,7 +160,7 @@
         $formbuttons[] = ['action' => $action, 'label' => $label];
     }
 
-    function getParentarray($table, $minlevel, $maxlevel, $field, $level = 0, $parent = 0)
+    function getParentarray($table, $minlevel, $maxlevel, $field, $level = 0, $parent = null)
     {
         global $settings, $translate;
 
@@ -173,7 +173,7 @@
             $parentarray[] = ['value' => 0, 'label' => $translate['cms_form_selectroot'], 'level' => $level, 'disabled' => ($minlevel > 0)];
         }
 
-        $result = db_query('SELECT a.id, a.'.$field.', a.parent_id FROM '.$table.' AS a WHERE a.parent_id = '.$parent.($hasDeleted ? ' AND NOT a.deleted' : '').' ORDER BY '.($hasSeq ? 'a.seq' : 'a.menutitle ASC'));
+        $result = db_query('SELECT a.id, a.'.$field.', a.parent_id FROM '.$table.' AS a WHERE a.parent_id '.($parent ? '= :parent_id' : 'IS NULL').($hasDeleted ? ' AND NOT a.deleted' : '').' ORDER BY '.($hasSeq ? 'a.seq' : 'a.menutitle ASC'), ['parent_id' => $parent]);
 
         while ($row = db_fetch($result)) {
             if ($level < $maxlevel) {
