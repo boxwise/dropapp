@@ -5,5 +5,3 @@ dispatch:
   service: demo
 - url: "app.boxwise.co/*"
   service: production
-- url: "market.drapenihavet.no/*"
-  service: dih
