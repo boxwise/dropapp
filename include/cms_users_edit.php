@@ -38,8 +38,8 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
             if (!$existinguser) {
                 [$success, $message] = sendlogindata($_POST['_origin'], ['id' => $userId]);
                 if ($success) {
-                    // defining own message because returned one sounds as if user resetted the password himself
-                    $message = 'User will receive an email with instructions and his password within couple of minutes!';
+                    // defining own message because returned one sounds as if user resetted the password themselves
+                    $message = 'User will receive an email with instructions and their password within couple of minutes!';
                 }
                 redirect('?action='.$_POST['_origin'].'&message='.$message);
             } else {
