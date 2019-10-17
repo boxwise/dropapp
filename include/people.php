@@ -14,7 +14,7 @@ $table = $action;
         $cmsmain->assign('title', 'Beneficiaries');
 
         listsetting('allowcopy', false);
-        listsetting('allowmove', true);
+        listsetting('allowmove', false);
         listsetting('allowmoveto', 1);
         listsetting('allowsort', false);
         listsetting('allowshowhide', false);
@@ -74,14 +74,16 @@ $table = $action;
 			' : ' ')
         .'GROUP BY people.id 
         ORDER BY 
-            -- sort by *parent* seq (or own seq if no parent)
-            IF(people.parent_id, parent.seq, people.seq),
+            -- sort by *parent* first & last name (or own first/last if no parent)
+            IF(people.parent_id, parent.lastname, people.lastname), 
+            IF(people.parent_id, parent.firstname, people.firstname),
             -- children should be grouped with their parents
             If(people.parent_id, parent.id, people.id),
             -- parents should appear before children
             IF(people.parent_id, 1, 0),
-            -- children ordered by seq too
-            IF(people.parent_id, people.seq, 0)
+            -- children ordered by first name & last name too
+            IF(people.parent_id, people.lastname, ""), 
+            IF(people.parent_id, people.firstname, "")
             ');
 
         $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
