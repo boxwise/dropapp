@@ -72,7 +72,17 @@ $table = $action;
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			' : ' ')
-        .'GROUP BY people.id ORDER BY IF(people.parent_id,parent.seq + (people.seq / 100000), people.seq), IF(people.parent_id,1,0)');
+        .'GROUP BY people.id 
+        ORDER BY 
+            -- sort by *parent* seq (or own seq if no parent)
+            IF(people.parent_id, parent.seq, people.seq),
+            -- children should be grouped with their parents
+            If(people.parent_id, parent.id, people.id),
+            -- parents should appear before children
+            IF(people.parent_id, 1, 0),
+            -- children ordered by seq too
+            IF(people.parent_id, people.seq, 0)
+            ');
 
         $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
