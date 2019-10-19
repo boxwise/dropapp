@@ -13,7 +13,7 @@
 (SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult_age'].')+IF(p.gender="F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult_age'].',1,0) AS female,
 (SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult_age'].')+IF(p.gender="M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult_age'].',1,0) AS boys,
 (SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult_age'].')+IF(p.gender="F" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 < '.$_SESSION['camp']['adult_age'].',1,0) AS girls
-FROM people AS p WHERE camp_id = :camp_id AND UNIX_TIMESTAMP(date_of_birth) != 0 AND p.visible AND parent_id = 0 AND NOT deleted AND container != "?"', ['camp_id' => $_SESSION['camp']['id']]);
+FROM people AS p WHERE camp_id = :camp_id AND UNIX_TIMESTAMP(date_of_birth) != 0 AND p.visible AND parent_id IS NULL AND NOT deleted AND container != "?"', ['camp_id' => $_SESSION['camp']['id']]);
     $data['familysize'] = [];
     foreach ($array as $a) {
         ++$data['familysize'][$a['size']]['count'];
@@ -32,7 +32,7 @@ FROM people AS p WHERE camp_id = :camp_id AND UNIX_TIMESTAMP(date_of_birth) != 0
     ksort($data['familysize']);
 
         $data['tip'] = db_row('SELECT * FROM tipofday ORDER BY RAND()');
-        $data['families'] = db_value('SELECT COUNT(id) FROM people AS p WHERE visible AND parent_id = 0 AND NOT deleted AND p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
+        $data['families'] = db_value('SELECT COUNT(id) FROM people AS p WHERE visible AND parent_id IS NULL AND NOT deleted AND p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
         $data['residents'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
         $data['notregistered'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND notregistered', ['camp_id' => $_SESSION['camp']['id']]);
         $data['residentscamp'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND LEFT(container,2) != "PK"', ['camp_id' => $_SESSION['camp']['id']]);

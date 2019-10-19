@@ -41,10 +41,12 @@ class ClearMinimalDb extends AbstractSeed
         $this->execute('DELETE FROM `camps`');
         $this->execute('DELETE FROM `organisations`');
         $this->execute('DELETE FROM `qr`');
+        $this->execute('DELETE FROM `stock`');
         $this->execute('DELETE FROM `sizegroup`');
         $this->execute('DELETE FROM `tipofday`');
         $this->execute('DELETE FROM `transactions`');
         $this->execute('DELETE FROM `translate`');
+        $this->execute('DELETE FROM `translate_categories`');
         $this->execute('DELETE FROM `genders`');
         $this->execute('DELETE FROM `units`');
         $this->execute('DELETE FROM `sizes`');

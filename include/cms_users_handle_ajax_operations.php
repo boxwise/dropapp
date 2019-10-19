@@ -35,6 +35,8 @@ if ($ajax) {
         case 'sendlogindata':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = sendlogindata($table, $ids);
+            // defining own message because returned one sounds as if user resetted the password themselves
+            $message = 'User will receive an email with instructions and their password within couple of minutes!';
 
             break;
         case 'loginasuser':

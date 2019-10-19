@@ -36,9 +36,15 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
             $row = db_row('SELECT * FROM '.$table.' WHERE id = :id ', ['id' => $_SESSION['user']['id']]);
             $_SESSION['user'] = array_merge($_SESSION['user'], $row);
             if (!$existinguser) {
-                sendlogindata($_POST['_origin'], ['id' => $userId]);
+                [$success, $message] = sendlogindata($_POST['_origin'], ['id' => $userId]);
+                if ($success) {
+                    // defining own message because returned one sounds as if user resetted the password themselves
+                    $message = 'User will receive an email with instructions and their password within couple of minutes!';
+                }
+                redirect('?action='.$_POST['_origin'].'&message='.$message);
+            } else {
+                redirect('?action='.$_POST['_origin']);
             }
-            redirect('?action='.$_POST['_origin']);
         } else {
             redirect('?action='.$_POST['_origin'].'&warning=1&message=You do not have the rights to change this user!');
         }
