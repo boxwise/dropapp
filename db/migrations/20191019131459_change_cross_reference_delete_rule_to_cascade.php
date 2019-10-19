@@ -15,6 +15,7 @@ class ChangeCrossReferenceDeleteRuleToCascade extends AbstractMigration
             ->addForeignKey('language_id', 'languages', 'id', [
                 'delete' => 'CASCADE', 'update' => 'CASCADE',
             ])
-            ->save();
+            ->save()
+        ;
     }
 }
