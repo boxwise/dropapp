@@ -22,7 +22,7 @@
             gtag('config', 'UA-135092361-4');
         </script>
     {/literal}
-{elseif $smarty.server.HTTP_HOST == 'app.boxwise.co'}
+{elseif $smarty.server.HTTP_HOST == 'app.boxwise.co' || $smarty.server.HTTP_HOST == 'market.drapenihavet.no'}
     {literal}   
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-135092361-2"></script>
         <script>
@@ -33,9 +33,9 @@
         </script>
     {/literal}
 {/if}
-{if $smarty.server.HTTP_HOST == 'app.boxwise.co' || $smarty.server.HTTP_HOST == 'staging.boxwise.co'}
+{if $smarty.server.HTTP_HOST == 'app.boxwise.co' || $smarty.server.HTTP_HOST == 'market.drapenihavet.no' || $smarty.server.HTTP_HOST == 'staging.boxwise.co'}
 <script>
-    const heapProjectId = {($smarty.server.HTTP_HOST == 'app.boxwise.co') ? '1677886010' : '17989829' };
+    const heapProjectId = {($smarty.server.HTTP_HOST == 'app.boxwise.co' || $smarty.server.HTTP_HOST == 'market.drapenihavet.no') ? '1677886010' : '17989829' };
     const userId = "{$smarty.session.user.id}";
     const organisationId = "{$smarty.session.organisation.label}";
     const isAdmin = "{$smarty.session.user.is_admin}";

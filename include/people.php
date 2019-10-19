@@ -193,7 +193,7 @@ $table = $action;
                     $success = false;
                 } else {
                     foreach ($ids as $id) {
-                        db_query('UPDATE people SET parent_id IS NULL WHERE id = :id', ['id' => $id]);
+                        db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
                     }
                     $redirect = true;
                     $success = true;
