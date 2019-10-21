@@ -5,8 +5,8 @@
     if ($_POST) {
         $handler = new formHandler($table);
         //$handler->debug = true;
-        $keys = [];
-        $handler->savePost(array_merge($keys, ['title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps']));
+        $keys = ['title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps'];
+        $handler->savePost($keys, ['parent_id']);
 
         redirect('?action='.$_POST['_origin']);
     }
@@ -23,7 +23,7 @@
     // define tabs
     $title = (db_fieldexists('cms_functions', 'title_'.$lan) ? 'title_'.$lan : 'title');
 
-    addfield('select', 'Onderdeel van', 'parent_id', ['required' => true, 'formatlist' => 'formatparent', 'multiple' => false, 'placeholder' => 'Maak een keuze', 'options' => getParentarray($table, 0, 1, $title)]);
+    addfield('select', 'Parent', 'parent_id', ['required' => false, 'formatlist' => 'formatparent', 'multiple' => false, 'placeholder' => 'No parent', 'options' => getParentarray($table, 0, 1, $title)]);
 
     addfield('text', $translate['cms_function'], 'title_en', ['required' => true]);
     addfield('text', $translate['cms_function_include'], 'include');

@@ -126,21 +126,21 @@
 		WHERE parent_id IS NULL AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
 		GROUP BY p.id 
 		ORDER BY label']);
-    addfield('text', 'Firstname', 'firstname', ['tab' => 'people', 'required' => true]);
-    addfield('text', 'Lastname', 'lastname', ['tab' => 'people']);
-    addfield('text', $_SESSION['camp']['familyidentifier'], 'container', ['tab' => 'people', 'required' => true, 'onchange' => 'capitalize("container")']);
-    addfield('select', 'Gender', 'gender', ['tab' => 'people',
+    addfield('text', 'Firstname', 'firstname', ['testid' => 'firstname_id', 'tab' => 'people', 'required' => true]);
+    addfield('text', 'Lastname', 'lastname', ['testid' => 'lastname_id', 'tab' => 'people']);
+    addfield('text', $_SESSION['camp']['familyidentifier'], 'container', ['testid' => 'container_id', 'tab' => 'people', 'required' => true, 'onchange' => 'capitalize("container")']);
+    addfield('select', 'Gender', 'gender', ['testid' => 'gender_id', 'tab' => 'people',
         'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);
-    addfield('date', 'Date of birth', 'date_of_birth', ['tab' => 'people', 'date' => true, 'time' => false]);
+    addfield('date', 'Date of birth', 'date_of_birth', ['testid' => 'date_of_birth_id', 'tab' => 'people', 'date' => true, 'time' => false]);
     addfield('line', '', '', ['tab' => 'people']);
-    addfield('select', 'Language(s)', 'languages', ['tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
-    addfield('textarea', 'Comments', 'comments', ['tab' => 'people']);
+    addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
+    addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
     addfield('line', '', '', ['tab' => 'people']);
-    addfield('checkbox', 'This person is not officially registered in camp', 'notregistered', ['tab' => 'people']);
+    addfield('checkbox', 'This person is not officially registered in camp', 'notregistered', ['testid' => 'registered_id', 'tab' => 'people']);
     if ($_SESSION['camp']['extraportion'] && $_SESSION['camp']['food']) {
         addfield('checkbox', 'Extra food due to health condition (as indicated by Red Cross)', 'extraportion', ['tab' => 'people']);
     }
-    addfield('checkbox', 'This beneficiary is a volunteer with <i>'.$_SESSION['organisation']['label'].'</i>', 'volunteer', ['tab' => 'people']);
+    addfield('checkbox', 'This beneficiary is a volunteer with <i>'.$_SESSION['organisation']['label'].'</i>', 'volunteer', ['testid' => 'volunteer_id', 'tab' => 'people']);
 
     if ($_SESSION['camp']['bicycle'] || $_SESSION['camp']['workshop'] || $_SESSION['camp']['idcard']) {
         $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);

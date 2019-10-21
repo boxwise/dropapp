@@ -33,7 +33,7 @@ class ForeignKeyLocations extends AbstractMigration
     {
         $this->table('itemsout')
             ->changeColumn('from_location', 'integer', [
-                'null' => false,
+                'null' => true,
             ])
             ->changeColumn('to_location', 'integer', [
                 'null' => false,
