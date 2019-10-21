@@ -10,11 +10,10 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.visit('/?action=people');
     });
 
-    function DeleteTested(firstname) {
+    function DeleteTestedBeneficiary(firstname) {
         cy.get('body').then(($body) => {
             if ($body.text().includes(firstname)) {
-                cy.log("found")
-                cy.log(firstname)
+                cy.log("found" + firstname)
                 cy.get("tr").contains(firstname).parent("td").parent("tr").children().first().children().first().children('label').click();
                 cy.get("button[data-operation='delete']").click();
                 cy.get("a[data-apply='confirmation']").click();
@@ -22,8 +21,8 @@ context("5_2_Add_Beneficiary_Test", () => {
         })
     }
 
-    function SaveAndProgress(buttonname) {
-        cy.get("button").contains(buttonname).click();
+    function ClickButtonWithText(buttontext) {
+        cy.get("button").contains(buttontext).click();
     }
 
     function CheckInput(Field_id) {
@@ -34,8 +33,8 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.get("a[id='" + Tab_id + "']").should("be.visible");
     }
 
-    function CheckSaveButton(buttonname) {
-        cy.get("button").contains(buttonname).should("be.visible");
+    function CheckButtonVisibility(buttontext) {
+        cy.get("button").contains(buttontext).should("be.visible");
     }
 
     function CheckAssociation(name, name2) {
@@ -54,6 +53,10 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.get("input[id='s2id_autogen3']").should("be.empty");
     }
 
+    function NavigateToEditBeneficiaryForm(){
+        cy.visit('/?action=people_edit&origin=people');
+    }
+
     function CheckEmptyForm() {
         cy.getSelectedValueInDropDown("parent_id").contains("Please select").should('exist');
         CheckInput("firstname_id");
@@ -67,8 +70,8 @@ context("5_2_Add_Beneficiary_Test", () => {
         CheckCommentField();
         Checktab("tabid_bicycle");
         Checktab('tabid_signature');
-        CheckSaveButton("Save and close");
-        CheckSaveButton("Save and new");
+        CheckButtonVisibility("Save and close");
+        CheckButtonVisibility("Save and new");
         CheckCancelButton();
     }
 
@@ -90,28 +93,28 @@ context("5_2_Add_Beneficiary_Test", () => {
 
 
     it("5_2_1 Fill form, Save and close", () => {
-        DeleteTested(Test_firstname)
-        cy.visit('/?action=people_edit&origin=people');
+        DeleteTestedBeneficiary(Test_firstname)
+        NavigateToEditBeneficiaryForm()
         CheckEmptyForm();
         //check all the forms 
         FillForm(Test_firstname, Test_lastname, Test_case_id);
-        SaveAndProgress("Save and close");
+        ClickButtonWithText("Save and close");
         cy.notificationWithTextIsVisible(Test_firstname + " " + Test_lastname + " was added");
 
     });
 
     it("5_2_2 Prevent emtpy submit",() => {
-        cy.visit('/?action=people_edit&origin=people');
-        SaveAndProgress("Save and close");
+        NavigateToEditBeneficiaryForm();
+        ClickButtonWithText("Save and close");
         CheckQtip("qtip-0-content");
         CheckQtip("qtip-1-content");
     });    
 
     it("5_2_4 Save and New",()=> {
-        DeleteTested(Test_firstname);
-        cy.visit('/?action=people_edit&origin=people');
+        DeleteTestedBeneficiary(Test_firstname);
+        NavigateToEditBeneficiaryForm();
         FillForm(Test_firstname,Test_lastname,Test_case_id);
-        SaveAndProgress("Save and new");
+        ClickButtonWithText("Save and new");
         cy.notyTextNotificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added");
         cy.notyTextNotificationWithTextIsVisible(Test_case_id);
         CheckEmptyForm();
@@ -119,16 +122,16 @@ context("5_2_Add_Beneficiary_Test", () => {
 
     it("5_2_5 Save and new check if new person in familyhead-dropdown + check if empty",() => {
         //check all the forms 
-        DeleteTested(Test_firstname);
-        cy.visit('/?action=people_edit&origin=people');
+        DeleteTestedBeneficiary(Test_firstname);
+        NavigateToEditBeneficiaryForm();
         FillForm(Test_firstname,Test_lastname,Test_case_id);
-        SaveAndProgress("Save and new");
+        ClickButtonWithText("Save and new");
         cy.notyTextNotificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added");
         cy.notyTextNotificationWithTextIsVisible(Test_case_id);
         // Check for the familyhead after adding it above
         cy.selectOptionByText("parent_id",Test_case_id +" "+ Test_firstname);
         FillForm(Test_firstname2,Test_lastname,"");
-        SaveAndProgress("Save and close");
+        ClickButtonWithText("Save and close");
         cy.notificationWithTextIsVisible(Test_firstname2+" "+Test_lastname + " was added");
         CheckAssociation(Test_firstname,Test_firstname2);
     });
