@@ -14,7 +14,7 @@ $table = $action;
         $cmsmain->assign('title', 'Beneficiaries');
 
         listsetting('allowcopy', false);
-        listsetting('allowmove', false);
+        listsetting('allowmove', true);
         listsetting('allowmoveto', 1);
         listsetting('allowsort', false);
         listsetting('allowshowhide', false);
