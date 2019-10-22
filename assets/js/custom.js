@@ -96,28 +96,32 @@ $(function() {
         $("#field_date_of_signature").val('0000-00-00 00:00:00')
         return false;
     });
-
     //Validate dates in users menu
     $("#field_valid_firstday_datepicker").datetimepicker({
-        useCurrent: false
+        useCurrent: false,
+        maxDate: 0
     });
     $("#field_valid_lastday_datepicker").datetimepicker({
-        useCurrent: false
+        useCurrent: false,
+        minDate: 0
     });
     $("#field_valid_firstday_datepicker").on("dp.change", function(e) {
-        e.date._d.setDate(e.date._d.getDate()+1);
+        // e.date._d.setDate(e.date._d.getDate());
+        //var yesterday = new Date(Date.now() - 86400000)
+        var today = new Date(Date.now());
+        today.setHours(0,0,0,0)
         $("#field_valid_lastday_datepicker")
             .data("DateTimePicker")
-            .minDate(e.date);
+            .minDate((today > e.date._d) ? today: e.date._d)
     });
     $("#field_valid_lastday_datepicker").on("dp.change", function(e) {
-        e.date._d.setDate(e.date._d.getDate()-1);
+        // e.date._d.setDate(e.date._d.getDate());
         $("#field_valid_firstday_datepicker")
             .data("DateTimePicker")
-            .maxDate(e.date)
-            .minDate(MIN_VALID_DATE);
+            .maxDate(e.date._d)
     });
 });
+
 
 //limit date of beneficiary birth to max today
 $(document).ready(function() {
