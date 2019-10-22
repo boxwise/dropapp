@@ -34,7 +34,7 @@
 				AND (NOT g.deleted OR g.deleted IS NULL) AND (NOT u.deleted OR u.deleted IS NULL)
 				AND NOT (
 					(u.valid_lastday < CURDATE()  AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
-					OR (u.valid_firstday > CURRENT_DATE())
+					OR (u.valid_firstday > CURDATE())
 				)
 			GROUP BY u.id';
 

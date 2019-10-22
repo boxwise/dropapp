@@ -38,7 +38,7 @@
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL)
 				AND ((u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
-					OR (u.valid_firstday > current_date())
+					OR (u.valid_firstday > CURDATE())
 				)
 				AND UNIX_TIMESTAMP(u.deleted) = 0
 			GROUP BY u.id';
