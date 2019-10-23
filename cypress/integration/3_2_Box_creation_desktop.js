@@ -7,7 +7,10 @@ context("Box_creation_tests", () => {
     
     beforeEach(function() {
         cy.loginAsVolunteer();
+        cy.visit('/?action=stock');
+        DeleteAllBoxes()
         cy.visit('/?action=stock_edit&origin=stock');
+
     })
 
     function getBoxesMenu() {
@@ -30,11 +33,16 @@ context("Box_creation_tests", () => {
         cy.get("td").should('contain',productname).and('contain',size).and('contain',location);
     }
 
-    function DeleteTested(Id) {
-        //SearchBoxById(Id)
-        cy.get("input[data-testid='select-id").click();
-        cy.get("button[data-operation='delete']").click();
-        cy.get("a[data-apply='confirmation']").click();
+    
+    function DeleteAllBoxes(){
+        cy.get("input[data-testid='select_all']").click()
+        cy.get('button:visible').then(($body) => {
+            if ($body.text().includes("Delete")) {
+                cy.log("FOUND IT")
+            cy.get("button[data-operation='delete']").click();
+            cy.get("a[data-apply='confirmation']").click();
+            }})
+
     }
     function FillForm(product,size,location,items){
         cy.selectOptionByText("product_id", product);
@@ -93,8 +101,8 @@ context("Box_creation_tests", () => {
         CheckQtip('qtip-2-content');
         CheckQtip('qtip-3-content');
     });
-
     it('3_2_2 Create Box with data', () => {
+
         FillForm(Test_product,Test_size,Test_location,Test_number);
         SaveAndProgress("Save and close");
         CheckBoxMessage("This box contains "+Test_number+" "+Test_product+" and is located in "+Test_location);
@@ -102,7 +110,6 @@ context("Box_creation_tests", () => {
             const Test_id = IdFromMessage($message);
             ContinueToMenu();
             CheckBoxCreated(Test_id, Product_name,Test_size, Test_location,Test_number);
-            DeleteTested(Test_id);
         });  
     });
 
@@ -115,7 +122,6 @@ context("Box_creation_tests", () => {
             CheckEmpty();
             getBoxesMenu();
             CheckBoxCreated(Test_id, Product_name,Test_size, Test_location,Test_number);
-            DeleteTested();
         });
     });
 
@@ -131,7 +137,6 @@ context("Box_creation_tests", () => {
             CheckUrl('pdf');
             CheckUrl('label');
             cy.visit('/?action=stock');
-            DeleteTested();
         });
     });
 });

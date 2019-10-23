@@ -17,7 +17,7 @@
 			<div class="table-nav">
 				<ul class="actions">
 					{if $listconfig['allowselectall']}<li>
-						<label class="btn btn-default btn-sm tooltip-this" data-toggle="tooltip" data-placement="top" title="{$translate['cms_list_selectall']}" for="group-select-1"><input id="group-select-1" type="checkbox" class="group-select"></label>
+						<label class="btn btn-default btn-sm tooltip-this" data-toggle="tooltip" data-placement="top" title="{$translate['cms_list_selectall']}" for="group-select-1"><input id="group-select-1" data-testid='select_all' type="checkbox" class="group-select"></label>
 					</li>{/if}
 					<li class="item-selected-independend">
 						<div class="btn-group">
