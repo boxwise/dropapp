@@ -33,8 +33,8 @@
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL) AND (NOT u.deleted OR u.deleted IS NULL)
 				AND NOT (
-					(u.valid_lastday < NOW() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
-					OR (u.valid_firstday > NOW())
+					(u.valid_lastday < CURDATE()  AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
+					OR (u.valid_firstday > CURDATE())
 				)
 			GROUP BY u.id';
 
@@ -45,8 +45,8 @@
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
 			WHERE u.cms_usergroups_id = :usergroup AND u.id != :user
 			AND NOT (
-				(u.valid_lastday < NOW() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
-				OR (u.valid_firstday > NOW())
+				(u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
+				OR (u.valid_firstday > CURDATE())
 			)';
     }
     require_once 'cms_users_page.php';
