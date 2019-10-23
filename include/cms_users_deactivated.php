@@ -37,8 +37,8 @@
 				'.($_SESSION['user']['is_admin'] ? '' : '(uc.camp_id IN ('.($camps ? $camps : 0).')) AND ').' 
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL)
-				AND ((u.valid_lastday < NOW() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
-					OR (u.valid_firstday > NOW())
+				AND ((u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
+					OR (u.valid_firstday > CURDATE())
 				)
 				AND UNIX_TIMESTAMP(u.deleted) = 0
 			GROUP BY u.id';
@@ -50,8 +50,8 @@
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
 			WHERE u.cms_usergroups_id = :usergroup
 			AND (
-				(u.valid_lastday < NOW() AND UNIX_TIMESTAMP(u.valid_lastday) != 0)
-				OR u.valid_firstday > NOW()
+				(u.valid_lastday < CURDATE()  AND UNIX_TIMESTAMP(u.valid_lastday) != 0)
+				OR u.valid_firstday > CURDATE()
 			)
 			AND UNIX_TIMESTAMP(u.deleted) = 0
 			AND u.id != :user';
