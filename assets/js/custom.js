@@ -106,8 +106,6 @@ $(function() {
         minDate: 0
     });
     $("#field_valid_firstday_datepicker").on("dp.change", function(e) {
-        // e.date._d.setDate(e.date._d.getDate());
-        //var yesterday = new Date(Date.now() - 86400000)
         var today = new Date(Date.now());
         today.setHours(0,0,0,0)
         $("#field_valid_lastday_datepicker")
@@ -115,10 +113,10 @@ $(function() {
             .minDate((today > e.date._d) ? today: e.date._d)
     });
     $("#field_valid_lastday_datepicker").on("dp.change", function(e) {
-        // e.date._d.setDate(e.date._d.getDate());
         $("#field_valid_firstday_datepicker")
             .data("DateTimePicker")
             .maxDate(e.date._d)
+            .minDate(MIN_VALID_DATE)
     });
 });
 
