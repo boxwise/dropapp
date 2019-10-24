@@ -14,6 +14,17 @@ require_once 'library/lib/errorhandling.php';
 // doing basic routing from here
 use OpenCensus\Trace\Tracer;
 
+// permanent redirect for old market.drapenihavet.no url
+// ideally it wouldn't need to run PHP code to do this redirect
+// but appengine standard doesn't give us alternatives
+// it should probably also live in it's own seperate code,
+// but this was easiest to control during the migration process
+if ('market.drapenihavet.no' == $_SERVER['HTTP_HOST']) {
+    header('Location: https://app.boxwise.co'.$_SERVER['REQUEST_URI'].true, 301);
+
+    return;
+}
+
 $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
 Tracer::inSpan(
     ['name' => ('gcloud-entry:'.$parsedUrl)],

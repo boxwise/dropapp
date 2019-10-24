@@ -6,4 +6,4 @@ dispatch:
 - url: "app.boxwise.co/*"
   service: production
 - url: "market.drapenihavet.no/*"
-  service: dih
+  service: production
