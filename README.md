@@ -13,19 +13,14 @@ Write or call Hans ([hans@boxwise.co](mailto:hans@boxwise.co) & +4917652181647) 
 
 ### Preparation for Installation
 
-- Please have a php version higher than 7.2 installed.
-- The php extensions `mbstring` and `curl` are needed.
-
-       apt install php-curl php-mbstring
+* Install [Docker](https://www.docker.com/products/docker-desktop)
 
 ### How do I get set up?
 
-(optional - ToDo Fix bug for Ubuntu users) 
-0. Clone this repo into /var/www/html. Also make sure to allow write permissions on templates folder. 
+0. Clone this repo. If you're running Ubuntu, you may need to set write permissions to the templates folder for Docker. 
 
-       cd /var/www
-       git clone https://github.com/boxwise/dropapp html
-       chmod -R 777 html/templates (not generally recommended - ToDo Fix bug for Ubuntu users) 
+       git clone https://github.com/boxwise/dropapp
+       chmod -R 777 dropapp/templates (not generally recommended - ToDo Fix bug for Ubuntu users) 
 
 1. You first need to install 'compose' (we suggest making it available globally)
 
