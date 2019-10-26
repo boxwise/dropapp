@@ -97,27 +97,31 @@ $(function() {
         return false;
     });
 
-    //Validate dates in users menu
-    $("#field_valid_firstday_datepicker").datetimepicker({
-        useCurrent: false
-    });
-    $("#field_valid_lastday_datepicker").datetimepicker({
-        useCurrent: false
-    });
+    $("#field_valid_firstday_datepicker").data("DateTimePicker").useCurrent(false)
+    $("#field_valid_lastday_datepicker").data("DateTimePicker").useCurrent(false)
+
+
     $("#field_valid_firstday_datepicker").on("dp.change", function(e) {
-        e.date._d.setDate(e.date._d.getDate()+1);
+        var today = new Date(Date.now());
+        today.setHours(0,0,0,0)
+        field_date = $("#field_valid_lastday_datepicker").data("DateTimePicker").date()
         $("#field_valid_lastday_datepicker")
             .data("DateTimePicker")
-            .minDate(e.date);
-    });
+            .minDate((today > e.date._d) ? today: e.date._d)
+        if (field_date)
+        {
+            if (field_date < e.date._d) {
+                $("#field_valid_lastday_datepicker").data("DateTimePicker")
+                    .clear()
+            }
+        }
+    })
     $("#field_valid_lastday_datepicker").on("dp.change", function(e) {
-        e.date._d.setDate(e.date._d.getDate()-1);
         $("#field_valid_firstday_datepicker")
             .data("DateTimePicker")
-            .maxDate(e.date)
-            .minDate(MIN_VALID_DATE);
     });
 });
+
 
 //limit date of beneficiary birth to max today
 $(document).ready(function() {
