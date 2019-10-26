@@ -97,9 +97,12 @@ $(function() {
         return false;
     });
 
-    $("#field_valid_firstday_datepicker").data("DateTimePicker").useCurrent(false)
-    $("#field_valid_lastday_datepicker").data("DateTimePicker").useCurrent(false)
-
+    if ($("#field_valid_firstday_datepicker").length) {
+        $("#field_valid_firstday_datepicker").data("DateTimePicker").useCurrent(false);
+    }
+    if ($("#field_valid_lastday_datepicker").length) {
+        $("#field_valid_lastday_datepicker").data("DateTimePicker").useCurrent(false);
+    }
 
     $("#field_valid_firstday_datepicker").on("dp.change", function(e) {
         var today = new Date(Date.now());
