@@ -42,6 +42,7 @@
 					(u.valid_lastday < CURDATE()  AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
 					OR (u.valid_firstday > CURDATE())
 				)
+				AND UNIX_TIMESTAMP(u.deleted) = 0
 			GROUP BY u.id';
 
         // Do not forget to specify :usergroup and :user in the db call later
@@ -53,6 +54,7 @@
 			AND NOT (
 				(u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
 				OR (u.valid_firstday > CURDATE())
-			)';
+			)
+			AND UNIX_TIMESTAMP(u.deleted) = 0';
     }
     require_once 'cms_users_page.php';

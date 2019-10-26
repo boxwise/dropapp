@@ -10,7 +10,7 @@
         listsetting('haspagemenu', true);
         addpagemenu('active', 'Active', ['link' => '?action=cms_users']);
         addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before']);
-        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
+        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'active' => true]);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
 
         // because we access DB tables based on file names - action name matches table name (e.g. cms_users.php affects cms_users DB table)
