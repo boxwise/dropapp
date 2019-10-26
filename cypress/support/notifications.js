@@ -6,6 +6,16 @@ Cypress.Commands.add("notificationWithTextIsVisible", notificationText => {
 });
 
 Cypress.Commands.add(
+    "mobileNotificationWithTextIsVisible",
+    notificationText => {
+        cy.get("div[class='message ']").should(
+            "contain",
+            notificationText
+        );
+    }
+);
+
+Cypress.Commands.add(
     "mobileWarningNotificationWithTextIsVisible",
     notificationText => {
         cy.get("div[class='message warning']").should(
@@ -15,12 +25,6 @@ Cypress.Commands.add(
     }
 );
 
-Cypress.Commands.add(
-    "mobileNotificationWithTextIsVisible",
-    notificationText => {
-        cy.get("div[class='message ']").should(
-            "contain",
-            notificationText
-        );
-    }
-);
+Cypress.Commands.add("notyTextNotificationWithTextIsVisible", notificationText => {
+    cy.get("span[class='noty_text']").contains(notificationText).should("be.visible");
+});

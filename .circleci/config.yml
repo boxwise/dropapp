@@ -144,3 +144,12 @@ workflows:
         filters:
           branches:
             only: production
+    - deploy:
+        name: deploy-dih
+        envVariablePrefix: BOXWISE_DIH_
+        serviceName: dih
+        requires:
+          - build
+        filters:
+          branches:
+            only: production

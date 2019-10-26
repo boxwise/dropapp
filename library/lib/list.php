@@ -19,7 +19,7 @@ function listMove($table, $ids, $regardparent = true, $hook = '')
         ++$seq[$level];
 
         if ($hasParent) {
-            $parent_id = ($level ? $parent[$level - 1] : 0);
+            $parent_id = ($level ? $parent[$level - 1] : null);
             db_query('UPDATE '.$table.' SET parent_id = :parent_id, seq = :seq WHERE id = :id', ['parent_id' => $parent_id, 'seq' => $seq[$level], 'id' => $id]);
             if ($hook) {
                 $result = $hook($id);
@@ -63,7 +63,7 @@ function listRealDelete($table, $ids, $uri = false)
     return [false, $translate['cms_list_deleteerror'], false];
 }
 
-function listDelete($table, $ids, $uri = false)
+function listDelete($table, $ids, $uri = false, $fktables = null)
 {
     global $translate, $action;
 
@@ -74,18 +74,21 @@ function listDelete($table, $ids, $uri = false)
     try {
         foreach ($ids as $id) {
             if ($hasDeletefield) {
-                // Does the db have foreign keys?
-                $foreignkeys = db_referencedforeignkeys($table);
-                if (count($foreignkeys) > 0) {
-                    foreach ($foreignkeys as $foreignkey) {
-                        // Do the foreign keys restrict the delete?
-                        if ('RESTRICT' == $foreignkey['DELETE_RULE']) {
-                            $restricted = db_array('
-							SELECT b.id'.(db_fieldexists($foreignkey['TABLE_NAME'], 'label') ? ', b.label' : (db_fieldexists($foreignkey['TABLE_NAME'], 'naam') ? ', b.naam AS label' : (db_fieldexists($foreignkey['TABLE_NAME'], 'name') ? ', b.name AS label' : ' AS label'))).'
-							FROM '.$table.' a, '.$foreignkey['TABLE_NAME'].' b 
-							WHERE a.'.$foreignkey['REFERENCED_COLUMN_NAME'].' = b.'.$foreignkey['COLUMN_NAME'].' AND '.(db_fieldexists($foreignkey['TABLE_NAME'], 'deleted') ? '(NOT b.deleted OR b.deleted IS NULL) AND ' : '').' a.id = :id', ['id' => $id]);
-                            if (count($restricted)) {
-                                return [false, 'The entry '.($restricted[0]['label'] ? $restricted[0]['label'] : $restricted[0]['id'].' of the table '.$foreignkey['TABLE_NAME']).' is still linked to this item.<br>Please edit or delete it first.', false];
+                // Check foreign keys only if specified.
+                if (isset($fktables)) {
+                    // Does the db have foreign keys?
+                    $foreignkeys = db_referencedforeignkeys($table);
+                    if (count($foreignkeys) > 0) {
+                        foreach ($foreignkeys as $foreignkey) {
+                            // Do we want to check the foreign key and does the foreign key restrict the delete?
+                            if (in_array($foreignkey['TABLE_NAME'], $fktables) && ('RESTRICT' == $foreignkey['DELETE_RULE'])) {
+                                $restricted = db_array('
+                                SELECT b.id'.(db_fieldexists($foreignkey['TABLE_NAME'], 'label') ? ', b.label' : (db_fieldexists($foreignkey['TABLE_NAME'], 'naam') ? ', b.naam AS label' : (db_fieldexists($foreignkey['TABLE_NAME'], 'name') ? ', b.name AS label' : ' AS label'))).'
+                                FROM '.$table.' a, '.$foreignkey['TABLE_NAME'].' b 
+                                WHERE a.'.$foreignkey['REFERENCED_COLUMN_NAME'].' = b.'.$foreignkey['COLUMN_NAME'].' AND '.(db_fieldexists($foreignkey['TABLE_NAME'], 'deleted') ? '(NOT b.deleted OR b.deleted IS NULL) AND ' : '').' a.id = :id', ['id' => $id]);
+                                if (count($restricted)) {
+                                    return [false, 'The entry '.($restricted[0]['label'] ? $restricted[0]['label'] : $restricted[0]['id'].' of the table '.$foreignkey['TABLE_NAME']).' is still linked to this item.<br>Please edit or delete it first.', false];
+                                }
                             }
                         }
                     }
