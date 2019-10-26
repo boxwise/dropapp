@@ -7,7 +7,11 @@
         if (!$_SESSION['user']['is_admin']) {
             $data2 = db_array($cms_users_same_level_query, ['user' => $_SESSION['user']['id'], 'usergroup' => $_SESSION['usergroup']['id']]);
             if (!empty($data2)) {
-                $data = array_merge($data, $data2);
+                if (isset($data)) {
+                    $data = array_merge($data, $data2);
+                } else {
+                    $data = $data2;
+                }
             }
         }
 

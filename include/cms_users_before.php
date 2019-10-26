@@ -21,7 +21,7 @@
         $replaceArray = ['_before'];
         $editedaction = str_ireplace($replaceArray, '', $action);
         listsetting('edit', $editedaction.'_edit');
-        dump($_SESSION);
+
         $camps = db_value(
             '
 			SELECT GROUP_CONCAT(c.id) 
