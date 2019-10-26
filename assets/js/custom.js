@@ -96,27 +96,29 @@ $(function() {
         $("#field_date_of_signature").val('0000-00-00 00:00:00')
         return false;
     });
-    //Validate dates in users menu
-    $("#field_valid_firstday_datepicker").datetimepicker({
-        useCurrent: false,
-        maxDate: 0
-    });
-    $("#field_valid_lastday_datepicker").datetimepicker({
-        useCurrent: false,
-        minDate: 0
-    });
+
+    $("#field_valid_firstday_datepicker").data("DateTimePicker").useCurrent(false)
+    $("#field_valid_lastday_datepicker").data("DateTimePicker").useCurrent(false)
+
+
     $("#field_valid_firstday_datepicker").on("dp.change", function(e) {
         var today = new Date(Date.now());
         today.setHours(0,0,0,0)
+        field_date = $("#field_valid_lastday_datepicker").data("DateTimePicker").date()
         $("#field_valid_lastday_datepicker")
             .data("DateTimePicker")
             .minDate((today > e.date._d) ? today: e.date._d)
-    });
+        if (field_date)
+        {
+            if (field_date < e.date._d) {
+                $("#field_valid_lastday_datepicker").data("DateTimePicker")
+                    .clear()
+            }
+        }
+    })
     $("#field_valid_lastday_datepicker").on("dp.change", function(e) {
         $("#field_valid_firstday_datepicker")
             .data("DateTimePicker")
-            .maxDate(e.date._d)
-            .minDate(MIN_VALID_DATE)
     });
 });
 
