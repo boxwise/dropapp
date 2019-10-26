@@ -7,7 +7,11 @@
         if (!$_SESSION['user']['is_admin']) {
             $data2 = db_array($cms_users_same_level_query, ['user' => $_SESSION['user']['id'], 'usergroup' => $_SESSION['usergroup']['id']]);
             if (!empty($data2)) {
-                $data = array_merge($data, $data2);
+                if (isset($data)) {
+                    $data = array_merge($data, $data2);
+                } else {
+                    $data = $data2;
+                }
             }
         }
 
@@ -19,11 +23,7 @@
 
         listsetting('width', 12);
         listsetting('allowsort', true);
-
-        addbutton('sendlogindata', $translate['cms_users_sendlogin'], ['icon' => 'fa-user', 'confirm' => true, 'disableif' => true]);
-        if ($_SESSION['user']['is_admin'] && !$_SESSION['user2']) {
-            addbutton('loginasuser', $translate['cms_users_loginas'], ['icon' => 'fa-users', 'confirm' => true, 'oneitemonly' => true, 'disableif' => true]);
-        }
+        listsetting('delete', 'Deactivate');
 
         $cmsmain->assign('data', $data);
         $cmsmain->assign('listconfig', $listconfig);
