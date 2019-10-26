@@ -5,12 +5,17 @@ context("Box_creation_tests", () => {
     let Product_name  = "Jeans"; //in the box creation product name is automatically concatenated with gender-info, therefore we use this variable to store a processed version for checks in the boxes menu
     let Test_size = "S";  
     
+    before(function(){
+        DeleteAllBoxes();
+    })
+
     beforeEach(function() {
         cy.loginAsVolunteer();
-        cy.visit('/?action=stock');
-        DeleteAllBoxes()
         cy.visit('/?action=stock_edit&origin=stock');
+    })
 
+    after(function(){
+        DeleteAllBoxes();
     })
 
     function getBoxesMenu() {
@@ -32,9 +37,9 @@ context("Box_creation_tests", () => {
         SearchBoxById(Id);
         cy.get("td").should('contain',productname).and('contain',size).and('contain',location);
     }
-
-    
     function DeleteAllBoxes(){
+        cy.loginAsVolunteer();
+        cy.visit('/?action=stock');
         cy.get("input[data-testid='select_all']").click()
         cy.get('button:visible').then(($body) => {
             if ($body.text().includes("Delete")) {
@@ -42,7 +47,6 @@ context("Box_creation_tests", () => {
             cy.get("button[data-operation='delete']").click();
             cy.get("a[data-apply='confirmation']").click();
             }})
-
     }
     function FillForm(product,size,location,items){
         cy.selectOptionByText("product_id", product);
@@ -53,7 +57,6 @@ context("Box_creation_tests", () => {
     function IdFromMessage(message) {
         return message.text().split('ID').pop().split('(write')[0].trim();
     }
-
     function ContinueToMenu() {
         cy.get("a").contains("Continue").click();
     }
