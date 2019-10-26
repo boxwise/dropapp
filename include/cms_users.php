@@ -9,8 +9,10 @@
         initlist();
         listsetting('add', $translate['cms_users_new']);
         listsetting('haspagemenu', true);
-        addpagemenu('all', 'Active', ['link' => '?action=cms_users', 'active' => true]);
-        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
+        addpagemenu('active', 'Active', ['link' => '?action=cms_users']);
+        addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before', 'active' => true]);
+        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'active' => true]);
+        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true]);
 
         $camps = db_value(
             '
