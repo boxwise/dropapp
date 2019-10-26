@@ -9,7 +9,7 @@
         listsetting('allowadd', false);
         listsetting('haspagemenu', true);
         addpagemenu('active', 'Active', ['link' => '?action=cms_users']);
-        addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before', 'active' => true]);
+        addpagemenu('before', 'Not active yet', ['link' => '?action=cms_users_before', 'active' => true]);
         addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
         //Send login data even though they cannot login yet

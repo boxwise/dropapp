@@ -10,7 +10,7 @@
         listsetting('add', $translate['cms_users_new']);
         listsetting('haspagemenu', true);
         addpagemenu('active', 'Active', ['link' => '?action=cms_users', 'active' => true]);
-        addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before']);
+        addpagemenu('before', 'Not active yet', ['link' => '?action=cms_users_before']);
         addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
         addbutton('sendlogindata', $translate['cms_users_sendlogin'], ['icon' => 'fa-user', 'confirm' => true, 'disableif' => true]);
