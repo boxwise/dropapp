@@ -19,7 +19,7 @@ context("Box_creation_tests", () => {
     })
 
     function getBoxesMenu() {
-        cy.get("a[class='menu_stock']").last().click();
+        cy.visit('/?action=stock');
     }
     function SaveAndProgress(buttonname) {
         cy.get("button").contains(buttonname).click();
@@ -27,6 +27,7 @@ context("Box_creation_tests", () => {
     function SearchBoxById(Id) {
         cy.get("input[data-testid ='box-search']").type(Id);
         cy.get("button[data-testid='search-button']").click();
+        cy.reload(); // The search submits a form and reloads the whole page. This is not caught properly by Ajax though. Cypress executes the next command without waiting for the reload to be finished. therefore, we added an additional reload.
     }
     function CheckBoxMessage(Text) {
         cy.get("h2").should('contain',Text).should('be.visible');
@@ -62,7 +63,7 @@ context("Box_creation_tests", () => {
     }
 
     function CreateQR() {
-        cy.get("input[data-testid='select-id").click();
+        cy.get("input[data-testid='select-id']").click();
         cy.get("i[class='fa fa-print']").click();
     }
     function CheckInput(Field_id){
@@ -139,7 +140,6 @@ context("Box_creation_tests", () => {
             CreateQR();
             CheckUrl('pdf');
             CheckUrl('label');
-            cy.visit('/?action=stock');
         });
     });
 });
