@@ -7,18 +7,13 @@
     } else {
         initlist();
         listsetting('allowadd', false);
+        listsetting('allowedit', false);
+        listsetting('allowdelete', false);
         listsetting('haspagemenu', true);
         addpagemenu('active', 'Active', ['link' => '?action=cms_users']);
-        addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before', 'active' => true]);
-        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'active' => true]);
+        addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before']);
+        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true]);
-
-        // because we access DB tables based on file names - action name matches table name (e.g. cms_users.php affects cms_users DB table)
-        // and list tabs have their own page, action needs to be edited to match DB table name
-        // origin stays the same so after confirm, user gets navigated back to the tab he came from
-        $replaceArray = ['_deactivated'];
-        $editedaction = str_ireplace($replaceArray, '', $action);
-        listsetting('edit', $editedaction.'_edit');
 
         $camps = db_value(
             '
@@ -29,7 +24,7 @@
         );
 
         // Execution of queries in cms_users_page.php
-        $cms_users_lower_level_query = 'SELECT u.*, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete, 1 as disableifistrue
+        $cms_users_lower_level_query = 'SELECT u.naam, SUBSTR(u.email, 1, LENGTH(u.email)-LENGTH(".deleted.")-LENGTH(u.id)) AS email, u.valid_firstday, u.valid_lastday, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete, 1 as disableifistrue
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
 			LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
@@ -39,23 +34,16 @@
 				'.($_SESSION['user']['is_admin'] ? '' : '(uc.camp_id IN ('.($camps ? $camps : 0).')) AND ').' 
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL)
-				AND ((u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
-					OR (u.valid_firstday > CURDATE())
-				)
-				AND UNIX_TIMESTAMP(u.deleted) = 0
+				AND u.deleted
 			GROUP BY u.id';
 
         // Do not forget to specify :usergroup and :user in the db call later
         $cms_users_same_level_query = '
-			SELECT u.*, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 1 as disableifistrue
+			SELECT u.naam, SUBSTR(u.email, 1, LENGTH(u.email)-LENGTH(".deleted.")-LENGTH(u.id)) AS email, u.valid_firstday, u.valid_lastday, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 1 as disableifistrue
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
 			WHERE u.cms_usergroups_id = :usergroup
-			AND (
-				(u.valid_lastday < CURDATE()  AND UNIX_TIMESTAMP(u.valid_lastday) != 0)
-				OR u.valid_firstday > CURDATE()
-			)
-			AND UNIX_TIMESTAMP(u.deleted) = 0
+			AND u.deleted
 			AND u.id != :user';
 
         require_once 'cms_users_page.php';

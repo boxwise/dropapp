@@ -9,14 +9,14 @@
         listsetting('allowadd', false);
         listsetting('haspagemenu', true);
         addpagemenu('active', 'Active', ['link' => '?action=cms_users']);
-        addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before', 'active' => true]);
-        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'active' => true]);
-        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true]);
+        addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before']);
+        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
+        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
 
         // because we access DB tables based on file names - action name matches table name (e.g. cms_users.php affects cms_users DB table)
         // and list tabs have their own page, action needs to be edited to match DB table name
         // origin stays the same so after confirm, user gets navigated back to the tab he came from
-        $replaceArray = ['_deactivated'];
+        $replaceArray = ['_expired'];
         $editedaction = str_ireplace($replaceArray, '', $action);
         listsetting('edit', $editedaction.'_edit');
 
@@ -39,9 +39,8 @@
 				'.($_SESSION['user']['is_admin'] ? '' : '(uc.camp_id IN ('.($camps ? $camps : 0).')) AND ').' 
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL)
-				AND ((u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
-					OR (u.valid_firstday > CURDATE())
-				)
+                AND u.valid_lastday < CURDATE() 
+                AND UNIX_TIMESTAMP(u.valid_lastday) != 0
 				AND UNIX_TIMESTAMP(u.deleted) = 0
 			GROUP BY u.id';
 
@@ -51,10 +50,8 @@
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
 			WHERE u.cms_usergroups_id = :usergroup
-			AND (
-				(u.valid_lastday < CURDATE()  AND UNIX_TIMESTAMP(u.valid_lastday) != 0)
-				OR u.valid_firstday > CURDATE()
-			)
+            AND u.valid_lastday < CURDATE()  
+            AND UNIX_TIMESTAMP(u.valid_lastday) != 0
 			AND UNIX_TIMESTAMP(u.deleted) = 0
 			AND u.id != :user';
 

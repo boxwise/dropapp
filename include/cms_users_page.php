@@ -19,11 +19,7 @@
 
         listsetting('width', 12);
         listsetting('allowsort', true);
-
-        addbutton('sendlogindata', $translate['cms_users_sendlogin'], ['icon' => 'fa-user', 'confirm' => true, 'disableif' => true]);
-        if ($_SESSION['user']['is_admin'] && !$_SESSION['user2']) {
-            addbutton('loginasuser', $translate['cms_users_loginas'], ['icon' => 'fa-users', 'confirm' => true, 'oneitemonly' => true, 'disableif' => true]);
-        }
+        listsetting('delete', 'Deactivate');
 
         $cmsmain->assign('data', $data);
         $cmsmain->assign('listconfig', $listconfig);

@@ -9,10 +9,14 @@
         initlist();
         listsetting('add', $translate['cms_users_new']);
         listsetting('haspagemenu', true);
-        addpagemenu('active', 'Active', ['link' => '?action=cms_users']);
-        addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before', 'active' => true]);
-        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'active' => true]);
-        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true]);
+        addpagemenu('active', 'Active', ['link' => '?action=cms_users', 'active' => true]);
+        addpagemenu('before', 'Not yet active', ['link' => '?action=cms_users_before']);
+        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
+        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
+        addbutton('sendlogindata', $translate['cms_users_sendlogin'], ['icon' => 'fa-user', 'confirm' => true, 'disableif' => true]);
+        if ($_SESSION['user']['is_admin'] && !$_SESSION['user2']) {
+            addbutton('loginasuser', $translate['cms_users_loginas'], ['icon' => 'fa-users', 'confirm' => true, 'oneitemonly' => true, 'disableif' => true]);
+        }
 
         $camps = db_value(
             '
@@ -42,7 +46,7 @@
 
         // Do not forget to specify :usergroup and :user in the db call later
         $cms_users_same_level_query = '
-			SELECT u.*, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 0 as disableifistrue
+			SELECT u.*, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 1 as disableifistrue
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
 			WHERE u.cms_usergroups_id = :usergroup AND u.id != :user
