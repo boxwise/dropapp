@@ -305,7 +305,7 @@ describe('Manage beneficiaries', () => {
             getBeneficiaryRow(TEST_LASTNAME3).should('exist');
 
             //cleanup
-            fullDeleteTestedBeneficiary([TEST_LASTNAME3]);
+            fullDeleteTestedBeneficiaries([TEST_LASTNAME3]);
         });
     });
 
