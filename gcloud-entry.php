@@ -32,6 +32,7 @@ Tracer::inSpan(
         // old path of QR-codes
         case '/flip/scan.php':
             require 'mobile.php';
+
             break;
         case '/login.php':
         case '/ajax.php':
