@@ -10,11 +10,11 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.visit('/?action=people');
     });
 
-    function DeleteTestedBeneficiary(firstname) {
+    function DeleteTestedBeneficiary(lastname) {
         cy.get('body').then(($body) => {
-            if ($body.text().includes(firstname)) {
-                cy.log("found" + firstname)
-                cy.get("tr").contains(firstname).parent("td").parent("tr").children().first().children().first().children('label').click();
+            if ($body.text().includes(lastname)) {
+                cy.log("found" + lastname)
+                cy.get("tr").contains(lastname).parent("td").parent("tr").children().first().children().first().children('label').click();
                 cy.get("button[data-operation='delete']").click();
                 cy.get("a[data-apply='confirmation']").click();
             }
@@ -75,15 +75,12 @@ context("5_2_Add_Beneficiary_Test", () => {
         CheckCancelButton();
     }
 
-    function InputFill(Field_id, Field_input) {
-        cy.get("input[data-testid = '" + Field_id + "']").type(Field_input);
-    }
 
     function FillForm(firstname, lastname, case_id) {
-        InputFill("firstname_id", firstname);
-        InputFill("lastname_id", lastname);
+        cy.inputFill("firstname_id", firstname);
+        cy.inputFill("lastname_id", lastname);
         if (case_id != "") {
-            InputFill("container_id", case_id);
+            cy.inputFill("container_id", case_id);
         }
     }
 
@@ -93,7 +90,7 @@ context("5_2_Add_Beneficiary_Test", () => {
 
 
     it("5_2_1 Fill form, Save and close", () => {
-        DeleteTestedBeneficiary(Test_firstname)
+        DeleteTestedBeneficiary(Test_lastname)
         NavigateToEditBeneficiaryForm()
         CheckEmptyForm();
         //check all the forms 
@@ -111,7 +108,7 @@ context("5_2_Add_Beneficiary_Test", () => {
     });    
 
     it("5_2_4 Save and New",()=> {
-        DeleteTestedBeneficiary(Test_firstname);
+        DeleteTestedBeneficiary(Test_lastname);
         NavigateToEditBeneficiaryForm();
         FillForm(Test_firstname,Test_lastname,Test_case_id);
         ClickButtonWithText("Save and new");
@@ -122,7 +119,7 @@ context("5_2_Add_Beneficiary_Test", () => {
 
     it("5_2_5 Save and new check if new person in familyhead-dropdown + check if empty",() => {
         //check all the forms 
-        DeleteTestedBeneficiary(Test_firstname);
+        DeleteTestedBeneficiary(Test_lastname);
         NavigateToEditBeneficiaryForm();
         FillForm(Test_firstname,Test_lastname,Test_case_id);
         ClickButtonWithText("Save and new");
