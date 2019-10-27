@@ -17,6 +17,11 @@ context("5_2_Add_Beneficiary_Test", () => {
                 cy.get("tr").contains(lastname).parent("td").parent("tr").children().first().children().first().children('label').click();
                 cy.get("button[data-operation='delete']").click();
                 cy.get("a[data-apply='confirmation']").click();
+                //delete the user also from deactivated
+                cy.get("ul[data-testid='listTab'] a").contains("Deactivated").click();
+                cy.get("tr").contains(lastname).parent("td").parent("tr").children().first().children().first().children('label').click();
+                cy.get("button").contains("Full delete").click();
+                cy.get("a[data-apply='confirmation']").click();
             }
         })
     }
