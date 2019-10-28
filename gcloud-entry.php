@@ -21,7 +21,7 @@ use OpenCensus\Trace\Tracer;
 // but this was easiest to control during the migration process
 if ('market.drapenihavet.no' == $_SERVER['HTTP_HOST']) {
     $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
-    header('Location: https://app.boxwise.co'.$_SERVER['REQUEST_URI'].(empty($_GET) ? '?' : '&').'legacy=1', true, 301);
+    header('Location: https://app.boxwise.co'.$_SERVER['REQUEST_URI'].(empty($_GET) ? '?' : '&').'qrlegacy=1', true, 301);
 
     return;
 }
