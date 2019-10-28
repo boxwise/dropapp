@@ -1,6 +1,6 @@
 <?php
 
-    $qrid = db_value('SELECT id FROM qr WHERE code = :barcode', ['barcode' => $_GET['saveassignbox']]);
+    $qrid = db_value('SELECT id FROM qr WHERE code = :barcode and legacy=:legacy', ['barcode' => $_GET['saveassignbox'], 'legacy' => (isset($_GET['qrlegacy']) ? 1 : 0)]);
 
     if (!intval($_GET['box'])) {
         trigger_error('Missing Box ID');
