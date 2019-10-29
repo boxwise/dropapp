@@ -31,7 +31,7 @@
 			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
 			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id
-		WHERE l.camp_id = '.$_SESSION['camp']['id'].
+		WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND OR l.camp_id = '.$_SESSION['camp']['id'].
 
         ($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '').
 
