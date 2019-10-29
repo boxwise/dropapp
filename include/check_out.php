@@ -51,7 +51,7 @@
         $cmsmain->assign('formelements', $formdata);
         $cmsmain->assign('formbuttons', $formbuttons);
     } else {
-        if ($_POST['do'] == 'delete') {
+        if ('delete' == $_POST['do']) {
             $ids = explode(',', $_POST['ids']);
             // check if person is allowed to delete transaction
             foreach ($ids as $id) {
