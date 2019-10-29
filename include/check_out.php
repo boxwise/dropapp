@@ -51,36 +51,32 @@
         $cmsmain->assign('formelements', $formdata);
         $cmsmain->assign('formbuttons', $formbuttons);
     } else {
-        if ($_POST['do']) {
-            switch ($_POST['do']) {
-                case 'delete':
-                    $ids = explode(',', $_POST['ids']);
-                    list($success, $message, $redirect) = listDelete($table, $ids);
-
-                    break;
-                case 'hide':
-                    $ids = explode(',', $_POST['ids']);
-                    list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-
-                    break;
-                case 'show':
-                    $ids = explode(',', $_POST['ids']);
-                    list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-
-                    break;
+        if ($_POST['do'] == 'delete') {
+            $ids = explode(',', $_POST['ids']);
+            // check if person is allowed to delete transaction
+            foreach ($ids as $id) {
+                verify_campaccess_people(db_value('SELECT people_id FROM transactions WHER id=:id', ['id' => $id]));
             }
-
+            list($success, $message, $redirect) = listDelete($table, $ids);
             $return = ['success' => $success, 'message' => $message, 'redirect' => false, 'action' => "$('#field_people_id').trigger('change')"];
 
             echo json_encode($return);
             die();
         }
 
+        // verify acces if data of a person is requested
+        verify_campaccess_people($_POST['people_id']);
+        verify_deletedrecord('people', $_POST['people_id']);
+
+        // set camp depending on people_id
+        $camp = db_row('
+            SELECT c.* FROM camps c 
+            WHERE id = (
+                SELECT p.camp_id FROM people p
+                WHERE p.id = :people_id)', ['people_id' => $_POST['people_id']]);
+
         // Ajax POST request of shopping cart
         if ($_POST['cart']) {
-            verify_campaccess_people($_POST['people_id']);
-            verify_deletedrecord('people', $_POST['people_id']);
-
             $_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
             $_POST['user_id'] = $_SESSION['user']['id'];
 
@@ -92,7 +88,7 @@
                 $_POST['count'] = intval($item['count']);
                 $_POST['drops'] = $item['price'] * intval($item['count']) * (-1);
 
-                $notificationText = $notificationText.'<li>'.$item['count'].'x '.$item['nameWithoutPrice'].' - '.$_POST['drops'] * (-1).' '.$_SESSION['camp']['currencyname'].'</li>';
+                $notificationText = $notificationText.'<li>'.$item['count'].'x '.$item['nameWithoutPrice'].' - '.$_POST['drops'] * (-1).' '.$camp['currencyname'].'</li>';
 
                 $handler = new formHandler($table);
                 $id = $handler->savePost($savekeys);
@@ -127,7 +123,7 @@
             WHERE people_id = '.$data['people_id'].' 
             AND t.product_id IS NOT NULL 
             AND CAST(transaction_date as Date)=(SELECT CAST(MAX(transaction_date) as Date) FROM transactions WHERE people_id = '.$data['people_id'].' AND product_id IS NOT NULL)
-            ORDER BY t.transaction_date DESC', 'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'tdate' => 'Date'],
+            ORDER BY t.transaction_date DESC', 'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($camp['currencyname']), 'tdate' => 'Date'],
             'allowedit' => false, 'allowadd' => false, 'allowselect' => true, 'allowselectall' => false, 'action' => 'check_out', 'redirect' => false, 'allowsort' => false, 'listid' => $data['people_id'], ]);
 
         $ajaxform->assign('data', $data);
@@ -140,8 +136,8 @@
 
         $data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = :id OR parent_id = :id AND visible AND NOT deleted ORDER BY parent_id, seq', ['id' => $data['people_id']]);
 
-        $adults = $_SESSION['camp']['maxfooddrops_adult'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$_SESSION['camp']['adult_age'].', 0, 1)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $data['people_id']]);
-        $children = $_SESSION['camp']['maxfooddrops_child'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$_SESSION['camp']['adult_age'].', 1, 0)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $data['people_id']]);
+        $adults = $camp['maxfooddrops_adult'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$camp['adult_age'].', 0, 1)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $data['people_id']]);
+        $children = $camp['maxfooddrops_child'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$camp['adult_age'].', 1, 0)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $data['people_id']]);
 
         $data['fooddrops'] = intval($adults) + intval($children);
         $data['foodspent'] = db_value('SELECT SUM(drops) FROM transactions AS t, products AS p WHERE t.product_id = p.id AND p.category_id = 11 AND t.people_id = :id AND t.transaction_date > (SELECT cyclestart FROM camps WHERE id = 1)', ['id' => $data['people_id']]);
@@ -154,7 +150,7 @@
         $data['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $data['people_id']]), true);
 
         $ajaxaside->assign('data', $data);
-        $ajaxaside->assign('currency', $_SESSION['camp']['currencyname']);
+        $ajaxaside->assign('currency', $camp['currencyname']);
         $htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
 
         $success = true;
