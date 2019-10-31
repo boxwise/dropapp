@@ -1,4 +1,4 @@
-const SEED_BOX_COMMENT = "Martin test comment";
+const SEED_BOX_COMMENT = "Cypress seed test box";
 
 Cypress.Commands.add("deleteAllBoxes", () => {
     cy.loginAsVolunteer();

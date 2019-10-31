@@ -9,6 +9,7 @@ const SAME_ORG_BOX_CONTENT = "Shampoo";
 const SAME_ORG_BOX_SIZE = "One size";
 const SAME_ORG_BOX_LOCATION = LOCATION3;
 const SAME_ORG_BOX_COUNT = "50";
+const SAME_ORG_BOX_COMMENT = "MobileBoxCreation test box (non-seed)";
 
 const SAME_ORG_QR_URL_WITHOUT_BOX = "b1cf83ae73adfce0d14dbe81b53cb96b";
 
@@ -35,9 +36,9 @@ function createBoxFormIsVisible(){
 
 describe('Mobile box creation using QR scanning (logged-in user)', () => {
     beforeEach(() => {
-      cy.loginAsVolunteer();
-      cy.visit('/?action=qr');
-      createQrCode();
+        cy.loginAsVolunteer();
+        cy.visit('/?action=qr');
+        createQrCode();
     });
 
     function typeNumberOfLabels(number){
@@ -78,6 +79,10 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         cy.get("input[data-testid='items_count']").clear().type(count);
     }
 
+    function writeComment(comment){
+        cy.get("input[data-testid='comments_id']").clear().type(comment);
+    }
+
     function clickNewBoxButton(){
         cy.get("input[data-testid='submit_new_box']").click();
     }
@@ -106,11 +111,14 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
             selectSize(size);
             selectLocation(LOCATION3);
             defineItemsCount(itemsCount);
+            writeComment(SAME_ORG_BOX_COMMENT);
             clickNewBoxButton();
             // assertions
             cy.mobileNotificationWithTextIsVisible('contains ' + itemsCount + ' ' + PRODUCT1);
             cy.mobileNotificationWithTextIsVisible('located in ' + LOCATION3);
             checkBoxContent(PRODUCT1, size, LOCATION3, itemsCount);
+            // cleanup
+            cy.deleteAllBoxes();
         });
     });
 
