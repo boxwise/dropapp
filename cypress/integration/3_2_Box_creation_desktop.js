@@ -6,7 +6,7 @@ context("Box_creation_tests", () => {
     let Test_size = "S";  
     
     before(function(){
-        DeleteAllBoxes();
+        cy.deleteAllBoxes();
     })
 
     beforeEach(function() {
@@ -15,7 +15,7 @@ context("Box_creation_tests", () => {
     })
 
     after(function(){
-        DeleteAllBoxes();
+        cy.deleteAllBoxes();
     })
 
     function getBoxesMenu() {
@@ -37,17 +37,6 @@ context("Box_creation_tests", () => {
         getBoxesMenu();
         SearchBoxById(Id);
         cy.get("td").should('contain',productname).and('contain',size).and('contain',location);
-    }
-    function DeleteAllBoxes(){
-        cy.loginAsVolunteer();
-        cy.visit('/?action=stock');
-        cy.get("input[data-testid='select_all']").click()
-        cy.get('button:visible').then(($body) => {
-            if ($body.text().includes("Delete")) {
-                cy.log("FOUND IT")
-            cy.get("button[data-operation='delete']").click();
-            cy.get("a[data-apply='confirmation']").click();
-            }})
     }
     function FillForm(product,size,location,items){
         cy.selectOptionByText("product_id", product);
