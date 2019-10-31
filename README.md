@@ -14,6 +14,10 @@ Write or call Hans ([hans@boxwise.co](mailto:hans@boxwise.co) & +4917652181647) 
 ### Preparation for Installation
 
 * Install [Docker](https://www.docker.com/products/docker-desktop)
+* Install [PHP 7.2 or later](https://www.php.net/downloads.php).
+* Ensure you have the `mbstring` and `curl` PHP extensions installed. On Ubuntu:
+
+       apt install php-curl php-mbstring
 
 ### How do I get set up?
 
