@@ -50,13 +50,11 @@ describe('User management', () => {
         getConfirmActionButton().should('not.exist');
         getDeactivateButton().click();
         getConfirmActionButton().click();
-        //cy.notyTextNotificationWithTextIsVisible("Item deleted");
         getDeactivatedUsersTab().click();
         getUserRow(deactivateTestUserName).should('exist');
         checkUserCheckboxByName(deactivateTestUserName);
         getReactivateButton().click();
-        //cy.notyTextNotificationWithTextIsVisible("Item recovered");
-        getActiveUsersTab();
+        getActiveUsersTab().click();
         getUserRow(deactivateTestUserName).should('exist');
     });
 });
