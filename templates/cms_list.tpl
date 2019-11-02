@@ -126,12 +126,12 @@
 				  	<thead>
 					  	<tr>
 						{foreach $listdata as $key=>$column}
-					  		<th><div {if $column['width']}style="width:{$column['width']}px;"{/if}>{$column['label']}</div></th>
+					  		<th><div {if $column['width']}style="width:{$column['width']}px;"{/if}>{$column['label'] nofilter}</div></th>
 						{/foreach}
 					  	</tr>
 						<tr class="sorter-false firstline">
 							{foreach $firstline as $column}
-					  			<th><div>{$column}</div></th>
+					  			<th><div>{$column nofilter}</div></th>
 							{/foreach}
 					  	</tr>
 					</thead>
@@ -184,7 +184,7 @@
 				  	<tfoot>
 					  	<tr>
 						{foreach $listfooter as $column}
-					  		<th><div>{$column}</div></th>
+					  		<th><div>{$column nofilter}</div></th>
 						{/foreach}
 					  	</tr>
 					</tfoot>

@@ -1,1 +1,1 @@
-{$row[$column['field']]}
+{$row[$column['field']] nofilter}
