@@ -10,12 +10,12 @@
 
         initlist();
 
-        $cmsmain->assign('title', 'Locations');
+        $cmsmain->assign('title', 'Warehouse Locations');
         listsetting('search', ['sizes.label']);
 
         $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount FROM locations WHERE camp_id = '.$_SESSION['camp']['id']);
 
-        addcolumn('text', 'Locations', 'label');
+        addcolumn('text', 'Warehouse Locations', 'label');
         addcolumn('text', 'Number of boxes', 'boxcount');
 
         listsetting('allowsort', false);

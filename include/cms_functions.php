@@ -14,9 +14,9 @@
         $data = gettreedata('SELECT cms_functions.*, IF(parent_id IS NULL,0,1) AS editable FROM cms_functions LEFT OUTER JOIN cms_functions_camps AS x ON x.cms_functions_id = cms_functions.id LEFT OUTER JOIN camps AS c ON c.id = x.camps_id GROUP BY cms_functions.id ORDER BY cms_functions.seq');
 
         if (db_fieldexists($table, 'title_'.$lan)) {
-            addcolumn('text', 'Functie', 'title_'.$lan);
+            addcolumn('text', 'Function', 'title_'.$lan);
         } else {
-            addcolumn('text', 'Functie', 'title');
+            addcolumn('text', 'Function', 'title');
         }
         addcolumn('text', 'Include', 'include');
 
