@@ -1,6 +1,6 @@
 const SEED_BOX_COMMENT = "Cypress seed test box";
 
-Cypress.Commands.add("deleteAllBoxes", () => {
+Cypress.Commands.add("deleteAllBoxesExceptSeed", () => {
     cy.loginAsVolunteer();
     cy.visit('/?action=stock');
     cy.get("input[data-testid='select_all']").click();

@@ -6,7 +6,7 @@ context("Box_creation_tests", () => {
     let Test_size = "S";  
     
     before(function(){
-        cy.deleteAllBoxes();
+        cy.deleteAllBoxesExceptSeed();
     })
 
     beforeEach(function() {
@@ -15,7 +15,7 @@ context("Box_creation_tests", () => {
     })
 
     after(function(){
-        cy.deleteAllBoxes();
+        cy.deleteAllBoxesExceptSeed();
     })
 
     function getBoxesMenu() {

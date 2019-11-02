@@ -118,7 +118,7 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
             cy.mobileNotificationWithTextIsVisible('located in ' + LOCATION3);
             checkBoxContent(PRODUCT1, size, LOCATION3, itemsCount);
             // cleanup
-            cy.deleteAllBoxes();
+            cy.deleteAllBoxesExceptSeed();
         });
     });
 
