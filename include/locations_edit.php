@@ -30,7 +30,7 @@
     $cmsmain->assign('include', 'cms_form.tpl');
 
     // put a title above the form
-    $cmsmain->assign('title', 'Location');
+    $cmsmain->assign('title', 'Warehouse Location');
 
     addfield('hidden', '', 'id');
     addfield('hidden', '', 'camp_id');
