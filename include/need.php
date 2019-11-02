@@ -108,7 +108,7 @@ if (!$ajax) {
 			LEFT JOIN 
 				(SELECT st.items, st.product_id, st.size_id, s.label
 					FROM stock AS st, locations AS l, sizes AS s
-					WHERE (NOT st.deleted OR st.deleted IS NULL) AND st.location_id = l.id AND l.visible AND st.size_id = s.id) st  
+					WHERE (NOT st.deleted OR st.deleted IS NULL) AND st.location_id = l.id AND l.visible AND l.deleted IS NULL AND st.size_id = s.id) st  
 				ON (st.product_id = pro.id AND UPPER(st.label) = UPPER(s.label))';
     //left joins for other camps to distinguish between NULL and 0
     foreach ($camps as $key => $camp) {
@@ -118,7 +118,7 @@ if (!$ajax) {
 					FROM (products AS pro, sizes AS s, locations AS l)
 					LEFT JOIN stock st
 					ON ((NOT st.deleted OR st.deleted IS NULL) AND st.location_id = l.id AND pro.id = st.product_id AND s.id = st.size_id)
-					WHERE l.visible AND l.camp_id = '.$key.' AND pro.camp_id = '.$key.'
+					WHERE l.visible AND l.deleted IS NULL AND l.camp_id = '.$key.' AND pro.camp_id = '.$key.'
 					GROUP BY UPPER(pro.name), pro.gender_id, UPPER(s.label)) st_'.$key.'
 				ON (st_'.$key.'.product = UPPER(pro.name) AND st_'.$key.'.gender_id = g.id AND st_'.$key.'.size = UPPER(s.label))';
     }

@@ -8,7 +8,7 @@
         $cmsmain->assign('title', 'Products');
         listsetting('search', ['name', 'g.label', 'products.comments']);
 
-        $locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]));
+        $locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]));
         if (!$locations) {
             $locations = 0;
         }

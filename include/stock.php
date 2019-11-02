@@ -9,7 +9,7 @@
         $cmsmain->assign('title', 'Boxes');
         listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
-        listfilter(['label' => 'By location', 'query' => 'SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
+        listfilter(['label' => 'By location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
 
         $statusarray = ['showall' => 'All boxes', 'ordered' => 'Ordered boxes', 'dispose' => 'Untouched for 3 month'];
         listfilter2(['label' => 'Only active boxes', 'options' => $statusarray, 'filter' => '"show"']);
@@ -31,7 +31,7 @@
 			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
 			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
 			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id
-		WHERE l.camp_id = '.$_SESSION['camp']['id'].
+		WHERE l.deleted IS NULL AND l.camp_id = '.$_SESSION['camp']['id'].
 
         ($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '').
 
@@ -78,7 +78,7 @@
         listsetting('allowcopy', false);
         listsetting('add', 'Add');
 
-        $locations = db_simplearray('SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+        $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
         addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
         addbutton('qr', 'Make label', ['icon' => 'fa-print']);
         addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
