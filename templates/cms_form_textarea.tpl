@@ -5,9 +5,9 @@
 			<textarea name="{$element['field']}" {if $element['maxlength']}data-max-count="{$element['maxlength']}"{/if} rows="{if $element['rows']}{$element['rows']}{else}3{/if}" id="field_{$element['field']}" class="form-control"
 				{if $element['readonly']}readonly{/if} 
 				{if $element['required']}required{/if} 			
- 				{if $element['onblur']}onblur="{$element['onblur']|escape};"{/if}
- 				{if $element['onchange']}onchange="{$element['onchange']|escape};"{/if}
- 				{if $element['onkeyup']}onkeyup="{$element['onkeyup']|escape};"{/if}
+ 				{if $element['onblur']}onblur="{$element['onblur']};"{/if}
+ 				{if $element['onchange']}onchange="{$element['onchange']};"{/if}
+ 				{if $element['onkeyup']}onkeyup="{$element['onkeyup']};"{/if}
 				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 				>{$data[$element['field']]}</textarea>
 			{if $element['maxlength']}<p class="counter-parent safe"><span class="counter">{$element['maxlength']}</span> {$translate['cms_form_charactersleft']|replace:'%n':$element['maxlength']}</p>{/if}
