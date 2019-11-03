@@ -54,6 +54,8 @@
             redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$handler->id);
         } elseif ('submitandnew' == $_POST['__action']) {
             redirect('?action='.$action.'&origin='.$_POST['_origin'].'&message='.$message);
+        } elseif ($_POST['__action'] == '' && $_POST['_origin'] == '') {
+            redirect('?action=people&message='.$message);   // routing after adding beneficiary
         } else {
             redirect('?action='.$_POST['_origin'].($_POST['id'] ? '' : '&message='.$message));
         }
