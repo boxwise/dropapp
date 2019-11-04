@@ -54,12 +54,12 @@ class Cypress extends AbstractSeed
             $product_number = (string) $products[array_rand($products)];
             $product_sizes = $sizes[$product_number];
             $data[] = [
-                    'id' => (800000000 + $i), //numberBetween($min = 800000000, $max = 999999999) ###Random numbers lead to duplicate insert--> failing seeding
-                    'box_id' => (900000 + $i), //numberBetween($min = 100000, $max = 999000),   ###as above
-                    'location_id' => $locations[array_rand($locations)],
-                    'product_id' => $product_number,
-                    'size_id' => $product_sizes[array_rand($product_sizes)],
-                ];
+                'id' => (800000000 + $i), //numberBetween($min = 800000000, $max = 999999999) ###Random numbers lead to duplicate insert--> failing seeding
+                'box_id' => (900000 + $i), //numberBetween($min = 100000, $max = 999000),   ###as above
+                'location_id' => $locations[array_rand($locations)],
+                'product_id' => $product_number,
+                'size_id' => $product_sizes[array_rand($product_sizes)],
+            ];
         }
 
         $this->table('stock')->insert($data)->save();
@@ -84,11 +84,11 @@ class Cypress extends AbstractSeed
 
             //##define gender and firstname randomly
             $gender_rand = (bool) random_int(0, 1);
-            if ($gender_rand == 1) {
+            if (1 == $gender_rand) {
                 $tempdata['firstname'] = $faker->firstname('male');
                 $tempdata['gender'] = 'M';
             }
-            if ($gender_rand == 0) {
+            if (0 == $gender_rand) {
                 $tempdata['firstname'] = $faker->firstname('female');
                 $tempdata['gender'] = 'F';
             }
