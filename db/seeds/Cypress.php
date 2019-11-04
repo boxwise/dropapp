@@ -43,5 +43,61 @@ class Cypress extends AbstractSeed
         $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`) VALUES (100000005,'TestDummyLocation',100000001,0,0,1,0,0);");
         $this->execute("INSERT INTO `qr` (`id`, `code`, `created`) VALUES (100000002,'4b382363fa161c111fa9ad2b335ceacd','2019-09-29 17:12:57'), (100000003,'b1cf83ae73adfce0d14dbe81b53cb96b','2019-09-29 18:12:57');");
         $this->execute("INSERT INTO `stock` (`id`, `box_id`, `product_id`, `size_id`,`items`,`location_id`,`qr_id`,`comments`,`created`,`created_by`) VALUES (100000001, 235563, 1165, 68, 50, 100000005, 100000001, '50 dummy products', '2019-09-29 18:15:32', 1);");
+
+        $faker = Faker\Factory::create();
+        $data = [];
+        $sizes = [];
+        $products = range(1161, 1162);
+        $sizes = ['1158' => range(53, 55), '1159' => range(71, 75), '1160' => array_merge(range(14, 27), [51], range(65, 67)), '1161' => [68], '1162' => array_merge([44, 45], [47, 48], [69]), '1163' => [68], '1164' => [68]];
+        $locations = ['100000000', '100000001', '100000002', '100000003', '100000004', '100000005'];
+        for ($i = 0; $i < 10000; ++$i) {
+            $product_number = (string) $products[array_rand($products)];
+            $product_sizes = $sizes[$product_number];
+            $data[] = [
+                    'id' => (800000000 + $i), //numberBetween($min = 800000000, $max = 999999999) ###Random numbers lead to duplicate insert--> failing seeding
+                    'box_id' => (900000 + $i), //numberBetween($min = 100000, $max = 999000),   ###as above
+                    'location_id' => $locations[array_rand($locations)],
+                    'product_id' => $product_number,
+                    'size_id' => $product_sizes[array_rand($product_sizes)],
+                ];
+        }
+
+        $this->table('stock')->insert($data)->save();
+
+        $data2 = [];
+        $parentids = [];
+        for ($i = 0; $i < 10000; ++$i) {
+            $tempdata = [
+                'camp_id' => 100000000,
+                'lastname' => $faker->lastName,
+                'id' => 900000000 + $i,
+                'date_of_birth' => $faker->dateTimeThisCentury->format('Y-m-d'),
+            ];
+
+            //#Allocate parent_id randomly
+            if ($i > 1) {
+                $rand_num = $faker->numberBetween($min = 0, $max = 100);
+                if ($rand_num > 40) {
+                    $tempdata['parent_id'] = $parentids[array_rand($parentids)];
+                }
+            }
+
+            //##define gender and firstname randomly
+            $gender_rand = (bool) random_int(0, 1);
+            if ($gender_rand == 1) {
+                $tempdata['firstname'] = $faker->firstname('male');
+                $tempdata['gender'] = 'M';
+            }
+            if ($gender_rand == 0) {
+                $tempdata['firstname'] = $faker->firstname('female');
+                $tempdata['gender'] = 'F';
+            }
+            if (!array_key_exists('parent_id', $tempdata)) {
+                array_push($parentids, $tempdata['id']);
+            }
+
+            $data2[] = $tempdata;
+        }
+        $this->table('people')->insert($data2)->save();
     }
 }
