@@ -7,7 +7,7 @@ If you are new, please introduce yourself in the #introductions channel.
 
 A couple of quick things:
 
-- **Friday and Monday are Boxwise Days!** We meet online each Friday at 10am CET to distribute tasks. This call usually takes about an hour. On Monday at 6pm we have a quick 15 min check-up to see where we are. Check out the [slack #dev channel]((https://join.slack.com/t/boxwise/shared_invite/esksnQtMzE4NzExMjkxNTM2LTk0MzY2Mjg0MTY5ZmJjMjI1ODNmODZiNmJlNTAwM2Y4MmJkZDJjZWEyNzk0YTQyZGI0ZTYxMTc2NTgxNjk1ZTM)) for more details.
+- **Once a week we e-meet!** We meet online usually once a week on the weekend to distribute tasks. This call usually takes about an hour. Check out the [slack #dev channel]((https://join.slack.com/t/boxwise/shared_invite/esksnQtMzE4NzExMjkxNTM2LTk0MzY2Mjg0MTY5ZmJjMjI1ODNmODZiNmJlNTAwM2Y4MmJkZDJjZWEyNzk0YTQyZGI0ZTYxMTc2NTgxNjk1ZTM)) for more details.
 - **Do you need help using Boxwise?** [Join our Slack group and ask in the #support channel.](https://join.slack.com/t/boxwise/shared_invite/enQtMzE4NzExMjkxNTM2LTk0MzY2Mjg0MTY5ZmJjMjI1ODNmODZiNmJlNTAwM2Y4MmJkZDJjZWEyNzk0YTQyZGI0ZTYxMTc2NTgxNjk1ZTM) Psst. We also wrote [some doc about how to use Boxwise](https://helpme.boxwise.co)
 - **Have you found a bug, or got an idea for a feature?** [Write us!](mailto:hello@boxwise.co)
 
