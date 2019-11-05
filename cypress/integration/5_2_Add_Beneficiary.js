@@ -91,6 +91,9 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.get("div[id='" + qtip_id + "']").should("be.visible");
     }
 
+    function getBeneficiaryRow(familyName){
+        return cy.get('tr').contains(familyName);
+    }
 
     it("5_2_1 Fill form, Save and close", () => {
         DeleteTestedBeneficiary(Test_firstname)
@@ -100,7 +103,7 @@ context("5_2_Add_Beneficiary_Test", () => {
         FillForm(Test_firstname, Test_lastname, Test_case_id);
         ClickButtonWithText("Save and close");
         cy.notificationWithTextIsVisible(Test_firstname + " " + Test_lastname + " was added");
-
+        getBeneficiaryRow(Test_lastname).should('exist');
     });
 
     it("5_2_2 Prevent emtpy submit",() => {

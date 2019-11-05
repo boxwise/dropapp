@@ -2,9 +2,9 @@
 	<div class="login-reset-template" style="background-image: url(assets/img/background-1.jpg);">
 		<h1>{$translate['site_name']}</h1>
 		<form id="reset" class="well-center login-reset-form form" data-ajax="1" data-action="reset2" method="post">
-			<input type="hidden" name="hash" value="{$smarty.get.hash|escape:'html'}" />
-			<input type="hidden" name="userid" value="{$smarty.get.userid|escape:'html'}" />
-			<input type="hidden" name="peopleid" value="{$smarty.get.peopleid|escape:'html'}" />
+			<input type="hidden" name="hash" value="{$smarty.get.hash}" />
+			<input type="hidden" name="userid" value="{$smarty.get.userid}" />
+			<input type="hidden" name="peopleid" value="{$smarty.get.peopleid}" />
 			<h2>{$translate['cms_reset2_pagetitle']}</h2>
 			<p>{$translate['cms_reset2_description']}</p>
 			<div class="form-group">

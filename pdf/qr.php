@@ -34,10 +34,10 @@ for ($i = 0; $i < intval($_GET['count']); ++$i) {
     }
 
     if ($labels[$i]) {
-        $box = db_row('SELECT s.box_id, p.name AS product, s.items, s2.label AS size, g.label AS gender, s.qr_id, qr.code FROM stock AS s LEFT OUTER JOIN products AS p ON s.product_id = p.id LEFT OUTER JOIN sizes AS s2 ON s.size_id = s2.id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id LEFT OUTER JOIN qr ON s.qr_id = qr.id WHERE s.id = :id', ['id' => $labels[$i]]);
+        $box = db_row('SELECT s.box_id, p.name AS product, s.items, s2.label AS size, g.label AS gender, s.qr_id, qr.code, qr.legacy FROM stock AS s LEFT OUTER JOIN products AS p ON s.product_id = p.id LEFT OUTER JOIN sizes AS s2 ON s.size_id = s2.id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id LEFT OUTER JOIN qr ON s.qr_id = qr.id WHERE s.id = :id', ['id' => $labels[$i]]);
     }
 
-    if ($box['code']) {
+    if ($box['code'] && !$box['legacy']) {
         $hash = $box['code'];
     } else {
         $id = db_value('SELECT id FROM qr ORDER BY id DESC LIMIT 1') + 1;
@@ -45,6 +45,12 @@ for ($i = 0; $i < intval($_GET['count']); ++$i) {
         db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$hash.'",NOW())');
         if ($labels[$i]) {
             db_query('UPDATE stock SET qr_id = :qr_id WHERE id = :id', ['id' => $labels[$i], 'qr_id' => $id]);
+            $from = [];
+            if ($box['legacy']) {
+                db_query('DELETE FROM qr WHERE id=:id', ['id' => $box['qr_id']]);
+                $from['int'] = $box['qr_id'];
+            }
+            simpleSaveChangeHistory('stock', $labels[$i], 'New Qr-code assigned.', $from, ['int' => $id]);
         }
     }
 
