@@ -8,8 +8,7 @@
         initlist();
         listsetting('allowadd', false);
         listsetting('haspagemenu', true);
-        addpagemenu('active', 'Active', ['link' => '?action=cms_users']);
-        addpagemenu('before', 'Not active yet', ['link' => '?action=cms_users_before']);
+        addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users']);
         addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'active' => true]);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
 

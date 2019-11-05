@@ -10,8 +10,7 @@
         listsetting('allowedit', false);
         listsetting('allowdelete', false);
         listsetting('haspagemenu', true);
-        addpagemenu('active', 'Active', ['link' => '?action=cms_users']);
-        addpagemenu('before', 'Not active yet', ['link' => '?action=cms_users_before']);
+        addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users']);
         addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true]);
         addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'confirm' => true]);
@@ -36,7 +35,8 @@
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL)
 				AND u.deleted
-			GROUP BY u.id';
+            GROUP BY u.id
+            ORDER BY UNIX_TIMESTAMP(u.valid_lastday)';
 
         // Do not forget to specify :usergroup and :user in the db call later
         $cms_users_same_level_query = '

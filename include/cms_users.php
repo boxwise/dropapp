@@ -9,8 +9,7 @@
         initlist();
         listsetting('add', $translate['cms_users_new']);
         listsetting('haspagemenu', true);
-        addpagemenu('active', 'Active', ['link' => '?action=cms_users', 'active' => true]);
-        addpagemenu('before', 'Not active yet', ['link' => '?action=cms_users_before']);
+        addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'active' => true]);
         addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
         addbutton('sendlogindata', $translate['cms_users_sendlogin'], ['icon' => 'fa-user', 'confirm' => true, 'disableif' => true]);
@@ -38,12 +37,10 @@
 				'.($_SESSION['user']['is_admin'] ? '' : '(uc.camp_id IN ('.($camps ? $camps : 0).')) AND ').' 
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL) AND (NOT u.deleted OR u.deleted IS NULL)
-				AND NOT (
-					(u.valid_lastday < CURDATE()  AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
-					OR (u.valid_firstday > CURDATE())
-				)
+				AND NOT (u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
 				AND UNIX_TIMESTAMP(u.deleted) = 0
-			GROUP BY u.id';
+			GROUP BY u.id
+			ORDER BY UNIX_TIMESTAMP(u.valid_firstday)';
 
         // Do not forget to specify :usergroup and :user in the db call later
         $cms_users_same_level_query = '
@@ -51,10 +48,7 @@
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
 			WHERE u.cms_usergroups_id = :usergroup AND u.id != :user
-			AND NOT (
-				(u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
-				OR (u.valid_firstday > CURDATE())
-			)
+			AND NOT (u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0)
 			AND UNIX_TIMESTAMP(u.deleted) = 0';
     }
     require_once 'cms_users_page.php';
