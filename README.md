@@ -4,7 +4,7 @@
 
 You just found the Drop App (first version of [Boxwise](https://www.boxwise.co) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
 
-We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Our second user is [Intervolve](https://intervolvegr.com/) who is using Drop App in the Koutsochero camp in Larissa, Greece.
+We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users are [Intervolve](https://intervolvegr.com/), [R4R](https://www.refugees4refugees.gr) and [IHA](iha.help.
 
 We have evolved the app to now be centrally hosted to we can offer the product to many more organisations, and are working to improve the quality of the product. 
 
@@ -58,27 +58,15 @@ Once the docker containers are running the app is accessible at http://localhost
 
 After this you should be able to login to the app using email address: some.admin@boxwise.co with password: admin
 
-### Database and migrations
+### Our dev environment recommendation
 
-If you want to connect to the MySQL server from your host machine, you can do this using
-
-    docker exec -it html_db_mysql_1 mysql -u root -p
-
-If you want to reset it, you should stop docker, delete the files in `/.docker/data/mysql` and call `docker-compose up` again.
-
-We're using [Phinx](https://phinx.org/) and [phinx-migrations-generator](https://github.com/odan/phinx-migrations-generator) to manage database migrations. Running
-
-    vendor/bin/phinx-migrations generate
-
-Will generate a new migration based on the diff of /db/migrations/schema.php.
-
-To connect to the DB, use mysql user `root` with password `dropapp_root`.
+Most of us use VSCode as a code editor and MySQL workbench for database access.
 
 ### Linting / Auto formatting
 
 So we don't have to think/argue over code conventions, we're using the [php-cs-fixer](https://github.com/FriendsOfPhp/PHP-CS-Fixer) automatic code formatter.
 
-CircleCI will *fail* if there is any code requiring linting fixes. 
+CircleCI will *fail* your Pull-Request if there is any code requiring linting fixes. 
 
 If you're using VSCode, the `vscode-php-cs-fixer` extension will be suggested automatically and apply 
 auto format on save. 
@@ -95,7 +83,9 @@ We have enabled XDebug remote debugging in the default Docker configuration, so 
 
 If you're using VS Code, if you install the [PHP Debug](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug) extension and start the 'Listen for XDebug' configuration, you can then set breakpoints in your code.
 
-#### For linux users 
+Please be aware that only breakpoints are caught which sit in a line with executable code.
+
+#### Debugging For linux users 
 
 Docker containers running on linux cannot resolve the address `host.docker.internal` to an ip-address. To use Xdebug on linux you have to specify the internal ip-address of the docker container in `docker-compose.yaml`.
 To find out your internal docker address run 
@@ -107,9 +97,55 @@ Enter the address in `docker-compose.yaml` here:
         environment:
             XDEBUG_CONFIG: remote_host=172.19.0.1 
 
+
+### Database and migrations
+
+#### Command-line access
+
+If you want to connect to the MySQL server from your host machine, you can do this using
+
+    docker exec -it <name of the db docker container> mysql -u root -p
+
+The mysql server in your docker container is also reachable on port 9906 of your localhost
+
+    mysql --host=127.0.0.1 --port=9906 -u root -p
+
+The password for the root-user for the db `dropapp_dev` is `dropapp_root`.
+
+#### MySQL workbench access
+
+Most of use use workbench to acces the MySQL database. To establish a connection you need to enter your `localhost`-address, e.g. `127.0.0.1`, for 'Hostname' and `9906` for 'Port'.
+
+#### Phinx migrations and seeds
+
+We're using [Phinx](https://phinx.org/) to run database migration and create database seeds.
+To create an migration run
+
+        vendor/bin/phinx create <NameOfMigrationInCamelCaseFormat>
+
+It creates an file in `db/migrations`. Please use this file to write your db migration.
+
+#### Re-seed your database
+
+If you want to re-seed your database, just run
+
+        vendor/bin/phinx seed:run -e development
+
+The `ClearMinimalDb` phinx-seeder clears all old tables before re-inserting the seed.
+
+### Cypress and testing
+
+We use [Cypress](https://www.cypress.io) for Browser-test. To run Cypress tests on your local environment, please
+1. [Install Cypress via direct Download](https://docs.cypress.io/guides/getting-started/installing-cypress.html#Direct-download)
+2. Set the variable `baseURL` to your local address, e.g. `localhost:8100` in cypress.json.
+3. Open Cypress and this repo in Cypress
+
+All tests in `cypress/integrations` should be found and can be directly executed. 
+
 ### Contribution guidelines ###
 
-You gotta be awesome and kind
+You gotta be awesome and kind.
+For everything else, please see our [contribution guidelines](https://github.com/boxwise/dropapp/blob/master/CONTRIBUTING.md)
 
 ### Who do I talk to? ###
 
