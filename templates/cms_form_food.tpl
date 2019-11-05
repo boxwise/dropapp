@@ -2,14 +2,14 @@
 		<input type="hidden" name="__field_amount[{$element['field']}]" value="text {if $element['format']!=""}{$element['format']}{/if} {if $element['readonly']}readonly{/if}">
 		<label for="field_amount[{$element['field']}]" class="control-label col-sm-4 label-two-layers">
 			{$element['label']} 
-			<small class="light">({$data['name'][$element['field']]|escape:'html'})</small>
+			<small class="light">({$data['name'][$element['field']]})</small>
 		</label>
 
 
 		<div class="col-sm-4 input-element input-element-small">
 	 		<input type="number" id="field_amount[{$element['field']}]" name="field_amount[{$element['field']}]" 
 	 			class="form-control" 
-	 			value="{$data['available'][$element['field']]|escape:'html'}"
+	 			value="{$data['available'][$element['field']]}"
 	 			min="0" max="{$data['available'][$element['field']]}">
 	 		<small class="light">{$data['available'][$element['field']]} of {$data['maxamount'][$element['field']]} available</small>
 		</div>

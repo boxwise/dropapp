@@ -59,22 +59,22 @@
         addfield('line');
     }
 
-    addfield('select', 'Product', 'product_id', ['required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name', 'onchange' => 'getSizes()']);
+    addfield('select', 'Product', 'product_id', ['test_id' => 'product_id', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].' ORDER BY name', 'onchange' => 'getSizes()']);
 
     addfield('select', 'Size', 'size_id', ['required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM sizes WHERE sizegroup_id = '.intval(db_value('SELECT sizegroup_id FROM products WHERE id = :id', ['id' => $data['product_id']])).' ORDER BY seq', 'tooltip' => 'If the right size for your box is not here, don\'t put it in comments, but first double check if you have the right product. For example: Long sleeves for babies, we call them tops.']);
 
-    addfield('number', 'Items', 'items');
+    addfield('number', 'Items', 'items', ['testid' => 'items_id']);
 
     addfield('select', 'Location', 'location_id', ['required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq']);
 
     if ($data['qr_id']) {
-        $qr = db_value('SELECT code FROM qr WHERE id = :id', ['id' => $data['qr_id']]);
+        $qr = db_row('SELECT code, legacy FROM qr WHERE id = :id', ['id' => $data['qr_id']]);
 
-        addfield('html', '', '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$qr.'" /><br /><br />', ['aside' => true, 'asidetop' => true]);
+        addfield('html', '', '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$qr['code'].($qr['legacy'] ? '&qrlegacy=1' : '').'" /><br /><br />', ['aside' => true, 'asidetop' => true]);
     }
 
     addfield('line');
-    addfield('textarea', 'Comments', 'comments');
+    addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id']);
     addfield('line');
     addfield('html', 'Box History', showHistory('stock', $data['id']), ['width' => 10]);
 
