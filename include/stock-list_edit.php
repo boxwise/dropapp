@@ -79,7 +79,7 @@
         listsetting('allowselect', true);
         listsetting('allowselectinvisible', false);
 
-        $locations = db_simplearray('SELECT id, label FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+        $locations = db_simplearray('SELECT id, label FROM locations WHERE l.deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
         addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
         addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
         addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
