@@ -2,6 +2,9 @@
 
     $ids = explode(',', $_POST['ids']);
 
+    // confirmed testusers
+    $testusers = ['some.admin@boxwise.co', 'admin@admin.co', 'coordinator@coordinator.co', 'user@user.co'];
+
     //Define all ids which are allowed to be deleted
     $allowed['people'] = db_array('
         SELECT p.id
@@ -23,11 +26,10 @@
         WHERE g.organisation_id = 100000000'
     );
 
-    // Test if user is test user and the ids can be deleted
-    // on production environment the users never have an id bigger than 100000000
+    // Test if user is test user, if table is key in $allowed and the ids can be deleted
     $return = ['success' => true];
     foreach ($ids as $id) {
-        if ($_SESSION['user']['id'] >= 100000000 && in_array($id, $allowed[$_POST['table']])) {
+        if (in_array($_SESSION['user']['email'], $testusers) && isset($allowed[$_POST['table']]) && in_array($id, $allowed[$_POST['table']])) {
             listRealDelete($_POST['table'], $ids);
         } else {
             $return = ['success' => false, 'message' => 'You do not have access to delete Test data!'];
