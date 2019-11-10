@@ -10,4 +10,4 @@
     $market = db_value('SELECT id FROM locations WHERE is_market AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
     db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.intval($_GET['items']).',NOW(),'.$box['location_id'].','.$market.')');
 
-    redirect('?message=Box <strong>'.$box['box_id'].'</strong> contains now '.$newitems.'x <strong>'.$box['product'].'</strong>. <a href="?boxid='.$box['id'].'">Go back to this box</a>.');
+    redirect('?message=Box <strong>'.$box['box_id'].'</strong> contains now '.$newitems.'x <strong>'.$box['product'].'</strong>.&messageAnchorText=Go back to this box&messageAnchorTarget=boxid&messageAnchorTargetValue='.$box['id']);
