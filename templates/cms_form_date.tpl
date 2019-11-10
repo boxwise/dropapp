@@ -7,9 +7,9 @@
 					class="form-control" 
 					value="{$data[$element['field']]}" 
 					{if $element['required']}required{/if} 
-					{if $element['onblur']}onblur="{$element['onblur']|escape};"{/if}
-					{if $element['onchange']}onchange="{$element['onchange']|escape};"{/if}
-					{if $element['onkeyup']}onkeyup="{$element['onkeyup']|escape};"{/if}
+					{if $element['onblur']}onblur="{$element['onblur']};"{/if}
+					{if $element['onchange']}onchange="{$element['onchange']};"{/if}
+					{if $element['onkeyup']}onkeyup="{$element['onkeyup']};"{/if}
 					{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 				/>
 				<span class="input-group-addon"><span class="fa {if $element['date']}fa-calendar{else}fa-clock-o{/if}"></span></span>

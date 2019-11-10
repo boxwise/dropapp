@@ -7,7 +7,7 @@
 				data-placeholder="{if isset($element['placeholder'])}{$element['placeholder']}{else}{$translate['cms_form_selectplaceholder']}{/if}"
 				{if $element['required']}required{/if} 
 				{if $element['formatlist']} data-format-list="{$element['formatlist']}"{/if}
-				{if isset($element['onchange'])}onchange="{$element['onchange']|escape};"{/if}
+				{if isset($element['onchange'])}onchange="{$element['onchange']};"{/if}
 				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 			>
 			<option></option>

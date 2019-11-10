@@ -13,7 +13,10 @@
         $cmsmain->assign('title', 'Warehouse Locations');
         listsetting('search', ['sizes.label']);
 
-        $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount FROM locations WHERE camp_id = '.$_SESSION['camp']['id']);
+        $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount 
+            FROM locations 
+            WHERE deleted IS NULL 
+            AND camp_id = '.$_SESSION['camp']['id']);
 
         addcolumn('text', 'Warehouse Locations', 'label');
         addcolumn('text', 'Number of boxes', 'boxcount');

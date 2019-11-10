@@ -7,7 +7,7 @@
 				{if $data[$element['field']]}checked{/if}  
 				{if $element['readonly']}disabled{/if} 
 				{if $element['required']}required{/if} 
- 				{if $element['onchange']}onchange="{$element['onchange']|escape};"{/if}
+ 				{if $element['onchange']}onchange="{$element['onchange']};"{/if}
 				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 			> {$element['label']}
 				{if $element['tooltip']}{include file="cms_tooltip.tpl"}{/if}

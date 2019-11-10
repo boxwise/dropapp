@@ -35,7 +35,13 @@
 
     if (1 == $_GET['created']) {
         $smarty = new Zmarty();
-        $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $_GET['created_id']]);
+        $box = db_row('
+            SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location 
+            FROM stock AS s 
+            LEFT OUTER JOIN products AS p ON p.id = s.product_id 
+            LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
+            LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
+            WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $_GET['created_id']]);
         $smarty->assign('box', $box);
         $htmlaside = $smarty->fetch('stock_confirm_new.tpl');
         addfield('html', '', $htmlaside);
@@ -65,7 +71,7 @@
 
     addfield('number', 'Items', 'items', ['testid' => 'items_id']);
 
-    addfield('select', 'Location', 'location_id', ['required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM locations WHERE camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq']);
+    addfield('select', 'Location', 'location_id', ['required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq']);
 
     if ($data['qr_id']) {
         $qr = db_row('SELECT code, legacy FROM qr WHERE id = :id', ['id' => $data['qr_id']]);
