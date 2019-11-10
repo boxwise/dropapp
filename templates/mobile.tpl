@@ -45,7 +45,7 @@
 				</div>
 			{/if}		
 		</header>
-		{if $data['message']}<div class="message {if $data['warning']}warning{/if}">{$data['message']}</div>{/if}
+		{if $data['message']}<div class="message {if $data['warning']}warning{/if}">{$data['message'] nofilter}</div>{/if}
 		{if $include}{include file="{$include}"}{/if}
 		{if $smarty.session.user}
 			<footer>
