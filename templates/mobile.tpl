@@ -50,7 +50,7 @@
 				{$data['message'] nofilter}
 				{if $data['messageAnchorText'] && $data['messageAnchorTarget'] && $data['messageAnchorTargetValue']}
 					<a href="?{$data['messageAnchorTarget']}={$data['messageAnchorTargetValue']}">
-						{$data['messageAnchorText'] nofilter}
+						{$data['messageAnchorText']}
 					</a>
 				{/if}
 			</div>
