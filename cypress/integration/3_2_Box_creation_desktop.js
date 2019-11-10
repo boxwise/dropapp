@@ -4,17 +4,14 @@ context("Box_creation_tests", () => {
     let Test_product = "Jeans Female";
     let Product_name  = "Jeans"; //in the box creation product name is automatically concatenated with gender-info, therefore we use this variable to store a processed version for checks in the boxes menu
     let Test_size = "S";  
-    
-    before(function(){
-        cy.deleteAllBoxesExceptSeed();
-    })
 
     beforeEach(function() {
         cy.loginAsVolunteer();
         cy.visit('/?action=stock_edit&origin=stock');
     })
 
-    after(function(){
+    afterEach(function(){
+        cy.visit('/?action=stock');
         cy.deleteAllBoxesExceptSeed();
     })
 
@@ -23,6 +20,10 @@ context("Box_creation_tests", () => {
     }
     function SaveAndProgress(buttonname) {
         cy.get("button").contains(buttonname).click();
+    }
+    function clearSearchbox(){
+        cy.get("input[data-testid ='box-search']").clear();
+        cy.get("button[data-testid='search-button']").click();
     }
     function SearchBoxById(Id) {
         cy.get("input[data-testid ='box-search']").type(Id);
@@ -103,6 +104,8 @@ context("Box_creation_tests", () => {
             const Test_id = IdFromMessage($message);
             ContinueToMenu();
             CheckBoxCreated(Test_id, Product_name,Test_size, Test_location,Test_number);
+            // clearSearchbox();
+            // cy.deleteAllBoxesExceptSeed();
         });  
     });
 
@@ -115,6 +118,8 @@ context("Box_creation_tests", () => {
             CheckEmpty();
             getBoxesMenu();
             CheckBoxCreated(Test_id, Product_name,Test_size, Test_location,Test_number);
+            // clearSearchbox();
+            // cy.deleteAllBoxesExceptSeed();
         });
     });
 
@@ -126,6 +131,8 @@ context("Box_creation_tests", () => {
             const Test_id = IdFromMessage($message) ;
             ContinueToMenu();
             SearchBoxById(Test_id);
+            // clearSearchbox();
+            // cy.deleteAllBoxesExceptSeed();
             // Pdf cannot be opened in circle ci
             // CreateQR();
             // CheckUrl('pdf');
