@@ -209,7 +209,7 @@ function loadSessionData($user)
             WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_SESSION['usergroup']['organisation_id']]);
     }
     $camplist = camplist();
-    if (count($camplist) == 1) {
+    if (1 == count($camplist)) {
         // if user has only access to one camp then set the information
         $_SESSION['camp'] = reset($camplist);
     } elseif (isset($_GET['camp'])) {
@@ -229,11 +229,11 @@ function loadSessionData($user)
         $_SESSION['camp'] = reset($camplist);
     }
 
-    if (isset($_SESSION['organisation']) && isset($_SESSION['camp'])) {
+    if (isset($_SESSION['organisation'], $_SESSION['camp'])) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 function loginasuser($table, $ids)
