@@ -261,7 +261,8 @@ $table = $action;
                 break;
             case 'export':
                 $success = true;
-                $redirect = '?action=people_export&ids='.$_POST['ids'];
+                $_SESSION['export_ids'] = $_POST['ids'];
+                $redirect = '?action=people_export';
 
                 break;
         }
