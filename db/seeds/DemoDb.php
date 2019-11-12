@@ -263,17 +263,41 @@ class DemoDb extends AbstractSeed
         $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `organisation_id`,`email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
 			(2,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe',1,'jane.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
 			(3,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe',1,'joe.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
-			(4,'5f4dcc3b5aa765d61d8327deb882cf99','Sam Sample',1,'sam.sample@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',3,'0000-00-00','0000-00-00'),
-			(5,'5f4dcc3b5aa765d61d8327deb882cf99','Donald Dummy',1,'donald.dummy@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',4,'0000-00-00','0000-00-00'),
-			(6,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Bloggs',1,'jane.bloggs@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',5,'0000-00-00','0000-00-00'),
-			(7,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Bloggs',1,'joe.bloggs@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',6,'0000-00-00','0000-00-00'),
 			(10,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe',2,'jane.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00'),
 			(11,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe',2,'joe.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',11,'0000-00-00','0000-00-00'),
 			(12,'5f4dcc3b5aa765d61d8327deb882cf99','Sam Sample',2,'sam.sample@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',12,'0000-00-00','0000-00-00'),
-			(13,'5f4dcc3b5aa765d61d8327deb882cf99','Donald Dummy',2,'donald.dummy@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',13,'0000-00-00','0000-00-00'),
-			(14,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Bloggs',2,'jane.bloggs@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',14,'0000-00-00','0000-00-00'),
-			(15,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Bloggs',2,'joe.bloggs@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00'),
-			(16,'5f4dcc3b5aa765d61d8327deb882cf99','John Smith',2,'john.smith@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',16,'0000-00-00','0000-00-00');");
+			(15,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Bloggs',2,'joe.bloggs@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00');");
+		$users = [];
+		for ($i = 20; $i < 120; ++$i) {
+			$tempdata = [
+						'id' => $i,
+						'cms_usergroups_id' => $faker->randomElement([3,4,5,6,13,14,16]),
+						'email' => $faker->unique()->email,
+						'language' => 2,
+						'naam' => $faker->name,
+						'pass' => '5f4dcc3b5aa765d61d8327deb882cf99',                   
+					];
+
+			// set valid dates for 70 per cent of users
+			$rand_num = $faker->numberBetween($min = 0, $max = 100);
+			if ($rand_num < 71) {
+				$tempdata['valid_firstday'] = $faker->dateTimeBetween($startDate = '-350 days', $endDate = '+250 days',$timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+				$tempdata['valid_lastday'] = $faker->dateTimeBetween($startDate = $tempdata['valid_firstday'], $endDate = '+255 days',$timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+			} else {
+				$tempdata['valid_firstday'] = '0000-00-00 00:00:00';
+				$tempdata['valid_lastday'] = '0000-00-00 00:00:00';
+			}
+
+			// deactivate 5 per cent of the users
+			$rand_num = $faker->numberBetween($min = 0, $max = 100);
+			if ($rand_num < 5) {
+				$tempdata['deleted'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+				$tempdata['email'] = $tempdata['email'].'.deleted.'.$i;
+			}
+			$users[] = $tempdata;
+		}
+		$this->table('cms_users')->insert($users)->save();
+		
 
 		//------------------- library_type
 		$this->execute("INSERT INTO `library_type` (`id`, `label`, `camp_id`) VALUES
