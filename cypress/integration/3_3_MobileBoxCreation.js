@@ -1,6 +1,6 @@
 import { getLoginConfiguration } from '../config';
 
-const PRODUCT1 = "Diapers";
+const PRODUCT1 = "Jeans";
 
 const LOCATION3 = "TestDonated";
 
@@ -80,7 +80,7 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
     }
 
     function writeComment(comment){
-        cy.get("input[data-testid='comments_id']").clear().type(comment);
+        cy.get("input[data-testid='comments']").clear().type(comment);
     }
 
     function clickNewBoxButton(){
@@ -106,7 +106,7 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
             createBoxFormIsVisible();
             // filling out new box form
             let itemsCount = 100;
-            let size = "7-12 months"
+            let size = "M"
             selectProduct(PRODUCT1);
             selectSize(size);
             selectLocation(LOCATION3);
