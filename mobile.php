@@ -19,23 +19,9 @@ if ($_POST && 'login' == $_POST['action']) {
 }
 
 // new: fill the camp selection menu --------------------------------------------
-
-// Set organisation
-if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
-    if (!isset($_SESSION['camp']['id']) && $_GET['organisation']) {
-        $_SESSION['organisation'] = db_row('SELECT o.* FROM organisations AS o WHERE (NOT o.deleted OR o.deleted IS NULL) AND o.id = :organisation', ['organisation' => $_GET['organisation']]);
-    } else {
-        $_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id=:id AND (NOT deleted OR deleted IS NULL)', ['id' => $_SESSION['camp']['organisation_id']]);
-    }
-}
 $tpl->assign('org', $_SESSION['organisation']);
 
 $camplist = camplist();
-if ($_GET['camp']) {
-    $_SESSION['camp'] = $camplist[$_GET['camp']];
-} elseif (!isset($_SESSION['camp'])) {
-    $_SESSION['camp'] = reset($camplist);
-}
 $tpl->assign('camps', $camplist);
 $tpl->assign('currentcamp', $_SESSION['camp']);
 // end of the camp menu addition --------------------------------------------

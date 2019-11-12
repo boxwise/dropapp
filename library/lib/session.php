@@ -15,9 +15,9 @@ function login($email, $pass, $autologin, $mobile = false)
             $message = $in_valid_dates['message'];
 
             if ($success) {
-                loadSessionData($user);
+                $loadsessionresult = loadSessionData($user);
 
-                db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', ['id' => $_SESSION['user']['id']]);
+                db_query('UPDATE cms_users SET lastlogin = NOW() WHERE id = :id', ['id' => $user['id']]);
                 logfile(($mobile ? 'Mobile user ' : 'User ').'logged in with '.$_SERVER['HTTP_USER_AGENT']);
 
                 if (isset($autologin)) {
@@ -28,7 +28,11 @@ function login($email, $pass, $autologin, $mobile = false)
                     setcookie('autologin_pass', null, time() - 3600, '/');
                 }
 
-                $redirect = '/?action=start';
+                if (isset($_GET['destination']) && $loadsessionresult) {
+                    $redirect = '/?action='.urldecode($_GET['destination']);
+                } else {
+                    $redirect = '/?action=start';
+                }
             }
         } else { // password is not correct
             $success = false;
@@ -58,27 +62,36 @@ function checksession()
     $result = ['success' => true];
 
     if (isset($_SESSION['user'])) { // a valid session exists
-        db_query('UPDATE cms_users SET lastaction = NOW() WHERE id = :id', ['id' => $_SESSION['user']['id']]);
-        $_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id = :id', ['id' => $_SESSION['user']['id']]);
+        $user = db_row('SELECT * FROM cms_users WHERE id = :id', ['id' => $_SESSION['user']['id']]);
 
         // Check if account is not expired
-        $in_valid_dates = check_valid_from_until_date($_SESSION['user']['valid_firstday'], $_SESSION['user']['valid_lastday']);
+        $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday']);
         if (!$in_valid_dates['success']) {
             $result['success'] = false;
             $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
             $result['message'] = $in_valid_dates['message'];
+        } elseif (!loadSessionData($user)) {
+            $result['redirect'] = '/?action=start';
         }
     } else { // no valid session exists
         if (isset($_COOKIE['autologin_user'])) { // a autologin cookie exists
             $user = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND pass = :pass', ['email' => $_COOKIE['autologin_user'], 'pass' => $_COOKIE['autologin_pass']]);
-            if ($user) {
-                loadSessionData($user);
-                db_query('UPDATE cms_users SET lastlogin = NOW(), lastaction = NOW() WHERE id = :id', ['id' => $_SESSION['user']['id']]);
-
-                return $result;
+            if ($user) { // the cookie is valied
+                // Check if account is not expired
+                $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday']);
+                if (!$in_valid_dates['success']) {
+                    $result['success'] = false;
+                    $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
+                    $result['message'] = $in_valid_dates['message'];
+                } else {
+                    if (!loadSessionData($user)) {
+                        $result['redirect'] = '/?action=start';
+                    }
+                }
+            } else { //cookie is invalid
+                setcookie('autologin_user', null, time() - 3600, '/');
+                setcookie('autologin_pass', null, time() - 3600, '/');
             }
-            setcookie('autologin_user', null, time() - 3600, '/');
-            setcookie('autologin_pass', null, time() - 3600, '/');
         }
         $result['success'] = false;
         $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
@@ -90,8 +103,6 @@ function checksession()
 function logout($redirect = false)
 {
     global $settings;
-
-    db_query('UPDATE cms_users SET lastaction = "0000-00-00 00:00:00" WHERE id = :id', ['id' => $_SESSION['user']['id']]);
 
     setcookie('autologin_user', null, time() - 3600, '/');
     setcookie('autologin_pass', null, time() - 3600, '/');
@@ -172,17 +183,57 @@ function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkK
     return $password;
 }
 
+// session data requires user, usergroup, organisation, camp
+//usergroup is optional for Boxwise Gods
 function loadSessionData($user)
 {
     $_SESSION['user'] = $user;
-    $_SESSION['usergroup'] = db_row('
-		SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel 
-		FROM cms_usergroups AS ug 
-		WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $user['cms_usergroups_id']]);
-    $_SESSION['organisation'] = db_row('
-		SELECT * 
-		FROM organisations 
-		WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_SESSION['usergroup']['organisation_id']]);
+    // update last action
+    db_query('UPDATE cms_users SET lastaction = NOW() WHERE id = :id', ['id' => $_SESSION['user']['id']]);
+
+    if ($_SESSION['user']['is_admin']) {
+        // set organisation depending on url
+        if (isset($_GET['organisation'])) {
+            $_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_GET['organisation']]);
+            // unset camp if organisation is changed
+            unset($_SESSION['camp']);
+        }
+    } else {
+        $_SESSION['usergroup'] = db_row('
+            SELECT ug.*, (SELECT level FROM cms_usergroups_levels AS ul WHERE ul.id = ug.userlevel) AS userlevel 
+            FROM cms_usergroups AS ug 
+            WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $user['cms_usergroups_id']]);
+        $_SESSION['organisation'] = db_row('
+            SELECT * 
+            FROM organisations 
+            WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_SESSION['usergroup']['organisation_id']]);
+    }
+    $camplist = camplist();
+    if (count($camplist) == 1) {
+        // if user has only access to one camp then set the information
+        $_SESSION['camp'] = reset($camplist);
+    } elseif (isset($_GET['camp'])) {
+        // if camp is specified in url
+        $_SESSION['camp'] = $camplist[$_GET['camp']];
+        if ($_SESSION['user']['is_admin']) {
+            // set organisation of Boxwise God depending on camp
+            $_SESSION['organisation'] = db_row('
+                SELECT * 
+                FROM organisations 
+                WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_SESSION['camp']['organisation_id']]);
+        }
+    } elseif (!$ajax && !isset($_SESSION['camp'])) {
+        // only if the session did expire and it is not an ajax call.
+        // Why ajax?
+        // It can happen that an org does not have internet for example in the checkout. The internet connection is checked before a form is submitted. If no internet connection is detected the entries from the form are kept. To not assign the delayed form submission to a wrong camp it is excepted.
+        $_SESSION['camp'] = reset($camplist);
+    }
+
+    if (isset($_SESSION['organisation']) && isset($_SESSION['camp'])) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function loginasuser($table, $ids)
@@ -195,10 +246,10 @@ function loginasuser($table, $ids)
     $_SESSION['camp2'] = $_SESSION['camp'];
     $_SESSION['usergroup2'] = $_SESSION['usergroup'];
     $_SESSION['organisation2'] = $_SESSION['organisation'];
-    $_SESSION['user'] = db_row('SELECT * FROM cms_users WHERE id=:id', ['id' => $id]);
-    loadSessionData($_SESSION['user']);
-    $camplist = camplist();
-    $_SESSION['camp'] = reset($camplist);
+    $user = db_row('SELECT * FROM cms_users WHERE id=:id', ['id' => $id]);
+    if (!loadSessionData($user)) {
+        throw new Exception('$_SESSION data not fully loaded!');
+    }
     $success = true;
     $message = 'Logged in as '.$_SESSION['user']['naam'];
 
