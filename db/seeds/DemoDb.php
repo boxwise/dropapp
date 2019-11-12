@@ -1670,5 +1670,39 @@ class DemoDb extends AbstractSeed
             $stock[] = $tempdata;
         }
         $this->table('stock')->insert($stock)->save();
+
+        //------------------- transactions
+        $transactions = [];
+        $i = 1;
+        foreach ($people as $person) {
+            if (!isset($person['parent_id'])) { // only familyheads can do transactions
+                $price = 0;
+                if ($person['camp_id'] == 3) { // only camp 3 uses tokens
+                    $transactions[] = [
+                        'id' => $i,
+                        'count' => 0,
+                        'drops' => 150,
+                        'people_id' => $person['id'],
+                        'transaction_date' => $faker->dateTimeBetween($startDate = '-30 days', $endDate = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s'),
+                        'user_id' => 1, ];
+                    ++$i;
+                    $price = -10;
+                }
+                // max of 10 transactions per familyhead
+                $rand_num = $faker->numberBetween($min = 0, $max = 10);
+                for ($j = 1; $j <= $rand_num; ++$j) {
+                    $transactions[] = [
+                        'id' => $i,
+                        'count' => $faker->numberBetween($min = 1, $max = 5),
+                        'drops' => $price,
+                        'people_id' => $person['id'],
+                        'product_id' => $faker->randomElement($products[$person['camp_id']]),
+                        'transaction_date' => $faker->dateTimeBetween($startDate = '-30 days', $endDate = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s'),
+                        'user_id' => 1, ];
+                    ++$i;
+                }
+            }
+        }
+        $this->table('transactions')->insert($transactions)->save();
     }
 }
