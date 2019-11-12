@@ -1677,7 +1677,7 @@ class DemoDb extends AbstractSeed
         foreach ($people as $person) {
             if (!isset($person['parent_id'])) { // only familyheads can do transactions
                 $price = 0;
-                if ($person['camp_id'] == 3) { // only camp 3 uses tokens
+                if (3 == $person['camp_id']) { // only camp 3 uses tokens
                     $transactions[] = [
                         'id' => $i,
                         'count' => 0,
