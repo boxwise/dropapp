@@ -11,10 +11,10 @@ const SAME_ORG_BOX_LOCATION = LOCATION3;
 const SAME_ORG_BOX_COUNT = "50";
 const SAME_ORG_BOX_COMMENT = "MobileBoxCreation test box (non-seed)";
 
-const SAME_ORG_QR_URL_WITHOUT_BOX = "b1cf83ae73adfce0d14dbe81b53cb96b";
+const SAME_ORG_QR_URL_WITHOUT_BOX = "5c829d1bf278615670dceeb9b3919ed2";
 
 const DIFFERENT_ORG_QR_URL = "44f683a84163b3523afe57c2e008bc8c";
-const DIFFERENT_ORG_QR_URL_WITHOUT_BOX = "4b382363fa161c111fa9ad2b335ceacd";
+const DIFFERENT_ORG_QR_URL_WITHOUT_BOX = "5a5ea04157ce4d020f65c3dd950f4fa3";
 
 const NON_EXISTENT_QR_ULR = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
@@ -102,7 +102,7 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         getQrCode().then($qr => {
             cy.viewport('iphone-6');
             let qrUrl = $qr[0].src.split('data=https://')[1];
-            cy.visit('https://' + qrUrl);
+            cy.visit('http://' + qrUrl);
             createBoxFormIsVisible();
             // filling out new box form
             let itemsCount = 100;
@@ -126,7 +126,7 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         getQrCode().then($qr => {
             cy.viewport('iphone-6');
             let qrUrl = $qr[0].src.split('data=https://')[1];
-            cy.visit('https://' + qrUrl);
+            cy.visit('http://' + qrUrl);
             clickNewBoxButton();
             checkRequiredFieldsErrors()
         })
