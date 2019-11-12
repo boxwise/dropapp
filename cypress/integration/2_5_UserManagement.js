@@ -54,6 +54,12 @@ describe('User management', () => {
         getUserRow(deactivateTestUserName).should('exist');
         checkUserCheckboxByName(deactivateTestUserName);
         getReactivateButton().click();
+        getConfirmActionButton().should('be.visible');
+        getCancelAction().should('be.visible');
+        getCancelAction().click();
+        getConfirmActionButton().should('not.exist');
+        getReactivateButton().click();
+        getConfirmActionButton().click();
         getActiveUsersTab().click();
         getUserRow(deactivateTestUserName).should('exist');
     });
