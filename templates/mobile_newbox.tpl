@@ -40,7 +40,7 @@
 			</select>
 		</div>
 		<div class="form-group"><input type="number" name="items" pattern="\d*" placeholder="Number of items" value="{$box['items']}" class="form-control" min="1" data-testid="items_count" required></div>
-		<div class="form-group"><input type="text" name="comments" placeholder="Comments for this box" value="{$box['comments']}" class="form-control"></div>
+		<div class="form-group"><input type="text" name="comments" placeholder="Comments for this box" value="{$box['comments']}" data-testid="comments" class="form-control"></div>
 		<input type="submit" name="submitbutton" class="btn" value="Save" data-testid="submit_new_box">
 	</form>
 {* 	<script>{if $box['product_id']}getSizes({$box['size_id']});{/if}</script> *}
