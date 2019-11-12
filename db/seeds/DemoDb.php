@@ -24,7 +24,7 @@ class DemoDb extends AbstractSeed
         // https://github.com/fzaninotto/Faker
         $faker = Faker\Factory::create();
         // to make the seed reproducible
-        $faker->seed(1);
+        $faker->seed(2);
 
         //------------------- organisations
         $this->execute("INSERT INTO `organisations` (`id`, `label`, `deleted`) VALUES
@@ -1023,8 +1023,9 @@ class DemoDb extends AbstractSeed
         //------------------- qr
         $qr = [];
         for ($i = 0; $i < 15000; ++$i) {
+			// qr code not unique because faker in Cypress.php intervene
             $tempdata = [
-                        'code' => $faker->unique()->md5,
+                        'code' => substr($faker->unique()->md5,0,-1),
                         'id' => $i,
                     ];
             $qr[] = $tempdata;
@@ -1033,7 +1034,11 @@ class DemoDb extends AbstractSeed
 
 		//------------------- stock
 		// restrict selection of random ids
+		// key is campid
 		$products = ['1' => range(1,219), '2' => range(220,414), '3' => range(415,609)];
+		// key is campid
+		$locations = ['1' => range(1,13), '2' =>range(14,18), '3'=>range(19,22)];
+		// key is productid
 		$sizes = ['1' => [1,2,3,4,5,71],
 			'2' => [1,2,3,4,5,71],
 			'3' => [1,2,3,4,5,71],
@@ -1645,7 +1650,6 @@ class DemoDb extends AbstractSeed
 			'609' => [52]];
 
         $stock = [];
-        $locations = ['1' => range(1,13), '2' =>range(14,18), '3'=>range(19,22)];
         for ($i = 1; $i <= 10000; ++$i) {
 			$campid = $faker->randomElement(['1','2','3']);
             $tempdata = [
