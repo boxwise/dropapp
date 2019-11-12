@@ -29,7 +29,7 @@ function login($email, $pass, $autologin, $mobile = false)
                 }
 
                 if (isset($_GET['destination']) && $loadsessionresult) {
-                    $redirect = '/?action='.urldecode($_GET['destination']);
+                    $redirect = '/'.urldecode($_GET['destination']);
                 } else {
                     $redirect = '/?action=start';
                 }
