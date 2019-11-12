@@ -213,7 +213,7 @@ class Cypress extends AbstractSeed
 
         //------------------- stock
         $this->execute("INSERT INTO `stock` (`id`, `box_id`, `product_id`, `size_id`,`items`,`location_id`,`qr_id`,`comments`,`created`,`created_by`) VALUES
-			(100000000, 328765, 1163, 68, 50, 100000002, 100000000, '50 shampoo bottles', '2019-09-29 11:15:32', 1);");
+			(100000000, 328765, 1163, 68, 50, 100000002, 100000000, 'Cypress seed test box', '2015-01-01 11:15:32', 1);");
         $products = range(1158, 1164);
         $locations = range(100000000, 100000004);
         $sizes = ['1158' => [53, 54, 55, 70],
