@@ -20,9 +20,8 @@ class MinimalDb extends AbstractSeed
         // and replacement pattern:
         // $this->execute("$1");\n
 
-        $this->execute('SET FOREIGN_KEY_CHECKS=0;');
-
         //------------------- cms_functions
+        $this->execute('SET FOREIGN_KEY_CHECKS=0;');
         $this->execute("INSERT INTO `cms_functions` (`id`,`parent_id`,`title_en`,`include`,`seq`,`alert`,`adminonly`,`visible`,`allusers`,`allcamps`) VALUES 
             (35,NULL,'Free Shop','',1,0,0,1,0,0),
 			(42,NULL,'Admin','',7,0,0,1,0,0),
@@ -72,6 +71,7 @@ class MinimalDb extends AbstractSeed
 			(156,42,'User groups','cms_usergroups',20,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
 			(158,35,'Add beneficiary','people_add',3,0,0,1,0,0);");
+        $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings
         $this->execute("INSERT INTO `cms_settings` (`id`, `category_id`, `type`, `code`, `description`, `options`, `value`, `hidden`, `created`, `created_by`, `modified`, `modified_by`) VALUES
@@ -143,6 +143,7 @@ class MinimalDb extends AbstractSeed
             (10,'ten');");
 
         //------------------- product_categories
+        $this->execute('SET FOREIGN_KEY_CHECKS=0;');
         $this->execute("INSERT INTO `product_categories` (`id`, `label`, `seq`, `parent_id`) VALUES 
             (1,'Underwear / Nightwear',11,12),
             (2,'Bottoms',12,12),
@@ -161,7 +162,8 @@ class MinimalDb extends AbstractSeed
             (15,'Medication',5,9),
             (16,'Fresh food',31,11),
             (17,'Dry food',32,11),
-            (18,'Books & Stationery',42,13);");
+			(18,'Books & Stationery',42,13);");
+        $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- sizegroup
         $this->execute("INSERT INTO `sizegroup` (`id`, `label`, `seq`) VALUES
@@ -480,7 +482,5 @@ class MinimalDb extends AbstractSeed
 			(2,'kg','kilogram',2,NULL,NULL,NULL,NULL),
 			(3,'g','gram',1,NULL,NULL,NULL,NULL),
             (4,'piece','piece',4,NULL,NULL,NULL,NULL);");
-
-        $this->execute('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
