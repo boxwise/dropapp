@@ -29,9 +29,10 @@
 			{if $smarty.session.user}
 				<div class="orgcamp" data-testid="orgcampDiv">
 					{if $org}
-							{$org['label']} /
+							{$org['label']}
 					{/if}
 					{if $camps|count>1}
+						/
 						<span id="campselect">&nbsp;
 							<select name="campselect" dir="rtl">
 									{foreach $camps as $c}
