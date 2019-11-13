@@ -30,7 +30,7 @@
 		
 {if !$data['othercamp']}
 		<hr></hr>
-		<p>I took items out of this box to the shop:</p>
+		<p>I took items out of this box:</p>
 			<form method="get">
 				<input type="hidden" name="saveamount" value="{$box['id']}">
 				<div class="form-group">
@@ -39,7 +39,7 @@
 				<input class="btn" type="submit" value="Remove these items">
 			</form>
 		<hr></hr>	
-		<p>Or change the contents of the box</p>
+		<p>Change the contents of the box:</p>
 		<a class="btn" href="?editbox={$box['id']}">Edit the box</a>
 		<p>  <center>Box history</center></p>
 		<div id="history">
