@@ -61,40 +61,31 @@ function checksession()
     global $settings;
     $result = ['success' => true];
 
+    $user = false;
     if (isset($_SESSION['user'])) { // a valid session exists
         $user = db_row('SELECT * FROM cms_users WHERE id = :id', ['id' => $_SESSION['user']['id']]);
+    } elseif (isset($_COOKIE['autologin_user'])) { // a autologin cookie exists
+        $user = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND pass = :pass', ['email' => $_COOKIE['autologin_user'], 'pass' => $_COOKIE['autologin_pass']]);
+    }
 
+    // check if user was loaded
+    if ($user) {
         // Check if account is not expired
         $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday']);
         if (!$in_valid_dates['success']) {
             $result['success'] = false;
             $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
             $result['message'] = $in_valid_dates['message'];
-        } elseif (!loadSessionData($user)) {
+        } elseif (!loadSessionData($user)) { // Check if camp and organisation SESSION variable was loaded
             $result['redirect'] = '/?action=start';
         }
-    } else { // no valid session exists
-        if (isset($_COOKIE['autologin_user'])) { // a autologin cookie exists
-            $user = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND pass = :pass', ['email' => $_COOKIE['autologin_user'], 'pass' => $_COOKIE['autologin_pass']]);
-            if ($user) { // the cookie is valied
-                // Check if account is not expired
-                $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday']);
-                if (!$in_valid_dates['success']) {
-                    $result['success'] = false;
-                    $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
-                    $result['message'] = $in_valid_dates['message'];
-                } else {
-                    if (!loadSessionData($user)) {
-                        $result['redirect'] = '/?action=start';
-                    }
-                }
-            } else { //cookie is invalid
-                setcookie('autologin_user', null, time() - 3600, '/');
-                setcookie('autologin_pass', null, time() - 3600, '/');
-            }
-        }
+    } else {
         $result['success'] = false;
         $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
+        if (isset($_COOKIE['autologin_user'])) { //cookie is invalid
+            setcookie('autologin_user', null, time() - 3600, '/');
+            setcookie('autologin_pass', null, time() - 3600, '/');
+        }
     }
 
     return $result;
