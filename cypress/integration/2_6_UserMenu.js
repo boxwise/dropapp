@@ -17,6 +17,10 @@ context("2_6_UserMenu_Test", () => {
         cy.get(selector).should("be.visible").contains(text);
     }
 
+    function CheckElementDoesNotExist(selector) {
+        cy.get(selector).should("not.exist");
+    }
+
     function ClickOnElement(selector) {
         cy.get(selector).first().click();
     }
@@ -32,7 +36,17 @@ context("2_6_UserMenu_Test", () => {
         CheckForElementByTypeAndTestId("input", "select_all");
         CheckForElement("a[href='?action=cms_users_edit&origin=cms_users']");
         CheckElementNotEmpty("td[class='list-level- list-column-email'] div[class='td-content']");
-        // test at both admin and coordinator levels
+
+        // check that admin can see roles Coordinator and User
+        CheckForElementByText("td[class='list-level- list-column-usergroup'] div", "TestUserGroup_Coordinator");
+        CheckForElementByText("td[class='list-level- list-column-usergroup'] div", "TestUserGroup_User");
+
+        // login as coodrinator; check that coordinator can see roles User but not Admin
+        cy.visit('/?logout=1');
+        cy.loginAsCoordinator();
+        cy.visit('/?action=cms_users');
+        CheckForElementByText("td[class='list-level- list-column-usergroup'] div", "TestUserGroup_User");
+        CheckElementDoesNotExist("tr[id='row-100000000']");
     });
 
     it("2_6_1 Check for list elements for single user edit page", () => {
