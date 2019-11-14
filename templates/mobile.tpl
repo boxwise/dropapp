@@ -28,11 +28,13 @@
 			<strong><a href="/mobile.php">{$translate['site_name']}</a></strong>
 			{if $smarty.session.user}
 				<div class="orgcamp" data-testid="orgcampDiv">
-					{if $org}
+					{if $org && $orgcamp_length < 34}
 							{$org['label']}
 					{/if}
-					{if $camps|count>1}
+					{if $orgcamp_length < 34 && $camps|count>1}
 						/
+					{/if}
+					{if $camps|count>1}
 						<span id="campselect">&nbsp;
 							<select name="campselect" dir="rtl">
 									{foreach $camps as $c}
