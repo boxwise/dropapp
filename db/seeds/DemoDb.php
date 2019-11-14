@@ -268,7 +268,7 @@ class DemoDb extends AbstractSeed
 			(12,'5f4dcc3b5aa765d61d8327deb882cf99','Sam Sample',2,'sam.sample@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',12,'0000-00-00','0000-00-00'),
 			(15,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Bloggs',2,'joe.bloggs@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00');");
         $users = [];
-        for ($i = 20; $i < 120; ++$i) {
+        for ($i = 20; $i <= 120; ++$i) {
             $tempdata = [
                 'id' => $i,
                 'cms_usergroups_id' => $faker->randomElement([3, 4, 5, 6, 13, 14, 16]),
@@ -305,7 +305,7 @@ class DemoDb extends AbstractSeed
 
         //------------------- library
         $library = [];
-        for ($i = 0; $i < 100; ++$i) {
+        for ($i = 1; $i <= 100; ++$i) {
             $tempdata = [
                 'id' => $i,
                 'code' => $faker->unique()->ean8,
@@ -351,7 +351,7 @@ class DemoDb extends AbstractSeed
         $lastcontainer = null;
         $lastdeleted = null;
         $campid = 1;
-        for ($i = 0; $i < 1500; ++$i) {
+        for ($i = 1; $i <= 1500; ++$i) {
             $tempdata = [
                 'id' => $i,
             ];
@@ -1021,7 +1021,7 @@ class DemoDb extends AbstractSeed
 
         //------------------- qr
         $qr = [];
-        for ($i = 0; $i < 15000; ++$i) {
+        for ($i = 1; $i <= 15000; ++$i) {
             // qr code not unique because faker in Cypress.php intervene
             $tempdata = [
                 'code' => substr($faker->unique()->md5, 0, -1),
