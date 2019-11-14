@@ -171,7 +171,7 @@
 
                 break;
             case 'export':
-                $_SESSION['export_ids'] = $_POST['ids'];
+                $_SESSION['export_ids_stock'] = $_POST['ids'];
                 list($success, $message, $redirect) = [true, '', '?action=stock_export'];
 
                 break;
