@@ -2,7 +2,7 @@
 	<div class="col-sm-{$listconfig['width']}">
 		<div class="row row-title">
 			<div class="col-sm-12">
-				<h1>{$title}</h1>
+				<h1>{$title nofilter}</h1>
 				{if $listconfig['haspagemenu']}
 					<ul class="pagemenu list-unstyled">
 					{foreach $listconfig['pagemenu'] as $code=>$pagemenu}
