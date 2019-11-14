@@ -46,6 +46,15 @@ if ($_GET['message']) {
 if ($_GET['warning']) {
     $data['warning'] = true;
 }
+if ($_GET['messageAnchorText']) {
+    $data['messageAnchorText'] = $_GET['messageAnchorText'];
+}
+if ($_GET['messageAnchorTarget']) {
+    $data['messageAnchorTarget'] = $_GET['messageAnchorTarget'];
+}
+if ($_GET['messageAnchorTargetValue']) {
+    $data['messageAnchorTargetValue'] = $_GET['messageAnchorTargetValue'];
+}
 
 // Forward to login
 if (!$checksession_result['success']) {

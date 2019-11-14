@@ -43,7 +43,7 @@
 		<a class="btn" href="?editbox={$box['id']}">Edit the box</a>
 		<p>  <center>Box history</center></p>
 		<div id="history">
-			<center>{$history}</center>
+			<center>{$history nofilter}</center>
 		</div>
 		
 {/if}
