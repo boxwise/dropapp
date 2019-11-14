@@ -47,7 +47,7 @@
 		</header>
 		{if $data['message']}
 			<div class="message {if $data['warning']}warning{/if}">
-				{$data['message']}
+				{$data['message'] nofilter}
 				{if $data['messageAnchorText'] && $data['messageAnchorTarget'] && $data['messageAnchorTargetValue']}
 					<a href="?{$data['messageAnchorTarget']}={$data['messageAnchorTargetValue']}">
 						{$data['messageAnchorText']}
