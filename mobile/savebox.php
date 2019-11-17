@@ -42,7 +42,7 @@ if (!isset($_POST)) {
     if (!$new) {
         $message = 'Box '.$box['box_id'].' modified with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'].'. <a href="?boxid='.$box['id'].'">Go back to this box.</a>';
     } else {
-        $message = 'New box with box ID <strong class="bigger">'.$box['box_id'].'</strong> (write this number on the box label). This box contains '.$box['items'].' '.$box['product'].' and is located in '.$box['location'].'. <a href="?boxid='.$box['id'].'">Edit this box.</a>';
+        $message = 'New box with box ID <strong class="bigger">'.$box['box_id'].'</strong> (write this number on the box label). This box contains '.$box['items'].' '.$box['product'].' and is located in '.$box['location'].'.&messageAnchorText=Edit this box&messageAnchorTarget=boxid&messageAnchorTargetValue='.$box['id'];
     }
 
     redirect('?boxid='.$box['id'].'&message='.$message);
