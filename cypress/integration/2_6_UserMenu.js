@@ -1,28 +1,31 @@
-context("2_6_UserMenu_Test", () => {
+const USER_GROUP_COORDINATOR = "TestUserGroup_Coordinator";
+const USER_GROUP_USER = "TestUserGroup_User";
+const BROWSER_TEST_USER_USER = "BrowserTestUser_User";
+const NEW_USER_BUTTON_LABEL = "New user";
+const SEND_LOGIN_DATA_BUTTON_LABEL = "Send login data";
+const USER_EMAIL = "user@user.co";
+
+describe("2_6_UserMenu_Test", () => {
 
     beforeEach(function () {
         cy.loginAsAdmin();
         cy.visit('/?action=cms_users');
     });
 
-    function CheckForElement(selector) {
-        cy.get(selector).should("be.visible");
-    }
-
-    function CheckElementNotEmpty(selector) {
-        cy.get(selector).should("not.be.empty");
-    }
-
     function CheckForElementByText(selector, text) {
-        cy.get(selector).should("be.visible").contains(text);
+        cy.get(selector).contains(text).should("be.visible");
     }
 
-    function CheckElementDoesNotExist(selector) {
-        cy.get(selector).should("not.exist");
+    function CheckElementDoesNotExistByText(selector, text) {
+        cy.get(selector).contains(text).should('not.exist');
     }
 
     function ClickOnElement(selector) {
         cy.get(selector).first().click();
+    }
+
+    function ClickOnElementByText(selector, text) {
+        cy.get(selector).contains(text).click();
     }
 
     function CheckForElementByTypeAndTestId(type, testId) {
@@ -34,36 +37,36 @@ context("2_6_UserMenu_Test", () => {
         CheckForElementByTypeAndTestId("a", "expired");
         CheckForElementByTypeAndTestId("a", "deactivated");
         CheckForElementByTypeAndTestId("input", "select_all");
-        CheckForElement("a[href='?action=cms_users_edit&origin=cms_users']");
-        CheckElementNotEmpty("td[class='list-level- list-column-email'] div[class='td-content']");
+        CheckForElementByText("a", NEW_USER_BUTTON_LABEL);
+        CheckForElementByText("div", USER_EMAIL);
 
         // check that admin can see roles Coordinator and User
-        CheckForElementByText("td[class='list-level- list-column-usergroup'] div", "TestUserGroup_Coordinator");
-        CheckForElementByText("td[class='list-level- list-column-usergroup'] div", "TestUserGroup_User");
+        CheckForElementByText("td[class='list-level- list-column-usergroup'] div", USER_GROUP_COORDINATOR);
+        CheckForElementByText("td[class='list-level- list-column-usergroup'] div", USER_GROUP_USER);
 
         // login as coodrinator; check that coordinator can see roles User but not Admin
         cy.visit('/?logout=1');
         cy.loginAsCoordinator();
         cy.visit('/?action=cms_users');
-        CheckForElementByText("td[class='list-level- list-column-usergroup'] div", "TestUserGroup_User");
-        CheckElementDoesNotExist("tr[id='row-100000000']");
+        CheckForElementByText("td[class='list-level- list-column-usergroup'] div", USER_GROUP_USER);
+        CheckElementDoesNotExistByText("tr", USER_GROUP_COORDINATOR);
     });
 
     it("2_6_1 Check for list elements for single user edit page", () => {
-        ClickOnElement("td[class='controls-front list-level- list-column-naam'] a[class='td-content-field']");
-        CheckForElement("div[id='div_naam']");
-        CheckForElement("div[id='div_email']");
-        CheckForElement("div[id='div_cms_usergroups_id']");
-        CheckForElement("div[id='div_valid_firstday']");
-        CheckForElement("div[id='div_valid_lastday']");
-        CheckForElement("div[id='div_lastlogin']");
-        CheckForElement("div[class='created light small']");
+        ClickOnElementByText("a", BROWSER_TEST_USER_USER);
+        CheckForElementByTypeAndTestId("input", "user_name");
+        CheckForElementByTypeAndTestId("input", "user_email");
+        CheckForElementByTypeAndTestId("select", "user_group");
+        CheckForElementByTypeAndTestId("input", "user_valid_from");
+        CheckForElementByTypeAndTestId("input", "user_valid_to");
+        CheckForElementByTypeAndTestId("div", "user_last_login");
+        CheckForElementByTypeAndTestId("div", "user_created_data");
     });
 
     it("2_6_2 Tick box for active user", () => {
         ClickOnElement("input[class='item-select']");
         CheckForElementByTypeAndTestId("button", "list-delete-button")
-        CheckForElementByText("button", "Send login data");
+        CheckForElementByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
     });
 
 });

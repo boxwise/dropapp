@@ -71,8 +71,8 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     $cmsmain->assign('title', $translate['cms_user']);
 
     // define tabs
-    addfield('text', $translate['cms_users_naam'], 'naam', ['required' => true]);
-    addfield('email', $translate['cms_users_email'], 'email', ['required' => true, 'tooltip' => $translate['cms_users_email_tooltip']]);
+    addfield('text', $translate['cms_users_naam'], 'naam', ['required' => true, 'testid' => 'user_name']);
+    addfield('email', $translate['cms_users_email'], 'email', ['required' => true, 'tooltip' => $translate['cms_users_email_tooltip'], 'testid' => 'user_email']);
 
     $usergroups = db_array('
 		SELECT ug.id AS value, ug.label 
@@ -80,20 +80,20 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON (ugl.id=ug.userlevel)
 		WHERE ug.organisation_id = :organisation_id AND (ugl.level < :userlevel OR :is_admin) AND (NOT ug.deleted OR ug.deleted IS NULL)
 		ORDER BY ug.label', ['organisation_id' => $_SESSION['organisation']['id'], 'userlevel' => $_SESSION['usergroup']['userlevel'], 'is_admin' => $_SESSION['user']['is_admin']]);
-    addfield('select', 'Select user group', 'cms_usergroups_id', ['required' => true, 'options' => $usergroups]);
+    addfield('select', 'Select user group', 'cms_usergroups_id', ['required' => true, 'options' => $usergroups, 'testid' => 'user_group']);
 
     addfield('line');
-    addfield('date', 'Valid from', 'valid_firstday', ['date' => true, 'time' => false]);
-    addfield('date', 'Valid until', 'valid_lastday', ['date' => true, 'time' => false]);
+    addfield('date', 'Valid from', 'valid_firstday', ['date' => true, 'time' => false, 'testid' => 'user_valid_from']);
+    addfield('date', 'Valid until', 'valid_lastday', ['date' => true, 'time' => false, 'testid' => 'user_valid_to']);
 
     addfield('line');
     if ('0000-00-00 00:00:00' == $data['lastlogin']) {
         $data['lastlogin'] = '';
     }
-    addfield('info', $translate['cms_users_lastlogin'], 'lastlogin', ['date' => 'true', 'time' => 'true']);
+    addfield('info', $translate['cms_users_lastlogin'], 'lastlogin', ['date' => 'true', 'time' => 'true', 'testid' => 'user_last_login']);
     addfield('line');
 
-    addfield('created', 'Gemaakt', 'created', ['aside' => true]);
+    addfield('created', 'Gemaakt', 'created', ['aside' => true, 'testid' => 'user_created_data']);
 
     $cmsmain->assign('data', $data);
     $cmsmain->assign('formelements', $formdata);
