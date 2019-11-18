@@ -147,7 +147,7 @@ describe('Manage beneficiaries', () => {
     function createMergedFamily(firstname1, lastname1, firstname2, lastname2, testCaseId){
         createTestBeneficiary(firstname1, lastname1, testCaseId);
         createTestBeneficiary(firstname2, lastname2, testCaseId);
-        cy.wait(7000);
+        cy.reload();
         checkBeneficiaryCheckboxByName(lastname1);
         checkBeneficiaryCheckboxByName(lastname2);
         clickMergeButton();
@@ -217,7 +217,7 @@ describe('Manage beneficiaries', () => {
     //no cleanup ahead is needed because the delete action doesn't depend on other users and if they're present
     it('Delete beneficiary', () => {
         createTestBeneficiary(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_CASE_ID);
-        cy.wait(7000);
+        cy.reload();
         checkBeneficiaryCheckboxByName(TEST_LASTNAME1);
         clickDeleteButton();
         confirmAction();
@@ -234,11 +234,11 @@ describe('Manage beneficiaries', () => {
         fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);   //delete beneficiaries from previous tests (should not be any, but just in case)
         createTestBeneficiary(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_CASE_ID);
         createTestBeneficiary(TEST_FIRSTNAME2, TEST_LASTNAME2, TEST_CASE_ID);
-        cy.wait(7000);
+        cy.reload();
         checkBeneficiaryCheckboxByName(TEST_LASTNAME1);
         checkBeneficiaryCheckboxByName(TEST_LASTNAME2);
         clickMergeButton();
-        cy.wait(7000);
+        cy.reload();
         verifyBeneficiaryRowLevel(TEST_LASTNAME1,0);
         verifyBeneficiaryRowLevel(TEST_LASTNAME2,1);
         
@@ -249,10 +249,10 @@ describe('Manage beneficiaries', () => {
     it('Detach beneficiaries from family', () => {
         fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);   //delete beneficiaries from previous tests (should not be any, but just in case)
         createMergedFamily(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_FIRSTNAME2, TEST_LASTNAME2, TEST_CASE_ID);
-        cy.wait(7000);
+        cy.reload();
         checkBeneficiaryCheckboxByName(TEST_LASTNAME2);
         clickDetachButton();
-        cy.wait(7000);
+        cy.reload();
         verifyBeneficiaryRowLevel(TEST_LASTNAME1,0);
         verifyBeneficiaryRowLevel(TEST_LASTNAME2,0);
         //cleanup
@@ -273,7 +273,6 @@ describe('Manage beneficiaries', () => {
         getBeneficiaryRow(DEACTIVATED_BENEFICIARY).should('exist');
     });
 
-    //DOESNT WORK YET!
     it('Recover deactivated beneficiaries', () => {
         //make sure there isn't a beneficiary with the same name in the All tab
         cy.get('body').then(($body) => {
@@ -293,7 +292,7 @@ describe('Manage beneficiaries', () => {
             }
             //create our test user
             createTestBeneficiary(TEST_FIRSTNAME3, TEST_LASTNAME3, TEST_CASE_ID);
-            cy.wait(7000);
+            cy.reload();
             checkBeneficiaryCheckboxByName(TEST_LASTNAME3)
             clickDeleteButton();
             confirmAction();
