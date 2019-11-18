@@ -31,6 +31,8 @@ class ClearMinimalDb extends AbstractSeed
         $this->execute('DELETE FROM `laundry_slots`');
         $this->execute('DELETE FROM `laundry_times`');
         $this->execute('DELETE FROM `laundry_stations`');
+        $this->execute('DELETE FROM `library_type`');
+        $this->execute('DELETE FROM `library`');
         $this->execute('DELETE FROM `locations`');
         $this->execute('DELETE FROM `log`');
         $this->execute('DELETE FROM `need_periods`');

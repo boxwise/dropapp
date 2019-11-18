@@ -45,6 +45,4 @@ if (!isset($_POST)) {
         $message = 'New box with box ID <strong class="bigger">'.$box['box_id'].'</strong> (write this number on the box label). This box contains '.$box['items'].' '.$box['product'].' and is located in '.$box['location'].'. <a href="?boxid='.$box['id'].'">Edit this box.</a>';
     }
 
-    $data['barcode'] = db_value('SELECT code FROM qr WHERE id = :id', ['id' => $box['qr_id']]);
-
-    redirect('?barcode='.$data['barcode'].'&message='.$message);
+    redirect('?boxid='.$box['id'].'&message='.$message);

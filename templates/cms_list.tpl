@@ -2,11 +2,11 @@
 	<div class="col-sm-{$listconfig['width']}">
 		<div class="row row-title">
 			<div class="col-sm-12">
-				<h1>{$title}</h1>
+				<h1>{$title nofilter}</h1>
 				{if $listconfig['haspagemenu']}
 					<ul class="pagemenu list-unstyled" data-testid="listTab">
 					{foreach $listconfig['pagemenu'] as $code=>$pagemenu}
-						<li><a class="{if $pagemenu['active']}active{/if}" href="{$pagemenu['link']}">{$pagemenu['label']}</a>
+						<li><a class="{if $pagemenu['active']}active{/if}" href="{$pagemenu['link']}" {if isset($pagemenu['testid'])}data-testid="{$pagemenu['testid']}"{/if} >{$pagemenu['label']}</a>
 					{/foreach}
 					</ul>
 				{/if}
@@ -17,7 +17,7 @@
 			<div class="table-nav">
 				<ul class="actions">
 					{if $listconfig['allowselectall']}<li>
-						<label class="btn btn-default btn-sm tooltip-this" data-toggle="tooltip" data-placement="top" title="{$translate['cms_list_selectall']}" for="group-select-1"><input id="group-select-1" type="checkbox" class="group-select"></label>
+						<label class="btn btn-default btn-sm tooltip-this" data-toggle="tooltip" data-placement="top" title="{$translate['cms_list_selectall']}" for="group-select-1"><input id="group-select-1" data-testid='select_all' type="checkbox" class="group-select"></label>
 					</li>{/if}
 					<li class="item-selected-independend">
 						<div class="btn-group">
@@ -62,7 +62,7 @@
 							{if $listconfig['allowshowhide']}<button data-operation="show" class="action-show start-operation btn btn-default btn-sm" href="#" data-testid="list-show-button"><i class="fa glyphicon fa-eye"></i> {$listconfig['show']}</button>
 							<button data-operation="hide" class="start-operation btn btn-default btn-sm" href="#" data-testid="list-hide-button"><i class="fa fa-eye-slash"></i> {$listconfig['hide']}</button>{/if}
 
-							{if $listconfig['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_delete']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="action-delete start-operation btn btn-sm confirm btn-danger" href="#" data-testid="list-delete-button"><i class="fa fa-trash"></i> {$listconfig['delete']}</button>{/if}
+							{if $listconfig['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$listconfig['delete']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="action-delete start-operation btn btn-sm confirm btn-danger" href="#" data-testid="list-delete-button"><i class="fa fa-trash"></i> {$listconfig['delete']}</button>{/if}
 
 							{if $listconfig['allowcopy']}<button data-operation="copy" data-placement="top" class="action-copy start-operation btn btn-sm btn-default" href="#" data-testid="list-copy-button"><i class="fa fa-copy"></i> {$listconfig['copy']}</button>{/if}
 
@@ -108,11 +108,11 @@
 							<form method="post">
 								<div class="input-group form-inline search-group">
 									<div class="has-feedback">
-										<input type="text" class="form-control input-sm" name="search" value="{$listconfig['searchvalue']}">
+										<input type="text" class="form-control input-sm" data-testid='box-search' name="search" value="{$listconfig['searchvalue']}">
 										{if $listconfig['searchvalue']}<a class="fa fa-times-circle form-control-feedback" href="?action={$listconfig['origin']}&resetsearch=true"></a>{/if}
 									</div>
 									<span class="input-group-btn">
-										<button class="btn btn-sm btn-default" type="submit"><span class="fa fa-search"></span></button>
+										<button class="btn btn-sm btn-default" data-testid = "search-button" type="submit"><span  class="fa fa-search"></span></button>
 									</span>
 								</div>
 							</form>
@@ -126,12 +126,12 @@
 				  	<thead>
 					  	<tr>
 						{foreach $listdata as $key=>$column}
-					  		<th><div {if $column['width']}style="width:{$column['width']}px;"{/if}>{$column['label']}</div></th>
+					  		<th><div {if $column['width']}style="width:{$column['width']}px;"{/if}>{$column['label'] nofilter}</div></th>
 						{/foreach}
 					  	</tr>
 						<tr class="sorter-false firstline">
 							{foreach $firstline as $column}
-					  			<th><div>{$column}</div></th>
+					  			<th><div>{$column nofilter}</div></th>
 							{/foreach}
 					  	</tr>
 					</thead>
@@ -155,7 +155,7 @@
 										<td class="controls-front list-level-{$row['level']} list-column-{$key}">
 											<div class="td-content">
 												<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-												<label class="item-select-label"><input class="item-select" type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}></label>
+												<label class="item-select-label"><input class="item-select" data-testid='select-id' type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}></label>
 													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
 														<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
 													{else}
@@ -184,7 +184,7 @@
 				  	<tfoot>
 					  	<tr>
 						{foreach $listfooter as $column}
-					  		<th><div>{$column}</div></th>
+					  		<th><div>{$column nofilter}</div></th>
 						{/foreach}
 					  	</tr>
 					</tfoot>

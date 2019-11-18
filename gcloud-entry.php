@@ -14,6 +14,18 @@ require_once 'library/lib/errorhandling.php';
 // doing basic routing from here
 use OpenCensus\Trace\Tracer;
 
+// permanent redirect for old market.drapenihavet.no url
+// ideally it wouldn't need to run PHP code to do this redirect
+// but appengine standard doesn't give us alternatives
+// it should probably also live in it's own seperate code,
+// but this was easiest to control during the migration process
+if (('market.drapenihavet.no' == $_SERVER['HTTP_HOST']) || ('www.market.drapenihavet.no' == $_SERVER['HTTP_HOST'])) {
+    $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
+    header('Location: https://app.boxwise.co'.$_SERVER['REQUEST_URI'].(empty($_GET) ? '?' : '&').'qrlegacy=1', true, 301);
+
+    return;
+}
+
 $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
 Tracer::inSpan(
     ['name' => ('gcloud-entry:'.$parsedUrl)],
@@ -27,6 +39,11 @@ Tracer::inSpan(
         case '/':
         case '/index.php':
             require 'index.php';
+
+            break;
+        // old path of QR-codes
+        case '/flip/scan.php':
+            require 'mobile.php';
 
             break;
         case '/login.php':

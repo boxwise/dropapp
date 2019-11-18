@@ -1,6 +1,6 @@
 import { getLoginConfiguration } from '../config';
 
-const PRODUCT1 = "Diapers";
+const PRODUCT1 = "Jeans";
 
 const LOCATION3 = "TestDonated";
 
@@ -9,11 +9,12 @@ const SAME_ORG_BOX_CONTENT = "Shampoo";
 const SAME_ORG_BOX_SIZE = "One size";
 const SAME_ORG_BOX_LOCATION = LOCATION3;
 const SAME_ORG_BOX_COUNT = "50";
+const SAME_ORG_BOX_COMMENT = "MobileBoxCreation test box (non-seed)";
 
-const SAME_ORG_QR_URL_WITHOUT_BOX = "b1cf83ae73adfce0d14dbe81b53cb96b";
+const SAME_ORG_QR_URL_WITHOUT_BOX = "5c829d1bf278615670dceeb9b3919ed2";
 
 const DIFFERENT_ORG_QR_URL = "44f683a84163b3523afe57c2e008bc8c";
-const DIFFERENT_ORG_QR_URL_WITHOUT_BOX = "4b382363fa161c111fa9ad2b335ceacd";
+const DIFFERENT_ORG_QR_URL_WITHOUT_BOX = "5a5ea04157ce4d020f65c3dd950f4fa3";
 
 const NON_EXISTENT_QR_ULR = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
@@ -35,9 +36,9 @@ function createBoxFormIsVisible(){
 
 describe('Mobile box creation using QR scanning (logged-in user)', () => {
     beforeEach(() => {
-      cy.loginAsVolunteer();
-      cy.visit('/?action=qr');
-      createQrCode();
+        cy.loginAsVolunteer();
+        cy.visit('/?action=qr');
+        createQrCode();
     });
 
     function typeNumberOfLabels(number){
@@ -78,6 +79,10 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         cy.get("input[data-testid='items_count']").clear().type(count);
     }
 
+    function writeComment(comment){
+        cy.get("input[data-testid='comments']").clear().type(comment);
+    }
+
     function clickNewBoxButton(){
         cy.get("input[data-testid='submit_new_box']").click();
     }
@@ -101,16 +106,19 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
             createBoxFormIsVisible();
             // filling out new box form
             let itemsCount = 100;
-            let size = "7-12 months"
+            let size = "M"
             selectProduct(PRODUCT1);
             selectSize(size);
             selectLocation(LOCATION3);
             defineItemsCount(itemsCount);
+            writeComment(SAME_ORG_BOX_COMMENT);
             clickNewBoxButton();
             // assertions
             cy.mobileNotificationWithTextIsVisible('contains ' + itemsCount + ' ' + PRODUCT1);
             cy.mobileNotificationWithTextIsVisible('located in ' + LOCATION3);
             checkBoxContent(PRODUCT1, size, LOCATION3, itemsCount);
+            // cleanup
+            cy.deleteAllBoxesExceptSeed();
         });
     });
 

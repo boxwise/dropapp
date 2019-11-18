@@ -1,6 +1,7 @@
 <?php
 
-$locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]));
+$locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]));
+
 $result = db_query(
     'SELECT p.*, sg.label AS sizegroup, g.label AS gender, p.value AS drops, COALESCE(SUM(s.items),0) AS items, pc.label AS category 
 		FROM products AS p

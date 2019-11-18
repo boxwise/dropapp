@@ -35,7 +35,7 @@
 						<span id="campselect">&nbsp;
 							<select name="campselect" dir="rtl">
 									{foreach $camps as $c}
-										<option value="?barcode={$smarty.get.barcode|escape:'html'}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
+										<option value="?barcode={$smarty.get.barcode}&camp={$c['id']}" {if $c['id']==$currentcamp['id']}selected{/if}>{$c['name']}</option>
 									{/foreach}
 							</select>
 						</span>
@@ -45,7 +45,16 @@
 				</div>
 			{/if}		
 		</header>
-		{if $data['message']}<div class="message {if $data['warning']}warning{/if}">{$data['message']}</div>{/if}
+		{if $data['message']}
+			<div class="message {if $data['warning']}warning{/if}">
+				{$data['message'] nofilter}
+				{if $data['messageAnchorText'] && $data['messageAnchorTarget'] && $data['messageAnchorTargetValue']}
+					<a href="?{$data['messageAnchorTarget']}={$data['messageAnchorTargetValue']}">
+						{$data['messageAnchorText']}
+					</a>
+				{/if}
+			</div>
+		{/if}
 		{if $include}{include file="{$include}"}{/if}
 		{if $smarty.session.user}
 			<footer>

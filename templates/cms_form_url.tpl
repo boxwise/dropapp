@@ -6,13 +6,13 @@
 	 		<input type="text" id="field_{$element['field']}" name="{$element['field']}" 
 	 			{if $element['maxlength']}data-max-count="{$element['maxlength']}"{/if} 
 	 			class="form-control{if $element['format']} cms-form-{$element['format']}{/if}{if $element['setformtitle']} setformtitle{/if}" 
-	 			value="{$data[$element['field']]|escape:'html'}" 
+	 			value="{$data[$element['field']]}" 
 	 			
 	 			{if isset($element['onchange']) or $element['format']}
-	 				onchange="{if $element['format']}cms_form_{$element['format']}('{$element['field']}');{/if}{$element['onchange']|escape};"
+	 				onchange="{if $element['format']}cms_form_{$element['format']}('{$element['field']}');{/if}{$element['onchange']};"
 	 			{/if}
-	 			onkeyup="{$element['onkeyup']|escape:'quotes'};" 
-	 			onblur="{$element['onblur']|escape:'quotes'};" 
+	 			onkeyup="{$element['onkeyup']};" 
+	 			onblur="{$element['onblur']};" 
 				{if $element['minlength']}minlength="{$element['minlength']}"{/if}
 				{if $element['required']}required{/if} readonly
 				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}

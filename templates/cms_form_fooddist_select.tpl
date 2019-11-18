@@ -18,7 +18,7 @@
 					value = "{$data[$column['field']]}"
 					data-placeholder="{if isset($element['placeholder'])}{$element['placeholder']}{else}{$translate['cms_form_selectplaceholder']}{/if}"
 					{if $column['required']}required{/if} 
-					{if isset($element['onchange'])}onchange="{$element['onchange']|escape};"{/if}
+					{if isset($element['onchange'])}onchange="{$element['onchange']};"{/if}
 					>
 						<option></option>
 						{foreach $element['options'] as $option}

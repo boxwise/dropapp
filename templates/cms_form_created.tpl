@@ -9,6 +9,6 @@
 		<br /> <br /> Last signature: {$data['date_of_signature']}
 	{/if}
 	{if ({$smarty.post.origin} == 'stock')}
-		<br /> <br /><i class="fa fa-history"></i> <a href="/ajax.php?file=history&table={if $table}{$table}{else}{$smarty.get.action|escape:'html'}{/if}&id={$data['id']}" class="fancybox" data-fancybox-type="ajax">{$translate['cms_form_view_modified']}</a>
+		<br /> <br /><i class="fa fa-history"></i> <a href="/ajax.php?file=history&table={if $table}{$table nofilter}{else}{$smarty.get.action}{/if}&id={$data['id']}" class="fancybox" data-fancybox-type="ajax">{$translate['cms_form_view_modified']}</a>
 	{/if}
 </div>

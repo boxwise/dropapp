@@ -7,9 +7,9 @@
 				{if $element['minlength']}minlength="{$element['minlength']}"{/if} 
 				class="form-control"  
 				
- 				{if $element['onblur']}onblur="{$element['onblur']|escape};"{/if}
- 				{if $element['onchange']}onchange="{$element['onchange']|escape};"{/if}
- 				{if $element['onkeyup']}onkeyup="{$element['onkeyup']|escape};"{/if}
+ 				{if $element['onblur']}onblur="{$element['onblur']};"{/if}
+ 				{if $element['onchange']}onchange="{$element['onchange']};"{/if}
+ 				{if $element['onkeyup']}onkeyup="{$element['onkeyup']};"{/if}
 				{if $element['disableautocomplete']}autocomplete="new-password"{/if}
 				
 				{if $element['readonly'] || $element['locked']}readonly{/if} 
