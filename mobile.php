@@ -38,16 +38,6 @@ if ($_GET['camp']) {
 }
 $tpl->assign('camps', $camplist);
 $tpl->assign('currentcamp', $_SESSION['camp']);
-
-$longestcamplength = 0;
-foreach ($camplist as $c) {
-    if (strlen($c['name']) > $longestcamplength) {
-        $longestcamplength = strlen($c['name']);
-    }
-}
-$orgcamplength = strlen($_SESSION['organisation']['label']) + $longestcamplength;
-$tpl->assign('orgcamp_length', $orgcamplength);
-
 // end of the camp menu addition --------------------------------------------
 
 if ($_GET['message']) {
