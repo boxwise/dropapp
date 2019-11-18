@@ -128,7 +128,7 @@ class Cypress extends AbstractSeed
 			(1164,'Rice (1kg)',11,10,7,100000000,25,3,'2019-09-05 13:57:59',1,NULL,NULL,0,0,1,'',NULL);");
 
         //------------------- people
-         $this->execute("INSERT INTO `people` (`id`,`firstname`,`lastname`,`camp_id`,`container`,`date_of_birth`,`created`, `approvalsigned`, `signaturefield`, `date_of_signature`, `deleted`) VALUES
+        $this->execute("INSERT INTO `people` (`id`,`firstname`,`lastname`,`camp_id`,`container`,`date_of_birth`,`created`, `approvalsigned`, `signaturefield`, `date_of_signature`, `deleted`) VALUES
         	(100000001,'User', 'WithoutTokens',100000000,'001','1980-07-10','2019-09-02',1, NULL,'2019-09-02', '0000-00-00 00:00:00'),
         	(100000002, 'Conor', 'McGregor',100000000,'002','1980-07-10','2019-09-02',1,NULL,'2019-09-02','0000-00-00 00:00:00'),
         	(100000003, 'Garry', 'Tonon',100000000,'003','1985-07-10','2019-09-01',1,NULL,'2019-09-02','0000-00-00 00:00:00'),
@@ -142,7 +142,7 @@ class Cypress extends AbstractSeed
         $lastcontainer = null;
         $lastdeleted = null;
         $campid = 100000000;
-        for ($i = 100000005; $i <= 100001005; ++$i) {
+        for ($i = 100000007; $i <= 100001005; ++$i) {
             $tempdata = [
                 'id' => $i,
             ];
