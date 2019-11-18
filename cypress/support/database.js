@@ -1,10 +1,11 @@
-Cypress.Commands.add("testdbdelete", (table, ids) => {
+Cypress.Commands.add("testdbdelete", (table, ids, emails = null) => {
     cy.request({
         method: "POST",
         url: "/ajax.php?file=testdbdelete",
         body: {
             table: table,
-            ids: ids
+            ids: ids,
+            emails: emails
         },
         form: true
     }).then(response => {

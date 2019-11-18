@@ -10,7 +10,16 @@
     if (!(in_array($settings['db_database'], $devdbs) && in_array($_SESSION['user']['email'], $testusers))) {
         $return = ['success' => false, 'message' => 'You do not have access to delete test data!'];
     } else {
-        $ids = explode(',', $_POST['ids']);
+        $ids = [];
+        // get ids of user by emails
+        if (isset($_POST['emails'])) {
+            $emails = explode(',', $_POST['emails']);
+            foreach ($emails as $email) {
+                $id[] = db_value('SELECT id FROM cms_users WHERE email = :email', ['email' => $email]);
+            }
+        } else {
+            $ids = explode(',', $_POST['ids']);
+        }
 
         //Define all ids which are allowed to be deleted
         $allowed['people'] = db_array(
