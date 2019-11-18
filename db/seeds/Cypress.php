@@ -140,7 +140,7 @@ class Cypress extends AbstractSeed
         $lastcontainer = null;
         $lastdeleted = null;
         $campid = 100000000;
-        for ($i = 100000005; $i <= 100010005; ++$i) {
+        for ($i = 100000005; $i <= 100001005; ++$i) {
             $tempdata = [
                 'id' => $i,
             ];
@@ -204,7 +204,7 @@ class Cypress extends AbstractSeed
             (100000002,'5a5ea04157ce4d020f65c3dd950f4fa3'),
             (100000003,'5c829d1bf278615670dceeb9b3919ed2');");
         $qr = [];
-        for ($i = 100000004; $i <= 100015002; ++$i) {
+        for ($i = 100000004; $i <= 100001502; ++$i) {
             $tempdata = [
                 'code' => $faker->unique()->md5,
                 'id' => $i,
@@ -227,7 +227,7 @@ class Cypress extends AbstractSeed
             '1164' => [68], ];
 
         $stock = [];
-        for ($i = 100000004; $i <= 100008001; ++$i) {
+        for ($i = 100000004; $i <= 100001001; ++$i) {
             $tempdata = [
                 'id' => $i,
                 'box_id' => $faker->unique()->randomNumber($nbDigits = 7, $strict = true),
