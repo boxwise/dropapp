@@ -2,11 +2,11 @@
 	<div class="col-sm-{$listconfig['width']}">
 		<div class="row row-title">
 			<div class="col-sm-12">
-				<h1>{$title}</h1>
+				<h1>{$title nofilter}</h1>
 				{if $listconfig['haspagemenu']}
 					<ul class="pagemenu list-unstyled">
 					{foreach $listconfig['pagemenu'] as $code=>$pagemenu}
-						<li><a class="{if $pagemenu['active']}active{/if}" href="{$pagemenu['link']}">{$pagemenu['label']}</a>
+						<li><a class="{if $pagemenu['active']}active{/if}" href="{$pagemenu['link']}" {if isset($pagemenu['testid'])}data-testid="{$pagemenu['testid']}"{/if} >{$pagemenu['label']}</a>
 					{/foreach}
 					</ul>
 				{/if}
