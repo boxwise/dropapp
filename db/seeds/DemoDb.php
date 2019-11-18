@@ -1021,7 +1021,7 @@ class DemoDb extends AbstractSeed
 
         //------------------- qr
         $qr = [];
-        for ($i = 1; $i <= 15000; ++$i) {
+        for ($i = 1; $i <= 1500; ++$i) {
             // qr code not unique because faker in Cypress.php intervene
             $tempdata = [
                 'code' => substr($faker->unique()->md5, 0, -1),
@@ -1649,7 +1649,7 @@ class DemoDb extends AbstractSeed
             '609' => [52], ];
 
         $stock = [];
-        for ($i = 1; $i <= 10000; ++$i) {
+        for ($i = 1; $i <= 1000; ++$i) {
             $campid = $faker->randomElement(['1', '2', '3']);
             $tempdata = [
                 'id' => $i,
@@ -1663,7 +1663,7 @@ class DemoDb extends AbstractSeed
 
             //order a few boxes
             $rand_num = $faker->numberBetween($min = 0, $max = 1000);
-            if (($rand_num < 2)) {
+            if (($rand_num < 20)) {
                 $tempdata['ordered'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d');
             }
 
