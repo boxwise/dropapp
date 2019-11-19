@@ -1,5 +1,12 @@
 <?php
 
+//Create array with the export_ids_people in it
+$export_ids_array = explode(',', $_SESSION['export_ids_stock']);
+//Create a list of placeholders ? the same length as export ids given
+$id_pars = str_repeat('?,', count($export_ids_array) - 1).'?';
+//Put camp id as first element in the list
+array_unshift($export_ids_array, $_SESSION['camp']['id']);
+
 $data = db_query(
     'SELECT boxes.*, g.label AS gender, p.name AS product, s.label AS size, l.label AS location
     FROM stock as boxes
@@ -7,8 +14,8 @@ $data = db_query(
     LEFT OUTER JOIN locations AS l ON l.id = boxes.location_id
     LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
     LEFT OUTER JOIN sizes AS s ON s.id = boxes.size_id 
-    WHERE l.camp_id = :campid AND (NOT boxes.deleted OR boxes.deleted IS NULL) '.($_SESSION['export_ids_stock'] ? 'AND boxes.id in ('.$_SESSION['export_ids_stock'].')' : ' AND FALSE'),
-    ['campid' => $_SESSION['camp']['id']]
+    WHERE l.camp_id = ? AND (NOT boxes.deleted OR boxes.deleted IS NULL) '.($_SESSION['export_ids_stock'] ? 'AND boxes.id in ('.$id_pars.') ' : ' AND FALSE'),
+    $export_ids_array
 );
 unset($_SESSION['export_ids_stock']);
 $keys = ['box_id' => 'Box number', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'location' => 'Location', 'items' => 'Items', 'comments' => 'Comments'];
