@@ -1,4 +1,4 @@
-<div class="created light small">
+<div class="created light small" {if isset($element['testid'])}data-testid="{$element['testid']}"{/if}>
 	{if $data['created']}
 		{$translate['cms_form_createdby']} {if $data['created_by']}{$data['created_by']}{else}<em>{$translate['cms_form_createdunknown']}</em>{/if}<br />{$translate['cms_form_ondate']} {$data['created']} <br /><br />
 	{/if}
