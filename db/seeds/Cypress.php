@@ -21,7 +21,8 @@ class Cypress extends AbstractSeed
 
         //------------------- organisations
         $this->execute("INSERT INTO `organisations` (`id`, `label`, `created`, `created_by`, `deleted`, `modified`, `modified_by`) VALUES
-            (100000000,'TestOrganisation','2019-07-10 08:05:56',1,NULL,NULL,NULL), (100000001,'DummyTestOrgWithBoxes','2019-09-29 08:05:56',1,NULL,NULL,NULL);");
+            (100000000,'TestOrganisation','2019-07-10 08:05:56',1,NULL,NULL,NULL), 
+	    (100000001,'DummyTestOrgWithBoxes','2019-09-29 08:05:56',1,NULL,NULL,NULL);");
 
         //------------------- camps
         $this->execute("INSERT INTO `camps` (`id`, `idcard`, `laundry`, `laundry_cyclestart`, `market`, `maxfooddrops_adult`, `maxfooddrops_child`, `modified`, `modified_by`, `name`, `organisation_id`, `schedulebreak`, `schedulebreakduration`, `schedulebreakstart`, `schedulestart`, `schedulestop`, `scheduletimeslot`, `seq`, `workshop`, `adult_age`, `bicycle`, `bicycle_closingtime`, `bicycle_closingtime_saturday`, `bicyclerenttime`, `created`, `created_by`, `currencyname`, `cyclestart`, `daystokeepdeletedpersons`, `delete_inactive_users`, `deleted`, `dropcapadult`, `dropcapchild`, `dropsperadult`, `dropsperchild`, `extraportion`, `familyidentifier`, `food`) VALUES
