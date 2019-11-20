@@ -52,6 +52,8 @@ for ($i = 0; $i < intval($_GET['count']); ++$i) {
             }
             simpleSaveChangeHistory('stock', $labels[$i], 'New Qr-code assigned.', $from, ['int' => $id]);
         }
+
+        simpleSaveChangeHistory('qr', $id, 'New QR-code generated');
     }
 
     $url = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash;
