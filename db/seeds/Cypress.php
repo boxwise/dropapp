@@ -143,7 +143,7 @@ class Cypress extends AbstractSeed
         $lastcontainer = null;
         $lastdeleted = null;
         $campid = 100000000;
-        for ($i = 100000005; $i <= 100001005; ++$i) {
+        for ($i = 100000005; $i <= 100000055; ++$i) {
             $tempdata = [
                 'id' => $i,
             ];
