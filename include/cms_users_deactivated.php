@@ -10,7 +10,7 @@
         listsetting('allowedit', false);
         listsetting('allowdelete', false);
         listsetting('haspagemenu', true);
-        addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users']);
+        addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'testid' => 'active_pending']);
         addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true]);
         addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'confirm' => true]);
