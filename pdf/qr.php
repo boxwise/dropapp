@@ -51,8 +51,8 @@ for ($i = 0; $i < intval($_GET['count']); ++$i) {
                 $from['int'] = $box['qr_id'];
             }
             simpleSaveChangeHistory('stock', $labels[$i], 'New Qr-code assigned.', $from, ['int' => $id]);
-        } else {
         }
+
         simpleSaveChangeHistory('qr', $id, 'New QR-code generated');
     }
 
