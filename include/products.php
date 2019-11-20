@@ -91,7 +91,8 @@
                 break;
             case 'export':
                 $success = true;
-                $redirect = '?action=products_export&ids='.$_POST['ids'];
+                $_SESSION['export_ids_products'] = $_POST['ids'];
+                $redirect = '?action=products_export';
 
                 break;
         }
