@@ -26,6 +26,7 @@
                     $data['labels'][$i]['hash'] = md5($id);
                     db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$data['labels'][$i]['hash'].'",NOW())');
                     db_query('UPDATE stock AS s SET qr_id = :qr_id, modified = NOW() WHERE id = :id', ['id' => $l, 'qr_id' => $id]);
+                    simpleSaveChangeHistory('qr', $id, 'New QR-code generated');
                 }
                 ++$i;
             }
@@ -34,6 +35,7 @@
                 $id = db_value('SELECT id FROM qr ORDER BY id DESC LIMIT 1') + 1;
                 $data['labels'][$i]['hash'] = md5($id);
                 db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$data['labels'][$i]['hash'].'",NOW())');
+                simpleSaveChangeHistory('qr', $id, 'New QR-code generated');
             }
         }
         $cmsmain->assign('include', 'boxlabels.tpl');
