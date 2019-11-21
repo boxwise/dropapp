@@ -142,17 +142,21 @@ $(function() {
     // group select
     $(".group-select").change(function() {
         var parent = $(this).closest(".table-parent");
-        if ($(this).is(":checked")) {
-            parent
-                .find(".item-select:visible:not(:checked)")
-                .prop("checked", true)
-                .trigger("change");
-        } else {
-            parent
-                .find(".item-select:visible:checked")
-                .prop("checked", false)
-                .trigger("change");
-        }
+        var is_checked = $(this).is(":checked");
+
+        // old way of doing it
+        // if ($(this).is(":checked")) {
+        //     parent
+        //         .find(".item-select:visible:not(:checked)")
+        //         .prop("checked", true)
+        //         .trigger("change");
+        // } else {
+        //     parent
+        //         .find(".item-select:visible:checked")
+        //         .prop("checked", false)
+        //         .trigger("change");
+        // }
+        $("input.item-select:visible", parent).prop('checked', is_checked).trigger("change");
     });
     // if group-select is checked on load, toggle single-selects
     $(".group-select").trigger("change");
