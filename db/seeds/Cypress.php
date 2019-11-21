@@ -131,11 +131,13 @@ class Cypress extends AbstractSeed
             (1165,'DummyProduct',2,1,5,100000001,50,3,'2019-09-05 13:54:40',1,NULL,NULL,0,0,1,'',NULL);");
 
         //------------------- people
-        $this->execute("INSERT INTO `people` (`id`,`firstname`,`lastname`,`camp_id`,`container`,`date_of_birth`,`created`) VALUES
-        	(100000001,'User', 'WithoutTokens',100000000,'001','1980-07-10','2019-09-02'),
-        	(100000002, 'Conor', 'McGregor',100000000,'002','1980-07-10','2019-09-02'),
-        	(100000003, 'Garry', 'Tonon',100000000,'003','1985-07-10','2019-09-01'),
-			(100000004, 'Kron', 'Gracie',100000000,'004','1978-07-10','2019-09-02')");
+        $this->execute("INSERT INTO `people` (`id`,`firstname`,`lastname`,`camp_id`,`container`,`date_of_birth`,`created`, `approvalsigned`, `signaturefield`, `date_of_signature`, `deleted`) VALUES
+        	(100000001,'User', 'WithoutTokens',100000000,'001','1980-07-10','2019-09-02',1, NULL,'2019-09-02', '0000-00-00 00:00:00'),
+        	(100000002, 'Conor', 'McGregor',100000000,'002','1980-07-10','2019-09-02',1,NULL,'2019-09-02','0000-00-00 00:00:00'),
+        	(100000003, 'Garry', 'Tonon',100000000,'003','1985-07-10','2019-09-01',1,NULL,'2019-09-02','0000-00-00 00:00:00'),
+			(100000004, 'Kron', 'Gracie',100000000,'004','1978-07-10','2019-09-02',1,NULL,'2019-09-02','0000-00-00 00:00:00'),
+            (100000005, 'User', 'WithoutApproval',100000000,'004','1978-07-10','2019-09-02',0,NULL,'0000-00-00 00:00:00', '0000-00-00 00:00:00'), 
+            (100000006, 'DeactivatedBeneficiary', 'DeactivatedBeneficiary',100000000,'004','1978-07-10','2019-09-02',1,NULL,'2019-09-02', '2019-10-25 11:01:30')");
 
         $people = [];
         $lastparentid = null;

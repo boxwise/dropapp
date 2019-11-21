@@ -28,3 +28,7 @@ Cypress.Commands.add(
 Cypress.Commands.add("notyTextNotificationWithTextIsVisible", notificationText => {
     cy.get("span[class='noty_text']").contains(notificationText).should("be.visible");
 });
+
+Cypress.Commands.add("clickAwayNotyTextNotificationWithText", notificationText => {
+    cy.get("span[class='noty_text']").contains(notificationText).click();
+});

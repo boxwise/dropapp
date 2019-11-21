@@ -46,8 +46,8 @@
         addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
         addcolumn('datetime', 'Last active', 'lastactive');
 
-        addbutton('undelete', 'Recover', ['icon' => 'fa-history', 'oneitemonly' => false]);
-        addbutton('realdelete', 'Full delete', ['icon' => 'fa-trash', 'oneitemonly' => false, 'confirm' => true]);
+        addbutton('undelete', 'Recover', ['icon' => 'fa-history', 'oneitemonly' => false, 'testId' => 'recoverDeactivatedUser']);
+        addbutton('realdelete', 'Full delete', ['icon' => 'fa-trash', 'oneitemonly' => false, 'confirm' => true, 'testId' => 'fullDeleteUser']);
 
         $cmsmain->assign('data', $data);
         $cmsmain->assign('listconfig', $listconfig);

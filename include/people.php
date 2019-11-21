@@ -134,9 +134,9 @@ $table = $action;
                     addcolumn('datetime', 'Created', 'created');
                 }
 
-                addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false]);
-                addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false]);
-                addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false]);
+                addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
+                addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
+                addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false, 'testid' => 'detachFromFamily']);
 
                 if ($_SESSION['camp']['bicycle']) {
                     $options['bicycle'] = 'Bicycle card';
@@ -153,7 +153,7 @@ $table = $action;
 
                 addbutton('print', 'Print', ['icon' => 'fa-print', 'options' => $options]);
                 addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer']);
-                addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => true]);
+                addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportBeneficiariesButton']);
 
                 $cmsmain->assign('data', $data);
                 $cmsmain->assign('listconfig', $listconfig);
