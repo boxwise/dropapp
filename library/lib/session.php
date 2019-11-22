@@ -205,7 +205,7 @@ function loadSessionData($user)
     $camplist = camplist();
     if (1 == count($camplist)) { // an organisation has only one camp or a user has only access to one camp
         $_SESSION['camp'] = reset($camplist);
-    } elseif (isset($_GET['camp']) && isset($camplist[$_GET['camp']])) { // the camp is specified in url and the user has access to it
+    } elseif (isset($_GET['camp'], $camplist[$_GET['camp']])) { // the camp is specified in url and the user has access to it
         $_SESSION['camp'] = $camplist[$_GET['camp']];
     } elseif ($user['is_admin'] && isset($_GET['camp']) && !isset($camplist)) { // the user is a Boxwise God and camplist is not set ($_SESSION['organisation'] is not set) and the camp is specified in the url
         $_SESSION['camp'] = db_row('
@@ -218,7 +218,7 @@ function loadSessionData($user)
                 WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_SESSION['camp']['organisation_id']]);
     } elseif (!isset($_SESSION['camp']) && isset($camplist)) { // the session did expire and camplist is set
         $_SESSION['camp'] = reset($camplist);
-    } elseif (isset($_SESSION['camp']['id']) && isset($camplist[$_SESSION['camp']['id']])) { // the session did not expire and the user can access the camp
+    } elseif (isset($_SESSION['camp']['id'], $camplist[$_SESSION['camp']['id']])) { // the session did not expire and the user can access the camp
         $_SESSION['camp'] = $camplist[$_SESSION['camp']['id']];
     } else {
         // user has access to more than one camp AND
