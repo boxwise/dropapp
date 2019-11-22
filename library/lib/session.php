@@ -180,9 +180,10 @@ function loadSessionData($user)
 {
     $_SESSION['user'] = $user;
     // update last action
-    db_query('UPDATE cms_users SET lastaction = NOW() WHERE id = :id', ['id' => $_SESSION['user']['id']]);
+    db_query('UPDATE cms_users SET lastaction = NOW() WHERE id = :id', ['id' => $user['id']]);
 
-    if ($_SESSION['user']['is_admin']) {
+    // ----------- load organisation and usergroup
+    if ($user['is_admin']) {
         // set organisation depending on url
         if (isset($_GET['organisation'])) {
             $_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_GET['organisation']]);
@@ -199,32 +200,40 @@ function loadSessionData($user)
             FROM organisations 
             WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_SESSION['usergroup']['organisation_id']]);
     }
+
+    // ------------ load camp
     $camplist = camplist();
-    if (1 == count($camplist)) {
-        // if user has only access to one camp then set the information
+    if (1 == count($camplist)) { // an organisation has only one camp or a user has only access to one camp
         $_SESSION['camp'] = reset($camplist);
-    } elseif (isset($_GET['camp'])) {
-        // if camp is specified in url
+    } elseif (isset($_GET['camp']) && isset($camplist[$_GET['camp']])) { // the camp is specified in url and the user has access to it
         $_SESSION['camp'] = $camplist[$_GET['camp']];
-        if ($_SESSION['user']['is_admin']) {
-            // set organisation of Boxwise God depending on camp
-            $_SESSION['organisation'] = db_row('
+    } elseif ($user['is_admin'] && isset($_GET['camp']) && !isset($camplist)) { // the user is a Boxwise God and camplist is not set ($_SESSION['organisation'] is not set) and the camp is specified in the url
+        $_SESSION['camp'] = db_row('
+                SELECT * 
+                FROM camps
+                WHERE id = :id AND (NOT camps.deleted OR camps.deleted IS NULL)', ['id' => $_GET['camp']]);
+        $_SESSION['organisation'] = db_row('
                 SELECT * 
                 FROM organisations 
                 WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_SESSION['camp']['organisation_id']]);
-        }
-    } elseif (!$ajax && !isset($_SESSION['camp'])) {
-        // only if the session did expire and it is not an ajax call.
-        // Why ajax?
-        // It can happen that an org does not have internet for example in the checkout. The internet connection is checked before a form is submitted. If no internet connection is detected the entries from the form are kept. To not assign the delayed form submission to a wrong camp it is excepted.
+    } elseif (!isset($_SESSION['camp']) && isset($camplist)) { // the session did expire and camplist is set
         $_SESSION['camp'] = reset($camplist);
+    } elseif (isset($_SESSION['camp']['id']) && isset($camplist[$_SESSION['camp']['id']])) { // the session did not expire and the user can access the camp
+        $_SESSION['camp'] = $camplist[$_SESSION['camp']['id']];
+    } else {
+        // user has access to more than one camp AND
+        // (no camp is specified in GET or the specified camp is not accessible by the user) AND
+        // ((the session expired and camplist is not set (only possible for Boxwise Gods if $_SESSION['organisation'] is not set) OR
+        // (the session did not expire, but the user has no access to the camp specified in $_SESSION))
+        return false;
     }
 
-    if (isset($_SESSION['organisation'], $_SESSION['camp'])) {
-        return true;
+    // Test if session is set properly
+    if (!isset($_SESSION['organisation']) || !isset($_SESSION['camp'])) {
+        throw new Exception('$_SESSION[organisation] or $_SESSION[camp] is not set!');
     }
 
-    return false;
+    return true;
 }
 
 function loginasuser($table, $ids)
