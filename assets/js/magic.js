@@ -141,23 +141,10 @@ $(function() {
 
     // group select
     $(".group-select").change(function() {
-        // Faster way of doing it
-        // var parent = $.makeArray(
-        //     $(".group-select").closest(".table-parent")
-        // )[0];
-        // var is_checked = $(this).is(":checked");
-        // var checkboxes = parent.getElementsByClassName("item-select");
-
-        // for (var checkbox of checkboxes) {
-        //     checkbox.checked = is_checked;
-        // slected style of corresponding row needs to be selected 
-        // }
-
-        // old way of doing it
         var parent = $(".group-select").closest(".table-parent");
         if ($(this).is(":checked")) {
             parent
-                .find(".item-select:visible:not(:checked)")
+                .find(".item-select:visible:not(:checked)") //if find ever proves to be too slow, we could replace it with getelementbyclass from vanilla js which works 6 times faster.
                 .prop("checked", true)
                 .closest("tr")
                 .toggleClass("selected");
