@@ -142,29 +142,21 @@ $(function() {
     // group select
     $(".group-select").change(function() {
         var parent = $(".group-select").closest(".table-parent");
-        if ($(this).is(":checked")) {
-            parent
-                .find(".item-select:visible:not(:checked)") //if find ever proves to be too slow, we could replace it with getelementbyclass from vanilla js which works 6 times faster.
-                .prop("checked", true)
-                .closest("tr")
-                .toggleClass("selected");
-        } else {
-            parent
-                .find(".item-select:visible:checked")
-                .prop("checked", false)
-                .closest("tr")
-                .toggleClass("selected");
-        }
+        var is_checked = $(this).is(":checked");
+        parent
+            .find(".item-select:visible") //if find ever proves to be too slow, we could replace it with getelementbyclass from vanilla js which works 6 times faster.
+            .prop("checked", is_checked)
+            .closest("tr")
+            .toggleClass("selected")
+            .promise()
+            .done(function() { //only trigger the event change of a ".item-select" once
+                parent
+                    .find(".item-select:visible:first")
+                    .closest("tr")
+                    .toggleClass("selected");
+                parent.find(".item-select:visible:first").trigger("change");
+            });
     });
-    // if group-select is checked on load, toggle single-selects
-    $(".group-select").trigger("change");
-
-    // single select
-
-    // if item selected on load, toggle parent class
-    $(".item-select:checked")
-        .closest("tr")
-        .toggleClass("selected");
 
     // make lists items clickable
     $(document).on("click", ".item-clickable", function(e) {
