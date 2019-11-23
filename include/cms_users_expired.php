@@ -8,9 +8,9 @@
         initlist();
         listsetting('allowadd', false);
         listsetting('haspagemenu', true);
-        addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users']);
-        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'active' => true]);
-        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
+        addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'testid' => 'active_pending']);
+        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'active' => true, 'testid' => 'expired']);
+        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'testid' => 'deactivated']);
 
         // because we access DB tables based on file names - action name matches table name (e.g. cms_users.php affects cms_users DB table)
         // and list tabs have their own page, action needs to be edited to match DB table name

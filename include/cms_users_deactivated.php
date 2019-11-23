@@ -11,8 +11,8 @@
         listsetting('allowdelete', false);
         listsetting('haspagemenu', true);
         addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'testid' => 'active_pending']);
-        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
-        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true]);
+        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'testid' => 'expired']);
+        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true, 'testid' => 'deactivated']);
         addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'confirm' => true]);
 
         $camps = db_value(
