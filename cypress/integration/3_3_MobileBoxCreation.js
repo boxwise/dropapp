@@ -160,7 +160,7 @@ describe('Mobile box creation using QR scanning (logged-out user)', () => {
         cy.visit('/mobile.php?barcode=' + DIFFERENT_ORG_QR_URL);
         cy.viewport('iphone-6');
         fillLoginForm(); 
-        cy.mobileWarningNotificationWithTextIsVisible("Oops!! This box is registered in");
+        cy.notyTextNotificationWithTextIsVisible("Oops!! This box is registered in");
     });
 
     // TEST IMPLEMENTED BUT THE APP BEHAVIOR DOESN'T MIRROR IT
@@ -174,6 +174,6 @@ describe('Mobile box creation using QR scanning (logged-out user)', () => {
         cy.visit('/mobile.php?barcode=' + NON_EXISTENT_QR_ULR);
         cy.viewport('iphone-6');
         fillLoginForm(); 
-        cy.mobileWarningNotificationWithTextIsVisible("This is not a valid QR-code for " + config.orgName);
+        cy.notyTextNotificationWithTextIsVisible("This is not a valid QR-code for " + config.orgName);
     });    
 });
