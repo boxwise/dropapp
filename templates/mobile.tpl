@@ -20,13 +20,13 @@
 		<script src="/assets/js/jquery.noty.packaged.min.js"></script>    
 		{if $data['notificationFunction']}
 		    <script>
-				debugger;
 		        {$data['notificationFunction']}(
-					{if $data['notificationFunction']}{$data['boxid']}, {/if}
-					{if $data['notificationFunction']}'{$data['boxNumber']}',  {/if}
-					{if $data['notificationFunction']}'{$data['itemsCount']}',  {/if}
-					{if $data['notificationFunction']}'{$data['boxProduct']}',  {/if}
-					{if $data['notificationFunction']}'{$data['boxLocation']}' {/if}
+					{if $data['boxid']}{$data['boxid']}, {/if}
+					{if $data['boxNumber']}'{$data['boxNumber']}',  {/if}
+					{if $data['itemsCount']}'{$data['itemsCount']}',  {/if}
+					{if $data['boxProduct']}'{$data['boxProduct']}',  {/if}
+					{if $data['boxLocation']}'{$data['boxLocation']}', {/if}
+					{if $data['warning']}true{else}false{/if}
 				);
 			</script>
 		{/if}

@@ -25,12 +25,26 @@ function updateSizes(size){
 	}
 }
 
-function saveBoxNotification(boxId, boxNumber, itemsCount, product, boxLocation){
+function saveBoxNotification(boxId, boxNumber, itemsCount, product, boxLocation, isWarning){
 	var notificationText = "New box with box ID <strong class='bigger'>" + boxNumber + "</strong> (write this number on the box label). This box contains  <strong class='bigger'>" + itemsCount + " " + product + "</strong> and is located in  <strong class='bigger'>" + boxLocation + "</strong>. <a href='?boxid=" + boxId + "'>Edit this box.</a>";
+	showNotyNotification(notificationText, isWarning);
+}
+
+function editBoxNotification(boxId, boxNumber, itemsCount, product, boxLocation, isWarning){
+	var notificationText = "Box <strong class='bigger'>" + boxNumber + "</strong> modified with <strong class='bigger'>" + product + " (" + itemsCount + "x)</strong> in <strong class='bigger'>" + boxLocation + "</strong>. <a href=\"?boxid=" + boxId + "\">Go back to this box.</a>";
+	showNotyNotification(notificationText, isWarning);
+}
+
+function saveAmountNotification(boxId, boxNumber, itemsCount, product,isWarning){
+	var notificationText = "Box <strong class='bigger'>" + boxNumber + "</strong> contains now <strong class='bigger'>" + itemsCount + "x " + product + "</strong>. <a href=\"?boxid=" + boxId + "\">Go back to this box.</a>";
+	showNotyNotification(notificationText, isWarning);
+}
+
+function showNotyNotification(notificationText, isWarning){
 	setTimeout(function(){
 		noty({
 			text: notificationText,
-			type: 'success',
+			type: isWarning ? 'error': 'success',
 			closeWith: ['click'],
 			timeout: 10000
 		});

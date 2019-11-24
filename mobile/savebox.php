@@ -40,9 +40,8 @@ if (!isset($_POST)) {
     $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id', ['id' => $id]);
 
     if (!$new) {
-        $message = 'Box '.$box['box_id'].' modified with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'].'. <a href="?boxid='.$box['id'].'">Go back to this box.</a>';
         $notificationFunction = 'editBoxNotification';
-        $boxId = $box['box_id'];
+        $boxId = $box['id'];
         $boxNumber = $box['box_id'];
         $itemsCount = $box['items'];
         $boxProduct = $box['product'];

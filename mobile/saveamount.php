@@ -17,4 +17,4 @@
     $market = db_value('SELECT id FROM locations WHERE is_market AND deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
     db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.intval($_GET['items']).',NOW(),'.$box['location_id'].','.$market.')');
 
-    redirect('?message=Box '.$box['box_id'].' contains now '.$newitems.'x '.$box['product'].'.&messageAnchorText=Go back to this box&messageAnchorTarget=boxid&messageAnchorTargetValue='.$box['id']);
+    redirect('?notificationFunction=saveAmountNotification&boxid='.$box['id'].'&boxNumber='.$box['box_id'].'&itemsCount='.$newitems.'&boxProduct='.$box['product']);
