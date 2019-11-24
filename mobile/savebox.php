@@ -41,8 +41,19 @@ if (!isset($_POST)) {
 
     if (!$new) {
         $message = 'Box '.$box['box_id'].' modified with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'].'. <a href="?boxid='.$box['id'].'">Go back to this box.</a>';
+        $notificationFunction = 'editBoxNotification';
+        $boxId = $box['box_id'];
+        $boxNumber = $box['box_id'];
+        $itemsCount = $box['items'];
+        $boxProduct = $box['product'];
+        $boxLocation = $box['location'];
     } else {
-        $message = 'New box with box ID <strong class="bigger">'.$box['box_id'].'</strong> (write this number on the box label). This box contains '.$box['items'].' '.$box['product'].' and is located in '.$box['location'].'.&messageAnchorText=Edit this box&messageAnchorTarget=boxid&messageAnchorTargetValue='.$box['id'];
+        $notificationFunction = 'saveBoxNotification';
+        $boxId = $box['id'];
+        $boxNumber = $box['box_id'];
+        $itemsCount = $box['items'];
+        $boxProduct = $box['product'];
+        $boxLocation = $box['location'];
     }
 
-    redirect('?boxid='.$box['id'].'&message='.$message);
+    redirect('?boxid='.$boxId.'&notificationFunction='.$notificationFunction.'&boxNumber='.$boxNumber.'&itemsCount='.$itemsCount.'&boxProduct='.$boxProduct.'&boxLocation='.$boxLocation);
