@@ -17,7 +17,8 @@
 		<script src="/assets/js/bootstrap.min.js"></script>
 		<script src="/assets/js/select2.min.js"></script>
 		<script src="/assets/js/mobile.js"></script>
-		<script src="/assets/js/jquery.noty.packaged.min.js"></script>    
+		<script src="/assets/js/jquery.noty.packaged.min.js"></script>   
+		{* dynamically built JS function call to trigger a correct noty toast notification  *}
 		{if $data['notificationFunction']}
 		    <script>
 		        {$data['notificationFunction']}(
@@ -26,6 +27,9 @@
 					{if $data['itemsCount']}'{$data['itemsCount']}',  {/if}
 					{if $data['boxProduct']}'{$data['boxProduct']}',  {/if}
 					{if $data['boxLocation']}'{$data['boxLocation']}', {/if}
+					{if $data['previousBoxLocation']}'{$data['previousBoxLocation']}', {/if}
+					{if $data['campName']}'{$data['campName']}', {/if}
+					{if $data['currentCampName']}'{$data['currentCampName']}', {/if}
 					{if $data['warning']}true{else}false{/if}
 				);
 			</script>

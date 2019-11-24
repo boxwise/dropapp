@@ -11,4 +11,4 @@
 
     db_query('INSERT INTO history (tablename,record_id,changes,ip,changedate,user_id) VALUES ("stock",'.$box['id'].',"Box assigned to QR-code '.$qrid.'","'.$_SERVER['REMOTE_ADDR'].'",NOW(),'.$_SESSION['user']['id'].')');
 
-    redirect('?message=QR-code is succesfully linked to box '.$box['product'].' ('.$box['items'].'x) in '.$box['location']);
+    redirect('?notificationFunction=boxLinkedToQRCode&boxProduct='.$box['product'].'&itemsCount='.$box['items'].'&boxLocation='.$box['location']);

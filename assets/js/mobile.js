@@ -40,11 +40,41 @@ function saveAmountNotification(boxId, boxNumber, itemsCount, product,isWarning)
 	showNotyNotification(notificationText, isWarning);
 }
 
+function boxDoesntExistNotification(isWarning){
+	var notificationText = "Box with such ID does not exist";
+	showNotyNotification(notificationText, isWarning);
+}
+
+function editingDeletedBoxNotification(isWarning){
+	var notificationText = "This box has been deleted. Editing and saving this form undeletes it.";
+	showNotyNotification(notificationText, isWarning);
+}
+
+function editingBoxOfAnotherOrganisation(campName, currentCamp, isWarning){
+	var notificationText = "Oops!! This box is registered in <strong class='bigger'>" + campName + "</strong>, are you sure this is what you were looking for?<br /><br /> No? <a href=\"/mobile.php\">Search again!</a><br /><br /> Yes? Edit and save this box to transfer it to " + currentCamp + '.';
+	showNotyNotification(notificationText, isWarning);
+}
+
+function moveBoxNotification(boxId, boxNumber, itemsCount, product, boxLocation, previousBoxLocation, isWarning){
+	var notificationText = "Box <strong class='bigger'>" + boxNumber + "</strong> contains  <strong class='bigger'>" + itemsCount + "x " + product + "</strong> - is moved from " + previousBoxLocation + " to  <strong class='bigger'>" + boxLocation + "</strong>. <a href=\"?boxid=" + boxId + "\">Go back to this box.</a>";
+	showNotyNotification(notificationText, isWarning);
+}
+
+function genericErrorNotification(){
+	var notificationText = "Something went wrong! Please try again!";
+	showNotyNotification(notificationText, true);
+}
+
+function boxLinkedToQRCode(itemsCount, product, boxLocation,isWarning){
+	var notificationText = "QR-code is succesfully linked to box with " + product + " (" + itemsCount + "x) in " + boxLocation;
+	showNotyNotification(notificationText, isWarning);
+}
+
 function showNotyNotification(notificationText, isWarning){
 	setTimeout(function(){
 		noty({
 			text: notificationText,
-			type: isWarning ? 'error': 'success',
+			type: isWarning ? 'warning': 'success',
 			closeWith: ['click'],
 			timeout: 10000
 		});

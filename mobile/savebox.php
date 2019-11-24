@@ -1,7 +1,7 @@
 <?php
 
 if (!isset($_POST)) {
-    redirect('?warning=1&message=Something went wrong! Please try again!');
+    redirect('?notificationFunction=genericErrorNotification');
 
     return;
 }
@@ -26,7 +26,7 @@ if (!isset($_POST)) {
 
     // Validate QR-code
     if (!$_POST['qr_id']) {
-        redirect('?warning=1&message=Something went wrong! Please try again!');
+        redirect('?notificationFunction=genericErrorNotification');
     }
 
     $handler = new formHandler('stock');
@@ -55,4 +55,4 @@ if (!isset($_POST)) {
         $boxLocation = $box['location'];
     }
 
-    redirect('?boxid='.$boxId.'&notificationFunction='.$notificationFunction.'&boxNumber='.$boxNumber.'&itemsCount='.$itemsCount.'&boxProduct='.$boxProduct.'&boxLocation='.$boxLocation);
+    redirect('?notificationFunction='.$notificationFunction.'&boxid='.$boxId.'&boxNumber='.$boxNumber.'&itemsCount='.$itemsCount.'&boxProduct='.$boxProduct.'&boxLocation='.$boxLocation);

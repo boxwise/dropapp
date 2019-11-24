@@ -64,6 +64,14 @@ if ($_GET['boxProduct']) {
 if ($_GET['boxLocation']) {
     $data['boxLocation'] = $_GET['boxLocation'];
 }
+if ($_GET['previousBoxLocation']) {
+    $data['previousBoxLocation'] = $_GET['previousBoxLocation'];
+}
+if ($_GET['campName']) {
+    $data['campName'] = $_GET['campName'];
+    $data['currentCampName'] = $_SESSION['camp']['name'];
+}
+
 if ($_GET['messageAnchorText']) {
     $data['messageAnchorText'] = $_GET['messageAnchorText'];
 }
@@ -93,8 +101,8 @@ if (!$checksession_result['success']) {
 } elseif (!db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' LIMIT 1 ')) {
     redirect('/?action=start');
 } else { // --------------- All routing happens here
-    // Boxlabel is scanned
-    if ('' != $_GET['barcode'] || '' != $_GET['boxid']) {
+    // Boxlabel is scanned (this only happens when notification is not set)
+    if (('' != $_GET['barcode'] || '' != $_GET['boxid']) && !$_GET['notificationFunction']) {
         require_once 'mobile/barcode.php';
 
     // Assign a QR code to existing box

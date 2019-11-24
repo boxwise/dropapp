@@ -10,7 +10,7 @@
 
     if (!is_null($box['deleted']) && '0000-00-00 00:00:00' != $box['deleted']) {
         unset($box['location_id']);
-        $data['message'] = 'This box has been deleted. Editing and saving this form undeletes it.';
+        $data['notificationFunction'] = 'editingDeletedBoxNotification';
         $data['warning'] = true;
     }
 
