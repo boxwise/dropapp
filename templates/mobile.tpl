@@ -30,6 +30,7 @@
 					{if $data['previousBoxLocation']}'{$data['previousBoxLocation']}', {/if}
 					{if $data['campName']}'{$data['campName']}', {/if}
 					{if $data['currentCampName']}'{$data['currentCampName']}', {/if}
+					{if $data['organisationName']}'{$data['organisationName']}', {/if}
 					{if $data['warning']}true{else}false{/if}
 				);
 			</script>

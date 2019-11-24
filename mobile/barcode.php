@@ -4,7 +4,8 @@
 
     if ($_GET['barcode'] && !db_value('SELECT id FROM qr WHERE code = :code AND legacy = :legacy', ['code' => $_GET['barcode'], 'legacy' => (isset($_GET['qrlegacy']) ? 1 : 0)])) {
         $data['warning'] = true;
-        $data['message'] = 'This is not a valid QR-code for '.$_SESSION['organisation']['label'];
+        $data['notificationFunction'] = 'notValidQrCode';
+        $data['organisationName'] = $_SESSION['organisation']['label'];
         $data['barcode'] = '';
         // Check if it is a legacy error
         if (db_value('SELECT id FROM qr WHERE code = :code AND legacy = :legacy', ['code' => $_GET['barcode'], 'legacy' => (!isset($_GET['qrlegacy']) ? 1 : 0)])) {

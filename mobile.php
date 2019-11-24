@@ -71,6 +71,9 @@ if ($_GET['campName']) {
     $data['campName'] = $_GET['campName'];
     $data['currentCampName'] = $_SESSION['camp']['name'];
 }
+if ($_GET['organisationName']) {
+    $data['organisationName'] = $_GET['organisationName'];
+}
 
 if ($_GET['messageAnchorText']) {
     $data['messageAnchorText'] = $_GET['messageAnchorText'];

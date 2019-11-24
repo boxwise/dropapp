@@ -19,4 +19,4 @@
         db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$newlocation['id'].')');
     }
 
-    redirect('?&notificationFunction=moveBoxNotification&boxid='.$box['id'].'&boxNumber='.$box['box_id'].'&itemsCount='.$box['items'].'&boxProduct='.$box['product'].'&boxLocation='.$newlocation['label'].'&previousBoxLocation='.$box['location']);
+    redirect('?notificationFunction=moveBoxNotification&boxid='.$box['id'].'&boxNumber='.$box['box_id'].'&itemsCount='.$box['items'].'&boxProduct='.$box['product'].'&boxLocation='.$newlocation['label'].'&previousBoxLocation='.$box['location']);

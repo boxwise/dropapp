@@ -70,6 +70,11 @@ function boxLinkedToQRCode(itemsCount, product, boxLocation,isWarning){
 	showNotyNotification(notificationText, isWarning);
 }
 
+function notValidQrCode(organisationName, isWarning){
+	var notificationText = 'This is not a valid QR-code for ' + organisationName;
+	showNotyNotification(notificationText, isWarning);
+}
+
 function showNotyNotification(notificationText, isWarning){
 	setTimeout(function(){
 		noty({
