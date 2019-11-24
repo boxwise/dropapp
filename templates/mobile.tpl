@@ -10,13 +10,26 @@
 		<link href="/assets/css/bootstrap.min.css" rel="stylesheet">    
 		<link href="/assets/css/select2.css" rel="stylesheet" />
 		<link href="/assets/css/select2-bootstrap.css" rel="stylesheet" />
-		<link href="/assets/css/mobile.css?v=2" rel="stylesheet">    
-
+		<link href="/assets/css/mobile.css?v=2" rel="stylesheet">
+		
 		<script src="/assets/js/jquery-3.1.1.min.js"></script>
 		<script src="/assets/js/jquery.validate.min.js"></script>
 		<script src="/assets/js/bootstrap.min.js"></script>
 		<script src="/assets/js/select2.min.js"></script>
-		<script src="/assets/js/mobile.js?v=2"></script>
+		<script src="/assets/js/mobile.js"></script>
+		<script src="/assets/js/jquery.noty.packaged.min.js"></script>    
+		{if $data['notificationFunction']}
+		    <script>
+				debugger;
+		        {$data['notificationFunction']}(
+					{if $data['notificationFunction']}{$data['boxid']}, {/if}
+					{if $data['notificationFunction']}'{$data['boxNumber']}',  {/if}
+					{if $data['notificationFunction']}'{$data['itemsCount']}',  {/if}
+					{if $data['notificationFunction']}'{$data['boxProduct']}',  {/if}
+					{if $data['notificationFunction']}'{$data['boxLocation']}' {/if}
+				);
+			</script>
+		{/if}
 
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
 		<link rel="icon" type="image/png" href="/assets/img/favicon-32x32.png" sizes="32x32">

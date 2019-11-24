@@ -46,6 +46,24 @@ if ($_GET['message']) {
 if ($_GET['warning']) {
     $data['warning'] = true;
 }
+if ($_GET['notificationFunction']) {
+    $data['notificationFunction'] = $_GET['notificationFunction'];
+}
+if ($_GET['boxid']) {
+    $data['boxid'] = $_GET['boxid'];
+}
+if ($_GET['boxNumber']) {
+    $data['boxNumber'] = $_GET['boxNumber'];
+}
+if ($_GET['itemsCount']) {
+    $data['itemsCount'] = $_GET['itemsCount'];
+}
+if ($_GET['boxProduct']) {
+    $data['boxProduct'] = $_GET['boxProduct'];
+}
+if ($_GET['boxLocation']) {
+    $data['boxLocation'] = $_GET['boxLocation'];
+}
 if ($_GET['messageAnchorText']) {
     $data['messageAnchorText'] = $_GET['messageAnchorText'];
 }
