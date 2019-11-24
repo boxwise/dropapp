@@ -1,6 +1,5 @@
 <?php
     $findBoxId = $_GET['findbox'];
-
     $barcode = db_row('
         SELECT q.code AS code, s.id AS id 
         FROM (stock AS s, locations AS l) 
