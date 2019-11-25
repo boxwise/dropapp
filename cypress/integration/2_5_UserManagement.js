@@ -51,6 +51,7 @@ describe('User management', () => {
         getDeactivateButton().click();
         getConfirmActionButton().click();
         getDeactivatedUsersTab().click();
+        getDeactivatedUsersTab().should('have.class', 'active')
         getUserRow(deactivateTestUserName).should('exist');
         checkUserCheckboxByName(deactivateTestUserName);
         getReactivateButton().click();
