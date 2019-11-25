@@ -105,7 +105,7 @@ context("5_2_Add_Beneficiary_Test", () => {
         //check all the forms 
         FillForm(Test_firstname, Test_lastname, Test_case_id);
         ClickButtonWithText("Save and close");
-        //cy.notificationWithTextIsVisible(Test_firstname + " " + Test_lastname + " was added");
+        cy.notificationWithTextIsVisible(Test_firstname + " " + Test_lastname + " was added");
         getBeneficiaryRow(Test_lastname).should('exist');
     });
 
