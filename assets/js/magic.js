@@ -147,13 +147,13 @@ $(function() {
             .find(".item-select:visible") //if find ever proves to be too slow, we could replace it with getelementbyclass from vanilla js which works 6 times faster.
             .prop("checked", is_checked)
             .closest("tr")
-            .toggleClass("selected")
+            .toggleClass("selected", is_checked)
             .promise()
             .done(function() { //only trigger the event change of a ".item-select" once
                 parent
                     .find(".item-select:visible:first")
                     .closest("tr")
-                    .toggleClass("selected");
+                    .toggleClass("selected", !is_checked);
                 parent.find(".item-select:visible:first").trigger("change");
             });
     });
