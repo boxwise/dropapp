@@ -108,7 +108,8 @@ class Cypress extends AbstractSeed
         	(100000004,'bb1f40afbf093afa5b9b343625ed08bd','Expired',NULL,'expired@expired.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:58',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'2019-07-01','2019-07-09'),
         	(100000005,'bb1f40afbf093afa5b9b343625ed08bd','Deleted',NULL,'deleted@deleted.co.deleted.100000005',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:15:42',1,'2019-07-10 08:15:50',1,NULL,2,'2019-07-10 08:15:50',100000000,'0000-00-00','0000-00-00'),
         	(100000006,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_UserWithNoPermissions',NULL,'noPermissions@noPermissions.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000003,'0000-00-00','0000-00-00'),
-        	(100000007,'1c962d7d2e90e539d64bca1be5257724','BrowserTestUser_DeactivateTest',NULL,'deactivateTest@deactivateTest.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'0000-00-00','0000-00-00');");
+        	(100000007,'1c962d7d2e90e539d64bca1be5257724','BrowserTestUser_DeactivateTest',NULL,'deactivateTest@deactivateTest.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'0000-00-00','0000-00-00'),
+        	(100000008,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_Pending',NULL,'pending@pending.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'2022-12-20','2023-12-20');");
 
         //------------------- locations
         $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`) VALUES
