@@ -108,7 +108,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
 
         cy.wait("@deactivated").then(xhr => {
             expect(xhr.response.body.message).to.equal(ITEM_RECOVERED);
-          });
+        });
         
         checkForElementByText("span", ITEM_RECOVERED);
         checkElementDoesNotExistByText("p", DELETED_USER_NAME);
@@ -125,6 +125,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
         checkForElementByText("h3", ARE_YOU_SURE_POPUP);
         clickOnElementByText("a", CANCEL_BUTTON);
+        checkElementDoesNotExistByText("h3", ARE_YOU_SURE_POPUP);
     });
 
 });
