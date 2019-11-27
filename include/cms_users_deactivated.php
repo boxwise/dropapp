@@ -13,7 +13,7 @@
         addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'testid' => 'active_pending']);
         addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'testid' => 'expired']);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true, 'testid' => 'deactivated']);
-        addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'confirm' => true]);
+        addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'reactivate-cms-user']);
 
         $camps = db_value(
             '
