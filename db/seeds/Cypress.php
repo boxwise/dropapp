@@ -13,12 +13,6 @@ class Cypress extends AbstractSeed
 
     public function run()
     {
-        // Faker library
-        // https://github.com/fzaninotto/Faker
-        $faker = Faker\Factory::create();
-        // to make the seed reproducible
-        $faker->seed(1);
-
         //------------------- organisations
         $this->execute("INSERT INTO `organisations` (`id`, `label`, `created`, `created_by`, `deleted`, `modified`, `modified_by`) VALUES
             (100000000,'TestOrganisation','2019-07-10 08:05:56',1,NULL,NULL,NULL), 
@@ -139,63 +133,6 @@ class Cypress extends AbstractSeed
             (100000005, 'User', 'WithoutApproval',100000000,'004','1978-07-10','2019-09-02',0,NULL,'0000-00-00 00:00:00', '0000-00-00 00:00:00'), 
             (100000006, 'DeactivatedBeneficiary', 'DeactivatedBeneficiary',100000000,'004','1978-07-10','2019-09-02',1,NULL,'2019-09-02', '2019-10-25 11:01:30')");
 
-        $people = [];
-        $lastparentid = null;
-        $lastlastname = null;
-        $lastcontainer = null;
-        $lastdeleted = null;
-        $campid = 100000000;
-        for ($i = 100000007; $i <= 100000055; ++$i) {
-            $tempdata = [
-                'id' => $i,
-            ];
-
-            // parent or child
-            $rand_num = $faker->numberBetween($min = 0, $max = 100);
-            if (($rand_num < 40) || is_null($lastparentid)) {
-                $tempdata['date_of_birth'] = $faker->dateTimeInInterval($startDate = '-15 years', $interval = '-65 years', $timezone = 'Europe/Athens')->format('Y-m-d');
-                $tempdata['lastname'] = $faker->lastName;
-                $tempdata['container'] = $faker->unique()->randomNumber($nbDigits = 5, $strict = true);
-                $lastparentid = $tempdata['id'];
-                $lastlastname = $tempdata['lastname'];
-                $lastcontainer = $tempdata['container'];
-
-                // deactivate 5 per cent of people
-                $rand_num = $faker->numberBetween($min = 0, $max = 100);
-                if ($rand_num < 5) {
-                    $tempdata['deleted'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
-                    $lastdeleted = $tempdata['deleted'];
-                } else {
-                    $lastdeleted = null;
-                }
-            } else {
-                $tempdata['date_of_birth'] = $faker->dateTimeInInterval($startDate = '-15 years', $interval = '+15 years', $timezone = 'Europe/Athens')->format('Y-m-d');
-                $tempdata['parent_id'] = $lastparentid;
-                $tempdata['lastname'] = $lastlastname;
-                $tempdata['container'] = $lastcontainer;
-                if (!is_null($lastdeleted)) {
-                    $tempdata['deleted'] = $lastdeleted;
-                }
-            }
-
-            // assign camp
-            $tempdata['camp_id'] = $campid;
-
-            // define gender and firstname randomly
-            $gender_rand = (bool) random_int(0, 1);
-            if (1 == $gender_rand) {
-                $tempdata['firstname'] = $faker->firstname('male');
-                $tempdata['gender'] = 'M';
-            }
-            if (0 == $gender_rand) {
-                $tempdata['firstname'] = $faker->firstname('female');
-                $tempdata['gender'] = 'F';
-            }
-
-            $people[] = $tempdata;
-        }
-        $this->table('people')->insert($people)->save();
-
         //------------------- transactions
         $this->execute("INSERT INTO `transactions` (`id`,`people_id`,`product_id`,`size_id`,`count`,`drops`,`transaction_date`, `user_id`) VALUES
         	(100000000, 100000002, 1158, 1, 0 , 2147483647 ,'2019-09-02', 1),
@@ -210,50 +147,10 @@ class Cypress extends AbstractSeed
             (100000003,'5c829d1bf278615670dceeb9b3919ed2'),
             (100000004,'4b382363fa161c111fa9ad2b335ceacd'),
          	(100000005,'b1cf83ae73adfce0d14dbe81b53cb96b');");
-        $qr = [];
-        for ($i = 100000006; $i <= 100000522; ++$i) {
-            $tempdata = [
-                'code' => $faker->unique()->md5,
-                'id' => $i,
-            ];
-            $qr[] = $tempdata;
-        }
-        $this->table('qr')->insert($qr)->save();
 
         //------------------- stock
         $this->execute("INSERT INTO `stock` (`id`, `box_id`, `product_id`, `size_id`,`items`,`location_id`,`qr_id`,`comments`,`created`,`created_by`) VALUES
 			(100000000, 328765, 1163, 68, 50, 100000002, 100000000, 'Cypress seed test box', '2015-01-01 11:15:32', 1),
             (100000001, 235563, 1165, 68, 50, 100000005, 100000001, '50 dummy products', '2019-09-29 18:15:32', 1);");
-        $products = range(1158, 1164);
-        $locations = range(100000000, 100000004);
-        $sizes = ['1158' => [53, 54, 55, 70],
-            '1159' => [1, 2, 3, 4, 5, 71],
-            '1160' => [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 51, 65, 66, 67, 128, 129],
-            '1161' => [68],
-            '1162' => [108, 109, 110, 111, 112, 113, 114, 115],
-            '1163' => [68],
-            '1164' => [68], ];
-
-        $stock = [];
-        for ($i = 100000006; $i <= 100000501; ++$i) {
-            $tempdata = [
-                'id' => $i,
-                'box_id' => $faker->unique()->randomNumber($nbDigits = 7, $strict = true),
-                'product_id' => $faker->randomElement($products),
-                'items' => $faker->numberBetween($min = 1, $max = 100),
-                'location_id' => $faker->randomElement($locations),
-                'qr_id' => $i,
-            ];
-            $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
-
-            //order a few boxes
-            $rand_num = $faker->numberBetween($min = 0, $max = 10000);
-            if (($rand_num < 2)) {
-                $tempdata['ordered'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d');
-            }
-
-            $stock[] = $tempdata;
-        }
-        $this->table('stock')->insert($stock)->save();
     }
 }
