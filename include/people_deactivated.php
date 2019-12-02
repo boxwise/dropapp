@@ -14,7 +14,7 @@
         listsetting('allowcopy', false);
         listsetting('allowmove', false);
         listsetting('allowmoveto', 1);
-        listsetting('allowsort', false);
+        listsetting('allowsort', true);
         listsetting('allowshowhide', false);
         listsetting('allowdelete', false);
         listsetting('allowedit', false);
@@ -46,7 +46,7 @@
         addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
         addcolumn('datetime', 'Last active', 'lastactive');
 
-        addbutton('undelete', 'Recover', ['icon' => 'fa-history', 'oneitemonly' => false, 'testId' => 'recoverDeactivatedUser']);
+        addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'oneitemonly' => false, 'testId' => 'recoverDeactivatedUser']);
         addbutton('realdelete', 'Full delete', ['icon' => 'fa-trash', 'oneitemonly' => false, 'confirm' => true, 'testId' => 'fullDeleteUser']);
 
         $cmsmain->assign('data', $data);

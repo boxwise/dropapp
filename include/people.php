@@ -20,6 +20,7 @@ $table = $action;
         listsetting('allowshowhide', false);
         listsetting('search', ['firstname', 'lastname', 'container', 'comments']);
         listsetting('add', 'New person');
+        listsetting('delete', 'Deactivate');
 
         listsetting('haspagemenu', true);
         addpagemenu('all', 'All', ['link' => '?action=people', 'active' => true]);
