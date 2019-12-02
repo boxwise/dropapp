@@ -67,7 +67,7 @@
                 break;
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids, false, ['stock']);
+                list($success, $message, $redirect) = listDelete($table, $ids);
 
                 break;
             case 'copy':
