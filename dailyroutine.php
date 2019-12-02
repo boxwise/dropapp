@@ -42,23 +42,6 @@
         }
     }
 
-    // this function sorts the people list on container/household id, giving the best possible overview
-    $result = db_query('SELECT id, parent_id, people.container FROM people WHERE NOT deleted AND parent_id IS NULL ORDER BY camp_id, IF(LEFT(container,2)="PK" OR LEFT(container,1)="T",LEFT(container,2),LEFT(container,1)), IF(LEFT(container,2)="PK" OR LEFT(container,1)="T",SUBSTRING(container,3),SUBSTRING(container,2))*1
-');
-
-    while ($row = db_fetch($result)) {
-        ++$i;
-        db_query('UPDATE people SET seq = '.$i.' WHERE id = '.$row['id']);
-
-        $j = 0;
-
-        $result2 = db_query('SELECT id FROM people WHERE NOT deleted AND parent_id = '.$row['id'].' ORDER BY DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 DESC');
-        while ($row2 = db_fetch($result2)) {
-            ++$j;
-            db_query('UPDATE people SET seq = '.$j.' WHERE id = '.$row2['id']);
-        }
-    }
-
     // people that have not been active for a longer time will be deleted(Changed to deactivated in visible text, variables remain under the name deleted, as does the databasse)
     // the amount of days of inactivity is set in the camp table
     $result = db_query('SELECT p.id, p.lastname, p.created, p.modified, c.delete_inactive_users AS treshold FROM people AS p LEFT OUTER JOIN camps AS c ON c.id = p.camp_id WHERE NOT p.deleted AND p.parent_id IS NULL');
