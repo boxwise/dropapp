@@ -5,34 +5,42 @@
     //to debug through the browser
     require_once 'library/core.php';
 
-    // this function caps the maximum of drops
-
-// This function doesn't run properly because it requires adult_age from a camp setting, it is not yet available
-// Rework: do this for all the camps at once and use the setting per camp.
-
-/*
-    $result = db_query('SELECT
-    p.*, SUM(t.drops) AS drops,
-    IF((SELECT COUNT(id) FROM people WHERE volunteer AND (id = p.id OR parent_id = p.id)),99999,dropcapadult * (SELECT COUNT(id) FROM people WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 >= '.$_SESSION['camp']['adult_age'].') +
-    dropcapchild * (SELECT COUNT(id) FROM people WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 < '.$_SESSION['camp']['adult_age'].')) AS maxdrops
-FROM
-    people AS p,
-    transactions AS t,
-    camps AS c
-WHERE
-    t.people_id = p.id AND
-    NOT p.deleted AND
-    c.id = p.camp_id AND
-    p.parent_id IS NULL
-GROUP BY p.id
+    //--------- capping of tokens
+    $result = db_query('
+        SELECT p.*, SUM(t.drops) AS drops,
+            IF((
+                SELECT COUNT(id) 
+                FROM people 
+                WHERE volunteer AND (id = p.id OR parent_id = p.id)
+            ),99999,
+                c.dropcapadult * (
+                    SELECT COUNT(id) 
+                    FROM people 
+                    WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 >= c.adult_age
+                    ) 
+                + c.dropcapchild * (
+                    SELECT COUNT(id) 
+                    FROM people 
+                    WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 < c.adult_age
+                    )
+            ) AS maxdrops
+        FROM people AS p,
+            transactions AS t,
+            camps AS c
+        WHERE t.people_id = p.id AND
+            (NOT p.deleted OR p.deleted IS NULL) AND
+            c.id = p.camp_id AND
+            p.parent_id IS NULL
+        GROUP BY p.id
     ');
-
-    while($row = db_fetch($result)) {
-        if($row['drops']>$row['maxdrops']) {
-            db_query('INSERT INTO transactions (people_id, description, drops, transaction_date) VALUES (:id, "Drops capped to maximum", :drops, NOW())',array('id'=>$row['id'],'drops'=>-$row['drops']+$row['maxdrops']));
+    while ($row = db_fetch($result)) {
+        if ($row['drops'] > $row['maxdrops']) {
+            db_query('
+                INSERT INTO transactions (people_id, description, drops, transaction_date) 
+                VALUES (:id, "Tokens capped to maximum", :drops, NOW())',
+                array('id' => $row['id'], 'drops' => -$row['drops'] + $row['maxdrops']));
         }
     }
-*/
 
     // this function sorts the people list on container/household id, giving the best possible overview
     $result = db_query('SELECT id, parent_id, people.container FROM people WHERE NOT deleted AND parent_id IS NULL ORDER BY camp_id, IF(LEFT(container,2)="PK" OR LEFT(container,1)="T",LEFT(container,2),LEFT(container,1)), IF(LEFT(container,2)="PK" OR LEFT(container,1)="T",SUBSTRING(container,3),SUBSTRING(container,2))*1
