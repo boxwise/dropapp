@@ -44,22 +44,28 @@
 
     // people that have not been active for a longer time will be deleted(Changed to deactivated in visible text, variables remain under the name deleted, as does the databasse)
     // the amount of days of inactivity is set in the camp table
-    $result = db_query('SELECT p.id, p.lastname, p.created, p.modified, c.delete_inactive_users AS treshold FROM people AS p LEFT OUTER JOIN camps AS c ON c.id = p.camp_id WHERE NOT p.deleted AND p.parent_id IS NULL');
+    $result = db_query('
+        SELECT p.id, p.lastname, p.created, p.modified, c.delete_inactive_users AS treshold 
+        FROM people AS p 
+        LEFT OUTER JOIN camps AS c ON c.id = p.camp_id 
+        WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.parent_id IS NULL');
     while ($row = db_fetch($result)) {
-        /*
-        if(strtotime($row['lastfoodtransaction'])>strtotime($row['lastransaction'])) {$row['lastransaction'] = $row['lastfoodtransaction'];}
-        var_export($row['lastfoodtransaction']);
-        $row['touch'] = (strtotime($row['lasttransaction'])>strtotime($row['modified'])?$row['lasttransaction']:$row['modified']);
-        if(!$row['touch']) $row['touch'] = $row['created'];
-         */
-        $row['touch'] = db_value('SELECT GREATEST(COALESCE((SELECT transaction_date 
-					FROM transactions AS t 
-					WHERE t.people_id = people.id AND people.parent_id IS NULL AND product_id IS NOT NULL 
-					ORDER BY transaction_date DESC LIMIT 1),0), 
-					COALESCE(people.modified,0),COALESCE(people.created,0))
-				FROM people
-				WHERE id = :id', ['id' => $row['id']]);
-
+        $row['touch'] = db_value('
+            SELECT GREATEST(COALESCE((
+                SELECT transaction_date 
+				FROM transactions AS t 
+				WHERE t.people_id = people.id AND people.parent_id IS NULL AND product_id IS NOT NULL 
+                ORDER BY transaction_date DESC LIMIT 1
+            ),0),
+            COALESCE((
+                SELECT transaction_date 
+				FROM library_transactions AS t 
+				WHERE t.people_id = people.id AND people.parent_id IS NULL  
+                ORDER BY transaction_date DESC LIMIT 1
+            ),0),
+            COALESCE(people.modified,0),COALESCE(people.created,0))
+			FROM people
+			WHERE id = :id', ['id' => $row['id']]);
         if ($row['touch']) {
             $date1 = new DateTime($row['touch']);
             $date2 = new DateTime();
