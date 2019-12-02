@@ -79,16 +79,16 @@
         }
     }
 
-    // family members of deleted people should also be deleted
-    $result = db_query('SELECT p2.id FROM people AS p1, people AS p2 WHERE p2.parent_id = p1.id AND p1.deleted AND NOT p2.deleted');
+    // family members of deleted parents should also be deleted
+    $result = db_query('
+        SELECT p2.id 
+        FROM people AS p1, people AS p2 
+        WHERE p2.parent_id = p1.id AND p1.deleted AND (NOT p2.deleted OR p2.deleted IS NULL)');
     while ($row = db_fetch($result)) {
         db_query('UPDATE people SET deleted = NOW() WHERE id = :id', ['id' => $row['id']]);
         simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine because head of family/beneficiary was deleted');
         db_touch('people', $row['id']);
     }
-
-    // delete children with a deleted parent
-    db_query('UPDATE people p1 LEFT JOIN people p2 ON p1.parent_id = p2.id SET p1.deleted = NOW() WHERE p2.deleted AND !p1.deleted AND p1.parent_id IS NOT NULL');
 
     // this notifies us when a new installation of the Drop App is made
     if (!isset($settings['installed'])) {
