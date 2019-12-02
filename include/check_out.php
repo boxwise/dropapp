@@ -55,7 +55,7 @@
             $ids = explode(',', $_POST['ids']);
             // check if person is allowed to delete transaction
             foreach ($ids as $id) {
-                verify_campaccess_people(db_value('SELECT people_id FROM transactions WHER id=:id', ['id' => $id]));
+                verify_campaccess_people(db_value('SELECT people_id FROM transactions WHERE id=:id', ['id' => $id]));
             }
             list($success, $message, $redirect) = listDelete($table, $ids);
             $return = ['success' => $success, 'message' => $message, 'redirect' => false, 'action' => "$('#field_people_id').trigger('change')"];
