@@ -35,10 +35,12 @@
     ');
     while ($row = db_fetch($result)) {
         if ($row['drops'] > $row['maxdrops']) {
-            db_query('
+            db_query(
+                '
                 INSERT INTO transactions (people_id, description, drops, transaction_date) 
                 VALUES (:id, "Tokens capped to maximum", :drops, NOW())',
-                array('id' => $row['id'], 'drops' => -$row['drops'] + $row['maxdrops']));
+                ['id' => $row['id'], 'drops' => -$row['drops'] + $row['maxdrops']]
+            );
         }
     }
 
