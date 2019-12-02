@@ -149,7 +149,8 @@ $(function() {
             .closest("tr")
             .toggleClass("selected", is_checked)
             .promise()
-            .done(function() { //only trigger the event change of a ".item-select" once
+            .done(function() {
+                //only trigger the event change of a ".item-select" once
                 parent
                     .find(".item-select:visible:first")
                     .closest("tr")
@@ -727,59 +728,85 @@ function initiateList() {
                         dataType: "json",
                         success: function(result) {
                             if (result.success) {
-                                var allTargets = $();
-                                selectedTargets.each(function() {
-                                    target = $(this);
-                                    allTargets = allTargets
-                                        .add(target)
-                                        .add(target.prev(".inbetween"))
-                                        .add(
-                                            target.nextUntil(
-                                                ".level-" + target.data("level")
-                                            )
-                                        );
-                                });
-                                switch (el.data("operation")) {
-                                    case "delete":
-                                        allTargets.fadeOut(200, function() {
-                                            $(this).remove();
-                                        });
-                                        break;
+                                if (el.data("operation") != "export") {
+                                    // create allTargets only if we are not exporting data.
+                                    var allTargets = $();
+                                    selectedTargets.each(function() {
+                                        target = $(this);
+                                        allTargets = allTargets
+                                            .add(target)
+                                            .add(target.prev(".inbetween"))
+                                            .add(
+                                                target.nextUntil(
+                                                    ".level-" +
+                                                        target.data("level")
+                                                )
+                                            );
+                                    });
+                                    switch (el.data("operation")) {
+                                        case "delete":
+                                            allTargets.fadeOut(200, function() {
+                                                $(this).remove();
+                                            });
+                                            break;
 
-                                    case "undelete":
-                                        allTargets.fadeOut(200, function() {
-                                            $(this).remove();
-                                        });
-                                        break;
+                                        case "undelete":
+                                            allTargets.fadeOut(200, function() {
+                                                $(this).remove();
+                                            });
+                                            break;
 
-                                    case "hide":
-                                        if (parent.data("inheritvisibility")) {
-                                            allTargets.addClass("item-hidden");
-                                        } else {
-                                            selectedTargets.addClass(
-                                                "item-hidden"
-                                            );
-                                        }
-                                        break;
-                                    case "show":
-                                        if (parent.data("inheritvisibility")) {
-                                            allTargets.removeClass(
-                                                "item-hidden"
-                                            );
-                                        } else {
-                                            selectedTargets.removeClass(
-                                                "item-hidden"
-                                            );
-                                        }
-                                        break;
-                                    default:
-                                    // nothing
+                                        case "hide":
+                                            if (
+                                                parent.data("inheritvisibility")
+                                            ) {
+                                                allTargets.addClass(
+                                                    "item-hidden"
+                                                );
+                                            } else {
+                                                selectedTargets.addClass(
+                                                    "item-hidden"
+                                                );
+                                            }
+                                            break;
+                                        case "show":
+                                            if (
+                                                parent.data("inheritvisibility")
+                                            ) {
+                                                allTargets.removeClass(
+                                                    "item-hidden"
+                                                );
+                                            } else {
+                                                selectedTargets.removeClass(
+                                                    "item-hidden"
+                                                );
+                                            }
+                                            break;
+                                        default:
+                                        // nothing
+                                    }
                                 }
                                 // deselect items
                                 selectedTargets
                                     .find(".item-select:visible:checked")
                                     .prop("checked", false)
-                                    .trigger("change");
+                                    .closest("tr")
+                                    .toggleClass("selected", false)
+                                    .promise()
+                                    .done(function() {
+                                        //only trigger the event change of a ".item-select" once
+                                        parent
+                                            .find(".item-select:visible:first")
+                                            .closest("tr")
+                                            .toggleClass(
+                                                "selected",
+                                                true
+                                            );
+                                        parent
+                                            .find(".item-select:visible:first")
+                                            .trigger("change");
+                                    });
+                                // .trigger("change");
                             }
                             if (result.message) {
                                 var n = noty({
