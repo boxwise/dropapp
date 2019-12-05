@@ -2,9 +2,6 @@
 
     // This file is called about one time daily
 
-    // to debug through the browser
-    require_once 'library/core.php';
-
     // people that have not been active for a longer time will be deleted(Changed to deactivated in visible text, variables remain under the name deleted, as does the databasse)
     // the amount of days of inactivity is set in the camp table
     $result = db_query('
