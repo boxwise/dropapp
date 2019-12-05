@@ -2,48 +2,8 @@
 
     // This file is called about one time daily
 
-    //to debug through the browser
+    // to debug through the browser
     require_once 'library/core.php';
-
-    //--------- capping of tokens
-    // commented out because there exists a capping check alread in give2all.php
-    // $result = db_query('
-    //     SELECT p.*, SUM(t.drops) AS drops,
-    //         IF((
-    //             SELECT COUNT(id)
-    //             FROM people
-    //             WHERE volunteer AND (id = p.id OR parent_id = p.id)
-    //         ),99999,
-    //             c.dropcapadult * (
-    //                 SELECT COUNT(id)
-    //                 FROM people
-    //                 WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 >= c.adult_age
-    //                 )
-    //             + c.dropcapchild * (
-    //                 SELECT COUNT(id)
-    //                 FROM people
-    //                 WHERE (id = p.id OR parent_id = p.id) AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),date_of_birth)),"%Y")+0 < c.adult_age
-    //                 )
-    //         ) AS maxdrops
-    //     FROM people AS p,
-    //         transactions AS t,
-    //         camps AS c
-    //     WHERE t.people_id = p.id AND
-    //         (NOT p.deleted OR p.deleted IS NULL) AND
-    //         c.id = p.camp_id AND
-    //         p.parent_id IS NULL
-    //     GROUP BY p.id
-    // ');
-    // while ($row = db_fetch($result)) {
-    //     if ($row['drops'] > $row['maxdrops']) {
-    //         db_query(
-    //             '
-    //             INSERT INTO transactions (people_id, description, drops, transaction_date)
-    //             VALUES (:id, "Tokens capped to maximum", :drops, NOW())',
-    //             ['id' => $row['id'], 'drops' => -$row['drops'] + $row['maxdrops']]
-    //         );
-    //     }
-    // }
 
     // people that have not been active for a longer time will be deleted(Changed to deactivated in visible text, variables remain under the name deleted, as does the databasse)
     // the amount of days of inactivity is set in the camp table
