@@ -15,12 +15,6 @@
         logout();
     }
 
-    // dailyroutine is performed when the last action of any user is not of today
-    if (strftime('%Y-%m-%d') != $settings['dailyroutine'] || 'dailyroutine' == $action) {
-        db_query('UPDATE cms_settings SET value = "'.strftime('%Y-%m-%d').'" WHERE code = "dailyroutine"');
-        require 'dailyroutine.php';
-    }
-
     $cmsmain = new Zmarty();
 
     // make an organisation menu, if the user is system admin
