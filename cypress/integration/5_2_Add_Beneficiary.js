@@ -109,7 +109,7 @@ context("5_2_Add_Beneficiary_Test", () => {
         getBeneficiaryRow(Test_lastname).should('exist');
     });
 
-    it("5_2_2 Prevent emtpy submit",() => {
+    it("5_2_2 Prevent empty submit",() => {
         NavigateToEditBeneficiaryForm();
         ClickButtonWithText("Save and close");
         CheckQtip("qtip-0-content");
