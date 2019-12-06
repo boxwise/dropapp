@@ -1,5 +1,5 @@
 <?php
-
+    require_once 'library/core.php';
     // This file is called about one time daily
 
     // people that have not been active for a longer time will be deleted(Changed to deactivated in visible text, variables remain under the name deleted, as does the databasse)
