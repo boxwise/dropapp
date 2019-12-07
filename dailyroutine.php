@@ -1,4 +1,5 @@
 <?php
+
     require_once 'library/core.php';
     // This file is called about one time daily
 
