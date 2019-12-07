@@ -92,90 +92,89 @@ describe('Create usergroups (admin)', () => {
         cy.visit('/?action=cms_usergroups_edit&origin=cms_usergroups');
     });
 
-    // it("Create & delete 'coordinator' usergroup", () => {
-    //     FillUserGroupForm(BrowserTestUserGroup_Coordinator, "Coordinator", TestBase, TestUserGroupFunctions)
-    //     clickButtonWithText("Save and close");
-    //     getUserGroupRow(BrowserTestUserGroup_Coordinator).should('exist');
-    //     //testing delete
-    //     checkUserGroupCheckboxByName(BrowserTestUserGroup_Coordinator)
-    //     clickDeleteButton();
-    //     confirmAction();
-    //     getUserGroupRow(BrowserTestUserGroup_Coordinator).should('not.exist');
-    //     cy.notyTextNotificationWithTextIsVisible("Item deleted");
+    it("Create & delete 'coordinator' usergroup", () => {
+        FillUserGroupForm(BrowserTestUserGroup_Coordinator, "Coordinator", TestBase, TestUserGroupFunctions)
+        clickButtonWithText("Save and close");
+        getUserGroupRow(BrowserTestUserGroup_Coordinator).should('exist');
+        //testing delete
+        checkUserGroupCheckboxByName(BrowserTestUserGroup_Coordinator)
+        clickDeleteButton();
+        confirmAction();
+        getUserGroupRow(BrowserTestUserGroup_Coordinator).should('not.exist');
+        cy.notyTextNotificationWithTextIsVisible("Item deleted");
 
-    //     //cleanup just in case
-    //     deleteUserGroup(BrowserTestUserGroup_Coordinator);
-    // });
+        //cleanup just in case
+        deleteUserGroup(BrowserTestUserGroup_Coordinator);
+    });
 
-    // it("Create & delete 'user' usergroup", () => {
-    //     FillUserGroupForm(TestUserGroup_User, "User", TestBase, TestUserGroupFunctions)
-    //     clickButtonWithText("Save and close");
-    //     getUserGroupRow(TestUserGroup_User).should('exist');
-    //     //testing delete
-    //     checkUserGroupCheckboxByName(TestUserGroup_User)
-    //     clickDeleteButton();
-    //     confirmAction();
-    //     getUserGroupRow(TestUserGroup_User).should('not.exist');
-    //     cy.notyTextNotificationWithTextIsVisible("Item deleted");
+    it("Create & delete 'user' usergroup", () => {
+        FillUserGroupForm(BrowserTestUserGroup_User, "User", TestBase, TestUserGroupFunctions)
+        clickButtonWithText("Save and close");
+        getUserGroupRow(BrowserTestUserGroup_User).should('exist');
+        //testing delete
+        checkUserGroupCheckboxByName(BrowserTestUserGroup_User)
+        clickDeleteButton();
+        confirmAction();
+        getUserGroupRow(BrowserTestUserGroup_User).should('not.exist');
+        cy.notyTextNotificationWithTextIsVisible("Item deleted");
 
-    //     //cleanup just in case
-    //     deleteUserGroup(TestUserGroup_User);
-    // });
+        //cleanup just in case
+        deleteUserGroup(BrowserTestUserGroup_User);
+    });
 
-    // it('Prevent usergroup creation without base', () => {
-    //     cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
-    //     cy.selectOptionByText('userlevel', "Coordinator");
-    //     for (var fcn of TestUserGroupFunctions) {
-    //         cy.selectOptionByText("cms_functions",fcn);
-    //     }
-    //     clickButtonWithText("Save and close");
-    //     checkQtip("This field is required");
-    //     userGroupFormElementsAreVisible();
-    // });
+    it('Prevent usergroup creation without base', () => {
+        cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
+        cy.selectOptionByText('userlevel', "Coordinator");
+        for (var fcn of TestUserGroupFunctions) {
+            cy.selectOptionByText("cms_functions",fcn);
+        }
+        clickButtonWithText("Save and close");
+        checkQtip("This field is required");
+        userGroupFormElementsAreVisible();
+    });
 
-    // it('Prevent usergroup creation without functions', () => {
-    //     cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
-    //     cy.selectOptionByText('userlevel', "Coordinator");
-    //     cy.selectOptionByText('camps', TestBase);
-    //     clickButtonWithText("Save and close");
-    //     checkQtip("This field is required");
-    //     userGroupFormElementsAreVisible();
-    // });
+    it('Prevent usergroup creation without functions', () => {
+        cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
+        cy.selectOptionByText('userlevel', "Coordinator");
+        cy.selectOptionByText('camps', TestBase);
+        clickButtonWithText("Save and close");
+        checkQtip("This field is required");
+        userGroupFormElementsAreVisible();
+    });
 
 
-    // it("Check available usergroup levels", () => {
-    //     cy.clickSelect("userlevel");
-    //     for (var lvl of AllLevels){
-    //         if (LevelsVisibleToAdmin.includes(lvl)) {
-    //             getOption(lvl).should('exist');
-    //         } else {
-    //             getOption(lvl).should('not.exist');
-    //         }
+    it("Check available usergroup levels", () => {
+        cy.clickSelect("userlevel");
+        for (var lvl of AllLevels){
+            if (LevelsVisibleToAdmin.includes(lvl)) {
+                getOption(lvl).should('exist');
+            } else {
+                getOption(lvl).should('not.exist');
+            }
             
-    //     }
-    // });
+        }
+    });
 
-    // it("Check available functions", () => {
-    //     cy.clickSelect("cms_functions");
-    //     for (var fcn of AllFunctions){
-    //         if (AdminAvailableFunctions.includes(fcn)) {
-    //             getOption(fcn).should('exist');
-    //         } else {
-    //             getOption(fcn).should('not.exist');
-    //         }
+    it("Check available functions", () => {
+        cy.clickSelect("cms_functions");
+        for (var fcn of AllFunctions){
+            if (AdminAvailableFunctions.includes(fcn)) {
+                getOption(fcn).should('exist');
+            } else {
+                getOption(fcn).should('not.exist');
+            }
             
-    //     }
-    // });
+        }
+    });
 
-    // it('Prevent deletion of usergroup with users', () => {
-    //     cy.visit('/?action=cms_usergroups');
-    //     checkUserGroupCheckboxByName(UserGroupWithUsersAssigned)
-    //     clickDeleteButton();
-    //     confirmAction();
-    //     //cy.notyTextNotificationWithTextIsVisible("Please edit or delete it first");
-    //     cy.reload();    //checking for the notification doesn't work because the assertion executes before the notification shows up
-    //     getUserGroupRow(UserGroupWithUsersAssigned).should('exist');
-    // });
+    it('Prevent deletion of usergroup with users', () => {
+        cy.visit('/?action=cms_usergroups');
+        checkUserGroupCheckboxByName(UserGroupWithUsersAssigned)
+        clickDeleteButton();
+        confirmAction();
+        cy.notyTextNotificationWithTextIsVisible("Please edit or delete it first");
+        getUserGroupRow(UserGroupWithUsersAssigned).should('exist');
+    });
 });
 
 
@@ -200,57 +199,56 @@ describe('Create usergroups (coordinator)', () => {
         deleteUserGroup(BrowserTestUserGroup_User);
     });
 
-    // it('Prevent usergroup creation without base', () => {
-    //     cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
-    //     cy.selectOptionByText('userlevel', "User");
-    //     for (var fcn of TestUserGroupFunctions) {
-    //         cy.selectOptionByText("cms_functions",fcn);
-    //     }
-    //     clickButtonWithText("Save and close");
-    //     checkQtip("This field is required");
-    //     userGroupFormElementsAreVisible();
-    // });
+    it('Prevent usergroup creation without base', () => {
+        cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
+        cy.selectOptionByText('userlevel', "User");
+        for (var fcn of TestUserGroupFunctions) {
+            cy.selectOptionByText("cms_functions",fcn);
+        }
+        clickButtonWithText("Save and close");
+        checkQtip("This field is required");
+        userGroupFormElementsAreVisible();
+    });
 
-    // it('Prevent usergroup creation without functions', () => {
-    //     cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
-    //     cy.selectOptionByText('userlevel', "User");
-    //     cy.selectOptionByText('camps', TestBase);
-    //     clickButtonWithText("Save and close");
-    //     checkQtip("This field is required");
-    //     userGroupFormElementsAreVisible();
-    // });
+    it('Prevent usergroup creation without functions', () => {
+        cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
+        cy.selectOptionByText('userlevel', "User");
+        cy.selectOptionByText('camps', TestBase);
+        clickButtonWithText("Save and close");
+        checkQtip("This field is required");
+        userGroupFormElementsAreVisible();
+    });
 
-    // it("Check available usergroup levels", () => {
-    //     cy.clickSelect("userlevel");
-    //     for (var lvl of AllLevels){
-    //         if (LevelsVisibleToCoordinator.includes(lvl)) {
-    //             getOption(lvl).should('exist');
-    //         } else {
-    //             getOption(lvl).should('not.exist');
-    //         }
+    it("Check available usergroup levels", () => {
+        cy.clickSelect("userlevel");
+        for (var lvl of AllLevels){
+            if (LevelsVisibleToCoordinator.includes(lvl)) {
+                getOption(lvl).should('exist');
+            } else {
+                getOption(lvl).should('not.exist');
+            }
             
-    //     }
-    // });
+        }
+    });
 
-    // it("Check available functions", () => {
-    //     cy.clickSelect("cms_functions");
-    //     for (var fcn of AllFunctions){
-    //         if (CoordinatorAvailableFunctions.includes(fcn)) {
-    //             getOption(fcn).should('exist');
-    //         } else {
-    //             getOption(fcn).should('not.exist');
-    //         }
+    it("Check available functions", () => {
+        cy.clickSelect("cms_functions");
+        for (var fcn of AllFunctions){
+            if (CoordinatorAvailableFunctions.includes(fcn)) {
+                getOption(fcn).should('exist');
+            } else {
+                getOption(fcn).should('not.exist');
+            }
             
-    //     }
-    // });
+        }
+    });
 
     it('Prevent deletion of usergroup with users', () => {
         cy.visit('/?action=cms_usergroups');
         checkUserGroupCheckboxByName(UserGroupWithUsersAssigned)
         clickDeleteButton();
         confirmAction();
-        //cy.notyTextNotificationWithTextIsVisible("Please edit or delete it first");
-        cy.reload();    //checking for the notification doesn't work because the assertion executes before the notification shows up
+        cy.notyTextNotificationWithTextIsVisible("Please edit or delete it first");
         getUserGroupRow(UserGroupWithUsersAssigned).should('exist');
     });
 });
