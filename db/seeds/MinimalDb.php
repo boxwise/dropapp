@@ -36,7 +36,7 @@ class MinimalDb extends AbstractSeed
 			(92,35,'Give tokens to all','give2all',7,0,0,1,0,0),
 			(96,128,'Sales reports','sales_list',15,0,0,1,0,0),
 			(99,NULL,'Inventory','',4,0,0,1,0,0),
-			(102,128,'Fancy graphs <sup>beta</sup>','fancygraphs',17,0,0,1,0,0),
+			(102,128,'Fancy graphs <sup>(beta)</sup>','fancygraphs',17,0,0,1,0,0),
 			(110,35,'Stockroom','container-stock',5,0,0,1,0,0),
 			(111,35,'Generate market schedule','market_schedule',6,0,0,1,0,0),
 			(112,99,'Generate QR labels','qr',14,0,0,1,0,0),
