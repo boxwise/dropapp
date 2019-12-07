@@ -43,7 +43,7 @@ class MinimalDb extends AbstractSeed
 			(113,NULL,'Actions','',6,0,0,1,0,0),
 			(115,42,'Warehouses','locations',21,0,0,1,0,0),
 			(116,110,'Containers List','printed_list_containers',2,0,0,1,1,0),
-			(117,128,'Needed items <sup>beta</sup>','need',16,0,0,1,0,0),
+			(117,128,'Needed items <sup>(beta)</sup>','need',16,0,0,1,0,0),
 			(118,35,'Manage beneficiaries','people',4,0,0,1,0,0),
 			(121,NULL,'Hidden menu items','',9,0,0,0,1,0),
 			(123,121,'Start page','start',27,0,0,0,1,0),
