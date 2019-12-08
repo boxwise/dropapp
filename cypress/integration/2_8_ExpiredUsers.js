@@ -58,6 +58,11 @@ describe("2_8_ExpiredUsers_Test", () => {
             expect($tr).to.have.class('selected');
         });
     }
+
+    function watchRequest(requestType, route, alias) {
+        // watch a request and give it an alias in order to wait/check the response later
+        cy.server().route(requestType, route).as(alias);
+    }
  
     it("2_8 Check for list elements in Expired tab", () => {
         checkForElementByTypeAndTestId("input", "select_all");
@@ -112,9 +117,10 @@ describe("2_8_ExpiredUsers_Test", () => {
         clickOnElementByTypeAndTestId("button", "list-delete-button");
         checkForElementByText("h3", ARE_YOU_SURE_POPUP);
 
-        cy.server().route("POST", "/?action=cms_users_expired").as("expired");
+        watchRequest("POST", "/?action=cms_users_expired", "expired");
         clickOnElementByText("div.popover-content a", DEACTIVATE_BUTTON);
 
+        // wait for "expired" request to complete and then check response body message
         cy.wait("@expired").then(xhr => {
             expect(xhr.response.body.message).to.equal(ITEM_DELETED);
         });
@@ -124,13 +130,16 @@ describe("2_8_ExpiredUsers_Test", () => {
         checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
 
-        cy.server().route("POST", "/?action=cms_users_deactivated").as("deactivated");
+        watchRequest("POST", "/?action=cms_users_deactivated", "deactivated");
+
         clickOnElementByText("a", OK_BUTTON);
 
+        // wait for "deactivated" request to complete and then check response body message
         cy.wait("@deactivated").then(xhr => {
             expect(xhr.response.body.message).to.equal(ITEM_RECOVERED);
         });
 
+        // test cancel button
         cy.visit('/?action=cms_users_expired');
         checkForElementByText("a", EXPIRED_COORDINATOR_NAME);
         checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);

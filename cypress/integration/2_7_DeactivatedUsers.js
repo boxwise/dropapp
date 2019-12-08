@@ -59,6 +59,11 @@ describe("2_7_DeactivatedUsers_Test", () => {
             expect($tr).to.have.class('selected');
         });
     }
+
+    function watchRequest(requestType, route, alias) {
+        // watch a request and give it an alias in order to wait/check the response later
+        cy.server().route(requestType, route).as(alias);
+    }
  
     it("2_7 Check for list elements in Deactivated tab", () => {
         checkForElementByTypeAndTestId("input", "select_all");
@@ -103,9 +108,10 @@ describe("2_7_DeactivatedUsers_Test", () => {
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
         checkForElementByText("h3", ARE_YOU_SURE_POPUP);
 
-        cy.server().route("POST", "/?action=cms_users_deactivated").as("deactivated");
+        watchRequest("POST", "/?action=cms_users_deactivated", "deactivated");
         clickOnElementByText("a", OK_BUTTON);
 
+        // wait for "deactivated" request to complete and then check response body message
         cy.wait("@deactivated").then(xhr => {
             expect(xhr.response.body.message).to.equal(ITEM_RECOVERED);
         });
@@ -113,6 +119,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
         checkForElementByText("span", ITEM_RECOVERED);
         checkElementDoesNotExistByText("p", DELETED_USER_NAME);
         
+        // check that re-activated user appears in Active Users tab
         cy.visit('/?action=cms_users');
         checkForElementByText("a", DELETED_USER_NAME);
 
@@ -120,6 +127,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
         clickOnElementByTypeAndTestId("button", "list-delete-button");
         clickOnElementByText("div.popover-content a", DEACTIVATE_BUTTON);
        
+        // test cancel button
         cy.visit('/?action=cms_users_deactivated');
         checkUserCheckboxByName(DELETED_USER_NAME);
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
