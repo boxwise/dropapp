@@ -1,9 +1,10 @@
-//test user groups to be created
+//test usergroup data to be created
 const BrowserTestUserGroup_Coordinator = "BrowserTestUserGroup_Coordinator";
 const BrowserTestUserGroup_User = "BrowserTestUserGroup_User";
+const TestBase = "TestBase";
+const TestUserGroupFunctions = ["Boxes", "Checkout"];
 
 // data from seed
-const TestBase = "TestBase";
 const AllFunctions = ['Free Shop', 'Admin','Users','Settings','Texts','Manage menu functions','Manage products',
 'Checkout','Boxes','Find beneficiary','Give tokens to all','Sales reports','Inventory','Fancy graphs',
 'Stockroom','Generate market schedule','Generate QR labels','Actions','Warehouses','Containers List',
@@ -21,11 +22,12 @@ const CoordinatorAvailableFunctions = ['Checkout','Boxes','Fancy graphs', 'Find 
 'Stockroom','Generate QR labels','Users','Manage products','Generate market schedule',
 'Needed items','Manage beneficiaries', 'Sales reports','Give tokens to all',
 'User groups','Add beneficiary'];
-const TestUserGroupFunctions = ["Boxes", "Checkout"];
+
 const AllLevels = ["Coordinator", "User", "Admin"]
 const LevelsVisibleToAdmin = ["Coordinator", "User"];
 const LevelsVisibleToCoordinator = ["User"];
-const UserGroupWithUsersAssigned = "TestUserGroup_NoPermissions";
+
+const TestUserGroupWithUsersAssigned = "TestUserGroup_NoPermissions";
 const TestUserGroup_Coordinator = "TestUserGroup_Coordinator";
 const TestUserGroup_User = "TestUserGroup_User"
 
@@ -169,11 +171,11 @@ describe('Create usergroups (admin)', () => {
 
     it('Prevent deletion of usergroup with users', () => {
         cy.visit('/?action=cms_usergroups');
-        checkUserGroupCheckboxByName(UserGroupWithUsersAssigned)
+        checkUserGroupCheckboxByName(TestUserGroupWithUsersAssigned)
         clickDeleteButton();
         confirmAction();
         cy.notyTextNotificationWithTextIsVisible("Please edit or delete it first");
-        getUserGroupRow(UserGroupWithUsersAssigned).should('exist');
+        getUserGroupRow(TestUserGroupWithUsersAssigned).should('exist');
     });
 });
 
@@ -245,10 +247,10 @@ describe('Create usergroups (coordinator)', () => {
 
     it('Prevent deletion of usergroup with users', () => {
         cy.visit('/?action=cms_usergroups');
-        checkUserGroupCheckboxByName(UserGroupWithUsersAssigned)
+        checkUserGroupCheckboxByName(TestUserGroupWithUsersAssigned)
         clickDeleteButton();
         confirmAction();
         cy.notyTextNotificationWithTextIsVisible("Please edit or delete it first");
-        getUserGroupRow(UserGroupWithUsersAssigned).should('exist');
+        getUserGroupRow(TestUserGroupWithUsersAssigned).should('exist');
     });
 });
