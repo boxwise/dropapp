@@ -126,29 +126,28 @@ function listDelete($table, $ids, $uri = false, $fktables = null)
 
 function listDeleteMessage($table, $id, $foreignkey, $restricted)
 {
-    $table_name = array(
-    'camps' => 'camp',
-    'locations' => 'wharehouse',
-    'organisations' => 'organisation',
-);
-    $object_table_name = array(
-    'people' => 'a beneficiary',
-    'products' => 'a product',
-    'library' => 'a library',
-    'locations' => 'a wharehouse',
-    'stock' => 'a box',
-    'camps' => 'a camp',
-    'cms_users' => ' an user',
-    'cms_usergroups' => 'an usergroup',
-    );
+    $table_name = [
+        'camps' => 'camp',
+        'locations' => 'wharehouse',
+        'organisations' => 'organisation',
+    ];
+    $object_table_name = [
+        'people' => 'a beneficiary',
+        'products' => 'a product',
+        'library' => 'a library',
+        'locations' => 'a wharehouse',
+        'stock' => 'a box',
+        'camps' => 'a camp',
+        'cms_users' => ' an user',
+        'cms_usergroups' => 'an usergroup',
+    ];
     $object_name = implode('', array_column($restricted, 'label'));
     $id_name = ' with id '.implode('', array_column($restricted, 'id'));
     if (!empty($object_name)) {
         $object_name = ' called '.$object_name.' ';
     }
-    $string = 'This '.$table_name[$table].' cannot be deleted/deactivated since '.$object_table_name[$foreignkey['TABLE_NAME']].''.$object_name.' '.$id_name.' is still active';
 
-    return $string;
+    return 'This '.$table_name[$table].' cannot be deleted/deactivated since '.$object_table_name[$foreignkey['TABLE_NAME']].''.$object_name.' '.$id_name.' is still active';
 }
 
 function listDeleteAction($table, $id, $count = 0, $recursive = false)
