@@ -78,6 +78,12 @@
                 break;
             case 'realdelete':
                 $ids = explode(',', $_POST['ids']);
+                foreach ($ids as $id) {
+                    // unlink transactions
+                    db_query('UPDATE transactions SET people_id = NULL WHERE people_id = :id', ['id' => $id]);
+                    // unlink parent from children
+                    db_query('UPDATE people SET parent_id = NULL WHERE parent_id = :id AND deleted', ['id' => $id]);
+                }
                 list($success, $message, $redirect) = listRealDelete($table, $ids);
 
                 break;
