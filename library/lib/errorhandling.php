@@ -2,6 +2,26 @@
 
 use Google\Cloud\ErrorReporting\Bootstrap;
 
+function boxwise_sentry_scope(Sentry\State\Scope $scope): void
+{
+    $session = $_SESSION;
+    if (isset($_SESSION['user'])) {
+        // Do not pass private data
+        unset($session['user']['email']);
+        unset($session['user']['naam']);
+        unset($session['user']['pass']);
+        // set Sentry to logged in mode
+        $scope->setTag('logged in', 'true');
+        $scope->setUser([
+            'id' => $session['user']['id'],
+        ]);
+    } else {
+        $scope->setTag('logged in', 'false');
+    }
+
+    $scope->setExtra('session', $session);
+};
+
 function bootstrap_exception_handler(Throwable $ex)
 {
     if (getenv('GOOGLE_CLOUD_PROJECT')) {
@@ -10,17 +30,7 @@ function bootstrap_exception_handler(Throwable $ex)
         Bootstrap::exceptionHandler($ex);
     }
     // report to sentry
-    Sentry\configureScope(function (Sentry\State\Scope $scope): void {
-        if (isset($_SESSION['user'])) {
-            $scope->setTag('logged in', 'true');
-            $scope->setUser([
-                'id' => $_SESSION['user']['id'],
-            ]);
-        } else {
-            $scope->setTag('logged in', 'false');
-        }
-        $scope->setExtra('session', $_SESSION);
-    });
+    Sentry\configureScope('boxwise_sentry_scope');
     Sentry\captureException($ex);
     $eventId = Sentry\State\Hub::getCurrent()->getLastEventId();
     // this will only work if there hasn't already been response output
@@ -35,7 +45,14 @@ function bootstrap_exception_handler(Throwable $ex)
     die();
 }
 
+function boxwise_error_handler($errorlevel, $message)
+{
+    Sentry\configureScope('boxwise_sentry_scope');
+
+    return false;
+}
 set_exception_handler('bootstrap_exception_handler');
+set_error_handler('boxwise_error_handler', error_reporting());
 smarty::muteExpectedErrors();
 
 function logfile($content)
