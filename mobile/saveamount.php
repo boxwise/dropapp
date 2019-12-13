@@ -13,8 +13,4 @@
     db_query('INSERT INTO history (tablename,record_id,changes,ip,changedate,user_id,from_int,to_int) VALUES ("stock",'.$box['id'].',"items","'.$_SERVER['REMOTE_ADDR'].'",NOW(),'.$_SESSION['user']['id'].', '.$box['items'].', '.$newitems.')');
     db_query('UPDATE stock SET items = :items, modified = NOW(), modified_by = :user WHERE id = :id', ['id' => $box['id'], 'items' => $newitems, 'user' => $_SESSION['user']['id']]);
 
-    // Move items to market if amount is changed
-    //$market = db_value('SELECT id FROM locations WHERE is_market AND deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
-    //db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.intval($_GET['items']).',NOW(),'.$box['location_id'].','.$market.')');
-
     redirect('?message=Box '.$box['box_id'].' contains now '.$newitems.'x '.$box['product'].'.&messageAnchorText=Go back to this box&messageAnchorTarget=boxid&messageAnchorTargetValue='.$box['id']);
