@@ -2,14 +2,16 @@
 
 use Google\Cloud\ErrorReporting\Bootstrap;
 
+/**
+ * set the scope for sentry exception and error handler.
+ */
 function boxwise_sentry_scope(Sentry\State\Scope $scope): void
 {
     $session = $_SESSION;
     if (isset($_SESSION['user'])) {
         // Do not pass private data
-        unset($session['user']['email']);
-        unset($session['user']['naam']);
-        unset($session['user']['pass']);
+        unset($session['user']['email'], $session['user']['naam'], $session['user']['pass']);
+
         // set Sentry to logged in mode
         $scope->setTag('logged in', 'true');
         $scope->setUser([
@@ -45,15 +47,68 @@ function bootstrap_exception_handler(Throwable $ex)
     die();
 }
 
-function boxwise_error_handler($errorlevel, $message)
-{
-    Sentry\configureScope('boxwise_sentry_scope');
-
-    return false;
-}
+// Set exception handler
 set_exception_handler('bootstrap_exception_handler');
-set_error_handler('boxwise_error_handler', error_reporting());
+
+/**
+ * boxwise error handler
+ * a class is created to to pass the previous errorhandler down to the Boxwise errorhandler (http://php.net/set_error_handler).
+ */
+class boxwise_error_handler_class
+{
+    /**
+     * error handler returned by set_error_handler() in self::add_error_handler.
+     */
+    private static $previous_error_handler = null;
+
+    /**
+     * add boxwise_error_handler to existing error handlers.
+     */
+    public static function add_error_handler()
+    {
+        $error_handler = ['boxwise_error_handler_class', 'boxwise_error_handler'];
+        $previous = set_error_handler($error_handler, error_reporting());
+        // avoid dead loops
+        if ($previous !== $error_handler) {
+            self::$previous_error_handler = $previous;
+        }
+    }
+
+    /**
+     * Error Handler to add sentry scope to errors.
+     *
+     * @see http://php.net/set_error_handler
+     *
+     * @param int $errno      Error level
+     * @param     $errstr
+     * @param     $errfile
+     * @param     $errline
+     * @param     $errcontext
+     *
+     * @return bool
+     */
+    public static function boxwise_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
+    {
+        Sentry\configureScope('boxwise_sentry_scope');
+
+        if (self::$previous_error_handler) {
+            return call_user_func(
+                self::$previous_error_handler,
+                $errno,
+                $errstr,
+                $errfile,
+                $errline,
+                $errcontext
+            );
+        }
+
+        return false;
+    }
+}
+
+// Set error handlers
 smarty::muteExpectedErrors();
+boxwise_error_handler_class::add_error_handler();
 
 function logfile($content)
 {

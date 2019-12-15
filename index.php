@@ -4,8 +4,6 @@
     $ajax = false;
     $mobile = false;
 
-    trigger_error('test');
-
     require_once 'library/core.php';
     date_default_timezone_set('Europe/Athens');
     db_query('SET time_zone = "+'.(date('Z') / 3600).':00"');
