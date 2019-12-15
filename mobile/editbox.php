@@ -9,9 +9,11 @@
         WHERE s.id = :id', ['id' => $_GET['editbox']]);
 
     if (!is_null($box['deleted']) && '0000-00-00 00:00:00' != $box['deleted']) {
+        // box is a deleted box
         unset($box['location_id']);
         $data['message'] = 'This box has been deleted. Editing and saving this form undeletes it.';
         $data['warning'] = true;
+        trigger_error($data['message']);
     }
 
     $data['products'] = db_array('SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label, sizegroup_id FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = :camp_id ORDER BY name', ['camp_id' => $_SESSION['camp']['id']]);
