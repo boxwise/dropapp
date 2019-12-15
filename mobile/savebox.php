@@ -28,6 +28,9 @@ if (!isset($_POST)) {
         db_query('UPDATE stock SET deleted = "0000-00-00 00:00" WHERE id = :id', ['id' => $_POST['id']]);
     }
 
+    // keys of POST to be saved
+    $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments'];
+
     // Validate QR-code
     if (!$_POST['qr_id']) {
         if ($new) {
@@ -36,11 +39,13 @@ if (!isset($_POST)) {
         } else {
             trigger_error('No QR-code associated to existing box.');
         }
+    } else {
+        // add qr_id key only to formhandler if POST entry exists
+        $savekeys[] = 'qr_id';
     }
 
     $handler = new formHandler('stock');
 
-    $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments', 'qr_id'];
     if ($_POST['id']) {
         $savekeys[] = 'id';
     }
