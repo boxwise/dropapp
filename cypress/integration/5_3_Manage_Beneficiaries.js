@@ -244,7 +244,7 @@ describe('Manage beneficiaries', () => {
 
     it('Merge beneficiaries into family', () => {
         // if we notice tests start passing because cleanup doesn't work properly, uncomment the next row to maybe try twice
-        // fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);
+        fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);
         createTestBeneficiary(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_CASE_ID);
         createTestBeneficiary(TEST_FIRSTNAME2, TEST_LASTNAME2, TEST_CASE_ID);
         cy.reload();
@@ -261,7 +261,7 @@ describe('Manage beneficiaries', () => {
 
     it('Detach beneficiaries from family', () => {
         // if we notice tests start passing because cleanup doesn't work properly, uncomment the next row to maybe try twice
-        // fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);   //delete beneficiaries from previous tests (should not be any, but just in case)
+        fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);   //delete beneficiaries from previous tests (should not be any, but just in case)
         createMergedFamily(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_FIRSTNAME2, TEST_LASTNAME2, TEST_CASE_ID);
         cy.reload();
         checkBeneficiaryCheckboxByName(TEST_LASTNAME2);
