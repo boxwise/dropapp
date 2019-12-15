@@ -1,6 +1,6 @@
 <?php
 
-if (isset($_POST)) {
+if (!isset($_POST)) {
     trigger_error('No POST data was passed to mobile savebox script.', E_USER_ERROR);
     redirect('?warning=1&message=Something went wrong! Please try again!');
 
