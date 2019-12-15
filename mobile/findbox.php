@@ -9,6 +9,8 @@
     if ($barcode['id']) {
         redirect('?boxid='.$barcode['id']);
     } else {
-        redirect('?barcode=&warning=1&message=This box number does not exist.');
+        $message = 'This box number does not exist.';
+        trigger_error($message);
+        redirect('?barcode=&warning=1&message='.$message);
     }
     die();
