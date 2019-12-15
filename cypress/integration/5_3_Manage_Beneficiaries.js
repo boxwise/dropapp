@@ -197,7 +197,6 @@ describe('Manage beneficiaries', () => {
     it('Navigation, page elements and list visibility', () => {
         cy.visit('/');
         cy.get("a[class='menu_people']").last().contains("Manage beneficiaries").click();
-        //cy.verifyActiveSideMenuNavigation('menu_people');
         // page elements visibility checks
         getBeneficiariesTable().should('be.visible');
         getNewPersonButton().should('be.visible');
