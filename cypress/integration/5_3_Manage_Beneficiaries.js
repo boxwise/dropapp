@@ -153,6 +153,13 @@ describe('Manage beneficiaries', () => {
         clickMergeButton();
     }
 
+    function deleteFromDeactivated(lastname){
+        cy.visit('/?action=people_deactivated');
+        checkBeneficiaryCheckboxByName(lastname);
+        clickFullDeleteButton();
+        confirmAction();
+    }
+
     function fullDeleteTestedBeneficiary(lastname) {
         cy.get('body').then(($body) => {
             if ($body.text().includes(lastname)) {
@@ -160,10 +167,7 @@ describe('Manage beneficiaries', () => {
                 checkBeneficiaryCheckboxByName(lastname)
                 clickDeleteButton();
                 confirmAction();
-                getDeactivatedTab().click();
-                checkBeneficiaryCheckboxByName(lastname);
-                clickFullDeleteButton();
-                confirmAction();
+                deleteFromDeactivated(lastname);
             }
         });
     }
@@ -182,6 +186,12 @@ describe('Manage beneficiaries', () => {
             fullDeleteTestedBeneficiary(TEST_LASTNAME3);
             cy.visit('/?action=people');
         }
+    }
+
+    function fullDeleteOfMergedUsers() {
+        cy.visit('/?action=people');
+        fullDeleteTestedBeneficiary(TEST_LASTNAME1);
+        deleteFromDeactivated(TEST_LASTNAME2);
     }
 
     it('Navigation, page elements and list visibility', () => {
