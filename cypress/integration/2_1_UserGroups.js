@@ -2,6 +2,7 @@
 const BrowserTestUserGroup_Coordinator = "BrowserTestUserGroup_Coordinator";
 const BrowserTestUserGroup_User = "BrowserTestUserGroup_User";
 const TestBase = "TestBase";
+const TestBaseOfAnotherOrg = "DummyTestBaseWithBoxes"
 const TestUserGroupFunctions = ["Boxes", "Checkout"];
 
 // data from seed
@@ -144,7 +145,6 @@ describe('Create usergroups (admin)', () => {
         userGroupFormElementsAreVisible();
     });
 
-
     it("Check available usergroup levels", () => {
         cy.clickSelect("userlevel");
         for (var lvl of AllLevels){
@@ -155,6 +155,12 @@ describe('Create usergroups (admin)', () => {
             }
             
         }
+    });
+
+    it('Check available bases', () => {
+        cy.clickSelect("camps");
+        getOption(TestBase).should('exist');
+        getOption(TestBaseOfAnotherOrg).should('not.exist');
     });
 
     it("Check available functions", () => {
@@ -231,6 +237,12 @@ describe('Create usergroups (coordinator)', () => {
             }
             
         }
+    });
+
+    it('Check available bases', () => {
+        cy.clickSelect("camps");
+        getOption(TestBase).should('exist');
+        getOption(TestBaseOfAnotherOrg).should('not.exist');
     });
 
     it("Check available functions", () => {
