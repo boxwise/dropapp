@@ -2,9 +2,9 @@
 	<div class="col-sm-{$listconfig['width']}">
 		<div class="row row-title">
 			<div class="col-sm-12">
-				<h1>{$title}</h1>
+				<h1>{$title nofilter}</h1>
 				{if $listconfig['haspagemenu']}
-					<ul class="pagemenu list-unstyled">
+					<ul class="pagemenu list-unstyled" data-testid="listTab">
 					{foreach $listconfig['pagemenu'] as $code=>$pagemenu}
 						<li><a class="{if $pagemenu['active']}active{/if}" href="{$pagemenu['link']}" {if isset($pagemenu['testid'])}data-testid="{$pagemenu['testid']}"{/if} >{$pagemenu['label']}</a>
 					{/foreach}
@@ -122,7 +122,7 @@
 				<div class="fc"></div>
 			</div>
 			<div class="sticky-header-container">
-				<table class="table list-{$listconfig['origin']}" {if $listconfig['sortlist']}data-sortlist="{$listconfig['sortlist']}"{/if}>
+				<table class="table list-{$listconfig['origin']}" {if $listconfig['sortlist']}data-sortlist="{$listconfig['sortlist']}"{/if} data-testid="table-{$listconfig['origin']}">
 				  	<thead>
 					  	<tr>
 						{foreach $listdata as $key=>$column}

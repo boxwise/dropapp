@@ -29,11 +29,11 @@ describe('User management', () => {
     }
 
     function getDeactivatedUsersTab(){
-        return cy.get("a").contains("Deactivated");
+        return cy.get("a[data-testid='deactivated']");
     }
 
     function getActiveUsersTab(){
-        return cy.get("a").contains("Active");
+        return cy.get("a[data-testid='active_pending']")
     }
 
     function getReactivateButton(){
@@ -51,6 +51,7 @@ describe('User management', () => {
         getDeactivateButton().click();
         getConfirmActionButton().click();
         getDeactivatedUsersTab().click();
+        getDeactivatedUsersTab().should('have.class', 'active')
         getUserRow(deactivateTestUserName).should('exist');
         checkUserCheckboxByName(deactivateTestUserName);
         getReactivateButton().click();

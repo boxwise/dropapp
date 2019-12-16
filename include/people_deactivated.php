@@ -14,7 +14,7 @@
         listsetting('allowcopy', false);
         listsetting('allowmove', false);
         listsetting('allowmoveto', 1);
-        listsetting('allowsort', false);
+        listsetting('allowsort', true);
         listsetting('allowshowhide', false);
         listsetting('allowdelete', false);
         listsetting('allowedit', false);
@@ -46,8 +46,8 @@
         addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
         addcolumn('datetime', 'Last active', 'lastactive');
 
-        addbutton('undelete', 'Recover', ['icon' => 'fa-history', 'oneitemonly' => false]);
-        addbutton('realdelete', 'Full delete', ['icon' => 'fa-trash', 'oneitemonly' => false, 'confirm' => true]);
+        addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'oneitemonly' => false, 'testId' => 'recoverDeactivatedUser']);
+        addbutton('realdelete', 'Full delete', ['icon' => 'fa-trash', 'oneitemonly' => false, 'confirm' => true, 'testId' => 'fullDeleteUser']);
 
         $cmsmain->assign('data', $data);
         $cmsmain->assign('listconfig', $listconfig);
@@ -78,6 +78,12 @@
                 break;
             case 'realdelete':
                 $ids = explode(',', $_POST['ids']);
+                foreach ($ids as $id) {
+                    // unlink transactions
+                    db_query('UPDATE transactions SET people_id = NULL WHERE people_id = :id', ['id' => $id]);
+                    // unlink parent from children
+                    db_query('UPDATE people SET parent_id = NULL WHERE parent_id = :id AND deleted', ['id' => $id]);
+                }
                 list($success, $message, $redirect) = listRealDelete($table, $ids);
 
                 break;

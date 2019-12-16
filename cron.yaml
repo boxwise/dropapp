@@ -7,3 +7,15 @@ cron:
   url: /reseed-db.php
   target: demo
   schedule: every 99999 hours
+- description: "dailyroutine staging job"
+  url: /dailyroutine.php
+  target: staging
+  schedule: every day 00:00
+# - description: "dailyroutine demo job"
+#   url: /dailyroutine.php
+#   target: demo
+#   schedule: every day 00:00
+# - description: "dailyroutine production job"
+#   url: /dailyroutine.php
+#   target: production
+#   schedule: every day 00:00

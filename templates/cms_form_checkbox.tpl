@@ -9,7 +9,7 @@
 				{if $element['required']}required{/if} 
  				{if $element['onchange']}onchange="{$element['onchange']};"{/if}
 				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
-			> {$element['label']}
+			> {$element['label'] nofilter}
 				{if $element['tooltip']}{include file="cms_tooltip.tpl"}{/if}
 			</label>
 		</div>

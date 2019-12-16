@@ -1,7 +1,7 @@
 {if $listconfig['filter']}
 	<li>
 		<div class="btn-group">
-			<div type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+			<div type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" data-testId="filter1Button">
 				{if $listconfig['filtervalue']}
 					{$listconfig['filter']['options'][$listconfig['filtervalue']]}
 				{else}
@@ -25,7 +25,7 @@
 {if $listconfig['filter2']}
 	<li>
 		<div class="btn-group">
-			<div type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+			<div type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" data-testId="filter2Button">
 				{if $listconfig['filtervalue2']}
 					{$listconfig['filter2']['options'][$listconfig['filtervalue2']]}
 				{else}
@@ -48,7 +48,7 @@
 {if $listconfig['filter3']}
 	<li>
 		<div class="btn-group">
-			<div type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+			<div type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" data-testId="filter3Button">
 				{if $listconfig['filtervalue3']}
 					{$listconfig['filter3']['options'][$listconfig['filtervalue3']]}
 				{else}

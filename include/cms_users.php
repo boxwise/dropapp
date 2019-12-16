@@ -9,9 +9,9 @@
         initlist();
         listsetting('add', $translate['cms_users_new']);
         listsetting('haspagemenu', true);
-        addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'active' => true]);
-        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired']);
-        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated']);
+        addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'active' => true, 'testid' => 'active_pending']);
+        addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'testid' => 'expired']);
+        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'testid' => 'deactivated']);
         addbutton('sendlogindata', $translate['cms_users_sendlogin'], ['icon' => 'fa-user', 'confirm' => true, 'disableif' => true]);
         if ($_SESSION['user']['is_admin'] && !$_SESSION['user2']) {
             addbutton('loginasuser', $translate['cms_users_loginas'], ['icon' => 'fa-users', 'confirm' => true, 'oneitemonly' => true, 'disableif' => true]);

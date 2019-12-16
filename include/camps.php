@@ -29,7 +29,7 @@
                 break;
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids);
+                list($success, $message, $redirect) = listDelete($table, $ids, false, ['library', 'people', 'products', 'locations']);
 
                 break;
             case 'copy':

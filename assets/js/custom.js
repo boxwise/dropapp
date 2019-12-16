@@ -99,9 +99,15 @@ $(function() {
 
     if ($("#field_valid_firstday_datepicker").length) {
         $("#field_valid_firstday_datepicker").data("DateTimePicker").useCurrent(false);
+        let today = new Date(Date.now());
+        today.setHours(0,0,0,0)
+        $("#field_valid_firstday_datepicker").data("DateTimePicker").minDate(today);
     }
     if ($("#field_valid_lastday_datepicker").length) {
         $("#field_valid_lastday_datepicker").data("DateTimePicker").useCurrent(false);
+        let today = new Date(Date.now());
+        today.setHours(0,0,0,0)
+        $("#field_valid_lastday_datepicker").data("DateTimePicker").minDate(today);
     }
 
     $("#field_valid_firstday_datepicker").on("dp.change", function(e) {

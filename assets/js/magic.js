@@ -141,28 +141,22 @@ $(function() {
 
     // group select
     $(".group-select").change(function() {
-        var parent = $(this).closest(".table-parent");
-        if ($(this).is(":checked")) {
-            parent
-                .find(".item-select:visible:not(:checked)")
-                .prop("checked", true)
-                .trigger("change");
-        } else {
-            parent
-                .find(".item-select:visible:checked")
-                .prop("checked", false)
-                .trigger("change");
-        }
+        var parent = $(".group-select").closest(".table-parent");
+        var is_checked = $(this).is(":checked");
+        parent
+            .find(".item-select:visible") //if find ever proves to be too slow, we could replace it with getelementbyclass from vanilla js which works 6 times faster.
+            .prop("checked", is_checked)
+            .closest("tr")
+            .toggleClass("selected", is_checked)
+            .promise()
+            .done(function() { //only trigger the event change of a ".item-select" once
+                parent
+                    .find(".item-select:visible:first")
+                    .closest("tr")
+                    .toggleClass("selected", !is_checked);
+                parent.find(".item-select:visible:first").trigger("change");
+            });
     });
-    // if group-select is checked on load, toggle single-selects
-    $(".group-select").trigger("change");
-
-    // single select
-
-    // if item selected on load, toggle parent class
-    $(".item-select:checked")
-        .closest("tr")
-        .toggleClass("selected");
 
     // make lists items clickable
     $(document).on("click", ".item-clickable", function(e) {
@@ -392,14 +386,14 @@ $(function() {
         $("#submitaction").val(el.val());
     });
 
-    // form submit 
+    // form submit
     $(".form").each(function() {
         var el = $(this);
 
         // Fix for super annoying bug from jQuery validate https://github.com/jquery-validation/jquery-validation/issues/309
         $("<input>")
             .attr({
-                id : "submitaction",
+                id: "submitaction",
                 type: "hidden",
                 name: "__action",
                 value: ""
@@ -608,7 +602,7 @@ $(function() {
 });
 
 $(window).resize(function() {
-    if ($(".nav-aside").length){
+    if ($(".nav-aside").length) {
         if (
             $(window).height() >
             $(".nav-aside ul:first").offset().top + $(".nav-aside").height()
@@ -668,7 +662,7 @@ function initiateList() {
             } else {
                 parent.find(".disable-if").prop("disabled", false);
             }
-            
+
             if (
                 selected.length &&
                 !parent.find(".actions").is(".items-selected")
@@ -681,7 +675,10 @@ function initiateList() {
                 parent.find(".actions").removeClass("items-selected");
             } else if (selected.length > 1) {
                 parent.find(".one-item-only").prop("disabled", true);
-            } else if (selected.length < 2 && parent.find(".disable-if-is-true").length === 0) {
+            } else if (
+                selected.length < 2 &&
+                parent.find(".disable-if-is-true").length === 0
+            ) {
                 parent.find(".one-item-only").prop("disabled", false);
             }
 

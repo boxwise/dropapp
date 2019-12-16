@@ -4,7 +4,7 @@
 
 You just found the Drop App (first version of [Boxwise](https://www.boxwise.co) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
 
-We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users are [Intervolve](https://intervolvegr.com/), [R4R](https://www.refugees4refugees.gr) and [IHA](iha.help.
+We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users are [Intervolve](https://intervolvegr.com/), [R4R](https://www.refugees4refugees.gr) and [IHA](iha.help).
 
 We have evolved the app to now be centrally hosted to we can offer the product to many more organisations, and are working to improve the quality of the product. 
 
@@ -26,7 +26,7 @@ Write or call Hans ([hans@boxwise.co](mailto:hans@boxwise.co) & +4917652181647) 
        git clone https://github.com/boxwise/dropapp
        chmod -R 777 dropapp/templates (not generally recommended - ToDo Fix bug for Ubuntu users) 
 
-1. You first need to install 'compose' (we suggest making it available globally)
+1. You first need to install 'composer' (we suggest making it available globally)
 
        curl -s https://getcomposer.org/installer | php
        mv composer.phar /usr/local/bin/composer

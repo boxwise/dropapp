@@ -50,6 +50,7 @@ Tracer::inSpan(
         case '/ajax.php':
         case '/mobile.php':
         case '/reset.php':
+        case '/dailyroutine.php':
         case '/pdf/workshopcard.php':
         case '/pdf/bicyclecard.php':
         case '/pdf/idcard.php':
