@@ -1,0 +1,151 @@
+const ARE_YOU_SURE_POPUP = "Are you sure?";
+const CANCEL_BUTTON = "Cancel";
+const OK_BUTTON = "OK";
+const ITEM_RECOVERED = "Item recovered";
+const DEACTIVATE_BUTTON = "Deactivate";
+const ITEM_DELETED = "Item deleted";
+const EXPIRED_COORDINATOR_NAME = "Expired Coordinator";
+const EXPIRED_COORDINATOR_EMAIL = "expired_coordinator@expired.co";
+const EXPIRED_USER_ROLE = "TestUserGroup_User";
+const EXPIRED_COORDINATOR_ROLE = "TestUserGroup_Coordinator";
+const EXPIRED_ADMIN_ROLE = "TestUserGroup_Admin";
+const EXPIRED_COORDINATOR_VALID_FROM = "11 April 2017";
+const EXPIRED_COORDINATOR_VALID_TO = "28 May 2017";
+
+describe("2_8_ExpiredUsers_Test", () => {
+
+    beforeEach(function () {
+        cy.loginAsAdmin();
+        cy.visit('/?action=cms_users_expired');
+    });
+
+    function checkForElementByText(selector, text) {
+        cy.get(selector).contains(text).should("be.visible");
+    }
+
+    function checkElementDoesNotExistByText(selector, text) {
+        cy.get(selector).contains(text).should('not.exist');
+    }
+
+    function clickOnElement(selector) {
+        cy.get(selector).first().click();
+    }
+
+    function clickOnElementByText(selector, text) {
+        cy.get(selector).contains(text).click();
+    }
+
+    function checkForElementByTypeAndTestId(type, testId) {
+        cy.get(type + "[data-testid = '" + testId + "']").should("be.visible");
+    }
+
+    function clickOnElementByTypeAndTestId(type, testId) {
+        cy.get(type + "[data-testid = '" + testId + "']").click();
+    }
+
+    function getUserRow(name){
+        return cy.get('tr').contains(name);
+    }
+
+    function checkUserCheckboxByName(name){
+        getUserRow(name).parent().parent().parent().within(() => {
+            cy.get("input[type='checkbox']").check();
+        });
+    }
+
+    function checkAllUsersSelected() {
+        cy.get('tbody tr').each(($tr) => {
+            expect($tr).to.have.class('selected');
+        });
+    }
+
+    function watchRequest(requestType, route, alias) {
+        // watch a request and give it an alias in order to wait/check the response later
+        cy.server().route(requestType, route).as(alias);
+    }
+ 
+    it("2_8 Check for list elements in Expired tab", () => {
+        checkForElementByTypeAndTestId("input", "select_all");
+        checkForElementByText("a", EXPIRED_COORDINATOR_NAME);
+        checkForElementByText("div", EXPIRED_COORDINATOR_EMAIL);
+        checkForElementByText("div", EXPIRED_COORDINATOR_ROLE);
+        checkForElementByText("div", EXPIRED_COORDINATOR_VALID_FROM);
+        checkForElementByText("div", EXPIRED_COORDINATOR_VALID_TO);
+
+        // check that admin can see roles Coordinator and User
+        checkForElementByText("div", EXPIRED_COORDINATOR_ROLE);
+        checkForElementByText("div", EXPIRED_USER_ROLE);
+
+        // login as coodrinator; check that coordinator can see roles User but not Admin
+        cy.visit('/?logout=1');
+        cy.loginAsCoordinator();
+        cy.visit('/?action=cms_users_expired');
+        checkForElementByText("div", EXPIRED_USER_ROLE);
+        checkElementDoesNotExistByText("div", EXPIRED_ADMIN_ROLE);
+    });
+
+    it("2_8_1 Click on expired user, edit page should open", () => {
+        clickOnElementByText("a", EXPIRED_COORDINATOR_NAME);
+        checkForElementByTypeAndTestId("input", "user_name");
+        checkForElementByTypeAndTestId("input", "user_email");
+        checkForElementByTypeAndTestId("select", "user_group");
+        checkForElementByTypeAndTestId("input", "user_valid_from");
+        checkForElementByTypeAndTestId("input", "user_valid_to");
+        checkForElementByTypeAndTestId("div", "user_last_login");
+        checkForElementByTypeAndTestId("div", "user_created_data");
+    });
+
+    it("2_8_2 Tick box for expired user", () => {
+        checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
+        checkForElementByTypeAndTestId("button", "list-delete-button");
+        // extend date button should appear
+    });
+
+    it("2_8_3 Select all expired users", () => {
+        checkForElementByTypeAndTestId("input", "select_all");
+        clickOnElement("input[data-testid = 'select_all']");
+        checkAllUsersSelected();
+        checkForElementByTypeAndTestId("button", "list-delete-button");
+        // extend date button should appear
+    });
+
+    // it("2_8_4 Extend validity of expired user", () => {
+    // });
+
+    it("2_8_5 Deactivate expired user", () => {
+        checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
+        clickOnElementByTypeAndTestId("button", "list-delete-button");
+        checkForElementByText("h3", ARE_YOU_SURE_POPUP);
+
+        watchRequest("POST", "/?action=cms_users_expired", "expired");
+        clickOnElementByText("div.popover-content a", DEACTIVATE_BUTTON);
+
+        // wait for "expired" request to complete and then check response body message
+        cy.wait("@expired").then(xhr => {
+            expect(xhr.response.body.message).to.equal(ITEM_DELETED);
+        });
+
+        cy.visit('/?action=cms_users_deactivated');
+        checkForElementByText("p", EXPIRED_COORDINATOR_NAME);
+        checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
+        clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
+
+        watchRequest("POST", "/?action=cms_users_deactivated", "deactivated");
+
+        clickOnElementByText("a", OK_BUTTON);
+
+        // wait for "deactivated" request to complete and then check response body message
+        cy.wait("@deactivated").then(xhr => {
+            expect(xhr.response.body.message).to.equal(ITEM_RECOVERED);
+        });
+
+        // test cancel button
+        cy.visit('/?action=cms_users_expired');
+        checkForElementByText("a", EXPIRED_COORDINATOR_NAME);
+        checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
+        clickOnElementByTypeAndTestId("button", "list-delete-button");
+        clickOnElementByText("a", CANCEL_BUTTON);
+        checkElementDoesNotExistByText("h3", ARE_YOU_SURE_POPUP);
+    });
+
+});
