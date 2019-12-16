@@ -40,9 +40,9 @@ function organisationlist($short = false)
         return  db_array('SELECT * FROM organisations 
             WHERE (NOT organisations.deleted OR organisations.deleted IS NULL) 
             ORDER BY label');
-    } else {
-        throw new Exception('A non Boxwise God tries to load a list of all organisations!');
     }
+
+    throw new Exception('A non Boxwise God tries to load a list of all organisations!');
 }
 
 // return all camps a user has access to
