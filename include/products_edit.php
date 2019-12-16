@@ -53,7 +53,7 @@
     LEFT OUTER JOIN locations AS l ON l.id = stock.location_id 
     LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
     LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id 
-    WHERE l.deleted IS NULL AND stock.product_id = '.$id, 'columns' => ['box_id' => 'Box ID', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'items' => 'Items', 'location' => 'Location', 'comments' => 'Comments'],
+    WHERE l.deleted IS NULL AND (not stock.deleted or stock.deleted = 0) AND l.visible AND stock.product_id = '.$id, 'columns' => ['box_id' => 'Box ID', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'items' => 'Items', 'location' => 'Location', 'comments' => 'Comments'],
             'allowedit' => true, 'allowadd' => false, 'allowselect' => true, 'allowselectall' => false, 'allowshowhide' => false, 'action' => 'stock', 'redirect' => true, 'allowsort' => true, ]);
     }
 
