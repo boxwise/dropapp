@@ -15,7 +15,7 @@ function login($email, $pass, $autologin, $mobile = false)
             $message = $in_valid_dates['message'];
 
             if ($success) {
-                $loadsessionresult = loadSessionData($user);
+                loadSessionData($user);
 
                 db_query('UPDATE cms_users SET lastlogin = NOW() WHERE id = :id', ['id' => $user['id']]);
                 logfile(($mobile ? 'Mobile user ' : 'User ').'logged in with '.$_SERVER['HTTP_USER_AGENT']);
@@ -28,7 +28,7 @@ function login($email, $pass, $autologin, $mobile = false)
                     setcookie('autologin_pass', null, time() - 3600, '/');
                 }
 
-                if (isset($_GET['destination']) && $loadsessionresult) {
+                if (isset($_GET['destination'])) {
                     $redirect = '/'.urldecode($_GET['destination']);
                 } else {
                     $redirect = '/?action=start';
@@ -76,8 +76,8 @@ function checksession()
             $result['success'] = false;
             $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
             $result['message'] = $in_valid_dates['message'];
-        } elseif (!loadSessionData($user)) { // Check if camp and organisation SESSION variable was loaded
-            $result['redirect'] = '/?action=start';
+        } else {
+            loadSessionData($user);
         }
     } else {
         $result['success'] = false;
@@ -175,7 +175,7 @@ function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkK
 }
 
 // session data requires user, usergroup, organisation, camp
-//usergroup is optional for Boxwise Gods
+// organistion and usergroup is optional for Boxwise Gods
 function loadSessionData($user)
 {
     $_SESSION['user'] = $user;
@@ -207,33 +207,22 @@ function loadSessionData($user)
         $_SESSION['camp'] = reset($camplist);
     } elseif (isset($_GET['camp'], $camplist[$_GET['camp']])) { // the camp is specified in url and the user has access to it
         $_SESSION['camp'] = $camplist[$_GET['camp']];
-    } elseif ($user['is_admin'] && isset($_GET['camp']) && !isset($camplist)) { // the user is a Boxwise God and camplist is not set ($_SESSION['organisation'] is not set) and the camp is specified in the url
-        $_SESSION['camp'] = db_row('
-                SELECT * 
-                FROM camps
-                WHERE id = :id AND (NOT camps.deleted OR camps.deleted IS NULL)', ['id' => $_GET['camp']]);
-        $_SESSION['organisation'] = db_row('
-                SELECT * 
-                FROM organisations 
-                WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_SESSION['camp']['organisation_id']]);
-    } elseif (!isset($_SESSION['camp']) && isset($camplist)) { // the session did expire and camplist is set
+    } elseif (!isset($_SESSION['camp'])) { // the session did expire
+        // the first camp of camplist is selected as a default.
         $_SESSION['camp'] = reset($camplist);
-    } elseif (isset($_SESSION['camp']['id'], $camplist[$_SESSION['camp']['id']])) { // the session did not expire and the user can access the camp
+    } elseif (isset($_SESSION['camp']['id']) && $camplist[$_SESSION['camp']['id']]) { // the session did not expire and the user can access the camp
         $_SESSION['camp'] = $camplist[$_SESSION['camp']['id']];
-    } else {
-        // user has access to more than one camp AND
-        // (no camp is specified in GET or the specified camp is not accessible by the user) AND
-        // ((the session expired and camplist is not set (only possible for Boxwise Gods if $_SESSION['organisation'] is not set) OR
-        // (the session did not expire, but the user has no access to the camp specified in $_SESSION))
-        return false;
+    }
+
+    if ($user['is_admin'] && isset($_SESSION['camp']['id']) && !isset($_SESSION['organisation']['id'])) { //Boxwise God who selected a camp before an organisation was specified.
+        // based on the selected camp the organisation is selected.
+        $_SESSION['organisation'] = organisationlist()[$_SESSION['camp']['organisation_id']];
     }
 
     // Test if session is set properly
     if (!isset($_SESSION['organisation']) || !isset($_SESSION['camp'])) {
         throw new Exception('$_SESSION[organisation] or $_SESSION[camp] is not set!');
     }
-
-    return true;
 }
 
 function loginasuser($table, $ids)
@@ -247,9 +236,7 @@ function loginasuser($table, $ids)
     $_SESSION['usergroup2'] = $_SESSION['usergroup'];
     $_SESSION['organisation2'] = $_SESSION['organisation'];
     $user = db_row('SELECT * FROM cms_users WHERE id=:id', ['id' => $id]);
-    if (!loadSessionData($user)) {
-        throw new Exception('$_SESSION data not fully loaded!');
-    }
+    loadSessionData($user);
     $success = true;
     $message = 'Logged in as '.$_SESSION['user']['naam'];
 
