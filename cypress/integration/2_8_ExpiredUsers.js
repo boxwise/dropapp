@@ -39,6 +39,14 @@ describe("2_8_ExpiredUsers_Test", () => {
         cy.get(type + "[data-testid = '" + testId + "']").should("be.visible");
     }
 
+    function checkClassByTypeAndTestId(type, testId, _class, hasClass) {
+        if (hasClass == true) {
+            cy.get(type + "[data-testid = '" + testId + "']").should("have.class", _class);
+        } else {
+            cy.get(type + "[data-testid = '" + testId + "']").should("not.have.class", _class);
+        }
+    }
+
     function clickOnElementByTypeAndTestId(type, testId) {
         cy.get(type + "[data-testid = '" + testId + "']").click();
     }
@@ -145,7 +153,7 @@ describe("2_8_ExpiredUsers_Test", () => {
         checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "list-delete-button");
         clickOnElementByText("a", CANCEL_BUTTON);
-        checkElementDoesNotExistByText("h3", ARE_YOU_SURE_POPUP);
+        checkClassByTypeAndTestId("button", "list-delete-button", "open", false);
     });
 
 });
