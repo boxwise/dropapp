@@ -90,7 +90,7 @@ function listDelete($table, $ids, $uri = false, $fktables = null)
                                     $namestring = ',b.name AS label';
                                 } elseif (db_fieldexists($foreignkey['TABLE_NAME'], 'firstname')) {
                                     $namestring = ',concat(b.firstname," ",b.lastname) AS label';
-                                } elseif (2 == 2) {
+                                } else {
                                     $namestring = '';
                                 }
                                 $restricted = db_array('
@@ -98,7 +98,6 @@ function listDelete($table, $ids, $uri = false, $fktables = null)
                                 FROM '.$table.' a, '.$foreignkey['TABLE_NAME'].' b 
                                 WHERE a.'.$foreignkey['REFERENCED_COLUMN_NAME'].' = b.'.$foreignkey['COLUMN_NAME'].' AND '.(db_fieldexists($foreignkey['TABLE_NAME'], 'deleted') ? '(NOT b.deleted OR b.deleted IS NULL) AND ' : '').' a.id = :id', ['id' => $id]);
                                 if (count($restricted)) {
-                                    //return [false, 'The entry '.($restricted[0]['label'] ? $restricted[0]['label'] : $restricted[0]['id'].' of the table '.$foreignkey['TABLE_NAME']).' is still linked to this item.<br>Please edit or delete it first.', false];
                                     return [false, listDeleteMessage($table, $id, $foreignkey, $restricted), false];
                                 }
                             }
@@ -128,14 +127,14 @@ function listDeleteMessage($table, $id, $foreignkey, $restricted)
 {
     $table_name = [
         'camps' => 'camp',
-        'locations' => 'wharehouse',
+        'locations' => 'warehouse',
         'organisations' => 'organisation',
     ];
     $object_table_name = [
         'people' => 'a beneficiary',
         'products' => 'a product',
         'library' => 'a library',
-        'locations' => 'a wharehouse',
+        'locations' => 'a warehouse',
         'stock' => 'a box',
         'camps' => 'a camp',
         'cms_users' => ' an user',
@@ -147,7 +146,7 @@ function listDeleteMessage($table, $id, $foreignkey, $restricted)
         $object_name = ' called '.$object_name.' ';
     }
 
-    return 'This '.$table_name[$table].' cannot be deleted/deactivated since '.$object_table_name[$foreignkey['TABLE_NAME']].''.$object_name.' '.$id_name.' is still active';
+    return 'This '.$table_name[$table].' cannot be removed since '.$object_table_name[$foreignkey['TABLE_NAME']].''.$object_name.' '.$id_name.' is still active. Please edit or remove it first';
 }
 
 function listDeleteAction($table, $id, $count = 0, $recursive = false)
