@@ -73,62 +73,56 @@ function listDelete($table, $ids, $uri = false, $fktables = null)
     $hasPrevent = db_fieldexists($table, 'preventdelete');
     $hasTree = db_fieldexists($table, 'parent_id');
 
-    try {
-        foreach ($ids as $id) {
-            if ($hasDeletefield) {
-                // Check foreign keys only if specified.
-                if (isset($fktables)) {
-                    // Does the db have foreign keys?
-                    $foreignkeys = db_referencedforeignkeys($table);
-                    if (count($foreignkeys) > 0) {
-                        foreach ($foreignkeys as $foreignkey) {
-                            // Do we want to check the foreign key and does the foreign key restrict the delete?
-                            if (in_array($foreignkey['TABLE_NAME'], $fktables) && ('RESTRICT' == $foreignkey['DELETE_RULE'])) {
-                                if (db_fieldexists($foreignkey['TABLE_NAME'], 'label')) {
-                                    $namestring = ',b.label AS label';
-                                } elseif (db_fieldexists($foreignkey['TABLE_NAME'], 'naam')) {
-                                    $namestring = ',b.naam AS label';
-                                } elseif (db_fieldexists($foreignkey['TABLE_NAME'], 'name')) {
-                                    $namestring = ',b.name AS label';
-                                } elseif (db_fieldexists($foreignkey['TABLE_NAME'], 'firstname')) {
-                                    $namestring = ',concat(b.firstname," ",b.lastname) AS label';
-                                } else {
-                                    $namestring = '';
-                                }
-                                $restricted = db_array('
-                                SELECT b.id as id'.$namestring.'
-                                FROM '.$table.' a, '.$foreignkey['TABLE_NAME'].' b 
-                                WHERE a.'.$foreignkey['REFERENCED_COLUMN_NAME'].' = b.'.$foreignkey['COLUMN_NAME'].' AND '.(db_fieldexists($foreignkey['TABLE_NAME'], 'deleted') ? '(NOT b.deleted OR b.deleted IS NULL) AND ' : '').' a.id = :id', ['id' => $id]);
-                                if (count($restricted)) {
-                                    trigger_error(listDeleteMessage($table, $id, $foreignkey, $restricted));
+    foreach ($ids as $id) {
+        if ($hasDeletefield) {
+            // Check foreign keys only if specified.
+            if (isset($fktables)) {
+                // Does the db have foreign keys?
+                $foreignkeys = db_referencedforeignkeys($table);
+                if (count($foreignkeys) > 0) {
+                    foreach ($foreignkeys as $foreignkey) {
+                        // Do we want to check the foreign key and does the foreign key restrict the delete?
+                        if (in_array($foreignkey['TABLE_NAME'], $fktables) && ('RESTRICT' == $foreignkey['DELETE_RULE'])) {
+                            if (db_fieldexists($foreignkey['TABLE_NAME'], 'label')) {
+                                $namestring = ',b.label AS label';
+                            } elseif (db_fieldexists($foreignkey['TABLE_NAME'], 'naam')) {
+                                $namestring = ',b.naam AS label';
+                            } elseif (db_fieldexists($foreignkey['TABLE_NAME'], 'name')) {
+                                $namestring = ',b.name AS label';
+                            } elseif (db_fieldexists($foreignkey['TABLE_NAME'], 'firstname')) {
+                                $namestring = ',concat(b.firstname," ",b.lastname) AS label';
+                            } else {
+                                $namestring = '';
+                            }
+                            $restricted = db_array('
+                            SELECT b.id as id'.$namestring.'
+                            FROM '.$table.' a, '.$foreignkey['TABLE_NAME'].' b 
+                            WHERE a.'.$foreignkey['REFERENCED_COLUMN_NAME'].' = b.'.$foreignkey['COLUMN_NAME'].' AND '.(db_fieldexists($foreignkey['TABLE_NAME'], 'deleted') ? '(NOT b.deleted OR b.deleted IS NULL) AND ' : '').' a.id = :id', ['id' => $id]);
+                            if (count($restricted)) {
+                                trigger_error(listDeleteMessage($table, $id, $foreignkey, $restricted));
 
-                                    return [false, listDeleteMessage($table, $id, $foreignkey, $restricted), false];
-                                }
+                                return [false, listDeleteMessage($table, $id, $foreignkey, $restricted), false];
                             }
                         }
                     }
                 }
-                $count += listDeleteAction($table, $id, 0, $hasTree);
-            } else {
-                $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
-                $count += $result->rowCount();
-                if ($result->rowCount()) {
-                    simpleSaveChangeHistory($table, $id, 'Record deleted');
-                }
+            }
+            $count += listDeleteAction($table, $id, 0, $hasTree);
+        } else {
+            $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
+            $count += $result->rowCount();
+            if ($result->rowCount()) {
+                simpleSaveChangeHistory($table, $id, 'Record deleted');
             }
         }
-        if ($count) {
-            return [true, $translate['cms_list_deletesuccess'], false];
-        }
-
-        trigger_error($translate['cms_list_deleteerror'], E_USER_ERROR);
-
-        return [false, $translate['cms_list_deleteerror'], false];
-    } catch (Exception $e) {
-        trigger_error($e->getMessage(), E_USER_ERROR);
-
-        return [false, $e->getMessage(), false];
     }
+    if ($count) {
+        return [true, $translate['cms_list_deletesuccess'], false];
+    }
+
+    trigger_error($translate['cms_list_deleteerror'], E_USER_ERROR);
+
+    return [false, $translate['cms_list_deleteerror'], false];
 }
 
 function listDeleteMessage($table, $id, $foreignkey, $restricted)
