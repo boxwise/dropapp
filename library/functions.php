@@ -73,7 +73,7 @@ function verify_campaccess_people($id)
     $camp_id = db_value('SELECT camp_id FROM people WHERE id = :id', ['id' => $id]);
     $camps = camplist(true);
     if (!in_array($camp_id, $camps)) {
-        trigger_error("You don't have access to this record");
+        throw new Exception("You don't have access to this record");
     }
 }
 
@@ -86,13 +86,13 @@ function verify_campaccess_location($id)
     $camp_id = db_value('SELECT camp_id FROM locations WHERE id = :id', ['id' => $id]);
     $camps = camplist(true);
     if (!in_array($camp_id, $camps)) {
-        trigger_error("You don't have access to this record");
+        throw new Exception("You don't have access to this record");
     }
 }
 
 function verify_deletedrecord($table, $id)
 {
     if (db_value('SELECT IF(NOT deleted OR deleted IS NULL,0,1) FROM '.$table.' WHERE id = :id', ['id' => $id])) {
-        trigger_error('This record does not exist');
+        throw new Exception('This record does not exist');
     }
 }

@@ -91,11 +91,11 @@ describe('Manage beneficiaries', () => {
     }
 
     function getDeactivatedTab(){
-        return cy.get("ul[data-testid='listTab'] a").contains("Deactivated");
+        return cy.get("ul[data-testid='listTab'] li a").contains("Deactivated");
     }
 
-    function selectAllTab(){
-        cy.get("ul[data-testid='listTab'] a").contains("All").click();
+    function getAllTab(){
+        return cy.get("ul[data-testid='listTab'] a").contains("All");
     }
 
     function selectFilterOption(option){
@@ -153,6 +153,13 @@ describe('Manage beneficiaries', () => {
         clickMergeButton();
     }
 
+    function deleteFromDeactivated(lastname){
+        cy.visit('/?action=people_deactivated');
+        checkBeneficiaryCheckboxByName(lastname);
+        clickFullDeleteButton();
+        confirmAction();
+    }
+
     function fullDeleteTestedBeneficiary(lastname) {
         cy.get('body').then(($body) => {
             if ($body.text().includes(lastname)) {
@@ -160,10 +167,7 @@ describe('Manage beneficiaries', () => {
                 checkBeneficiaryCheckboxByName(lastname)
                 clickDeleteButton();
                 confirmAction();
-                getDeactivatedTab().click();
-                checkBeneficiaryCheckboxByName(lastname);
-                clickFullDeleteButton();
-                confirmAction();
+                deleteFromDeactivated(lastname);
             }
         });
     }
@@ -184,10 +188,15 @@ describe('Manage beneficiaries', () => {
         }
     }
 
+    function fullDeleteOfMergedUsers() {
+        cy.visit('/?action=people');
+        fullDeleteTestedBeneficiary(TEST_LASTNAME1);
+        deleteFromDeactivated(TEST_LASTNAME2);
+    }
+
     it('Navigation, page elements and list visibility', () => {
         cy.visit('/');
         cy.get("a[class='menu_people']").last().contains("Manage beneficiaries").click();
-        cy.verifyActiveSideMenuNavigation('menu_people');
         // page elements visibility checks
         getBeneficiariesTable().should('be.visible');
         getNewPersonButton().should('be.visible');
@@ -222,6 +231,8 @@ describe('Manage beneficiaries', () => {
         clickDeleteButton();
         confirmAction();
         getDeactivatedTab().click();
+        cy.reload();
+        getDeactivatedTab().should('have.class', 'active')
         getBeneficiaryRow(TEST_LASTNAME1).should('exist');
 
         //cleanup - full delete of the test user
@@ -232,7 +243,7 @@ describe('Manage beneficiaries', () => {
 
     it('Merge beneficiaries into family', () => {
         // if we notice tests start passing because cleanup doesn't work properly, uncomment the next row to maybe try twice
-        // fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);
+        fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);
         createTestBeneficiary(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_CASE_ID);
         createTestBeneficiary(TEST_FIRSTNAME2, TEST_LASTNAME2, TEST_CASE_ID);
         cy.reload();
@@ -244,12 +255,12 @@ describe('Manage beneficiaries', () => {
         verifyBeneficiaryRowLevel(TEST_LASTNAME2,1);
         
         //cleanup
-        fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);
+        fullDeleteOfMergedUsers();
     });
 
     it('Detach beneficiaries from family', () => {
         // if we notice tests start passing because cleanup doesn't work properly, uncomment the next row to maybe try twice
-        // fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);   //delete beneficiaries from previous tests (should not be any, but just in case)
+        fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);   //delete beneficiaries from previous tests (should not be any, but just in case)
         createMergedFamily(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_FIRSTNAME2, TEST_LASTNAME2, TEST_CASE_ID);
         cy.reload();
         checkBeneficiaryCheckboxByName(TEST_LASTNAME2);
@@ -271,6 +282,7 @@ describe('Manage beneficiaries', () => {
 
     it('Load deactivated beneficiaries', () => {
         getDeactivatedTab().click();
+        cy.reload();
         getDeactivatedTab().should('have.class', 'active');
         getBeneficiaryRow(DEACTIVATED_BENEFICIARY).should('exist');
     });
@@ -286,11 +298,15 @@ describe('Manage beneficiaries', () => {
                 confirmAction();
                 //delete user from deactivated tab
                 getDeactivatedTab().click();
+                cy.reload();
+                getDeactivatedTab().should('have.class', 'active');
                 checkBeneficiaryCheckboxByName(TEST_LASTNAME3);
                 clickFullDeleteButton();
                 confirmAction();
                 //navigate to All for the test to start
-                selectAllTab();
+                getAllTab().click();
+                cy.reload();
+                getAllTab().should('have.class', 'active');
             }
             //create our test user
             createTestBeneficiary(TEST_FIRSTNAME3, TEST_LASTNAME3, TEST_CASE_ID);
@@ -299,10 +315,14 @@ describe('Manage beneficiaries', () => {
             clickDeleteButton();
             confirmAction();
             getDeactivatedTab().click();
+            cy.reload();
+            getDeactivatedTab().should('have.class', 'active');
             checkBeneficiaryCheckboxByName(TEST_LASTNAME3);
             clickRecoverButton();
             cy.notyTextNotificationWithTextIsVisible("Item recovered");
-            selectAllTab();
+            getAllTab().click();
+            cy.reload();
+            getAllTab().should('have.class', 'active');
             getBeneficiaryRow(TEST_LASTNAME3).should('exist');
 
             //cleanup
