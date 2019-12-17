@@ -146,7 +146,7 @@ function listDeleteMessage($table, $id, $foreignkey, $restricted)
         $object_name = ' called '.$object_name.' ';
     }
 
-    return 'This '.$table_name[$table].' cannot be removed since '.$object_table_name[$foreignkey['TABLE_NAME']].''.$object_name.' '.$id_name.' is still active. Please edit or remove it first';
+    return 'This '.$table_name[$table].' cannot be removed since '.$object_table_name[$foreignkey['TABLE_NAME']].''.$object_name.' '.$id_name.' is still active. Please edit or remove it first!';
 }
 
 function listDeleteAction($table, $id, $count = 0, $recursive = false)
