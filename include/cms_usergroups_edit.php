@@ -17,7 +17,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 
             redirect('?action='.$_POST['_origin']);
         } else {
-            trigger_error('Naughty boy!');
+            throw new Exception('Naughty boy!');
         }
     }
 
@@ -88,5 +88,5 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     $cmsmain->assign('formelements', $formdata);
     $cmsmain->assign('formbuttons', $formbuttons);
 } else {
-    trigger_error('You do not have access to this menu. Please ask your admin to change this!');
+    throw new Exception('You do not have access to this menu. Please ask your admin to change this!');
 }

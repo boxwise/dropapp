@@ -87,5 +87,5 @@
             die();
         }
     } else {
-        trigger_error('You do not have access to this menu. Please ask your admin to change this!');
+        throw new Exception('You do not have access to this menu. Please ask your admin to change this!');
     }

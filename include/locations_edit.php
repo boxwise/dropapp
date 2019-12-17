@@ -6,7 +6,7 @@
     if ($_POST) {
         verify_campaccess_location($_POST['id']);
         if (!in_array($_POST['camp_id'], camplist(true))) {
-            trigger_error("You don't have access to this record");
+            throw new Exception("You don't have access to this record");
         }
 
         $handler = new formHandler($table);

@@ -5,7 +5,7 @@
 
     if (!$ajax) {
         if (!$_SESSION['camp']['id']) {
-            trigger_error('The list of locations is not available when there is no camp selected');
+            throw new Exception('The list of locations is not available when there is no camp selected');
         }
 
         initlist();

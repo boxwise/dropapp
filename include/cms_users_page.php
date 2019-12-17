@@ -30,5 +30,5 @@
         $cmsmain->assign('listdata', $listdata);
         $cmsmain->assign('include', 'cms_list.tpl');
     } else {
-        trigger_error('You do not have access to this menu. Please ask your admin to change this!');
+        throw new Exception('You do not have access to this menu. Please ask your admin to change this!');
     }
