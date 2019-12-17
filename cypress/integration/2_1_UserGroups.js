@@ -161,6 +161,7 @@ describe('Create usergroups (admin)', () => {
         cy.clickSelect("camps");
         getOption(TestBase).should('exist');
         getOption(TestBaseOfAnotherOrg).should('not.exist');
+        cy.checkOptionsCount("bases", 1);
     });
 
     it("Check available functions", () => {
@@ -243,6 +244,7 @@ describe('Create usergroups (coordinator)', () => {
         cy.clickSelect("camps");
         getOption(TestBase).should('exist');
         getOption(TestBaseOfAnotherOrg).should('not.exist');
+        cy.checkOptionsCount("bases", 1);
     });
 
     it("Check available functions", () => {
