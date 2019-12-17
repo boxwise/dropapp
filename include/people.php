@@ -7,7 +7,7 @@ $table = $action;
 
     if (!$ajax) {
         if (!$_SESSION['camp']['id']) {
-            trigger_error('The list of beneficiaries is not available when there is no camp selected');
+            throw new Exception('The list of beneficiaries is not available when there is no camp selected');
         }
         initlist();
 
