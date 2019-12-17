@@ -51,6 +51,11 @@ if (!isset($_POST)) {
     }
     $id = $handler->savePost($savekeys);
 
+    // Log qr box connection in history table
+    if ($new) {
+        simpleSaveChangeHistory('qr', $_POST['qr_id'], 'QR code associated to box.', [], ['int' => $id]);
+    }
+
     $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id', ['id' => $id]);
 
     // Validate QR-code again
