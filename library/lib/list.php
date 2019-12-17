@@ -60,6 +60,8 @@ function listRealDelete($table, $ids, $uri = false)
         return [true, $translate['cms_list_deletesuccess'], true];
     }
 
+    trigger_error($translate['cms_list_deleteerror'], E_USER_ERROR);
+
     return [false, $translate['cms_list_deleteerror'], false];
 }
 
@@ -98,6 +100,8 @@ function listDelete($table, $ids, $uri = false, $fktables = null)
                                 FROM '.$table.' a, '.$foreignkey['TABLE_NAME'].' b 
                                 WHERE a.'.$foreignkey['REFERENCED_COLUMN_NAME'].' = b.'.$foreignkey['COLUMN_NAME'].' AND '.(db_fieldexists($foreignkey['TABLE_NAME'], 'deleted') ? '(NOT b.deleted OR b.deleted IS NULL) AND ' : '').' a.id = :id', ['id' => $id]);
                                 if (count($restricted)) {
+                                    trigger_error(listDeleteMessage($table, $id, $foreignkey, $restricted));
+
                                     return [false, listDeleteMessage($table, $id, $foreignkey, $restricted), false];
                                 }
                             }
@@ -117,8 +121,12 @@ function listDelete($table, $ids, $uri = false, $fktables = null)
             return [true, $translate['cms_list_deletesuccess'], false];
         }
 
+        trigger_error($translate['cms_list_deleteerror'], E_USER_ERROR);
+
         return [false, $translate['cms_list_deleteerror'], false];
     } catch (Exception $e) {
+        trigger_error($e->getMessage(), E_USER_ERROR);
+
         return [false, $e->getMessage(), false];
     }
 }
@@ -187,6 +195,8 @@ function listUndelete($table, $ids, $uri = false)
         return [true, $translate['cms_list_undeletesuccess'], false];
     }
 
+    trigger_error($translate['cms_list_undeleteerror'], E_USER_ERROR);
+
     return [false, $translate['cms_list_undeleteerror'], false];
 }
 
@@ -215,6 +225,8 @@ function listCopy($table, $ids, $field)
     $fieldexists = db_fieldexists($table, $field);
 
     if (!$fieldexists) {
+        trigger_error($translate['cms_list_copyfailure'], E_USER_ERROR);
+
         return [false, $translate['cms_list_copyfailure'], true];
     }
 
@@ -259,7 +271,10 @@ function listShowHide($table, $ids, $show)
 
     $hasVisible = db_fieldexists($table, 'visible');
     if (!$hasVisible) {
-        return [false, 'Visible field does not exist'];
+        $message = 'Visible field does not exist';
+        trigger_error($message, E_USER_ERROR);
+
+        return [false, $message];
     }
     foreach ($ids as $id) {
         db_query('UPDATE '.$table.' SET visible = :show WHERE id = :id', ['id' => $id, 'show' => intval($show)]);
@@ -279,7 +294,10 @@ function listSwitch($table, $field, $id)
 {
     $hasField = db_fieldexists($table, $field);
     if (!$hasField) {
-        return [false, 'Field does not exist'];
+        $message = 'Field does not exist';
+        trigger_error($message, E_USER_ERROR);
+
+        return [false, $message];
     }
     db_query('UPDATE '.$table.' SET '.$field.' = NOT '.$field.' WHERE id = :id', ['id' => $id]);
     $newvalue = db_value('SELECT '.$field.' FROM '.$table.' WHERE id = :id', ['id' => $id]);

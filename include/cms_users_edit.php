@@ -13,11 +13,17 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 			WHERE (NOT u.deleted OR u.deleted = NULL) AND (NOT ug.deleted OR ug.deleted IS NULL) AND email = :email', ['email' => $_POST['email']]);
         if ($existinguser && ($existinguser['id'] != $_POST['id'])) {
             if ($existinguser['organisation_id'] != $_SESSION['organisation']['id']) {
-                redirect('?action=cms_users&warning=1&message=This email already exists in another organisation.<br>Please ask the corresponding person to deactivate their other account!');
+                $message = 'This email already exists in another organisation.<br>Please ask the corresponding person to deactivate their other account!';
+                trigger_error($message, E_USER_ERROR);
+                redirect('?action=cms_users&warning=1&message='.$message);
             } elseif (!$_SESSION['user']['is_admin'] && ($_SESSION['usergoup']['userlevel'] <= $existinguser['userlevel'])) {
-                redirect('?action=cms_users&warning=1&message=This email already exists in your organisation. You do not have access to this account.');
+                $message = 'This email already exists in your organisation. You do not have access to this account.';
+                trigger_error($message, E_USER_ERROR);
+                redirect('?action=cms_users&warning=1&message='.$message);
             } else {
-                redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message=This email already exists. You are forwarded to the corresponding account.');
+                $message = 'This email already exists. You are forwarded to the corresponding account.';
+                trigger_error($message);
+                redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message='.$message);
             }
         }
 
@@ -40,13 +46,17 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
                 if ($success) {
                     // defining own message because returned one sounds as if user resetted the password themselves
                     $message = 'User will receive an email with instructions and their password within couple of minutes!';
+                } else {
+                    trigger_error($message, E_USER_ERROR);
                 }
                 redirect('?action='.$_POST['_origin'].'&message='.$message);
             } else {
                 redirect('?action='.$_POST['_origin']);
             }
         } else {
-            redirect('?action='.$_POST['_origin'].'&warning=1&message=You do not have the rights to change this user!');
+            $message = 'You do not have the rights to change this user!';
+            trigger_error($message, E_USER_ERROR);
+            redirect('?action='.$_POST['_origin'].'&warning=1&message='.$message);
         }
     }
 

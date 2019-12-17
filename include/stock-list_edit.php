@@ -142,6 +142,8 @@
                 $boxid = db_value('SELECT box_id FROM stock WHERE id = :id', ['id' => $id]);
                 $success = true;
                 $message = '';
+
+                // To Do This link cannot work. the hash has the wrong format
                 $redirect = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$boxid;
 
                 break;

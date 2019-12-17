@@ -82,6 +82,7 @@
                 $success = false;
                 $message = $translate['cms_list_notexistingdo'];
                 $redirect = false;
+                trigger_error($message, E_USER_ERROR);
 
                 break;
         }

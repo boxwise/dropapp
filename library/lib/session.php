@@ -147,6 +147,7 @@ function sendlogindata($table, $ids)
         if ($result) {
             $message = $result;
             $success = false;
+            trigger_error($message, E_USER_ERROR);
         } else {
             $success = true;
             db_query('UPDATE '.$table.' SET pass = :pass WHERE id = :id', ['pass' => md5($newpassword), 'id' => $id]);

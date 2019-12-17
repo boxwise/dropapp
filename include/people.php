@@ -174,9 +174,11 @@ $table = $action;
                 if ($containsmembers) {
                     $message = 'Please select only individuals or family heads to merge';
                     $success = false;
+                    trigger_error($message);
                 } elseif (1 == count($ids)) {
                     $message = 'Please select more than one person to merge them into a family';
                     $success = false;
+                    trigger_error($message);
                 } else {
                     $oldest = db_value('SELECT id FROM people WHERE id IN ('.$_POST['ids'].') ORDER BY date_of_birth ASC LIMIT 1');
                     $extradrops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id IN ('.$_POST['ids'].') AND people_id != :oldest', ['oldest' => $oldest]);
@@ -204,6 +206,7 @@ $table = $action;
                 if ($containsmembers) {
                     $message = 'Please select only members of a family, not family heads';
                     $success = false;
+                    trigger_error($message);
                 } else {
                     foreach ($ids as $id) {
                         db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
