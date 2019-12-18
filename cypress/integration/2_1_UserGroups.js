@@ -181,7 +181,7 @@ describe('Create usergroups (admin)', () => {
         checkUserGroupCheckboxByName(TestUserGroupWithUsersAssigned)
         clickDeleteButton();
         confirmAction();
-        cy.notyTextNotificationWithTextIsVisible("Please edit or delete it first");
+        cy.notyTextNotificationWithTextIsVisible("Please edit or remove it first");
         getUserGroupRow(TestUserGroupWithUsersAssigned).should('exist');
     });
 });
@@ -264,7 +264,7 @@ describe('Create usergroups (coordinator)', () => {
         checkUserGroupCheckboxByName(TestUserGroupWithUsersAssigned)
         clickDeleteButton();
         confirmAction();
-        cy.notyTextNotificationWithTextIsVisible("Please edit or delete it first");
+        cy.notyTextNotificationWithTextIsVisible("Please edit or remove it first");
         getUserGroupRow(TestUserGroupWithUsersAssigned).should('exist');
     });
 });
