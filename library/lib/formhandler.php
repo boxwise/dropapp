@@ -163,7 +163,7 @@ class formHandler
         }
 
         // logging for https://trello.com/c/IWFWNlwz
-        if ($this->table == 'stock') {
+        if ('stock' == $this->table) {
             trigger_error('Logging Box creation for QR-bug.');
         }
         db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', ['table' => $this->table, 'id' => $this->id, 'change' => 'Record created', 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR']]);
