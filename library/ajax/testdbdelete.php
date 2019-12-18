@@ -24,29 +24,30 @@
         }
 
         //Define all ids which are allowed to be deleted
-        $allowed['people'] = db_array(
+        $allowed['people'] = array_column(db_array(
             'SELECT p.id
             FROM people p
             LEFT JOIN camps c ON p.camp_id = c.id
             WHERE c.organisation_id = 100000000'
-        );
-        $allowed['stock'] = db_array(
+        ), 'id');
+        $allowed['stock'] = array_column(db_array(
             'SELECT s.id
             FROM stock s
             LEFT JOIN locations l ON s.location_id = l.id
             LEFT JOIN camps c ON l.camp_id = c.id
             WHERE c.organisation_id = 100000000'
-        );
-        $allowed['cms_users'] = db_array(
+        ), 'id');
+        $allowed['cms_users'] = array_column(db_array(
             'SELECT u.id
             FROM cms_users u
             LEFT JOIN cms_usergroups g ON u.cms_usergroups_id = g.id
             WHERE g.organisation_id = 100000000'
-        );
-        $allowed = array_column($allowed[$_POST['table']], 'id');
+        ), 'id');
+        //$allowed = array_column($allowed[$_POST['table']], 'id');
         // Test if table is key in $allowed and the ids can be deleted
         foreach ($ids as $id) {
-            if ($return['success'] && isset($allowed[$_POST['table']]) && in_array($id, $allowed)) {
+            $permission = ($return['success'] && isset($allowed[$_POST['table']]) && in_array($id, $allowed[$_POST['table']]));
+            if ($permission) {
                 listRealDelete($_POST['table'], $ids);
                 $return = ['success' => true, 'message' => 'Successfully deleted id '.$id.' '];
             } else {
