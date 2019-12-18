@@ -28,6 +28,14 @@ describe("2_7_DeactivatedUsers_Test", () => {
         cy.get(selector).contains(text).should('not.exist');
     }
 
+    function checkClassByTypeAndTestId(type, testId, _class, hasClass) {
+        if (hasClass == true) {
+            cy.get(type + "[data-testid = '" + testId + "']").should("have.class", _class);
+        } else {
+            cy.get(type + "[data-testid = '" + testId + "']").should("not.have.class", _class);
+        }
+    }
+
     function clickOnElement(selector) {
         cy.get(selector).first().click();
     }
@@ -131,9 +139,9 @@ describe("2_7_DeactivatedUsers_Test", () => {
         cy.visit('/?action=cms_users_deactivated');
         checkUserCheckboxByName(DELETED_USER_NAME);
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
-        checkForElementByText("h3", ARE_YOU_SURE_POPUP);
+        checkClassByTypeAndTestId("button", "reactivate-cms-user", "open", true);
         clickOnElementByText("a", CANCEL_BUTTON);
-        checkElementDoesNotExistByText("h3", ARE_YOU_SURE_POPUP);
+        checkClassByTypeAndTestId("button", "reactivate-cms-user", "open", false);
     });
 
 });
