@@ -58,7 +58,7 @@ AND (f.allusers OR (f2.parent_id IS NULL AND uf.cms_usergroups_id = :usergroup A
 
     // if the action is allowed or if the user is a system admin, we load it
     if ($allowed || $_SESSION['user']['is_admin']) {
-        @include 'include/'.$action.'.php';
+        include 'include/'.$action.'.php';
     }
 
     $cmsmain->assign('action', $action);
