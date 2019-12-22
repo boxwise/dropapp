@@ -59,5 +59,3 @@
         $result = sendmail('hans@boxwise.co', 'hans@boxwise.co', 'New installation of Boxwise', $mail);
         db_query('INSERT INTO settings (category_id, type, code, description_en, value) VALUES (1,"text","installed","Date and time of installation and first run",NOW())');
     }
-
-    header('/');
