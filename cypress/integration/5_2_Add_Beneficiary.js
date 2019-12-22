@@ -130,20 +130,19 @@ context("5_2_Add_Beneficiary_Test", () => {
         CheckEmptyForm();
     });
 
-    // it("5_2_5 Save and new check if new person in familyhead-dropdown + check if empty",() => {
-    //     //check all the forms 
-    //     DeleteTestedBeneficiary(Test_lastname);
-    //     NavigateToEditBeneficiaryForm();
-    //     FillForm(Test_firstname,Test_lastname,Test_case_id);
-    //     ClickButtonWithText("Save and new");
-    //     cy.notyTextNotificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added");
-    //     cy.notyTextNotificationWithTextIsVisible(Test_case_id);
-    //     // Check for the familyhead after adding it above
-    //     cy.selectOptionByText("parent_id",Test_case_id +" "+ Test_firstname); // having an issue checking the dropdown list here
-    //     FillForm(Test_firstname2,Test_lastname,"");
-    //     ClickButtonWithText("Save and close");
-    //     cy.notificationWithTextIsVisible(Test_firstname2+" "+Test_lastname + " was added");
-    //     CheckAssociation(Test_firstname,Test_firstname2);
-    // });
+    it("5_2_5 Save and new check if new person in familyhead-dropdown + check if empty",() => {
+        DeleteTestedBeneficiary(Test_lastname);
+        NavigateToEditBeneficiaryForm();
+        FillForm(Test_firstname,Test_lastname,Test_case_id);
+        ClickButtonWithText("Save and new");
+        cy.notyTextNotificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added");
+        cy.notyTextNotificationWithTextIsVisible(Test_case_id);
+        // Check for the familyhead after adding it above
+        cy.selectOptionByText("parent_id",Test_case_id +" "+ Test_firstname); // having an issue checking the dropdown list here
+        FillForm(Test_firstname2,Test_lastname,"");
+        ClickButtonWithText("Save and close");
+        cy.notificationWithTextIsVisible(Test_firstname2+" "+Test_lastname + " was added");
+        CheckAssociation(Test_firstname,Test_firstname2);
+    });
 });
 
