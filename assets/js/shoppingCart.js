@@ -279,7 +279,7 @@ $(document).ready(function() {
         shoppingCart.removeItemFromCartAll(productId);
         renderCart();
     });
-    
+
     $(document).on("change",'.changeQuantity', function(e){
         e.preventDefault();
         var productId = event.target.getAttribute('productId');
