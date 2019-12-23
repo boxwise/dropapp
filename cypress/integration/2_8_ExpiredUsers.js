@@ -15,6 +15,7 @@ const EXPIRED_COORDINATOR_VALID_TO = "28 May 2017";
 describe("2_8_ExpiredUsers_Test", () => {
 
     beforeEach(function () {
+        cy.setupAjaxActionHook();
         cy.loginAsAdmin();
         cy.visit('/?action=cms_users_expired');
     });
@@ -65,11 +66,6 @@ describe("2_8_ExpiredUsers_Test", () => {
         cy.get('tbody tr').each(($tr) => {
             expect($tr).to.have.class('selected');
         });
-    }
-
-    function watchRequest(requestType, route, alias) {
-        // watch a request and give it an alias in order to wait/check the response later
-        cy.server().route(requestType, route).as(alias);
     }
  
     it("2_8 Check for list elements in Expired tab", () => {
@@ -124,28 +120,15 @@ describe("2_8_ExpiredUsers_Test", () => {
         checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "list-delete-button");
         checkForElementByText("h3", ARE_YOU_SURE_POPUP);
-
-        watchRequest("POST", "/?action=cms_users_expired", "expired");
         clickOnElementByText("div.popover-content a", DEACTIVATE_BUTTON);
-
-        // wait for "expired" request to complete and then check response body message
-        cy.wait("@expired").then(xhr => {
-            expect(xhr.response.body.message).to.equal(ITEM_DELETED);
-        });
+        cy.waitForAjaxAction(ITEM_DELETED);
 
         cy.visit('/?action=cms_users_deactivated');
         checkForElementByText("p", EXPIRED_COORDINATOR_NAME);
         checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
-
-        watchRequest("POST", "/?action=cms_users_deactivated", "deactivated");
-
         clickOnElementByText("a", OK_BUTTON);
-
-        // wait for "deactivated" request to complete and then check response body message
-        cy.wait("@deactivated").then(xhr => {
-            expect(xhr.response.body.message).to.equal(ITEM_RECOVERED);
-        });
+        cy.waitForAjaxAction(ITEM_RECOVERED);
 
         // test cancel button
         cy.visit('/?action=cms_users_expired');
