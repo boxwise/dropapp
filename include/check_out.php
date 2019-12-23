@@ -114,7 +114,7 @@
         addfield('shopping_cart', '', '', ['columns' => ['product' => ['name' => 'Product'], 'count' => ['name' => 'Amount', 'width' => '25%'], 'drops2' => ['name' => 'Price', 'width' => '15%'], 'drops3' => ['name' => 'Total Price', 'width' => '15%'], 'delete' => ['name' => '']]]);
 
         $table = 'transactions';
-        addfield('title', 'Last Purchases', '', ['labelindent' => true]);
+        addfield('title', 'Last Purchases', '', ['labelindent' => true, 'id' => 'LastPurchaseTitle']);
         addfield('list', '', 'purch', ['width' => 10, 'query' => 'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
             FROM transactions AS t 
             LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 

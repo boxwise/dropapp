@@ -10,6 +10,6 @@
 
     <script src="/assets/js/magic.js?v=7"></script>
     <script src="/assets/js/custom.js?v=7"></script> 
-    <script src="/assets/js/shoppingCart.js?v=7"></script>    
+    <script src="/assets/js/shoppingCart.js"></script>    
   </body>
 </html>
