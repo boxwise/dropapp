@@ -66,6 +66,7 @@ describe('Manage beneficiaries', () => {
     }
 
     function getBeneficiaryRow(familyName){
+        cy.get('table').should('have.class', 'initialized');
         return cy.get('tr').contains(familyName);
     }
 
@@ -77,7 +78,7 @@ describe('Manage beneficiaries', () => {
 
     function checkBeneficiaryCheckboxByName(familyName){
         getBeneficiaryRow(familyName).parent().parent().parent().within(() => {
-            cy.get("input[type='checkbox']").check();
+            cy.get("input[type='checkbox']").scrollIntoView().check({force: true});
         });
     }
 
