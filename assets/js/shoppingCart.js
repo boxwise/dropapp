@@ -161,7 +161,7 @@ $(document).ready(function() {
           // }).appendTo(tableRef);
 
           let tr = jQuery('<tr/>')
-          .appendTo(tableRef);
+            .appendTo(tableRef);
 
           jQuery('<td />')
             .text(item.name)
@@ -271,13 +271,13 @@ $(document).ready(function() {
     });
 
     $(document).on("click",'.deleteFromCart', function(e){
-      var productId = e.target.getAttribute('productId');
-      if (!productId) {
-          // event triggered by the trash icon rather than button itself
-          var productId = e.target.parentElement.getAttribute('productId');
-      }
-      shoppingCart.removeItemFromCartAll(productId);
-      renderCart();
+        var productId = e.target.getAttribute('productId');
+        if (!productId) {
+            // event triggered by the trash icon rather than button itself
+            var productId = e.target.parentElement.getAttribute('productId');
+        }
+        shoppingCart.removeItemFromCartAll(productId);
+        renderCart();
     });
     
     $(document).on("change",'.changeQuantity', function(e){
