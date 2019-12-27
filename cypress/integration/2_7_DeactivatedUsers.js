@@ -11,11 +11,13 @@ const ARE_YOU_SURE_POPUP = "Are you sure?";
 const CANCEL_BUTTON = "Cancel";
 const OK_BUTTON = "OK";
 const ITEM_RECOVERED = "Item recovered";
+const ITEM_DELETED = "Item deleted";
 const DEACTIVATE_BUTTON = "Deactivate";
 
 describe("2_7_DeactivatedUsers_Test", () => {
 
     beforeEach(function () {
+        cy.setupAjaxActionHook();
         cy.loginAsAdmin();
         cy.visit('/?action=cms_users_deactivated');
     });
@@ -68,11 +70,6 @@ describe("2_7_DeactivatedUsers_Test", () => {
         });
     }
 
-    function watchRequest(requestType, route, alias) {
-        // watch a request and give it an alias in order to wait/check the response later
-        cy.server().route(requestType, route).as(alias);
-    }
- 
     it("2_7 Check for list elements in Deactivated tab", () => {
         checkForElementByTypeAndTestId("input", "select_all");
         checkForElementByText("p", DELETED_COORDINATOR_NAME);
@@ -115,14 +112,8 @@ describe("2_7_DeactivatedUsers_Test", () => {
         checkUserCheckboxByName(DELETED_USER_NAME);
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
         checkForElementByText("h3", ARE_YOU_SURE_POPUP);
-
-        watchRequest("POST", "/?action=cms_users_deactivated", "deactivated");
         clickOnElementByText("a", OK_BUTTON);
-
-        // wait for "deactivated" request to complete and then check response body message
-        cy.wait("@deactivated").then(xhr => {
-            expect(xhr.response.body.message).to.equal(ITEM_RECOVERED);
-        });
+        cy.waitForAjaxAction(ITEM_RECOVERED);
         
         checkForElementByText("span", ITEM_RECOVERED);
         checkElementDoesNotExistByText("p", DELETED_USER_NAME);
@@ -134,6 +125,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
         checkUserCheckboxByName(DELETED_USER_NAME);
         clickOnElementByTypeAndTestId("button", "list-delete-button");
         clickOnElementByText("div.popover-content a", DEACTIVATE_BUTTON);
+        cy.waitForAjaxAction(ITEM_DELETED);
        
         // test cancel button
         cy.visit('/?action=cms_users_deactivated');
