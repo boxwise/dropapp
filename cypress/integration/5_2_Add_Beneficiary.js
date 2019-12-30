@@ -15,12 +15,16 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.get('body').then(($body) => {
             if ($body.text().includes(lastname)) {
                 cy.log("found" + lastname)
-                cy.get("tr").contains(lastname).parent("td").parent("tr").children().first().children().first().children('label').click();
+                cy.get('tr').contains(lastname).parent().parent().parent().within(() => {
+                    cy.get("input[type='checkbox']").check();
+                });
                 cy.get("button[data-operation='delete']").click();
                 cy.get("a[data-apply='confirmation']").click();
-                //delete the user also from deactivated
+                // delete the user also from deactivated
                 cy.get("ul[data-testid='listTab'] a").contains("Deactivated").click();
-                cy.get("tr").contains(lastname).parent("td").parent("tr").children().first().children().first().children('label').click();
+                cy.get('tr').contains(lastname).parent().parent().parent().within(() => {
+                    cy.get("input[type='checkbox']").check();
+                });
                 cy.get("button").contains("Full delete").click();
                 cy.get("a[data-apply='confirmation']").click();
             }
@@ -109,7 +113,7 @@ context("5_2_Add_Beneficiary_Test", () => {
         getBeneficiaryRow(Test_lastname).should('exist');
     });
 
-    it("5_2_2 Prevent emtpy submit",() => {
+    it("5_2_2 Prevent empty submit",() => {
         NavigateToEditBeneficiaryForm();
         ClickButtonWithText("Save and close");
         CheckQtip("qtip-0-content");
@@ -124,10 +128,9 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.notyTextNotificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added");
         cy.notyTextNotificationWithTextIsVisible(Test_case_id);
         CheckEmptyForm();
-    })
+    });
 
     it("5_2_5 Save and new check if new person in familyhead-dropdown + check if empty",() => {
-        //check all the forms 
         DeleteTestedBeneficiary(Test_lastname);
         NavigateToEditBeneficiaryForm();
         FillForm(Test_firstname,Test_lastname,Test_case_id);
@@ -135,7 +138,7 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.notyTextNotificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added");
         cy.notyTextNotificationWithTextIsVisible(Test_case_id);
         // Check for the familyhead after adding it above
-        cy.selectOptionByText("parent_id",Test_case_id +" "+ Test_firstname);
+        cy.selectOptionByText("parent_id",Test_case_id +" "+ Test_firstname); // having an issue checking the dropdown list here
         FillForm(Test_firstname2,Test_lastname,"");
         ClickButtonWithText("Save and close");
         cy.notificationWithTextIsVisible(Test_firstname2+" "+Test_lastname + " was added");

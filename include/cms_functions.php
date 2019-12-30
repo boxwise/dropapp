@@ -5,7 +5,7 @@
 
     if (!$ajax) {
         if (!$_SESSION['user']['is_admin']) {
-            trigger_error('Alleen voor ADMIN', E_USER_ERROR);
+            throw new Exception('Only for Boxwise Gods');
         }
         initlist();
 

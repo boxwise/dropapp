@@ -5,7 +5,7 @@
 
     if (!$ajax) {
         if (!$_SESSION['camp']['id']) {
-            trigger_error('The list of locations is not available when there is no camp selected');
+            throw new Exception('The list of locations is not available when there is no camp selected');
         }
 
         initlist();
@@ -13,7 +13,7 @@
         $cmsmain->assign('title', 'Warehouse Locations');
         listsetting('search', ['sizes.label']);
 
-        $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount 
+        $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount,0 as level 
             FROM locations 
             WHERE deleted IS NULL 
             AND camp_id = '.$_SESSION['camp']['id']);

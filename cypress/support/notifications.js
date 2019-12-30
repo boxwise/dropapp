@@ -1,5 +1,5 @@
 Cypress.Commands.add("notificationWithTextIsVisible", notificationText => {
-    cy.get("ul[id='noty_topCenter_layout_container']").should(
+    cy.get("ul[id='noty_topCenter_layout_container']", {timeout: 20000}).should(
         "contain",
         notificationText
     );
@@ -26,7 +26,7 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("notyTextNotificationWithTextIsVisible", notificationText => {
-    cy.get("span[class='noty_text']").contains(notificationText).should("be.visible");
+    cy.get("span[class='noty_text']", {timeout: 20000}).contains(notificationText).should("be.visible");
 });
 
 Cypress.Commands.add("clickAwayNotyTextNotificationWithText", notificationText => {
