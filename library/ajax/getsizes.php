@@ -5,7 +5,6 @@
     $size_id = intval($_GET['size']);
 
     $result = db_array('SELECT s.* FROM sizes AS s, sizegroup AS sg, products AS p WHERE s.sizegroup_id = sg.id AND p.id = :id AND p.sizegroup_id = sg.id ORDER BY s.seq', ['id' => $product_id]);
-
     $html = '<option></option>';
 
     if (count($result) == 1) {
