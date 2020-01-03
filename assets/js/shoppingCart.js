@@ -255,7 +255,6 @@ $(document).ready(function() {
         }
     });
 
-
     $("#add-to-cart-button").click(function(e) {
         e.preventDefault();
 

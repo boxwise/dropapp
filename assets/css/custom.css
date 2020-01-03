@@ -765,6 +765,18 @@ td.list-level-0.list-column-ean_print div a:hover {
 	margin-bottom: 20px;
 	padding: 0;
 }
+.deleteFromCart{
+	position: relative;
+	z-index: 1;
+}
+.changeQuantity{
+	position: relative;
+	z-index: 1;
+}
+#LastPurchaseTitle{
+	position: relative;
+	z-index: 0;
+}
 @media (max-width: 1260px){
 	.shopping_cart_table{
 		float: left;
