@@ -98,5 +98,5 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     $cmsmain->assign('data', $data);
     $cmsmain->assign('formelements', $formdata);
 } else {
-    throw new Exception('You do not have access to this menu. Please ask your admin to change this!');
+    trigger_error('You do not have access to this menu. Please ask your admin to change this!');
 }
