@@ -28,24 +28,24 @@
         if ($ids != []) {
             //Define all ids which are allowed to be deleted
             $allowed['people'] = array_column(db_array(
-            'SELECT p.id
+                'SELECT p.id
             FROM people p
             LEFT JOIN camps c ON p.camp_id = c.id
             WHERE c.organisation_id = 100000000'
-        ), 'id');
+            ), 'id');
             $allowed['stock'] = array_column(db_array(
-            'SELECT s.id
+                'SELECT s.id
             FROM stock s
             LEFT JOIN locations l ON s.location_id = l.id
             LEFT JOIN camps c ON l.camp_id = c.id
             WHERE c.organisation_id = 100000000'
-        ), 'id');
+            ), 'id');
             $allowed['cms_users'] = array_column(db_array(
-            'SELECT u.id
+                'SELECT u.id
             FROM cms_users u
             LEFT JOIN cms_usergroups g ON u.cms_usergroups_id = g.id
             WHERE g.organisation_id = 100000000'
-        ), 'id');
+            ), 'id');
             // Test if table is key in $allowed and the ids can be deleted
             foreach ($ids as $id) {
                 $permission = ($return['success'] && isset($allowed[$_POST['table']]) && in_array($id, $allowed[$_POST['table']]));
