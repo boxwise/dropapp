@@ -26,7 +26,7 @@ $table = $action;
         addpagemenu('all', 'All', ['link' => '?action=people', 'active' => true]);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=people_deactivated']);
 
-        $statusarray = ['week' => 'New this week', 'month' => 'New this month'];
+        $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'expired' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
         listfilter(['label' => 'Show all people', 'options' => $statusarray, 'filter' => '"show"']);
 
         listsetting('manualquery', true);
@@ -54,8 +54,14 @@ $table = $action;
         LEFT OUTER JOIN people AS parent ON parent.id = people.parent_id
 		WHERE 
 			NOT people.deleted AND 
-			'.('week' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") AND' : '').
-            ('month' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") AND' : '').'
+			'.('week' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") AND ' : '').
+            ('month' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") AND ' : '').
+            ('approvalsigned' == $listconfig['filtervalue'] ? ' ((NOT people.approvalsigned AND people.parent_id IS NULL) OR people.parent_id IN 
+                (SELECT peop.id
+                FROM people peop
+                WHERE peop.parent_id IS NULL AND NOT peop.approvalsigned)) AND ' : '').
+            ('volunteer' == $listconfig['filtervalue'] ? ' people.volunteer AND ' : '').
+            ('notregistered' == $listconfig['filtervalue'] ? ' people.notregistered AND ' : '').'
 			people.camp_id = '.$_SESSION['camp']['id'].
             ($listconfig['searchvalue'] ? ' AND
 			(people.lastname LIKE "%'.$search.'%" OR 
@@ -73,8 +79,9 @@ $table = $action;
 			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
 			 ))
 			' : ' ')
-        .'GROUP BY people.id 
-        ORDER BY 
+        .'GROUP BY people.id '.
+        ('expired' == $listconfig['filtervalue'] ? 'HAVING expired ' : '').
+        'ORDER BY 
             -- sort by *parent* first & last name (or own first/last if no parent)
             IF(people.parent_id, parent.lastname, people.lastname), 
             IF(people.parent_id, parent.firstname, people.firstname),
@@ -113,6 +120,9 @@ $table = $action;
                     }
                     if ($data[$key]['volunteer']) {
                         $data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
+                    }
+                    if ($data[$key]['notregistered']) {
+                        $data[$key]['expired'] .= '<i class="fa fa-times blue tooltip-this" title="This beneficiary is not officially registered."></i> ';
                     }
                 }
             }
