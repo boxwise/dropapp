@@ -12,6 +12,12 @@ Cypress.Commands.add("getSelectedValueInDropDown", (field_id, text) => {
     .find("span");
 });
 
+Cypress.Commands.add("CheckDropDownEmpty",(field_id) => {
+    cy.get("div[id='s2id_field_" + field_id + "']")
+    .children()
+    .find("span").should("contain","Please select");
+});
+
 Cypress.Commands.add("selectForFieldExists", (field_id) => {
     cy.get("div[id='s2id_field_" + field_id + "']").should('exist');
 });

@@ -17,7 +17,7 @@ Cypress.config("defaultCommandTimeout",200000)
         cy.selectOptionByText("cms_usergroups_id", group)
     }
 
-    function GetQtipsEmpty(){
+    function CheckRequiredFields(){
         cy.get("div[id='qtip-1-content']").should('be.visible')
         cy.get("div[id='qtip-2-content']").should('be.visible')
         cy.get("div[id='qtip-3-content']").should('be.visible')
@@ -30,13 +30,13 @@ Cypress.config("defaultCommandTimeout",200000)
     it("2_4_0_A Check empty form + empty submit",() => {
         cy.get("input[data-testid='user_name']").should("be.visible")
         cy.get("input[data-testid='user_email']").should("be.visible")
-        cy.get("span[id='select2-chosen-1']").should("be.visible")
+        cy.CheckDropDownEmpty("cms_usergroups_id")
         cy.get("input[data-testid='user_valid_from']").should("be.visible")
         cy.get("input[data-testid='user_valid_to']").should("be.visible")
         cy.get("button").contains("Save and close").should('be.visible')
         cy.get("a").contains("Cancel").should('be.visible')
         cy.get("button").contains("Save and close").click()
-        GetQtipsEmpty()
+        CheckRequiredFields()
     })
     
     it("2_4_0_B Create New user", () => {
