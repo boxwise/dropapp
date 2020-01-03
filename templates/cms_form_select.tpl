@@ -13,7 +13,7 @@
 			<option></option>
 			{foreach $element['options'] as $option}
 				<option 
-					{if count($element['options']) == 1 && $element['field'] != "product_id"}selected {/if}
+					{if count($element['options']) == 1 && $element['field'] != "product_id" && !$element['multiple']}selected {/if}
 					{if $data[$element['field']]==$option['value']}selected {/if}
 					{if $element['multiple'] && $option['selected']}selected {/if}
 					{if $option['disabled']}disabled{/if}
