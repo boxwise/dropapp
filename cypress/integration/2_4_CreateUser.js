@@ -1,4 +1,4 @@
-context("User creation text", () => {
+context("User creation", () => {
     let Testname = "paul";
     let Testgroup = "TestUserGroup_User";
     let Testaddress = "pauli@pauli.co";
