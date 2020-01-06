@@ -8,7 +8,7 @@ $export_ids_array = explode(',', $_SESSION['export_ids_products']);
 $id_pars = str_repeat('?,', count($export_ids_array) - 1).'?';
 //Put camp id as first element in the list
 
-if ($export_ids_array[0] != '') {
+if ('' != $export_ids_array[0]) {
     array_unshift($export_ids_array, $_SESSION['camp']['id']);
 }
 
