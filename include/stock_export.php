@@ -5,7 +5,9 @@ $export_ids_array = explode(',', $_SESSION['export_ids_stock']);
 //Create a list of placeholders ? the same length as export ids given
 $id_pars = str_repeat('?,', count($export_ids_array) - 1).'?';
 //Put camp id as first element in the list
-array_unshift($export_ids_array, $_SESSION['camp']['id']);
+if ($export_ids_array[0] != '') {
+    array_unshift($export_ids_array, $_SESSION['camp']['id']);
+}
 
 $data = db_query(
     'SELECT boxes.*, g.label AS gender, p.name AS product, s.label AS size, l.label AS location
