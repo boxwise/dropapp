@@ -22,3 +22,15 @@ Cypress.Commands.add("selectForFieldExists", (field_id) => {
     cy.get("div[id='s2id_field_" + field_id + "']").should('exist');
 });
 
+Cypress.Commands.add("selectForFieldExists", (field_id) => {
+    cy.get("div[id='s2id_field_" + field_id + "']").should('exist');
+});
+
+Cypress.Commands.add("checkOptionsCount", (field_id, count) => {
+    cy.get("div[id='s2id_field_" + field_id + "']").next().within(()=>{
+        cy.get("option").then($options => {
+            //there's one empty option when nothing is selected
+            expect($options.length).to.equal(count+1);
+        })
+    })
+});
