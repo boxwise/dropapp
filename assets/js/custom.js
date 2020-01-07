@@ -151,6 +151,47 @@ function offsetAnchor() {
         window.scrollTo(window.scrollX, window.scrollY - 100);
     }
 }
+
+function AjaxCheckSuccess(result){
+    if (result){
+        if (result.message){
+            var n = noty({
+                text: result.message,
+                type: result.success ? "success" : "error"
+                });
+        }
+        if (result.redirect){
+            setTimeout(function() {
+            execReload(result.redirect);
+            }, 1500);
+            } else {
+            execReload(result.redirect);
+            }
+            
+
+        if (result.action) {
+            eval(result.action);
+            }
+
+            
+    }
+    else
+    {var n = noty({
+        type: "error",
+        text: "Something went wrong - please inform your coordinator"
+    })
+
+    }
+
+}
+
+function AjaxError(result) {
+    var n = noty({
+        text:
+            "Cannot connect to Boxwise - please check your Internet connection.",
+        type: "error"
+    });
+}
 // Captures click events of all <a> elements with href starting with #
 $(document).on("click", 'a[href^="#"]', function(event) {
     // Click events are captured before hashchanges. Timeout
@@ -252,19 +293,10 @@ function updateLaundry(field, offset) {
                     $("#field_" + field).prop("disabled", false);
                     $("body").removeClass("loading");
                 }
-                if (result.message) {
-                    var n = noty({
-                        text: result.message,
-                        type: result.success ? "success" : "error"
-                    });
-                }
+                AjaxCheckSuccess(result);
             },
             error: function(result) {
-                var n = noty({
-                    text:
-                        "Something went wrong, maybe the internet connection is a bit choppy",
-                    type: "error"
-                });
+                AjaxError(result);
             }
         });
     }
@@ -320,19 +352,10 @@ function selectFamily(field,  reload, target) {
                     $("#field_" + field).prop("disabled", false);
                     $("body").removeClass("loading");
                 }
-                if (result.message) {
-                    var n = noty({
-                        text: result.message,
-                        type: result.success ? "success" : "error"
-                    });
-                }
+                AjaxCheckSuccess(result);
             },
             error: function(result) {
-                var n = noty({
-                    text:
-                        "Something went wrong, maybe the internet connection is a bit choppy",
-                    type: "error"
-                });
+                AjaxError(result);
             }
         });
     } else {
@@ -378,19 +401,10 @@ function getSizes() {
                 $("#field_product_id, #field_size_id").prop("disabled", false);
                 $("body").removeClass("loading");
             }
-            if (result.message) {
-                var n = noty({
-                    text: result.message,
-                    type: result.success ? "success" : "error"
-                });
-            }
+            AjaxCheckSuccess(result);
         },
         error: function(result) {
-            var n = noty({
-                text:
-                    "Something went wrong, maybe the internet connection is a bit choppy",
-                type: "error"
-            });
+            AjaxError(result);
         }
     });
     /*
@@ -495,28 +509,10 @@ $(".delete-user").on("click", function(e) {
             },
             dataType: "json",
             success: function(result) {
-                if (result.message) {
-                    var n = noty({
-                        text: result.message,
-                        type: result.success ? "success" : "error"
-                    });
-                }
-                if (result.redirect) {
-                    if (result.message) {
-                        setTimeout(function() {
-                            execReload(result.redirect);
-                        }, 1500);
-                    } else {
-                        execReload(result.redirect);
-                    }
-                }
+                AjaxCheckSuccess(result);
             },
             error: function(result) {
-                var n = noty({
-                    text:
-                        "This file cannot be found or what's being returned is not json.",
-                    type: "error"
-                });
+                AjaxError(result);
             }
         });
     }
