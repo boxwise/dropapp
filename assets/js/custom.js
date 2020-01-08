@@ -27,23 +27,14 @@ $(document).ready(function() {
             url: "ajax.php?file=checkusersmenu",
             dataType: "json",
             success: function(result) {
-                if (result.message) {
-                    var n = noty({
-                        text: result.message,
-                        type: result.success ? "success" : "error"
-                    });
-                }
+                AjaxCheckSuccess(result);
+            
                 if (!result.showusermenu) {
                     $(".menu_cms_users").hide();
                 }
             },
             error: function(result) {
-                console.log(result);
-                var n = noty({
-                    text:
-                        "This file cannot be found or what's being returned is not json.",
-                    type: "error"
-                });
+                AjaxError(result);
             }
         });
     }
@@ -153,7 +144,7 @@ function offsetAnchor() {
 }
 
 function AjaxCheckSuccess(result){
-    if (result){
+    if (result.success){
         if (result.message){
             var n = noty({
                 text: result.message,
