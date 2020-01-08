@@ -10,6 +10,8 @@ $id_pars = str_repeat('?,', count($export_ids_array) - 1).'?';
 
 if ('' != $export_ids_array[0]) {
     array_unshift($export_ids_array, $_SESSION['camp']['id']);
+} else {
+    $export_ids_array = [$_SESSION['camp']['id']];
 }
 
 $result = db_query(
