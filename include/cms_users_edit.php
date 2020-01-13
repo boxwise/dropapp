@@ -27,8 +27,12 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 			SELECT ug.organisation_id, ugl.level AS userlevel
 			FROM cms_usergroups AS ug
 			LEFT JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
-			WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $_POST['cms_usergroups_id']]);
-        if ($_SESSION['user']['is_admin'] || (($_SESSION['organisation']['id'] != $posteduser['organisation_id']) || ($_SESSION['usergroup']['userlevel'] <= $posteduser['userlevel']))) {
+            WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $_POST['cms_usergroups_id'][0]]);
+        $is_admin = $_SESSION['user']['is_admin'];
+        $organisation_allowed = ($_SESSION['organisation']['id'] == $posteduser['organisation_id']);
+        $userlevel_allowed = ($_SESSION['usergroup']['userlevel'] > $posteduser['userlevel']);
+
+        if ($is_admin || ($organisation_allowed && $userlevel_allowed)) {
             $keys = ['naam', 'email', 'cms_usergroups_id', 'valid_firstday', 'valid_lastday'];
 
             $handler = new formHandler($table);
