@@ -176,7 +176,7 @@ $table = $action;
         $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
         $ids = explode(',', $_POST['ids']);
         $delta = array_diff($ids, $valid_ids);
-        if (count($delta) == 0) {
+        if (0 == count($delta)) {
             switch ($_POST['do']) {
             case 'merge':
                 $ids = explode(',', $_POST['ids']);
@@ -286,9 +286,9 @@ $table = $action;
 
             echo json_encode($return);
             die();
-        } else {
-            throw new Exception('No access to this records');
         }
+
+        throw new Exception('No access to this records');
     }
     function correctchildren()
     {
