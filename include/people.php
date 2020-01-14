@@ -173,7 +173,11 @@ $table = $action;
             }
         );
     } else {
-        switch ($_POST['do']) {
+        $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
+        $ids = explode(',', $_POST['ids']);
+        $delta = array_diff($ids, $valid_ids);
+        if (count($delta) == 0) {
+            switch ($_POST['do']) {
             case 'merge':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $key => $value) {
@@ -278,12 +282,14 @@ $table = $action;
                 break;
         }
 
-        $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
+            $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
-        echo json_encode($return);
-        die();
+            echo json_encode($return);
+            die();
+        } else {
+            throw new Exception('No access to this records');
+        }
     }
-
     function correctchildren()
     {
         $result = db_query('SELECT (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AS newparent, p1.id FROM people AS p1 WHERE p1.parent_id > 0 AND (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AND NOT deleted');
