@@ -2,10 +2,15 @@
 
     $table = $action;
     $ajax = checkajax();
+    $is_admin = false;
 
     if (!$ajax) {
         if (!$_SESSION['camp']['id']) {
             throw new Exception('The list of locations is not available when there is no camp selected');
+        }
+
+        if ($_SESSION['user']['is_admin']) {
+            $is_admin = true;
         }
 
         initlist();
@@ -13,16 +18,30 @@
         $cmsmain->assign('title', 'Warehouse Locations');
         listsetting('search', ['sizes.label']);
 
-        $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount,0 as level 
+        if (!$is_admin) {
+            $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount,0 as level
+            FROM locations
+            WHERE deleted IS NULL
+            AND visible = 1
+            AND container_stock != 1
+            AND is_market != 1
+            AND is_donated != 1
+            AND is_lost != 1
+            AND camp_id = '.$_SESSION['camp']['id']);
+        } else {
+            $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount,0 as level 
             FROM locations 
             WHERE deleted IS NULL 
             AND camp_id = '.$_SESSION['camp']['id']);
+        }
 
         addcolumn('text', 'Warehouse Locations', 'label');
         addcolumn('text', 'Number of boxes', 'boxcount');
 
         listsetting('allowsort', false);
-        listsetting('allowcopy', true);
+        if (!$is_admin) {
+            listsetting('allowshowhide', false);
+        }
         listsetting('add', 'Add a location');
 
         $cmsmain->assign('data', $data);
