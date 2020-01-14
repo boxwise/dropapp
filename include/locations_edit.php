@@ -16,7 +16,7 @@
 
         $handler = new formHandler($table);
 
-        $savekeys = ['label', 'visible', 'camp_id', 'container_stock'];
+        $savekeys = ['label', 'visible', 'camp_id', 'container_stock', 'is_market', 'is_donated', 'is_lost'];
         $id = $handler->savePost($savekeys);
 
         redirect('?action='.$_POST['_origin']);
@@ -27,7 +27,8 @@
     //verify_campaccess_location($id);
 
     if (!$id) {
-        $data['visible'] = 1;
+        $data['visible'] = 0;
+        $data['container_stock'] = 1;
         $data['camp_id'] = $_SESSION['camp']['id'];
     }
 
@@ -42,6 +43,9 @@
     addfield('text', 'Label', 'label');
     if ($is_admin) {
         addfield('checkbox', 'Stockroom', 'container_stock');
+        addfield('checkbox', 'Market', 'is_market');
+        addfield('checkbox', 'Donated', 'is_donated');
+        addfield('checkbox', 'Lost', 'is_lost');
         addfield('checkbox', 'This warehouse location is an outgoing location', 'visible', ['aside' => true, 'tooltip' => 'Items in outgoing warehouse locations are not counted as part of your stock.']);
     }
     addfield('line', '', '', ['aside' => true]);
