@@ -173,11 +173,7 @@ $table = $action;
             }
         );
     } else {
-        $valid_ids = array_column(db_array('SELECT p.id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
-        $requested_ids = explode(',', $_POST['ids']);
-        $difference = array_diff($requested_ids, $valid_ids);
-        if (count($difference) == 0) {
-            switch ($_POST['do']) {
+        switch ($_POST['do']) {
             case 'merge':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $key => $value) {
@@ -188,10 +184,8 @@ $table = $action;
                 if ($containsmembers) {
                     $message = 'Please select only individuals or family heads to merge';
                     $success = false;
-                    trigger_error($message);
                 } elseif (1 == count($ids)) {
                     $message = 'Please select more than one person to merge them into a family';
-                    trigger_error($message);
                     $success = false;
                 } else {
                     $oldest = db_value('SELECT id FROM people WHERE id IN ('.$_POST['ids'].') ORDER BY date_of_birth ASC LIMIT 1');
@@ -220,7 +214,6 @@ $table = $action;
                 if ($containsmembers) {
                     $message = 'Please select only members of a family, not family heads';
                     $success = false;
-                    trigger_error($message);
                 } else {
                     foreach ($ids as $id) {
                         db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
@@ -283,9 +276,6 @@ $table = $action;
                 $redirect = '?action=people_export';
 
                 break;
-        }
-        } else {
-            throw new Exception('No access to these records!');
         }
 
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
