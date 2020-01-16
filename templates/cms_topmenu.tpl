@@ -42,7 +42,6 @@
 					<li><a href="?action=cms_profile">{$translate['cms_menu_settings']}</a></li>
 {if $smarty.session.user2}<li><a href="?action=exitloginas">{$translate['cms_menu_exitloginas']|replace:'%user%':$smarty.session.user2.naam}</a></li>{/if}
 					<!--{literal}<script>/* This is the function to open the widget code */function openWidget() { FreshworksWidget('open');}</script>{/literal}-->
-					<script></script> 
 					<li><a onclick="FreshworksWidget('identify', 'ticketForm', {	name: '{$smarty.session.user.naam}',	email: '{$smarty.session.user.email}',});" type="button" id = "Help" <!--href="http://helpme.boxwise.co"--> Help</button></li>
 					<li><a href="?action=logout">{$translate['cms_menu_logout']}</a></li>
 				</ul>
