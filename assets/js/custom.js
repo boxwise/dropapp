@@ -184,6 +184,17 @@ $(document).ready(function() {
             $("#div_laundrycomment").hide();
     }
 });
+
+$("#Help").click(openwidget());
+function openwidget(){
+    FreshworksWidget('open');
+}
+/*
+$("#HELP").click(function() {
+    alert("Let me help you");
+})
+document.getElementById("Help").addEventListener("click", function() {alert("LET ME HELP YOU")},false);
+*/
 $("#field_laundryblock").click(function() {
     if ($(this).is(":checked")) {
         $("#div_laundrycomment").show();
