@@ -149,12 +149,14 @@
 								{if $row['preventdelete']}item-nondeletable{/if}
 								{if $row['disableifistrue']}disable-if-is-true{/if}
 								{if $listconfig['allowmove'] && $row['level']>=$listconfig['allowmovefrom'] && $row['level']<=$listconfig['allowmoveto']}item-zortable{/if}
-								{if ($listconfig['allowselect']|is_array && $listconfig['allowselect'][$row['level']]) or (!$listconfig['allowselect']|is_array && $listconfig['allowselect'])}item-selectable{/if}">
+								{if ($listconfig['allowselect']|is_array && $listconfig['allowselect'][$row['level']]) or (!$listconfig['allowselect']|is_array && $listconfig['allowselect'])}item-selectable{/if}
+								{if $listconfig['allowcollapse'] && $row['level']}collapse level-{$row['level']-1}-parent-{$row['parent_id']}{/if}">
 								{foreach $listdata as $key=>$column name="rows"}
 									{if $smarty.foreach.rows.first}
 										<td class="controls-front list-level-{$row['level']} list-column-{$key}">
 											<div class="td-content">
 												<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+												{if $listconfig['allowcollapse']} <a data-toggle="collapse" href=".level-{$row['level']}-parent-{$row['id']}" role="button"><i class="fa fa-chevron-right"></i></a>{/if}
 												<label class="item-select-label"><input class="item-select" data-testid='select-id' type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}></label>
 													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
 														<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
