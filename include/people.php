@@ -144,7 +144,7 @@ $table = $action;
                 if ($listconfig['filtervalue']) {
                     addcolumn('datetime', 'Created', 'created');
                 }
-
+                addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
                 addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
                 addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
                 addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false, 'testid' => 'detachFromFamily']);
@@ -164,7 +164,6 @@ $table = $action;
 
                 addbutton('print', 'Print', ['icon' => 'fa-print', 'options' => $options]);
                 addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer']);
-                addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportBeneficiariesButton']);
 
                 $cmsmain->assign('data', $data);
                 $cmsmain->assign('listconfig', $listconfig);
