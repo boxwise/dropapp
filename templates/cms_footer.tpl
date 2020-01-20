@@ -12,6 +12,5 @@
     <script src="/assets/js/shoppingCart.js"></script>    
 
   {include file="freshdesk.tpl"}
-  <a onload="FillWidget({$smarty.session.user.naam},{$smarty.session.user.email});">
   </body>
 </html>
