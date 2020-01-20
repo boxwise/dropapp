@@ -61,5 +61,8 @@
 			</footer>
 		{/if}
 		<div id="loading"><div class="cp-spinner cp-round"></div></div>
+		{if $smarty.session.user}
+		{include file="freshdesk.tpl"}
+		{/if}
 	</body>
 </html>
