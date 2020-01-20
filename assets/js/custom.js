@@ -183,9 +183,7 @@ $(document).ready(function() {
         if (!$("#field_laundryblock").is(":checked"))
             $("#div_laundrycomment").hide();
     }
-    
 });
-
 $("#field_laundryblock").click(function() {
     if ($(this).is(":checked")) {
         $("#div_laundrycomment").show();
