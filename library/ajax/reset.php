@@ -34,6 +34,7 @@ $row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != ""
         $message = GENERIC_LOGIN_ERROR;
         $redirect = '';
         logfile('Poging tot wachtwoord reset door onbekende gebruiker '.$_POST['email']);
+        trigger_error($message);
     }
 
     $return = ['success' => $success, 'message' => $message, 'redirect' => false];
