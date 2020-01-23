@@ -176,6 +176,10 @@ $table = $action;
         $ids = explode(',', $_POST['ids']);
         $delta = array_diff($ids, $valid_ids);
         if (0 == count($delta)) {
+            $message = 'You do not have access to this beneficiary record!';
+            trigger_error($message);
+            $success = false;
+        } else {
             switch ($_POST['do']) {
             case 'merge':
                 $ids = explode(',', $_POST['ids']);
@@ -279,16 +283,15 @@ $table = $action;
                 $redirect = '?action=people_export';
 
                 break;
+            }
         }
 
-            $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
+        $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
-            echo json_encode($return);
-            die();
-        }
-
-        throw new Exception('No access to this records');
+        echo json_encode($return);
+        die();
     }
+
     function correctchildren()
     {
         $result = db_query('SELECT (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AS newparent, p1.id FROM people AS p1 WHERE p1.parent_id > 0 AND (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AND NOT deleted');
@@ -296,10 +299,9 @@ $table = $action;
             db_query('UPDATE people SET parent_id = :newparent WHERE id = :id', ['newparent' => $row['newparent'], 'id' => $row['id']]);
         }
     }
+
     function correctdrops($id)
     {
-        //$action = 'correctDrops({id:847, value: 1400}, {id:14, value: 1900})';
-
         $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
         $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
 
