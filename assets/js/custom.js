@@ -144,7 +144,6 @@ function offsetAnchor() {
 }
 
 function AjaxCheckSuccess(result){
-    if (result.success){
         if (result.message){
             var n = noty({
                 text: result.message,
@@ -164,15 +163,7 @@ function AjaxCheckSuccess(result){
             eval(result.action);
             }
 
-            
-    }
-    else
-    {var n = noty({
-        type: "error",
-        text: "Something went wrong - please inform your coordinator"
-    })
 
-    }
 
 }
 
