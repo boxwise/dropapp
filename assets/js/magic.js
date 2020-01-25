@@ -422,9 +422,9 @@ $(function() {
                         dataType: "json",
                         success: function(checkresult) {
                             if (checkresult.success) {
+                                AjaxFormSubmit(form);
                             }
                             $("body").removeClass("loading");
-                            AjaxFormSubmit(form);
 
                         },
                         error: function(checkresult) {
