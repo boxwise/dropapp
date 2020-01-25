@@ -8,4 +8,4 @@
 </script>
 <script type='text/javascript' src='https://widget.freshworks.com/widgets/48000000566.js' async defer></script>
 {/literal}
-<script>window.onload = function() {ldelim}FreshworksWidget('identify','ticketForm',{ldelim}	name: '{$smarty.session.user.naam}',	email: '{$smarty.session.user.email}'{rdelim});{rdelim}</script>
+<script>window.onload = function() {ldelim}FreshworksWidget('prefill','ticketForm',{ldelim}	name: '{$smarty.session.user.naam}',email: '{$smarty.session.user.email}',custom_fields: {ldelim} url: '{$smarty.server.REQUEST_URI}',user_id: '{$smarty.session.user.id}',organisation_id: '{$smarty.session.organisation.id}', organisation_label: '{$smarty.session.organisation.label}', {rdelim},{rdelim});{rdelim}</script>

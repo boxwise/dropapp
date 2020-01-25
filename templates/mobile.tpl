@@ -56,7 +56,6 @@
 		{if $smarty.session.user}
 			<footer>
 				<a href="/?action=start&camp={$currentcamp['id']}">Full App</a> - 
-				<a href="http://helpme.boxwise.co">Help</a> - 
 				<a href="?logout=1">{$translate['cms_menu_logout']}</a>
 			</footer>
 		{/if}
