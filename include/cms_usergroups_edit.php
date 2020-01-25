@@ -37,7 +37,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
 		WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $data['id']]);
     if (!$_SESSION['user']['is_admin'] && ($data && (($_SESSION['organisation']['id'] != $requestedgroup['organisation_id']) || ($_SESSION['usergroup']['userlevel'] <= $requestedgroup['userlevel'])))) {
-        redirect('?action='.$_GET['origin']);
+        throw new Exception('You do not have access to this usergroup!');
     }
 
     if (!$id) {
