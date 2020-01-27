@@ -145,9 +145,6 @@ $(document).ready(function() {
     }
 });
 
-$(document).ready(function() { $('#Help').click(function(){ FreshworksWidget('open') })});
-
-
 // The function actually applying the offset
 function offsetAnchor() {
     if (location.hash.length !== 0) {
