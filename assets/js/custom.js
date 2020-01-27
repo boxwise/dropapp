@@ -162,7 +162,7 @@ function AjaxCheckSuccess(result){
         if (result.action) {
             eval(result.action);
             }
-        if (result.success == 'undefined') {
+        if (typeof result.success == 'undefined') {
             var n = noty({
                 text: "Something went wrong - please inform your coordinator.",
                 type: "error"
