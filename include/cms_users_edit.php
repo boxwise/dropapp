@@ -14,7 +14,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
         if ($existinguser && ($existinguser['id'] != $_POST['id'])) {
             if ($existinguser['organisation_id'] != $_SESSION['organisation']['id']) {
                 redirect('?action=cms_users&warning=1&message=This email already exists in another organisation.<br>Please ask the corresponding person to deactivate their other account!');
-            } elseif (!$_SESSION['user']['is_admin'] && ($_SESSION['usergoup']['userlevel'] <= $existinguser['userlevel'])) {
+            } elseif (!$_SESSION['user']['is_admin'] && ($_SESSION['usergroup']['userlevel'] <= $existinguser['userlevel'])) {
                 redirect('?action=cms_users&warning=1&message=This email already exists in your organisation. You do not have access to this account.');
             } else {
                 redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message=This email already exists. You are forwarded to the corresponding account.');
