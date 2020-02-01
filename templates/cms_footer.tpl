@@ -11,6 +11,8 @@
     <script src="/assets/js/custom.js?v=7"></script> 
     <script src="/assets/js/shoppingCart.js"></script>    
 
-  {include file="freshdesk.tpl"}
+	  {if $smarty.session.user}
+      {include file="freshdesk.tpl"}
+    {/if}
   </body>
 </html>
