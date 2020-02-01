@@ -38,7 +38,9 @@ function login($email, $pass, $autologin, $mobile = false)
             $success = false;
             $message = INCORRECT_LOGIN_ERROR;
             $redirect = false;
-            logfile('Attempt to login with '.($mobile ? 'mobile and ' : '').' wrong password for '.$email);
+            $detailed_msg = 'Attempt to login with '.($mobile ? 'mobile and ' : '').' wrong password for '.$email;
+            logfile($detailed_msg);
+            trigger_error($detailed_msg);
         }
     } else { // user not found
         $success = false;
@@ -46,10 +48,14 @@ function login($email, $pass, $autologin, $mobile = false)
         $deleted = db_value('SELECT email FROM cms_users WHERE email != "" AND email LIKE "'.$_POST['email'].'%" AND deleted Limit 1');
         if ($deleted) {
             $message = GENERIC_LOGIN_ERROR;
-            logfile('Attempt to login '.($mobile ? 'with mobile ' : '').'as deleted user '.$email);
+            $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as deleted user '.$email;
+            logfile($detailed_msg);
+            trigger_error($detailed_msg);
         } else {
             $message = GENERIC_LOGIN_ERROR;
-            logfile('Attempt to login '.($mobile ? 'with mobile ' : '').'as unknown user '.$email);
+            $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as unknown user '.$email;
+            logfile($detailed_msg);
+            trigger_error($detailed_msg);
         }
     }
 
