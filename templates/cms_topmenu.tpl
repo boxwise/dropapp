@@ -41,7 +41,7 @@
 				<ul class="dropdown-menu dropdown-menu-right">
 					<li><a href="?action=cms_profile">{$translate['cms_menu_settings']}</a></li>
 {if $smarty.session.user2}<li><a href="?action=exitloginas">{$translate['cms_menu_exitloginas']|replace:'%user%':$smarty.session.user2.naam}</a></li>{/if}
-					<li><button onclick="openwidget()">Help</button></li>
+					<li><a href="#" onclick="openwidget()">Help</a></li>
 					{literal}
 					<script> function openwidget() { FreshworksWidget('open')}</script>
 					{/literal}
