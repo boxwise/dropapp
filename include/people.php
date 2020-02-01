@@ -172,7 +172,15 @@ $table = $action;
             }
         );
     } else {
-        switch ($_POST['do']) {
+        $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
+        $ids = explode(',', $_POST['ids']);
+        $delta = array_diff($ids, $valid_ids);
+        if (0 != count($delta)) {
+            $message = 'You do not have access to this beneficiary record!';
+            trigger_error($message, E_USER_ERROR);
+            $success = false;
+        } else {
+            switch ($_POST['do']) {
             case 'merge':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $key => $value) {
@@ -275,6 +283,7 @@ $table = $action;
                 $redirect = '?action=people_export';
 
                 break;
+            }
         }
 
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
@@ -290,10 +299,9 @@ $table = $action;
             db_query('UPDATE people SET parent_id = :newparent WHERE id = :id', ['newparent' => $row['newparent'], 'id' => $row['id']]);
         }
     }
+
     function correctdrops($id)
     {
-        //$action = 'correctDrops({id:847, value: 1400}, {id:14, value: 1900})';
-
         $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
         $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
 

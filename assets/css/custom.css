@@ -777,6 +777,16 @@ td.list-level-0.list-column-ean_print div a:hover {
 	position: relative;
 	z-index: 0;
 }
+
+div.filter-applied {
+	border-color: #4cbac5;
+	outline: none;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+	-webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+	transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
 @media (max-width: 1260px){
 	.shopping_cart_table{
 		float: left;
