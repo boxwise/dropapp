@@ -79,12 +79,11 @@
         listsetting('add', 'Add');
 
         $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+        addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
         addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
         addbutton('qr', 'Make label', ['icon' => 'fa-print']);
         addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
         addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
-
-        addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => true]);
 
         $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
         $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
