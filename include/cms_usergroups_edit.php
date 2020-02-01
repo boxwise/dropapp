@@ -5,14 +5,21 @@ $action = 'cms_usergroups_edit';
 
 if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')) {
     if ($_POST) {
-        $postedgroup = db_row('
+        // Distinguish between create and update of a user group
+        if ($_POST['id']) {
+            $postedgroup = db_row('
 			SELECT ug.organisation_id, ugl.level AS userlevel
 			FROM cms_usergroups AS ug
 			LEFT JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
             WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $_POST['id']]);
+
+            $allowed_group_level = ($_SESSION['usergroup']['userlevel'] > $postedgroup['userlevel']);
+            $allowed_organisation = ($_SESSION['usergroup']['organisation_id'] == $postedgroup['organisation_id']);
+        } else {
+            $allowed_group_level = true;
+            $allowed_organisation = true;
+        }
         $is_admin = $_SESSION['user']['is_admin'];
-        $allowed_group_level = ($_SESSION['usergroup']['userlevel'] > $postedgroup['userlevel']);
-        $allowed_organisation = ($_SESSION['usergroup']['organisation_id'] == $postedgroup['organisation_id']);
         $allowed_new_level = ($_SESSION['usergroup']['userlevel'] > db_value('SELECT level FROM cms_usergroups_levels WHERE id = :id', ['id' => $_POST['userlevel']]));
 
         if ($is_admin || ($allowed_new_level && $allowed_group_level && $allowed_organisation)) {
@@ -26,7 +33,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 
             redirect('?action='.$_POST['_origin']);
         } else {
-            throw new Exception('Naughty boy!');
+            throw new Exception('You do not have access to this user group!');
         }
     }
 
