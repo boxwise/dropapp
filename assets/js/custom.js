@@ -144,7 +144,6 @@ function offsetAnchor() {
 }
 
 function AjaxCheckSuccess(result){
-    if (result.success){
         if (result.message){
             var n = noty({
                 text: result.message,
@@ -163,16 +162,13 @@ function AjaxCheckSuccess(result){
         if (result.action) {
             eval(result.action);
             }
+        if (typeof result.success == 'undefined') {
+            var n = noty({
+                text: "Something went wrong - please inform your coordinator.",
+                type: "error"
+                });
+        }
 
-            
-    }
-    else
-    {var n = noty({
-        type: "error",
-        text: "Something went wrong - please inform your coordinator"
-    })
-
-    }
 
 }
 
