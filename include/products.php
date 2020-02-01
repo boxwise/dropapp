@@ -37,7 +37,7 @@
             addcolumn('toggle', 'In Stockroom?', 'stockincontainer', ['do' => 'togglecontainer']);
         }
 
-        addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => true]);
+        addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
 
         foreach ($data as $d) {
             $count += $d['items'];

@@ -7,7 +7,12 @@ $export_ids_array = explode(',', $_SESSION['export_ids_products']);
 //Create a list of placeholders ? the same length as export ids given
 $id_pars = str_repeat('?,', count($export_ids_array) - 1).'?';
 //Put camp id as first element in the list
-array_unshift($export_ids_array, $_SESSION['camp']['id']);
+
+if ('' != $export_ids_array[0]) {
+    array_unshift($export_ids_array, $_SESSION['camp']['id']);
+} else {
+    $export_ids_array = [$_SESSION['camp']['id']];
+}
 
 $result = db_query(
     'SELECT p.*, sg.label AS sizegroup, g.label AS gender, p.value AS drops, COALESCE(SUM(s.items),0) AS items, pc.label AS category 

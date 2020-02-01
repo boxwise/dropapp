@@ -202,7 +202,7 @@ describe('Manage beneficiaries', () => {
         // page elements visibility checks
         getBeneficiariesTable().should('be.visible');
         getNewPersonButton().should('be.visible');
-        getExportButton().should('be.visible');
+        getExportButton().should('not.be.visible');
         getDeactivatedBeneficiariesTab().should('be.visible');
         cy.get("h1").contains("Beneficiaries").should('be.visible');
     });
