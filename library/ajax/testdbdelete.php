@@ -8,7 +8,9 @@
 
     // Test if user is a testusers and the database is a dev database
     if (!(in_array($settings['db_database'], $devdbs) && in_array($_SESSION['user']['email'], $testusers))) {
-        $return = ['success' => false, 'message' => 'You do not have access to delete test data!'];
+        $msg = 'You do not have access to delete test data!';
+        $return = ['success' => false, 'message' => $msg];
+        trigger_error($msg, E_USER_ERROR);
     } else {
         $ids = [];
         // get ids of user by emails
@@ -54,6 +56,7 @@
                     $return = 'true';
                 } else {
                     $return = 'false';
+                    trigger_error('No permission to delete this data', E_USER_ERROR);
 
                     break;
                 }

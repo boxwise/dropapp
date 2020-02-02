@@ -10,7 +10,9 @@ try {
         AND l.level < '.intval($_SESSION['usergroup']['userlevel']) : ''));
     $return = ['success' => true, 'showusermenu' => ($showusermenu ? true : false)];
 } catch (Exception $e) {
-    $return = ['success' => false, 'message' => $e->getMessage()];
+    $msg = $e->getMessage();
+    $return = ['success' => false, 'message' => $msg];
+    trigger_error($msg);
 }
 
 echo json_encode($return);
