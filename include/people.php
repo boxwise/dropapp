@@ -175,7 +175,7 @@ $table = $action;
         $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
         $ids = explode(',', $_POST['ids']);
         $delta = array_diff($ids, $valid_ids);
-        if (0 == count($delta)) {
+        if (0 != count($delta)) {
             $message = 'You do not have access to this beneficiary record!';
             trigger_error($message, E_USER_ERROR);
             $success = false;

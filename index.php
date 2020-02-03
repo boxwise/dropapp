@@ -17,28 +17,14 @@
 
     $cmsmain = new Zmarty();
 
-    // make an organisation menu, if the user is system admin
-    if ($_SESSION['user']['is_admin']) {
-        if (isset($_GET['organisation'])) {
-            unset($_SESSION['camp']);
-            $_SESSION['organisation'] = db_row('SELECT * FROM organisations WHERE id = :id AND (NOT organisations.deleted OR organisations.deleted IS NULL)', ['id' => $_GET['organisation']]);
-        }
-        $organisations = db_array('SELECT * FROM organisations 
-			WHERE (NOT organisations.deleted OR organisations.deleted IS NULL) 
-			ORDER BY label');
-        $cmsmain->assign('organisations', $organisations);
-    }
-
-    // This fills the camp menu in the top bar (only if the user has access to more than 1 camp
-    $camplist = camplist();
-    if (isset($_GET['camp'])) {
-        $_SESSION['camp'] = $camplist[$_GET['camp']];
-    } elseif (!isset($_SESSION['camp'])) {
-        $_SESSION['camp'] = reset($camplist);
-    }
-    $cmsmain->assign('camps', $camplist);
-    $cmsmain->assign('currentcamp', $_SESSION['camp']);
+    // Fill the organisation menu
     $cmsmain->assign('currentOrg', $_SESSION['organisation']);
+    if ($_SESSION['user']['is_admin']) {
+        $cmsmain->assign('organisations', organisationlist());
+    }
+    // This fills the camp menu in the top bar (only if the user has access to more than 1 camp
+    $cmsmain->assign('camps', camplist());
+    $cmsmain->assign('currentcamp', $_SESSION['camp']);
     $cmsmain->assign('campaction', strpos($action, '_edit') ? substr($action, 0, -5) : $action);
     $cmsmain->assign('haswarehouse', db_value('SELECT id FROM locations WHERE camp_id = '.intval($_SESSION['camp']['id']).' LIMIT 1 '));
 

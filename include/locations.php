@@ -2,16 +2,13 @@
 
     $table = $action;
     $ajax = checkajax();
-    $is_admin = false;
 
     if (!$ajax) {
         if (!$_SESSION['camp']['id']) {
             throw new Exception('The list of locations is not available when there is no camp selected');
         }
 
-        if ($_SESSION['user']['is_admin']) {
-            $is_admin = true;
-        }
+        $is_admin = ($_SESSION['user']['is_admin']);
 
         initlist();
 
