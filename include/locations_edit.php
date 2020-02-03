@@ -5,14 +5,18 @@
     $is_admin = ($_SESSION['user']['is_admin']);
 
     if ($_POST) {
+        // check if you have access to the location you want to update
         verify_campaccess_location($_POST['id']);
-        if (!in_array($_POST['camp_id'], camplist(true))) {
-            throw new Exception("You don't have access to this record");
+
+        //Prepare POST
+        if ($is_admin) {
+            $_POST['visible'] = !$_POST['outgoing'];
+        } else {
+            $_POST['visible'] = true;
         }
+        $_POST['camp_id'] = $_SESSION['camp']['id'];
 
-        $_POST['visible'] = !$_POST['outgoing'];
         $handler = new formHandler($table);
-
         $savekeys = ['label', 'visible', 'camp_id', 'container_stock', 'is_market', 'is_donated', 'is_lost'];
         $id = $handler->savePost($savekeys);
 
@@ -21,15 +25,8 @@
 
     $data = db_row('SELECT *, NOT visible as outgoing FROM '.$table.' WHERE id = :id', ['id' => $id]);
 
-    //verify_campaccess_location($id);
-
     if (!$id) {
         $data = db_defaults($table);
-        $data['container_stock'] = 1;
-        $data['camp_id'] = $_SESSION['camp']['id'];
-        if ($is_admin) {
-            $data['visible'] = 0;
-        }
     }
 
     // open the template
@@ -39,7 +36,6 @@
     $cmsmain->assign('title', 'Warehouse Location');
 
     addfield('hidden', '', 'id');
-    addfield('hidden', '', 'camp_id');
     addfield('text', 'Label', 'label');
     if ($is_admin) {
         addfield('checkbox', 'Stockroom', 'container_stock');
@@ -47,8 +43,6 @@
         addfield('checkbox', 'Donated', 'is_donated');
         addfield('checkbox', 'Lost', 'is_lost');
         addfield('checkbox', 'This warehouse location is an outgoing location', 'outgoing', ['tooltip' => 'Items in outgoing warehouse locations are not counted as part of your stock.']);
-    } else {
-        addfield('hidden', '', 'visible');
     }
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);
