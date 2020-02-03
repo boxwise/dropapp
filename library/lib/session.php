@@ -226,8 +226,29 @@ function loadSessionData($user)
     }
 
     // Test if session is set properly
-    if (!isset($_SESSION['organisation']) || !isset($_SESSION['camp'])) {
-        throw new Exception('$_SESSION[organisation] or $_SESSION[camp] is not set!');
+    $logout_needed = false;
+    try {
+        if (!isset($_SESSION['organisation']) || !isset($_SESSION['camp'])) {
+            $logout_needed = true;
+            throw new Exception('$_SESSION[organisation] or $_SESSION[camp] is not set!');
+        } elseif ($_SESSION['organisation']['id'] != $_SESSION['camp']['organisation_id']) {
+            $logout_needed = true;
+            throw new Exception('$_SESSION[organisation] and $_SESSION[camp] do not match!');
+        }
+        if (!$user['is_admin']) {
+            if ($_SESSION['user']['cms_usergroups_id'] != $_SESSION['usergroup']['id']) {
+                $logout_needed = true;
+                throw new Exception('$_SESSION[user] and $_SESSION[usergroup] do not match!');
+            } elseif ($_SESSION['organisation']['id'] != $_SESSION['usergroup']['organisation_id']) {
+                $logout_needed = true;
+                throw new Exception('$_SESSION[organisation] and $_SESSION[usergroup] do not match!');
+            }
+        }
+    } finally {
+        // logout if SESSION is not set the right way.
+        if ($logout_needed) {
+            logout();
+        }
     }
 }
 
