@@ -9,11 +9,7 @@
         verify_campaccess_location($_POST['id']);
 
         //Prepare POST
-        if ($is_admin) {
-            $_POST['visible'] = !$_POST['outgoing'];
-        } else {
-            $_POST['visible'] = true;
-        }
+        $_POST['visible'] = !$_POST['outgoing'];
         $_POST['camp_id'] = $_SESSION['camp']['id'];
 
         $handler = new formHandler($table);
@@ -37,12 +33,13 @@
 
     addfield('hidden', '', 'id');
     addfield('text', 'Label', 'label');
+    addfield('checkbox', 'This warehouse location is an outgoing location.', 'outgoing', ['tooltip' => 'Items in outgoing warehouse locations are not counted as part of your stock.']);
     if ($is_admin) {
         addfield('checkbox', 'Stockroom', 'container_stock');
         addfield('checkbox', 'Shop', 'is_market');
         addfield('checkbox', 'Donated', 'is_donated');
         addfield('checkbox', 'Lost', 'is_lost');
-        addfield('checkbox', 'This warehouse location is an outgoing location', 'outgoing', ['tooltip' => 'Items in outgoing warehouse locations are not counted as part of your stock.']);
+        addfield('checkbox', 'Scrap', 'is_scrap');
     }
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);
