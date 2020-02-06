@@ -320,29 +320,29 @@ class DemoDb extends AbstractSeed
         $this->table('library')->insert($library)->save();
 
         //------------------- locations
-        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`) VALUES
-			(1,'Shop',1,1,0,0,1,0,0),
-			(2,'LOST',1,2,0,0,0,0,1),
-			(3,'SCRAP',1,3,0,0,0,0,0),
-			(4,'Stockroom',1,4,1,1,0,0,0),
-			(5,'WH',1,5,1,0,0,0,0),
-			(6,'WH Women',1,6,1,0,0,0,0),
-			(7,'WH Men',1,7,1,0,0,0,0),
-			(8,'WH Children',1,8,1,0,0,0,0),
-			(9,'WH Babies',1,9,1,0,0,0,0),
-			(10,'WH Shoes',1,10,1,0,0,0,0),
-			(11,'WH New arrivals',1,11,1,0,0,0,0),
-			(12,'WH Hygiene',1,12,1,0,0,0,0),
-			(13,'WH Seasonal',1,12,1,0,0,0,0),
-			(14,'LOST',2,14,0,0,0,0,1),
-			(15,'SCRAP',2,15,0,0,0,0,0),
-			(16,'Stockroom',2,16,1,1,0,0,0),
-			(17,'WH1',2,17,1,0,0,0,0),
-			(18,'WH2',2,18,1,0,0,0,0),
-			(19,'Shop',3,19,0,0,1,0,0),
-			(20,'LOST',3,20,0,0,0,0,1),
-			(21,'SCRAP',3,21,0,0,0,0,0),
-			(22,'Stockroom',3,21,1,1,0,0,0);");
+        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`) VALUES
+			(1,'Shop',1,1,0,0,1,0,0,0),
+			(2,'LOST',1,2,0,0,0,0,1,0),
+			(3,'SCRAP',1,3,0,0,0,0,0,1),
+			(4,'Stockroom',1,4,1,1,0,0,0,0),
+			(5,'WH',1,5,1,0,0,0,0,0),
+			(6,'WH Women',1,6,1,0,0,0,0,0),
+			(7,'WH Men',1,7,1,0,0,0,0,0),
+			(8,'WH Children',1,8,1,0,0,0,0,0),
+			(9,'WH Babies',1,9,1,0,0,0,0,0),
+			(10,'WH Shoes',1,10,1,0,0,0,0,0),
+			(11,'WH New arrivals',1,11,1,0,0,0,0,0),
+			(12,'WH Hygiene',1,12,1,0,0,0,0,0),
+			(13,'WH Seasonal',1,12,1,0,0,0,0,0),
+			(14,'LOST',2,14,0,0,0,0,1,0),
+			(15,'SCRAP',2,15,0,0,0,0,0,1),
+			(16,'Stockroom',2,16,1,1,0,0,0,0),
+			(17,'WH1',2,17,1,0,0,0,0,0),
+			(18,'WH2',2,18,1,0,0,0,0,0),
+			(19,'Shop',3,19,0,0,1,0,0,0),
+			(20,'LOST',3,20,0,0,0,0,1,0),
+			(21,'SCRAP',3,21,0,0,0,0,0,1),
+			(22,'Stockroom',3,21,1,1,0,0,0,0);");
 
         //------------------- people
         $people = [];
