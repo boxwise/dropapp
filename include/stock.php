@@ -9,10 +9,10 @@
         $cmsmain->assign('title', 'Boxes');
         listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
-        listfilter(['label' => 'By location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
+        listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
 
-        $statusarray = ['showall' => 'All boxes', 'ordered' => 'Ordered boxes', 'dispose' => 'Untouched for 3 month'];
-        listfilter2(['label' => 'Only active boxes', 'options' => $statusarray, 'filter' => '"show"']);
+        $statusarray = ['showall' => 'Everything', 'ordered' => 'Ordered boxes', 'dispose' => 'Untouched for 3 months'];
+        listfilter2(['label' => 'Boxes in Stock', 'options' => $statusarray, 'filter' => '"show"']);
 
         $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
         listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
