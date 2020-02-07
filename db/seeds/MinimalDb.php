@@ -170,9 +170,9 @@ class MinimalDb extends AbstractSeed
         //------------------- sizegroup
         $this->execute("INSERT INTO `sizegroup` (`id`, `label`, `seq`) VALUES
             (1,'XS, S, M, L, XL',1),
-			(2,'Baby by age (0-6, 7-12, 13-18, 19-24)',20),
+			(2,'Baby by month (0-6, 7-12, 13-18, 19-24)',20),
 			(3,'Shoe sizes Female',40),
-			(4,'Children by age (2-3, 4-5, 6-8, 9-12, 13-15)',9),
+			(4,'Children by year (2-3, 4-5, 6-8, 9-12, 13-15)',9),
 			(5,'S, M, L',2),
 			(6,'Mixed sizes',31),
 			(7,'One size',30),
@@ -181,14 +181,13 @@ class MinimalDb extends AbstractSeed
 			(12,'Diaper sizes',70),
 			(13,'Bra sizes',75),
 			(16,'Pack of 5-20, Pack of 21+, Bulk (100+)',80),
-			(17,'Children by age (2-5, 6-10, 11-15)',10),
-			(18,'Children by age (6-10, 11-15)',101),
+			(17,'Children by year (2-5, 6-10, 11-15)',10),
+			(18,'Children by year (6-10, 11-15)',101),
 			(19,'Singlepack, Multipack',81),
-			(20,'Children by age (2-5)',100),
-			(21,'Baby by age (0-2, 3-6, 7-12, 13-18, 19-24)',19),
-			(22,'Baby by age (0-6, 7-24)',20),
-			(23,'Children by age (2-3, 4-5, 6-7, 8-9, 10-11, 12-13, 14-15)',11), 
-			(24,'Baby by age (0-3, 4-6, 7-9, 10-12, 13-18, 19-24)',23);");
+			(20,'Children by month (2-5)',100),
+			(21,'Baby by month (0-2, 3-6, 7-12, 13-18, 19-24)',19),
+			(22,'Baby by month (0-6, 7-24)',20),
+			(23,'Children by year (2-3, 4-5, 6-7, 8-9, 10-11, 12-13, 14-15)',11);");
 
         //------------------- sizes
         $this->execute("INSERT INTO `sizes` (`id`,`label`,`sizegroup_id`,`portion`,`seq`) VALUES 
