@@ -90,7 +90,7 @@
                     $data[$key]['people'] = db_value('SELECT COUNT(DISTINCT(p.id)) FROM people AS p, transactions AS t WHERE (p.id = t.people_id OR p.parent_id = t.people_id) AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59" AND t.product_id > 0 AND t.people_id > 0 AND camp_id = :campid', ['campid' => $_SESSION['camp']['id']]);
                     $totalvisitors += $data[$key]['people'];
                 }
-                addcolumn('text', 'Sales', 'salesdate');
+                addcolumn('text', 'Sales', 'salesdate', 'sorter-shortDate dateFormat-ddmmyyyy');    //tablesorter works with dates only if header has a proper class assigned - https://mottie.github.io/tablesorter/docs/example-option-date-format.html
                 addcolumn('text', 'Amount', 'aantal');
                 addcolumn('text', 'Beneficiaries', 'people');
                 $cmsmain->assign('listfooter', ['Total sales', $totalsales.' items ('.$totaldrops.' '.$_SESSION['camp']['currencyname'].')', $totalvisitors]);

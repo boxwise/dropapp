@@ -126,7 +126,7 @@
 				  	<thead>
 					  	<tr>
 						{foreach $listdata as $key=>$column}
-					  		<th><div {if $column['width']}style="width:{$column['width']}px;"{/if}>{$column['label'] nofilter}</div></th>
+					  		<th {if $column['headerClass']}class="{$column['headerClass']}"{/if}><div {if $column['width']}style="width:{$column['width']}px;"{/if}>{$column['label'] nofilter}</div></th>
 						{/foreach}
 					  	</tr>
 						<tr class="sorter-false firstline">

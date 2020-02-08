@@ -609,11 +609,11 @@ function query_insert($str, $pos, $insert)
     return substr($str, 0, $pos).$insert.' '.substr($str, $pos);
 }
 
-function addcolumn($type, $label = false, $field = false, $array = [])
+function addcolumn($type, $label = false, $field = false, $headerClass = false, $array = [])
 {
     global $listdata, $data;
 
-    $listdata[$field] = ['type' => $type, 'label' => $label, 'field' => $field];
+    $listdata[$field] = ['type' => $type, 'label' => $label, 'field' => $field, 'headerClass' => $headerClass];
 
     foreach ($array as $key => $value) {
         $listdata[$field][$key] = $value;
