@@ -9,10 +9,15 @@
         $cmsmain->assign('title', 'Boxes');
         listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
-        listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
+        listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
 
-        $statusarray = ['showall' => 'Everything', 'ordered' => 'Ordered boxes', 'dispose' => 'Untouched for 3 months'];
-        listfilter2(['label' => 'Boxes in Stock', 'options' => $statusarray, 'filter' => '"show"']);
+        $statusarray = [
+            'boxes_in_stock' => 'In Stock',
+            'ordered' => 'Ordered',
+            'dispose' => 'Untouched for 3 months',
+            'lost_boxes' => 'Lost',
+            'showall' => 'Everything', ];
+        listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);
 
         $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
         listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
@@ -22,7 +27,28 @@
         listsetting('manualquery', true);
 
         //dump($listconfig);
-        $data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox ,
+
+        function get_filter2_query($applied_filter)
+        {
+            switch ($applied_filter) {
+                case 'boxes_in_stock':
+                    return ' AND l.visible';
+                case 'ordered':
+                    return ' AND (stock.ordered OR stock.picked) AND l.visible';
+                case 'dispose':
+                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible';
+                case 'lost_boxes':
+                    return ' AND l.is_lost';
+                case 'showall':
+                    return '';
+                default:
+                    return ' AND l.visible';
+            }
+        }
+
+        $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock']);
+
+        $query = 'SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox ,
 		IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
 		FROM '.$table.'
 			LEFT OUTER JOIN cms_users AS cu ON cu.id = stock.ordered_by
@@ -35,12 +61,14 @@
 
         ($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '').
 
-        ('ordered' == $_SESSION['filter2']['stock'] ? ' AND (stock.ordered OR stock.picked) AND l.visible' : ('dispose' == $_SESSION['filter2']['stock'] ? ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible' : (!$_SESSION['filter2']['stock'] ? ' AND l.visible' : ''))).
+        $applied_filter2_query.
 
         ($_SESSION['filter3']['stock'] ? ' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')' : '').
 
         ($_SESSION['filter']['stock'] ? ' AND (stock.location_id = '.$_SESSION['filter']['stock'].')' : '').
-        ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : ''));
+        ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : '');
+
+        $data = getlistdata($query);
 
         foreach ($data as $key => $value) {
             /*
