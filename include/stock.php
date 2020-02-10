@@ -26,8 +26,6 @@
         listfilter4(['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
         listsetting('manualquery', true);
 
-        //dump($listconfig);
-
         function get_filter2_query($applied_filter)
         {
             switch ($applied_filter) {
