@@ -119,8 +119,10 @@ class MinimalDb extends AbstractSeed
             (5,'Boy','Boy',5,1,0,0,1,0,'0'),
             (6,'Unisex Child','Child',7,1,1,0,1,0,'0'),
             (9,'Unisex Baby','Baby',8,1,1,0,0,0,'1'),
-            (10,'-',NULL,9,1,1,1,1,1,'1'),
-            (11,'Kid (2-5)','Kid',6,1,1,0,0,1,'0');");
+            (10,'-',NULL,0,1,1,1,1,1,'1'),
+            (11,'Unisex Kid','Kid',9,1,1,0,0,1,'0'),
+			(12,'Teen Girl','Girl',4,0,1,1,0,0,'0'),
+            (13,'Teen Boy','Boy',5,1,0,1,0,0,'0');");
 
         //------------------- need_periods
         $this->execute("INSERT INTO `need_periods` (`id`, `label`, `week_min`, `week_max`) VALUES
@@ -168,22 +170,24 @@ class MinimalDb extends AbstractSeed
         //------------------- sizegroup
         $this->execute("INSERT INTO `sizegroup` (`id`, `label`, `seq`) VALUES
             (1,'XS, S, M, L, XL',1),
-			(2,'Baby by age (6-12-18-24)',20),
+			(2,'Baby by month (0-6, 7-12, 13-18, 19-24)',20),
 			(3,'Shoe sizes Female',40),
-			(4,'Children by age (2-4-6-9-13)',9),
-			(5,'S, M, L',30),
-			(6,'Mixed sizes',90),
-			(7,'One size',91),
+			(4,'Children by year (2-3, 4-5, 6-8, 9-12, 13-15)',9),
+			(5,'S, M, L',2),
+			(6,'Mixed sizes',31),
+			(7,'One size',30),
 			(8,'Shoe sizes Male',50),
 			(9,'Shoe sizes children',60),
 			(12,'Diaper sizes',70),
 			(13,'Bra sizes',75),
 			(16,'Pack of 5-20, Pack of 21+, Bulk (100+)',80),
-			(17,'Children by age (2-5-10-15)',10),
-			(18,'Children by age (5-10-15)',11),
+			(17,'Children by year (2-5, 6-10, 11-15)',10),
+			(18,'Children by year (6-10, 11-15)',101),
 			(19,'Singlepack, Multipack',81),
-			(20,'Children by age (2-5)',12),
-			(21,'Baby by age (3-6-12-18-24)',19);");
+			(20,'Children by month (2-5)',100),
+			(21,'Baby by month (0-2, 3-6, 7-12, 13-18, 19-24)',19),
+			(22,'Baby by month (0-6, 7-24)',20),
+			(23,'Children by year (2-3, 4-5, 6-7, 8-9, 10-11, 12-13, 14-15)',11);");
 
         //------------------- sizes
         $this->execute("INSERT INTO `sizes` (`id`,`label`,`sizegroup_id`,`portion`,`seq`) VALUES 
@@ -258,28 +262,39 @@ class MinimalDb extends AbstractSeed
             (113,'Size 5 (>12 kg)',12,13,135),
             (114,'Size 6 (>16 kg)',12,13,136),
             (115,'Kids (>19 kg)',12,13,137),
-            (116,'2-5 year',17,33,10),
-            (117,'5-10 year',17,33,11),
-            (118,'10-15 year',17,34,12),
-            (119,'0-6 month',2,20,40),
-            (120,'6-12 month',2,20,41),
-            (121,'12-18 month',2,20,42),
-            (122,'18-24 month',2,20,43),
+            (116,'2-5 years',17,33,10),
+            (117,'6-10 years',17,33,11),
+            (118,'11-15 years',17,34,12),
+            (119,'0-6 months',2,20,40),
+            (120,'7-12 months',2,20,41),
+            (121,'13-18 months',2,20,42),
+            (122,'19-24 months',2,20,43),
             (123,'All ages',2,20,44),
-            (124,'5-10 year',18,50,20),
-            (125,'10-15 year',18,50,21),
+            (124,'6-10 years',18,50,20),
+            (125,'11-15 years',18,50,21),
             (126,'Singlepack',19,100,160),
             (127,'Multipack',19,0,161),
             (128,'17',9,5,100),
             (129,'18',9,5,101),
-            (130,'2-5 year',20,100,30),
+            (130,'2-5 years',20,100,30),
             (131,'75B',13,10,170),
             (132,'80B',13,10,171),
             (133,'85B',13,20,172),
             (134,'90b',13,20,173),
             (135,'95B',13,20,174),
             (136,'100C',13,10,175),
-            (137,'D+ (big)',13,10,176);");
+            (137,'D+ (big)',13,10,176),
+			(138,'0-6 months',22,25,180),
+			(139,'7-24 months',22,75,181),
+			(140,'All ages',4,100,182),
+			(141,'2-3 years',23,20,200),
+            (142,'4-5 years',23,20,201),
+            (143,'6-7 years',23,20,202),
+            (144,'8-9 years',23,20,203),            
+			(145,'10-11 years',23,20,201),
+            (146,'12-13 years',23,20,202),
+            (147,'14-15 years',23,20,203),
+			(148,'All ages',23,100,204);");
 
         //------------------- tipofday
         $this->execute("INSERT INTO `tipofday` (`id`, `title`, `content`) VALUES

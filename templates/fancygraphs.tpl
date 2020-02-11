@@ -178,11 +178,7 @@ var chart2 = AmCharts.makeChart("chartdiv2", {
 <div id="chartdiv2" class="chartdiv"></div>	
 <div class="fc"></div>
 <h1 class="light">
-{if $smarty.session.camp['id']==1}
-	There {if $data['residentscamp']==1} is {else} are {/if} currently <span class="number">{$data['residentscamp']}</span> {if $data['residentscamp']==1} person {else} people {/if} living in {$currentcamp['name']}. <span class="number">{$data['notregistered']}</span> {if $data['notregistered']==1} person lives {else} people live {/if} in this base unregistered.<br>
-{else}
-	There {if $data['residents']==1} is {else} are {/if} currently <span class="number">{$data['residents']}</span> {if $data['residents']==1} person {else} people {/if} living in {$currentcamp['name']}.
-{/if}
+There {if $data['residents']==1} is {else} are {/if} currently <span class="number">{$data['residents']}</span> {if $data['residents']==1} person {else} people {/if} living in {$currentcamp['name']}.
 
 
 <span class="men">{($data['totalmen'])}</span> of them {if $data['totalmen']==1} is {else} are {/if} male (<span class="men">{$data['menperc']|round}%</span>) and <span class="women">{$data['totalwomen']}</span> {if $data['totalwomen']==1} is {else} are {/if} female (<span class="women">{$data['womenperc']|round}</span>%).<br /> <span class="number">{$data['children']}</span> {if $data['children']==1} person is {else} people are {/if} {$smarty.session.camp['adult_age']-1} or younger (<span class="number">{($data['children']/$data['residents']*100)|round}%</span>).</h1>

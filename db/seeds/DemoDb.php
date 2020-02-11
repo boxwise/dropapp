@@ -33,9 +33,9 @@ class DemoDb extends AbstractSeed
 
         //------------------- camps
         $this->execute("INSERT INTO `camps` (`id`,`idcard`,`market`,`name`,`organisation_id`,`schedulebreak`,`schedulebreakduration`,`schedulebreakstart`,`schedulestart`,`schedulestop`,`scheduletimeslot`,`seq`,`adult_age`,`currencyname`,`cyclestart`,`daystokeepdeletedpersons`,`delete_inactive_users`,`deleted`,`dropcapadult`,`dropcapchild`,`dropsperadult`,`dropsperchild`,`extraportion`,`familyidentifier`,`resettokens`) VALUES 
-			(1,0,1,'Lesvos',1,'0','1','2019-08-27 13:00:00','2019-08-27 11:00:00','2019-08-27 17:00:00','0.5',1,15,'Tokens','2019-01-01 00:00:00',9999,999,NULL,99999,99999,'100','100',0,'Refugee / Case ID',0),
-			(2,0,0,'Thessaloniki',2,'0','1','13:00','9:00','15:00','0.25',2,15,'points','2019-11-05 09:13:11',9999,999,NULL,99999,99999,'100','50',0,'Family ID',1),
-			(3,0,1,'Samos',2,'0','1.5','2019-10-14 13:30:00','2019-10-14 10:30:00','2019-10-14 17:00:00','0.5',4,0,'Tokens','2019-01-06 22:18:10',60,90,NULL,500,300,'150','130',1,'Household',0);");
+			(1,0,1,'Lesvos',1,'0','1','2019-08-27 13:00:00','2019-08-27 11:00:00','2019-08-27 17:00:00','0.5',1,15,'Tokens','2019-01-01 00:00:00',9999,8,NULL,99999,99999,'100','100',0,'Refugee / Case ID',0),
+			(2,0,0,'Thessaloniki',2,'0','1','13:00','9:00','15:00','0.25',2,15,'points','2019-11-05 09:13:11',9999,9999,NULL,99999,99999,'100','50',0,'Family ID',1),
+			(3,0,1,'Samos',2,'0','1.5','2019-10-14 13:30:00','2019-10-14 10:30:00','2019-10-14 17:00:00','0.5',4,0,'Tokens','2019-01-06 22:18:10',60,9999,NULL,500,300,'150','130',1,'Household',0);");
 
         //------------------- cms_functions_camps
         $this->execute('INSERT INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES
@@ -320,29 +320,29 @@ class DemoDb extends AbstractSeed
         $this->table('library')->insert($library)->save();
 
         //------------------- locations
-        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`) VALUES
-			(1,'Shop',1,1,0,0,1,0,0),
-			(2,'LOST',1,2,0,0,0,0,1),
-			(3,'SCRAP',1,3,0,0,0,0,0),
-			(4,'Stockroom',1,4,1,1,0,0,0),
-			(5,'WH',1,5,1,0,0,0,0),
-			(6,'WH Women',1,6,1,0,0,0,0),
-			(7,'WH Men',1,7,1,0,0,0,0),
-			(8,'WH Children',1,8,1,0,0,0,0),
-			(9,'WH Babies',1,9,1,0,0,0,0),
-			(10,'WH Shoes',1,10,1,0,0,0,0),
-			(11,'WH New arrivals',1,11,1,0,0,0,0),
-			(12,'WH Hygiene',1,12,1,0,0,0,0),
-			(13,'WH Seasonal',1,12,1,0,0,0,0),
-			(14,'LOST',2,14,0,0,0,0,1),
-			(15,'SCRAP',2,15,0,0,0,0,0),
-			(16,'Stockroom',2,16,1,1,0,0,0),
-			(17,'WH1',2,17,1,0,0,0,0),
-			(18,'WH2',2,18,1,0,0,0,0),
-			(19,'Shop',3,19,0,0,1,0,0),
-			(20,'LOST',3,20,0,0,0,0,1),
-			(21,'SCRAP',3,21,0,0,0,0,0),
-			(22,'Stockroom',3,21,1,1,0,0,0);");
+        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`) VALUES
+			(1,'Shop',1,1,0,0,1,0,0,0),
+			(2,'LOST',1,2,0,0,0,0,1,0),
+			(3,'SCRAP',1,3,0,0,0,0,0,1),
+			(4,'Stockroom',1,4,1,1,0,0,0,0),
+			(5,'WH',1,5,1,0,0,0,0,0),
+			(6,'WH Women',1,6,1,0,0,0,0,0),
+			(7,'WH Men',1,7,1,0,0,0,0,0),
+			(8,'WH Children',1,8,1,0,0,0,0,0),
+			(9,'WH Babies',1,9,1,0,0,0,0,0),
+			(10,'WH Shoes',1,10,1,0,0,0,0,0),
+			(11,'WH New arrivals',1,11,1,0,0,0,0,0),
+			(12,'WH Hygiene',1,12,1,0,0,0,0,0),
+			(13,'WH Seasonal',1,12,1,0,0,0,0,0),
+			(14,'LOST',2,14,0,0,0,0,1,0),
+			(15,'SCRAP',2,15,0,0,0,0,0,1),
+			(16,'Stockroom',2,16,1,1,0,0,0,0),
+			(17,'WH1',2,17,1,0,0,0,0,0),
+			(18,'WH2',2,18,1,0,0,0,0,0),
+			(19,'Shop',3,19,0,0,1,0,0,0),
+			(20,'LOST',3,20,0,0,0,0,1,0),
+			(21,'SCRAP',3,21,0,0,0,0,0,1),
+			(22,'Stockroom',3,21,1,1,0,0,0,0);");
 
         //------------------- people
         $people = [];

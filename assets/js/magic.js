@@ -624,6 +624,7 @@ function initiateList() {
                 var el = $(this);
                 var options = $.extend(
                     {
+                        dateFormat : "ddmmyyyy", // set the default date format
                         widgets: ["stickyHeaders", "saveSort"],
                         widgetOptions: {
                             stickyHeaders_attachTo: el.closest(
