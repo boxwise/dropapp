@@ -811,9 +811,7 @@ function initiateList() {
                             }
                             AjaxCheckSuccess(result);
                         },
-                        error: function(result) {
-                            AjaxError(result);
-                        }
+                        error: AjaxError
                     });
                 } else {
                     var n = noty({
@@ -858,9 +856,7 @@ function initiateList() {
                     }
                     AjaxCheckSuccess(result);
                 },
-                error: function(result) {
-                    AjaxError(result);
-                }
+                error: AjaxError
             });
             e.preventDefault();
         });
