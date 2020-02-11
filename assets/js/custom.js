@@ -151,13 +151,14 @@ function AjaxCheckSuccess(result){
                 });
         }
         if (result.redirect){
+            if (result.message){
             setTimeout(function() {
             execReload(result.redirect);
             }, 1500);
             } else {
             execReload(result.redirect);
             }
-            
+        }
 
         if (result.action) {
             eval(result.action);
@@ -282,9 +283,7 @@ function updateLaundry(field, offset) {
                 }
                 AjaxCheckSuccess(result);
             },
-            error: function(result) {
-                AjaxError(result);
-            }
+            error: AjaxError(result)
         });
     }
 }
@@ -341,9 +340,8 @@ function selectFamily(field,  reload, target) {
                 }
                 AjaxCheckSuccess(result);
             },
-            error: function(result) {
-                AjaxError(result);
-            }
+            error: AjaxError(result)
+
         });
     } else {
         $("#dropcredit").data({ dropCredit: 0 });
@@ -390,9 +388,8 @@ function getSizes() {
             }
             AjaxCheckSuccess(result);
         },
-        error: function(result) {
-            AjaxError(result);
-        }
+        error: AjaxError(result)
+
     });
     /*
 	$('#field_size_id').html('<option>Something</option>');
@@ -498,9 +495,7 @@ $(".delete-user").on("click", function(e) {
             success: function(result) {
                 AjaxCheckSuccess(result);
             },
-            error: function(result) {
-                AjaxError(result);
-            }
+            error: AjaxError(result)
         });
     }
 });
