@@ -174,7 +174,7 @@ $table = $action;
     } else {
         $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
         $ids = [];
-        if ($_POST['do'] == 'move') { // move passes the ids in pairs with the level the id is moved to. Therefore, it needs to be handled differently.
+        if ('move' == $_POST['do']) { // move passes the ids in pairs with the level the id is moved to. Therefore, it needs to be handled differently.
             foreach (json_decode($_POST['ids']) as $pair) {
                 $ids[] = $pair[0];
             }
