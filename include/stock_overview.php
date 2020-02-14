@@ -100,7 +100,7 @@
     ON (INSTR(a1.new_id,concat(a2.new_id,"-"))=1 OR a2.new_id = "") and a1.level+1 = a2.level and (a2.level != 5)
     ORDER BY id';
 
-    $subtypes = 'SELECT IF(ISNULL(raw_b.size),COUNT(DISTINCT raw_b.id),COUNT(DISTINCT raw_b.size)) as subtypes, raw_a.id
+    $subtypes = 'SELECT IF(isnull(raw_a.size),CONCAT(COUNT(DISTINCT raw_b.id)," ",raw_b.labelname,IF(COUNT( DISTINCT raw_b.id)>1,"s","")),raw_b.size) as subtypes, raw_a.id
     from 
         ('.$rawdata.') AS raw_a 
     LEFT JOIN 
@@ -111,7 +111,7 @@
         raw_a.id';
 
     //SELECT COUNT(raw_b.id) as num_locations,
-    $locations = 'SELECT raw_a.id as id,count(distinct raw_b.location) as num_locations
+    $locations = 'SELECT raw_a.id as id,IF(count(distinct raw_b.location)=1,raw_b.location,concat(count(distinct raw_b.location)," locations")) as num_locations
     FROM 
         ('.$rawdata.') AS raw_a 
     INNER JOIN 
@@ -121,7 +121,7 @@
     GROUP BY 
         raw_a.id';
 
-    $data = db_array('SELECT IF((counts.subtypes=0),"-",counts.subtypes) as subtypes, IF(ISNULL(complete.location),num_locations.num_locations,complete.location) as num_locations, complete.*  
+    $data = db_array('SELECT IF((counts.subtypes=0),counts.subtypes,counts.subtypes) as subtypes, IF(ISNULL(complete.location),num_locations.num_locations,complete.location) as num_locations, complete.*  
     FROM 
     ('.$rawdata.')as complete 
     LEFT JOIN
