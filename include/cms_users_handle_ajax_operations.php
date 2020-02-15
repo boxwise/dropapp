@@ -12,7 +12,7 @@ if ($ajax) {
             list($success, $message, $redirect) = listDelete($table, $ids);
             if ($success) {
                 foreach ($ids as $id) {
-                    db_query('UPDATE cms_users SET email = CONCAT(email,".deleted.",id) WHERE id = :id', ['id' => $id]);
+                    db_query('UPDATE '.$table.' SET email = CONCAT(email,".deleted.",id) WHERE id = :id', ['id' => $id]);
                 }
             }
 
@@ -22,11 +22,16 @@ if ($ajax) {
             list($success, $message, $redirect) = listUndelete($table, $ids);
             if ($success) {
                 foreach ($ids as $id) {
-                    db_query('UPDATE cms_users SET email = SUBSTR(email, 1, LENGTH(email)-LENGTH(".deleted.")-LENGTH(id)) WHERE id = :id', ['id' => $id]);
+                    db_query('UPDATE '.$table.' SET email = SUBSTR(email, 1, LENGTH(email)-LENGTH(".deleted.")-LENGTH(id)) WHERE id = :id', ['id' => $id]);
                 }
             }
 
             break;
+        case 'prolong':
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listProlong($table, $ids);
+
+                break;
         case 'copy':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = listCopy($table, $ids, 'code');

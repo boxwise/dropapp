@@ -6,6 +6,7 @@
         require_once 'cms_users_handle_ajax_operations.php';
     } else {
         initlist();
+        addbutton('prolong', 'Prolong', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'prolong-cms-user']);
         listsetting('allowadd', false);
         listsetting('haspagemenu', true);
         addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'testid' => 'active_pending']);

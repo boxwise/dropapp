@@ -12,6 +12,7 @@
         addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'active' => true, 'testid' => 'active_pending']);
         addpagemenu('expired', 'Expired', ['link' => '?action=cms_users_expired', 'testid' => 'expired']);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'testid' => 'deactivated']);
+        addbutton('prolong', 'Prolong', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'prolong-cms-user']);
         addbutton('sendlogindata', $translate['cms_users_sendlogin'], ['icon' => 'fa-user', 'confirm' => true, 'disableif' => true]);
         if ($_SESSION['user']['is_admin'] && !$_SESSION['user2']) {
             addbutton('loginasuser', $translate['cms_users_loginas'], ['icon' => 'fa-users', 'confirm' => true, 'oneitemonly' => true, 'disableif' => true]);
