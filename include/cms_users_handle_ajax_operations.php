@@ -33,7 +33,6 @@ if ($ajax) {
                 list($success, $message, $redirect) = listProlong($table, $ids);
 
                 break;
-
         case 'copy':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = listCopy($table, $ids, 'code');
