@@ -750,13 +750,11 @@ function initiateList() {
                                                 $(this).remove();
                                             });
                                             break;
-
                                         case "undelete":
                                             allTargets.fadeOut(200, function() {
                                                 $(this).remove();
                                             });
                                             break;
-
                                         case "hide":
                                             if (
                                                 parent.data("inheritvisibility")
@@ -782,6 +780,16 @@ function initiateList() {
                                                     "item-hidden"
                                                 );
                                             }
+                                            break;
+                                        case "prolong":
+                                            allTargets.fadeOut(200, function() {
+                                                $(this).remove();
+                                            });
+                                            break;
+                                        case "prolongActive":
+                                            $.each( allTargets, function( key, value ) {
+                                                value.cells[4].innerText = ''
+                                            });
                                             break;
                                         default:
                                         // nothing
