@@ -100,7 +100,7 @@
     ON (INSTR(a1.new_id,concat(a2.new_id,"-"))=1 OR a2.new_id = "") and a1.level+1 = a2.level and (a2.level != 5)
     ORDER BY id';
 
-    $subtypes = 'SELECT IF(isnull(raw_a.size),CONCAT(COUNT(DISTINCT raw_b.id)," ",raw_b.labelname,IF(COUNT( DISTINCT raw_b.id)>1,"s","")),raw_b.size) as subtypes, raw_a.id
+    $subtypes = 'SELECT IF(isnull(raw_a.size),CONCAT(COUNT(DISTINCT raw_b.label)," ",raw_b.labelname,IF(COUNT( DISTINCT raw_b.label)>1,"s","")),raw_b.size) as subtypes, raw_a.id
     from 
         ('.$rawdata.') AS raw_a 
     LEFT JOIN 
