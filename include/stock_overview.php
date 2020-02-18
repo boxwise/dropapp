@@ -76,7 +76,7 @@
     INNER JOIN
         locations on stock.location_id = locations.id 
     WHERE 
-        locations.camp_id = 1  -- fixed for now
+        locations.camp_id = :camp_id
     GROUP BY 
         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
     HAVING 
@@ -109,7 +109,6 @@
         raw_a.id = raw_b.parent_id OR raw_a.level = 3 
     GROUP BY 
         raw_a.id';
-
     //SELECT COUNT(raw_b.id) as num_locations,
     $locations = 'SELECT raw_a.id as id,IF(count(distinct raw_b.location)=1,raw_b.location,concat(count(distinct raw_b.location)," locations")) as num_locations
     FROM 
@@ -131,7 +130,7 @@
     ON 
         complete.id=num_locations.id 
     ORDER BY 
-        complete.id;');
+        complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
     //$data = db_array($counts);
     $cmsmain->assign('data', $data);
     $cmsmain->assign('listconfig', $listconfig);
