@@ -25,13 +25,13 @@
 {if $listconfig['filter2']}
 	<li>
 		<div class="btn-group">
-			<div type="button" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filtervalue2']}filter-applied{/if}" data-toggle="dropdown" data-testId="filter2Button">
-				{if $listconfig['filtervalue2']}
-					{$listconfig['filter2']['options'][$listconfig['filtervalue2']]}
+			<div type="button" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filter2value']}filter-applied{/if}" data-toggle="dropdown" data-testId="filter2Button">
+				{if $listconfig['filter2value']}
+					{$listconfig['filter2']['options'][$listconfig['filter2value']]}
 				{else}
 					{$listconfig['filter2']['label']}
 				{/if}
-				{if $listconfig['filtervalue2']}
+				{if $listconfig['filter2value']}
 					<a class="fa fa-times form-control-feedback" href="?action={$listconfig['origin']}&resetfilter2=true"></a>
 				{else}
 					<span class="caret"></span>
@@ -48,13 +48,13 @@
 {if $listconfig['filter3']}
 	<li>
 		<div class="btn-group">
-			<div type="button" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filtervalue3']}filter-applied{/if}" data-toggle="dropdown" data-testId="filter3Button">
-				{if $listconfig['filtervalue3']}
-					{$listconfig['filter3']['options'][$listconfig['filtervalue3']]}
+			<div type="button" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filter3value']}filter-applied{/if}" data-toggle="dropdown" data-testId="filter3Button">
+				{if $listconfig['filter3value']}
+					{$listconfig['filter3']['options'][$listconfig['filter3value']]}
 				{else}
 					{$listconfig['filter3']['label']}
 				{/if}
-				{if $listconfig['filtervalue3']}
+				{if $listconfig['filter3value']}
 					<a class="fa fa-times form-control-feedback" href="?action={$listconfig['origin']}&resetfilter3=true"></a>
 				{else}
 					<span class="caret"></span>
@@ -72,13 +72,13 @@
 {if $listconfig['filter4']}
 	<li>
 		<div class="btn-group">
-			<div type="button" title="Chose among Products existing in boxes" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filtervalue4']}filter-applied{/if}" data-toggle="dropdown">
-				{if $listconfig['filtervalue4']}
-					{$listconfig['filter4']['options'][$listconfig['filtervalue4']]}
+			<div type="button" title="Chose among Products existing in boxes" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filter4value']}filter-applied{/if}" data-toggle="dropdown">
+				{if $listconfig['filter4value']}
+					{$listconfig['filter4']['options'][$listconfig['filter4value']]}
 				{else}
 					{$listconfig['filter4']['label']}
 				{/if}
-				{if $listconfig['filtervalue4']}
+				{if $listconfig['filter4value']}
 					<a class="fa fa-times form-control-feedback" href="?action={$listconfig['origin']}&resetfilter4=true"></a>
 				{else}
 					<span class="caret"></span>

@@ -343,83 +343,22 @@ function listsetting($set, $value)
     $listconfig[$set] = $value;
 }
 
-function listfilter($options = [])
+function filter($name, $options)
 {
     global $listconfig, $action;
-
     if ($options['query']) {
         $options['options'] = db_simplearray($options['query']);
     }
-    listsetting('filter', $options);
+    listsetting($name, $options);
 
-    if ($_GET['resetfilter']) {
-        unset($_SESSION['filter'][$action]);
+    if ($_GET['reset'.$name]) {
+        unset($_SESSION[$name][$action]);
     }
-    if ($_GET['filter']) {
-        $listconfig['filtervalue'] = $_GET['filter'];
-        $_SESSION['filter'][$action] = $listconfig['filtervalue'];
-    } elseif ($_SESSION['filter'][$action]) {
-        $listconfig['filtervalue'] = $_SESSION['filter'][$action];
-    }
-}
-
-function listfilter4($options = [])
-{
-    global $listconfig, $action;
-
-    if ($options['query']) {
-        $options['options'] = db_simplearray($options['query']);
-    }
-    listsetting('filter4', $options);
-
-    if ($_GET['resetfilter4']) {
-        unset($_SESSION['filter4'][$action]);
-    }
-    if ($_GET['filter4']) {
-        $listconfig['filtervalue4'] = $_GET['filter4'];
-        $_SESSION['filter4'][$action] = $listconfig['filtervalue4'];
-    } elseif ($_SESSION['filter4'][$action]) {
-        $listconfig['filtervalue4'] = $_SESSION['filter4'][$action];
-    }
-}
-
-function listfilter2($options = [])
-{
-    global $listconfig, $action;
-
-    if ($options['query']) {
-        $options['options'] = db_simplearray($options['query']);
-    }
-    listsetting('filter2', $options);
-
-    if ($_GET['resetfilter2']) {
-        unset($_SESSION['filter2'][$action]);
-    }
-    if ($_GET['filter2']) {
-        $listconfig['filtervalue2'] = $_GET['filter2'];
-        $_SESSION['filter2'][$action] = $listconfig['filtervalue2'];
-    } elseif ($_SESSION['filter2'][$action]) {
-        $listconfig['filtervalue2'] = $_SESSION['filter2'][$action];
-    }
-}
-
-function listfilter3($options = [])
-{
-    global $listconfig, $action;
-
-    if ($options['query']) {
-        $options['options'] = db_simplearray($options['query']);
-    }
-    listsetting('filter3', $options);
-
-    if ($_GET['resetfilter3']) {
-        unset($_SESSION['filter3'][$action]);
-    }
-    if ($_GET['filter3']) {
-        $listconfig['filtervalue3'] = $_GET['filter3'];
-        $_SESSION['filter3'][$action] = $listconfig['filtervalue3'];
-    } elseif ($_SESSION['filter3'][$action]) {
-        $listconfig['filtervalue3'] = $_SESSION['filter3'][$action];
+    if ($_GET[$name]) {
+        $listconfig[$name.'value'] = $_GET[$name];
+        $_SESSION[$name][$action] = $listconfig[$name.'value'];
+    } elseif ($_SESSION[$name][$action]) {
+        $listconfig[$name.'value'] = $_SESSION[$name][$action];
     }
 }
 
