@@ -403,9 +403,9 @@ function buildlistdataquery($query)
     $hasDeleted = db_fieldexists($table, 'deleted');
 
     $hasFilter = $listconfig['filtervalue'];
-    $hasFilter2 = $listconfig['filtervalue2'];
-    $hasFilter3 = $listconfig['filtervalue3'];
-    $hasFilter4 = $listconfig['filtervalue4'];
+    $hasFilter2 = $listconfig['filter2value'];
+    $hasFilter3 = $listconfig['filter3value'];
+    $hasFilter4 = $listconfig['filter4value'];
 
     if ($hasDeleted && !stripos($query, 'DELETED')) {
         $query = insertwhere($query, '(NOT '.$table.'.deleted OR '.$table.'.deleted IS NULL)');
