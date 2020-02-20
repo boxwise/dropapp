@@ -9,7 +9,6 @@
         $cmsmain->assign('title', 'Boxes');
         listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
-        //listfilter(['label' => 'By location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
         filter('filter', ['label' => 'By location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
 
         $statusarray = ['showall' => 'All boxes', 'ordered' => 'Ordered boxes', 'dispose' => 'Untouched for 3 month'];
@@ -19,11 +18,9 @@
         filter('filter3', ['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
 
         $itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
-        //listfilter4(['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
         filter('filter4', ['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
         listsetting('manualquery', true);
 
-        //dump($listconfig);
         $data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox ,
 		IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
 		FROM '.$table.'
