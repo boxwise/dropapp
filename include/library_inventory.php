@@ -9,8 +9,7 @@
         $cmsmain->assign('title', 'Library');
         listsetting('search', ['code', 'booktitle_en', 'booktitle_ar', 'author']);
 
-        listfilter(['label' => 'By category', 'query' => 'SELECT id, label FROM library_type ORDER BY label', 'filter' => 'library.type_id']);
-
+        filter('filter', ['label' => 'By category', 'query' => 'SELECT id, label FROM library_type ORDER BY label', 'filter' => 'library.type_id']);
         $data = getlistdata('SELECT * FROM library WHERE camp_id = '.intval($_SESSION['camp']['id']));
 
         addcolumn('text', 'Code', 'code');

@@ -9,7 +9,6 @@
         $cmsmain->assign('title', $translate['cms_translates']);
 
         listsetting('search', ['en', 'code', 'description']);
-        //listfilter(array('label'=>'Filter op categorie','query'=>'SELECT c.id AS value, c.name AS label FROM translate_categories AS c, translate AS t WHERE t.category_id = c.id GROUP BY c.id ORDER BY c.id','filter'=>'category_id'));
 
         $hasdescription = db_fieldexists($table, 'description');
 

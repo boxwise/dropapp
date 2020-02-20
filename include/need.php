@@ -63,10 +63,8 @@ if (!$ajax) {
     }
 
     //Filter
-    listfilter(['label' => 'Both needed and overstock', 'options' => ['green' => 'Good stock', 'red' => 'Needed', 'blue' => 'Overstock'], 'filter' => 'color']);
-
-    listfilter2(['label' => 'Scope', 'query' => 'SELECT id, label FROM need_periods ORDER BY week_min', 'filter' => 'scope']);
-
+    filter('filter', ['label' => 'Both needed and overstock', 'options' => ['green' => 'Good stock', 'red' => 'Needed', 'blue' => 'Overstock'], 'filter' => 'color']);
+    filter('filter2', ['label' => 'Scope', 'query' => 'SELECT id, label FROM need_periods ORDER BY week_min', 'filter' => 'scope']);
     // addbutton('export','Export',array('link'=>'?action=need&export=true','icon'=>'fa-download','showalways'=>true));
 
     $weeks = db_row('SELECT week_min AS min, week_max AS max FROM need_periods WHERE id = :id', ['id' => $_SESSION['filter2']['need']]);

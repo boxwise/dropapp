@@ -27,7 +27,7 @@ $table = $action;
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=people_deactivated']);
 
         $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'expired' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
-        listfilter(['label' => 'Show all people', 'options' => $statusarray, 'filter' => '"show"']);
+        filter('filter', ['label' => 'Show all people', 'options' => $statusarray, 'filter' => '"show"']);
 
         listsetting('manualquery', true);
 

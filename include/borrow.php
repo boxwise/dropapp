@@ -11,8 +11,8 @@
 
         $cmsmain->assign('title', 'Borrow items');
 
-        listfilter2(['label' => 'Location', 'query' => 'SELECT id, location FROM borrow_locations WHERE camp_id = '.intval($_SESSION['camp']['id']).' ORDER BY id', 'filter' => 'b.location_id']);
-        listfilter(['label' => 'Category', 'query' => 'SELECT id, label FROM borrow_categories ORDER BY id', 'filter' => 'b.category_id']);
+        filter('filter2', ['label' => 'Location', 'query' => 'SELECT id, location FROM borrow_locations WHERE camp_id = '.intval($_SESSION['camp']['id']).' ORDER BY id', 'filter' => 'b.location_id']);
+        filter('filter', ['label' => 'Category', 'query' => 'SELECT id, label FROM borrow_categories ORDER BY id', 'filter' => 'b.category_id']);
         listsetting('manualquery', true);
 
         $query = 'SELECT b.visible, b.visible AS editable, b.label, b.location_id, b.category_id, bc.label AS category, b.id,

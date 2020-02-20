@@ -13,7 +13,7 @@
             $locations = 0;
         }
 
-        listfilter(['label' => 'By category', 'query' => 'SELECT id, label FROM product_categories ORDER BY seq', 'filter' => 'products.category_id']);
+        filter('filter', ['label' => 'By category', 'query' => 'SELECT id, label FROM product_categories ORDER BY seq', 'filter' => 'products.category_id']);
 
         $data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," '.$_SESSION['camp']['currencyname'].'") AS drops, COALESCE(SUM(s.items),0) AS items, IF(SUM(s.items),1,0) AS preventdelete FROM '.$table.'
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
