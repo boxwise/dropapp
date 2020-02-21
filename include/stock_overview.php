@@ -17,6 +17,14 @@
     listsetting('allowmove', false);
     listsetting('allowcollapse', true);
 
+    listfilter(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND visible=1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq']);
+
+    $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
+    listfilter3(['label' => 'Gender', 'options' => $genders]);
+
+    $statusarray = ['Active' => 'Active Boxes', 'ordered' => 'Ordered boxes', 'lost' => 'Lost Boxes', 'donated' => 'Donated Boxes', 'untouched' => 'Untouched for 3 months'];
+    listfilter2(['label' => 'Active Boxes', 'options' => $statusarray]);
+
     addcolumn('text', 'Category', 'label');
     addcolumn('text', 'Subtypes', 'subtypes');
     addcolumn('text', 'items', 'N_items');
@@ -76,7 +84,11 @@
     INNER JOIN
         locations on stock.location_id = locations.id 
     WHERE 
-        locations.camp_id = :camp_id
+        locations.camp_id = :camp_id '.
+        ($_SESSION['filter3']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
+        .($_SESSION['filter']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter']['stock_overview']).')' : '')
+        .('lost' == $_SESSION['filter2']['stock_overview'] ? 'AND locations.is_lost=1' : ('donated' == $_SESSION['filter2']['stock_overview'] ? 'AND locations.is_donated=1' : ('ordered' == $_SESSION['filter2']['stock_overview'] ? 'AND (stock.ordered OR stock.picked)' : ('untouched' == $_SESSION['filter2']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND locations.visible' : ' AND (locations.visible=1 OR locations.is_market=1 OR locations.container_stock=1 and locations.visible)'))))
+        .'
     GROUP BY 
         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
     HAVING 
@@ -128,7 +140,7 @@
     LEFT JOIN
          ('.$locations.') AS num_locations
     ON 
-        complete.id=num_locations.id 
+        complete.id=num_locations.id
     ORDER BY 
         complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
     //$data = db_array($counts);
