@@ -45,9 +45,6 @@
 
     if ('out' == $data['status']) {
         $data['duration'] = ceil($data['duration'] / 86400).' days';
-        if (-1 == $data['people_id']) {
-            $data['user'] = $data['btcomment'];
-        }
         $cmsmain->assign('title', $data['user'].' is returning '.$data['code'].($data['booktitle_en'] ? ' - '.$data['booktitle_en'] : ''));
         $cmsmain->assign('data', $data);
         $cmsmain->assign('include', 'library_return.tpl');
