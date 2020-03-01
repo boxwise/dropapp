@@ -206,16 +206,6 @@ body.status #div_purch .table-nav, body.status #div_trans .table-nav{
 	display: none;
 }
 
-body.check_in .aside-form #form-submit, body.check_in .aside-form .btn-cancel{
-	display: none;
-}
-body.check_in .info-aside{
-	padding-bottom: 0;
-}
-body.check_in .familycredit{
-	border-bottom: none;
-}
-
 body.stock-list .table-parent, body.products .table-parent, body.stock .table-parent, body.need .table-parent {
 	max-width: none;
 }
