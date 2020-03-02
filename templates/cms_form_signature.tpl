@@ -24,7 +24,7 @@
 					<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree to my personal data being collected and processed for this purpose.<br />
 					I also agree that my family's personal data is being collected and processed.</p>
 				</div>
-				<div class="tab-pane fade" id="languagetab_ar">
+				<div class="tab-pane fade" id="languagetab_ar" dir="rtl">
 					<p>
 	تجمع IHA البيانات الشخصية اللازمة لكي تشارك في عمليات التوزيع والأنشطة الخاصة بنا.
 	هذا يشمل:
@@ -73,9 +73,9 @@
 	<ul class="nav nav-tabs">
 		<li class = "active"><a href="#languagetab_en" data-toggle="tab">English</a></li>
 		<li><a href="#languagetab_fr" data-toggle="tab">Français</a></li>
-		<!-- <li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
-		<li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li>
-		<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li> -->
+		<li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
+		<!-- <li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li> -->
+		<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li> 
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane fade in active" id="languagetab_en">
@@ -84,7 +84,7 @@
 			<p>For refugees that receive aid/assistance/ from {$currentOrg['label']} (clothes/shoes/food/other assistance or activities), the following information is retained:</p>
 			<ul>
 			<li>Name</li>
-			<li>Age, (date of birth)</li>
+			<li>Age (date of birth)</li>
 			<li>Nationality (in some cases)</li>
 			<li>Address (e.g. container number in the refugee camp)</li>
 			<li>Telephone number (in some cases)</li>
@@ -113,12 +113,106 @@
 			<p>Je suis d’accord pour que mes données personnelles soient gardées et traitées comme décrit dans les règles de confidentialité de ‘{$currentOrg['label']}’.</p>
 			<p>J’approuve également que les données personnelles de ma famille soient stockées et traitées ainsi que décrit ci-dessus</p>
 		</div>
-		
-		<div class="tab-pane fade" id="languagetab_ar">
+		<div class="tab-pane fade" id="languagetab_ar" style="text-align:right" dir="rtl">
+			<h3>
+				معلومات حول سياسات الخصوصية الجديدة
+			</h3><br />
+			<p>
+				ترغب منظمة
+				{$currentOrg['label']}
+				 في إعادة تأكيد أننا نحمي معلوماتك الخاصة ، مع الإشارة إلى سياسات الخصوصية الجديدة التي تنطبق على دول الاتحاد الأوروبي / المنطقة الاقتصادية الأوروبية 
+				 .<br />
+ 				للاجئين الذين يتلقون مساعدات / مساعدة / من منظمة 
+				{$currentOrg['label']}
+				  (ملابس / أحذية / طعام / مساعدات أو أنشطة أخرى) ، يتم الاحتفاظ بالمعلومات التالية
+				:
+			</p>
+			<ul>
+				<li>
+					اسم
+				</li>
+				<li>
+					العمر ، (تاريخ الميلاد)
+				</li>
+				<li>
+					الجنسية (في بعض الحالات)
+				</li>
+				<li>
+					العنوان (مثل رقم الكرفانة في مخيم اللاجئين)
+				</li>
+				<li>
+					رقم الهاتف (في بعض الحالات)
+				</li>
+				<li>
+					جنس
+				</li>
+			</ul>
+			<p>
+ 				أنت وحدك تزودنا بمعلوماتك الشخصية في محادثة مع ممثلين من منظمة
+				{$currentOrg['label']}. <br />
+				نحتاج إلى هذه المعلومات للتأكد من أنك جزء من خدمات التوزيع و / أو الخدمات الأخرى التي تقدمها المؤسسة ، وللتأكد من أن لدينا ما يكفي من المعدات للمستفيدين.<br />
+				   لا يقوم منظمة 
+				   {$currentOrg['label']}
+				     بمشاركة معلوماتك الشخصية مع أطراف أخرى.<br /> 
+ 				للوصول إلى الخدمات المذكورة التي تقدمها ، يجب أن توافق على أنه يمكننا مواصلة معالجة هذه المعلومات الخاصة بك والاحتفاظ بها .<br />
+ 				أوافق على أن معلوماتي الشخصية يتم تخزينها ومعالجتها كما هو موضح في سياسة الخصوصية الخاصة {$currentOrg['label']}. <br />
+ 				أوافق أيضًا على أن المعلومات الشخصية لعائلتي يتم تخزينها ومعالجتها كما هو موضح أعلاه.
+			</p>
 		</div>
 		<div class="tab-pane fade" id="languagetab_so">
 		</div>
-		<div class="tab-pane fade" id="languagetab_fa">
+		<div class="tab-pane fade" id="languagetab_fa" style="text-align:right" dir="rtl">
+			<h3>
+				اطلاعات جدید راجع به خط مش (سیاست)های حفظ حریم شخصی	
+			</h3><br />
+			<p>
+				سازمان
+			 	{$currentOrg['label']}
+				امیدوار است که به شما اطمینان دهد، با در نظر گرفتن سیاست های جدید حفظ حریم شخصی که در کشور های اتحادیه اروپا و EES تطبیق میشود از اطلاعات شخصی شما محافظت نماییم .<br />
+
+				برای مهاجرانی که کمک از سازمان 
+				{$currentOrg['label']}
+				 دریافت میکنند،مثل(لباس،کفش،غذا یا کمک های دیگر و  فعالیت های دیگر ، اطلاعات ذیل ثبت میگردد
+				:
+			</p>
+			<ul>
+				<li>
+					اسم
+				</li>
+				<li>
+					سن(تاریخ تولد)
+				</li>
+				<li>
+					ملیت(در صورت نیاز)
+				</li>
+				<li>
+					آدرس (شماره کانکس در کمپ مهاجران)
+				</li>
+				<li>
+					شماره تلفن(در صورت نیاز)
+				</li>
+				<li>
+					جنسیت
+				</li>
+			</ul>
+			<p>
+
+
+				شما خودتان این اطلاعات شخصی را  طی گفتگو با نماینده ما در سازمان  
+				{$currentOrg['label']}
+				  در میان بگذارید. ما به این اطلاعات جهت اطمینان بخاطر آمار توزیع و سایر خدماتی که از طرف سازمان فراهم میگردد لازم داریم، و این ما را مطمئن میسازد که چقدر تجهیزات برای بهره برداران داریم. 
+				سازمان 
+				{$currentOrg['label']}
+				اطلاعات شخصی شما را در اختیار ارگان های دیگر  نمی گذارد.<br />
+				برای دسترسی به خدمات ذکر شده که توسط سازمان 
+				{$currentOrg['label']}
+				 فراهم میگردد، شما باید موافقت نمایید که اطلاعات شخصی شما برای ادامه ی پروسه ثبت میگردد. <br />
+
+				من موافق هستم که اطلاعات شخصی ام طوری که ذکر شد برای پروسه حفظ حریم خصوصی در سازمان 
+				{$currentOrg['label']}
+				 ثبت گردد.<br />
+				من همچنان موافقم که اطلاعات شخصی خانواده ام طبق پروسه شرح داده شده فوق ثبت گردد.
+ 			</p>
 		</div>
 	</div>
 	{/if}
