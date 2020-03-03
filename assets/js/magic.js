@@ -920,6 +920,11 @@ function initiateList() {
             el.confirmation(options);
         });
        
+        $(".collapsebutton").each(function(){
+            if($(this).closest("tr").next().data("level")>$(this).closest("tr").data("level")){
+                $(this).append('<i class="fa fa-chevron-right"></i>');
+            }
+        });
         $(".collapsebutton").click(function() {
             var parentRow = $(this).closest("tr");
             var directChildRows = $("tr[data-collapseparent='"+$(this).data("collapseid")+"']");
