@@ -930,8 +930,10 @@ function initiateList() {
             var directChildRows = $("tr[data-collapseparent='"+$(this).data("collapseid")+"']");
             if (directChildRows.first().is(".collapse.in")) {
                 $("tr[data-hidecollapseparent"+parentRow.data('level')+"='"+$(this).data("collapseid")+"']").collapse('hide');
+                parentRow.find(".collapsebutton").find("i").removeClass("fa-chevron-down").addClass("fa-chevron-right");
             } else {
                 directChildRows.collapse("show");
+                parentRow.find(".collapsebutton").find("i").removeClass("fa-chevron-right").addClass("fa-chevron-down");
             }
         });
     } 
