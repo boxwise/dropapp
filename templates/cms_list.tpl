@@ -135,8 +135,12 @@
 							{/foreach}
 					  	</tr>
 					</thead>
-					<tbody>
+					<tbody>					
 				    {foreach $data as $row}
+						{* prepare parent_array for collapsing *}
+						{if $listconfig['allowcollapse'] && $row['level']}
+							{assign var="parent_array" value="-"|explode:$row['parent_id']}
+						{/if}
 				    	{if $prevlevel > $row['level'] && $listconfig['allowmove']}
 				    		{while $prevlevel > $row['level']}
 					    		<tr class="level-{$prevlevel} inbetween inbelow" data-level="{$prevlevel}"><td colspan="{$listdata|@count}"><span></span></td></tr>
@@ -150,14 +154,24 @@
 								{if $row['disableifistrue']}disable-if-is-true{/if}
 								{if $listconfig['allowmove'] && $row['level']>=$listconfig['allowmovefrom'] && $row['level']<=$listconfig['allowmoveto']}item-zortable{/if}
 								{if ($listconfig['allowselect']|is_array && $listconfig['allowselect'][$row['level']]) or (!$listconfig['allowselect']|is_array && $listconfig['allowselect'])}item-selectable{/if}
-								{if $listconfig['allowcollapse'] && $row['level']}collapse level-{$row['level']-1}-parent-{$row['parent_id']}{/if}">
+								{if $listconfig['allowcollapse'] && $row['level']}collapse{/if}"
+								{* reference classes for collapse button *}
+								{if $listconfig['allowcollapse'] && $row['level']} 
+									{foreach $parent_array as $level=>$parent}
+										{assign var="parent_array_slice" value=$parent_array|array_slice:0:($level+1)}
+										data-hidecollapseparent{$level}={'-'|implode:$parent_array_slice}
+									{/foreach}
+									data-collapseparent={$row['parent_id']}
+								{/if}>
 								{foreach $listdata as $key=>$column name="rows"}
 									{if $smarty.foreach.rows.first}
 										<td class="controls-front list-level-{$row['level']} list-column-{$key}">
 											<div class="td-content">
 												<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-												{if $listconfig['allowcollapse']} <a data-toggle="collapse" href=".level-{$row['level']}-parent-{$row['id']}" role="button"><i class="fa fa-chevron-right"></i></a>{/if}
-												<label class="item-select-label"><input class="item-select" data-testid='select-id' type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}></label>
+												{if $listconfig['allowcollapse']}<div class="collapsebutton" data-collapseid={$row['id']}></div>{/if}
+												<label class="item-select-label">
+													<input class="item-select" data-testid='select-id' type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}>
+												</label>
 													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
 														<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
 													{else}
