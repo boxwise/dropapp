@@ -1,36 +1,38 @@
 <?php
 
-    $table = 'genders';
+    $table = 'stock';
     $action = 'stock_overview';
+    $ajax = checkajax();
 
-    initlist();
+    if (!$ajax) {
+        initlist();
 
-    $cmsmain->assign('title', 'Stock Overview');
+        $cmsmain->assign('title', 'Stock Overview');
 
-    listsetting('allowcopy', false);
-    listsetting('allowadd', false);
-    listsetting('allowdelete', false);
-    listsetting('allowselect', false);
-    listsetting('allowselectall', false);
-    listsetting('allowsort', false);
-    listsetting('allowedit', false);
-    listsetting('allowmove', false);
-    listsetting('allowcollapse', true);
+        listsetting('allowcopy', false);
+        listsetting('allowadd', false);
+        listsetting('allowdelete', false);
+        listsetting('allowselect', false);
+        listsetting('allowselectall', false);
+        listsetting('allowsort', false);
+        listsetting('allowedit', false);
+        listsetting('allowmove', false);
+        listsetting('allowcollapse', true);
 
-    listfilter(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND visible=1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq']);
+        listfilter(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND visible=1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq']);
 
-    $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
-    listfilter3(['label' => 'Gender', 'options' => $genders]);
+        $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
+        listfilter3(['label' => 'Gender', 'options' => $genders]);
 
-    $statusarray = ['Active' => 'Active Boxes', 'ordered' => 'Ordered boxes', 'lost' => 'Lost Boxes', 'donated' => 'Donated Boxes', 'untouched' => 'Untouched for 3 months'];
-    listfilter2(['label' => 'Active Boxes', 'options' => $statusarray]);
+        $statusarray = ['Active' => 'Active Boxes', 'ordered' => 'Ordered boxes', 'lost' => 'Lost Boxes', 'donated' => 'Donated Boxes', 'untouched' => 'Untouched for 3 months'];
+        listfilter2(['label' => 'Active Boxes', 'options' => $statusarray]);
 
-    addcolumn('text', 'Category', 'label');
-    addcolumn('text', 'Subtypes', 'subtypes');
-    addcolumn('text', 'items', 'N_items');
-    addcolumn('text', 'Loctions', 'num_locations');
+        addcolumn('text', 'Category', 'label');
+        addcolumn('text', 'Subtypes', 'subtypes');
+        addcolumn('text', 'items', 'N_items');
+        addcolumn('text', 'Loctions', 'num_locations');
 
-    $joinquery = 'SELECT
+        $joinquery = 'SELECT
     a.*,
     IF(isnull(a.location),IF(isnull(a.Gender),IF(isnull(a.prod_id),"Category","Product"),"Gender"),"Size") as labelname,
     IF(isnull(a.location),IF(isnull(a.Gender),IF(isnull(a.prod_id),a.Category,a.Product),a.Gender),a.size) as label,
@@ -97,7 +99,7 @@
     WHERE 
         isnull(a.Category)=isnull(a.cat_id) and isnull(a.Product)=isnull(a.prod_id) and isnull(a.Gender)=isnull(a.g_id) and isnull(size)=isnull(size_id) and isnull(location)=isnull(loc_id)
     ';
-    $rawdata = 'SELECT DISTINCTROW
+        $rawdata = 'SELECT DISTINCTROW
     a1.labelname,
     a1.label,
     a1.new_id as id,
@@ -112,7 +114,7 @@
     ON (INSTR(a1.new_id,concat(a2.new_id,"-"))=1 OR a2.new_id = "") and a1.level+1 = a2.level and (a2.level != 5)
     ORDER BY id';
 
-    $subtypes = 'SELECT IF(isnull(raw_a.size),CONCAT(COUNT(DISTINCT raw_b.label)," ",raw_b.labelname,IF(COUNT( DISTINCT raw_b.label)>1,"s","")),raw_b.size) as subtypes, raw_a.id
+        $subtypes = 'SELECT IF(isnull(raw_a.size),CONCAT(COUNT(DISTINCT raw_b.label)," ",raw_b.labelname,IF(COUNT( DISTINCT raw_b.label)>1,"s","")),raw_b.size) as subtypes, raw_a.id
     from 
         ('.$rawdata.') AS raw_a 
     LEFT JOIN 
@@ -121,8 +123,8 @@
         raw_a.id = raw_b.parent_id OR raw_a.level = 3 
     GROUP BY 
         raw_a.id';
-    //SELECT COUNT(raw_b.id) as num_locations,
-    $locations = 'SELECT raw_a.id as id,IF(count(distinct raw_b.location)=1,raw_b.location,concat(count(distinct raw_b.location)," locations")) as num_locations
+        //SELECT COUNT(raw_b.id) as num_locations,
+        $locations = 'SELECT raw_a.id as id,IF(count(distinct raw_b.location)=1,raw_b.location,concat(count(distinct raw_b.location)," locations")) as num_locations
     FROM 
         ('.$rawdata.') AS raw_a 
     INNER JOIN 
@@ -132,7 +134,7 @@
     GROUP BY 
         raw_a.id';
 
-    $data = db_array('SELECT IF((counts.subtypes=0),counts.subtypes,counts.subtypes) as subtypes, IF(ISNULL(complete.location),num_locations.num_locations,complete.location) as num_locations, complete.*  
+        $data = db_array('SELECT IF((counts.subtypes=0),counts.subtypes,counts.subtypes) as subtypes, IF(ISNULL(complete.location),num_locations.num_locations,complete.location) as num_locations, complete.*  
     FROM 
     ('.$rawdata.')as complete 
     LEFT JOIN
@@ -143,8 +145,20 @@
         complete.id=num_locations.id
     ORDER BY 
         complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
-    //$data = db_array($counts);
-    $cmsmain->assign('data', $data);
-    $cmsmain->assign('listconfig', $listconfig);
-    $cmsmain->assign('listdata', $listdata);
-    $cmsmain->assign('include', 'cms_list.tpl');
+        //$data = db_array($counts);
+        $cmsmain->assign('data', $data);
+        $cmsmain->assign('listconfig', $listconfig);
+        $cmsmain->assign('listdata', $listdata);
+        $cmsmain->assign('include', 'cms_list.tpl');
+    } else {
+        switch ($_POST['do']) {
+            case 'collapse':
+                $_SESSION['stock_overview'] = $_POST['ids'];
+
+                break;
+        }
+        $return = $_SESSION['stock_overview'];
+
+        echo json_encode($return);
+        die();
+    }

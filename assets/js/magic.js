@@ -623,7 +623,7 @@ function initiateList() {
                 var el = $(this);
                 var options = $.extend(
                     {
-                        dateFormat : "ddmmyyyy", // set the default date format
+                        dateFormat: "ddmmyyyy", // set the default date format
                         widgets: ["stickyHeaders", "saveSort"],
                         widgetOptions: {
                             stickyHeaders_attachTo: el.closest(
@@ -964,6 +964,26 @@ function initiateList() {
                     .addClass("fa-chevron-down");
             }
         });
+        $("tr[class*=collapse]").on(
+            "shown.bs.collapse hidden.bs.collapse",
+            function() {
+                var tableParent = $(this).closest(".table-parent");
+                var collapseList = new Array();
+                tableParent.find("tr[class*=collapse]").each(function() {
+                    if ($(this).is(".collapse.in")) {
+                        collapseList.push($(this).data("id"));
+                    }
+                });
+                $.ajax({
+                    type: "post",
+                    url: tableParent.data("action"),
+                    data: { do: "collapse", ids: collapseList },
+                    dataType: "json"
+                }).done(function(response) {
+                    console.log(response);
+                });
+            }
+        );
     }
     $("body").removeClass("loading");
 }
