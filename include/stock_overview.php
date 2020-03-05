@@ -24,8 +24,10 @@
 
         $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
         listfilter2(['label' => 'Gender', 'options' => $genders]);
+        listsetting('filter2cssclass', 'overview-filter-gender');
 
         listfilter3(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND visible=1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq']);
+        listsetting('filter3cssclass', 'overview-filter-locations');
 
         addcolumn('text', 'Category', 'label');
         addcolumn('text', 'Subtypes', 'subtypes');
