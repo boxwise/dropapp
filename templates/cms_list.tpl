@@ -148,14 +148,15 @@
 				    		{/while}
 				    	{/if}
 					    {if $listconfig['allowmove']}<tr class="level-{$row['level']} inbetween" data-level="{$row['level']}"><td colspan="{$listdata|@count}"><span></span></td></tr>{/if}				    
-							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}" class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
+							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}" {if $listconfig['allowcollapse'] && $row['level']}data-notCollapsed={if $row['notCollapsed']}1{else}0{/if}{/if}
+								class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
 								{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit']))}item-clickable{/if}
 								{if $row['preventdelete']}item-nondeletable{/if}
 								{if $row['disableifistrue']}disable-if-is-true{/if}
 								{if $listconfig['allowmove'] && $row['level']>=$listconfig['allowmovefrom'] && $row['level']<=$listconfig['allowmoveto']}item-zortable{/if}
 								{if ($listconfig['allowselect']|is_array && $listconfig['allowselect'][$row['level']]) or (!$listconfig['allowselect']|is_array && $listconfig['allowselect'])}item-selectable{/if}
 								{if $listconfig['allowcollapse'] && isset($row['level'])}overview-level-{$row['level']}{/if}
-								{if $listconfig['allowcollapse'] && $row['level']}collapse{/if}"
+								{if $listconfig['allowcollapse'] && $row['level']}collapse {if $row['notCollapsed']}in{/if}{/if}"
 								{* reference classes for collapse button *}
 								{if $listconfig['allowcollapse'] && $row['level']} 
 									{foreach $parent_array as $level=>$parent}

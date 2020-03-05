@@ -145,7 +145,12 @@
         complete.id=num_locations.id
     ORDER BY 
         complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
-        //$data = db_array($counts);
+
+        foreach ($data as &$row) {
+            if (in_array($row['id'], $_SESSION['stock_overview'])) {
+                $row['notCollapsed'] = true;
+            }
+        }
         $cmsmain->assign('data', $data);
         $cmsmain->assign('listconfig', $listconfig);
         $cmsmain->assign('listdata', $listdata);

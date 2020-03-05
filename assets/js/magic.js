@@ -932,6 +932,15 @@ function initiateList() {
             }
         });
         $(".collapsebutton").click(function() {
+            // prepare collapseList for ajax request
+            var tableParent = $(this).closest(".table-parent");
+            var collapseList = new Array();
+            tableParent.find("tr[class*='collapse']").each(function() {
+                if ($(this).data("notCollapsed")) {
+                    collapseList.push($(this).data("id"));
+                }
+            });
+
             var parentRow = $(this).closest("tr");
             var directChildRows = $(
                 "tr[data-collapseparent='" + $(this).data("collapseid") + "']"
@@ -943,7 +952,15 @@ function initiateList() {
                     $(this).data("collapseid") +
                     "']"
             );
-            if (directChildRows.first().is(".collapse.in")) {
+            if (directChildRows.first().data("notCollapsed")) {
+                // remove rows from collapseList
+                allChildRows.each(function() {
+                    collapseList = collapseList.filter(
+                        el => el != $(this).data("id")
+                    );
+                });
+                // update rows in UI
+                allChildRows.data("notCollapsed", 0);
                 allChildRows.collapse("hide");
                 allChildRows
                     .find(".collapsebutton")
@@ -956,6 +973,12 @@ function initiateList() {
                     .removeClass("fa-chevron-down")
                     .addClass("fa-chevron-right");
             } else {
+                // add rows to collapseList
+                directChildRows.each(function() {
+                    collapseList.push($(this).data("id"));
+                });
+                // update rows in UI
+                directChildRows.data("notCollapsed", 1);
                 directChildRows.collapse("show");
                 parentRow
                     .find(".collapsebutton")
@@ -963,27 +986,17 @@ function initiateList() {
                     .removeClass("fa-chevron-right")
                     .addClass("fa-chevron-down");
             }
+            // send ajax to memorize which rows are collapsed
+            console.log(collapseList);
+            $.ajax({
+                type: "post",
+                url: tableParent.data("action"),
+                data: { do: "collapse", ids: collapseList },
+                dataType: "json"
+            }).done(function(response) {
+                console.log(response);
+            });
         });
-        $("tr[class*=collapse]").on(
-            "shown.bs.collapse hidden.bs.collapse",
-            function() {
-                var tableParent = $(this).closest(".table-parent");
-                var collapseList = new Array();
-                tableParent.find("tr[class*=collapse]").each(function() {
-                    if ($(this).is(".collapse.in")) {
-                        collapseList.push($(this).data("id"));
-                    }
-                });
-                $.ajax({
-                    type: "post",
-                    url: tableParent.data("action"),
-                    data: { do: "collapse", ids: collapseList },
-                    dataType: "json"
-                }).done(function(response) {
-                    console.log(response);
-                });
-            }
-        );
     }
     $("body").removeClass("loading");
 }
