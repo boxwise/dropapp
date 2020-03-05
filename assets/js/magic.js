@@ -639,7 +639,7 @@ function initiateList() {
                 );
                 el.tablesorter(options);
             });
-        } 
+        }
         $(".table").on("change", ".item-select", function(e) {
             var el = $(this);
             var parent = el.closest(".table-parent");
@@ -795,10 +795,7 @@ function initiateList() {
                                         parent
                                             .find(".item-select:visible:first")
                                             .closest("tr")
-                                            .toggleClass(
-                                                "selected",
-                                                true
-                                            );
+                                            .toggleClass("selected", true);
                                         parent
                                             .find(".item-select:visible:first")
                                             .trigger("change");
@@ -919,26 +916,54 @@ function initiateList() {
             );
             el.confirmation(options);
         });
-       
-        $(".collapsebutton").each(function(){
-            if($(this).closest("tr").next().data("level")>$(this).closest("tr").data("level")){
+
+        $(".collapsebutton").each(function() {
+            if (
+                $(this)
+                    .closest("tr")
+                    .next()
+                    .data("level") >
+                $(this)
+                    .closest("tr")
+                    .data("level")
+            ) {
                 $(this).append('<i class="fa fa-chevron-right"></i>');
             }
         });
         $(".collapsebutton").click(function() {
             var parentRow = $(this).closest("tr");
-            var directChildRows = $("tr[data-collapseparent='"+$(this).data("collapseid")+"']");
-            var allChildRows = $("tr[data-hidecollapseparent"+parentRow.data('level')+"='"+$(this).data("collapseid")+"']");
+            var directChildRows = $(
+                "tr[data-collapseparent='" + $(this).data("collapseid") + "']"
+            );
+            var allChildRows = $(
+                "tr[data-hidecollapseparent" +
+                    parentRow.data("level") +
+                    "='" +
+                    $(this).data("collapseid") +
+                    "']"
+            );
             if (directChildRows.first().is(".collapse.in")) {
-                allChildRows.collapse('hide');
-                allChildRows.find(".collapsebutton").find("i").removeClass("fa-chevron-down").addClass("fa-chevron-right");
-                parentRow.find(".collapsebutton").find("i").removeClass("fa-chevron-down").addClass("fa-chevron-right");
+                allChildRows.collapse("hide");
+                allChildRows
+                    .find(".collapsebutton")
+                    .find("i")
+                    .removeClass("fa-chevron-down")
+                    .addClass("fa-chevron-right");
+                parentRow
+                    .find(".collapsebutton")
+                    .find("i")
+                    .removeClass("fa-chevron-down")
+                    .addClass("fa-chevron-right");
             } else {
                 directChildRows.collapse("show");
-                parentRow.find(".collapsebutton").find("i").removeClass("fa-chevron-right").addClass("fa-chevron-down");
+                parentRow
+                    .find(".collapsebutton")
+                    .find("i")
+                    .removeClass("fa-chevron-right")
+                    .addClass("fa-chevron-down");
             }
         });
-    } 
+    }
     $("body").removeClass("loading");
 }
 
