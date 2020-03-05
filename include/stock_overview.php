@@ -31,8 +31,8 @@
 
         addcolumn('text', 'Category', 'label');
         addcolumn('text', 'Subtypes', 'subtypes');
-        addcolumn('text', 'items', 'N_items');
-        addcolumn('text', 'Loctions', 'num_locations');
+        addcolumn('text', 'Items', 'N_items');
+        addcolumn('text', 'Locations', 'num_locations');
 
         $joinquery = 'SELECT
     a.*,

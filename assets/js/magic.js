@@ -921,21 +921,25 @@ function initiateList() {
         // collapse functions for stock-overview
         $(".collapsebutton").each(function() {
             var parentRow = $(this).closest("tr");
-            if (parentRow.next().data("level") > parentRow.data("level")) {
-                if (parentRow.next().data("notcollapsed")) {
-                    $(this).append('<i class="fa fa-chevron-down"></i>');
-                } else {
-                    $(this).append('<i class="fa fa-chevron-right"></i>');
-                }
+            if ($(this).data("notcollapsed")) {
+                var directChildRows = $(
+                    "tr[data-collapseparent='" +
+                        $(this).data("collapseid") +
+                        "']"
+                );
+                directChildRows.collapse("show");
+                $(this).append('<i class="fa fa-chevron-down"></i>');
+            } else if (parentRow.next().data("level") > parentRow.data("level")) {
+                $(this).append('<i class="fa fa-chevron-right"></i>');
             }
         });
         $(".collapsebutton").click(function() {
             // prepare collapseList for ajax request
             var tableParent = $(this).closest(".table-parent");
             var collapseList = new Array();
-            tableParent.find("tr[class*='collapse']").each(function() {
+            tableParent.find(".collapsebutton").each(function() {
                 if ($(this).data("notcollapsed")) {
-                    collapseList.push($(this).data("id"));
+                    collapseList.push($(this).closest("tr").data("id"));
                 }
             });
             var parentRow = $(this).closest("tr");
@@ -949,36 +953,30 @@ function initiateList() {
                     $(this).data("collapseid") +
                     "']"
             );
-            if (directChildRows.first().data("notcollapsed")) {
+            if ($(this).data("notcollapsed")) {
                 // remove rows from collapseList
-                allChildRows.each(function() {
-                    collapseList = collapseList.filter(
-                        el => el != $(this).data("id")
-                    );
-                });
+                collapseList = collapseList.filter(
+                    el => el != parentRow.data("id")
+                );
                 // update rows in UI
-                allChildRows.data("notcollapsed", 0);
                 allChildRows.collapse("hide");
                 allChildRows
                     .find(".collapsebutton")
+                    .data("notcollapsed", 0)
                     .find("i")
                     .removeClass("fa-chevron-down")
                     .addClass("fa-chevron-right");
-                parentRow
-                    .find(".collapsebutton")
+                $(this)
                     .find("i")
                     .removeClass("fa-chevron-down")
                     .addClass("fa-chevron-right");
             } else {
                 // add rows to collapseList
-                directChildRows.each(function() {
-                    collapseList.push($(this).data("id"));
-                });
+                collapseList.push(parentRow.data("id"));
                 // update rows in UI
-                directChildRows.data("notcollapsed", 1);
                 directChildRows.collapse("show");
-                parentRow
-                    .find(".collapsebutton")
+                $(this)
+                    .data("notcollapsed", 1)
                     .find("i")
                     .removeClass("fa-chevron-right")
                     .addClass("fa-chevron-down");
@@ -994,19 +992,17 @@ function initiateList() {
         // Collapse All button
         $("#collapseall").click(function() {
             var tableParent = $(this).closest(".table-parent");
-            tableParent
-                .find("tr[class*='collapse']")
-                .data("notcollapsed", 0)
-                .collapse("hide");
+            tableParent.find("tr[class*='collapse']").collapse("hide");
             tableParent
                 .find(".collapsebutton")
+                .data("notcollapsed", 0)
                 .find("i")
                 .removeClass("fa-chevron-down")
                 .addClass("fa-chevron-right");
             $.ajax({
                 type: "post",
                 url: tableParent.data("action"),
-                data: { do: "collapseall"},
+                data: { do: "collapseall" },
                 dataType: "json"
             });
         });
