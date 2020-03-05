@@ -16,6 +16,9 @@
 
 			<div class="table-nav">
 				<ul class="actions">
+					{if $listconfig['allowcollapse']}<li>
+						<button class="btn btn-default btn-sm" id="collapseall" data-testid="collapseall"><i class="fa fa-chevron-circle-right"></i> Collapse All</button>
+					</li>{/if}
 					{if $listconfig['allowselectall']}<li>
 						<label class="btn btn-default btn-sm tooltip-this" data-toggle="tooltip" data-placement="top" title="{$translate['cms_list_selectall']}" for="group-select-1"><input id="group-select-1" data-testid='select_all' type="checkbox" class="group-select"></label>
 					</li>{/if}
@@ -148,7 +151,8 @@
 				    		{/while}
 				    	{/if}
 					    {if $listconfig['allowmove']}<tr class="level-{$row['level']} inbetween" data-level="{$row['level']}"><td colspan="{$listdata|@count}"><span></span></td></tr>{/if}				    
-							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}" class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
+							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}"
+								class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
 								{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit']))}item-clickable{/if}
 								{if $row['preventdelete']}item-nondeletable{/if}
 								{if $row['disableifistrue']}disable-if-is-true{/if}
@@ -169,7 +173,9 @@
 										<td class="controls-front list-level-{$row['level']} list-column-{$key}">
 											<div class="td-content">
 												<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-												{if $listconfig['allowcollapse']}<div class="collapsebutton" data-collapseid={$row['id']}></div>{/if}
+												{if $listconfig['allowcollapse']}
+													<div class="collapsebutton" data-collapseid={$row['id']} data-notcollapsed={isset($row['notCollapsed'])}>
+												</div>{/if}
 												<label class="item-select-label">
 													<input class="item-select" data-testid='select-id' type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}>
 												</label>

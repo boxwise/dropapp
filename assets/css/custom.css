@@ -836,3 +836,14 @@ div.filter-applied {
 	box-shadow: -8px 0px #FFAD63 inset;
 	padding-right: 16px;
 }
+
+.overview-filter-gender > div.btn.btn-sm.btn-default{
+	box-shadow: 8px 0px #FFCD63 inset, -8px 0px #FFCD63 inset;
+	padding-left: 18px;
+	padding-right: 18px;
+}
+.overview-filter-locations > div.btn.btn-sm.btn-default{
+	box-shadow: 8px 0px #FFAD63 inset, -8px 0px #FFAD63 inset;
+	padding-left: 18px;
+	padding-right: 18px;
+}
