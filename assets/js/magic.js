@@ -918,17 +918,15 @@ function initiateList() {
             el.confirmation(options);
         });
 
+        // collapse functions for stock-overview
         $(".collapsebutton").each(function() {
-            if (
-                $(this)
-                    .closest("tr")
-                    .next()
-                    .data("level") >
-                $(this)
-                    .closest("tr")
-                    .data("level")
-            ) {
-                $(this).append('<i class="fa fa-chevron-right"></i>');
+            var parentRow = $(this).closest("tr");
+            if (parentRow.next().data("level") > parentRow.data("level")) {
+                if (parentRow.next().data("notcollapsed")) {
+                    $(this).append('<i class="fa fa-chevron-down"></i>');
+                } else {
+                    $(this).append('<i class="fa fa-chevron-right"></i>');
+                }
             }
         });
         $(".collapsebutton").click(function() {
@@ -936,7 +934,7 @@ function initiateList() {
             var tableParent = $(this).closest(".table-parent");
             var collapseList = new Array();
             tableParent.find("tr[class*='collapse']").each(function() {
-                if ($(this).data("notCollapsed")) {
+                if ($(this).data("notcollapsed")) {
                     collapseList.push($(this).data("id"));
                 }
             });
@@ -951,7 +949,7 @@ function initiateList() {
                     $(this).data("collapseid") +
                     "']"
             );
-            if (directChildRows.first().data("notCollapsed")) {
+            if (directChildRows.first().data("notcollapsed")) {
                 // remove rows from collapseList
                 allChildRows.each(function() {
                     collapseList = collapseList.filter(
@@ -959,7 +957,7 @@ function initiateList() {
                     );
                 });
                 // update rows in UI
-                allChildRows.data("notCollapsed", 0);
+                allChildRows.data("notcollapsed", 0);
                 allChildRows.collapse("hide");
                 allChildRows
                     .find(".collapsebutton")
@@ -977,7 +975,7 @@ function initiateList() {
                     collapseList.push($(this).data("id"));
                 });
                 // update rows in UI
-                directChildRows.data("notCollapsed", 1);
+                directChildRows.data("notcollapsed", 1);
                 directChildRows.collapse("show");
                 parentRow
                     .find(".collapsebutton")
@@ -991,7 +989,7 @@ function initiateList() {
                 url: tableParent.data("action"),
                 data: { do: "collapse", ids: collapseList },
                 dataType: "json"
-            })
+            });
         });
     }
     $("body").removeClass("loading");

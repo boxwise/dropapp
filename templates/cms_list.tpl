@@ -148,7 +148,7 @@
 				    		{/while}
 				    	{/if}
 					    {if $listconfig['allowmove']}<tr class="level-{$row['level']} inbetween" data-level="{$row['level']}"><td colspan="{$listdata|@count}"><span></span></td></tr>{/if}				    
-							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}" {if $listconfig['allowcollapse'] && $row['level']}data-notCollapsed={if $row['notCollapsed']}1{else}0{/if}{/if}
+							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}" {if $listconfig['allowcollapse'] && $row['level']}data-notcollapsed={if $row['notCollapsed']}1{else}0{/if}{/if}
 								class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
 								{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit']))}item-clickable{/if}
 								{if $row['preventdelete']}item-nondeletable{/if}
