@@ -19,8 +19,9 @@
         listsetting('allowmove', false);
         listsetting('allowcollapse', true);
 
-        $statusarray = ['Active' => 'Active Boxes', 'ordered' => 'Ordered boxes', 'lost' => 'Lost Boxes', 'donated' => 'Donated Boxes', 'untouched' => 'Untouched for 3 months'];
-        listfilter(['label' => 'Active Boxes', 'options' => $statusarray]);
+        $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+        $statusarray = ['in_stock' => 'In stock', 'ordered' => 'Ordered', 'untouched' => 'Untouched for 3 months', 'lost' => 'Lost'];
+        listfilter(['label' => 'In stock', 'options' => ($statusarray + $outgoinglocations)]);
 
         $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
         listfilter2(['label' => 'Gender', 'options' => $genders]);
@@ -91,7 +92,11 @@
         locations.camp_id = :camp_id '.
         ($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
-        .('lost' == $_SESSION['filter']['stock_overview'] ? 'AND locations.is_lost=1' : ('donated' == $_SESSION['filter']['stock_overview'] ? 'AND locations.is_donated=1' : ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND (stock.ordered OR stock.picked)' : ('untouched' == $_SESSION['filter']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND locations.visible' : ' AND (locations.visible=1 OR locations.is_market=1 OR locations.container_stock=1 and locations.visible)'))))
+        .('lost' == $_SESSION['filter']['stock_overview'] ? 'AND locations.is_lost=1' :
+            ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND (stock.ordered OR stock.picked)' :
+                ('untouched' == $_SESSION['filter']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND locations.visible' :
+                    (is_numeric($_SESSION['filter']['stock_overview']) ? ' AND (locations.id = '.intval($_SESSION['filter']['stock_overview']).')' : '
+                        AND locations.visible'))))
         .'
     GROUP BY 
         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
