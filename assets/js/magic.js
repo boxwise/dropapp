@@ -928,8 +928,10 @@ function initiateList() {
         $(".collapsebutton").click(function() {
             var parentRow = $(this).closest("tr");
             var directChildRows = $("tr[data-collapseparent='"+$(this).data("collapseid")+"']");
+            var allChildRows = $("tr[data-hidecollapseparent"+parentRow.data('level')+"='"+$(this).data("collapseid")+"']");
             if (directChildRows.first().is(".collapse.in")) {
-                $("tr[data-hidecollapseparent"+parentRow.data('level')+"='"+$(this).data("collapseid")+"']").collapse('hide');
+                allChildRows.collapse('hide');
+                allChildRows.find(".collapsebutton").find("i").removeClass("fa-chevron-down").addClass("fa-chevron-right");
                 parentRow.find(".collapsebutton").find("i").removeClass("fa-chevron-down").addClass("fa-chevron-right");
             } else {
                 directChildRows.collapse("show");
