@@ -789,6 +789,11 @@ td.list-level-0.list-column-ean_print div a:hover {
 	}
 }
 
+.collapsebutton{
+	float: left;
+	padding: 8px 10px 8px 3px;
+	margin: -8px 0;
+}
 .overview-level-0 td:first-child{
 	box-shadow: 8px 0px #48ABB4 inset;
 	padding-left: 16px;
