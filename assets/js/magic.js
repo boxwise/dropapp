@@ -991,6 +991,19 @@ function initiateList() {
                 dataType: "json"
             });
         });
+        // Collapse All button
+        $("#collapseall").click(function() {
+            var tableParent = $(this).closest(".table-parent");
+            tableParent
+                .find("tr[class*='collapse']")
+                .data("notcollapsed", 0)
+                .collapse("hide");
+            tableParent
+                .find(".collapsebutton")
+                .find("i")
+                .removeClass("fa-chevron-down")
+                .addClass("fa-chevron-right");
+        });
     }
     $("body").removeClass("loading");
 }

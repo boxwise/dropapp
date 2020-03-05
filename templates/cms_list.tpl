@@ -16,6 +16,9 @@
 
 			<div class="table-nav">
 				<ul class="actions">
+					{if $listconfig['allowcollapse']}<li>
+						<button class="btn btn-default btn-sm" id="collapseall" data-testid="collapseall"><i class="fa fa-chevron-circle-right"></i> Collapse All</button>
+					</li>{/if}
 					{if $listconfig['allowselectall']}<li>
 						<label class="btn btn-default btn-sm tooltip-this" data-toggle="tooltip" data-placement="top" title="{$translate['cms_list_selectall']}" for="group-select-1"><input id="group-select-1" data-testid='select_all' type="checkbox" class="group-select"></label>
 					</li>{/if}
