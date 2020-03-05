@@ -153,7 +153,7 @@
 					    {if $listconfig['allowmove']}<tr class="level-{$row['level']} inbetween" data-level="{$row['level']}"><td colspan="{$listdata|@count}"><span></span></td></tr>{/if}				    
 							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}"
 								class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
-								{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit']))}item-clickable{/if}
+								{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])) && !isset($listconfig['listrownotclickable'])}item-clickable{/if}
 								{if $row['preventdelete']}item-nondeletable{/if}
 								{if $row['disableifistrue']}disable-if-is-true{/if}
 								{if $listconfig['allowmove'] && $row['level']>=$listconfig['allowmovefrom'] && $row['level']<=$listconfig['allowmoveto']}item-zortable{/if}

@@ -15,9 +15,9 @@
         listsetting('allowselect', false);
         listsetting('allowselectall', false);
         listsetting('allowsort', false);
-        listsetting('allowedit', false);
         listsetting('allowmove', false);
         listsetting('allowcollapse', true);
+        listsetting('listrownotclickable', true);
 
         $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
         $statusarray = ['in_stock' => 'In stock', 'ordered' => 'Ordered', 'untouched' => 'Untouched for 3 months', 'lost' => 'Lost'];
