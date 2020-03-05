@@ -798,3 +798,41 @@ div.filter-applied {
 		float: right;
 	}
 }
+
+.collapsebutton{
+	float: left;
+	padding: 8px 10px 8px 3px;
+	margin: -8px 0;
+}
+.overview-level-0 td:first-child{
+	box-shadow: 8px 0px #48ABB4 inset;
+	padding-left: 16px;
+}
+.overview-level-0 td:last-child{
+	box-shadow: -8px 0px #48ABB4 inset;
+	padding-right: 16px;
+}
+.overview-level-1 td:first-child{
+	box-shadow: 8px 0px #5874C0 inset;
+	padding-left: 16px;
+}
+.overview-level-1 td:last-child{
+	box-shadow: -8px 0px #5874C0 inset;
+	padding-right: 16px;
+}
+.overview-level-2 td:first-child{
+	box-shadow: 8px 0px #FFCD63 inset;
+	padding-left: 16px;
+}
+.overview-level-2 td:last-child{
+	box-shadow: -8px 0px #FFCD63 inset;
+	padding-right: 16px;
+}
+.overview-level-3 td:first-child{
+	box-shadow: 8px 0px #FFAD63 inset;
+	padding-left: 16px;
+}
+.overview-level-3 td:last-child{
+	box-shadow: -8px 0px #FFAD63 inset;
+	padding-right: 16px;
+}

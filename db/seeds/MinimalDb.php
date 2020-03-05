@@ -70,7 +70,8 @@ class MinimalDb extends AbstractSeed
 			(155,NULL,'Boxwise Gods','',8,0,1,1,0,0),
 			(156,42,'User groups','cms_usergroups',20,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
-			(158,35,'Add beneficiary','people_add',3,0,0,1,0,0);");
+			(158,35,'Add beneficiary','people_add',3,0,0,1,0,0),
+			(159,99,'Stock Overview','stock_overview',14,0,1,1,0,1);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings

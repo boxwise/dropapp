@@ -807,34 +807,34 @@ tr td:first-child{
 	border-left: 0 solid #fff;
 }
 tr.level-1 td:first-child{
-	border-left-width: 20px
+	border-left-width: 32px
 }
 tr.level-2 td:first-child{
-	border-left-width: 40px
+	border-left-width: 64px
 }
 tr.level-3 td:first-child{
-	border-left-width: 60px
+	border-left-width: 96px
 }
 tr.level-4 td:first-child{
-	border-left-width: 80px
+	border-left-width: 128px
 }
 tr.level-5 td:first-child{
-	border-left-width: 100px
-}
-tr.level-6 td:first-child{
-	border-left-width: 120px
-}
-tr.level-7 td:first-child{
-	border-left-width: 140px
-}
-tr.level-8 td:first-child{
 	border-left-width: 160px
 }
+tr.level-6 td:first-child{
+	border-left-width: 192px
+}
+tr.level-7 td:first-child{
+	border-left-width: 224px
+}
+tr.level-8 td:first-child{
+	border-left-width: 256px
+}
 tr.level-9 td:first-child{
-	border-left-width: 180px
+	border-left-width: 288px
 }
 tr.level-10 td:first-child{
-	border-left-width: 200px
+	border-left-width: 320px
 }
 .list-tree .level-0 {
 	font-weight: bold;
