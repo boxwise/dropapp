@@ -5,7 +5,7 @@
 
     initlist();
 
-    $cmsmain->assign('title', 'General stock');
+    $cmsmain->assign('title', 'Stock Overview');
 
     listsetting('allowcopy', false);
     listsetting('allowadd', false);
