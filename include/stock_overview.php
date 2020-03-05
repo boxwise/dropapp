@@ -161,8 +161,11 @@
                 $_SESSION['stock_overview'] = $_POST['ids'];
 
                 break;
+            case 'collapseall':
+                unset($_SESSION['stock_overview']);
+
+                break;
         }
-        $return = $_SESSION['stock_overview'];
 
         echo json_encode($return);
         die();

@@ -1003,6 +1003,12 @@ function initiateList() {
                 .find("i")
                 .removeClass("fa-chevron-down")
                 .addClass("fa-chevron-right");
+            $.ajax({
+                type: "post",
+                url: tableParent.data("action"),
+                data: { do: "collapseall"},
+                dataType: "json"
+            });
         });
     }
     $("body").removeClass("loading");
