@@ -940,7 +940,6 @@ function initiateList() {
                     collapseList.push($(this).data("id"));
                 }
             });
-
             var parentRow = $(this).closest("tr");
             var directChildRows = $(
                 "tr[data-collapseparent='" + $(this).data("collapseid") + "']"
@@ -987,15 +986,12 @@ function initiateList() {
                     .addClass("fa-chevron-down");
             }
             // send ajax to memorize which rows are collapsed
-            console.log(collapseList);
             $.ajax({
                 type: "post",
                 url: tableParent.data("action"),
                 data: { do: "collapse", ids: collapseList },
                 dataType: "json"
-            }).done(function(response) {
-                console.log(response);
-            });
+            })
         });
     }
     $("body").removeClass("loading");
