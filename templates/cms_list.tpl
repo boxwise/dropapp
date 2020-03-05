@@ -154,6 +154,7 @@
 								{if $row['disableifistrue']}disable-if-is-true{/if}
 								{if $listconfig['allowmove'] && $row['level']>=$listconfig['allowmovefrom'] && $row['level']<=$listconfig['allowmoveto']}item-zortable{/if}
 								{if ($listconfig['allowselect']|is_array && $listconfig['allowselect'][$row['level']]) or (!$listconfig['allowselect']|is_array && $listconfig['allowselect'])}item-selectable{/if}
+								{if $listconfig['allowcollapse'] && isset($row['level'])}overview-level-{$row['level']}{/if}
 								{if $listconfig['allowcollapse'] && $row['level']}collapse{/if}"
 								{* reference classes for collapse button *}
 								{if $listconfig['allowcollapse'] && $row['level']} 

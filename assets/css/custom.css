@@ -788,3 +788,36 @@ td.list-level-0.list-column-ean_print div a:hover {
 		float: right;
 	}
 }
+
+.overview-level-0 td:first-child{
+	box-shadow: 8px 0px #48ABB4 inset;
+	padding-left: 16px;
+}
+.overview-level-0 td:last-child{
+	box-shadow: -8px 0px #48ABB4 inset;
+	padding-right: 16px;
+}
+.overview-level-1 td:first-child{
+	box-shadow: 8px 0px #5874C0 inset;
+	padding-left: 16px;
+}
+.overview-level-1 td:last-child{
+	box-shadow: -8px 0px #5874C0 inset;
+	padding-right: 16px;
+}
+.overview-level-2 td:first-child{
+	box-shadow: 8px 0px #FFCD63 inset;
+	padding-left: 16px;
+}
+.overview-level-2 td:last-child{
+	box-shadow: -8px 0px #FFCD63 inset;
+	padding-right: 16px;
+}
+.overview-level-3 td:first-child{
+	box-shadow: 8px 0px #FFAD63 inset;
+	padding-left: 16px;
+}
+.overview-level-3 td:last-child{
+	box-shadow: -8px 0px #FFAD63 inset;
+	padding-right: 16px;
+}
