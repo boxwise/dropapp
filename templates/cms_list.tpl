@@ -174,7 +174,7 @@
 											<div class="td-content">
 												<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
 												{if $listconfig['allowcollapse']}
-													<div class="collapsebutton" data-collapseid={$row['id']} {if $listconfig['allowcollapse']}data-notcollapsed={isset($row['notCollapsed'])}{/if}>
+													<div class="collapsebutton" data-collapseid={$row['id']} data-notcollapsed={isset($row['notCollapsed'])}>
 												</div>{/if}
 												<label class="item-select-label">
 													<input class="item-select" data-testid='select-id' type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}>

@@ -148,6 +148,7 @@
     ORDER BY 
         complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
 
+        // Add what rows are expanded and collapsed
         foreach ($data as &$row) {
             if (in_array($row['id'], $_SESSION['stock_overview'])) {
                 $row['notCollapsed'] = true;
