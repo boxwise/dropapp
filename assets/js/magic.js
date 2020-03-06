@@ -929,7 +929,9 @@ function initiateList() {
                 );
                 directChildRows.collapse("show");
                 $(this).append('<i class="fa fa-chevron-down"></i>');
-            } else if (parentRow.next().data("level") > parentRow.data("level")) {
+            } else if (
+                parentRow.next().data("level") > parentRow.data("level")
+            ) {
                 $(this).append('<i class="fa fa-chevron-right"></i>');
             }
         });
@@ -939,7 +941,11 @@ function initiateList() {
             var collapseList = new Array();
             tableParent.find(".collapsebutton").each(function() {
                 if ($(this).data("notcollapsed")) {
-                    collapseList.push($(this).closest("tr").data("id"));
+                    collapseList.push(
+                        $(this)
+                            .closest("tr")
+                            .data("id")
+                    );
                 }
             });
             var parentRow = $(this).closest("tr");
@@ -967,6 +973,7 @@ function initiateList() {
                     .removeClass("fa-chevron-down")
                     .addClass("fa-chevron-right");
                 $(this)
+                    .data("notcollapsed", 0)
                     .find("i")
                     .removeClass("fa-chevron-down")
                     .addClass("fa-chevron-right");
