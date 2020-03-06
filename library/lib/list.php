@@ -208,29 +208,29 @@ function listUnDeleteAction($table, $id, $count = 0, $recursive = false)
     return $count;
 }
 
-function listProlong($table, $ids)
+function listExtend($table, $ids)
 {
     global $translate;
 
     $hasExpireDate = db_fieldexists($table, 'valid_lastday');
     foreach ($ids as $id) {
         if ($hasExpireDate) {
-            $count += listProlongAction($table, $id);
+            $count += listExtendAction($table, $id);
         }
     }
     if ($count) {
-        return [true, $translate['cms_list_prolongsuccess'], false];
+        return [true, $translate['cms_list_extendsuccess'], false];
     }
 
-    return [false, $translate['cms_list_prolongerror'], false];
+    return [false, $translate['cms_list_extenderror'], false];
 }
 
-function listProlongAction($table, $id)
+function listExtendAction($table, $id)
 {
     $result = db_query('UPDATE '.$table." SET valid_lastday = '0000-00-00 00:00:00' WHERE id = :id", ['id' => $id]);
     $count += $result->rowCount();
     if ($count) {
-        simpleSaveChangeHistory($table, $id, 'Record prolonged');
+        simpleSaveChangeHistory($table, $id, 'Record extended');
     }
 
     return $count;

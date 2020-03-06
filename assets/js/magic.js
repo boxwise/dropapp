@@ -781,12 +781,12 @@ function initiateList() {
                                                 );
                                             }
                                             break;
-                                        case "prolong":
+                                        case "extend":
                                             allTargets.fadeOut(200, function() {
                                                 $(this).remove();
                                             });
                                             break;
-                                        case "prolongActive":
+                                        case "extendActive":
                                             $.each( allTargets, function( key, value ) {
                                                 value.cells[4].innerText = ''
                                             });

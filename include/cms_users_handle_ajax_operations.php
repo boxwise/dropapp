@@ -27,10 +27,10 @@ if ($ajax) {
             }
 
             break;
-        case 'prolongActive':
-        case 'prolong':
+        case 'extendActive':
+        case 'extend':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listProlong($table, $ids);
+                list($success, $message, $redirect) = listExtend($table, $ids);
 
                 break;
         case 'copy':
