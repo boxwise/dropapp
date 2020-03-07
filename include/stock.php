@@ -30,7 +30,7 @@
         {
             switch ($applied_filter) {
                 case 'boxes_in_stock':
-                    return ' AND l.visible';
+                    return ' ';
                 case 'ordered':
                     return ' AND (stock.ordered OR stock.picked) AND l.visible';
                 case 'dispose':
@@ -38,7 +38,7 @@
                 case 'lost_boxes':
                     return ' AND l.is_lost';
                 case 'showall':
-                    return '';
+                    return ' ';
                 default:
                     return ' AND l.visible';
             }
