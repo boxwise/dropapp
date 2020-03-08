@@ -18,7 +18,7 @@ Cypress.Commands.add("deleteAllBoxesExceptSeed", () => {
         if ($button.text().includes("Delete")) {
             cy.log("Delete button is visible")
             cy.get("button[data-operation='delete']").click();
-            cy.get("a[data-apply='confirmation']").click();
+            cy.getConfirmActionButton().click();
         }
     });
 });

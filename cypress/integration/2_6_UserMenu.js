@@ -33,12 +33,6 @@ describe("2_6_UserMenu_Test", () => {
         cy.get(type + "[data-testid = '" + testId + "']").should("be.visible");
     }
 
-    function checkUserCheckboxByName(name){
-        cy.getRowWithName(name).parent().parent().parent().within(() => {
-            cy.get("input[type='checkbox']").check();
-        });
-    }
-
     function checkAllUsersSelected() {
         cy.get('tbody tr').each(($tr) => {
             expect($tr).to.have.class('selected');
@@ -77,13 +71,13 @@ describe("2_6_UserMenu_Test", () => {
     });
 
     it("2_6_2 Tick box for active user", () => {
-        checkUserCheckboxByName(BROWSER_TEST_USER_USER);
+        cy.checkGridCheckboxByText(BROWSER_TEST_USER_USER);
         checkForElementByTypeAndTestId("button", "list-delete-button");
         checkForElementByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
     });
 
     it("2_6_3 Tick box for pending user", () => {
-        checkUserCheckboxByName(BROWSER_TEST_USER_PENDING);
+        cy.checkGridCheckboxByText(BROWSER_TEST_USER_PENDING);
         checkForElementByTypeAndTestId("button", "list-delete-button");
         checkForElementByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
     });

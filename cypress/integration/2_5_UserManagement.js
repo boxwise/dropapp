@@ -6,18 +6,8 @@ describe('User management', () => {
         cy.visit('/?action=cms_users');
     });
 
-    function checkUserCheckboxByName(name){
-        cy.getRowWithName(name).parent().parent().parent().within(() => {
-            cy.get("input[type='checkbox']").check();
-        });
-    }
-
     function getDeactivateButton(){
         return cy.get("button[data-testid='list-delete-button']");
-    }
-
-    function getConfirmActionButton(){
-        return cy.get("a[data-apply='confirmation']");
     }
 
     function getCancelAction(){
@@ -37,27 +27,27 @@ describe('User management', () => {
     }
 
     it('Deactivate & reactivate user', () => {
-        checkUserCheckboxByName(deactivateTestUserName);
+        cy.checkGridCheckboxByText(deactivateTestUserName);
         getDeactivateButton().should('be.visible');
         getDeactivateButton().click();
-        getConfirmActionButton().should('be.visible');
+        cy.getConfirmActionButton().should('be.visible');
         getCancelAction().should('be.visible');
         getCancelAction().click();
-        getConfirmActionButton().should('not.exist');
+        cy.getConfirmActionButton().should('not.exist');
         getDeactivateButton().click();
-        getConfirmActionButton().click();
+        cy.getConfirmActionButton().click();
         getDeactivatedUsersTab().click();
         getDeactivatedUsersTab().should('have.class', 'active')
-        cy.getRowWithName(deactivateTestUserName).should('exist');
-        checkUserCheckboxByName(deactivateTestUserName);
+        cy.getRowWithText(deactivateTestUserName).should('exist');
+        cy.checkGridCheckboxByText(deactivateTestUserName);
         getReactivateButton().click();
-        getConfirmActionButton().should('be.visible');
+        cy.getConfirmActionButton().should('be.visible');
         getCancelAction().should('be.visible');
         getCancelAction().click();
-        getConfirmActionButton().should('not.exist');
+        cy.getConfirmActionButton().should('not.exist');
         getReactivateButton().click();
-        getConfirmActionButton().click();
+        cy.getConfirmActionButton().click();
         getActiveUsersTab().click();
-        cy.getRowWithName(deactivateTestUserName).should('exist');
+        cy.getRowWithText(deactivateTestUserName).should('exist');
     });
 });

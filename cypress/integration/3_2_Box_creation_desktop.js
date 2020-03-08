@@ -65,9 +65,6 @@ context("Box_creation_tests", () => {
     function CheckCancelButton(){
         cy.get("a").contains("Cancel").should("be.visible");
     }
-    function CheckQtip(qtip_id){
-        cy.get("div[id='"+ qtip_id + "']").should("be.visible");
-    }
     function CheckCommentField(){
         cy.get("textarea[data-testid='comments_id']").should("be.empty");
     }
@@ -91,9 +88,9 @@ context("Box_creation_tests", () => {
     it('3_2_1 Prevent box creation without data', () => {
         CheckEmpty();
         SaveAndProgress("Save and close");
-        CheckQtip('qtip-1-content');
-        CheckQtip('qtip-2-content');
-        CheckQtip('qtip-3-content');
+        cy.checkQtip('qtip-1-content');
+        cy.checkQtip('qtip-2-content');
+        cy.checkQtip('qtip-3-content');
     });
     it('3_2_2 Create Box with data', () => {
 

@@ -54,12 +54,6 @@ describe("2_7_DeactivatedUsers_Test", () => {
         cy.get(type + "[data-testid = '" + testId + "']").click();
     }
 
-    function checkUserCheckboxByName(name){
-        cy.getRowWithName(name).parent().parent().parent().within(() => {
-            cy.get("input[type='checkbox']").check();
-        });
-    }
-
     function checkAllUsersSelected() {
         cy.get('tbody tr').each(($tr) => {
             expect($tr).to.have.class('selected');
@@ -93,7 +87,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
     });
 
     it("2_7_2 Tick box for deactivated user", () => {
-        checkUserCheckboxByName(DELETED_COORDINATOR_NAME);
+        cy.checkGridCheckboxByText(DELETED_COORDINATOR_NAME);
         checkForElementByTypeAndTestId("button", "reactivate-cms-user");
     });
 
@@ -105,7 +99,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
     });
 
     it("2_7_4 Activate deactivated user", () => {
-        checkUserCheckboxByName(DELETED_USER_NAME);
+        cy.checkGridCheckboxByText(DELETED_USER_NAME);
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
         checkForElementByText("h3", ARE_YOU_SURE_POPUP);
         clickOnElementByText("a", OK_BUTTON);
@@ -118,14 +112,14 @@ describe("2_7_DeactivatedUsers_Test", () => {
         cy.visit('/?action=cms_users');
         checkForElementByText("a", DELETED_USER_NAME);
 
-        checkUserCheckboxByName(DELETED_USER_NAME);
+        cy.checkGridCheckboxByText(DELETED_USER_NAME);
         clickOnElementByTypeAndTestId("button", "list-delete-button");
         clickOnElementByText("div.popover-content a", DEACTIVATE_BUTTON);
         cy.waitForAjaxAction(ITEM_DELETED);
        
         // test cancel button
         cy.visit('/?action=cms_users_deactivated');
-        checkUserCheckboxByName(DELETED_USER_NAME);
+        cy.checkGridCheckboxByText(DELETED_USER_NAME);
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
         checkClassByTypeAndTestId("button", "reactivate-cms-user", "open", true);
         clickOnElementByText("a", CANCEL_BUTTON);

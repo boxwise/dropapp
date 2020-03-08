@@ -52,12 +52,6 @@ describe("2_8_ExpiredUsers_Test", () => {
         cy.get(type + "[data-testid = '" + testId + "']").click();
     }
 
-    function checkUserCheckboxByName(name){
-        cy.getRowWithName(name).parent().parent().parent().within(() => {
-            cy.get("input[type='checkbox']").check();
-        });
-    }
-
     function checkAllUsersSelected() {
         cy.get('tbody tr').each(($tr) => {
             expect($tr).to.have.class('selected');
@@ -96,7 +90,7 @@ describe("2_8_ExpiredUsers_Test", () => {
     });
 
     it("2_8_2 Tick box for expired user", () => {
-        checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
+        cy.checkGridCheckboxByText(EXPIRED_COORDINATOR_NAME);
         checkForElementByTypeAndTestId("button", "list-delete-button");
         // extend date button should appear
     });
@@ -113,7 +107,7 @@ describe("2_8_ExpiredUsers_Test", () => {
     // });
 
     it("2_8_5 Deactivate expired user", () => {
-        checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
+        cy.checkGridCheckboxByText(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "list-delete-button");
         checkForElementByText("h3", ARE_YOU_SURE_POPUP);
         clickOnElementByText("div.popover-content a", DEACTIVATE_BUTTON);
@@ -121,7 +115,7 @@ describe("2_8_ExpiredUsers_Test", () => {
 
         cy.visit('/?action=cms_users_deactivated');
         checkForElementByText("p", EXPIRED_COORDINATOR_NAME);
-        checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
+        cy.checkGridCheckboxByText(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
         clickOnElementByText("a", OK_BUTTON);
         cy.waitForAjaxAction(ITEM_RECOVERED);
@@ -129,7 +123,7 @@ describe("2_8_ExpiredUsers_Test", () => {
         // test cancel button
         cy.visit('/?action=cms_users_expired');
         checkForElementByText("a", EXPIRED_COORDINATOR_NAME);
-        checkUserCheckboxByName(EXPIRED_COORDINATOR_NAME);
+        cy.checkGridCheckboxByText(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "list-delete-button");
         clickOnElementByText("a", CANCEL_BUTTON);
         checkClassByTypeAndTestId("button", "list-delete-button", "open", false);

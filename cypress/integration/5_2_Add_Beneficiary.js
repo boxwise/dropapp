@@ -15,18 +15,14 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.get('body').then(($body) => {
             if ($body.text().includes(lastname)) {
                 cy.log("found" + lastname)
-                cy.getRowWithName(lastname).parent().parent().parent().within(() => {
-                    cy.get("input[type='checkbox']").check();
-                });
+                cy.checkGridCheckboxByText(lastname);
                 cy.get("button[data-operation='delete']").click();
-                cy.get("a[data-apply='confirmation']").click();
+                cy.getConfirmActionButton().click();
                 // delete the user also from deactivated
                 cy.get("ul[data-testid='listTab'] a").contains("Deactivated").click();
-                cy.getRowWithName(lastname).parent().parent().parent().within(() => {
-                    cy.get("input[type='checkbox']").check();
-                });
+                cy.checkGridCheckboxByText(lastname);
                 cy.get("button").contains("Full delete").click();
-                cy.get("a[data-apply='confirmation']").click();
+                cy.getConfirmActionButton().click();
             }
         })
     }
@@ -94,10 +90,6 @@ context("5_2_Add_Beneficiary_Test", () => {
         }
     }
 
-    function CheckQtip(qtip_id) {
-        cy.get("div[id='" + qtip_id + "']").should("be.visible");
-    }
-
     function getBeneficiaryRow(familyName){
         return cy.get('tr').contains(familyName);
     }
@@ -116,8 +108,8 @@ context("5_2_Add_Beneficiary_Test", () => {
     it("5_2_2 Prevent empty submit",() => {
         NavigateToEditBeneficiaryForm();
         ClickButtonWithText("Save and close");
-        CheckQtip("qtip-0-content");
-        CheckQtip("qtip-1-content");
+        cy.checkQtip("qtip-0-content");
+        cy.checkQtip("qtip-1-content");
     });    
 
     it("5_2_4 Save and New",()=> {
