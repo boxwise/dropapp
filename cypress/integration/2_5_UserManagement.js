@@ -6,12 +6,8 @@ describe('User management', () => {
         cy.visit('/?action=cms_users');
     });
 
-    function getUserRow(name){
-        return cy.get('tr').contains(name);
-    }
-
     function checkUserCheckboxByName(name){
-        getUserRow(name).parent().parent().parent().within(() => {
+        cy.getRowWithName(name).parent().parent().parent().within(() => {
             cy.get("input[type='checkbox']").check();
         });
     }
@@ -52,7 +48,7 @@ describe('User management', () => {
         getConfirmActionButton().click();
         getDeactivatedUsersTab().click();
         getDeactivatedUsersTab().should('have.class', 'active')
-        getUserRow(deactivateTestUserName).should('exist');
+        cy.getRowWithName(deactivateTestUserName).should('exist');
         checkUserCheckboxByName(deactivateTestUserName);
         getReactivateButton().click();
         getConfirmActionButton().should('be.visible');
@@ -62,6 +58,6 @@ describe('User management', () => {
         getReactivateButton().click();
         getConfirmActionButton().click();
         getActiveUsersTab().click();
-        getUserRow(deactivateTestUserName).should('exist');
+        cy.getRowWithName(deactivateTestUserName).should('exist');
     });
 });

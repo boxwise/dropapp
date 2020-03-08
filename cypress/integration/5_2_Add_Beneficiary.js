@@ -15,14 +15,14 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.get('body').then(($body) => {
             if ($body.text().includes(lastname)) {
                 cy.log("found" + lastname)
-                cy.get('tr').contains(lastname).parent().parent().parent().within(() => {
+                cy.getRowWithName(lastname).parent().parent().parent().within(() => {
                     cy.get("input[type='checkbox']").check();
                 });
                 cy.get("button[data-operation='delete']").click();
                 cy.get("a[data-apply='confirmation']").click();
                 // delete the user also from deactivated
                 cy.get("ul[data-testid='listTab'] a").contains("Deactivated").click();
-                cy.get('tr').contains(lastname).parent().parent().parent().within(() => {
+                cy.getRowWithName(lastname).parent().parent().parent().within(() => {
                     cy.get("input[type='checkbox']").check();
                 });
                 cy.get("button").contains("Full delete").click();

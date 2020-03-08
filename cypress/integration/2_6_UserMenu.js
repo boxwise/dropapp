@@ -33,12 +33,8 @@ describe("2_6_UserMenu_Test", () => {
         cy.get(type + "[data-testid = '" + testId + "']").should("be.visible");
     }
 
-    function getUserRow(name){
-        return cy.get('tr').contains(name);
-    }
-
     function checkUserCheckboxByName(name){
-        getUserRow(name).parent().parent().parent().within(() => {
+        cy.getRowWithName(name).parent().parent().parent().within(() => {
             cy.get("input[type='checkbox']").check();
         });
     }

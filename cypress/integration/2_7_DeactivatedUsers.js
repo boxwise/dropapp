@@ -54,12 +54,8 @@ describe("2_7_DeactivatedUsers_Test", () => {
         cy.get(type + "[data-testid = '" + testId + "']").click();
     }
 
-    function getUserRow(name){
-        return cy.get('tr').contains(name);
-    }
-
     function checkUserCheckboxByName(name){
-        getUserRow(name).parent().parent().parent().within(() => {
+        cy.getRowWithName(name).parent().parent().parent().within(() => {
             cy.get("input[type='checkbox']").check();
         });
     }

@@ -44,18 +44,10 @@ function getOption(lvl){
     return cy.get("ul[class='select2-results'] li").contains(lvl);
 }
 
-function clickButtonWithText(buttontext) {
-    cy.get("button").contains(buttontext).click();
-}
-
 function checkUserGroupCheckboxByName(name){
-    getUserGroupRow(name).parent().parent().parent().within(() => {
+    cy.getRowWithName(name).parent().parent().parent().within(() => {
         cy.get("input[type='checkbox']").check();
     });
-}
-
-function getUserGroupRow(name){
-    return cy.get('tr').contains(name);
 }
 
 function deleteUserGroup(name) {
@@ -97,13 +89,13 @@ describe('Create usergroups (admin)', () => {
 
     it("Create & delete 'coordinator' usergroup", () => {
         FillUserGroupForm(BrowserTestUserGroup_Coordinator, "Coordinator", TestBase, TestUserGroupFunctions)
-        clickButtonWithText("Save and close");
-        getUserGroupRow(BrowserTestUserGroup_Coordinator).should('exist');
+        cy.getButtonWithText("Save and close").click();
+        cy.getRowWithName(BrowserTestUserGroup_Coordinator).should('exist');
         //testing delete
         checkUserGroupCheckboxByName(BrowserTestUserGroup_Coordinator)
         clickDeleteButton();
         confirmAction();
-        getUserGroupRow(BrowserTestUserGroup_Coordinator).should('not.exist');
+        cy.getRowWithName(BrowserTestUserGroup_Coordinator).should('not.exist');
         cy.notyTextNotificationWithTextIsVisible("Item deleted");
 
         //cleanup just in case
@@ -112,13 +104,13 @@ describe('Create usergroups (admin)', () => {
 
     it("Create & delete 'user' usergroup", () => {
         FillUserGroupForm(BrowserTestUserGroup_User, "User", TestBase, TestUserGroupFunctions)
-        clickButtonWithText("Save and close");
-        getUserGroupRow(BrowserTestUserGroup_User).should('exist');
+        cy.getButtonWithText("Save and close").click();
+        cy.getRowWithName(BrowserTestUserGroup_User).should('exist');
         //testing delete
         checkUserGroupCheckboxByName(BrowserTestUserGroup_User)
         clickDeleteButton();
         confirmAction();
-        getUserGroupRow(BrowserTestUserGroup_User).should('not.exist');
+        cy.getRowWithName(BrowserTestUserGroup_User).should('not.exist');
         cy.notyTextNotificationWithTextIsVisible("Item deleted");
 
         //cleanup just in case
@@ -131,7 +123,7 @@ describe('Create usergroups (admin)', () => {
         for (var fcn of TestUserGroupFunctions) {
             cy.selectOptionByText("cms_functions",fcn);
         }
-        clickButtonWithText("Save and close");
+        cy.getButtonWithText("Save and close").click();
         checkQtip("This field is required");
         userGroupFormElementsAreVisible();
     });
@@ -140,7 +132,7 @@ describe('Create usergroups (admin)', () => {
         cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
         cy.selectOptionByText('userlevel', "Coordinator");
         cy.selectOptionByText('camps', TestBase);
-        clickButtonWithText("Save and close");
+        cy.getButtonWithText("Save and close").click();
         checkQtip("This field is required");
         userGroupFormElementsAreVisible();
     });
@@ -182,7 +174,7 @@ describe('Create usergroups (admin)', () => {
         clickDeleteButton();
         confirmAction();
         cy.notyTextNotificationWithTextIsVisible("Please edit or remove it first");
-        getUserGroupRow(TestUserGroupWithUsersAssigned).should('exist');
+        cy.getRowWithName(TestUserGroupWithUsersAssigned).should('exist');
     });
 });
 
@@ -195,13 +187,13 @@ describe('Create usergroups (coordinator)', () => {
 
     it("Create & delete 'user' usergroup", () => {
         FillUserGroupForm(BrowserTestUserGroup_User, "User", TestBase, TestUserGroupFunctions)
-        clickButtonWithText("Save and close");
-        getUserGroupRow(BrowserTestUserGroup_User).should('exist');
+        cy.getButtonWithText("Save and close").click();
+        cy.getRowWithName(BrowserTestUserGroup_User).should('exist');
         //testing delete
         checkUserGroupCheckboxByName(BrowserTestUserGroup_User)
         clickDeleteButton();
         confirmAction();
-        getUserGroupRow(BrowserTestUserGroup_User).should('not.exist');
+        cy.getRowWithName(BrowserTestUserGroup_User).should('not.exist');
         cy.notyTextNotificationWithTextIsVisible("Item deleted");
 
         //cleanup just in case
@@ -214,7 +206,7 @@ describe('Create usergroups (coordinator)', () => {
         for (var fcn of TestUserGroupFunctions) {
             cy.selectOptionByText("cms_functions",fcn);
         }
-        clickButtonWithText("Save and close");
+        cy.getButtonWithText("Save and close").click();
         checkQtip("This field is required");
         userGroupFormElementsAreVisible();
     });
@@ -223,7 +215,7 @@ describe('Create usergroups (coordinator)', () => {
         cy.get("input[data-testid='userGroupName']").clear().type(BrowserTestUserGroup_Coordinator);
         cy.selectOptionByText('userlevel', "User");
         cy.selectOptionByText('camps', TestBase);
-        clickButtonWithText("Save and close");
+        cy.getButtonWithText("Save and close").click();
         checkQtip("This field is required");
         userGroupFormElementsAreVisible();
     });
@@ -265,6 +257,6 @@ describe('Create usergroups (coordinator)', () => {
         clickDeleteButton();
         confirmAction();
         cy.notyTextNotificationWithTextIsVisible("Please edit or remove it first");
-        getUserGroupRow(TestUserGroupWithUsersAssigned).should('exist');
+        cy.getRowWithName(TestUserGroupWithUsersAssigned).should('exist');
     });
 });

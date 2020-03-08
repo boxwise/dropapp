@@ -33,16 +33,16 @@ Cypress.config("defaultCommandTimeout",200000)
         cy.CheckDropDownEmpty("cms_usergroups_id")
         cy.get("input[data-testid='user_valid_from']").should("be.visible")
         cy.get("input[data-testid='user_valid_to']").should("be.visible")
-        cy.get("button").contains("Save and close").should('be.visible')
+        cy.getButtonWithText("Save and close").should('be.visible')
         cy.get("a").contains("Cancel").should('be.visible')
-        cy.get("button").contains("Save and close").click()
+        cy.getButtonWithText("Save and close").click()
         CheckRequiredFields()
     })
     
     it("2_4_0_B Create New user", () => {
         DeleteTestUser(Testaddress)
         FillForm(Testname, Testaddress, Testgroup)
-        cy.get("button").contains("Save and close").click()
+        cy.getButtonWithText("Save and close").click()
         cy.get("tr").contains(Testaddress).should("be.visible")
         
     })
@@ -50,7 +50,7 @@ Cypress.config("defaultCommandTimeout",200000)
     it("2_4_1 Create New User without expiry date", () => {
         DeleteTestUser(Testaddress)
         FillForm(Testname, Testaddress, Testgroup)
-        cy.get("button").contains("Save and close").click()
+        cy.getButtonWithText("Save and close").click()
         cy.get("tr").contains(Testaddress).should("be.visible")
     })
 
@@ -60,23 +60,23 @@ Cypress.config("defaultCommandTimeout",200000)
         let today = new Date()
         let current_date = today.getDate() + "-" + today.getMonth() + "-"+today.getFullYear();
         cy.get("input[data-testid='user_valid_to']").type(current_date);
-        cy.get("button").contains("Save and close").click()
+        cy.getButtonWithText("Save and close").click()
         cy.get("tr").contains(Testaddress).should("be.visible")
     })
     
     it("2_4_4 Create User already existing in another organisation", () => {
         FillForm(Alt_org_name,Alt_org_mail,Testgroup)
-        cy.get("button").contains("Save and close").click()
+        cy.getButtonWithText("Save and close").click()
         cy.notyTextNotificationWithTextIsVisible("This email already exists")
     })
     
     it("2_4_5 Create already existing user same organisation", () => {
         DeleteTestUser(Testaddress)
         FillForm(Testname,Testaddress,Testgroup)
-        cy.get("button").contains("Save and close").click()
+        cy.getButtonWithText("Save and close").click()
         cy.get("a[data-testid='NewItem']").click()
         FillForm(Testname,Testaddress,Testgroup)
-        cy.get("button").contains("Save and close").click()
+        cy.getButtonWithText("Save and close").click()
         cy.notyTextNotificationWithTextIsVisible("This email already exists in your organisation")
     })
 })
