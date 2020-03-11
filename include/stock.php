@@ -11,13 +11,15 @@
 
         listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
 
+        $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+
         $statusarray = [
             'boxes_in_stock' => 'In Stock',
             'ordered' => 'Ordered',
             'dispose' => 'Untouched for 3 months',
             'lost_boxes' => 'Lost',
             'showall' => 'Everything', ];
-        listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);
+        listfilter2(['label' => 'Boxes', 'options' => ($statusarray + $outgoinglocations), 'filter' => '"show"']);
 
         $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
         listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
@@ -30,7 +32,7 @@
         {
             switch ($applied_filter) {
                 case 'boxes_in_stock':
-                    return ' ';
+                    return ' AND l.visible';
                 case 'ordered':
                     return ' AND (stock.ordered OR stock.picked) AND l.visible';
                 case 'dispose':
