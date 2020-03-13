@@ -51,7 +51,6 @@ class MinimalDb extends AbstractSeed
 			(126,121,'Exit login as','exitloginas',29,0,0,0,1,0),
 			(127,96,'Sales List Download','sales_list_download',9,0,0,1,1,0),
 			(128,NULL,'Insight','',5,0,0,1,0,0),
-			(129,117,'General stock','stock-list',10,0,0,0,1,0),
 			(130,35,'Lists','food_lists',8,0,0,1,0,0),
 			(131,NULL,'Services','',2,0,0,1,0,0),
 			(132,131,'Bicycles / Sport','borrow',10,0,0,1,0,0),
