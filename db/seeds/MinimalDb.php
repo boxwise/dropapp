@@ -43,7 +43,6 @@ class MinimalDb extends AbstractSeed
 			(113,NULL,'Actions','',6,0,0,1,0,0),
 			(115,42,'Warehouses','locations',21,0,0,1,0,0),
 			(116,110,'Containers List','printed_list_containers',2,0,0,1,1,0),
-			(117,128,'Needed items (beta)','need',16,0,0,1,0,0),
 			(118,35,'Manage beneficiaries','people',4,0,0,1,0,0),
 			(121,NULL,'Hidden menu items','',9,0,0,0,1,0),
 			(123,121,'Start page','start',27,0,0,0,1,0),
@@ -52,7 +51,6 @@ class MinimalDb extends AbstractSeed
 			(126,121,'Exit login as','exitloginas',29,0,0,0,1,0),
 			(127,96,'Sales List Download','sales_list_download',9,0,0,1,1,0),
 			(128,NULL,'Insight','',5,0,0,1,0,0),
-			(129,117,'General stock','stock-list',10,0,0,0,1,0),
 			(130,35,'Lists','food_lists',8,0,0,1,0,0),
 			(131,NULL,'Services','',2,0,0,1,0,0),
 			(132,131,'Bicycles / Sport','borrow',10,0,0,1,0,0),
@@ -124,12 +122,6 @@ class MinimalDb extends AbstractSeed
             (11,'Unisex Kid','Kid',9,1,1,0,0,1,'0'),
 			(12,'Teen Girl','Girl',4,0,1,1,0,0,'0'),
             (13,'Teen Boy','Boy',5,1,0,1,0,0,'0');");
-
-        //------------------- need_periods
-        $this->execute("INSERT INTO `need_periods` (`id`, `label`, `week_min`, `week_max`) VALUES
-			(1,'1 mth to 3 mths',4,13),
-			(2,'2 weeks to 6 weeks',2,6),
-            (3,'2 mths to 6 mths',8,26);");
 
         //------------------- numbers
         $this->execute("INSERT INTO `numbers` (`value`, `label`) VALUES
