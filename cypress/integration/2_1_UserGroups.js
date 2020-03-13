@@ -9,7 +9,7 @@ const TestUserGroupFunctions = ["Boxes", "Checkout"];
 const AllFunctions = ['Free Shop', 'Admin','Users','Settings','Texts','Manage menu functions','Manage products',
 'Checkout','Boxes','Find beneficiary','Give tokens to all','Sales reports','Inventory','Fancy graphs',
 'Stockroom','Generate market schedule','Generate QR labels','Actions','Warehouses','Containers List',
-'Needed items','Manage beneficiaries','Hidden menu items','Start page','Give tokens to selected families',
+'Stock Overview','Manage beneficiaries','Hidden menu items','Start page','Give tokens to selected families',
 'User profile','Exit login as','Sales List Download','Insight','General stock','Lists','Services',
 'Bicycles / Sport','Borrow edit','Borrow history ','Library','Borrow books','Library history',
 'Library','Laundry','All Residents export','Laundry No show','Laundry start new cycle','Organisations',
@@ -17,11 +17,11 @@ const AllFunctions = ['Free Shop', 'Admin','Users','Settings','Texts','Manage me
 const AdminAvailableFunctions = ['Users','Manage products',
 'Checkout','Boxes','Give tokens to all','Fancy graphs', 'Find beneficiary',
 'Stockroom','Generate market schedule','Generate QR labels',
-'Needed items','Manage beneficiaries', 'Sales reports',
+'Stock Overview','Manage beneficiaries', 'Sales reports',
 'User groups','Add beneficiary'];
 const CoordinatorAvailableFunctions = ['Checkout','Boxes','Fancy graphs', 'Find beneficiary',
 'Stockroom','Generate QR labels','Users','Manage products','Generate market schedule',
-'Needed items','Manage beneficiaries', 'Sales reports','Give tokens to all',
+'Stock Overview','Manage beneficiaries', 'Sales reports','Give tokens to all',
 'User groups','Add beneficiary'];
 
 const AllLevels = ["Coordinator", "User", "Admin"]
