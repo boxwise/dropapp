@@ -20,7 +20,7 @@
 				g.label AS gender, 
 				p.name AS product, 
 				s.label AS size, 
-				IF(l.camp_id = '.$_SESSION['camp']['id'].',l.label,c.name) AS location, 
+				l.label AS location, 
 				l.camp_id = '.$_SESSION['camp']['id'].' AS visible,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventdelete,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit,
@@ -44,7 +44,8 @@
 				p.gender_id = '.intval($gender).' '.
                 ($size ? ' AND s.id = '.intval($size) : '').' AND 
 				(NOT stock.deleted OR stock.deleted IS NULL) AND 
-				stock.location_id = l.id 
+				stock.location_id = l.id AND 
+                l.camp_id = '.$_SESSION['camp']['id'].'
 				AND l.visible');
 
         foreach ($data as $key => $value) {
