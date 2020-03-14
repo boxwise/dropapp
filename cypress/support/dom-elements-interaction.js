@@ -6,8 +6,8 @@ Cypress.Commands.add("getButtonWithText", (text) => {
     cy.get("button").contains(text);
 });
 
-Cypress.Commands.add("getRowWithText", (name) => {
-    cy.get('tr').contains(name);
+Cypress.Commands.add("getRowWithText", (text) => {
+    cy.get("tr").contains(text);
 });
 
 Cypress.Commands.add("checkGridCheckboxByText", (text) => {
@@ -26,4 +26,12 @@ Cypress.Commands.add("checkQtip", (qtip_id) => {
 
 Cypress.Commands.add("checkQtipWithText", (qtip_class, qtipText) => {
     cy.get("div[class='"+qtip_class+"']").contains(qtipText).should("be.visible");
+});
+
+Cypress.Commands.add("getElementBySelectorAndText", (selector, text) => {
+    cy.get(selector).contains(text);
+});
+
+Cypress.Commands.add("clickListDeleteButton", () => {
+    cy.get("button[data-testid='list-delete-button']").click();
 });

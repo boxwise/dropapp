@@ -116,8 +116,8 @@ describe('Manage beneficiaries', () => {
         cy.get("button").contains("Save and close").click();
     }
 
-    function clickDeleteButton(){
-        cy.get("button[data-testid='list-delete-button']").click();
+    function clickDeleteButtonAndCheckConfirmation(){
+        cy.clickListDeleteButton();
         cy.getConfirmActionButton().click();
         cy.waitForAjaxAction(ITEM_DELETED);
     }
@@ -174,7 +174,7 @@ describe('Manage beneficiaries', () => {
             if ($body.text().includes(lastname)) {
                 cy.log("Deleting beneficiary " + lastname)
                 cy.checkGridCheckboxByText(lastname)
-                clickDeleteButton();
+                clickDeleteButtonAndCheckConfirmation();
                 deleteFromDeactivated(lastname);
             }
         });
@@ -223,7 +223,7 @@ describe('Manage beneficiaries', () => {
     it('Delete beneficiary', () => {
         createTestBeneficiary(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_CASE_ID);
         cy.checkGridCheckboxByText(TEST_LASTNAME1);
-        clickDeleteButton();
+        clickDeleteButtonAndCheckConfirmation();
         selectDeactivatedTab();
         getBeneficiaryRow(TEST_LASTNAME1).should('exist');
 
@@ -279,7 +279,7 @@ describe('Manage beneficiaries', () => {
                 cy.log("found" + TEST_LASTNAME3)
                 //delete user from All tab
                 cy.checkGridCheckboxByText(TEST_LASTNAME3)
-                clickDeleteButton();
+                clickDeleteButtonAndCheckConfirmation();
                 //delete user from deactivated tab
                 selectDeactivatedTab();
                 cy.checkGridCheckboxByText(TEST_LASTNAME3);
@@ -290,7 +290,7 @@ describe('Manage beneficiaries', () => {
             //create our test user
             createTestBeneficiary(TEST_FIRSTNAME3, TEST_LASTNAME3, TEST_CASE_ID);
             cy.checkGridCheckboxByText(TEST_LASTNAME3)
-            clickDeleteButton();
+            clickDeleteButtonAndCheckConfirmation();
             selectDeactivatedTab();
             cy.checkGridCheckboxByText(TEST_LASTNAME3);
             clickRecoverButton();

@@ -20,20 +20,8 @@ describe("2_8_ExpiredUsers_Test", () => {
         cy.visit('/?action=cms_users_expired');
     });
 
-    function checkForElementByText(selector, text) {
-        cy.get(selector).contains(text).should("be.visible");
-    }
-
-    function checkElementDoesNotExistByText(selector, text) {
-        cy.get(selector).contains(text).should('not.exist');
-    }
-
     function clickOnElement(selector) {
         cy.get(selector).first().click();
-    }
-
-    function clickOnElementByText(selector, text) {
-        cy.get(selector).contains(text).click();
     }
 
     function checkForElementByTypeAndTestId(type, testId) {
@@ -51,35 +39,29 @@ describe("2_8_ExpiredUsers_Test", () => {
     function clickOnElementByTypeAndTestId(type, testId) {
         cy.get(type + "[data-testid = '" + testId + "']").click();
     }
-
-    function checkAllUsersSelected() {
-        cy.get('tbody tr').each(($tr) => {
-            expect($tr).to.have.class('selected');
-        });
-    }
  
     it("2_8 Check for list elements in Expired tab", () => {
         checkForElementByTypeAndTestId("input", "select_all");
-        checkForElementByText("a", EXPIRED_COORDINATOR_NAME);
-        checkForElementByText("div", EXPIRED_COORDINATOR_EMAIL);
-        checkForElementByText("div", EXPIRED_COORDINATOR_ROLE);
-        checkForElementByText("div", EXPIRED_COORDINATOR_VALID_FROM);
-        checkForElementByText("div", EXPIRED_COORDINATOR_VALID_TO);
+        cy.checkElementIsVisibleByText("a", EXPIRED_COORDINATOR_NAME);
+        cy.checkElementIsVisibleByText("div", EXPIRED_COORDINATOR_EMAIL);
+        cy.checkElementIsVisibleByText("div", EXPIRED_COORDINATOR_ROLE);
+        cy.checkElementIsVisibleByText("div", EXPIRED_COORDINATOR_VALID_FROM);
+        cy.checkElementIsVisibleByText("div", EXPIRED_COORDINATOR_VALID_TO);
 
         // check that admin can see roles Coordinator and User
-        checkForElementByText("div", EXPIRED_COORDINATOR_ROLE);
-        checkForElementByText("div", EXPIRED_USER_ROLE);
+        cy.checkElementIsVisibleByText("div", EXPIRED_COORDINATOR_ROLE);
+        cy.checkElementIsVisibleByText("div", EXPIRED_USER_ROLE);
 
         // login as coodrinator; check that coordinator can see roles User but not Admin
         cy.visit('/?logout=1');
         cy.loginAsCoordinator();
         cy.visit('/?action=cms_users_expired');
-        checkForElementByText("div", EXPIRED_USER_ROLE);
-        checkElementDoesNotExistByText("div", EXPIRED_ADMIN_ROLE);
+        cy.checkElementIsVisibleByText("div", EXPIRED_USER_ROLE);
+        cy.checkElementDoesNotExistByText("div", EXPIRED_ADMIN_ROLE);
     });
 
     it("2_8_1 Click on expired user, edit page should open", () => {
-        clickOnElementByText("a", EXPIRED_COORDINATOR_NAME);
+        cy.clickOnElementBySelectorAndText("a", EXPIRED_COORDINATOR_NAME);
         checkForElementByTypeAndTestId("input", "user_name");
         checkForElementByTypeAndTestId("input", "user_email");
         checkForElementByTypeAndTestId("select", "user_group");
@@ -98,7 +80,7 @@ describe("2_8_ExpiredUsers_Test", () => {
     it("2_8_3 Select all expired users", () => {
         checkForElementByTypeAndTestId("input", "select_all");
         clickOnElement("input[data-testid = 'select_all']");
-        checkAllUsersSelected();
+        cy.checkAllUsersSelected();
         checkForElementByTypeAndTestId("button", "list-delete-button");
         // extend date button should appear
     });
@@ -109,23 +91,23 @@ describe("2_8_ExpiredUsers_Test", () => {
     it("2_8_5 Deactivate expired user", () => {
         cy.checkGridCheckboxByText(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "list-delete-button");
-        checkForElementByText("h3", ARE_YOU_SURE_POPUP);
-        clickOnElementByText("div.popover-content a", DEACTIVATE_BUTTON);
+        cy.checkElementIsVisibleByText("h3", ARE_YOU_SURE_POPUP);
+        cy.clickOnElementBySelectorAndText("div.popover-content a", DEACTIVATE_BUTTON);
         cy.waitForAjaxAction(ITEM_DELETED);
 
         cy.visit('/?action=cms_users_deactivated');
-        checkForElementByText("p", EXPIRED_COORDINATOR_NAME);
+        cy.checkElementIsVisibleByText("p", EXPIRED_COORDINATOR_NAME);
         cy.checkGridCheckboxByText(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
-        clickOnElementByText("a", OK_BUTTON);
+        cy.clickOnElementBySelectorAndText("a", OK_BUTTON);
         cy.waitForAjaxAction(ITEM_RECOVERED);
 
         // test cancel button
         cy.visit('/?action=cms_users_expired');
-        checkForElementByText("a", EXPIRED_COORDINATOR_NAME);
+        cy.checkElementIsVisibleByText("a", EXPIRED_COORDINATOR_NAME);
         cy.checkGridCheckboxByText(EXPIRED_COORDINATOR_NAME);
         clickOnElementByTypeAndTestId("button", "list-delete-button");
-        clickOnElementByText("a", CANCEL_BUTTON);
+        cy.clickOnElementBySelectorAndText("a", CANCEL_BUTTON);
         checkClassByTypeAndTestId("button", "list-delete-button", "open", false);
     });
 

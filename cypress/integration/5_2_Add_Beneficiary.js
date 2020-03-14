@@ -90,10 +90,6 @@ context("5_2_Add_Beneficiary_Test", () => {
         }
     }
 
-    function getBeneficiaryRow(familyName){
-        return cy.get('tr').contains(familyName);
-    }
-
     it("5_2_1 Fill form, Save and close", () => {
         DeleteTestedBeneficiary(Test_lastname)
         NavigateToEditBeneficiaryForm()
@@ -102,7 +98,7 @@ context("5_2_Add_Beneficiary_Test", () => {
         FillForm(Test_firstname, Test_lastname, Test_case_id);
         ClickButtonWithText("Save and close");
         cy.notificationWithTextIsVisible(Test_firstname + " " + Test_lastname + " was added");
-        getBeneficiaryRow(Test_lastname).should('exist');
+        cy.getRowWithText(Test_lastname).should('exist');
     });
 
     it("5_2_2 Prevent empty submit",() => {
