@@ -17,15 +17,11 @@ describe("2_6_UserMenu_Test", () => {
         cy.get(selector).first().click();
     }
 
-    function checkForElementByTypeAndTestId(type, testId) {
-        cy.get(type + "[data-testid = '" + testId + "']").should("be.visible");
-    }
- 
     it("2_6 Check for list elements", () => {
-        checkForElementByTypeAndTestId("a.active", "active_pending");
-        checkForElementByTypeAndTestId("a", "expired");
-        checkForElementByTypeAndTestId("a", "deactivated");
-        checkForElementByTypeAndTestId("input", "select_all");
+        cy.checkForElementByTypeAndTestId("a.active", "active_pending");
+        cy.checkForElementByTypeAndTestId("a", "expired");
+        cy.checkForElementByTypeAndTestId("a", "deactivated");
+        cy.checkForElementByTypeAndTestId("input", "select_all");
         cy.checkElementIsVisibleByText("a", NEW_USER_BUTTON_LABEL);
         cy.checkElementIsVisibleByText("div", USER_EMAIL);
 
@@ -43,31 +39,31 @@ describe("2_6_UserMenu_Test", () => {
 
     it("2_6_1 Check for list elements for single user edit page", () => {
         cy.clickOnElementBySelectorAndText("a", BROWSER_TEST_USER_USER);
-        checkForElementByTypeAndTestId("input", "user_name");
-        checkForElementByTypeAndTestId("input", "user_email");
-        checkForElementByTypeAndTestId("select", "user_group");
-        checkForElementByTypeAndTestId("input", "user_valid_from");
-        checkForElementByTypeAndTestId("input", "user_valid_to");
-        checkForElementByTypeAndTestId("div", "user_last_login");
-        checkForElementByTypeAndTestId("div", "user_created_data");
+        cy.checkForElementByTypeAndTestId("input", "user_name");
+        cy.checkForElementByTypeAndTestId("input", "user_email");
+        cy.checkForElementByTypeAndTestId("select", "user_group");
+        cy.checkForElementByTypeAndTestId("input", "user_valid_from");
+        cy.checkForElementByTypeAndTestId("input", "user_valid_to");
+        cy.checkForElementByTypeAndTestId("div", "user_last_login");
+        cy.checkForElementByTypeAndTestId("div", "user_created_data");
     });
 
     it("2_6_2 Tick box for active user", () => {
         cy.checkGridCheckboxByText(BROWSER_TEST_USER_USER);
-        checkForElementByTypeAndTestId("button", "list-delete-button");
+        cy.checkForElementByTypeAndTestId("button", "list-delete-button");
         cy.checkElementIsVisibleByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
     });
 
     it("2_6_3 Tick box for pending user", () => {
         cy.checkGridCheckboxByText(BROWSER_TEST_USER_PENDING);
-        checkForElementByTypeAndTestId("button", "list-delete-button");
+        cy.checkForElementByTypeAndTestId("button", "list-delete-button");
         cy.checkElementIsVisibleByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
     });
 
     it("2_6_4 Select all users", () => {
-        checkForElementByTypeAndTestId("input", "select_all");
+        cy.checkForElementByTypeAndTestId("input", "select_all");
         clickOnElement("input[data-testid = 'select_all']");
-        checkForElementByTypeAndTestId("button", "list-delete-button");
+        cy.checkForElementByTypeAndTestId("button", "list-delete-button");
         cy.checkElementIsVisibleByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
         cy.checkAllUsersSelected();
     });

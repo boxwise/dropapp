@@ -35,3 +35,7 @@ Cypress.Commands.add("getElementBySelectorAndText", (selector, text) => {
 Cypress.Commands.add("clickListDeleteButton", () => {
     cy.get("button[data-testid='list-delete-button']").click();
 });
+
+Cypress.Commands.add("getElementByTypeAndTestId", (type, testId) => {
+    cy.get(type + "[data-testid = '" + testId + "']");
+});
