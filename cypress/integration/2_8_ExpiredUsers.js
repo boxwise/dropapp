@@ -20,10 +20,6 @@ describe("2_8_ExpiredUsers_Test", () => {
         cy.visit('/?action=cms_users_expired');
     });
 
-    function clickOnElement(selector) {
-        cy.get(selector).first().click();
-    }
-
     it("2_8 Check for list elements in Expired tab", () => {
         cy.checkForElementByTypeAndTestId("input", "select_all");
         cy.checkElementIsVisibleByText("a", EXPIRED_COORDINATOR_NAME);
@@ -63,7 +59,7 @@ describe("2_8_ExpiredUsers_Test", () => {
 
     it("2_8_3 Select all expired users", () => {
         cy.checkForElementByTypeAndTestId("input", "select_all");
-        clickOnElement("input[data-testid = 'select_all']");
+        cy.clickOnFirstElementBySelector("input[data-testid = 'select_all']");
         cy.checkAllUsersSelected();
         cy.checkForElementByTypeAndTestId("button", "list-delete-button");
         // extend date button should appear

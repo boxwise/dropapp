@@ -31,3 +31,7 @@ Cypress.Commands.add("checkClassByTypeAndTestId", (type, testId, _class, hasClas
         cy.getElementByTypeAndTestId(type, testId).should("not.have.class", _class);
     }
 });
+
+Cypress.Commands.add("clickOnFirstElementBySelector", (selector) => {
+    cy.get(selector).first().click();
+});

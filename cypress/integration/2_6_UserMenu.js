@@ -13,10 +13,6 @@ describe("2_6_UserMenu_Test", () => {
         cy.visit('/?action=cms_users');
     });
 
-    function clickOnElement(selector) {
-        cy.get(selector).first().click();
-    }
-
     it("2_6 Check for list elements", () => {
         cy.checkForElementByTypeAndTestId("a.active", "active_pending");
         cy.checkForElementByTypeAndTestId("a", "expired");
@@ -62,7 +58,7 @@ describe("2_6_UserMenu_Test", () => {
 
     it("2_6_4 Select all users", () => {
         cy.checkForElementByTypeAndTestId("input", "select_all");
-        clickOnElement("input[data-testid = 'select_all']");
+        cy.clickOnFirstElementBySelector("input[data-testid = 'select_all']");
         cy.checkForElementByTypeAndTestId("button", "list-delete-button");
         cy.checkElementIsVisibleByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
         cy.checkAllUsersSelected();

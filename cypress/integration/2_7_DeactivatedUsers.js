@@ -22,10 +22,6 @@ describe("2_7_DeactivatedUsers_Test", () => {
         cy.visit('/?action=cms_users_deactivated');
     });
 
-    function clickOnElement(selector) {
-        cy.get(selector).first().click();
-    }
-
     it("2_7 Check for list elements in Deactivated tab", () => {
         cy.checkForElementByTypeAndTestId("input", "select_all");
         cy.checkElementIsVisibleByText("p", DELETED_COORDINATOR_NAME);
@@ -59,7 +55,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
 
     it("2_7_3 Select all deactivated users", () => {
         cy.checkForElementByTypeAndTestId("input", "select_all");
-        clickOnElement("input[data-testid = 'select_all']");
+        cy.clickOnFirstElementBySelector("input[data-testid = 'select_all']");
         cy.checkAllUsersSelected();
         cy.checkForElementByTypeAndTestId("button", "reactivate-cms-user");
     });
