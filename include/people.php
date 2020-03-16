@@ -132,7 +132,7 @@ $table = $action;
             ['name' => ('people.php:addtemplatedata')],
             function () use ($cmsmain) {
                 global $listdata, $data, $listdata, $listconfig;
-                addcolumn('text', 'Lastname', 'lastname');
+                addcolumn('text', 'Surname', 'lastname');
                 addcolumn('text', 'Firstname', 'firstname');
                 addcolumn('text', 'Gender', 'gender2');
                 addcolumn('text', 'Age', 'age');

@@ -130,7 +130,7 @@
 		GROUP BY p.id 
 		ORDER BY label']);
     addfield('text', 'Firstname', 'firstname', ['testid' => 'firstname_id', 'tab' => 'people', 'required' => true]);
-    addfield('text', 'Lastname', 'lastname', ['testid' => 'lastname_id', 'tab' => 'people']);
+    addfield('text', 'Surname', 'lastname', ['testid' => 'lastname_id', 'tab' => 'people']);
     addfield('text', $_SESSION['camp']['familyidentifier'], 'container', ['testid' => 'container_id', 'tab' => 'people', 'required' => true, 'onchange' => 'capitalize("container")']);
     addfield('select', 'Gender', 'gender', ['testid' => 'gender_id', 'tab' => 'people',
         'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);
