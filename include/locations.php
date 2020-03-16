@@ -13,7 +13,7 @@
         initlist();
 
         $cmsmain->assign('title', 'Warehouse Locations');
-        listsetting('search', ['sizes.label']);
+        listsetting('search', ['locations.label']);
 
         if (!$is_admin) {
             $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount,0 as level

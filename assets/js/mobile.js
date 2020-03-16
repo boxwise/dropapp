@@ -3,6 +3,7 @@ $(function(){
 	
 	$('form').validate({
 	  submitHandler: function(form) {
+		$(form).find(':input[type=submit]').prop('disabled', true);
 	    form.submit();
 	  }
 	 });

@@ -13,9 +13,7 @@
 			l.id,
 			CONCAT(code," - ",booktitle_en,IF(booktitle_ar!="",CONCAT(" - ",booktitle_ar),""),IF(author!="",CONCAT(" (",author,")"),"")) AS title, 
 			(SELECT IF(lt.people_id = -1,lt.comment,CONCAT(firstname," ",lastname," (",container,")")) FROM library_transactions AS lt LEFT OUTER JOIN people AS p ON lt.people_id = p.id WHERE lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) AS name,
-			(SELECT p.phone FROM library_transactions AS lt, people AS p WHERE lt.people_id = p.id AND lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) AS phone,
 			(SELECT TIME_TO_SEC(TIMEDIFF(NOW(),transaction_date)) FROM library_transactions AS lt WHERE lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) AS duration
-		
 		FROM library AS l WHERE 
 			camp_id = '.intval($_SESSION['camp']['id']).' AND
 			(SELECT status FROM library_transactions AS lt WHERE lt.book_id = l.id ORDER BY lt.transaction_date DESC LIMIT 1) = "out"');
@@ -25,7 +23,6 @@
         }
         addcolumn('text', 'Book', 'title');
         addcolumn('html', 'Rented out to', 'name');
-        addcolumn('html', 'Phone', 'phone');
         addcolumn('html', 'Duration', 'duration');
 
         listsetting('allowsort', true);

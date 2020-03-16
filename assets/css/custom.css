@@ -206,16 +206,6 @@ body.status #div_purch .table-nav, body.status #div_trans .table-nav{
 	display: none;
 }
 
-body.check_in .aside-form #form-submit, body.check_in .aside-form .btn-cancel{
-	display: none;
-}
-body.check_in .info-aside{
-	padding-bottom: 0;
-}
-body.check_in .familycredit{
-	border-bottom: none;
-}
-
 body.stock-list .table-parent, body.products .table-parent, body.stock .table-parent, body.need .table-parent {
 	max-width: none;
 }
@@ -797,4 +787,53 @@ div.filter-applied {
 	.shopping_cart_table{
 		float: right;
 	}
+}
+
+.collapsebutton{
+	float: left;
+	padding: 8px 10px 8px 3px;
+	margin: -8px 0;
+}
+.overview-level-0 td:first-child{
+	box-shadow: 8px 0px #48ABB4 inset;
+	padding-left: 16px;
+}
+.overview-level-0 td:last-child{
+	box-shadow: -8px 0px #48ABB4 inset;
+	padding-right: 16px;
+}
+.overview-level-1 td:first-child{
+	box-shadow: 8px 0px #5874C0 inset;
+	padding-left: 16px;
+}
+.overview-level-1 td:last-child{
+	box-shadow: -8px 0px #5874C0 inset;
+	padding-right: 16px;
+}
+.overview-level-2 td:first-child{
+	box-shadow: 8px 0px #FFCD63 inset;
+	padding-left: 16px;
+}
+.overview-level-2 td:last-child{
+	box-shadow: -8px 0px #FFCD63 inset;
+	padding-right: 16px;
+}
+.overview-level-3 td:first-child{
+	box-shadow: 8px 0px #FFAD63 inset;
+	padding-left: 16px;
+}
+.overview-level-3 td:last-child{
+	box-shadow: -8px 0px #FFAD63 inset;
+	padding-right: 16px;
+}
+
+.overview-filter-gender > div.btn.btn-sm.btn-default{
+	box-shadow: 8px 0px #FFCD63 inset, -8px 0px #FFCD63 inset;
+	padding-left: 18px;
+	padding-right: 18px;
+}
+.overview-filter-locations > div.btn.btn-sm.btn-default{
+	box-shadow: 8px 0px #FFAD63 inset, -8px 0px #FFAD63 inset;
+	padding-left: 18px;
+	padding-right: 18px;
 }

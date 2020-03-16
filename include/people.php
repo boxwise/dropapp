@@ -132,7 +132,7 @@ $table = $action;
             ['name' => ('people.php:addtemplatedata')],
             function () use ($cmsmain) {
                 global $listdata, $data, $listdata, $listconfig;
-                addcolumn('text', 'Lastname', 'lastname');
+                addcolumn('text', 'Surname', 'lastname');
                 addcolumn('text', 'Firstname', 'firstname');
                 addcolumn('text', 'Gender', 'gender2');
                 addcolumn('text', 'Age', 'age');
@@ -173,7 +173,14 @@ $table = $action;
         );
     } else {
         $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
-        $ids = explode(',', $_POST['ids']);
+        $ids = [];
+        if ('move' == $_POST['do']) { // move passes the ids in pairs with the level the id is moved to. Therefore, it needs to be handled differently.
+            foreach (json_decode($_POST['ids']) as $pair) {
+                $ids[] = $pair[0];
+            }
+        } else {
+            $ids = explode(',', $_POST['ids']);
+        }
         $delta = array_diff($ids, $valid_ids);
         if (0 != count($delta)) {
             $message = 'You do not have access to this beneficiary record!';
