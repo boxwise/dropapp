@@ -6,7 +6,7 @@
     if ($_POST) {
         $handler = new formHandler($table);
 
-        $savekeys = ['name', 'gender_id', 'value', 'category_id', 'maxperadult', 'maxperchild', 'amountneeded', 'sizegroup_id', 'camp_id', 'comments', 'stockincontainer'];
+        $savekeys = ['name', 'gender_id', 'value', 'category_id', 'maxperadult', 'maxperchild', 'sizegroup_id', 'camp_id', 'comments', 'stockincontainer'];
         $id = $handler->savePost($savekeys);
 
         redirect('?action='.$_POST['_origin']);
@@ -15,7 +15,6 @@
     $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
 
     if (!$id) {
-        $data['amountneeded'] = 3;
         $data['camp_id'] = $_SESSION['camp']['id'];
     }
 
@@ -32,9 +31,6 @@
     if ($_SESSION['camp']['market']) {
         addfield('text', ucwords($_SESSION['camp']['currencyname']), 'value');
     }
-    if ($_SESSION['camp']['market']) {
-        addfield('number', 'Estimated annual need per person', 'amountneeded', ['width' => 3, 'required' => true]);
-    }
 
     addfield('line', '', '');
     addfield('select', 'Gender', 'gender_id', ['required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM genders ORDER BY seq']);
@@ -42,7 +38,7 @@
     addfield('line');
     addfield('textarea', 'Description', 'comments');
     addfield('line');
-    if ($_SESSION['camp']['market']) {
+    if (db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock ')) {
         addfield('checkbox', 'Always show product in Stockroom?', 'stockincontainer');
     }
     $table = 'stock';
