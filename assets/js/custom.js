@@ -33,9 +33,7 @@ $(document).ready(function() {
                     $(".menu_cms_users").hide();
                 }
             },
-            error: function(result) {
-                AjaxError(result);
-            }
+            error: AjaxError
         });
     }
 });
@@ -275,7 +273,7 @@ function updateLaundry(field, offset) {
                 }
                 AjaxCheckSuccess(result);
             },
-            error: AjaxError(result)
+            error: AjaxError
         });
     }
 }
@@ -332,7 +330,7 @@ function selectFamily(field,  reload, target) {
                 }
                 AjaxCheckSuccess(result);
             },
-            error: AjaxError(result)
+            error: AjaxError
 
         });
     } else {
@@ -380,7 +378,7 @@ function getSizes() {
             }
             AjaxCheckSuccess(result);
         },
-        error: AjaxError(result)
+        error: AjaxError
 
     });
     /*
@@ -487,7 +485,7 @@ $(".delete-user").on("click", function(e) {
             success: function(result) {
                 AjaxCheckSuccess(result);
             },
-            error: AjaxError(result)
+            error: AjaxError
         });
     }
 });
