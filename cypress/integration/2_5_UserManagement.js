@@ -6,10 +6,6 @@ describe('User management', () => {
         cy.visit('/?action=cms_users');
     });
 
-    function getDeactivateButton(){
-        return cy.get("button[data-testid='list-delete-button']");
-    }
-
     function getCancelAction(){
         return cy.get("a[data-dismiss='confirmation']");
     }
@@ -28,13 +24,13 @@ describe('User management', () => {
 
     it('Deactivate & reactivate user', () => {
         cy.checkGridCheckboxByText(deactivateTestUserName);
-        getDeactivateButton().should('be.visible');
-        getDeactivateButton().click();
+        cy.getListDeleteButton().should('be.visible');
+        cy.getListDeleteButton().click();
         cy.getConfirmActionButton().should('be.visible');
         getCancelAction().should('be.visible');
         getCancelAction().click();
         cy.getConfirmActionButton().should('not.exist');
-        getDeactivateButton().click();
+        cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
         getDeactivatedUsersTab().click();
         getDeactivatedUsersTab().should('have.class', 'active')

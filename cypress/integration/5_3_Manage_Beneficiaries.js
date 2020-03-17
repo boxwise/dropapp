@@ -117,7 +117,7 @@ describe('Manage beneficiaries', () => {
     }
 
     function clickDeleteButtonAndCheckConfirmation(){
-        cy.clickListDeleteButton();
+        cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
         cy.waitForAjaxAction(ITEM_DELETED);
     }

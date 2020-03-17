@@ -44,7 +44,7 @@ function deleteUserGroup(name) {
     cy.get('body').then(($body) => {
         if ($body.text().includes(name)) {
             cy.checkGridCheckboxByText(name)
-            cy.clickListDeleteButton();
+            cy.getListDeleteButton().click();
             cy.getConfirmActionButton().click();
         }
     });
@@ -71,7 +71,7 @@ describe('Create usergroups (admin)', () => {
         cy.getRowWithText(BrowserTestUserGroup_Coordinator).should('exist');
         //testing delete
         cy.checkGridCheckboxByText(BrowserTestUserGroup_Coordinator)
-        cy.clickListDeleteButton();
+        cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
         cy.getRowWithText(BrowserTestUserGroup_Coordinator).should('not.exist');
         cy.notyTextNotificationWithTextIsVisible("Item deleted");
@@ -86,7 +86,7 @@ describe('Create usergroups (admin)', () => {
         cy.getRowWithText(BrowserTestUserGroup_User).should('exist');
         //testing delete
         cy.checkGridCheckboxByText(BrowserTestUserGroup_User)
-        cy.clickListDeleteButton();
+        cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
         cy.getRowWithText(BrowserTestUserGroup_User).should('not.exist');
         cy.notyTextNotificationWithTextIsVisible("Item deleted");
@@ -149,7 +149,7 @@ describe('Create usergroups (admin)', () => {
     it('Prevent deletion of usergroup with users', () => {
         cy.visit('/?action=cms_usergroups');
         cy.checkGridCheckboxByText(TestUserGroupWithUsersAssigned)
-        cy.clickListDeleteButton();
+        cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
         cy.notyTextNotificationWithTextIsVisible("Please edit or remove it first");
         cy.getRowWithText(TestUserGroupWithUsersAssigned).should('exist');
@@ -169,7 +169,7 @@ describe('Create usergroups (coordinator)', () => {
         cy.getRowWithText(BrowserTestUserGroup_User).should('exist');
         //testing delete
         cy.checkGridCheckboxByText(BrowserTestUserGroup_User)
-        cy.clickListDeleteButton();
+        cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
         cy.getRowWithText(BrowserTestUserGroup_User).should('not.exist');
         cy.notyTextNotificationWithTextIsVisible("Item deleted");
@@ -232,7 +232,7 @@ describe('Create usergroups (coordinator)', () => {
     it('Prevent deletion of usergroup with users', () => {
         cy.visit('/?action=cms_usergroups');
         cy.checkGridCheckboxByText(TestUserGroupWithUsersAssigned)
-        cy.clickListDeleteButton();
+        cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
         cy.notyTextNotificationWithTextIsVisible("Please edit or remove it first");
         cy.getRowWithText(TestUserGroupWithUsersAssigned).should('exist');
