@@ -218,7 +218,7 @@ $(function() {
     });
 
     function closeModal(event) {
-        if (event.data == "close") {
+        if (event.data == "close" || event.data.hasOwnProperty('eventName')) {
             $.fancybox.close();
         } else {
             $.fancybox.close();
