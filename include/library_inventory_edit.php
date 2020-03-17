@@ -32,7 +32,7 @@
     addfield('text', 'Original title', 'booktitle_ar');
     addfield('text', 'Author', 'author');
     addfield('line');
-    addfield('select', 'Type', 'type_id', ['width' => 3, 'multiple' => false, 'query' => 'SELECT id AS value, label FROM library_type WHERE camp_id = '.intval($_SESSION['camp']['id']).' ORDER BY id']);
+    addfield('select', 'Type', 'type_id', ['width' => 3, 'multiple' => false, 'query' => 'SELECT id AS value, label FROM library_type']);
     addfield('checkbox', 'Available for borrowing', 'visible');
 
     addfield('line', '', '', ['aside' => true]);

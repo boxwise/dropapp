@@ -19,6 +19,6 @@ $result = db_query(
     $export_ids_array
 );
 unset($_SESSION['export_ids_people']);
-$keys = ['container' => $_SESSION['camp']['familyidentifier'], 'firstname' => 'Firstname', 'lastname' => 'Lastname', 'gender' => 'Gender', 'age' => 'Age', 'comments' => 'Comments', 'boxwise_family_id' => 'Boxwise Family ID', 'familyhead' => 'Head of Family'];
+$keys = ['container' => $_SESSION['camp']['familyidentifier'], 'firstname' => 'Firstname', 'lastname' => 'Surname', 'gender' => 'Gender', 'age' => 'Age', 'comments' => 'Comments', 'boxwise_family_id' => 'Boxwise Family ID', 'familyhead' => 'Head of Family'];
 
 csvexport($result, 'Beneficiaries_'.$_SESSION['camp']['name'], $keys);
