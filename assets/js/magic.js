@@ -218,7 +218,7 @@ $(function() {
     });
 
     function closeModal(event) {
-        if (event.data == "close") {
+        if (event.data == "close" || event.data.hasOwnProperty('eventName')) {
             $.fancybox.close();
         } else {
             $.fancybox.close();
@@ -425,6 +425,7 @@ $(function() {
                                 AjaxFormSubmit(form);
                             }
                             $("body").removeClass("loading");
+
                         },
                         error: function(checkresult) {
                             var n = noty({
@@ -803,32 +804,9 @@ function initiateList() {
                                     });
                                 // .trigger("change");
                             }
-                            if (result.message) {
-                                var n = noty({
-                                    text: result.message,
-                                    type: result.success ? "success" : "error"
-                                });
-                            }
-                            if (result.redirect) {
-                                if (result.message) {
-                                    setTimeout(function() {
-                                        execReload(result.redirect);
-                                    }, 1500);
-                                } else {
-                                    execReload(result.redirect);
-                                }
-                            }
-                            if (result.action) {
-                                eval(result.action);
-                            }
+                            AjaxCheckSuccess(result);
                         },
-                        error: function(result) {
-                            var n = noty({
-                                text:
-                                    "This file cannot be found or what's being returned is not json.",
-                                type: "error"
-                            });
-                        }
+                        error: AjaxError
                     });
                 } else {
                     var n = noty({
@@ -871,29 +849,9 @@ function initiateList() {
                         }
                         el.prev(".list-toggle-value").text(result.newvalue);
                     }
-                    if (result.message) {
-                        var n = noty({
-                            text: result.message,
-                            type: result.success ? "success" : "error"
-                        });
-                    }
-                    if (result.redirect) {
-                        if (result.message) {
-                            setTimeout(function() {
-                                execReload(result.redirect);
-                            }, 1500);
-                        } else {
-                            execReload(result.redirect);
-                        }
-                    }
+                    AjaxCheckSuccess(result);
                 },
-                error: function(result) {
-                    var n = noty({
-                        text:
-                            "This file cannot be found or what's being returned is not json.",
-                        type: "error"
-                    });
-                }
+                error: AjaxError
             });
             e.preventDefault();
         });
@@ -1090,29 +1048,12 @@ function AjaxFormSubmit(form) {
             dataType: "json",
             success: function(result) {
                 $("#form-submit").prop("disabled", false);
-                if (result.message) {
-                    var n = noty({
-                        text: result.message,
-                        type: result.success ? "success" : "error"
-                    });
-                }
-                if (result.redirect) {
-                    if (result.message) {
-                        setTimeout(function() {
-                            execReload(result.redirect);
-                        }, 1500);
-                    } else {
-                        execReload(result.redirect);
-                    }
-                }
                 $("body").removeClass("loading");
+                AjaxCheckSuccess(result);
+
             },
             error: function(result) {
-                var n = noty({
-                    text:
-                        "This file cannot be found or what's being returned is not json.",
-                    type: "error"
-                });
+                AjaxError(result);
                 $("body").removeClass("loading");
             }
         });
