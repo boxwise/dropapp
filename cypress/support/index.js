@@ -6,6 +6,7 @@ import './dom-elements-interaction'
 import './user-helpers'
 import './database'
 import './box-helper-functions'
+import './box-or-beneficiary-creation'
 import './ajax'
 
 Cypress.on('uncaught:exception', (err, runnable) => {

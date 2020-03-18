@@ -18,9 +18,6 @@ context("Box_creation_tests", () => {
     function getBoxesMenu() {
         cy.visit('/?action=stock');
     }
-    function SaveAndProgress(buttonname) {
-        cy.get("button").contains(buttonname).click();
-    }
     function clearSearchbox(){
         cy.get("input[data-testid ='box-search']").clear();
         cy.get("button[data-testid='search-button']").click();
@@ -56,46 +53,34 @@ context("Box_creation_tests", () => {
         cy.get("input[data-testid='select-id']").click();
         cy.get("i[class='fa fa-print']").click();
     }
-    function CheckInput(Field_id){
-        cy.get("input[data-testid = '" + Field_id + "']").should("be.empty");
-    }
-    function CheckSaveButton(buttonname){
-        cy.get("button").contains(buttonname).should("be.visible");
-    }
-    function CheckCancelButton(){
-        cy.get("a").contains("Cancel").should("be.visible");
-    }
-    function CheckCommentField(){
-        cy.get("textarea[data-testid='comments_id']").should("be.empty");
-    }
     function CheckUrl(Text){
         cy.url().should('contain',Text);
     }
     
-    function CheckEmpty(){
+    function CheckEmptyBoxForm(){
         cy.getSelectedValueInDropDown("product_id").contains("Please select").should('exist');
         cy.getSelectedValueInDropDown("size_id").contains("Please select").should('exist');
         cy.getSelectedValueInDropDown("location_id").contains("Please select").should('exist');
-        CheckInput("items_id");
-        CheckCommentField();
+        cy.checkInputIsEmpty("items_id");
+        cy.checkCommentFieldIsEmpty();
         //Check buttons
-        CheckSaveButton("Save and close");
-        CheckSaveButton("Save and new");
-        CheckCancelButton();
+        cy.getButtonWithText("Save and close").should("be.visible");
+        cy.getButtonWithText("Save and new").should("be.visible");
+        cy.checkCancelButton();
     }
     
 
     it('3_2_1 Prevent box creation without data', () => {
-        CheckEmpty();
-        SaveAndProgress("Save and close");
+        CheckEmptyBoxForm();
+        cy.getButtonWithText("Save and close").click();
         cy.checkQtip('qtip-1-content');
         cy.checkQtip('qtip-2-content');
         cy.checkQtip('qtip-3-content');
     });
-    it('3_2_2 Create Box with data', () => {
 
+    it('3_2_2 Create Box with data', () => {
         FillForm(Test_product,Test_size,Test_location,Test_number);
-        SaveAndProgress("Save and close");
+        cy.getButtonWithText("Save and close").click();
         CheckBoxMessage("This box contains "+Test_number+" "+Test_product+" and is located in "+Test_location);
         cy.get("h2").then(($message) => {
             const Test_id = IdFromMessage($message);
@@ -108,11 +93,11 @@ context("Box_creation_tests", () => {
 
     it('3_2_3 Create Box with data(Save and new)', () => {
         FillForm(Test_product,Test_size,Test_location,Test_number);
-        SaveAndProgress("Save and new");
+        cy.getButtonWithText("Save and new").click();
         CheckBoxMessage("This box contains "+Test_number+" "+Test_product+" and is located in "+Test_location);
         cy.get("h2").then(($message) => {
             const Test_id = IdFromMessage($message) 
-            CheckEmpty();
+            CheckEmptyBoxForm();
             getBoxesMenu();
             CheckBoxCreated(Test_id, Product_name,Test_size, Test_location,Test_number);
             // clearSearchbox();
@@ -122,7 +107,7 @@ context("Box_creation_tests", () => {
 
     it('3_2_4 Create new Box and create QR-code', () => {
         FillForm(Test_product,Test_size,Test_location,Test_number);
-        SaveAndProgress("Save and close");
+        cy.getButtonWithText("Save and close").click();
         CheckBoxMessage("This box contains "+Test_number+" "+Test_product+" and is located in "+Test_location);
         cy.get("h2").then(($message) => {
             const Test_id = IdFromMessage($message) ;
