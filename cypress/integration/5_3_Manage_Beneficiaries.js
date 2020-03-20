@@ -27,11 +27,11 @@ describe('Manage beneficiaries', () => {
     });
 
     function getBeneficiariesTable(){
-        return cy.get("table[data-testid='table-people']");
+        return cy.getElementByTypeAndTestId("table", "table-people");
     }
 
     function getExportButton(){
-        return cy.get("button[data-testid='exportBeneficiariesButton']");
+        return cy.getElementByTypeAndTestId("button", "exportBeneficiariesButton");
     }
     
     function getNewPersonButton(){
@@ -47,14 +47,14 @@ describe('Manage beneficiaries', () => {
     }
 
     function beneficiaryDataFormIsVisible(familyName){
-        cy.get("input[data-testid='firstname_id']").should('be.visible');
-        cy.get("input[data-testid='lastname_id']").should('have.value', familyName);
+        cy.getElementByTypeAndTestId("input", "firstname_id").should('be.visible');
+        cy.getElementByTypeAndTestId("input", "lastname_id").should('have.value', familyName);
     }
 
     function beneficiaryInfoAsideIsVisible(familyName){
-        cy.get("div[data-testid='info-aside']").should('be.visible'); 
-        cy.get("a[data-testid='familyMember']").contains(familyName).should('be.visible'); 
-        cy.get("span[data-testid='dropcredit']").should('be.visible'); 
+        cy.getElementByTypeAndTestId("div", "info-aside").should('be.visible'); 
+        cy.getElementByTypeAndTestId("a", "familyMember").contains(familyName).should('be.visible'); 
+        cy.getElementByTypeAndTestId("span", "dropcredit").should('be.visible');
     }
 
     function selectBeneficiaryFromTableByName(familyName){
