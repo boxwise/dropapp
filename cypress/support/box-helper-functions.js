@@ -22,3 +22,20 @@ Cypress.Commands.add("deleteAllBoxesExceptSeed", () => {
         }
     });
 });
+
+Cypress.Commands.add("clickMakeLabelsButton", () => {
+    cy.get("button").contains("Make labels").click();
+    // cy.getButtonWithText("Make labels").click({force: true});
+});
+
+Cypress.Commands.add("uncheckBigLabelsCheckbox", () => {
+    cy.getElementByTypeAndTestId("input", "field_fulllabel").uncheck();
+});
+
+Cypress.Commands.add("typeNumberOfLabels", (number) => {
+    cy.get("input[id='field_count']").clear().type(number);
+});
+
+Cypress.Commands.add("checkBigLabelsCheckbox", () => {
+    cy.get("input[data-testid='field_fulllabel']").check();
+});
