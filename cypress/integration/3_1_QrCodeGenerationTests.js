@@ -72,7 +72,7 @@ describe('QR labels tests - user with rights', () => {
 describe('QR labels tests - user without rights', () => {
 
     function labelsCountInputDoesntExist(number){
-        cy.get("input[data-testid='numberOfLabelsInput']").should('not.exist');
+        cy.GetElementByTypeAndTestId("input", "numberOfLabelsInput").should('not.exist');
     }  
 
     function generateQrsMenuDoesntExist(){
@@ -84,11 +84,11 @@ describe('QR labels tests - user without rights', () => {
         cy.visit('/?action=qr');
     });
   
-    // it("'Generate QR labels' menu is hidden", () => {
-    //     generateQrsMenuDoesntExist();
-    // });
+    it("'Generate QR labels' menu is hidden", () => {
+        generateQrsMenuDoesntExist();
+    });
   
-    // it('Generate QR labels page empty', () => {
-    //     labelsCountInputDoesntExist();
-    // });    
+    it('Generate QR labels page empty', () => {
+        labelsCountInputDoesntExist();
+    });    
   });
