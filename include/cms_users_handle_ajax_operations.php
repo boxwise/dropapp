@@ -30,7 +30,7 @@ if ($ajax) {
         case 'extendActive':
         case 'extend':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listExtend($table, $ids);
+                list($success, $message, $redirect) = listExtend($table, $ids, $_POST['option']);
 
                 break;
         case 'copy':
