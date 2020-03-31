@@ -215,11 +215,16 @@ function listExtend($table, $ids, $period)
     $hasExpireDate = db_fieldexists($table, 'valid_lastday');
     foreach ($ids as $id) {
         if ($hasExpireDate) {
-            $count += listExtendAction($table, $id, $period);
+            $updatedCount = listExtendAction($table, $id, $period);
+            $count += $updatedCount;
+            if ($updatedCount > 0) {
+                $getUpdatedValue = 'SELECT valid_lastday from cms_users where id = '.$id;
+                $updatedValue = db_value($getUpdatedValue);
+            }
         }
     }
     if ($count) {
-        return [true, $translate['cms_list_extendsuccess'], false];
+        return [true, $translate['cms_list_extendsuccess'], false, $updatedValue];
     }
 
     return [false, $translate['cms_list_extenderror'], false];
@@ -229,20 +234,20 @@ function listExtendAction($table, $id, $period)
 {
     switch ($period) {
         case 0:
-            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(valid_lastday, INTERVAL 1 WEEK) WHERE id = :id';
+            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(valid_lastday, INTERVAL 1 WEEK) WHERE id = :id;';
             break;
         case 1:
-            $extendQuery = 'UPDATE '.$table.' SET valid_lastday =DATE_ADD(valid_lastday, INTERVAL 1 MONTH) WHERE id = :id';
+            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(valid_lastday, INTERVAL 1 MONTH) WHERE id = :id;';
             break;
         case 2:
-            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(valid_lastday, INTERVAL 2 MONTH) WHERE id = :id';
+            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(valid_lastday, INTERVAL 2 MONTH) WHERE id = :id;';
             break;
         case 3:
         default:
-            $extendQuery = 'UPDATE '.$table." SET valid_lastday = '0000-00-00 00:00:00' WHERE id = :id";
+            $extendQuery = 'UPDATE '.$table." SET valid_lastday = '0000-00-00 00:00:00' WHERE id = :id;";
     }
-
     $result = db_query($extendQuery, ['id' => $id]);
+
     $count += $result->rowCount();
     if ($count) {
         simpleSaveChangeHistory($table, $id, 'Record extended');

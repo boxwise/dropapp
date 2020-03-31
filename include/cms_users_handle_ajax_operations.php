@@ -1,6 +1,7 @@
 <?php
 
 if ($ajax) {
+    $data = null;
     switch ($_POST['do']) {
         case 'move':
             $ids = json_decode($_POST['ids']);
@@ -30,7 +31,7 @@ if ($ajax) {
         case 'extendActive':
         case 'extend':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listExtend($table, $ids, $_POST['option']);
+                list($success, $message, $redirect, $data) = listExtend($table, $ids, $_POST['option']);
 
                 break;
         case 'copy':
@@ -62,7 +63,7 @@ if ($ajax) {
             break;
     }
 
-    $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
+    $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'data' => $data];
 
     echo json_encode($return);
     die();

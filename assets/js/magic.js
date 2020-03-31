@@ -783,12 +783,14 @@ function initiateList() {
                                             break;
                                         case "extend":
                                             allTargets.fadeOut(200, function() {
+                                                // TODO: remove based on data
                                                 $(this).remove();
                                             });
                                             break;
                                         case "extendActive":
                                             $.each( allTargets, function( key, value ) {
-                                                value.cells[4].innerText = ''
+                                                // TODO: update cell
+                                                alert(result.data);
                                             });
                                             break;
                                         default:
