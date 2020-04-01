@@ -235,12 +235,15 @@ function listExtendAction($table, $id, $period)
     switch ($period) {
         case 0:
             $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(valid_lastday, INTERVAL 1 WEEK) WHERE id = :id;';
+
             break;
         case 1:
             $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(valid_lastday, INTERVAL 1 MONTH) WHERE id = :id;';
+
             break;
         case 2:
             $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(valid_lastday, INTERVAL 2 MONTH) WHERE id = :id;';
+
             break;
         case 3:
         default:
