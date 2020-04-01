@@ -782,15 +782,35 @@ function initiateList() {
                                             }
                                             break;
                                         case "extend":
-                                            allTargets.fadeOut(200, function() {
-                                                // TODO: remove based on data
-                                                $(this).remove();
+                                            $.each( allTargets, function( key, value ) {
+                                                if (result.data === "0000-00-00"){
+                                                    $(this).fadeOut(200);   // remove from list if expiry isn't set
+                                                }
+                                                if (result.data){
+                                                    var parsedDate = parseReturnedDateString(result.data);
+                                                    var date = new Date(parsedDate[0], parsedDate[1]-1, parsedDate[2]);
+                                                    var currentDate = new Date();
+                                                    if (date>currentDate){
+                                                        $(this).fadeOut(200); // remove from list if expiry date is bigger than today
+                                                    } else {
+                                                        const newCellText =  parsedDate[2] + " " + monthName(date) + " " + parsedDate[0];
+                                                        value.cells[4].innerText = newCellText;  // update expiry text (but it's still expired)
+                                                    }
+                                                }
                                             });
                                             break;
                                         case "extendActive":
                                             $.each( allTargets, function( key, value ) {
-                                                // TODO: update cell
-                                                alert(result.data);
+                                                if (result.data === "0000-00-00"){
+                                                    value.cells[4].innerText = "";  // empty if expiry date isn't set at all
+                                                }
+                                                else if (result.data){
+                                                    // replace cell value with new date string
+                                                    var parsedDate = parseReturnedDateString(result.data);
+                                                    var date = new Date(parsedDate[0], parsedDate[1]-1, parsedDate[2]);
+                                                    const newCellText =  parsedDate[2] + " " + monthName(date) + " " + parsedDate[0];
+                                                    value.cells[4].innerText = newCellText;
+                                                }
                                             });
                                             break;
                                         default:
@@ -937,6 +957,18 @@ function initiateList() {
         // 		$('body').removeClass('loading');
     }
     $("body").removeClass("loading");
+}
+
+function monthName(dt){
+    mlist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+    return mlist[dt.getMonth()];
+};
+
+function parseReturnedDateString(dateString){
+    var year = dateString.substring(0,4);
+    var month = dateString.substring(5,7);
+    var day = dateString.substring(8,10);
+    return [year, month, day];
 }
 
 // format select2 for the parent select
