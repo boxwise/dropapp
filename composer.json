@@ -19,6 +19,8 @@
         "sendgrid/sendgrid": "^7.3",
         "google/cloud-logging": "^1.18",
         "google/cloud-error-reporting": "^0.15.0",
-        "fzaninotto/faker": "^1.8"
+        "fzaninotto/faker": "^1.8",
+        //"vlucas/phpdotenv": "^3.6.0",
+        "auth0/auth0-php": "~5.0"
     }
 }
