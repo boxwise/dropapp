@@ -62,17 +62,23 @@ function login($email, $pass, $autologin, $mobile = false)
     return ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 }
 
-function checksession()
+function authorize()
 {
     global $settings;
     $result = ['success' => true];
 
+    // user has been authenticated
     $user = false;
-    if (isset($_SESSION['user'])) { // a valid session exists
-        $user = db_row('SELECT * FROM cms_users WHERE id = :id', ['id' => $_SESSION['user']['id']]);
-    } elseif (isset($_COOKIE['autologin_user'])) { // a autologin cookie exists
-        $user = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND pass = :pass', ['email' => $_COOKIE['autologin_user'], 'pass' => $_COOKIE['autologin_pass']]);
+    if (isset($_SESSION['auth0__user']['email'])) {
+        $user = db_row('SELECT id, naam, organisation_id, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $_SESSION['auth0__user']['email']]);
+    } else {
+        throw new Exception('You are not authenticated!');
     }
+
+    // -------- autologin cookie to figure out
+    // elseif (isset($_COOKIE['autologin_user'])) { // a autologin cookie exists
+    //     $user = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND pass = :pass', ['email' => $_COOKIE['autologin_user'], 'pass' => $_COOKIE['autologin_pass']]);
+    // }
 
     // check if user was loaded
     if ($user) {

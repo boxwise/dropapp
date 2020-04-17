@@ -1,4 +1,9 @@
 <?php
+    // auth0
+    $settings['auth0_domain'] = '';
+    $settings['auth0_client_id'] = '';
+    $settings['auth0_client_secret'] = '';
+    $settings['auth0_redirect_uri'] = 'http://localhost:8100';
     // api key for sending email
     $settings['sendgrid_key'] = '';
     $settings['sentry_key'] = '';

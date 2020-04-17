@@ -2,4 +2,5 @@
 
 $login = true;
 require_once 'library/core.php';
-require_once 'include/cms_login.php';
+
+$auth0->login();
