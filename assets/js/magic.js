@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     $("body").addClass("loading");
     // Noty, for more info: http://ned.im/noty/
     $.noty.defaults = {
@@ -11,21 +11,21 @@ $(function() {
             open: "animated flipInX", // or Animate.css class names like: 'animated bounceInLeft'
             close: "animated flipOutX", // or Animate.css class names like: 'animated bounceOutLeft'
             easing: "swing",
-            speed: 500 // opening & closing animation speed
+            speed: 500, // opening & closing animation speed
         },
         timeout: 5000, // delay for closing event. Set false for sticky notifications
         closeWith: ["click"],
         callback: {
-            onShow: function() {},
-            afterShow: function() {},
-            onClose: function() {},
-            afterClose: function() {},
-            onCloseClick: function() {}
+            onShow: function () {},
+            afterShow: function () {},
+            onClose: function () {},
+            afterClose: function () {},
+            onCloseClick: function () {},
         },
-        buttons: false // an array of buttons
+        buttons: false, // an array of buttons
     };
 
-    $(".popupfilemanager").click(function(e) {
+    $(".popupfilemanager").click(function (e) {
         var el = $(this);
         $.fancybox.open({
             href: el.attr("href"),
@@ -38,13 +38,13 @@ $(function() {
             width: 860,
             height: 567,
             helpers: {
-                overlay: { closeClick: false }
-            }
+                overlay: { closeClick: false },
+            },
         });
         e.preventDefault();
     });
 
-    $(".file_name").each(function(e) {
+    $(".file_name").each(function (e) {
         el = $(this);
         //Creates globally usable var window.field_image_val
         eval("window." + el.attr("id") + '_val = "' + el.val() + '"');
@@ -53,7 +53,7 @@ $(function() {
     setInterval(checkFileChanged, 0.5);
 
     function checkFileChanged() {
-        $(".file_name").each(function(e) {
+        $(".file_name").each(function (e) {
             var el = $(this);
             var elp = el.closest("div");
             curVal = el.val();
@@ -88,7 +88,7 @@ $(function() {
             jpg: "image-o",
             jpeg: "image-o",
             gif: "image-o",
-            png: "image-o"
+            png: "image-o",
         };
 
         $(".file-remove").removeData("confirmed");
@@ -115,7 +115,7 @@ $(function() {
                 thisRemove.html(thisRemove.data("btn-erase-label"));
                 var n = noty({
                     text: thisAdd.data("btn-change-msg"),
-                    type: "success"
+                    type: "success",
                 });
             } else {
                 thisRemove.addClass("confirm");
@@ -140,7 +140,7 @@ $(function() {
     $(".zortable tbody").zortable();
 
     // group select
-    $(".group-select").change(function() {
+    $(".group-select").change(function () {
         var parent = $(".group-select").closest(".table-parent");
         var is_checked = $(this).is(":checked");
         parent
@@ -149,7 +149,7 @@ $(function() {
             .closest("tr")
             .toggleClass("selected", is_checked)
             .promise()
-            .done(function() {
+            .done(function () {
                 //only trigger the event change of a ".item-select" once
                 parent
                     .find(".item-select:visible:first")
@@ -160,13 +160,11 @@ $(function() {
     });
 
     // make lists items clickable
-    $(document).on("click", ".item-clickable", function(e) {
+    $(document).on("click", ".item-clickable", function (e) {
         var el = $(this);
         if (
             !$(e.target).is("input, label, .stay") &&
-            !$(e.target)
-                .parent()
-                .is(".stay")
+            !$(e.target).parent().is(".stay")
         ) {
             if (
                 el.closest(".table-parent").data("inside-form") &&
@@ -181,9 +179,9 @@ $(function() {
                     speedOut: 100,
                     autoSize: true,
                     width: 860,
-                    afterClose: function() {
+                    afterClose: function () {
                         $(".opened-fancybox").removeClass("opened-fancybox");
-                    }
+                    },
                 });
                 e.preventDefault();
             } else {
@@ -198,7 +196,7 @@ $(function() {
         }
     });
 
-    $(".table-parent[data-modal=true] .item-add").click(function(e) {
+    $(".table-parent[data-modal=true] .item-add").click(function (e) {
         var el = $(this);
         $.fancybox.open({
             href: el.attr("href"),
@@ -207,12 +205,12 @@ $(function() {
             speedIn: 100,
             speedOut: 100,
             autoSize: true,
-            width: 860
+            width: 860,
         });
         e.preventDefault();
     });
 
-    $(".modal-form .aside-content .btn-cancel").click(function(e) {
+    $(".modal-form .aside-content .btn-cancel").click(function (e) {
         parent.postMessage("close", "*");
         e.preventDefault();
     });
@@ -243,41 +241,34 @@ $(function() {
     }
     window.addEventListener("message", closeModal, false);
 
-    $("body").on("click", ".text-show-original, .text-hide-original", function(
+    $("body").on("click", ".text-show-original, .text-hide-original", function (
         e
     ) {
         var el = $(this);
-        el.parent()
-            .addClass("hide")
-            .siblings(".hide")
-            .removeClass("hide");
+        el.parent().addClass("hide").siblings(".hide").removeClass("hide");
         e.preventDefault();
     });
 
     // make the close 'x' on de dropdowns work
-    $(".dropdown-toggle").click(function(e) {
+    $(".dropdown-toggle").click(function (e) {
         if ($(e.target).is(".form-control-feedback")) {
             e.stopPropagation();
         }
     });
 
-    $(".dropdown-toggle").on("click", function(event) {
+    $(".dropdown-toggle").on("click", function (event) {
         if ($(this).data("toggle") != "dropdown") {
-            $(this)
-                .parent()
-                .toggleClass("open");
+            $(this).parent().toggleClass("open");
         }
     });
 
-    $("body").on("click", function(e) {
+    $("body").on("click", function (e) {
         if (
             !$(".dropdown-menu a.confirm").is(e.target) &&
             $(".dropdown-menu a.confirm").has(e.target).length === 0 &&
             $(".open").has(e.target).length === 0
         ) {
-            $(".dropdown-toggle")
-                .parent()
-                .removeClass("open");
+            $(".dropdown-toggle").parent().removeClass("open");
         }
     });
 
@@ -288,33 +279,31 @@ $(function() {
         style: {
             classes: "qtip-tipsy",
             tip: {
-                width: 10
-            }
+                width: 10,
+            },
         },
         show: {
-            effect: false
+            effect: false,
         },
         position: {
             my: "bottom center", // Position my top left...
             at: "top center", // at the bottom right of...
-            effect: false
-        }
+            effect: false,
+        },
     });
 
     // datetimepicker, more info: http://eonasdan.github.io/bootstrap-datetimepicker/
-    $(".date").each(function() {
+    $(".date").each(function () {
         var el = $(this);
         var options = $.extend(
             {
                 calendarWeeks: true,
-                showTodayButton: true
+                showTodayButton: true,
             },
             el.data()
         );
-        el.datetimepicker(options).on("dp.change dp.show", function() {
-            $(this)
-                .find("input")
-                .trigger("keyup");
+        el.datetimepicker(options).on("dp.change dp.show", function () {
+            $(this).find("input").trigger("keyup");
         });
         const MIN_VALID_DATE = new Date("January 1, 1900 00:00:00");
         el.datetimepicker(options)
@@ -323,22 +312,22 @@ $(function() {
     });
 
     // select2, more info: http://ivaynberg.github.io/select2/
-    $(".select2").each(function() {
+    $(".select2").each(function () {
         var el = $(this);
         var options = $.extend(
             {
                 allowClear: true,
-                formatResult: window[el.data("formatList")]
+                formatResult: window[el.data("formatList")],
             },
             el.data()
         );
-        el.select2(options).on("change", function() {
+        el.select2(options).on("change", function () {
             // trigger keyup to make the validation plugin validate the field again
             $(this).trigger("keyup");
         });
         el.prev()
             .find(".select2-input")
-            .on("focus", function(e, b, c) {
+            .on("focus", function (e, b, c) {
                 if (e.relatedTarget) {
                     el.select2("open");
                 }
@@ -346,24 +335,24 @@ $(function() {
     });
 
     // simplyCountable, counting characters, more info: https://github.com/aaronrussell/jquery-simply-countable
-    $("[data-max-count]").each(function() {
+    $("[data-max-count]").each(function () {
         var el = $(this);
         var options = $.extend(
             {
                 counter: el.next().find(".counter"),
-                onOverCount: function(count, countable, counter) {
+                onOverCount: function (count, countable, counter) {
                     $(countable).addClass("warning");
                 },
-                onSafeCount: function(count, countable, counter) {
+                onSafeCount: function (count, countable, counter) {
                     $(countable).removeClass("warning");
-                }
+                },
             },
             el.data()
         );
         el.simplyCountable(options);
     });
 
-    $(".unlock").click(function() {
+    $(".unlock").click(function () {
         var el = $(this);
         var parent = el.closest(".input-group");
         if (parent.is(".locked")) {
@@ -382,13 +371,13 @@ $(function() {
 
     // Event Listener to figure out which submit button is used
     // Related to fix of jQuery validate https://github.com/jquery-validation/jquery-validation/issues/309
-    $("button[name=__action]").click(function() {
+    $("button[name=__action]").click(function () {
         var el = $(this);
         $("#submitaction").val(el.val());
     });
 
     // form submit
-    $(".form").each(function() {
+    $(".form").each(function () {
         var el = $(this);
 
         // Fix for super annoying bug from jQuery validate https://github.com/jquery-validation/jquery-validation/issues/309
@@ -397,54 +386,42 @@ $(function() {
                 id: "submitaction",
                 type: "hidden",
                 name: "__action",
-                value: ""
+                value: "",
             })
             .appendTo(el);
 
         $(".form").validate({
             // https://jqueryvalidation.org/
             ignore: ".no-validate",
-            submitHandler: function(form) {
+            submitHandler: function (form) {
                 $("#form-submit").prop("disabled", true);
                 $("body").addClass("loading");
 
-                if (
-                    ["login", "reset", "reset2"].includes(
-                        $(form).data("action")
-                    )
-                ) {
-                    AjaxFormSubmit(form);
-                } else {
-                    // Test internet connection
-                    $.ajax({
-                        type: "post",
-                        url: "ajax.php?file=checkconnection",
-                        dataType: "json",
-                        success: function(checkresult) {
-                            if (checkresult.success) {
-                                AjaxFormSubmit(form);
-                            }
-                            $("body").removeClass("loading");
-                        },
-                        error: function(checkresult) {
-                            var n = noty({
-                                text:
-                                    "We cannot connect to the Boxwise server.<br> Do you have internet?",
-                                type: "error"
-                            });
-                            $("body").removeClass("loading");
+                // Test internet connection
+                $.ajax({
+                    type: "post",
+                    url: "ajax.php?file=checkconnection",
+                    dataType: "json",
+                    success: function (checkresult) {
+                        if (checkresult.success) {
+                            AjaxFormSubmit(form);
                         }
-                    });
-                }
+                        $("body").removeClass("loading");
+                    },
+                    error: function (checkresult) {
+                        var n = noty({
+                            text:
+                                "We cannot connect to the Boxwise server.<br> Do you have internet?",
+                            type: "error",
+                        });
+                        $("body").removeClass("loading");
+                    },
+                });
             },
-            errorPlacement: function(error, element) {
+            errorPlacement: function (error, element) {
                 if ($(error).text() != "") {
                     if (!("object" === typeof $(element).data("qtip"))) {
-                        if (
-                            $(element)
-                                .parent()
-                                .is(".input-group")
-                        ) {
+                        if ($(element).parent().is(".input-group")) {
                             errorTarget = $(element).parent();
                         } else if ($(element).is(".select2")) {
                             errorTarget = $(element).prev();
@@ -462,11 +439,11 @@ $(function() {
                             .not(".valid")
                             .qtip({
                                 content: {
-                                    text: $(error).text()
+                                    text: $(error).text(),
                                 },
                                 show: {
                                     ready: true,
-                                    effect: false
+                                    effect: false,
                                 },
                                 hide: false,
                                 position: {
@@ -477,32 +454,32 @@ $(function() {
                                         ".form-group"
                                     ),
                                     effect: false,
-                                    viewport: $("#container")
+                                    viewport: $("#container"),
                                 },
                                 style: {
                                     classes: "qtip-red",
                                     tip: {
-                                        width: 8
-                                    }
-                                }
+                                        width: 8,
+                                    },
+                                },
                             });
                     }
                 } else {
                     $(element).qtip("destroy", true);
                 }
             },
-            showErrors: function(errorMap, errorList) {
+            showErrors: function (errorMap, errorList) {
                 this.defaultShowErrors();
                 el.find(".nav-tabs a").removeClass("error");
-                el.find(".tab-pane:has(.form-control.error)").each(function() {
+                el.find(".tab-pane:has(.form-control.error)").each(function () {
                     var targetTab = $(this).attr("id");
                     $('a[href="#' + targetTab + '"]').addClass("error");
                 });
             },
-            success: function(error) {
+            success: function (error) {
                 el.find(".valid").qtip("destroy", true);
             },
-            ignoreTitle: true
+            ignoreTitle: true,
         });
     });
 
@@ -517,7 +494,7 @@ $(function() {
         $(".aside-content").removeClass("affix");
     }
 
-    $('a[data-toggle="tab"]').on("shown.bs.tab", function(e) {
+    $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
         var target = $($(e.target).attr("href"));
         if (target.has(".qtip")) {
             target.find(".error").qtip("reposition");
@@ -531,13 +508,13 @@ $(function() {
         $('[href="' + lastTab + '"]').tab("show");
     }
 
-    $(".table-parent").each(function() {
+    $(".table-parent").each(function () {
         var el = $(this);
         var table = el.find(".table");
         var maxheight = el.data("maxheight");
         if (maxheight) {
             setTableHeight(el, table, maxheight);
-            $(window).resize(function() {
+            $(window).resize(function () {
                 setTableHeight(el, table, maxheight);
             });
         }
@@ -557,18 +534,16 @@ $(function() {
     }
 
     // Tablesorter, for more info: http://mottie.github.io/tablesorter/docs/
-    $(".table-parent:not(.sortable) table").each(function() {
+    $(".table-parent:not(.sortable) table").each(function () {
         var el = $(this);
         el.find("th").data("sorter", false);
     });
 
     // format text fields in forms according to formatting functions on load
-    $(".form-control").each(function() {
+    $(".form-control").each(function () {
         var el = $(this);
-        var classes = $(this)
-            .attr("class")
-            .split(/\s+/);
-        $.each(classes, function(index, item) {
+        var classes = $(this).attr("class").split(/\s+/);
+        $.each(classes, function (index, item) {
             if (item.substring(0, 9) == "cms-form-") {
                 var format = "cms_form_" + item.substring(9);
                 if (typeof window[format] === "function")
@@ -578,7 +553,7 @@ $(function() {
     });
 
     // set the form title
-    $(".setformtitle").keyup(function() {
+    $(".setformtitle").keyup(function () {
         $("#form-title").text($(this).val());
     });
 
@@ -593,7 +568,7 @@ $(function() {
             autoSize: false,
             closeClick: false,
             openEffect: "none",
-            closeEffect: "none"
+            closeEffect: "none",
         });
     }
 
@@ -602,7 +577,7 @@ $(function() {
     $(window).trigger("resize");
 });
 
-$(window).resize(function() {
+$(window).resize(function () {
     if ($(".nav-aside").length) {
         if (
             $(window).height() >
@@ -619,7 +594,7 @@ function initiateList() {
     if ($(".table:not(.initialized)").length) {
         $(".table").addClass("initialized");
         if ($(".table-parent.sortable:not(.zortable) table").length) {
-            $(".table-parent.sortable:not(.zortable) table").each(function() {
+            $(".table-parent.sortable:not(.zortable) table").each(function () {
                 var el = $(this);
                 var options = $.extend(
                     {
@@ -628,20 +603,20 @@ function initiateList() {
                         widgetOptions: {
                             stickyHeaders_attachTo: el.closest(
                                 ".sticky-header-container"
-                            )
+                            ),
                         },
-                        initialized: function() {
+                        initialized: function () {
                             el.closest(".table-parent").addClass(
                                 "sortable-initialized"
                             );
-                        }
+                        },
                     },
                     el.data()
                 );
                 el.tablesorter(options);
             });
         }
-        $(".table").on("change", ".item-select", function(e) {
+        $(".table").on("change", ".item-select", function (e) {
             var el = $(this);
             var parent = el.closest(".table-parent");
 
@@ -688,7 +663,7 @@ function initiateList() {
             }
         });
         // list operations
-        $(".start-operation").on("click", function(e) {
+        $(".start-operation").on("click", function (e) {
             var el = $(this);
             e.preventDefault();
 
@@ -718,18 +693,18 @@ function initiateList() {
                             el.data("option") +
                             "&ids=" +
                             selectedTargets
-                                .map(function() {
+                                .map(function () {
                                     return $(this).data("id");
                                 })
                                 .get()
                                 .join(),
                         dataType: "json",
-                        success: function(result) {
+                        success: function (result) {
                             if (result.success) {
                                 if (el.data("operation") != "export") {
                                     // create allTargets only if we are not exporting data.
                                     var allTargets = $();
-                                    selectedTargets.each(function() {
+                                    selectedTargets.each(function () {
                                         target = $(this);
                                         allTargets = allTargets
                                             .add(target)
@@ -743,15 +718,21 @@ function initiateList() {
                                     });
                                     switch (el.data("operation")) {
                                         case "delete":
-                                            allTargets.fadeOut(200, function() {
-                                                $(this).remove();
-                                            });
+                                            allTargets.fadeOut(
+                                                200,
+                                                function () {
+                                                    $(this).remove();
+                                                }
+                                            );
                                             break;
 
                                         case "undelete":
-                                            allTargets.fadeOut(200, function() {
-                                                $(this).remove();
-                                            });
+                                            allTargets.fadeOut(
+                                                200,
+                                                function () {
+                                                    $(this).remove();
+                                                }
+                                            );
                                             break;
 
                                         case "hide":
@@ -791,7 +772,7 @@ function initiateList() {
                                     .closest("tr")
                                     .toggleClass("selected", false)
                                     .promise()
-                                    .done(function() {
+                                    .done(function () {
                                         //only trigger the event change of a ".item-select" once
                                         parent
                                             .find(".item-select:visible:first")
@@ -806,12 +787,12 @@ function initiateList() {
                             if (result.message) {
                                 var n = noty({
                                     text: result.message,
-                                    type: result.success ? "success" : "error"
+                                    type: result.success ? "success" : "error",
                                 });
                             }
                             if (result.redirect) {
                                 if (result.message) {
-                                    setTimeout(function() {
+                                    setTimeout(function () {
                                         execReload(result.redirect);
                                     }, 1500);
                                 } else {
@@ -822,18 +803,18 @@ function initiateList() {
                                 eval(result.action);
                             }
                         },
-                        error: function(result) {
+                        error: function (result) {
                             var n = noty({
                                 text:
                                     "This file cannot be found or what's being returned is not json.",
-                                type: "error"
+                                type: "error",
                             });
-                        }
+                        },
                     });
                 } else {
                     var n = noty({
                         text: "No item selected",
-                        type: "error"
+                        type: "error",
                     });
                 }
             } else {
@@ -844,7 +825,7 @@ function initiateList() {
                     el.attr("href") +
                     "?ids=" +
                     selectedTargets
-                        .map(function() {
+                        .map(function () {
                             return $(this).data("id");
                         })
                         .get()
@@ -852,7 +833,7 @@ function initiateList() {
             }
         });
 
-        $(".inside-list-start-operation").click(function(e) {
+        $(".inside-list-start-operation").click(function (e) {
             var el = $(this);
             var parent = el.closest(".table-parent");
             var target = el.closest("tr");
@@ -862,7 +843,7 @@ function initiateList() {
                 url: parent.data("action"),
                 data: "do=" + el.data("operation") + "&id=" + target.data("id"),
                 dataType: "json",
-                success: function(result) {
+                success: function (result) {
                     if (result.success) {
                         if (result.newvalue == 1) {
                             el.addClass("active");
@@ -874,12 +855,12 @@ function initiateList() {
                     if (result.message) {
                         var n = noty({
                             text: result.message,
-                            type: result.success ? "success" : "error"
+                            type: result.success ? "success" : "error",
                         });
                     }
                     if (result.redirect) {
                         if (result.message) {
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 execReload(result.redirect);
                             }, 1500);
                         } else {
@@ -887,19 +868,19 @@ function initiateList() {
                         }
                     }
                 },
-                error: function(result) {
+                error: function (result) {
                     var n = noty({
                         text:
                             "This file cannot be found or what's being returned is not json.",
-                        type: "error"
+                        type: "error",
                     });
-                }
+                },
             });
             e.preventDefault();
         });
 
         // Bootstrap Confirmation, more info: https://github.com/tavicu/bs-confirmation
-        $(".confirm").each(function(e) {
+        $(".confirm").each(function (e) {
             var el = $(this);
             var options = $.extend(
                 {
@@ -908,10 +889,10 @@ function initiateList() {
                     popout: true,
                     btnOkLabel: "OK",
                     trigger: "manual",
-                    onConfirm: function(e, element) {
+                    onConfirm: function (e, element) {
                         element.data("confirmed", true).trigger("click");
                         e.preventDefault();
-                    }
+                    },
                 },
                 el.data()
             );
@@ -919,7 +900,7 @@ function initiateList() {
         });
 
         // collapse functions for stock-overview
-        $(".collapsebutton").each(function() {
+        $(".collapsebutton").each(function () {
             var parentRow = $(this).closest("tr");
             if ($(this).data("notcollapsed")) {
                 var directChildRows = $(
@@ -935,17 +916,13 @@ function initiateList() {
                 $(this).append('<i class="fa fa-chevron-right"></i>');
             }
         });
-        $(".collapsebutton").click(function() {
+        $(".collapsebutton").click(function () {
             // prepare collapseList for ajax request
             var tableParent = $(this).closest(".table-parent");
             var collapseList = new Array();
-            tableParent.find(".collapsebutton").each(function() {
+            tableParent.find(".collapsebutton").each(function () {
                 if ($(this).data("notcollapsed")) {
-                    collapseList.push(
-                        $(this)
-                            .closest("tr")
-                            .data("id")
-                    );
+                    collapseList.push($(this).closest("tr").data("id"));
                 }
             });
             var parentRow = $(this).closest("tr");
@@ -962,7 +939,7 @@ function initiateList() {
             if ($(this).data("notcollapsed")) {
                 // remove rows from collapseList
                 collapseList = collapseList.filter(
-                    el => el != parentRow.data("id")
+                    (el) => el != parentRow.data("id")
                 );
                 // update rows in UI
                 allChildRows.collapse("hide");
@@ -993,11 +970,11 @@ function initiateList() {
                 type: "post",
                 url: tableParent.data("action"),
                 data: { do: "collapse", ids: collapseList },
-                dataType: "json"
+                dataType: "json",
             });
         });
         // Collapse All button
-        $("#collapseall").click(function() {
+        $("#collapseall").click(function () {
             var tableParent = $(this).closest(".table-parent");
             tableParent.find("tr[class*='collapse']").collapse("hide");
             tableParent
@@ -1010,7 +987,7 @@ function initiateList() {
                 type: "post",
                 url: tableParent.data("action"),
                 data: { do: "collapseall" },
-                dataType: "json"
+                dataType: "json",
             });
         });
     }
@@ -1048,12 +1025,7 @@ function fileExt(path) {
 function getUrl(el) {
     // hier moet ik met ajax de url vanuit php halen
     var el = $(el);
-    el.val(
-        el
-            .val()
-            .replace(/ /g, "-")
-            .toLowerCase()
-    );
+    el.val(el.val().replace(/ /g, "-").toLowerCase());
 }
 function setExternalText(el, target) {
     var el = $(el);
@@ -1088,17 +1060,17 @@ function AjaxFormSubmit(form) {
             url: "ajax.php?file=" + $(form).data("action"),
             data: $(form).serialize(),
             dataType: "json",
-            success: function(result) {
+            success: function (result) {
                 $("#form-submit").prop("disabled", false);
                 if (result.message) {
                     var n = noty({
                         text: result.message,
-                        type: result.success ? "success" : "error"
+                        type: result.success ? "success" : "error",
                     });
                 }
                 if (result.redirect) {
                     if (result.message) {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             execReload(result.redirect);
                         }, 1500);
                     } else {
@@ -1107,14 +1079,14 @@ function AjaxFormSubmit(form) {
                 }
                 $("body").removeClass("loading");
             },
-            error: function(result) {
+            error: function (result) {
                 var n = noty({
                     text:
                         "This file cannot be found or what's being returned is not json.",
-                    type: "error"
+                    type: "error",
                 });
                 $("body").removeClass("loading");
-            }
+            },
         });
     } else {
         form.submit();
