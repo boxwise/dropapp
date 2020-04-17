@@ -2,7 +2,6 @@
 
 function authorize()
 {
-    global $settings;
     $result = ['success' => true];
 
     $user = false;
@@ -28,16 +27,10 @@ function logout($redirect = false)
 {
     global $settings;
 
-    setcookie('autologin_user', null, time() - 3600, '/');
-    setcookie('autologin_pass', null, time() - 3600, '/');
-
     session_unset();
     session_destroy();
 
-    if (!$redirect) {
-        $redirect = '?';
-    }
-    redirect($redirect);
+    header('Location: https://'.$settings['auth0_domain'].'/v2/logout', true, 301); //$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
 }
 
 function check_valid_from_until_date($valid_from, $valid_until)
