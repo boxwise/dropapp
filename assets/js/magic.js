@@ -787,14 +787,14 @@ function initiateList() {
                                         case "extendActive":
                                             $.each( allTargets, function( key, value ) {
                                                 if (result.data === "0000-00-00"){
-                                                    value.cells[4].innerText = "";  // empty if expiry date isn't set at all
+                                                    $(value).find('.list-column-valid_lastday')[0].innerText = "";  // empty if expiry date isn't set at all
                                                 }
                                                 else if (result.data){
                                                     // replace cell value with new date string
                                                     var parsedDate = parseReturnedDateString(result.data);
                                                     var date = new Date(parsedDate[0], parsedDate[1]-1, parsedDate[2]);
                                                     const newCellText =  parsedDate[2] + " " + monthName(date) + " " + parsedDate[0];
-                                                    value.cells[4].innerText = newCellText;
+                                                    $(value).find('.list-column-valid_lastday')[0].innerText = newCellText;
                                                 }
                                             });
                                             break;
