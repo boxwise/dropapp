@@ -70,7 +70,7 @@ describe('Create usergroups (admin)', () => {
         cy.getButtonWithText("Save and close").click();
         cy.getRowWithText(BrowserTestUserGroup_Coordinator).should('exist');
         //testing delete
-        cy.checkGridCheckboxByText(BrowserTestUserGroup_Coordinator)
+        cy.checkGridCheckboxByText(BrowserTestUserGroup_Coordinator);
         cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
         cy.getRowWithText(BrowserTestUserGroup_Coordinator).should('not.exist');
@@ -85,7 +85,7 @@ describe('Create usergroups (admin)', () => {
         cy.getButtonWithText("Save and close").click();
         cy.getRowWithText(BrowserTestUserGroup_User).should('exist');
         //testing delete
-        cy.checkGridCheckboxByText(BrowserTestUserGroup_User)
+        cy.checkGridCheckboxByText(BrowserTestUserGroup_User);
         cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
         cy.getRowWithText(BrowserTestUserGroup_User).should('not.exist');
