@@ -1,5 +1,9 @@
 [![CircleCI](https://circleci.com/gh/boxwise/dropapp.svg?style=svg)](https://circleci.com/gh/boxwise/dropapp)
 
+<img width="150" height="50" src="//cdn.auth0.com/oss/badges/a0-badge-dark.png" >
+
+
+
 # Readme #
 
 You just found the Drop App (first version of [Boxwise](https://www.boxwise.co) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
