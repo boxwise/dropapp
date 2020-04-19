@@ -786,12 +786,13 @@ function initiateList() {
                                             break;
                                         case "extendActive":
                                             $.each( allTargets, function( key, value ) {
-                                                if (result.data === "0000-00-00"){
+                                                debugger;
+                                                if (result.data[key] === "0000-00-00"){
                                                     $(value).find('.list-column-valid_lastday')[0].innerText = "";  // empty if expiry date isn't set at all
                                                 }
-                                                else if (result.data){
+                                                else if (result.data[key]){
                                                     // replace cell value with new date string
-                                                    var parsedDate = parseReturnedDateString(result.data);
+                                                    var parsedDate = parseReturnedDateString(result.data[key]);
                                                     var date = new Date(parsedDate[0], parsedDate[1]-1, parsedDate[2]);
                                                     const newCellText =  parsedDate[2] + " " + monthName(date) + " " + parsedDate[0];
                                                     $(value).find('.list-column-valid_lastday')[0].innerText = newCellText;

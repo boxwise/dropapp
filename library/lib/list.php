@@ -213,13 +213,14 @@ function listExtend($table, $ids, $period)
     global $translate;
 
     $hasExpireDate = db_fieldexists($table, 'valid_lastday');
+    $updatedValue = [];
     foreach ($ids as $id) {
         if ($hasExpireDate) {
             $updatedCount = listExtendAction($table, $id, $period);
             $count += $updatedCount;
             if ($updatedCount > 0) {
                 $getUpdatedValue = 'SELECT valid_lastday from cms_users where id = '.$id;
-                $updatedValue = db_value($getUpdatedValue);
+                $updatedValue[] = db_value($getUpdatedValue);
             }
         }
     }
