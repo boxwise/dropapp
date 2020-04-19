@@ -32,7 +32,6 @@ class MinimalDb extends AbstractSeed
 			(67,42,'Manage products','products',18,0,0,1,0,0),
 			(87,35,'Checkout','check_out',2,0,0,1,0,0),
 			(90,99,'Boxes','stock',13,0,0,1,0,0),
-			(91,35,'Find beneficiary','check_in',1,0,0,1,0,0),
 			(92,35,'Give tokens to all','give2all',7,0,0,1,0,0),
 			(96,128,'Sales reports','sales_list',15,0,0,1,0,0),
 			(99,NULL,'Inventory','',4,0,0,1,0,0),
@@ -43,7 +42,6 @@ class MinimalDb extends AbstractSeed
 			(113,NULL,'Actions','',6,0,0,1,0,0),
 			(115,42,'Warehouses','locations',21,0,0,1,0,0),
 			(116,110,'Containers List','printed_list_containers',2,0,0,1,1,0),
-			(117,128,'Needed items (beta)','need',16,0,0,1,0,0),
 			(118,35,'Manage beneficiaries','people',4,0,0,1,0,0),
 			(121,NULL,'Hidden menu items','',9,0,0,0,1,0),
 			(123,121,'Start page','start',27,0,0,0,1,0),
@@ -52,7 +50,6 @@ class MinimalDb extends AbstractSeed
 			(126,121,'Exit login as','exitloginas',29,0,0,0,1,0),
 			(127,96,'Sales List Download','sales_list_download',9,0,0,1,1,0),
 			(128,NULL,'Insight','',5,0,0,1,0,0),
-			(129,117,'General stock','stock-list',10,0,0,0,1,0),
 			(130,35,'Lists','food_lists',8,0,0,1,0,0),
 			(131,NULL,'Services','',2,0,0,1,0,0),
 			(132,131,'Bicycles / Sport','borrow',10,0,0,1,0,0),
@@ -71,7 +68,7 @@ class MinimalDb extends AbstractSeed
 			(156,42,'User groups','cms_usergroups',20,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
 			(158,35,'Add beneficiary','people_add',3,0,0,1,0,0),
-			(159,99,'Stock Overview','stock_overview',14,0,1,1,0,1);");
+			(165,99,'Stock Overview (beta)','stock_overview',14,0,0,1,0,0);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings
@@ -124,12 +121,6 @@ class MinimalDb extends AbstractSeed
             (11,'Unisex Kid','Kid',9,1,1,0,0,1,'0'),
 			(12,'Teen Girl','Girl',4,0,1,1,0,0,'0'),
             (13,'Teen Boy','Boy',5,1,0,1,0,0,'0');");
-
-        //------------------- need_periods
-        $this->execute("INSERT INTO `need_periods` (`id`, `label`, `week_min`, `week_max`) VALUES
-			(1,'1 mth to 3 mths',4,13),
-			(2,'2 weeks to 6 weeks',2,6),
-            (3,'2 mths to 6 mths',8,26);");
 
         //------------------- numbers
         $this->execute("INSERT INTO `numbers` (`value`, `label`) VALUES
@@ -483,6 +474,8 @@ class MinimalDb extends AbstractSeed
 			(901,13,'text','cms_list_undelete',NULL,'Herstellen','Recover','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(902,13,'text','cms_list_undeleteerror',NULL,'De geselecteerde onderdelen (of een deel ervan) konden niet worden hersteld.','The selected items (or some of them) could not be recovered.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(903,13,'text','cms_list_undeletesuccess',NULL,'Onderdeel hersteld','Item recovered','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
+			(904,13,'text','cms_list_extendsuccess',NULL,'Vervaldatum item verlengd','Item expiration extended','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
+			(905,13,'text','cms_list_extenderror',NULL,'Geen van de geselecteerde items kon worden verlengd','None of the selected items could be extended','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(906,0,'text','bag_for_three','The color of a bag of vegetables for three persons','','Blue','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(907,0,'text','bag_for_one','The color of a bag of vegetables for one persons','','Yellow','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(908,0,'textarea','bicycle-rules','Rules for bicycle renting to be printed on the back of the Certificate','','Bikes are only available for beneficiaries of Nea Kavala. / You can only borrow a bike when you have succesfully finished the training and have signed the contract with us / To borrow a bike you hand over this certificate, you will get it back after returning the bike / You are responsible for your own safety and to bring back the bike in a clean and good state / You have to be 18 years old minimum to be able to borrow a bike. / At all times, bikes need to be back on the same day before 19:30. After 16:30 we will not start a new borrowing period. / The maximum borrowing period is three hours. / If you not follow these rules, we can ban you for two weeks and if you repeatedly not follow the rules we can ban you permanently.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),

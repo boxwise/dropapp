@@ -218,7 +218,7 @@ $(function() {
     });
 
     function closeModal(event) {
-        if (event.data == "close") {
+        if (event.data == "close" || event.data.hasOwnProperty('eventName')) {
             $.fancybox.close();
         } else {
             $.fancybox.close();
@@ -425,6 +425,7 @@ $(function() {
                                 AjaxFormSubmit(form);
                             }
                             $("body").removeClass("loading");
+
                         },
                         error: function(checkresult) {
                             var n = noty({
@@ -747,13 +748,11 @@ function initiateList() {
                                                 $(this).remove();
                                             });
                                             break;
-
                                         case "undelete":
                                             allTargets.fadeOut(200, function() {
                                                 $(this).remove();
                                             });
                                             break;
-
                                         case "hide":
                                             if (
                                                 parent.data("inheritvisibility")
@@ -780,6 +779,26 @@ function initiateList() {
                                                 );
                                             }
                                             break;
+                                        case "extend":
+                                            $.each( allTargets, function( key, value ) {
+                                                $(this).fadeOut(200);   // remove from expired list if extended
+                                            });
+                                            break;
+                                        case "extendActive":
+                                            $.each( allTargets, function( key, value ) {
+                                                debugger;
+                                                if (result.data[key] === "0000-00-00"){
+                                                    $(value).find('.list-column-valid_lastday')[0].innerText = "";  // empty if expiry date isn't set at all
+                                                }
+                                                else if (result.data[key]){
+                                                    // replace cell value with new date string
+                                                    var parsedDate = parseReturnedDateString(result.data[key]);
+                                                    var date = new Date(parsedDate[0], parsedDate[1]-1, parsedDate[2]);
+                                                    const newCellText =  parsedDate[2] + " " + monthName(date) + " " + parsedDate[0];
+                                                    $(value).find('.list-column-valid_lastday')[0].innerText = newCellText;
+                                                }
+                                            });
+                                            break;
                                         default:
                                         // nothing
                                     }
@@ -803,32 +822,9 @@ function initiateList() {
                                     });
                                 // .trigger("change");
                             }
-                            if (result.message) {
-                                var n = noty({
-                                    text: result.message,
-                                    type: result.success ? "success" : "error"
-                                });
-                            }
-                            if (result.redirect) {
-                                if (result.message) {
-                                    setTimeout(function() {
-                                        execReload(result.redirect);
-                                    }, 1500);
-                                } else {
-                                    execReload(result.redirect);
-                                }
-                            }
-                            if (result.action) {
-                                eval(result.action);
-                            }
+                            AjaxCheckSuccess(result);
                         },
-                        error: function(result) {
-                            var n = noty({
-                                text:
-                                    "This file cannot be found or what's being returned is not json.",
-                                type: "error"
-                            });
-                        }
+                        error: AjaxError
                     });
                 } else {
                     var n = noty({
@@ -871,29 +867,9 @@ function initiateList() {
                         }
                         el.prev(".list-toggle-value").text(result.newvalue);
                     }
-                    if (result.message) {
-                        var n = noty({
-                            text: result.message,
-                            type: result.success ? "success" : "error"
-                        });
-                    }
-                    if (result.redirect) {
-                        if (result.message) {
-                            setTimeout(function() {
-                                execReload(result.redirect);
-                            }, 1500);
-                        } else {
-                            execReload(result.redirect);
-                        }
-                    }
+                    AjaxCheckSuccess(result);
                 },
-                error: function(result) {
-                    var n = noty({
-                        text:
-                            "This file cannot be found or what's being returned is not json.",
-                        type: "error"
-                    });
-                }
+                error: AjaxError
             });
             e.preventDefault();
         });
@@ -1017,6 +993,18 @@ function initiateList() {
     $("body").removeClass("loading");
 }
 
+function monthName(dt){
+    mlist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+    return mlist[dt.getMonth()];
+};
+
+function parseReturnedDateString(dateString){
+    var year = dateString.substring(0,4);
+    var month = dateString.substring(5,7);
+    var day = dateString.substring(8,10);
+    return [year, month, day];
+}
+
 // format select2 for the parent select
 function formatparent(listItem) {
     var originalOption = listItem.element;
@@ -1090,29 +1078,12 @@ function AjaxFormSubmit(form) {
             dataType: "json",
             success: function(result) {
                 $("#form-submit").prop("disabled", false);
-                if (result.message) {
-                    var n = noty({
-                        text: result.message,
-                        type: result.success ? "success" : "error"
-                    });
-                }
-                if (result.redirect) {
-                    if (result.message) {
-                        setTimeout(function() {
-                            execReload(result.redirect);
-                        }, 1500);
-                    } else {
-                        execReload(result.redirect);
-                    }
-                }
                 $("body").removeClass("loading");
+                AjaxCheckSuccess(result);
+
             },
             error: function(result) {
-                var n = noty({
-                    text:
-                        "This file cannot be found or what's being returned is not json.",
-                    type: "error"
-                });
+                AjaxError(result);
                 $("body").removeClass("loading");
             }
         });
