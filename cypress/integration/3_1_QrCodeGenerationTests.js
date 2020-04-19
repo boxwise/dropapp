@@ -72,7 +72,7 @@ describe('QR labels tests - user with rights', () => {
 describe('QR labels tests - user without rights', () => {
 
     function labelsCountInputDoesntExist(number){
-        cy.GetElementByTypeAndTestId("input", "numberOfLabelsInput").should('not.exist');
+        cy.getElementByTypeAndTestId("input", "numberOfLabelsInput").should('not.exist');
     }  
 
     function generateQrsMenuDoesntExist(){
