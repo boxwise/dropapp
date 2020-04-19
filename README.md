@@ -142,10 +142,10 @@ We use [Cypress](https://www.cypress.io) for Browser-test. To run Cypress tests 
 
 All tests in `cypress/integrations` should be found and can be directly executed. When writing tests, try to follow these guidelines if possible:
 
-+ Avoid any duplication of helper functions across several files! If testing the same page in several test suites (files), there's a tendency to copy-paste the whole file and then rewrite tests. This leads to code duplication of helper functions. Instead, helper functions needed in several should be defined in one of `cypress/support` files - then they're available globally. Find the matching one by name or create a new one. In latter case, don't forget to import it in `cypress/integrations/index.js`. Avoid creating a miscellaneuos file names as it tends to lead to chaos.
++ Avoid any duplication of helper functions across several files! If testing the same page in several test suites (files), there's a tendency to copy-paste the whole file and then rewrite tests. This leads to code duplication of helper functions. Instead, helper functions needed in several locations should be defined in one of `cypress/support` files - then they're available globally. Find the matching one by name or create a new one. In latter case, don't forget to import it in `cypress/integrations/index.js`. Avoid creating miscellaneuos file names as it tends to lead to chaos.
 + Local helper functions defined in test files should have functional and easy-to-understand rather than technical names. Meaning, `clickNewUserButton()` is better than `clickElementByTypeAndTestId('button','new-user-button')`.
 + More general use helpers like 'clickElementByTypeAndTestId' can be used within the local helper functions if preferred. The reason for functional naming preference lies in increased readability of tests.
-+ Current codebase doesn't 100% follow everything stated above but it'd definitely help organising the test helpers accordingly at least from now on.
++ Current codebase doesn't 100% follow everything stated above but it'd definitely help organising the test helpers accordingly from now on.
 
 ![Selection_599](https://user-images.githubusercontent.com/8964422/77221481-6a190d00-6b4a-11ea-88d7-9fc70ce1c982.png)
 
