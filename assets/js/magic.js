@@ -781,20 +781,7 @@ function initiateList() {
                                             break;
                                         case "extend":
                                             $.each( allTargets, function( key, value ) {
-                                                if (result.data === "0000-00-00"){
-                                                    $(this).fadeOut(200);   // remove from list if expiry isn't set
-                                                }
-                                                if (result.data){
-                                                    var parsedDate = parseReturnedDateString(result.data);
-                                                    var date = new Date(parsedDate[0], parsedDate[1]-1, parsedDate[2]);
-                                                    var currentDate = new Date();
-                                                    if (date>currentDate){
-                                                        $(this).fadeOut(200); // remove from list if expiry date is bigger than today
-                                                    } else {
-                                                        const newCellText =  parsedDate[2] + " " + monthName(date) + " " + parsedDate[0];
-                                                        value.cells[4].innerText = newCellText;  // update expiry text (but it's still expired)
-                                                    }
-                                                }
+                                                $(this).fadeOut(200);   // remove from expired list if extended
                                             });
                                             break;
                                         case "extendActive":
