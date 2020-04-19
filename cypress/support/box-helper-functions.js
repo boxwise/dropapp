@@ -8,7 +8,7 @@ Cypress.Commands.add("deleteAllBoxesExceptSeed", () => {
     cy.get("body").then($body => {
         // make sure the seed box will not get deleted!
         if ($body.text().includes(SEED_BOX_COMMENT)) {
-            cy.get('tr').contains("Martin test comment").parent().parent().within(()=>{
+            cy.getRowWithText("Martin test comment").parent().parent().within(()=>{
                 cy.get("input[type='checkbox']").uncheck();
             });
         }
@@ -18,7 +18,24 @@ Cypress.Commands.add("deleteAllBoxesExceptSeed", () => {
         if ($button.text().includes("Delete")) {
             cy.log("Delete button is visible")
             cy.get("button[data-operation='delete']").click();
-            cy.get("a[data-apply='confirmation']").click();
+            cy.getConfirmActionButton().click();
         }
     });
+});
+
+Cypress.Commands.add("clickMakeLabelsButton", () => {
+    cy.get("button").contains("Make labels").click();
+    // cy.getButtonWithText("Make labels").click({force: true});
+});
+
+Cypress.Commands.add("uncheckBigLabelsCheckbox", () => {
+    cy.getElementByTypeAndTestId("input", "field_fulllabel").uncheck();
+});
+
+Cypress.Commands.add("typeNumberOfLabels", (number) => {
+    cy.get("input[id='field_count']").clear().type(number);
+});
+
+Cypress.Commands.add("checkBigLabelsCheckbox", () => {
+    cy.get("input[data-testid='field_fulllabel']").check();
 });
