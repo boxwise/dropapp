@@ -748,13 +748,11 @@ function initiateList() {
                                                 $(this).remove();
                                             });
                                             break;
-
                                         case "undelete":
                                             allTargets.fadeOut(200, function() {
                                                 $(this).remove();
                                             });
                                             break;
-
                                         case "hide":
                                             if (
                                                 parent.data("inheritvisibility")
@@ -780,6 +778,26 @@ function initiateList() {
                                                     "item-hidden"
                                                 );
                                             }
+                                            break;
+                                        case "extend":
+                                            $.each( allTargets, function( key, value ) {
+                                                $(this).fadeOut(200);   // remove from expired list if extended
+                                            });
+                                            break;
+                                        case "extendActive":
+                                            $.each( allTargets, function( key, value ) {
+                                                debugger;
+                                                if (result.data[key] === "0000-00-00"){
+                                                    $(value).find('.list-column-valid_lastday')[0].innerText = "";  // empty if expiry date isn't set at all
+                                                }
+                                                else if (result.data[key]){
+                                                    // replace cell value with new date string
+                                                    var parsedDate = parseReturnedDateString(result.data[key]);
+                                                    var date = new Date(parsedDate[0], parsedDate[1]-1, parsedDate[2]);
+                                                    const newCellText =  parsedDate[2] + " " + monthName(date) + " " + parsedDate[0];
+                                                    $(value).find('.list-column-valid_lastday')[0].innerText = newCellText;
+                                                }
+                                            });
                                             break;
                                         default:
                                         // nothing
@@ -973,6 +991,18 @@ function initiateList() {
         });
     }
     $("body").removeClass("loading");
+}
+
+function monthName(dt){
+    mlist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+    return mlist[dt.getMonth()];
+};
+
+function parseReturnedDateString(dateString){
+    var year = dateString.substring(0,4);
+    var month = dateString.substring(5,7);
+    var day = dateString.substring(8,10);
+    return [year, month, day];
 }
 
 // format select2 for the parent select
