@@ -32,7 +32,6 @@ class MinimalDb extends AbstractSeed
 			(67,42,'Manage products','products',18,0,0,1,0,0),
 			(87,35,'Checkout','check_out',2,0,0,1,0,0),
 			(90,99,'Boxes','stock',13,0,0,1,0,0),
-			(91,35,'Find beneficiary','check_in',1,0,0,1,0,0),
 			(92,35,'Give tokens to all','give2all',7,0,0,1,0,0),
 			(96,128,'Sales reports','sales_list',15,0,0,1,0,0),
 			(99,NULL,'Inventory','',4,0,0,1,0,0),
