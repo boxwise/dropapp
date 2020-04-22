@@ -2,7 +2,7 @@
 
     $ajax = true;
     // Only if the Login form calls ajax --> $login is set true
-    $login = (('login' == $_GET['file']) || ('reset' == $_GET['file']) || ('reset2' == $_GET['file']) ? true : false);
+    $login = (('cypresslogin' == $_GET['file']) ? true : false);
     require_once 'library/core.php';
 
     if ($checksession_result['success']) {

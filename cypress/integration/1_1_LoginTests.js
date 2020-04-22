@@ -5,21 +5,31 @@ context('Login tests', () => {
   let config = getLoginConfiguration();
 
   // Login commands trhough login page
+  /*
   function loginUsing(userMail, userPassword) {
     cy.visit("/login.php");
     cy.get("input[data-testid='email']").type(`${userMail}`);
     cy.get("input[data-testid='password']").type(`${userPassword}`);
     cy.get("input[data-testid='signInButton']").click();
   };
+  */
+
+  function loginUsing(userMail,userPassword){
+    cy.visit("/login.php");
+    cy.get("input[id='1-email']").type(`${userMail}`);
+    cy.get("input[name ='password']").type(`${userPassword}`);
+    cy.get("button[class='auth0-lock-submit']").click();
+  };
 
   it('Login test (Admin)', () => {
     console.log(config.testAdmin);
 
     console.log(config);
+    //Auth0_login(config.testAdmin,config.testPwd);
     loginUsing(config.testAdmin, config.testPwd);
     cy.get("div[data-testid='dropapp-header']").should('be.visible');
   });
-
+  /*
   it('Login test (Coordinator)', () => {
     loginUsing(config.testCoordinator, config.testPwd);
     cy.get("div[data-testid='dropapp-header']").should('be.visible');
@@ -73,4 +83,5 @@ context('Login tests', () => {
     cy.get("input[data-testid='submitForgottenPwd']").click();
     cy.notificationWithTextIsVisible(config.successPwdChangeNotif)
   });
+  */
 });
