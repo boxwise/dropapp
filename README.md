@@ -6,7 +6,7 @@
 
 You just found the Drop App (first version of [Boxwise](https://www.boxwise.co) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
 
-We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users are [Intervolve](https://intervolvegr.com/), [R4R](https://www.refugees4refugees.gr) and [IHA](iha.help).
+We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users are [Intervolve](https://intervolvegr.com/), [R4R](https://www.refugees4refugees.gr), [IHA](iha.help), and [Hermine](https://mfh.global/hermine/).
 
 We have evolved the app to now be centrally hosted to we can offer the product to many more organisations, and are working to improve the quality of the product. 
 
