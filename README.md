@@ -11,7 +11,7 @@ We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/
 We have evolved the app to now be centrally hosted to we can offer the product to many more organisations, and are working to improve the quality of the product. 
 
 To support the development of the new version we started a [crowdfunding campaign](https://donate.boxwise.co)!  
-Write or call Hans ([hans@boxwise.co](mailto:hans@boxwise.co) & +4917652181647) if you want to be part of our next step. 
+Write or call us ([hello@boxwise.co](mailto:hello@boxwise.co) & +4917652181647) if you want to be part of our next step. 
 
 ### Preparation for Installation
 
