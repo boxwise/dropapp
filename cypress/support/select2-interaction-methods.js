@@ -3,7 +3,11 @@
 
 Cypress.Commands.add("selectOptionByText", (field_id, optionText) => {
     cy.get("div[id='s2id_field_" + field_id + "']").click();
-    cy.get("ul[class='select2-results'] li").contains(optionText).click();
+    cy.getOptionByText(optionText).click();
+});
+
+Cypress.Commands.add("getOptionByText", (optionText) => {
+    cy.get("ul[class='select2-results'] li").contains(optionText);
 });
 
 Cypress.Commands.add("getSelectedValueInDropDown", (field_id, text) => {

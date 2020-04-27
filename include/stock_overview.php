@@ -21,7 +21,7 @@
 
         $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
         $statusarray = ['in_stock' => 'In stock', 'ordered' => 'Ordered', 'untouched' => 'Untouched for 3 months', 'lost' => 'Lost'];
-        listfilter(['label' => 'In stock', 'options' => ($statusarray + $outgoinglocations)]);
+        listfilter(['label' => 'Boxes', 'options' => ($statusarray + $outgoinglocations)]);
 
         $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
         listfilter2(['label' => 'Gender', 'options' => $genders]);
@@ -76,7 +76,7 @@
                             INNER JOIN
                                 products as b ON upper(a.name)=upper(b.name) 
                             WHERE 
-                                a.id != b.id and a.sizegroup_id = b.sizegroup_id and a.camp_id = 1 and b.camp_id = 1 and a.id<b.id 
+                                a.id != b.id and a.sizegroup_id = b.sizegroup_id and a.camp_id = :camp_id and b.camp_id = :camp_id and a.id<b.id 
                             GROUP BY 
                                 upper(a.name)
                             ) prod_a 
