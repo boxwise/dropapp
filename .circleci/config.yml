@@ -6,9 +6,17 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.3-stretch-node-browsers
+      - image: circleci/node:4.8.2
     working_directory: ~/project
     steps:
       - checkout
+      # create sentry release
+      - run: | 
+          curl -sL https://sentry.io/get-cli/ | bash
+          export SENTRY_RELEASE=$(sentry-cli releases propose-version)
+          sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
+          sentry-cli releases set-commits --auto $SENTRY_RELEASE
+          sentry-cli releases finalize $SENTRY_RELEASE
       - run: sudo docker-php-ext-install pdo_mysql exif
       # load composer cache
       - restore_cache:

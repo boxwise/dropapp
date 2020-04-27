@@ -6,6 +6,7 @@
         require_once 'cms_users_handle_ajax_operations.php';
     } else {
         initlist();
+        addbutton('extend', 'Extend Access', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'extend-cms-user', 'options' => ['1 week', '1 month', '2 months', 'No end date']]);
         listsetting('allowadd', false);
         listsetting('haspagemenu', true);
         addpagemenu('active', 'Active & Pending', ['link' => '?action=cms_users', 'testid' => 'active_pending']);

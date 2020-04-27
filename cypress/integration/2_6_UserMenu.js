@@ -13,91 +13,55 @@ describe("2_6_UserMenu_Test", () => {
         cy.visit('/?action=cms_users');
     });
 
-    function checkForElementByText(selector, text) {
-        cy.get(selector).contains(text).should("be.visible");
-    }
-
-    function checkElementDoesNotExistByText(selector, text) {
-        cy.get(selector).contains(text).should('not.exist');
-    }
-
-    function clickOnElement(selector) {
-        cy.get(selector).first().click();
-    }
-
-    function clickOnElementByText(selector, text) {
-        cy.get(selector).contains(text).click();
-    }
-
-    function checkForElementByTypeAndTestId(type, testId) {
-        cy.get(type + "[data-testid = '" + testId + "']").should("be.visible");
-    }
-
-    function getUserRow(name){
-        return cy.get('tr').contains(name);
-    }
-
-    function checkUserCheckboxByName(name){
-        getUserRow(name).parent().parent().parent().within(() => {
-            cy.get("input[type='checkbox']").check();
-        });
-    }
-
-    function checkAllUsersSelected() {
-        cy.get('tbody tr').each(($tr) => {
-            expect($tr).to.have.class('selected');
-        });
-    }
- 
     it("2_6 Check for list elements", () => {
-        checkForElementByTypeAndTestId("a.active", "active_pending");
-        checkForElementByTypeAndTestId("a", "expired");
-        checkForElementByTypeAndTestId("a", "deactivated");
-        checkForElementByTypeAndTestId("input", "select_all");
-        checkForElementByText("a", NEW_USER_BUTTON_LABEL);
-        checkForElementByText("div", USER_EMAIL);
+        cy.checkForElementByTypeAndTestId("a.active", "active_pending");
+        cy.checkForElementByTypeAndTestId("a", "expired");
+        cy.checkForElementByTypeAndTestId("a", "deactivated");
+        cy.checkForElementByTypeAndTestId("input", "select_all");
+        cy.checkElementIsVisibleByText("a", NEW_USER_BUTTON_LABEL);
+        cy.checkElementIsVisibleByText("div", USER_EMAIL);
 
         // check that admin can see roles Coordinator and User
-        checkForElementByText("td[class='list-level- list-column-usergroup'] div", USER_GROUP_COORDINATOR);
-        checkForElementByText("td[class='list-level- list-column-usergroup'] div", USER_GROUP_USER);
+        cy.checkElementIsVisibleByText("td[class='list-level- list-column-usergroup'] div", USER_GROUP_COORDINATOR);
+        cy.checkElementIsVisibleByText("td[class='list-level- list-column-usergroup'] div", USER_GROUP_USER);
 
         // login as coodrinator; check that coordinator can see roles User but not Admin
         cy.visit('/?logout=1');
         cy.loginAsCoordinator();
         cy.visit('/?action=cms_users');
-        checkForElementByText("td[class='list-level- list-column-usergroup'] div", USER_GROUP_USER);
-        checkElementDoesNotExistByText("tr", USER_GROUP_COORDINATOR);
+        cy.checkElementIsVisibleByText("td[class='list-level- list-column-usergroup'] div", USER_GROUP_USER);
+        cy.checkElementDoesNotExistByText("tr", USER_GROUP_COORDINATOR);
     });
 
     it("2_6_1 Check for list elements for single user edit page", () => {
-        clickOnElementByText("a", BROWSER_TEST_USER_USER);
-        checkForElementByTypeAndTestId("input", "user_name");
-        checkForElementByTypeAndTestId("input", "user_email");
-        checkForElementByTypeAndTestId("select", "user_group");
-        checkForElementByTypeAndTestId("input", "user_valid_from");
-        checkForElementByTypeAndTestId("input", "user_valid_to");
-        checkForElementByTypeAndTestId("div", "user_last_login");
-        checkForElementByTypeAndTestId("div", "user_created_data");
+        cy.clickOnElementBySelectorAndText("a", BROWSER_TEST_USER_USER);
+        cy.checkForElementByTypeAndTestId("input", "user_name");
+        cy.checkForElementByTypeAndTestId("input", "user_email");
+        cy.checkForElementByTypeAndTestId("select", "user_group");
+        cy.checkForElementByTypeAndTestId("input", "user_valid_from");
+        cy.checkForElementByTypeAndTestId("input", "user_valid_to");
+        cy.checkForElementByTypeAndTestId("div", "user_last_login");
+        cy.checkForElementByTypeAndTestId("div", "user_created_data");
     });
 
     it("2_6_2 Tick box for active user", () => {
-        checkUserCheckboxByName(BROWSER_TEST_USER_USER);
-        checkForElementByTypeAndTestId("button", "list-delete-button");
-        checkForElementByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
+        cy.checkGridCheckboxByText(BROWSER_TEST_USER_USER);
+        cy.checkForElementByTypeAndTestId("button", "list-delete-button");
+        cy.checkElementIsVisibleByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
     });
 
     it("2_6_3 Tick box for pending user", () => {
-        checkUserCheckboxByName(BROWSER_TEST_USER_PENDING);
-        checkForElementByTypeAndTestId("button", "list-delete-button");
-        checkForElementByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
+        cy.checkGridCheckboxByText(BROWSER_TEST_USER_PENDING);
+        cy.checkForElementByTypeAndTestId("button", "list-delete-button");
+        cy.checkElementIsVisibleByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
     });
 
     it("2_6_4 Select all users", () => {
-        checkForElementByTypeAndTestId("input", "select_all");
-        clickOnElement("input[data-testid = 'select_all']");
-        checkForElementByTypeAndTestId("button", "list-delete-button");
-        checkForElementByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
-        checkAllUsersSelected();
+        cy.checkForElementByTypeAndTestId("input", "select_all");
+        cy.clickOnFirstElementBySelector("input[data-testid = 'select_all']");
+        cy.checkForElementByTypeAndTestId("button", "list-delete-button");
+        cy.checkElementIsVisibleByText("button", SEND_LOGIN_DATA_BUTTON_LABEL);
+        cy.checkAllUsersSelected();
     });
 
 });

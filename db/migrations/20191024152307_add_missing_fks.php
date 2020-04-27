@@ -9,7 +9,6 @@ class AddMissingFKs extends AbstractMigration
         // this was a duplicate FK on people_id column
         $this->table('borrow_transactions')
             ->dropForeignKey('people_id')
-            ->dropForeignKey('people_id')
             ->addForeignKey('people_id', 'people', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
