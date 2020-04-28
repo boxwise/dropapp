@@ -21,7 +21,7 @@ if (isset($_POST['access_token'])) {
         $auth0->setIdToken($_POST['id_token']);
     }
     $curlcon = curl_init();
-    curl_setopt($curlcon, CURLOPT_URL, $settings['auth0_domain'].'/userinfo');
+    curl_setopt($curlcon, CURLOPT_URL, 'https://'.$settings['auth0_domain'].'/userinfo');
     curl_setopt($curlcon, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curlcon, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
