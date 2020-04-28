@@ -19,7 +19,6 @@ function loginWithAjax(username,password){
         };
         cy.request(options).then(({ body }) => {
             const { access_token, expires_in, id_token } = body;
-            console.log(access_token);
             cy.request({
                 method: "POST",
                 url: '/ajax.php?file=cypresslogin',
@@ -32,10 +31,10 @@ function loginWithAjax(username,password){
             }).then(response => {
                 expect(response.status).to.eq(200);
                 expect(response.body.message).to.be.empty;
+                expect(response.body.success).to.be.true;
             });
 
 })}
-
 
 // these are shortcuts to sign in via ajax, as we
 // don't need to test the full login flow for most
@@ -59,4 +58,3 @@ Cypress.Commands.add("loginAsCoordinator", () => {
     let config = getLoginConfiguration();
     loginWithAjax(config.testCoordinator, config.testPwd);
 });
-

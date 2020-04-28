@@ -1,10 +1,7 @@
 <?php
 
 require 'vendor/autoload.php';
-
 use Auth0\SDK\Auth0;
-
-//use Auth0\SDK\API\Authentication;
 
 $auth0 = new Auth0([
   'domain' => $settings['auth0_domain'],
@@ -24,7 +21,7 @@ if (isset($_POST['access_token'])) {
         $auth0->setIdToken($_POST['id_token']);
     }
     $curlcon = curl_init();
-    curl_setopt($curlcon, CURLOPT_URL, 'https://dev-tgx41z7g.eu.auth0.com/userinfo');
+    curl_setopt($curlcon, CURLOPT_URL, $settings['auth0_domain'].'/userinfo');
     curl_setopt($curlcon, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curlcon, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
