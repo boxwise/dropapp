@@ -151,6 +151,11 @@ All tests in `cypress/integrations` should be found and can be directly executed
 
 ![Selection_599](https://user-images.githubusercontent.com/8964422/77221481-6a190d00-6b4a-11ea-88d7-9fc70ce1c982.png)
 
+#### Known Cypress Issues
+We experienced before that tests can fail in CircleCI, but not in the local environment. The main reason for it is that Cypress is usually executing the commands slower in a local dev environment.
+Therefore, there is one additional rule when writing test:
++ When you want to execute a redirect, e.g. example by clicking a button or tab, please add an assertion after the click, e.g. of the url `cy.url().should('include', 'people_deactivated')`. Due to this assertion cypress will definitely wait until the redirect is executed.  
+
 
 ### Contribution guidelines ###
 
