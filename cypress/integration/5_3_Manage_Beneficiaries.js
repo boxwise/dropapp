@@ -225,12 +225,12 @@ describe('Manage beneficiaries', () => {
     //no cleanup ahead is needed because the delete action doesn't depend on other users and if they're present
     it('Delete beneficiary', () => {
         createTestBeneficiary(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_CASE_ID);
+        getBeneficiaryRow(TEST_LASTNAME1).should('exist');
         cy.checkGridCheckboxByText(TEST_LASTNAME1);
         clickDeleteButtonAndCheckConfirmation();
+        //cleanup - full delete of the test user
         selectDeactivatedTab();
         getBeneficiaryRow(TEST_LASTNAME1).should('exist');
-
-        //cleanup - full delete of the test user
         cy.checkGridCheckboxByText(TEST_LASTNAME1);
         clickFullDeleteButton();
     });
@@ -292,6 +292,7 @@ describe('Manage beneficiaries', () => {
             }
             //create our test user
             createTestBeneficiary(TEST_FIRSTNAME3, TEST_LASTNAME3, TEST_CASE_ID);
+            getBeneficiaryRow(TEST_LASTNAME3).should('exist');
             cy.checkGridCheckboxByText(TEST_LASTNAME3)
             clickDeleteButtonAndCheckConfirmation();
             selectDeactivatedTab();
