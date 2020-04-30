@@ -43,7 +43,7 @@ function userGroupFormElementsAreVisible(){
 function deleteUserGroup(name) {
     cy.get('body').then(($body) => {
         if ($body.text().includes(name)) {
-            cy.checkGridCheckboxByText(name)
+            cy.checkGridCheckboxByText(name);
             cy.getListDeleteButton().click();
             cy.getConfirmActionButton().click();
         }
