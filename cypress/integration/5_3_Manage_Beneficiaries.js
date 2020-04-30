@@ -101,6 +101,7 @@ describe('Manage beneficiaries', () => {
         cy.get("ul[data-testid='listTab'] a")
             .contains("All")
             .click();
+        cy.url().should('not.include', 'deactivated');
     }
 
     function selectFilterOption(option){
