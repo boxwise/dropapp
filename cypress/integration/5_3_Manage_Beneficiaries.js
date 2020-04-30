@@ -116,6 +116,7 @@ describe('Manage beneficiaries', () => {
         cy.inputFill("lastname_id", lastname);
         cy.inputFill("container_id", testCaseId);
         cy.get("button").contains("Save and close").click();
+        cy.url().should('not.include', 'edit');
     }
 
     function clickDeleteButtonAndCheckConfirmation(){
