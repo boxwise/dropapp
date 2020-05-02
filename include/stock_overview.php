@@ -64,7 +64,8 @@
                         (SELECT 
                             prod_a.group_id as group_id, 
                             prod_a.name as group_name,
-                            prod_b.id as id,prod_b.name as name,
+                            prod_b.id as id,
+                            prod_b.name as name,
                             prod_b.category_id as category_id,
                             prod_b.gender_id as gender_id
                         FROM
@@ -76,7 +77,7 @@
                             INNER JOIN
                                 products as b ON upper(a.name)=upper(b.name) 
                             WHERE 
-                                a.id != b.id and a.sizegroup_id = b.sizegroup_id and a.camp_id = :camp_id and b.camp_id = :camp_id and a.id<b.id 
+                                a.camp_id = :camp_id and b.camp_id = :camp_id and a.id<=b.id 
                             GROUP BY 
                                 upper(a.name)
                             ) prod_a 
