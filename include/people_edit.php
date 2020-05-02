@@ -4,15 +4,27 @@
     $action = 'people_edit';
 
     if ($_POST) {
-        $handler = new formHandler($table);
-        $handler->makeURL('fullname');
+        // delete a transaction of a person
+        if ($_POST['do'] == 'delete') {
+            $ids = explode(',', $_POST['ids']);
+            list($success, $message, $redirect) = listDelete('transactions', $ids);
 
+            $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
+
+            echo json_encode($return);
+            die();
+        }
+
+        // save the People edit form
         if ($_POST['id']) {
             $oldcontainer = db_value('SELECT container FROM people WHERE id = :id', ['id' => $_POST['id']]);
 
             verify_campaccess_people($_POST['id']);
             verify_deletedrecord($table, $_POST['id']);
         }
+
+        $handler = new formHandler($table);
+        $handler->makeURL('fullname');
         $savekeys = ['parent_id', 'firstname', 'lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield', 'date_of_signature'];
         if ($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) {
             $savekeys[] = 'laundryblock';
@@ -202,7 +214,7 @@
 				ORDER BY transaction_date DESC
 				LIMIT 20',
                 'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Purchase made by', 'tdate' => 'Date'],
-                'allowedit' => false, 'allowadd' => true, 'add' => 'New Purchase', 'addaction' => 'check_out&people_id='.intval($id), 'allowselect' => true, 'allowselectall' => false, 'action' => 'transactions', 'redirect' => true, 'allowsort' => false, 'modal' => false, ]);
+                'allowedit' => false, 'allowadd' => true, 'add' => 'New Purchase', 'addaction' => 'check_out&people_id='.intval($id), 'allowselect' => true, 'allowselectall' => false, 'action' => 'people_edit', 'redirect' => true, 'allowsort' => false, 'modal' => false, ]);
 
             addfield('line', '', '', ['tab' => 'transaction']);
 
@@ -214,7 +226,7 @@
 				ORDER BY transaction_date DESC
 				LIMIT 5',
                 'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
-                'allowedit' => false, 'allowadd' => $data['allowdrops'], 'add' => 'Give '.ucwords($_SESSION['camp']['currencyname']), 'addaction' => 'give&ids='.intval($id), 'allowsort' => false, 'allowselect' => true, 'allowselectall' => false, 'action' => 'transactions', 'redirect' => true, 'modal' => false, ]);
+                'allowedit' => false, 'allowadd' => $data['allowdrops'], 'add' => 'Give '.ucwords($_SESSION['camp']['currencyname']), 'addaction' => 'give&ids='.intval($id), 'allowsort' => false, 'allowselect' => true, 'allowselectall' => false, 'action' => 'people_edit', 'redirect' => true, 'modal' => false, ]);
 
             //show borrow history
             addfield('line', '', '', ['tab' => 'bicycle']);
