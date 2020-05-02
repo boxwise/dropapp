@@ -21,7 +21,7 @@
             'shop' => 'Moved to Free Shop',
             'lost_boxes' => 'Lost',
             'scrap' => 'Scrap',
-             ];
+        ];
         $statusarray += (is_null($outgoinglocations) ? [] : $outgoinglocations);
         listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);
 
