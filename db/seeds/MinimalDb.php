@@ -68,7 +68,7 @@ class MinimalDb extends AbstractSeed
 			(156,42,'User groups','cms_usergroups',20,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
 			(158,35,'Add beneficiary','people_add',3,0,0,1,0,0),
-			(165,99,'Stock Overview (beta)','stock_overview',14,0,0,1,0,0);");
+			(160,99,'Stock Overview (beta)','stock_overview',14,0,0,1,0,0);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings
