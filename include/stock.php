@@ -11,15 +11,19 @@
 
         listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
 
-        $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+        $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND NOT is_scrap AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
 
         $statusarray = [
             'boxes_in_stock' => 'In Stock',
+            'showall' => 'Everything',
             'ordered' => 'Ordered',
             'dispose' => 'Untouched for 3 months',
+            'shop' => 'Moved to Free Shop',
             'lost_boxes' => 'Lost',
-            'showall' => 'Everything', ];
-        listfilter2(['label' => 'Boxes', 'options' => ($statusarray + $outgoinglocations), 'filter' => '"show"']);
+            'scrap' => 'Scrap',
+        ];
+        $statusarray += (is_null($outgoinglocations) ? [] : $outgoinglocations);
+        listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);
 
         $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
         listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
@@ -39,6 +43,10 @@
                     return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible';
                 case 'lost_boxes':
                     return ' AND l.is_lost';
+                case 'shop':
+                    return ' AND l.is_market';
+                case 'scrap':
+                    return ' AND l.is_scrap';
                 case 'showall':
                     return ' ';
                 default:
