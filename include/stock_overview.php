@@ -166,6 +166,7 @@
             ON 
                 complete.id=num_locations.id
             ORDER BY 
+                CAST(SUBSTRING_INDEX(complete.id, "-",1) AS SIGNED), 
                 complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
 
         // Add what rows are expanded and collapsed
