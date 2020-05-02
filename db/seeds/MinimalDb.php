@@ -40,9 +40,9 @@ class MinimalDb extends AbstractSeed
 			(111,35,'Generate market schedule','market_schedule',6,0,0,1,0,0),
 			(112,99,'Generate QR labels','qr',14,0,0,1,0,0),
 			(113,NULL,'Actions','',6,0,0,1,0,0),
-			(115,42,'Warehouses','locations',21,0,0,1,0,0),
+			(115,42,'Warehouses','locations',19,0,0,1,0,0),
 			(116,110,'Containers List','printed_list_containers',2,0,0,1,1,0),
-			(118,35,'Manage beneficiaries','people',4,0,0,1,0,0),
+			(118,161,'Manage beneficiaries','people',4,0,0,1,0,0),
 			(121,NULL,'Hidden menu items','',9,0,0,0,1,0),
 			(123,121,'Start page','start',27,0,0,0,1,0),
 			(124,92,'Give tokens to selected families','give',3,0,0,1,1,0),
@@ -67,8 +67,9 @@ class MinimalDb extends AbstractSeed
 			(155,NULL,'Boxwise Gods','',8,0,1,1,0,0),
 			(156,42,'User groups','cms_usergroups',20,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
-			(158,35,'Add beneficiary','people_add',3,0,0,1,0,0),
-			(160,99,'Stock Overview (beta)','stock_overview',14,0,0,1,0,0);");
+			(158,161,'Add beneficiary','people_add',3,0,0,1,0,0),
+			(160,99,'Stock Overview (beta)','stock_overview',13,0,0,1,0,0),
+			(161,NULL,'Beneficiaries','',0,0,0,1,0,0);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings
