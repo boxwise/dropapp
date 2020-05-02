@@ -5,7 +5,7 @@
 
     if ($_POST) {
         // delete a transaction of a person
-        if ($_POST['do'] == 'delete') {
+        if ('delete' == $_POST['do']) {
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = listDelete('transactions', $ids);
 
