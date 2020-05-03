@@ -25,7 +25,7 @@
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventdelete,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit,
 				IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue,
-				IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox
+				IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage
 			FROM 
 				(products AS p, 
 				locations AS l, 
@@ -49,11 +49,6 @@
 				AND l.visible');
 
         foreach ($data as $key => $value) {
-            if ($data[$key]['oldbox']) {
-                $data[$key]['oldbox'] = '<span class="hide">1</span><i class="fa fa-exclamation-triangle warning tooltip-this" title="This box hasn\'t been touched in 3 months or more and may be disposed"></i>';
-            } else {
-                $data[$key]['oldbox'] = '<span class="hide">0</span>';
-            }
             if ($data[$key]['ordered']) {
                 $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
             } elseif ($data[$key]['picked']) {
@@ -70,7 +65,7 @@
         addcolumn('text', 'Comments', 'shortcomment');
         addcolumn('text', 'Items', 'items');
         addcolumn('text', 'Location', 'location');
-        addcolumn('html', '&nbsp;', 'oldbox');
+        addcolumn('text', 'Box Age', 'boxage');
         addcolumn('html', '&nbsp;', 'order');
 
         listsetting('allowsort', true);
@@ -84,10 +79,6 @@
         addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
         addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
         addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
-
-        //$locations = db_simplearray('SELECT id, label FROM locations ORDER BY seq');
-        //addbutton('movebox','Move box',array('icon'=>'fa-arrows', 'options'=>$locations));
-        //addbutton('qr','Make label',array('icon'=>'fa-print','oneitemonly'=>true));
 
         $cmsmain->assign('data', $data);
         $cmsmain->assign('listconfig', $listconfig);

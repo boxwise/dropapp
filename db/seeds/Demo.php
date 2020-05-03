@@ -2,12 +2,12 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class DemoDb extends AbstractSeed
+class Demo extends AbstractSeed
 {
     public function getDependencies()
     {
         return [
-            'MinimalDb',
+            'Minimal',
         ];
     }
 
@@ -1653,6 +1653,9 @@ class DemoDb extends AbstractSeed
             if (($rand_num < 20)) {
                 $tempdata['ordered'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d');
             }
+
+            // set created date for Box age
+            $tempdata['created'] = $faker->dateTimeBetween($startDate = '-350 days', $endDate = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
 
             $stock[] = $tempdata;
         }

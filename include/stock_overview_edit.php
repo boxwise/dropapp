@@ -26,7 +26,7 @@
         		s.label AS size,
         		l.label AS location,
         		IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue,
-        		IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox
+        		IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage
         	FROM
         		(product_categories AS pc,
                 products AS p,
@@ -52,11 +52,6 @@
                 l.visible');
 
         foreach ($data as $key => $value) {
-            if ($data[$key]['oldbox']) {
-                $data[$key]['oldbox'] = '<span class="hide">1</span><i class="fa fa-exclamation-triangle warning tooltip-this" title="This box hasn\'t been touched in 3 months or more and may be disposed"></i>';
-            } else {
-                $data[$key]['oldbox'] = '<span class="hide">0</span>';
-            }
             if ($data[$key]['ordered']) {
                 $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
             } elseif ($data[$key]['picked']) {
@@ -73,7 +68,7 @@
         addcolumn('text', 'Comments', 'shortcomment');
         addcolumn('text', 'Items', 'items');
         addcolumn('text', 'Location', 'location');
-        addcolumn('html', '&nbsp;', 'oldbox');
+        addcolumn('text', 'Box Age', 'boxage');
         addcolumn('html', '&nbsp;', 'order');
 
         listsetting('allowsort', true);

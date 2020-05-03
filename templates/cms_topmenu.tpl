@@ -1,7 +1,7 @@
 <header class="header-top">
 	<div class="header-top-inner container-fluid" data-testid="dropapp-header">
  		<div class="pull-left">
-			<a href="#" class="menu-btn visible-xs">&#9776;</a>
+			<a href="#" class="menu-btn visible-xs visible-sm visible-md">&#9776;</a>
 			<a href="/" class="brand">{$translate['site_name']}</a>
 			{if $smarty.session.organisation.label}{$smarty.session.organisation.label}
 	 		{if $camps|count<1}

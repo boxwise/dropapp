@@ -2,7 +2,7 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class ClearMinimalDb extends AbstractSeed
+class ClearDb extends AbstractSeed
 {
     public function run()
     {

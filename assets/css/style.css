@@ -1057,6 +1057,13 @@ tr.level-10 td:first-child{
 	right: 20px;
 }
 
+@media screen and (max-width: 1199px){
+	.content{
+		margin-left: 0;
+		padding-left: 0;
+		border-left: none;
+	}
+}
 
 @media screen and (max-width: 767px){
 	body{
@@ -1065,11 +1072,6 @@ tr.level-10 td:first-child{
 	.header-top{
 /* 		position: relative; */
 		position: fixed;
-	}
-	.content{
-		margin-left: 0;
-		padding-left: 0;
-		border-left: none;
 	}
 	.navbar-nav>li>a{
 		padding: 9px 8px 8px 8px;
@@ -1101,7 +1103,7 @@ tr.level-10 td:first-child{
 }
 
 /* putting the right sidebar below the form */
-@media screen and (max-width: 959px){
+@media screen and (max-width: 785px){
 	.content-form{
 		margin-right: 0;
 	}
