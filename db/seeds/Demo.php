@@ -2,12 +2,12 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class DemoDb extends AbstractSeed
+class Demo extends AbstractSeed
 {
     public function getDependencies()
     {
         return [
-            'MinimalDb',
+            'Minimal',
         ];
     }
 
