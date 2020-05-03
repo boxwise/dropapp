@@ -295,7 +295,7 @@ body.stock-list .table-parent, body.products .table-parent, body.stock .table-pa
 	text-align: center;
 	
 }
-@media screen and (min-width: 767px){
+@media screen and (min-width: 1200px){
 	.fixed.nav-aside {
 		position:fixed;
 		top:40px;

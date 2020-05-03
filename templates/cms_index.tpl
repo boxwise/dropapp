@@ -1,6 +1,6 @@
 {include file="cms_header.tpl"}
 
-<nav class="pushy pushy-open visible-xs">
+<nav class="pushy pushy-open visible-xs visible-sm visible-md">
     <a href="#" class="pushy-close fa fa-times"></a>
     <ul class="level0">
     {foreach $menu as $item}
@@ -25,7 +25,7 @@
 
   <div class="container-fluid">
   	{if !$modal}
-	    <div class="nav-aside hidden-xs">
+	    <div class="nav-aside hidden-xs hidden-sm hidden-md">
 	      <ul class="level0">
 	      {foreach $menu as $item}
 	        <li class="nav-header">{$item['title']}</li>
