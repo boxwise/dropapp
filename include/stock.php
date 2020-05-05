@@ -118,7 +118,7 @@
         addcolumn('text', 'Comments', 'shortcomment');
         addcolumn('text', 'Items', 'items');
         addcolumn('text', 'Location', 'location');
-        addcolumn('text', 'Box Age', 'boxage');
+        addcolumn('text', 'Age', 'boxage');
         addcolumn('html', '&nbsp;', 'order');
 
         listsetting('allowsort', true);
