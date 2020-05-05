@@ -247,9 +247,9 @@ class Demo extends AbstractSeed
         $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `organisation_id`,`email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
 			(2,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe',1,'jane.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
 			(3,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe',1,'joe.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
-			(4,'561f17d01f24d21ab28f9f44e3210cba','Volunteer',1,'stagingenv_volunteer@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',3,'0000-00-00','0000-00-00'),
-			(5,'06620ab218abfb24a12798cfb2c260a3','Coordinator',1,'stagingenv_coordinator@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
-			(6,'06620ab218abfb24a12798cfb2c260a3','Head of Operations',1,'stagingenv_headofops@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
+			(4,'7a53ac982b06d7b9aed4eec5e18693d3','Volunteer',1,'stagingenv_volunteer@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',3,'0000-00-00','0000-00-00'),
+			(5,'ca02bab14acaa85afd14dfbc73c285bf','Coordinator',1,'stagingenv_coordinator@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
+			(6,'7dfc3d2ee682b299cf33aacabcf55e26','Head of Operations',1,'stagingenv_headofops@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
 			(10,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe',2,'jane.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00'),
 			(11,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe',2,'joe.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',11,'0000-00-00','0000-00-00'),
 			(12,'5f4dcc3b5aa765d61d8327deb882cf99','Sam Sample',2,'sam.sample@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',12,'0000-00-00','0000-00-00'),
