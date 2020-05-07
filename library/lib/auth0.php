@@ -12,7 +12,7 @@ $auth0 = new Auth0([
 
 $userInfo = $auth0->getUser();
 
-if (isset($_POST['access_token'])) {
+if (isset($_POST['access_token']) && (($_SERVER['HTTP_HOST'] == 'localhost:8100') || $_SERVER['HTTP_HOST'] == 'https://staging.boxwise.co')) {
     $auth0->setAccessToken($_POST['access_token']);
     if (isset($_POST['refresh_token'])) {
         $auth0->setRefreshToken($_POST['refresh_token']);

@@ -30,7 +30,7 @@ function logout($redirect = false)
     session_unset();
     session_destroy();
 
-    header('Location: https://'.$settings['auth0_domain'].'/v2/logout', true, 301); //$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
+    header('Location: https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo=http://'.$_SERVER['HTTP_HOST'], true, 301);
 }
 
 function check_valid_from_until_date($valid_from, $valid_until)
