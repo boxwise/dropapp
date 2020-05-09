@@ -130,6 +130,49 @@ function createUserAuth0($token, $email, $password, $connection, $auth0_domain)
 
     return json_decode($userstring, true);
 }
+function verifyEmailAuth0($token, $domain, $userid, $client_id)
+{   //Adapted from Auth0 documentation https://auth0.com/docs/design/creating-invite-only-applications#import-users
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://'.$domain.'/api/v2/tickets/email-verification',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_POSTFIELDS => '{ "user_id": "'.$userid.'", "client_id": "'.$client_id.'" }',
+  CURLOPT_HTTPHEADER => array(
+    'authorization: Bearer '.$token,
+  ),
+));
+
+    $response = curl_exec($curl);
+
+    return json_decode($response);
+}
+
+function passwordResetAuth0($token, $domain, $callback_url, $userid, $client_id)
+{   //Adapted from Auth0 documentation https://auth0.com/docs/design/creating-invite-only-applications#import-users
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://'.$domain.'/api/v2/tickets/password-change',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'POST',
+  CURLOPT_POSTFIELDS => '{ "result_url": "'.$callback_url.'", "user_id": "'.$userid.'", "new_password": "secret", "connection_id": "con_0000000000000001", "email": "EMAIL", "ttl_sec": 0 }',
+  CURLOPT_HTTPHEADER => array(
+    'authorization: Bearer '.$token,
+  ),
+));
+
+    $response = curl_exec($curl);
+}
 
 function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkKLMmNnoPpQqRrSsTtUuVvWwXxYyZz!$-_@#%^*()+=')
 {
