@@ -82,6 +82,55 @@ function sendlogindata($table, $ids)
     return [$success, $message];
 }
 
+function getManagmentToken($client_id, $client_secret, $auth0_domain)
+{
+    $curlcon = curl_init();
+    $data = ['client_id' => $client_id,
+            'client_secret' => $client_secret,
+            'audience' => 'https://'.$auth0_domain.'/api/v2/',
+            'grant_type' => 'client_credentials', ];
+    $postvars = '';
+    foreach ($data as $key => $value) {
+        $postvars .= $key.'='.$value.'&';
+    }
+    curl_setopt($curlcon, CURLOPT_URL, 'https://'.$auth0_domain.'/oauth/token');
+    curl_setopt($curlcon, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curlcon, CURLOPT_POST, 1);
+    curl_setopt($curlcon, CURLOPT_POSTFIELDS, $postvars);
+    curl_setopt($curlcon, CURLOPT_ENCODING, '');
+    curl_setopt($curlcon, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/x-www-form-urlencoded', ]);
+    //'Authorization: Bearer '.$_POST['access_token'], ]);
+    $userstring = curl_exec($curlcon);
+
+    return json_decode($userstring, true);
+}
+function createUserAuth0($token, $email, $password, $connection, $auth0_domain)
+{
+    $data = ['email' => $email,
+            'connection' => $connection,
+            'password' => $password, ];
+    $postvars = '';
+    /*
+    foreach ($data as $key => $value) {
+        $postvars .= $key.'='.$value.'&';
+    }
+    */
+    $postvars = json_encode($data);
+    $cu = curl_init();
+    curl_setopt($cu, CURLOPT_URL, 'https://'.$auth0_domain.'/api/v2/users');
+    curl_setopt($cu, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($cu, CURLOPT_POST, 1);
+    curl_setopt($cu, CURLOPT_POSTFIELDS, $postvars);
+    curl_setopt($cu, CURLOPT_ENCODING, '');
+    curl_setopt($cu, CURLOPT_HTTPHEADER, [
+        'Content-type: application/json',
+        'Authorization: Bearer '.$token, ]);
+    $userstring = curl_exec($cu);
+
+    return json_decode($userstring, true);
+}
+
 function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkKLMmNnoPpQqRrSsTtUuVvWwXxYyZz!$-_@#%^*()+=')
 {
     $password = '';
