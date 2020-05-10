@@ -164,7 +164,7 @@ For everything else, please see our [contribution guidelines](https://github.com
 
 ### Who do I talk to? ###
 
-Right now best talk to [Hans](mailto:hans@boxwise.co)!
+Right now best drop an email to hello@boxwise.co
 
 ### License ###
 
