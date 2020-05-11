@@ -12,10 +12,6 @@ context('Login tests', () => {
   };
 
   it('Login test (Admin)', () => {
-    console.log(config.testAdmin);
-
-    console.log(config);
-    //Auth0_login(config.testAdmin,config.testPwd);
     loginUsing(config.testAdmin, config.testPwd);
     cy.get("div[data-testid='dropapp-header']").should('be.visible');
   });
