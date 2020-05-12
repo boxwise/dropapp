@@ -82,6 +82,38 @@ function sendlogindata($table, $ids)
     return [$success, $message];
 }
 
+function checkUserAuth0($token, $domain, $email)
+{
+    $data = ['email' => $email];
+    $postvars = '';
+    /*
+    foreach ($data as $key => $value) {
+        $postvars .= $key.'='.$value.'&';
+    }
+    */
+    $postvars = json_encode($data);
+    $cu = curl_init();
+    curl_setopt($cu, CURLOPT_URL, 'https://'.$domain.'/api/v2/users-by-email');
+    curl_setopt($cu, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($cu, CURLOPT_POST, 1);
+    curl_setopt($cu, CURLOPT_POSTFIELDS, $postvars);
+    curl_setopt($cu, CURLOPT_ENCODING, '');
+    curl_setopt($cu, CURLOPT_HTTPHEADER, [
+            'Content-type: application/json',
+            'Authorization: Bearer '.$token, ]);
+    $userstring = curl_exec($cu);
+
+    return json_decode($userstring, true);
+}
+
+function registerUserAuth0($auth0_domain, $client_id, $client_secret, $email, $connection)
+{
+    $management_token = getManagmentToken($client_id, $client_secret, $auth0_domain);
+    $token = $management_token['access_token'];
+    $created_user = createUserAuth0($token, $email, 'As1234asdf!', $connection, $auth0_domain);
+    $user_id = $created_user['user_id'];
+    $password_reset = resetPasswordAuth0($auth0_domain, $client_id, $email, $connection);
+}
 function getManagmentToken($client_id, $client_secret, $auth0_domain)
 {
     $curlcon = curl_init();
@@ -126,52 +158,36 @@ function createUserAuth0($token, $email, $password, $connection, $auth0_domain)
     curl_setopt($cu, CURLOPT_HTTPHEADER, [
         'Content-type: application/json',
         'Authorization: Bearer '.$token, ]);
+    $info = curl_getinfo($cu);
     $userstring = curl_exec($cu);
 
     return json_decode($userstring, true);
 }
-function verifyEmailAuth0($token, $domain, $userid, $client_id)
-{   //Adapted from Auth0 documentation https://auth0.com/docs/design/creating-invite-only-applications#import-users
-    $curl = curl_init();
 
-    curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://'.$domain.'/api/v2/tickets/email-verification',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => '',
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS => '{ "user_id": "'.$userid.'", "client_id": "'.$client_id.'" }',
-  CURLOPT_HTTPHEADER => array(
-    'authorization: Bearer '.$token,
-  ),
-));
+function resetPasswordAuth0($auth0_domain, $auth0_client_id, $email, $connection)
+{
+    $data = ['connection' => $connection,
+            'email' => $email,
+            'client_id' => $auth0_client_id, ];
+    $postvars = '';
 
-    $response = curl_exec($curl);
+    foreach ($data as $key => $value) {
+        $postvars .= $key.'='.$value.'&';
+    }
 
-    return json_decode($response);
-}
+    $postvars = json_encode($data);
+    $cu = curl_init();
+    curl_setopt($cu, CURLOPT_URL, 'https://'.$auth0_domain.'/dbconnections/change_password');
+    curl_setopt($cu, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($cu, CURLOPT_POST, 1);
+    curl_setopt($cu, CURLOPT_POSTFIELDS, $postvars);
+    curl_setopt($cu, CURLOPT_ENCODING, '');
+    curl_setopt($cu, CURLOPT_HTTPHEADER, [
+        'content-type: application/json', ]);
+    //'Authorization: Bearer '.$token, ]);
+    $userstring = curl_exec($cu);
 
-function passwordResetAuth0($token, $domain, $callback_url, $userid, $client_id)
-{   //Adapted from Auth0 documentation https://auth0.com/docs/design/creating-invite-only-applications#import-users
-    $curl = curl_init();
-
-    curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://'.$domain.'/api/v2/tickets/password-change',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => '',
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS => '{ "result_url": "'.$callback_url.'", "user_id": "'.$userid.'", "new_password": "secret", "connection_id": "con_0000000000000001", "email": "EMAIL", "ttl_sec": 0 }',
-  CURLOPT_HTTPHEADER => array(
-    'authorization: Bearer '.$token,
-  ),
-));
-
-    $response = curl_exec($curl);
+    return json_decode($userstring, true);
 }
 
 function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkKLMmNnoPpQqRrSsTtUuVvWwXxYyZz!$-_@#%^*()+=')
