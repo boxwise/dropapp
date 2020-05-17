@@ -145,15 +145,20 @@ p{
 	padding: 5px 15px;
 	text-transform: uppercase;
 	color: #aaa;
-	font-size: 0.85em;
-	font-weight:bold;
+	/* font-size: 0.85em; */
 	margin-top: 10px;
 	margin-left: 15px;
 }
 .nav-aside ul li a{
+	position: relative;
 	color: #000;
 	display: block;
 	padding: 5px 15px;
+	text-transform: capitalize;
+}
+/* used to prevent capitalization of certain words intentionally wrapped in a span */
+.nav-aside ul li span{
+	text-transform: lowercase;
 }
 .nav-aside ul li a:hover{
 	background:#f2f2f2;
@@ -167,9 +172,6 @@ p{
 	font-weight: bold;
 	margin-right: -1px;
 	border-right: 1px solid #e1e1e1;
-}
-.nav-aside ul li a{
-	position: relative;
 }
 .nav-aside ul li a i{
 	top: -3px;
