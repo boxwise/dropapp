@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Boxwise - Simple</title>
 		
+		<link href="/assets/css/theme.css?v=1" rel="stylesheet">    
 		<link href="/assets/css/bootstrap.min.css" rel="stylesheet">    
 		<link href="/assets/css/select2.css" rel="stylesheet" />
 		<link href="/assets/css/select2-bootstrap.css" rel="stylesheet" />
