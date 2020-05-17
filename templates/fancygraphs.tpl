@@ -12,7 +12,7 @@
 var chart = AmCharts.makeChart("chartdiv", {
     "type": "serial",
     "theme": "light",
-    "fontFamily": "Helvetica Neue ,Helvetica,Arial,sans-serif",
+    "fontFamily": Open Sans,"Helvetica Neue ,Helvetica,Arial,sans-serif",
     "rotate": true,
     "legend": {
         "useGraphSettings": true
@@ -87,7 +87,7 @@ var chart = AmCharts.makeChart("chartdiv", {
 var chart2 = AmCharts.makeChart("chartdiv2", {
     "type": "serial",
     "theme": "light",
-    "fontFamily": "Helvetica Neue ,Helvetica,Arial,sans-serif",
+    "fontFamily": "Open Sans,Helvetica Neue ,Helvetica,Arial,sans-serif",
     "legend": {
         "useGraphSettings": true
     },

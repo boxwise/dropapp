@@ -20,7 +20,7 @@
 var chart = AmCharts.makeChart( "chartdiv", {
   "type": "serial",
   "theme": "light",
-  "fontFamily": "Helvetica Neue ,Helvetica,Arial,sans-serif",
+  "fontFamily": "Open Sans,Helvetica Neue ,Helvetica,Arial,sans-serif",
   "dataProvider": [
 	{foreach $data['sales'] as $date=>$sales name=sales}
 		{
@@ -64,7 +64,7 @@ var chart = AmCharts.makeChart( "chartdiv", {
 var chart = AmCharts.makeChart( "chartdiv2", {
   "type": "serial",
   "theme": "light",
-  "fontFamily": "Helvetica Neue ,Helvetica,Arial,sans-serif",
+  "fontFamily": "Open Sans,Helvetica Neue ,Helvetica,Arial,sans-serif",
   "dataProvider": [
 
 	{foreach $data['borrow'] as $date=>$borrow name=borrow}
