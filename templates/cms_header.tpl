@@ -12,7 +12,8 @@
     <link href="/assets/css/theme.css?v=1" rel="stylesheet"> 
     <link href="/assets/css/minified.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
-    <link href="/assets/css/custom.css?v=7" rel="stylesheet">    
+    <link href="/assets/css/pushy.css" rel="stylesheet">
+    <link href="/assets/css/custom.css" rel="stylesheet">    
     <link href="/assets/css/print.css" rel="stylesheet" media="print">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

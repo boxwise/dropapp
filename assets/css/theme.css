@@ -1,3 +1,7 @@
 :root {
-    --boxwiseBlue: #009DAD; 
+    --boxwiseBlue: #009DAD;
+    --boxwiseYellow: #f4e6a0;
+    --headerBackground: #ffffff;
+    --sidebarBackground: #ffffff;
+    --sidebarFontColor: #000000;
 }

@@ -64,15 +64,15 @@ p{
 	top: 0;
 	width: 100%;
 	background: #D71920;
-	color: #fff;
+	color: #000;
 	z-index: 9999;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 .header-top-inner{
 	padding: 5px 15px;
 }
 .header-top-inner a{
-	color: #fff;
+	color: #000;
 }
 .header-top-inner .menu-btn{
     font-size: 1.5em;
@@ -80,9 +80,10 @@ p{
     margin-top: -7px;
 }
 .header-top-inner .brand{
-	font-size: 1.5em;
+	font-size: 1.77em;
+	font-family: "OpenSans ExtraBold";
 	font-weight: bold;
-	color: #fff;
+	color: #000;
 	display: inline-block;
 	transition: all 500ms;
 	padding-right: 5px;
@@ -115,6 +116,7 @@ p{
 .navbar-nav>li>a{
 	padding-top: 9px;
 	padding-bottom: 7px;
+	font-size:1.33em;
 }
 
 .navbar-nav .open .dropdown-menu{
@@ -145,7 +147,7 @@ p{
 	padding: 5px 15px;
 	text-transform: uppercase;
 	color: #aaa;
-	/* font-size: 0.85em; */
+	font-size: 1.33em;
 	margin-top: 10px;
 	margin-left: 15px;
 }
@@ -172,6 +174,7 @@ p{
 	font-weight: bold;
 	margin-right: -1px;
 	border-right: 1px solid #e1e1e1;
+	font-size: 1em;
 }
 .nav-aside ul li a i{
 	top: -3px;
@@ -317,6 +320,8 @@ body > iframe { display: none; }
 
 .row-title h1{ /*?*/
 	margin: 0;
+	text-transform: uppercase;
+	font-size: 1.77em;
 }
 
 .form-group {
@@ -394,6 +399,7 @@ body > iframe { display: none; }
 
 
 .btn{
+	font-size: 1em;
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
@@ -1077,6 +1083,7 @@ tr.level-10 td:first-child{
 	}
 	.navbar-nav>li>a{
 		padding: 9px 8px 8px 8px;
+		font-size:1.33em;
 	}
 	.header-top .navbar-nav.pull-right li:first-child a{
 		padding-bottom: 3px;
