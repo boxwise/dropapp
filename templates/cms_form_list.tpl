@@ -18,7 +18,7 @@
 							{if $element['allowshowhide']}<button data-operation="show" class="start-operation btn btn-default btn-sm" href="#"><i class="fa glyphicon fa-eye"></i> {$element['show']}</button>
 							<button data-operation="hide" class="start-operation btn btn-default btn-sm" href="#"><i class="fa fa-eye-slash"></i> {$element['hide']}</button>{/if}
 							
-							{if $element['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm confirm btn-danger" href="#"><i class="fa fa-trash-o"></i> {$element['delete']}</button>{/if}
+							{if $element['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$translate['cms_list_confirm_ok']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="start-operation btn btn-sm confirm" href="#"><i class="fa fa-trash-o"></i> {$element['delete']}</button>{/if}
 							
 							{if $element['allowcopy']}<button data-operation="copy" data-placement="top" class="start-operation btn btn-sm btn-default" href="#"><i class="fa fa-copy"></i> {$element['copy']}</button>{/if}
 							

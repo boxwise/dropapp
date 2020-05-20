@@ -58,9 +58,6 @@ hr{
 	background-color: var(--sidebarBackground);
 	color: var(--sidebarFontColor);
 }
-.nav-aside ul li.active > a{
-	color:var(--boxwiseBlue);
-}
 
 .aside-form-top{
 	margin-top: 0;

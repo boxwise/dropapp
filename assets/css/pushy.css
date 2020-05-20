@@ -44,8 +44,9 @@
 }
 
 .pushy .active a{
-	background: var(--boxwiseYellow);
-	color: #fff;
+	color: var(--sidebarFontColor);
+    background:var(--boxwiseYellow);
+    font-weight: bold;
 }
 
 .pushy a:hover{
