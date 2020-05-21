@@ -5,4 +5,6 @@
     --headerBackground: #ffffff;
     --sidebarBackground: #ffffff;
     --sidebarFontColor: #000000;
+    --inactiveTabsBackground: #eee;
+    --activeOrHoverTabsBackground: #fff
 }
