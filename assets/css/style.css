@@ -246,9 +246,12 @@ p{
 	background: #f8f8f8;
 	position: relative;
 	right: -311px;
+	color: var(--boxwiseYellow);
 }
 .aside-content.affix{
 	right: auto;
+	background: var(--boxwiseYellow);
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 .aside-form{
 	margin-top: 15px;
@@ -409,6 +412,7 @@ body > iframe { display: none; }
 	margin-bottom:7px;
 	margin-right: 5px;
 	pointer-events: visible;
+	color: var(--buttonTextColor);
 }
 .btn-group .btn, .actions .btn-group .btn{
 	margin-right: 0;

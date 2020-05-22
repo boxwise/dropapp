@@ -6,5 +6,7 @@
     --sidebarBackground: #ffffff;
     --sidebarFontColor: #000000;
     --inactiveTabsBackground: #eee;
-    --activeOrHoverTabsBackground: #fff
+    --activeOrHoverTabsBackground: #fff;
+    --buttonTextColor: #fff !important;
+    --rightPanelTextColor: #EF404A;
 }

@@ -12,7 +12,7 @@ body{
 }
 
 a{
-	color: var(--boxwiseBlue);
+	color: var(--rightPanelTextColor);
 }
 a:hover{
 	color: #333;
@@ -67,7 +67,6 @@ hr{
 }
 #people_id_selected{
 	font-size: 1.3em;
-	color: #aaa;
 }
 #people_id_selected p{
 	margin-bottom: 0;
@@ -87,6 +86,11 @@ p#familyname{
 }
 .familycredit #dropcredit{
 	font-weight: bold;
+	color: var(--rightPanelTextColor);
+    font-size: 1.33em;
+}
+.lastPurchaseSpan{
+	font-style: italic;
 }
 .familycredit .btn{
 	float: right;
@@ -127,7 +131,6 @@ p#familyname{
 
 .people-list{
 	color: #000;
-	font-size: 0.8em;
 	margin: 0 0 20px;
 	padding: 0;
 }
@@ -136,7 +139,12 @@ p#familyname{
 	list-style: none;
 }
 .people-list li.parent a{
-	font-size: 1.4em;
+	font-size: 1.33em;
+	font-weight: bold;
+	color: var(--rightPanelTextColor);
+}
+.people-list li a{
+	color: black;
 }
 .people-comment {
 	font-weight: normal;
