@@ -15,7 +15,7 @@ a{
 	color: var(--rightPanelTextColor);
 }
 a:hover, a:active, a:focus, a:active:focus {
-	/* color: var(--buttonTextColor); */
+	color: var(--buttonTextColor);
 }
 .blue {
 	color:var(--boxwiseBlue);
@@ -98,8 +98,6 @@ p#familyname{
 }
 .familycredit .btn{
 	float: right;
-	border: 1px solid;
-	/* padding: 2px 6px; */
 }
 
 .coinsImage{
