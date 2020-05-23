@@ -236,6 +236,7 @@ p{
 }
 
 .content-form{
+	/* margin-right: 420px; */
 	margin-right: 336px;
 /* 	max-width: 900px;	 */
 	position: relative;
@@ -248,6 +249,7 @@ p{
 }
 
 .aside-content{
+	/* width: 395px; */
 	width: 311px;
 	padding: 20px;
 	background: #f8f8f8;

@@ -65,9 +65,6 @@ hr{
 .info-aside{
 	padding: 0 0 20px 0;
 }
-#people_id_selected{
-	font-size: 1.3em;
-}
 #people_id_selected p{
 	margin-bottom: 0;
 }
@@ -92,10 +89,17 @@ p#familyname{
 .lastPurchaseSpan{
 	font-style: italic;
 }
+.privacyNoteSpan{
+	font-style: italic;
+	color: #333;
+}
+.privacySignButton{
+    margin-left: 8px;
+}
 .familycredit .btn{
 	float: right;
 	border: 1px solid;
-	padding: 2px 6px;
+	/* padding: 2px 6px; */
 }
 
 .coinsImage{
