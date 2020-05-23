@@ -329,9 +329,9 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 		overflow: auto;
 	}																	
 }
-
 .header-top .navbar-nav > li{
 	float: left;
+	padding-top:10px;
 }
 .navbar-nav li.text-only{
 	padding: 10px 10px 8px;
@@ -351,10 +351,10 @@ a[href="http://www.amcharts.com/javascript-charts/"] {
 	color: #000;
 }
 .light .men {
-	color: #4cbac5;
+	color: var(--graphsMenColor);
 }
 .light .women {
-	color: #db57bd;
+	color: var(--graphsWomenColor);
 }
 .table tfoot th {
 	border-top: 1px solid #999 !important;
@@ -802,45 +802,34 @@ div.filter-applied {
 	margin: -8px 0;
 }
 .overview-level-0 td:first-child{
-	box-shadow: 8px 0px #48ABB4 inset;
+	box-shadow: 8px 0px var(--stockOverviewLevel1) inset;
 	padding-left: 16px;
 }
 .overview-level-0 td:last-child{
-	box-shadow: -8px 0px #48ABB4 inset;
+	box-shadow: -8px 0px var(--stockOverviewLevel1) inset;
 	padding-right: 16px;
 }
 .overview-level-1 td:first-child{
-	box-shadow: 8px 0px #5874C0 inset;
+	box-shadow: 8px 0px var(--stockOverviewLevel2) inset;
 	padding-left: 16px;
 }
 .overview-level-1 td:last-child{
-	box-shadow: -8px 0px #5874C0 inset;
+	box-shadow: -8px 0px var(--stockOverviewLevel2) inset;
 	padding-right: 16px;
 }
 .overview-level-2 td:first-child{
-	box-shadow: 8px 0px #FFCD63 inset;
+	box-shadow: 8px 0px var(--stockOverviewLevel3) inset;
 	padding-left: 16px;
 }
 .overview-level-2 td:last-child{
-	box-shadow: -8px 0px #FFCD63 inset;
+	box-shadow: -8px 0px var(--stockOverviewLevel3) inset;
 	padding-right: 16px;
 }
 .overview-level-3 td:first-child{
-	box-shadow: 8px 0px #FFAD63 inset;
+	box-shadow: 8px 0px var(--stockOverviewLevel4) inset;
 	padding-left: 16px;
 }
 .overview-level-3 td:last-child{
-	box-shadow: -8px 0px #FFAD63 inset;
+	box-shadow: -8px 0px var(--stockOverviewLevel4) inset;
 	padding-right: 16px;
-}
-
-.overview-filter-gender > div.btn.btn-sm.btn-default{
-	box-shadow: 8px 0px #FFCD63 inset, -8px 0px #FFCD63 inset;
-	padding-left: 18px;
-	padding-right: 18px;
-}
-.overview-filter-locations > div.btn.btn-sm.btn-default{
-	box-shadow: 8px 0px #FFAD63 inset, -8px 0px #FFAD63 inset;
-	padding-left: 18px;
-	padding-right: 18px;
 }

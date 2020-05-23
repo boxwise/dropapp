@@ -68,6 +68,13 @@ p{
 	z-index: 9999;
 	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
+.header-top .orgCampHeaderSpan{
+	position: absolute;
+	font-size: 1.77em;
+    padding-top: 8px;
+    padding-left: 60px;
+    font-weight: bold;
+}
 .header-top-inner{
 	padding: 5px 15px;
 }
@@ -95,10 +102,10 @@ p{
 	margin-top: -5px;
 	margin-bottom: -5px;
 }
-.header-top-inner .nav>li>a:hover, .header-top-inner .nav>li>a:focus, .header-top-inner .nav .open>a, .header-top-inner .nav .open>a:hover, .header-top-inner .nav .open>a:focus{
+/* .header-top-inner .nav .open>a:hover, .header-top-inner .nav .open>a:focus{
 	background: rgba(0,0,0,0.1);
 	color: #fff;
-}
+} */
 .header-top-inner .dropdown-menu{
 	margin-top: -1px;
 	margin-right: -1px;
@@ -111,7 +118,6 @@ p{
 }
 .header-top .fa-mobile{
 	margin-right: 5px;
-	font-size: 1.3em;
 }
 .navbar-nav>li>a{
 	padding-top: 9px;
