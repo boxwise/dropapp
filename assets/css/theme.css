@@ -10,12 +10,13 @@
     --buttonTextColor: #fff !important;
     --rightPanelTextColor: #EF404A;
 
-    /* GRAPHS, CHARTS, STOCK OVERVIEW */
-    --graphsMenColor: #29335f;
+    /* GRAPHS, CHARTS*/
+    --graphsMenColor: #315c88;
     --graphsBoysColor: #aacfe3;
     --graphsWomenColor: #ef404a;
     --graphsGirlsColor: #f8aa9e;
 
+    /* STOCK OVERVIEW  */
     --stockOverviewLevel1: #aacfe3;
     --stockOverviewLevel2: #315c88;
     --stockOverviewLevel3: #f37167;

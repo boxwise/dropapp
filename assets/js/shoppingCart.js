@@ -192,7 +192,7 @@ $(document).ready(function() {
             .appendTo(tr);
           let deleteCellButton = jQuery('<button/>', {
             'type': 'button',
-            'class': 'btn btn-sm btn-danger deleteFromCart',
+            'class': 'btn btn-sm deleteFromCart',
             'data-testid': 'deleteFromCart',
             'productid': item.id,
           }).appendTo(deleteCell);

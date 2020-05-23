@@ -419,6 +419,7 @@ body > iframe { display: none; }
 	margin-right: 5px;
 	pointer-events: visible;
 	color: var(--buttonTextColor);
+	cursor: pointer;
 }
 .btn-group .btn, .actions .btn-group .btn{
 	margin-right: 0;
@@ -429,6 +430,7 @@ body > iframe { display: none; }
 .btn:hover{
 	background-position: 0 0;
 	text-shadow: none;
+	color: var(--buttonTextColor);
 }
 .btn.active, .btn:active{
 	box-shadow: none;
@@ -451,7 +453,7 @@ body > iframe { display: none; }
 	background-image: -moz-linear-gradient(top,#f8f8f8,#f1f1f1);
 	background-image: -ms-linear-gradient(top,#f8f8f8,#f1f1f1);
 	border: 1px solid #c6c6c6;
-	color: #333;
+	/* color: #333; */
 }
 .btn-default.active, .btn-default:active{
 	border-color: #888;

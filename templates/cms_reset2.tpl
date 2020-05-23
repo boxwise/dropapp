@@ -13,7 +13,7 @@
 			<div class="form-group">
 				<input class="form-control" type="password" name="pass2" id="pass2" equalTo="#pass" placeholder="{$translate['cms_login_repeatpassword']}" required />	
 			</div>
-			<input class="btn btn-success" type="submit" value="{$translate['cms_reset2_submit']}" />
+			<input class="btn" type="submit" value="{$translate['cms_reset2_submit']}" />
 			<a class="forgot-password" href="/login.php">{$translate['cms_login_pagetitle']}</a>
 		</form>
 	</div> 

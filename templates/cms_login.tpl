@@ -9,7 +9,7 @@
 			<div class="form-group">
 				<input class="form-control" type="password" name="pass" id="pass" data-testid="password" placeholder="{$translate['cms_login_password']}" required />	
 			</div>
-			<input class="btn btn-success" type="submit" value="{$translate['cms_login_submit']}" data-testid="signInButton"/>
+			<input class="btn" type="submit" value="{$translate['cms_login_submit']}" data-testid="signInButton"/>
 			<label for="autologin"><input type='checkbox' name='autologin' id='autologin' value="1"> {$translate['cms_login_autologin']}</label>
 			<a class="forgot-password" data-testid="forgotPassword" href="/reset.php">{$translate['cms_login_forgotpassword']}</a>
 		</form>

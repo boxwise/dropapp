@@ -7,7 +7,7 @@
 			<div class="form-group">
 				<input class="form-control" type="email" name="email" id="email" placeholder="{$translate['cms_login_email']}" data-testid="forgotPwdEmailField" required autofocus />	
 			</div>
-			<input class="btn btn-success" type="submit" value="{$translate['cms_reset_submit']}" data-testid="submitForgottenPwd" />
+			<input class="btn" type="submit" value="{$translate['cms_reset_submit']}" data-testid="submitForgottenPwd" />
 			<a class="forgot-password" href="/login.php">{$translate['cms_login_pagetitle']}</a>
 		</form>
 	</div>

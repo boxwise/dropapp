@@ -47,13 +47,13 @@
 					{/foreach}	
 				</div>
 				{if !$data['hidesubmit']}
-					<button name="__action" value="" class="btn btn-submit btn-success">{$translate['cms_form_submit']}</button>
+					<button name="__action" value="" class="btn btn-submit">{$translate['cms_form_submit']}</button>
 				{/if}
 				{foreach $formbuttons as $button}
-					<button name="__action" value="{$button['action']}" class="btn btn-submit btn-success">{$button['label']}</button>
+					<button name="__action" value="{$button['action']}" class="btn btn-submit">{$button['label']}</button>
 				{/foreach}
 
-				{if !$data['hidecancel']}<a href="/?action={$smarty.get.origin}" class="btn btn-cancel btn-default">{$translate['cms_form_cancel']}</a>{/if}
+				{if !$data['hidecancel']}<a href="/?action={$smarty.get.origin}" class="btn btn-default">{$translate['cms_form_cancel']}</a>{/if}
 				
 				<div class="aside-form">
 					{foreach $formelements as $element}		
