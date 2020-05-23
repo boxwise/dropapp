@@ -2,18 +2,19 @@
 	<div class="header-top-inner container-fluid" data-testid="dropapp-header">
  		<div class="pull-left">
 			<a href="#" class="menu-btn visible-xs visible-sm visible-md">&#9776;</a>
-			<img src="../assets/img/boxtribute.png" width="120"></img>
+			<img class="visible-xs visible-sm visible-md" src="../assets/img/boxtribute_small.png" width="35"></img>
+			<img class="headerLogo visible-lg" src="../assets/img/boxtribute.png" width="120"></img>
 			{* <a href="/" class="brand">{$translate['site_name']}</a> *}
-			<span class="orgCampHeaderSpan">
-				{if $smarty.session.organisation.label}{$smarty.session.organisation.label}
-				{if $camps|count<1}
-					/ No camp
-				{else}
-					/ {$camps[$smarty.session.camp['id']]['name']}
-				{/if}
-				{/if}
-			</span>
  		</div>
+		<span class="orgCampHeaderSpan">
+			{if $smarty.session.organisation.label}{$smarty.session.organisation.label}
+				{if $camps|count<1}
+					(No camp)
+				{else}
+					({$camps[$smarty.session.camp['id']]['name']})
+				{/if}
+			{/if}
+		</span>
 		<ul class="nav navbar-nav pull-right">
 	 		{if $camps|count>1}
 				<li class="dropdown">

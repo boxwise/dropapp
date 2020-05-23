@@ -125,4 +125,6 @@
 .pushy .pushy-close{
     padding-top: 12px;
     font-size: 1.5em;
+    margin-left: 150px;
+    color:grey
 }

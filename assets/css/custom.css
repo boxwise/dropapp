@@ -14,8 +14,8 @@ body{
 a{
 	color: var(--rightPanelTextColor);
 }
-a:hover{
-	color: #333;
+a:hover, a:active, a:focus, a:active:focus {
+	/* color: var(--buttonTextColor); */
 }
 .blue {
 	color:var(--boxwiseBlue);
