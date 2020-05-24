@@ -715,7 +715,6 @@ textarea.select2{
 }
 .search-group a.form-control-feedback:hover{
 	text-decoration: none;
-	color: #D71920;
 }
 .dropdown-toggle a.form-control-feedback{
 	color: #444;
@@ -725,7 +724,6 @@ textarea.select2{
 }
 .dropdown-toggle a.form-control-feedback:hover{
 	text-decoration: none;
-	color: #D71920;
 }
 .dropdown-toggle:hover{
 	border-color: #4cbac5;
