@@ -146,8 +146,7 @@ var chart2 = AmCharts.makeChart("chartdiv2", {
 		"fillAlphas": 0.85,
 		"lineAlphas": 0
     }],
-    "depth3D": 20,
-	"angle": 30,
+    "depth3D": 0,
     "chartCursor": {
         "categoryBalloonEnabled": false,
         "cursorAlpha": 0,
