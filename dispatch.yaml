@@ -1,5 +1,5 @@
 dispatch:
-- url: "staging.boxwise.co/*"
+- url: "staging.boxwise.co/"
   service: default
 - url: "demo.boxwise.co/*"
   service: demo
