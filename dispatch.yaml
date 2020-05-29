@@ -1,5 +1,11 @@
 dispatch:
-- url: "staging.boxwise.co/"
+- url: "staging.boxwise.co/api/*"
+  service: api-staging
+- url: "demo.boxwise.co/api/*"
+  service: api-demo
+- url: "app.boxwise.co/api/*"
+  service: api-production
+- url: "staging.boxwise.co/*"
   service: default
 - url: "demo.boxwise.co/*"
   service: demo
@@ -9,9 +15,3 @@ dispatch:
   service: production
 - url: "www.market.drapenihavet.no/*"
   service: production
-- url: "staging.boxwise.co/api/*"
-  service: api-staging
-- url: "demo.boxwise.co/api/*"
-  service: api-demo
-- url: "app.boxwise.co/api/*"
-  service: api-production
