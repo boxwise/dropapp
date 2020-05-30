@@ -8,6 +8,9 @@ In each ADR file, write these sections:
 
 # Title
 
+Trello-card: 
+Decision Deadline
+
 ## Status
 
 What is the status, such as proposed, accepted, rejected, deprecated, superseded, etc.?
