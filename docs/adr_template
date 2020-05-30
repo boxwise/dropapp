@@ -1,0 +1,33 @@
+# ADR template by Michael Nygard
+
+This is a template for architecture decisions based partly on [Documenting architecture decisions - Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).
+You can use [adr-tools](https://github.com/npryce/adr-tools).
+
+In each ADR file, write these sections:
+
+
+# Title
+
+## Status
+
+What is the status, such as proposed, accepted, rejected, deprecated, superseded, etc.?
+
+## Context or Problem Statement
+
+What is the issue that we're seeing that is motivating this decision or change?
+
+## Decision Drivers 
+
+What are the key criterias on which the decision is based.
+
+## Considered Options
+
+Which alternatives were considered?
+
+## Decision
+
+What is the change that we're proposing and/or doing?
+
+## Consequences
+
+What becomes easier or more difficult to do because of this change?
