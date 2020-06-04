@@ -168,4 +168,4 @@ Right now best drop an email to hello@boxwise.co
 
 ### License ###
 
-See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
+See the [LICENSE](./LICENSE) file for license rights and limitations (Apache 2.0).
