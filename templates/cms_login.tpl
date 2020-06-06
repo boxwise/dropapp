@@ -1,6 +1,6 @@
 {include file="cms_header.tpl"}
 	<div class="login-reset-template" style="background-image: url({$data['background']});">
-		<h1>{$translate['site_name']}</h1>
+		<div style="margin:0px auto; text-align:center;"><img class="loginLogo" src="../assets/img/boxtribute.png" width="200"></img></div>
 		<form id="login" class="well-center login-reset-form form" data-ajax="1" data-action="login" method="post">
 			<h2>{$translate['cms_login_pagetitle']}</h2>
 			<div class="form-group">

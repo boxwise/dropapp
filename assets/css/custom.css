@@ -35,7 +35,7 @@ hr{
 .login-reset-template{
 	top: 0;
 	padding-top: 40px;
-	background: var(--boxwiseBlue);
+	background: white !important;
 	min-height: 100%;
 	position: absolute;
 	width: 100%;

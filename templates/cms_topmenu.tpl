@@ -2,16 +2,16 @@
 	<div class="header-top-inner container-fluid" data-testid="dropapp-header">
  		<div class="pull-left">
 			<a href="#" class="menu-btn visible-xs visible-sm visible-md"><i class="fa fa-ellipsis-v"></i></a>
-			<img class="visible-xs visible-sm visible-md" src="../assets/img/boxtribute_small.png" width="35"></img>
-			<img class="headerLogo visible-lg" src="../assets/img/boxtribute.png" width="120"></img>
+			<a href="/" class="boxtributeLogoLink"><img class="visible-xs visible-sm visible-md" src="../assets/img/boxtribute_small.png" width="35"></img></a>
+			<a href="/" class="boxtributeLogoLink"><img class="visible-lg" src="../assets/img/boxtribute.png" width="120"></img></a>
 			{* <a href="/" class="brand">{$translate['site_name']}</a> *}
  		</div>
 		<span class="orgCampHeaderSpan">
-			{if $smarty.session.organisation.label}{$smarty.session.organisation.label}
+			{if $smarty.session.organisation.label}
 				{if $camps|count<1}
-					(No camp)
+					{$smarty.session.organisation.label}
 				{else}
-					({$camps[$smarty.session.camp['id']]['name']})
+					{$camps[$smarty.session.camp['id']]['name']}
 				{/if}
 			{/if}
 		</span>
