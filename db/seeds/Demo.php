@@ -414,29 +414,29 @@ class Demo extends AbstractSeed
         $this->table('library')->insert($library)->save();
 
         //------------------- locations
-        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`) VALUES
-			(1,'Shop',1,1,0,0,1,0,0,0),
-			(2,'LOST',1,2,0,0,0,0,1,0),
-			(3,'SCRAP',1,3,0,0,0,0,0,1),
-			(4,'Stockroom',1,4,1,1,0,0,0,0),
-			(5,'WH',1,5,1,0,0,0,0,0),
-			(6,'WH Women',1,6,1,0,0,0,0,0),
-			(7,'WH Men',1,7,1,0,0,0,0,0),
-			(8,'WH Children',1,8,1,0,0,0,0,0),
-			(9,'WH Babies',1,9,1,0,0,0,0,0),
-			(10,'WH Shoes',1,10,1,0,0,0,0,0),
-			(11,'WH New arrivals',1,11,1,0,0,0,0,0),
-			(12,'WH Hygiene',1,12,1,0,0,0,0,0),
-			(13,'WH Seasonal',1,12,1,0,0,0,0,0),
-			(14,'LOST',2,14,0,0,0,0,1,0),
-			(15,'SCRAP',2,15,0,0,0,0,0,1),
-			(16,'Stockroom',2,16,1,1,0,0,0,0),
-			(17,'WH1',2,17,1,0,0,0,0,0),
-			(18,'WH2',2,18,1,0,0,0,0,0),
-			(19,'Shop',3,19,0,0,1,0,0,0),
-			(20,'LOST',3,20,0,0,0,0,1,0),
-			(21,'SCRAP',3,21,0,0,0,0,0,1),
-			(22,'Stockroom',3,21,1,1,0,0,0,0);");
+        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`,`box_state_id`) VALUES
+			(1,'Shop',1,1,0,0,1,0,0,0,5),
+			(2,'LOST',1,2,0,0,0,0,1,0,2),
+			(3,'SCRAP',1,3,0,0,0,0,0,1,6),
+			(4,'Stockroom',1,4,1,1,0,0,0,0,1),
+			(5,'WH',1,5,1,0,0,0,0,0,1),
+			(6,'WH Women',1,6,1,0,0,0,0,0,1),
+			(7,'WH Men',1,7,1,0,0,0,0,0,1),
+			(8,'WH Children',1,8,1,0,0,0,0,0,1),
+			(9,'WH Babies',1,9,1,0,0,0,0,0,1),
+			(10,'WH Shoes',1,10,1,0,0,0,0,0,1),
+			(11,'WH New arrivals',1,11,1,0,0,0,0,0,1),
+			(12,'WH Hygiene',1,12,1,0,0,0,0,0,1),
+			(13,'WH Seasonal',1,12,1,0,0,0,0,0,1),
+			(14,'LOST',2,14,0,0,0,0,1,0,2),
+			(15,'SCRAP',2,15,0,0,0,0,0,1,6),
+			(16,'Stockroom',2,16,1,1,0,0,0,0,1),
+			(17,'WH1',2,17,1,0,0,0,0,0,1),
+			(18,'WH2',2,18,1,0,0,0,0,0,1),
+			(19,'Shop',3,19,0,0,1,0,0,0,5),
+			(20,'LOST',3,20,0,0,0,0,1,0,2),
+			(21,'SCRAP',3,21,0,0,0,0,0,1,6),
+			(22,'Stockroom',3,21,1,1,0,0,0,0,1);");
 
         //------------------- people
         $people = [];
@@ -1131,6 +1131,29 @@ class Demo extends AbstractSeed
         $products = ['1' => range(1, 219), '2' => range(220, 414), '3' => range(415, 609)];
         // key is campid
         $locations = ['1' => range(1, 13), '2' => range(14, 18), '3' => range(19, 22)];
+        // key is location
+        $box_state = ['1' => 5,
+            '2' => 2,
+            '3' => 6,
+            '4' => 1,
+            '5' => 1,
+            '6' => 1,
+            '7' => 1,
+            '8' => 1,
+            '9' => 1,
+            '10' => 1,
+            '11' => 1,
+            '12' => 1,
+            '13' => 1,
+            '14' => 2,
+            '15' => 6,
+            '16' => 1,
+            '17' => 1,
+            '18' => 1,
+            '19' => 5,
+            '20' => 2,
+            '21' => 6,
+            '22' => 1, ];
         // key is productid
         $sizes = ['1' => [1, 2, 3, 4, 5, 71],
             '2' => [1, 2, 3, 4, 5, 71],
@@ -1745,12 +1768,14 @@ class Demo extends AbstractSeed
         $stock = [];
         for ($i = 1; $i <= 1000; ++$i) {
             $campid = $faker->randomElement(['1', '2', '3']);
+            $locationid = $faker->randomElement($locations[$campid]);
             $tempdata = [
                 'id' => $i,
                 'box_id' => $faker->unique()->randomNumber($nbDigits = 6, $strict = true),
                 'product_id' => $faker->randomElement($products[$campid]),
                 'items' => $faker->numberBetween($min = 1, $max = 100),
-                'location_id' => $faker->randomElement($locations[$campid]),
+                'location_id' => $locationid,
+                'box_state_id' => $box_state[$locationid],
                 'qr_id' => $i,
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
@@ -1759,6 +1784,7 @@ class Demo extends AbstractSeed
             $rand_num = $faker->numberBetween($min = 0, $max = 1000);
             if (($rand_num < 20)) {
                 $tempdata['ordered'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d');
+                $tempdata['box_state_id'] = 3;
             }
 
             $stock[] = $tempdata;
