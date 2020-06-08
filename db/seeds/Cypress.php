@@ -7,7 +7,7 @@ class Cypress extends AbstractSeed
     public function getDependencies()
     {
         return [
-            'Minimal',
+            'MinimalDb',
         ];
     }
 

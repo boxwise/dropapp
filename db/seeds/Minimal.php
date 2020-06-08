@@ -2,12 +2,12 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class Minimal extends AbstractSeed
+class MinimalDb extends AbstractSeed
 {
     public function getDependencies()
     {
         return [
-            'ClearDb',
+            'ClearMinimalDb',
         ];
     }
 
