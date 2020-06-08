@@ -45,7 +45,8 @@ class AddBoxState extends AbstractMigration
         // add box state to stock table
         $this->table('stock')
             ->addColumn('box_state_id', 'integer', ['default' => 1, 'null' => false])
-            ->save();
+            ->save()
+        ;
 
         // set box states of stock
         $this->execute('
@@ -104,12 +105,14 @@ class AddBoxState extends AbstractMigration
             ->addForeignKey('box_state_id', 'box_state', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
-            ->save();
+            ->save()
+        ;
 
         // add box state to locations table
         $this->table('locations')
             ->addColumn('box_state_id', 'integer', ['default' => 1, 'null' => true])
-            ->save();
+            ->save()
+        ;
 
         // set box states of locations
         $this->execute('
@@ -144,6 +147,7 @@ class AddBoxState extends AbstractMigration
             ->addForeignKey('box_state_id', 'box_state', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
-            ->save();
+            ->save()
+        ;
     }
 }
