@@ -108,7 +108,7 @@ class AddBoxState extends AbstractMigration
 
         // add box state to locations table
         $this->table('locations')
-            ->addColumn('box_state_id', 'integer', ['default' => 1, 'null' => false])
+            ->addColumn('box_state_id', 'integer', ['default' => 1, 'null' => true])
             ->save();
 
         // set box states of locations
