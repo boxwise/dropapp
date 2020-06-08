@@ -63,7 +63,7 @@ for ($i = 0; $i < intval($_GET['count']); ++$i) {
     }
     $pdf->Image($url, 88, 12 + $y, 34, 34, 'png');
 
-    $pdf->Image($_SERVER['DOCUMENT_ROOT'].'/pdf/logo.png', 82, 120 + $y, 50, 10);
+    $pdf->Image($_SERVER['DOCUMENT_ROOT'].'/pdf/logo.png', 82, 120 + $y, 50, 20);
 
     $pdf->SetFont('helvetica', '', 9);
 
