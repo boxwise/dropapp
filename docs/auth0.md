@@ -1,41 +1,31 @@
-# Authentication with Auth0
+# Auth0
 
-Trello-card: https://trello.com/c/8KEgl3nv
+We are using Auth0 for the authentication of Boxtribute. As an introduction see the a quickstart guides, e.g. for [react](https://auth0.com/docs/quickstart/spa/react)
 
-## Status
+## General
 
-accepted, implementation in progress
+To mirror the development lifecycle of boxtribute there are four Auth0 tenants:
+- [boxtribute-dev](https://boxtribute-dev.eu.auth0.com/)
+This is the tenant for development. Every developer of Boxwise has access to it. Just write Hans in slack if this is not the case.
+- [boxtribute-staging](https://boxtribute-staging.eu.auth0.com/)
+- [boxtribute-demo](https://boxtribute-staging.eu.auth0.com/)
+This is the tenant for the demo instance for interested ngos.
+- [boxtribute-production](https://boxtribute-staging.eu.auth0.com/)
 
-## Context or Problem Statement
+## Authentication
+We are only using [email-password authentication](https://auth0.com/docs/connections/database) and do not have any social logins enabled at the moment. We are using the Auth0 user store to administrate the user accounts. 
+Every tenant has only one [Database Connection](https://auth0.com/docs/connections/database) since the Auth0 authentication does not allow multiple Database Connections for the same Application.
 
-Our handling of user data is far from bullet-proof. We have stumbled upon cases where SQL injection is possible and the current password encryption is only md5. Additionally, we are building a new mobile app in React and Flask and need to implement a way to handle authentication there. 
+The development and staging include demo user accounts which match the accounts in the database seed of the dropapp and boxwise-flask repo.
+These demo users are imported and updated by hand at the moment.
 
-## Decision Drivers 
+## Applications
+Every Auth0 tenant has two [applications](https://auth0.com/docs/applications) set-up:
+- a single page application called `boxtribute-react` for the new mobile framework.
+- a regular web application called `dropapp-php` for the old dropapp framework.
 
-1. Security / Risk for us
-2. Ease of Use
-3. Cost
-
-
-## Considered Options
-
-- Building our own authentication solution
-- Google Firebase
-- Auth0
-
-## Decision
-
-We are going for Auth0 since 
-- we have prior experience with Auth0 in the team, 
-- a first test in an afternoon coding session were satisfying and
-- Auth0 offers a free plan for Open-source projects.
-
-We are not building our own authentication solution to reduce the security risks coming with handling g passwords.
-
-## Consequences
-
-###Easier:
-We can almost drop a whole user flow.
-
-###More difficult:
-Switching between mobile and desktop application. 
+## [Custom Domains](https://auth0.com/docs/custom-domains)
+The domains for the Auth0 tenants are linked to the following domains:
+- staging-login.boxtribute.org --> boxtribute-staging.eu.auth0.com
+- demo-login.boxtribute.org --> boxtribute-demo.eu.auth0.com
+- login.boxtribute.org --> boxtribute-production.eu.auth0.com
