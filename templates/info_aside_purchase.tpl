@@ -7,10 +7,22 @@
 
 	{if $data['shoeswarning']}<p class="warningbox">This beneficiary has already bought<br />winter shoes or light shoes for men in this or the previous cycle.</p>{/if}
 
-	{if isset($data['approvalsigned']) && !$data['approvalsigned'] && $data['parent_id']==0} <a class="btn btn-danger tooltip-this" data-toggle="tooltip" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data." href="?action=people_edit&id={$data['people_id']}" data-testid="privacyDeclarationMissingButton" ><span class="fa fa-edit"></span> No signature</a>{/if}
+	{if isset($data['approvalsigned']) && !$data['approvalsigned'] && $data['parent_id']==0} 
+		<span class="privacyNoteSpan">Needs Data Privacy Agreement!</span>
+		<a class="btn privacySignButton" data-toggle="tooltip" href="?action=people_edit&id={$data['people_id']}" data-testid="privacyDeclarationMissingButton" >
+			<span class="fa fa-edit"></span> 
+				Sign
+		</a>{/if}
 
 
-	<p class="familycredit"><img src="../assets/img/more_coins.png" class="coinsImage" /> <span id="dropcredit" data-drop-credit="{$data['dropcoins']}" data-testid="dropcredit">{$data['dropcoins']}</span> {$currency} {if $data['allowdrops']}<a class="btn btn-sm" href="{$data['givedropsurl']}"><img src="../assets/img/one_coin.png" class="coinsImage" /> <span data-testid='giveTokensButton'>Give {$currency}</span></a>{/if}<br /><br /><span class="small">Last purchase: {$data['lasttransaction']}</span>
+	<p class="familycredit">
+		<span id="dropcredit" data-drop-credit="{$data['dropcoins']}" data-testid="dropcredit">{$data['dropcoins']} {$currency} </span> 
+	
+	{if $data['allowdrops']}
+		<a class="btn btn-sm" href="{$data['givedropsurl']}"><span data-testid='giveTokensButton'>Give {$currency}</span> <img src="../assets/img/one_coin.png" class="coinsImage" /></a>
+	{/if}
+	<br /><br />
+	<span class="lastPurchaseSpan">Last purchase: {$data['lasttransaction']}</span>
 	</p>
 	{if $smarty.session.camp['food']}<p class="familycredit{if $data['fooddrops']<=0} warningbox{/if}">Max food: <img src="../assets/img/more_coins.png" class="coinsImage" /></i> <span id="foodcredit"  data-food-credit="{$data['fooddrops']}">{$data['fooddrops']}</span> {$currency} <span class="people-comment">This is the amount of {$currency} that this family can spend on food items.</span></p>
 	{/if}

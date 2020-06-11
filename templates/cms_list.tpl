@@ -65,7 +65,7 @@
 							{if $listconfig['allowshowhide']}<button data-operation="show" class="action-show start-operation btn btn-default btn-sm" href="#" data-testid="list-show-button"><i class="fa glyphicon fa-eye"></i> {$listconfig['show']}</button>
 							<button data-operation="hide" class="start-operation btn btn-default btn-sm" href="#" data-testid="list-hide-button"><i class="fa fa-eye-slash"></i> {$listconfig['hide']}</button>{/if}
 
-							{if $listconfig['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$listconfig['delete']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="action-delete start-operation btn btn-sm confirm btn-danger" href="#" data-testid="list-delete-button"><i class="fa fa-trash"></i> {$listconfig['delete']}</button>{/if}
+							{if $listconfig['allowdelete']}<button data-operation="delete" data-placement="top" data-title="{$translate['cms_list_confirm_title']}" data-btn-ok-label="{$listconfig['delete']}" data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" class="action-delete start-operation btn btn-sm confirm" href="#" data-testid="list-delete-button"><i class="fa fa-trash"></i> {$listconfig['delete']}</button>{/if}
 
 							{if $listconfig['allowcopy']}<button data-operation="copy" data-placement="top" class="action-copy start-operation btn btn-sm btn-default" href="#" data-testid="list-copy-button"><i class="fa fa-copy"></i> {$listconfig['copy']}</button>{/if}
 
@@ -114,7 +114,7 @@
 										<input type="text" class="form-control input-sm" data-testid='box-search' name="search" value="{$listconfig['searchvalue']}">
 										{if $listconfig['searchvalue']}<a class="fa fa-times-circle form-control-feedback" href="?action={$listconfig['origin']}&resetsearch=true"></a>{/if}
 									</div>
-									<span class="input-group-btn">
+									<span class="input-group-btn listSearchButtonDiv">
 										<button class="btn btn-sm btn-default" data-testid = "search-button" type="submit"><span  class="fa fa-search"></span></button>
 									</span>
 								</div>

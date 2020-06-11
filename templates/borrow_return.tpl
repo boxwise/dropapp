@@ -14,5 +14,5 @@
 	</div>
 
 <div class="fc"></div>
-<a href="?action=borrow_edit&return={$data['id']}&user={$data['people_id']}" class="btn btn-success">Return the item</a>
+<a href="?action=borrow_edit&return={$data['id']}&user={$data['people_id']}" class="btn">Return the item</a>
 </div>

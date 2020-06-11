@@ -25,27 +25,27 @@ class Minimal extends AbstractSeed
         $this->execute("INSERT INTO `cms_functions` (`id`,`parent_id`,`title_en`,`include`,`seq`,`alert`,`adminonly`,`visible`,`allusers`,`allcamps`) VALUES 
             (35,NULL,'Free Shop','',1,0,0,1,0,0),
 			(42,NULL,'Admin','',7,0,0,1,0,0),
-			(43,42,'Users','cms_users',19,0,0,1,0,1),
+			(43,42,'Manage Users','cms_users',19,0,0,1,0,1),
 			(44,155,'Settings','cms_settings',25,0,1,1,0,1),
 			(45,155,'Texts','cms_translate',26,0,1,1,0,1),
 			(50,155,'Manage menu functions','cms_functions',24,0,1,1,0,1),
 			(67,42,'Manage products','products',18,0,0,1,0,0),
 			(87,35,'Checkout','check_out',2,0,0,1,0,0),
 			(90,99,'Boxes','stock',13,0,0,1,0,0),
-			(92,35,'Give tokens to all','give2all',7,0,0,1,0,0),
+			(92,35,'Give tokens <span>to</span> all','give2all',7,0,0,1,0,0),
 			(96,128,'Sales reports','sales_list',15,0,0,1,0,0),
 			(99,NULL,'Inventory','',4,0,0,1,0,0),
-			(102,128,'Fancy graphs (beta)','fancygraphs',17,0,0,1,0,0),
+			(102,128,'Fancy graphs (<span>beta</span>)','fancygraphs',17,0,0,1,0,0),
 			(110,35,'Stockroom','container-stock',5,0,0,1,0,0),
 			(111,35,'Generate market schedule','market_schedule',6,0,0,1,0,0),
 			(112,99,'Generate QR labels','qr',14,0,0,1,0,0),
 			(113,NULL,'Actions','',6,0,0,1,0,0),
-			(115,42,'Warehouses','locations',19,0,0,1,0,0),
+			(115,42,'Edit Warehouses','locations',19,0,0,1,0,0),
 			(116,110,'Containers List','printed_list_containers',2,0,0,1,1,0),
 			(118,161,'Manage beneficiaries','people',4,0,0,1,0,0),
 			(121,NULL,'Hidden menu items','',9,0,0,0,1,0),
 			(123,121,'Start page','start',27,0,0,0,1,0),
-			(124,92,'Give tokens to selected families','give',3,0,0,1,1,0),
+			(124,92,'Give tokens <span>to</span> selected families','give',3,0,0,1,1,0),
 			(125,121,'User profile','cms_profile',28,0,0,0,1,0),
 			(126,121,'Exit login as','exitloginas',29,0,0,0,1,0),
 			(127,96,'Sales List Download','sales_list_download',9,0,0,1,1,0),
@@ -55,8 +55,8 @@ class Minimal extends AbstractSeed
 			(132,131,'Bicycles / Sport','borrow',10,0,0,1,0,0),
 			(140,132,'Borrow edit','borrowedititem',6,0,0,1,1,0),
 			(144,132,'Borrow history ','borrowhistory',7,0,0,1,1,0),
-			(145,148,'Library titles (beta)','library_inventory',11,0,0,1,0,0),
-			(146,148,'Lent out (beta)','library',12,0,0,1,0,0),
+			(145,148,'Library titles (<span>beta</span>)','library_inventory',11,0,0,1,0,0),
+			(146,148,'Lent out (<span>beta</span>)','library',12,0,0,1,0,0),
 			(147,146,'Library history','libraryhistory',8,0,0,1,1,0),
 			(148,NULL,'Library','',3,0,0,1,0,0),
 			(149,131,'Laundry','laundry',9,0,0,1,0,0),
@@ -68,7 +68,7 @@ class Minimal extends AbstractSeed
 			(156,42,'User groups','cms_usergroups',20,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
 			(158,161,'Add beneficiary','people_add',3,0,0,1,0,0),
-			(160,99,'Stock Overview (beta)','stock_overview',13,0,0,1,0,0),
+			(160,99,'Stock Overview (<span>beta</span>)','stock_overview',13,0,0,1,0,0),
 			(161,NULL,'Beneficiaries','',0,0,0,1,0,0);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
@@ -484,7 +484,7 @@ class Minimal extends AbstractSeed
 			(910,0,'text','listtitle_dryfood','Food list for dry food','','Dry Food','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(911,0,'text','listtitle_vegetables','Food list for vegetables','','Vegetables','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(912,0,'textarea','workshop-rules','Rules for workshop access','','Workshop access is only available for beneficiaries of Nea Kavala. / You can access the workshop when you have succesfully finished the training and have signed the contract with us / To get access to the workshop and use tools you show us this card, you will get it back after returning the tools and leaving the workshop  / You are responsible for your own safety and to return all tools in a clean and good state / You have to be 16 years old minimum. / Always return all the tools before closing time of the workshop (17:00) / If you not follow these rules, we can ban you for two weeks and if you repeatedly not follow the rules we can ban you permanently.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
-			(913,0,'text','site_name','','','Boxwise','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00');");
+			(913,0,'text','site_name','','','Boxtribute','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00');");
 
         //------------------- units
         $this->execute("INSERT INTO `units` (`id`, `label`, `longlabel`, `seq`, `created`, `created_by`, `modified`, `modified_by`) VALUES

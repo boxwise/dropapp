@@ -11,8 +11,8 @@
     height: 100%;
     top: 0;
     z-index: 9999;
-    background: #333332;
-    color: #fff;
+    background: var(--sidebarBackground);
+    color: var(--sidebarFontColor);
     -webkit-box-shadow: inset -10px 0 6px -9px rgba(0, 0, 0, .7);
     -moz-box-shadow: inset -10px 0 6px -9px rgba(0, 0, 0, .7);
     box-shadow: inset -10px 0 6px -9px rgba(0, 0, 0, .7);
@@ -38,14 +38,15 @@
 
 .pushy a{
     display: block;
-    color: #ccc;
+    color: var(--sidebarFontColor);
     text-decoration: none;
     padding: 5px 30px 5px 15px;
 }
 
 .pushy .active a{
-	background: #555;
-	color: #fff;
+	color: var(--sidebarFontColor);
+    background:var(--boxwiseYellow);
+    font-weight: bold;
 }
 
 .pushy a:hover{
@@ -124,4 +125,6 @@
 .pushy .pushy-close{
     padding-top: 12px;
     font-size: 1.5em;
+    margin-left: 150px;
+    color:grey
 }
