@@ -114,7 +114,7 @@
 										<input type="text" class="form-control input-sm" data-testid='box-search' name="search" value="{$listconfig['searchvalue']}">
 										{if $listconfig['searchvalue']}<a class="fa fa-times-circle form-control-feedback" href="?action={$listconfig['origin']}&resetsearch=true"></a>{/if}
 									</div>
-									<span class="input-group-btn">
+									<span class="input-group-btn listSearchButtonDiv">
 										<button class="btn btn-sm btn-default" data-testid = "search-button" type="submit"><span  class="fa fa-search"></span></button>
 									</span>
 								</div>

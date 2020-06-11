@@ -152,7 +152,7 @@ p{
 .nav-aside ul li.nav-header{
 	padding: 5px 15px;
 	text-transform: uppercase;
-	color: #aaa;
+	color: #000;
 	font-size: 1.33em;
 	margin-top: 10px;
 	margin-left: 15px;
@@ -484,6 +484,9 @@ body > iframe { display: none; }
 }
 .btn .caret{
 	margin-left: 2px;
+}
+.listSearchButtonDiv{
+	font-size: 12px;
 }
 /* using a different icon font, so need to fix some icon positioning and names from plugins */
 
