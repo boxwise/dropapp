@@ -29,3 +29,20 @@ The domains for the Auth0 tenants are linked to the following domains:
 - staging-login.boxtribute.org --> boxtribute-staging.eu.auth0.com
 - demo-login.boxtribute.org --> boxtribute-demo.eu.auth0.com
 - login.boxtribute.org --> boxtribute-production.eu.auth0.com
+
+## Auth0 user data
+The following data of each user are currently saved in the [auth0 user db](https://auth0.com/docs/users/references/bulk-import-database-schema-examples):
+- `user_id` (string)
+`id`-column in `cms_users` table. Auth0 prepends the connection to the string, e.g. `auth0|1`
+- `name` (string)
+`naam`-column in `cms_users` table.
+- `email` (string)
+`email`-column in `cms_users` table. Must be in email format.
+- `app_metadata['usergroup_id']` (int)
+`cms_usergroups_id`-column in `cms_users` table.
+- `app_metadata['is_god']` (int)
+`is_admin`-column in `cms_users` table. Boolean to identify God Admin with access to multiple organisations.
+- `app_metadata['valid_firstday']` (int)
+`valid_firstday`-column in `cms_users` table.
+- `app_metadata['valid_lastday']` (int)
+`valid_lastday`-column in `cms_users` table.
