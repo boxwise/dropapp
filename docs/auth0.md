@@ -39,10 +39,10 @@ The following data of each user are currently saved in the [auth0 user db](https
 - `email` (string)
 `email`-column in `cms_users` table. Must be in email format.
 - `app_metadata['usergroup_id']` (int)
-`cms_usergroups_id`-column in `cms_users` table.
+`cms_usergroups_id`-column in `cms_users` table. OPTIONAL, not filled if user is a God Admin.
 - `app_metadata['is_god']` (int)
 `is_admin`-column in `cms_users` table. Boolean to identify God Admin with access to multiple organisations.
 - `app_metadata['valid_firstday']` (int)
-`valid_firstday`-column in `cms_users` table.
+`valid_firstday`-column in `cms_users` table. OPTIONAL, only filled if user has a time-limited access.
 - `app_metadata['valid_lastday']` (int)
-`valid_lastday`-column in `cms_users` table.
+`valid_lastday`-column in `cms_users` table. OPTIONAL, only filled if user has a time-limited access.
