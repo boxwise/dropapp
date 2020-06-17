@@ -8,7 +8,7 @@
       <li>
           <ul class="level1">
     {foreach $item['sub'] as $subitem}
-            <li{if isset($subitem['active'])} class="active"{/if}><a class="menu_{$subitem['include']|default:''}" href="?action={$subitem['include']|default:''}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
+            <li{if isset($subitem['active'])} class="active"{/if}><a class="menu_{$subitem['include']|default:''}" href="?action={$subitem['include']|default:''}">{$subitem['title'] nofilter}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
       {/foreach}
           </ul>
       </li>
