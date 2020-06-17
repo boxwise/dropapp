@@ -64,7 +64,7 @@ class Minimal extends AbstractSeed
 			(151,149,'Laundry No show','laundry_noshow',4,0,0,1,1,0),
 			(152,149,'Laundry start new cycle','laundry_startcycle',5,0,0,1,1,0),
 			(154,155,'Organisations','organisations',23,0,1,1,0,1),
-			(155,NULL,'Boxwise Gods','',8,0,1,1,0,0),
+			(155,NULL,'Boxtribute Gods','',8,0,1,1,0,0),
 			(156,42,'User groups','cms_usergroups',20,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
 			(158,161,'Add beneficiary','people_add',3,0,0,1,0,0),
@@ -75,9 +75,9 @@ class Minimal extends AbstractSeed
         //------------------- cms_settings
         $this->execute("INSERT INTO `cms_settings` (`id`, `category_id`, `type`, `code`, `description`, `options`, `value`, `hidden`, `created`, `created_by`, `modified`, `modified_by`) VALUES
 			(83,1,'select','cms_language','Language used for CMS interface','en=English','en',1,NULL,NULL,NULL,NULL),
-			(86,1,'text','mail_sender','Sender address for e-mails sent by Boxwise','','hello@boxwise.co',1,NULL,NULL,NULL,NULL),
-			(87,1,'text','mail_sender_name','Sender name for e-mails sent by Boxwise','','Boxwise',1,NULL,NULL,NULL,NULL),
-			(92,1,'text','apple-mobile-web-app-title','Title for Apple Mobile Web App','','Boxwise',1,NULL,NULL,NULL,NULL),
+			(86,1,'text','mail_sender','Sender address for e-mails sent by Boxtribute','','hello@boxwise.co',1,NULL,NULL,NULL,NULL),
+			(87,1,'text','mail_sender_name','Sender name for e-mails sent by Boxtribute','','Boxtribute',1,NULL,NULL,NULL,NULL),
+			(92,1,'text','apple-mobile-web-app-title','Title for Apple Mobile Web App','','Boxtribute',1,NULL,NULL,NULL,NULL),
 			(137,1,'text','dailyroutine','Last date the daily routine did run','','2019-06-26',1,NULL,NULL,NULL,NULL),
             (138,1,'text','installed','Date and time of installation and first run','','2016-23-11 9:00:00',1,NULL,NULL,NULL,NULL);");
 
@@ -360,7 +360,7 @@ class Minimal extends AbstractSeed
 			(538,13,'text','cms_function_users',NULL,'Beschikbaar voor deze gebruikers','Available voor these users','',1,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(539,13,'text','cms_form_cancel','','Annuleren','Cancel','',1,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(542,13,'text','cms_email_salutation',NULL,'Beste','Dear','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
-			(543,13,'textarea','cms_email_boilerplate','','Deze e-mail is verstuurd vanuit','You\\'ve received this email because you were created an account for Boxwise through {orgname}. If you think you got this email by mistake, please contact us at [mailto:helpme@boxwise.co]. ','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
+			(543,13,'textarea','cms_email_boilerplate','','Deze e-mail is verstuurd vanuit','You\\'ve received this email because you were created an account for Boxtribute through {orgname}. If you think you got this email by mistake, please contact us at [mailto:helpme@boxwise.co]. ','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(544,13,'textarea','cms_reset_mail','','Je hebt aangegeven dat je een nieuw wachtwoord wilt instellen voor het CMS op {sitename}.<br /><br />\r\n<a href=\"{link}\">Klik hier om een nieuw wachtwoord in te stellen</a><br /><br />\r\nHeb je geen nieuw wachtwoord aangevraagd, dan hoef je geen actie te ondernemen.\r\n','You have requested a new password for {sitename}.<br /><br />\r\n<a href=\"{link}\">Click here to enter a new password</a><br /><br />\r\nIf you didn\\'t requested this yourself, you don\\'t have to do anything.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(545,13,'text','cms_reset2_pagetitle',NULL,'Kies een nieuw wachtwoord','Choose a new password','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00')");
         $this->execute("INSERT INTO `translate` (`id`, `category_id`, `type`, `code`, `description`, `nl`, `en`, `fr`, `hidden`, `created`, `created_by`, `modified`, `modified_by`, `deleted`) VALUES
@@ -402,7 +402,7 @@ class Minimal extends AbstractSeed
 			(649,13,'text','tooltip_url','','Als je de URL leeg laat, maakt het systeem automatisch een goeie url voor je pagina. Je kan de URL veranderen door dit veld te ontgrendelen. Realiseer je wel dat door het veranderen van een URL bestaande verwijzingen naar deze pagina kunnen verdwijnen.','If you leave this field empty, the system will fill it in for you. If you want to change a value, you can unlock this field and do so. But realise that this can result in broken links.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(654,13,'text','cms_list_showhidesuccess',NULL,'Tonen/verbergen succesvol','','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(655,13,'text','cms_reset_mailsubject',NULL,'Nieuw wachtwoord','New password','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
-			(656,13,'textarea','cms_sendlogin_mail','','Hierbij ontvang je een wachtwoord om in te loggen op het systeem van {sitename}.<br /><br /> Je nieuwe wachtwoord is <strong>{password}</strong><br /><br /> Let op: Het systeem maakt onderscheid tussen hoofd- en kleine letters.<br /><br /> Als je bent ingelogd kan je het wachtwoord zelf wijzigen, door op je naam te klikken in de rechterbovenhoek en dan voor \\'Instellingen\\' te kiezen. Kies dan wel voor een niet al te makkelijk te raden password van minimaal acht tekens.','You are all set up with a Boxwise account to work with <strong>\\'{orgname}\\'</strong>! <br/> Please use this email address and the password below to log in to Boxwise ({sitename}) from the browser of your mobile or desktop device.<br /><br /> Your password is <strong>{password}</strong><br /><br /> We encourage you to update your password to something secure and memorable by logging in, clicking on your name in the upper right corner and choosing \\'Settings\\'. <br /> <br /> Let\\'s get distributing! <br /> The Boxwise Team ','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
+			(656,13,'textarea','cms_sendlogin_mail','','Hierbij ontvang je een wachtwoord om in te loggen op het systeem van {sitename}.<br /><br /> Je nieuwe wachtwoord is <strong>{password}</strong><br /><br /> Let op: Het systeem maakt onderscheid tussen hoofd- en kleine letters.<br /><br /> Als je bent ingelogd kan je het wachtwoord zelf wijzigen, door op je naam te klikken in de rechterbovenhoek en dan voor \\'Instellingen\\' te kiezen. Kies dan wel voor een niet al te makkelijk te raden password van minimaal acht tekens.','You are all set up with a Boxtribute account to work with <strong>\\'{orgname}\\'</strong>! <br/> Please use this email address and the password below to log in to Boxtribute ({sitename}) from the browser of your mobile or desktop device.<br /><br /> Your password is <strong>{password}</strong><br /><br /> We encourage you to update your password to something secure and memorable by logging in, clicking on your name in the upper right corner and choosing \\'Settings\\'. <br /> <br /> Let\\'s get distributing! <br /> The Boxtribute Team ','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(657,13,'text','cms_sendlogin_mailsubject','','Nieuw wachtwoord','New password','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(658,13,'text','cms_sendlogin_confirm',NULL,'De logingegevens zijn verstuurd.','Within a few minutes you will receive an e-mail with further instructions to reset your password.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(660,13,'text','cms_email_signature','','Met veel liefde...','Much love...','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
