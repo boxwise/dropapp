@@ -6,7 +6,7 @@ We are using Auth0 for the authentication of Boxtribute. As an introduction see 
 
 To mirror the development lifecycle of boxtribute there are four Auth0 tenants:
 - [boxtribute-dev](https://boxtribute-dev.eu.auth0.com/)
-This is the tenant for development. Every developer of Boxwise has access to it. Just write Hans in slack if this is not the case.
+This is the tenant for development. Every developer of Boxtribute has access to it. Just write Hans in slack if this is not the case.
 - [boxtribute-staging](https://boxtribute-staging.eu.auth0.com/)
 - [boxtribute-demo](https://boxtribute-staging.eu.auth0.com/)
 This is the tenant for the demo instance for interested ngos.
@@ -16,7 +16,7 @@ This is the tenant for the demo instance for interested ngos.
 We are only using [email-password authentication](https://auth0.com/docs/connections/database) and do not have any social logins enabled at the moment. We are using the Auth0 user store to administrate the user accounts. 
 Every tenant has only one [Database Connection](https://auth0.com/docs/connections/database) since the Auth0 authentication does not allow multiple Database Connections for the same Application.
 
-The development and staging include demo user accounts which match the accounts in the database seed of the dropapp and boxwise-flask repo.
+The development and staging include demo user accounts which match the accounts in the database seed of the dropapp and boxtribute-flask repo.
 These demo users are imported and updated by hand at the moment.
 
 ## Applications
