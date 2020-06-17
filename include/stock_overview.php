@@ -93,7 +93,8 @@
                     INNER JOIN
                         locations on stock.location_id = locations.id 
                     WHERE 
-                        locations.camp_id = :camp_id '.
+                        locations.camp_id = :camp_id 
+                        AND (NOT stock.deleted OR stock.deleted IS NULL)'.
                         ($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
                         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
                         .('lost' == $_SESSION['filter']['stock_overview'] ? 'AND locations.is_lost=1' :
