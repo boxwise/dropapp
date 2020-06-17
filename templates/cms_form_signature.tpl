@@ -68,7 +68,7 @@
 					Ez di heman demê de bipejirînim ku daneyên kesane yên malbata min hatine komkirin û pêvajoyê ne.</p>
 				</div>
 			</div>
-		</div>
+		</div>	
 	{else}
 	<ul class="nav nav-tabs">
 		<li class = "active"><a href="#languagetab_en" data-toggle="tab">English</a></li>
@@ -79,21 +79,40 @@
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane fade in active" id="languagetab_en">
-			<h3>Information about new privacy policies</h3><br />
-			<p>{$currentOrg['label']} wish to reassert you that we are protecting your private information, with reference to the new privacy policies that applies to EU/EES countries.</p>
-			<p>For refugees that receive aid/assistance/ from {$currentOrg['label']} (clothes/shoes/food/other assistance or activities), the following information is retained:</p>
-			<ul>
-			<li>Name</li>
-			<li>Age (date of birth)</li>
-			<li>Nationality (in some cases)</li>
-			<li>Address (e.g. container number in the refugee camp)</li>
-			<li>Telephone number (in some cases)</li>
-			<li>Gender</li>
-			</ul>
-			<p>You do on your own provide us with your personal information in conversation with representatives from {$currentOrg['label']}. We need this information to ensure that you are part of our distribution and/or other services provided by the organisation, and to make sure that we have enough equipment for our beneficiaries.</p>
-			<p>{$currentOrg['label']} does not share your personal information with other parties.</p>
-			<p>To access the mentioned services provided by {$currentOrg['label']}, you must agree that we can continue to process and retain this information about you.</p>
-			<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree that my personal information is stored and processed as described in the Privacy Policy of {$currentOrg['label']}.</p><p>I also agree that my family ́s personal information is stored and processed as described above.</p>
+			{if {$currentOrg['label']}=='CESRT'}
+				<h3>Information about new privacy policies</h3><br />
+				<p>OA/CESRT wishes to reassure you that we are protecting your private information, with reference to the new privacy policies that applies to EU/EES countries.</p>
+				<p>For beneficiaries that receive aid from the OA/CESRT Distribution Centre, the following information is retained:</p>
+				<ul>
+				<li>Name</li>
+				<li>Age (date of birth)</li>
+				<li>Nationality (in some cases)</li>
+				<li>Address (usually this is the camp name)</li>
+				<li>Telephone number (in some cases)</li>
+				<li>Gender</li>
+				</ul>
+				<p>You do on your own provide OA/CESRT representatives with your personal information at the OA/CESRT Distribution Centre. We need this information to ensure that you are part of our distribution services provided by the organisation. This is important to schedule appointments and to help ensure we have enough equipment for our beneficiaries.</p>
+				<p>So that the OA/CESRT Distribution Centre runs efficiently, please agree that we can continue to process and retain this information about you. OA/CESRT does not share your personal information with other parties.</p>
+				<p>To access the mentioned services provided by {$currentOrg['label']}, you must agree that we can continue to process and retain this information about you.</p>
+				<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree that my personal information is stored and processed as described in the Privacy Policy of OA/CESRT.
+				<p>I also agree that my family ́s personal information is stored and processed as described above.</p>
+			{else}
+				<h3>Information about new privacy policies</h3><br />
+				<p>{$currentOrg['label']} wish to reassert you that we are protecting your private information, with reference to the new privacy policies that applies to EU/EES countries.</p>
+				<p>For refugees that receive aid/assistance/ from {$currentOrg['label']} (clothes/shoes/food/other assistance or activities), the following information is retained:</p>
+				<ul>
+				<li>Name</li>
+				<li>Age (date of birth)</li>
+				<li>Nationality (in some cases)</li>
+				<li>Address (e.g. container number in the refugee camp)</li>
+				<li>Telephone number (in some cases)</li>
+				<li>Gender</li>
+				</ul>
+				<p>You do on your own provide us with your personal information in conversation with representatives from {$currentOrg['label']}. We need this information to ensure that you are part of our distribution and/or other services provided by the organisation, and to make sure that we have enough equipment for our beneficiaries.</p>
+				<p>{$currentOrg['label']} does not share your personal information with other parties.</p>
+				<p>To access the mentioned services provided by {$currentOrg['label']}, you must agree that we can continue to process and retain this information about you.</p>
+				<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree that my personal information is stored and processed as described in the Privacy Policy of {$currentOrg['label']}.</p><p>I also agree that my family ́s personal information is stored and processed as described above.</p>
+			{/if}
 		</div>
 		<div class="tab-pane fade" id="languagetab_fr">
 			<h3>Informations sur les nouvelles règles de confidentialité</h3><br />
