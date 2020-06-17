@@ -150,6 +150,7 @@ function sendlogindata($table, $ids)
         $mail = str_ireplace('{sitename}', $_SERVER['HTTP_HOST'], $mail);
         $mail = str_ireplace('{password}', $newpassword, $mail);
         $mail = str_ireplace('{orgname}', $_SESSION['organisation']['label'], $mail);
+        $mail = str_ireplace('{user}', $_SESSION['user']['naam'], $mail);
 
         $result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);
         if ($result) {
