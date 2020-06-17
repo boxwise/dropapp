@@ -15,6 +15,7 @@
     <link href="/assets/css/pushy.css" rel="stylesheet">
     <link href="/assets/css/custom.css" rel="stylesheet">    
     <link href="/assets/css/print.css" rel="stylesheet" media="print">
+    <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@700&display=swap" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
