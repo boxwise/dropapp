@@ -26,7 +26,7 @@
 	</head>
 	<body class="mobile" data-testid="mobileBody">
 		<header>
-			<strong><a href="/mobile.php">{$translate['site_name']}</a></strong>
+			<strong><a href="/mobile.php"><img src="../assets/img/boxtribute.png" width="120"></img></a></strong>
 			{if $smarty.session.user}
 				<div class="orgcamp" data-testid="orgcampDiv">
 					{if $org && $camps|count==1}
