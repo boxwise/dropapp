@@ -8,10 +8,11 @@
  		</div>
 		<span class="orgCampHeaderSpan">
 			{if $smarty.session.organisation.label}
+				{$smarty.session.organisation.label}
 				{if $camps|count<1}
-					{$smarty.session.organisation.label}
+					(No Base)
 				{else}
-					{$camps[$smarty.session.camp['id']]['name']}
+					({$camps[$smarty.session.camp['id']]['name']})
 				{/if}
 			{/if}
 		</span>

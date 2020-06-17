@@ -1,16 +1,15 @@
 body {
-	font-family: Arial, sans-serif;
+	font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size:2em;
 	margin:0 10px;
 	padding:0;
-	color: #395c6b;
 }
 hr{
 	border-color: #fff;
 	margin-bottom: 40px;
 }
 button, .btn {
-	font-family: Arial, sans-serif;
+	font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size:24px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -72,7 +71,6 @@ header a, header a:hover, header a:active{
 	margin-bottom: 15px;
 	border-radius: 3px;
 	background-color: var(--boxwiseYellow);
-	color: #395c6b 
 }
 #box-info-content{
 	padding: 10px;
@@ -189,13 +187,14 @@ a {
 	color:var(--boxwiseButtons);
 }
 .orgcamp{
+	margin-top: 10px;
 	float: right;
 }
 #campselect{
 	position: relative;
 }
 #campselect select{
-	color: #fff;
+	color: #000;
 	background: none;
 	border:none;
 	cursor: pointer;
@@ -207,7 +206,6 @@ a {
 }
 #campselect select option{
 	text-align: right;
-	background: #395c6b;
 }
 #campselect:after{
 	content: '';

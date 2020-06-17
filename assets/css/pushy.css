@@ -29,11 +29,12 @@
     font-size: 1.1em;
 }
 .pushy ul li.nav-header{
+    font-size: 1.33em !important;
     text-transform: uppercase;
     padding: 4px 30px 4px 15px;
     font-size: 1em;
     margin-top: 10px;
-    font-weight: bold;
+    font-family: 'Chivo';
 }
 
 .pushy a{
