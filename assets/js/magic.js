@@ -430,7 +430,7 @@ $(function() {
                         error: function(checkresult) {
                             var n = noty({
                                 text:
-                                    "We cannot connect to the Boxwise server.<br> Do you have internet?",
+                                    "We cannot connect to the Boxtribute server.<br> Do you have internet?",
                                 type: "error"
                             });
                             $("body").removeClass("loading");

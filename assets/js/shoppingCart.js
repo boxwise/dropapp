@@ -321,7 +321,7 @@ $(document).ready(function() {
             },
             error: function(result) {
                 var n = noty({
-                    text: "We cannot connect to the Boxwise server.<br> Do you have internet?",
+                    text: "We cannot connect to the Boxtribute server.<br> Do you have internet?",
                     type: "error"
                 });
             }
