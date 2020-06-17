@@ -13,7 +13,7 @@ const AllFunctions = ['Free Shop', 'Admin','Users','Settings','Texts','Manage me
 'User profile','Exit login as','Sales List Download','Insight','General stock','Lists','Services',
 'Bicycles / Sport','Borrow edit','Borrow history ','Library','Borrow books','Library history',
 'Library','Laundry','All Residents export','Laundry No show','Laundry start new cycle','Organisations',
-'Boxwise Gods','User groups','Bases','Add beneficiary'];
+'Boxtribute Gods','User groups','Bases','Add beneficiary'];
 const AdminAvailableFunctions = ['Users','Manage products',
 'Checkout','Boxes','Give tokens to all','Fancy graphs',
 'Stockroom','Generate market schedule','Generate QR labels',

@@ -5,7 +5,7 @@
 
     if (!$ajax) {
         if (!$_SESSION['user']['is_admin']) {
-            throw new Exception('Only for Boxwise Gods');
+            throw new Exception('Only for Boxtribute Gods');
         }
         initlist();
 

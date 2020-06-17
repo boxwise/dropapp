@@ -181,7 +181,7 @@ function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkK
 }
 
 // session data requires user, usergroup, organisation, camp
-// organistion and usergroup is optional for Boxwise Gods
+// organistion and usergroup is optional for Boxtribute Gods
 function loadSessionData($user)
 {
     $_SESSION['user'] = $user;
@@ -220,7 +220,7 @@ function loadSessionData($user)
         $_SESSION['camp'] = $camplist[$_SESSION['camp']['id']];
     }
 
-    if ($user['is_admin'] && isset($_SESSION['camp']['id']) && !isset($_SESSION['organisation']['id'])) { //Boxwise God who selected a camp before an organisation was specified.
+    if ($user['is_admin'] && isset($_SESSION['camp']['id']) && !isset($_SESSION['organisation']['id'])) { //Boxtribute God who selected a camp before an organisation was specified.
         // based on the selected camp the organisation is selected.
         $_SESSION['organisation'] = organisationlist()[$_SESSION['camp']['organisation_id']];
     }
@@ -263,7 +263,7 @@ function loginasuser($table, $ids)
 {
     $id = $ids[0];
     if ($_SESSION['user2'] or !$_SESSION['user']['is_admin']) {
-        throw new Exception('You don\'t have access. Either you are not a Boxwise God or you are already logged in as a different user!');
+        throw new Exception('You don\'t have access. Either you are not a Boxtribute God or you are already logged in as a different user!');
     }
     $_SESSION['user2'] = $_SESSION['user'];
     $_SESSION['camp2'] = $_SESSION['camp'];

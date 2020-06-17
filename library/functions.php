@@ -33,7 +33,7 @@ function allowgivedrops()
     return $_SESSION['user']['is_admin'] || db_value('SELECT id FROM cms_functions AS f, cms_usergroups_functions AS uf WHERE uf.cms_functions_id = f.id AND f.include = "give2all" AND uf.cms_usergroups_id = :usergroup', ['usergroup' => $_SESSION['usergroup']['id']]);
 }
 
-// return all organisations a Boxwise God user has access to
+// return all organisations a Boxtribute God user has access to
 function organisationlist($short = false)
 {
     if ($_SESSION['user']['is_admin']) {
@@ -42,7 +42,7 @@ function organisationlist($short = false)
             ORDER BY label', [], false, true);
     }
 
-    throw new Exception('A non Boxwise God tries to load a list of all organisations!');
+    throw new Exception('A non Boxtribute God tries to load a list of all organisations!');
 }
 
 // return all camps a user has access to
@@ -50,11 +50,11 @@ function camplist($short = false)
 {
     $parameters = [];
     $whereclause = '';
-    if (!$_SESSION['user']['is_admin']) { // normal user (no Boxwise God)
+    if (!$_SESSION['user']['is_admin']) { // normal user (no Boxtribute God)
         $parameters['organisation_id'] = $_SESSION['organisation']['id'];
         $parameters['usergroup_id'] = $_SESSION['usergroup']['id'];
         $whereclause = ' AND c.organisation_id = :organisation_id AND x.camp_id = c.id AND x.cms_usergroups_id = :usergroup_id';
-    } elseif (isset($_SESSION['organisation']['id'])) { // Boxwise God and a organisation is specified
+    } elseif (isset($_SESSION['organisation']['id'])) { // Boxtribute God and a organisation is specified
         $parameters['organisation_id'] = $_SESSION['organisation']['id'];
         $whereclause = ' AND c.organisation_id = :organisation_id';
     }
