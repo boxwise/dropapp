@@ -21,6 +21,7 @@ describe('QR labels tests - user with rights', () => {
 
     it('Left panel navigation', () => {
         cy.visit('/');
+        cy.viewport(1280, 720);
         cy.get("a[class='menu_qr']").last().contains("Generate QR labels").click();
         labelsCountInputIsVisible();
         cy.verifyActiveSideMenuNavigation('menu_qr');

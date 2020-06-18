@@ -61,7 +61,8 @@ describe('Checkout tests', () => {
   }
 
   it('Left panel navigation', () => {
-	  cy.visit('/');
+    cy.visit('/');
+    cy.viewport(1280, 720);
 	  cy.get("a[class='menu_check_out']").last().contains("Checkout").click();
     cy.get("button[data-testid='submitShoppingCart']").should("be.visible");
     cy.verifyActiveSideMenuNavigation('menu_check_out');

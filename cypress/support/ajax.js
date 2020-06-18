@@ -9,6 +9,8 @@ Cypress.Commands.add("setupAjaxActionHook", () => {
 Cypress.Commands.add("waitForAjaxAction", (expectedResponse) => {
     // wait for the expected response
     cy.wait('@ajaxPostAction').then(xhr => {
+        cy.log(xhr.response.body);
+        cy.log(xhr.response.body.success);
         expect(xhr.response.body.success).to.equal(true);
         expect(xhr.response.body.message).to.equal(expectedResponse);
 
