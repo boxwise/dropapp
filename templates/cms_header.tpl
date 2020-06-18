@@ -9,7 +9,6 @@
     <title>{if isset($title)}{$title|strip_tags:false} - {/if}{$translate['site_name']}</title>
 
     <!-- Bootstrap -->
-    <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@700&display=swap" rel="stylesheet">
     <link href="/assets/css/theme.css?v=1" rel="stylesheet"> 
     <link href="/assets/css/minified.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
