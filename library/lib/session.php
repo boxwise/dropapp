@@ -86,20 +86,19 @@ function checkUserAuth0($token, $domain, $email)
 {
     $data = ['email' => $email];
     $postvars = '';
-    /*
+
     foreach ($data as $key => $value) {
-        $postvars .= $key.'='.$value.'&';
+        $postvars .= '?'.$key.'='.$value;
     }
-    */
-    $postvars = json_encode($data);
+
+    //$postvars = json_encode($data);
     $cu = curl_init();
-    curl_setopt($cu, CURLOPT_URL, 'https://'.$domain.'/api/v2/users-by-email');
+
+    $urlstring = 'https://'.$domain.'/api/v2/users-by-email'.str_replace('@', '%40', $postvars);
+    curl_setopt($cu, CURLOPT_URL, $urlstring);
     curl_setopt($cu, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($cu, CURLOPT_POST, 1);
-    curl_setopt($cu, CURLOPT_POSTFIELDS, $postvars);
-    curl_setopt($cu, CURLOPT_ENCODING, '');
     curl_setopt($cu, CURLOPT_HTTPHEADER, [
-            'Content-type: application/json',
+            'content-type: application/x-www-form-urlencoded',
             'Authorization: Bearer '.$token, ]);
     $userstring = curl_exec($cu);
 
