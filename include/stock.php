@@ -33,7 +33,7 @@
         listsetting('manualquery', true);
 
         function get_filter2_query($applied_filter, $custom_outgoing_locations)
-        {   
+        {
             if (!is_null($custom_outgoing_locations) && array_key_exists($applied_filter, $custom_outgoing_locations)) {
                 return ' AND l.id = '.$applied_filter;
             }
