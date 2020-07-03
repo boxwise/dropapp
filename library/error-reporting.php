@@ -26,6 +26,7 @@ Tracer::inSpan(
                 'dsn' => $settings['sentry_key'],
                 'environment' => $_SERVER['HTTP_HOST'],
                 'error_types' => error_reporting(),
+                'release' => isset($settings['release']) ? $settings['release'] : 'dev',
             ]
         );
     }
