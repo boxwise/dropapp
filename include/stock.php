@@ -32,8 +32,11 @@
         listfilter4(['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
         listsetting('manualquery', true);
 
-        function get_filter2_query($applied_filter)
-        {
+        function get_filter2_query($applied_filter, $custom_outgoing_locations)
+        {   
+            if (!is_null($custom_outgoing_locations) && array_key_exists($applied_filter, $custom_outgoing_locations)) {
+                return ' AND l.id = '.$applied_filter;
+            }
             switch ($applied_filter) {
                 case 'boxes_in_stock':
                     return ' AND l.visible';
@@ -54,7 +57,7 @@
             }
         }
 
-        $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock']);
+        $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock'], $outgoinglocations);
 
         $query = '
             SELECT 
