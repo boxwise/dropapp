@@ -76,10 +76,11 @@
 		<li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
 		<!-- <li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li> -->
 		<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li> 
+		<li><a href="#languagetab_som" data-toggle="tab">Somali</a></li>
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane fade in active" id="languagetab_en">
-			{if {$currentOrg['label']}=='CESRT'}
+			{if {$currentOrg['id']}==14}
 				<h3>Information about new privacy policies</h3><br />
 				<p>OA/CESRT wishes to reassure you that we are protecting your private information, with reference to the new privacy policies that applies to EU/EES countries.</p>
 				<p>For beneficiaries that receive aid from the OA/CESRT Distribution Centre, the following information is retained:</p>
@@ -232,6 +233,24 @@
 				 ثبت گردد.<br />
 				من همچنان موافقم که اطلاعات شخصی خانواده ام طبق پروسه شرح داده شده فوق ثبت گردد.
  			</p>
+		</div>
+		<div class="tab-pane fade" id="languagetab_som">
+			<h3>Warbixin ku saabsan Qaanunka xog qarinteena cusub.</h3><br />
+			<p>‘{$currentOrg['label']}’ Waxay jeclaan laheyd inaan ku damaanaad qaadno inaan ilaalino maclaamaadkaaga shaqsiga ah anagoo ku dhaqmeyna xeerarka cusub ee dhowrista xogta shaqsiyaad ee wadamada Miwodaga Yurub (EU) iyo Wadamada Dhaqaale Wadaaga Yurub (EES).</p>
+			<p>Ka faa’ideysteyaasha gargaaka ka helaya Xarunta Qeybinta Ee ‘{$currentOrg['label']}’, Waxaa looga baahan yahay waxyaabahan soo socda:</p>
+			<ul>
+			<li>Magaca</li>
+			<li>Da’da (taariikh dhalashada)</li>
+			<li>Wadanka dhalashada (Mararka qaar)</li>
+			<li>Adreyska aad degan tahay: (Kaamka magaciisa)</li>
+			<li>Telefoon number (mararka qaar)</li>
+			<li>Lab/ Dhedig</li>
+			</ul>
+			<p>Adiga ayaa lagaa rabaa inaad macluumaadkaaga shaqsiga ah u soo sheegto wakiilada ‘{$currentOrg['label']}’. Waxan ugu baahanahay macluumaadkaan si aan u xaqiijino inaad qeyb ka tahay barnaamijkeena wax qeybinta ee ah hey’adu sameyso, sidoo kale waxay muhuum u yihiin si loo qorsheeyo balamaha si aan u xaqiijino inaan u heyno ka faa’ideysteyaasheena alaab ku filan.</p>
+			<p>‘{$currentOrg['label']}‘ lama wadaageyso macluumaadkaaga shaqsiga ah qeybaha kale.</p>
+			<p>Si ay xarumaha qeybinta ‘{$currentOrg['label']}’ ugu shaqeyaan si sax ah, fadlan aqbal inaan qorno oo aana keydino macluumaadkaaga shaqsiga ah.</p>
+			<p>Anigoo ah, <strong>{$data['firstname']} {$data['lastname']}</strong>, Waxaan aqbalayaa in macluumaadkeyga shaqsiga ah lagu qoro laguna keydiyo sida ay qabaan Qawaaniinta Xog Dhowristaf ‘{$currentOrg['label']}’.</p>
+			<p>Sidoo kale waxaan aqbalayaa in macluumaadka shaqsiga ah ee qoyskeyga lagu qoro looguna keediyo sida kor ku xusan.</p>
 		</div>
 	</div>
 	{/if}
