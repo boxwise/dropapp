@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   gcp-cli: circleci/gcp-cli@1.5.0
-  cypress: cypress-io/cypress@1.8.0
+  cypress: cypress-io/cypress@1.25.0
 jobs:
   build:
     docker:
