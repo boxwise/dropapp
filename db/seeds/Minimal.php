@@ -106,8 +106,8 @@ class Minimal extends AbstractSeed
             (16,1,NULL,NULL,'Dari',NULL,NULL,16,0);");
 
         //------------------- cms_users
-        $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `organisation_id`, `email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
-			(1,'21232f297a57a5a743894a0e4a801fc3','some admin',NULL,'some.admin@boxwise.co',1,'',2,'0000-00-00 00:00:00',NULL,NULL,NULL);");
+        $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
+			(1,'21232f297a57a5a743894a0e4a801fc3','some admin','some.admin@boxwise.co',1,'',2,'0000-00-00 00:00:00',NULL,NULL,NULL);");
 
         //------------------- genders
         $this->execute("INSERT INTO `genders` (`id`,`label`,`shortlabel`,`seq`,`male`,`female`,`adult`,`child`,`baby`,`color`) VALUES 

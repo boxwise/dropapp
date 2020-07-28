@@ -244,16 +244,22 @@ class Demo extends AbstractSeed
 			(160,16);');
 
         //------------------- cms_users
-        $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `organisation_id`,`email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
-            (2,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe',1,'jane.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
-            (3,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe',1,'joe.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
-			(4,'7a53ac982b06d7b9aed4eec5e18693d3','Volunteer',1,'stagingenv_volunteer@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',3,'0000-00-00','0000-00-00'),
-			(5,'ca02bab14acaa85afd14dfbc73c285bf','Coordinator',1,'stagingenv_coordinator@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
-			(6,'7dfc3d2ee682b299cf33aacabcf55e26','Head of Operations',1,'stagingenv_headofops@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
-			(10,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe',2,'jane.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00'),
-            (11,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe',2,'joe.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',11,'0000-00-00','0000-00-00'),
-            (12,'5f4dcc3b5aa765d61d8327deb882cf99','Sam Sample',2,'sam.sample@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',12,'0000-00-00','0000-00-00'),
-            (15,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Bloggs',2,'joe.bloggs@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00');");
+        $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
+            (2,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe','jane.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
+            (3,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe','joe.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
+			(4,'7a53ac982b06d7b9aed4eec5e18693d3','Volunteer','stagingenv_volunteer@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',3,'0000-00-00','0000-00-00'),
+			(5,'ca02bab14acaa85afd14dfbc73c285bf','Coordinator','stagingenv_coordinator@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
+			(6,'7dfc3d2ee682b299cf33aacabcf55e26','Head of Operations','stagingenv_headofops@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
+			(7,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Volunteer','dev_volunteer@boxaid.org',0,NULL,2,'0000-00-00 00:00:00',3,'0000-00-00','0000-00-00'),
+			(8,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Coordinator','dev_coordinator@boxaid.org',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
+			(9,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Head of Operations','dev_headofops@boxaid.org',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
+			(10,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe','jane.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00'),
+            (11,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe','joe.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',11,'0000-00-00','0000-00-00'),
+            (12,'5f4dcc3b5aa765d61d8327deb882cf99','Sam Sample','sam.sample@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',12,'0000-00-00','0000-00-00'),
+            (15,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Bloggs','joe.bloggs@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00'),
+			(16,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Volunteer','dev_volunteer@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',16,'0000-00-00','0000-00-00'),
+			(17,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Coordinator','dev_coordinator@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00'),
+			(18,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Head of Operations','dev_headofops@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00');");
         $users = [];
         for ($i = 20; $i <= 120; ++$i) {
             $tempdata = [
