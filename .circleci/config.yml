@@ -140,7 +140,7 @@ workflows:
         envVariablePrefix: BOXWISE_STAGING_
         serviceName: default
         requires:
-          - build
+          - build-production
         filters:
           branches:
             only: fix_sentry_releases_versioning
