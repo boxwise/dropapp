@@ -52,18 +52,18 @@ jobs:
           cd workspace
           # record version
           echo "CircleCI build number:${CIRCLE_BUILD_NUM}
-          Branch: ${CIRCLE_BRANCH}
-          Git hash: ${CIRCLE_SHA1}" > assets/version.txt
+            Git hash: ${CIRCLE_SHA1}
+            ${CIRCLE_TAG+Release: ${CIRCLE_TAG}}" > assets/version.txt
           # generate config file
           echo "<?php
             \$settings['version'] = '${CIRCLE_BUILD_NUM}';
+            ${CIRCLE_TAG+\$settings['release'] = '${CIRCLE_TAG}';}
             \$settings['db_socket'] = '/cloudsql/${BOXWISE_PRIMARYDB_SOCKET}';
             \$settings['db_database'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_user'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_pass'] = '${<< parameters.envVariablePrefix >>DBPASS}';
             \$settings['sendgrid_key'] = '${BOXWISE_SENDGRID}';
-            \$settings['sentry_key'] = '${BOXWISE_SENTRY}';
-            \$settings['release'] = '${CIRCLE_SHA1}'; " > library/config.php
+            \$settings['sentry_key'] = '${BOXWISE_SENTRY}';" > library/config.php
           echo "paths:
             migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'
             seeds: '%%PHINX_CONFIG_DIR%%/db/seeds'
@@ -107,16 +107,12 @@ jobs:
     docker: 
       - image: circleci/node:4.8.2
     steps:
-      - checkout 
-      - run:
-          name: Test CircleCI pipelines and git tags
-          command: |
-            echo $CIRCLE_BRANCH $CIRCLE_TAG $CIRCLE_BUILD_NUM $CIRCLE_SHA1
+      - checkout
       - run:
           name: Create Sentry Release
           command: |
             curl -sL https://sentry.io/get-cli/ | bash
-            export SENTRY_RELEASE=$(sentry-cli releases propose-version)
+            export SENTRY_RELEASE=$CIRCLE_TAG
             sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
             sentry-cli releases set-commits --auto $SENTRY_RELEASE
             sentry-cli releases finalize $SENTRY_RELEASE
@@ -148,6 +144,11 @@ workflows:
         filters:
           branches:
             only: master
+    - build:
+        name: build-production
+        filters:
+          tags:
+            only: /^v.*/
     - deploy:
         name: deploy-demo
         envVariablePrefix: BOXWISE_DEMO_
@@ -157,6 +158,8 @@ workflows:
         filters:
           branches:
             only: production
+          tags:
+            only: /^v.*/
     - deploy:
         name: deploy-prod
         envVariablePrefix: BOXWISE_PROD_
@@ -166,6 +169,8 @@ workflows:
         filters:
           branches:
             only: production
+          tags:
+            only: /^v.*/
     - create-sentry-release:
         name: create-sentry-release-for-production
         # requires:

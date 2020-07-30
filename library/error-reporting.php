@@ -21,13 +21,23 @@ Tracer::inSpan(
     ['name' => 'sentry.init'],
     function () {
         global $settings;
-        Sentry\init(
-            [
-                'dsn' => $settings['sentry_key'],
-                'environment' => $_SERVER['HTTP_HOST'],
-                'error_types' => error_reporting(),
-                'release' => 'dropapp@'.(isset($settings['release']) ? $settings['release'] : 'dev'),
-            ]
-        );
+        if (isset($settings['release'])) {
+            Sentry\init(
+                [
+                    'dsn' => $settings['sentry_key'],
+                    'environment' => $_SERVER['HTTP_HOST'],
+                    'error_types' => error_reporting(),
+                    'release' => 'dropapp@'.$settings['release'],
+                ]
+            );
+        } else {
+            Sentry\init(
+                [
+                    'dsn' => $settings['sentry_key'],
+                    'environment' => $_SERVER['HTTP_HOST'],
+                    'error_types' => error_reporting(),
+                ]
+            );
+        }
     }
 );
