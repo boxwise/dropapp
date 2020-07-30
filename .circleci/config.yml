@@ -109,9 +109,9 @@ jobs:
     steps:
       - checkout 
       - run:
-        name: Test CircleCI pipelines and git tags
-        command: |
-          echo $CIRCLE_BRANCH $CIRCLE_TAG
+          name: Test CircleCI pipelines and git tags
+          command: |
+            echo $CIRCLE_BRANCH $CIRCLE_TAG
       - run:
           name: Create Sentry Release
           command: |
