@@ -108,7 +108,10 @@ jobs:
       - image: circleci/node:4.8.2
     steps:
       - checkout 
-      # create sentry release
+      - run:
+        name: Test CircleCI pipelines and git tags
+        command: |
+          echo << pipeline.git.branch >> << pipeline.git.tag >>
       - run:
           name: Create Sentry Release
           command: |
