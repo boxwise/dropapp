@@ -143,7 +143,9 @@ workflows:
           - build
         filters:
           branches:
-            only: master
+            only: fix_sentry_releases_versioning
+          tags:
+            only: /^v.*/
     - build:
         name: build-production
         filters:
