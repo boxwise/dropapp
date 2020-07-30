@@ -10,13 +10,6 @@ jobs:
     working_directory: ~/project
     steps:
       - checkout
-      # create sentry release
-      - run: | 
-          curl -sL https://sentry.io/get-cli/ | bash
-          export SENTRY_RELEASE=$(sentry-cli releases propose-version)
-          sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
-          sentry-cli releases set-commits --auto $SENTRY_RELEASE
-          sentry-cli releases finalize $SENTRY_RELEASE
       - run: sudo docker-php-ext-install pdo_mysql exif
       # load composer cache
       - restore_cache:
@@ -41,6 +34,7 @@ jobs:
           root: ~/project
           paths:
             - .
+
   deploy:
     parameters:
       serviceName:
@@ -108,6 +102,22 @@ jobs:
           # deploy
           gcloud app deploy app-<< parameters.serviceName >>.yaml --version ${CIRCLE_BUILD_NUM}
           gcloud app deploy cron.yaml dispatch.yaml --version ${CIRCLE_BUILD_NUM}
+  
+  create-sentry-release:
+    docker: 
+      - image: circleci/node:4.8.2
+    steps:
+      - checkout 
+      # create sentry release
+      - run:
+          name: Create Sentry Release
+          command: |
+            curl -sL https://sentry.io/get-cli/ | bash
+            export SENTRY_RELEASE=$(sentry-cli releases propose-version)
+            sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE
+            sentry-cli releases set-commits --auto $SENTRY_RELEASE
+            sentry-cli releases finalize $SENTRY_RELEASE
+
 workflows:
   build-and-deploy:
     jobs:
@@ -153,3 +163,10 @@ workflows:
         filters:
           branches:
             only: production
+    - create-sentry-release:
+        name: create-sentry-release-for-production
+        # requires:
+        #   - deploy-prod
+        filters:
+          branches:
+            only: fix_sentry_releases_versioning
