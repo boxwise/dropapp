@@ -6,7 +6,7 @@
   "license": "MIT",
   "devDependencies": {
     "cypress": "^4.11.0",
-    "wait-on": "^3.3.0"
+    "wait-on": "^5.1.0"
   },
   "scripts": {
     "cypress": "CYPRESS_baseUrl=http://localhost:8100 cypress"
