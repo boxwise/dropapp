@@ -147,6 +147,8 @@ workflows:
     - build:
         name: build-production
         filters:
+          branches:
+            only: production
           tags:
             only: /^v.*/
     - deploy:
