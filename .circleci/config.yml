@@ -52,8 +52,8 @@ jobs:
           cd workspace
           # record version
           echo "CircleCI build number:${CIRCLE_BUILD_NUM}
-            Git hash: ${CIRCLE_SHA1}
-            ${CIRCLE_TAG+Release: ${CIRCLE_TAG}}" > assets/version.txt
+          Git hash: ${CIRCLE_SHA1}
+          ${CIRCLE_TAG+Release: ${CIRCLE_TAG}}" > assets/version.txt
           # generate config file
           echo "<?php
             \$settings['version'] = '${CIRCLE_BUILD_NUM}';
@@ -140,12 +140,10 @@ workflows:
         envVariablePrefix: BOXWISE_STAGING_
         serviceName: default
         requires:
-          - build-production
+          - build
         filters:
           branches:
-            only: fix_sentry_releases_versioning
-          tags:
-            only: /^v.*/
+            only: master
     - build:
         name: build-production
         filters:
@@ -175,10 +173,10 @@ workflows:
             only: /^v.*/
     - create-sentry-release:
         name: create-sentry-release-for-production
-        # requires:
-        #   - deploy-prod
+        requires:
+          - deploy-prod
         filters:
           branches:
-            only: fix_sentry_releases_versioning
+            only: production
           tags:
             only: /^v.*/
