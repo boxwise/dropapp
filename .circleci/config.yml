@@ -111,7 +111,7 @@ jobs:
       - run:
         name: Test CircleCI pipelines and git tags
         command: |
-          echo << pipeline.git.branch >> << pipeline.git.tag >>
+          echo $CIRCLE_BRANCH $CIRCLE_TAG
       - run:
           name: Create Sentry Release
           command: |
