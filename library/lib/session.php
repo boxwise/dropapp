@@ -6,7 +6,7 @@ function authorize()
 
     $user = false;
     if (isset($_SESSION['auth0__user']['email'])) {// user has been authenticated
-        $user = db_row('SELECT id, naam, organisation_id, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $_SESSION['auth0__user']['email']]);
+        $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $_SESSION['auth0__user']['email']]);
         if ($user) { // does user exist in the app db and in the auth0 db
             if (check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'])) { // is the user account still valid?
                 loadSessionData($user);
