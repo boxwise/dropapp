@@ -156,10 +156,7 @@ $(document).ready(function() {
         $("#shopping_cart").find("tr:gt(0)").remove();
         cart.forEach((item) => {
           let tableRef = document.getElementById("shopping_cart");
-
-          // jQuery('<tr><td>Rice (1kg) - (25 Tokens)</td><td><input type="number" class="form-control valid changeQuantity" data-testid="changeQuantity" step="1" min="1" productid="1164" value="1"></td><td data-testid="totalPrice" id="totalSum_1164">25</td><td data-testid="price">25</td><td><button type="button" class="btn btn-sm btn-danger deleteFromCart" data-testid="deleteFromCart" productid="1164" min="1"><i class="fa fa-trash-o"></i></button></td></tr>', {
-          // }).appendTo(tableRef);
-
+          
           let tr = jQuery('<tr/>')
             .appendTo(tableRef);
 
@@ -195,7 +192,7 @@ $(document).ready(function() {
             .appendTo(tr);
           let deleteCellButton = jQuery('<button/>', {
             'type': 'button',
-            'class': 'btn btn-sm btn-danger deleteFromCart',
+            'class': 'btn btn-sm deleteFromCart',
             'data-testid': 'deleteFromCart',
             'productid': item.id,
           }).appendTo(deleteCell);
@@ -324,7 +321,7 @@ $(document).ready(function() {
             },
             error: function(result) {
                 var n = noty({
-                    text: "We cannot connect to the Boxwise server.<br> Do you have internet?",
+                    text: "We cannot connect to the Boxtribute server.<br> Do you have internet?",
                     type: "error"
                 });
             }

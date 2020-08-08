@@ -1,7 +1,7 @@
 /* body */
 
 body{
-	padding-top: 40px;
+	padding-top: 50px;
 	font-size: 13px;
 }
 
@@ -64,25 +64,37 @@ p{
 	top: 0;
 	width: 100%;
 	background: #D71920;
-	color: #fff;
+	color: #000;
 	z-index: 9999;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+.header-top .orgCampHeaderSpan{
+	position: absolute;
+	font-size: 1.77em;
+    padding-top: 8px;
+    padding-left: 60px;
+	font-weight: bold;
+	text-transform: capitalize;
 }
 .header-top-inner{
 	padding: 5px 15px;
 }
 .header-top-inner a{
-	color: #fff;
+	color: #000;
+}
+.boxtributeLogoLink{
+	display: inline-block;
 }
 .header-top-inner .menu-btn{
     font-size: 1.5em;
     float: left;
-    margin-top: -7px;
+    margin-top: 4px;
 }
 .header-top-inner .brand{
-	font-size: 1.5em;
+	font-size: 1.77em;
+	font-family: "OpenSans ExtraBold";
 	font-weight: bold;
-	color: #fff;
+	color: #000;
 	display: inline-block;
 	transition: all 500ms;
 	padding-right: 5px;
@@ -93,10 +105,6 @@ p{
 .header-top-inner .nav.pull-right{
 	margin-top: -5px;
 	margin-bottom: -5px;
-}
-.header-top-inner .nav>li>a:hover, .header-top-inner .nav>li>a:focus, .header-top-inner .nav .open>a, .header-top-inner .nav .open>a:hover, .header-top-inner .nav .open>a:focus{
-	background: rgba(0,0,0,0.1);
-	color: #fff;
 }
 .header-top-inner .dropdown-menu{
 	margin-top: -1px;
@@ -110,11 +118,11 @@ p{
 }
 .header-top .fa-mobile{
 	margin-right: 5px;
-	font-size: 1.3em;
 }
 .navbar-nav>li>a{
 	padding-top: 9px;
 	padding-bottom: 7px;
+	font-size:1.33em;
 }
 
 .navbar-nav .open .dropdown-menu{
@@ -144,16 +152,21 @@ p{
 .nav-aside ul li.nav-header{
 	padding: 5px 15px;
 	text-transform: uppercase;
-	color: #aaa;
-	font-size: 0.85em;
-	font-weight:bold;
+	color: #000;
+	font-size: 1.33em;
 	margin-top: 10px;
 	margin-left: 15px;
 }
 .nav-aside ul li a{
+	position: relative;
 	color: #000;
 	display: block;
 	padding: 5px 15px;
+	text-transform: capitalize;
+}
+/* used to prevent capitalization of certain words intentionally wrapped in a span */
+.nav-aside ul li span{
+	text-transform: lowercase;
 }
 .nav-aside ul li a:hover{
 	background:#f2f2f2;
@@ -162,14 +175,12 @@ p{
 	border-right: 1px solid #e1e1e1;
 }
 .nav-aside ul li.active > a{
-	color: #D71920;
-	background:#eee;
+	color: var(--sidebarFontColor);
+	background:var(--boxwiseYellow);
 	font-weight: bold;
 	margin-right: -1px;
 	border-right: 1px solid #e1e1e1;
-}
-.nav-aside ul li a{
-	position: relative;
+	font-size: 1em;
 }
 .nav-aside ul li a i{
 	top: -3px;
@@ -203,25 +214,28 @@ p{
 
 .content .row-title .pagemenu li a{
 	display: block;
+    margin-right: 15px;
 	padding: 4px 15px;
 	color: #000;
+	background-color: var(--inactiveTabsBackground);
 }
 
 .content .row-title .pagemenu li a:hover{
-	background: #f2f2f2;
+	background: var(--activeOrHoverTabsBackground);
+	border: 1px solid black;
+	border-radius: 4px 4px 0 0;
 	text-decoration: none;
 }
 
 .content .row-title .pagemenu li a.active{
-	color: #009DAD;
+	background: var(--activeOrHoverTabsBackground);
+	border: 1px solid black;
+	border-radius: 2px 2px 0 0; 
 	font-weight: bold;
-	background: #fff;
-	border-top: 1px solid #eee;
-	border-left: 1px solid #eee;
-	border-right: 1px solid #eee;
 }
 
 .content-form{
+	/* margin-right: 420px; */
 	margin-right: 336px;
 /* 	max-width: 900px;	 */
 	position: relative;
@@ -234,14 +248,18 @@ p{
 }
 
 .aside-content{
+	/* width: 395px; */
 	width: 311px;
 	padding: 20px;
 	background: #f8f8f8;
 	position: relative;
 	right: -311px;
+	color: var(--boxwiseYellow);
 }
 .aside-content.affix{
 	right: auto;
+	background: var(--boxwiseYellow);
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 .aside-form{
 	margin-top: 15px;
@@ -315,6 +333,8 @@ body > iframe { display: none; }
 
 .row-title h1{ /*?*/
 	margin: 0;
+	text-transform: uppercase;
+	font-size: 1.77em;
 }
 
 .form-group {
@@ -333,28 +353,26 @@ body > iframe { display: none; }
 .tab-content{
 	margin-top: 30px;
 }
-.nav-tabs li.active a{
-}
 .nav-tabs li a.error{
 	background: #F78B83;
 	color: #fff;
 }
 .nav-tabs li.active a.error{
-	background: #009DAD;
+	background: var(--boxwiseBlue);
 }
 
 .nav-tabs>li>a{
 	margin-right: 10px;
-	font-weight: bold;
 	border: 1px solid #eee;
 	border-bottom-color: #ddd;
 	color: #333;
 	background-color: #eee;
 }
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus, .nav>li>a:hover, .nav>li>a:focus{
-	border-color: #009DAD #009DAD #009DAD;
-	color: #fff;
-	background: #009DAD;
+	border-color: black black black;
+	color: #000;
+	background: white;
+	font-weight: bold;
 }
 
 /* lock/unlock */
@@ -392,6 +410,9 @@ body > iframe { display: none; }
 
 
 .btn{
+	background: var(--boxwiseButtons);
+	background-color: var(--boxwiseButtons);
+	font-size: 1em;
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
@@ -399,6 +420,11 @@ body > iframe { display: none; }
 	margin-bottom:7px;
 	margin-right: 5px;
 	pointer-events: visible;
+	color: var(--buttonTextColor);
+	cursor: pointer;border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
 }
 .btn-group .btn, .actions .btn-group .btn{
 	margin-right: 0;
@@ -407,8 +433,7 @@ body > iframe { display: none; }
 	margin-right: 7px;
 }
 .btn:hover{
-	background-position: 0 0;
-	text-shadow: none;
+	text-decoration: underline;
 }
 .btn.active, .btn:active{
 	box-shadow: none;
@@ -431,7 +456,6 @@ body > iframe { display: none; }
 	background-image: -moz-linear-gradient(top,#f8f8f8,#f1f1f1);
 	background-image: -ms-linear-gradient(top,#f8f8f8,#f1f1f1);
 	border: 1px solid #c6c6c6;
-	color: #333;
 }
 .btn-default.active, .btn-default:active{
 	border-color: #888;
@@ -460,6 +484,9 @@ body > iframe { display: none; }
 }
 .btn .caret{
 	margin-left: 2px;
+}
+.listSearchButtonDiv{
+	font-size: 12px;
 }
 /* using a different icon font, so need to fix some icon positioning and names from plugins */
 
@@ -670,6 +697,8 @@ textarea.select2{
 }
 .actions .btn{
 	margin-right: 7px;
+    background: var(--boxwiseButtons);
+    color: #ffffff;
 }
 
 .navigations > li{
@@ -690,7 +719,6 @@ textarea.select2{
 }
 .search-group a.form-control-feedback:hover{
 	text-decoration: none;
-	color: #D71920;
 }
 .dropdown-toggle a.form-control-feedback{
 	color: #444;
@@ -700,7 +728,6 @@ textarea.select2{
 }
 .dropdown-toggle a.form-control-feedback:hover{
 	text-decoration: none;
-	color: #D71920;
 }
 
 /* table general */
@@ -730,21 +757,12 @@ textarea.select2{
 .table{
 	border-bottom: 1px solid #ddd;
 }
-.table tbody tr.item td, .table tbody tr.item th{
-	background: #fafafa;
+.table tbody tr:hover td, .table tbody tr:hover th{
+	background: var(--boxwiseYellow);
+	cursor: pointer;
 }
 .table tbody tr.item-clickable{
 	cursor: pointer;
-}
-.table tbody tr.item-clickable:hover td, .table tbody tr.item-clickable:hover th{
-	background: #f5f5f5;
-	cursor: pointer;
-}
-.table tbody tr.selected td{
-	background: #E7F5FC;
-}
-.table tbody tr.selected:hover td{
-	background: #DCF3FF;
 }
 .table .td-content .breakall{
 	word-break: break-all;
@@ -1021,6 +1039,7 @@ tr.level-10 td:first-child{
 .login-reset-form {
 	max-width: 300px;
 	min-width: 230px;
+	margin-top: 30px;
 }
 .login-reset-form .btn-success{
 	margin-right: 10px;
@@ -1029,6 +1048,9 @@ tr.level-10 td:first-child{
 	margin-top: 15px;
 	display: inline-block;
 	color: #aaa;
+}
+.loginLogo{
+
 }
 
 /* Modal Form */
@@ -1057,22 +1079,25 @@ tr.level-10 td:first-child{
 	right: 20px;
 }
 
-
-@media screen and (max-width: 767px){
-	body{
-		padding-top: 30px;
-	}
-	.header-top{
-/* 		position: relative; */
-		position: fixed;
-	}
+@media screen and (max-width: 1199px){
 	.content{
 		margin-left: 0;
 		padding-left: 0;
 		border-left: none;
 	}
+}
+
+@media screen and (max-width: 767px){
+	body{
+		padding-top: 50px;
+	}
+	.header-top{
+/* 		position: relative; */
+		position: fixed;
+	}
 	.navbar-nav>li>a{
 		padding: 9px 8px 8px 8px;
+		font-size:1.33em;
 	}
 	.header-top .navbar-nav.pull-right li:first-child a{
 		padding-bottom: 3px;
@@ -1101,7 +1126,7 @@ tr.level-10 td:first-child{
 }
 
 /* putting the right sidebar below the form */
-@media screen and (max-width: 959px){
+@media screen and (max-width: 785px){
 	.content-form{
 		margin-right: 0;
 	}

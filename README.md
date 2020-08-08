@@ -4,7 +4,7 @@
 
 # Readme #
 
-You just found the Drop App (first version of [Boxwise](https://www.boxwise.co) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
+You just found the Drop App (first version of [Boxtribute](https://www.boxtribute.org) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
 
 We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users are [Intervolve](https://intervolvegr.com/), [R4R](https://www.refugees4refugees.gr), [IHA](https://www.iha.help/), and [Hermine](https://mfh.global/hermine/).
 
@@ -151,6 +151,11 @@ All tests in `cypress/integrations` should be found and can be directly executed
 
 ![Selection_599](https://user-images.githubusercontent.com/8964422/77221481-6a190d00-6b4a-11ea-88d7-9fc70ce1c982.png)
 
+#### Known Cypress Issues
+We experienced before that tests can fail in CircleCI, but not in the local environment. The main reason for it is that Cypress is usually executing the commands slower in a local dev environment.
+Therefore, a few additional guidelines when writing test:
++ When you want to execute a redirect, e.g. example by clicking a button or tab, please add an assertion after the click, e.g. of the url `cy.url().should('include', 'people_deactivated')`. Due to this assertion cypress will definitely wait until the redirect is executed.  
++ Only if you use `cy.visit()` you can be sure that the cypress test wait until a page is fully loaded. Therefore, try to navigate as much as possible with `cy.visit()`.
 
 ### Contribution guidelines ###
 
@@ -159,8 +164,8 @@ For everything else, please see our [contribution guidelines](https://github.com
 
 ### Who do I talk to? ###
 
-Right now best talk to [Hans](mailto:hans@boxwise.co)!
+Drop us an email to hello@boxwise.co
 
 ### License ###
 
-See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
+See the [LICENSE](./LICENSE) file for license rights and limitations (Apache 2.0).

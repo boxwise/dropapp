@@ -7,12 +7,18 @@ Cypress.Commands.add("getButtonWithText", (text) => {
 });
 
 Cypress.Commands.add("getRowWithText", (text) => {
+    // This only returns the firs DOM element found.
     cy.get("tr").contains(text);
 });
 
 Cypress.Commands.add("checkGridCheckboxByText", (text) => {
-    cy.getRowWithText(text).parent().parent().parent().within(() => {
-        cy.get("input[type='checkbox']").scrollIntoView().check({force: true});
+    cy.get("tr").each(($tr) => {
+        // iterate through all rows
+        if ($tr.text().includes(text)){
+            cy.wrap($tr).within(() => {
+                cy.get("input[type='checkbox']").scrollIntoView().should('be.visible').check({force: true});
+            });
+        }
     });
 });
 

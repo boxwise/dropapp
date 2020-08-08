@@ -7,7 +7,7 @@ class Cypress extends AbstractSeed
     public function getDependencies()
     {
         return [
-            'MinimalDb',
+            'Minimal',
         ];
     }
 
@@ -31,7 +31,7 @@ class Cypress extends AbstractSeed
         	(111,100000000),
         	(92,100000000),
         	(90,100000000),
-			(165,100000000),
+			(160,100000000),
         	(112,100000000),
         	(96,100000000),
         	(102,100000000),
@@ -60,8 +60,8 @@ class Cypress extends AbstractSeed
         	(110,100000002),
         	(43,100000002),
 			(156,100000002),
-			(165,100000002),
-			(165,100000000),
+			(160,100000002),
+			(160,100000000),
         	(90,100000000),
         	(87,100000000),
         	(102,100000000),
@@ -71,7 +71,7 @@ class Cypress extends AbstractSeed
         	(110,100000000),
         	(158,100000001),
         	(90,100000001),
-			(165,100000001),
+			(160,100000001),
         	(87,100000001),
         	(102,100000001),
         	(111,100000001),
@@ -92,30 +92,30 @@ class Cypress extends AbstractSeed
 			(100000000,100000003);');
 
         //------------------- cms_users
-        $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `organisation_id`, `email`, `is_admin`, `lastlogin`, `lastaction`, `created`, `created_by`, `modified`, `modified_by`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
-        	(100000000,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_Admin',NULL,'admin@admin.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:10:40',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000002,'0000-00-00','0000-00-00'),
-        	(100000001,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_Coordinator',NULL,'coordinator@coordinator.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:08',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000001,'0000-00-00','0000-00-00'),
-        	(100000002,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_User',NULL,'user@user.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'0000-00-00','0000-00-00'),
-        	(100000003,'bb1f40afbf093afa5b9b343625ed08bd','NotActived',NULL,'notactivated@notactivated.com',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:35',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'2019-07-20','2019-07-31'),
-        	(100000004,'bb1f40afbf093afa5b9b343625ed08bd','Expired User',NULL,'expired@expired.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:58',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'2019-07-01','2019-07-09'),
-        	(100000005,'bb1f40afbf093afa5b9b343625ed08bd','Deleted User',NULL,'deleted@deleted.co.deleted.100000005',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:15:42',1,'2019-07-10 08:15:50',1,NULL,2,'2019-07-10 08:15:50',100000000,'0000-00-00','0000-00-00'),
-        	(100000006,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_UserWithNoPermissions',NULL,'noPermissions@noPermissions.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000003,'0000-00-00','0000-00-00'),
-        	(100000007,'1c962d7d2e90e539d64bca1be5257724','BrowserTestUser_DeactivateTest',NULL,'deactivateTest@deactivateTest.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'0000-00-00','0000-00-00'),
-        	(100000008,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_Pending',NULL,'pending@pending.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'2022-12-20','2023-12-20'),
-            (100000009,'bb1f40afbf093afa5b9b343625ed08bd','Deleted Coordinator',NULL,'deleted_coordinator@deleted.co.deleted.100000009',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:15:42',1,'2019-07-10 08:15:50',1,NULL,2,'2019-07-10 08:15:50',100000001,'2018-05-26','2019-05-26'),
-        	(100000010,'bb1f40afbf093afa5b9b343625ed08bd','Deleted Admin',NULL,'deleted_admin@deleted.co.deleted.100000010',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:15:42',1,'2019-07-10 08:15:50',1,NULL,2,'2019-07-10 08:15:50',100000002,'0000-00-00','0000-00-00'),
-            (100000011,'bb1f40afbf093afa5b9b343625ed08bd','Expired Coordinator',NULL,'expired_coordinator@expired.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:58',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000001,'2017-04-11','2017-05-28'),
-        	(100000012,'bb1f40afbf093afa5b9b343625ed08bd','Expired Admin',NULL,'expired_admin@expired.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:58',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000002,'2017-04-11','2017-05-28');");
+        $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `email`, `is_admin`, `lastlogin`, `lastaction`, `created`, `created_by`, `modified`, `modified_by`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
+        	(100000000,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_Admin','admin@admin.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:10:40',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000002,'0000-00-00','0000-00-00'),
+        	(100000001,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_Coordinator', 'coordinator@coordinator.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:08',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000001,'0000-00-00','0000-00-00'),
+        	(100000002,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_User', 'user@user.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'0000-00-00','0000-00-00'),
+        	(100000003,'bb1f40afbf093afa5b9b343625ed08bd','NotActived', 'notactivated@notactivated.com',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:35',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'2019-07-20','2019-07-31'),
+        	(100000004,'bb1f40afbf093afa5b9b343625ed08bd','Expired User', 'expired@expired.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:58',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'2019-07-01','2019-07-09'),
+        	(100000005,'bb1f40afbf093afa5b9b343625ed08bd','Deleted User', 'deleted@deleted.co.deleted.100000005',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:15:42',1,'2019-07-10 08:15:50',1,NULL,2,'2019-07-10 08:15:50',100000000,'0000-00-00','0000-00-00'),
+        	(100000006,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_UserWithNoPermissions', 'noPermissions@noPermissions.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000003,'0000-00-00','0000-00-00'),
+        	(100000007,'1c962d7d2e90e539d64bca1be5257724','BrowserTestUser_DeactivateTest', 'deactivateTest@deactivateTest.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'0000-00-00','0000-00-00'),
+        	(100000008,'bb1f40afbf093afa5b9b343625ed08bd','BrowserTestUser_Pending', 'pending@pending.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:11:31',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000000,'2022-12-20','2023-12-20'),
+            (100000009,'bb1f40afbf093afa5b9b343625ed08bd','Deleted Coordinator', 'deleted_coordinator@deleted.co.deleted.100000009',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:15:42',1,'2019-07-10 08:15:50',1,NULL,2,'2019-07-10 08:15:50',100000001,'2018-05-26','2019-05-26'),
+        	(100000010,'bb1f40afbf093afa5b9b343625ed08bd','Deleted Admin', 'deleted_admin@deleted.co.deleted.100000010',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:15:42',1,'2019-07-10 08:15:50',1,NULL,2,'2019-07-10 08:15:50',100000002,'0000-00-00','0000-00-00'),
+            (100000011,'bb1f40afbf093afa5b9b343625ed08bd','Expired Coordinator', 'expired_coordinator@expired.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:58',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000001,'2017-04-11','2017-05-28'),
+        	(100000012,'bb1f40afbf093afa5b9b343625ed08bd','Expired Admin', 'expired_admin@expired.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:58',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000002,'2017-04-11','2017-05-28');");
 
         //------------------- locations
-        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`) VALUES
-        	(100000000,'TestShop',100000000,0,0,1,0,0,0),
-        	(100000001,'TestLOST',100000000,0,0,0,0,1,0),
-        	(100000002,'TestDonated',100000000,0,0,0,1,0,0),
-        	(100000003,'TestWarehouse',100000000,1,0,0,0,0,0),
-			(100000004,'TestStockroom',100000000,1,1,0,0,0,0),
-            (100000005,'TestDummyLocation',100000001,0,0,1,0,0,0),
-            (100000006,'TestSCRAP',100000000,0,0,0,0,0,1);");
+        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`,`box_state_id`) VALUES
+        	(100000000,'TestShop',100000000,0,0,1,0,0,0,5),
+        	(100000001,'TestLOST',100000000,0,0,0,0,1,0,2),
+        	(100000002,'TestDonated',100000000,0,0,0,1,0,0,5),
+        	(100000003,'TestWarehouse',100000000,1,0,0,0,0,0,1),
+			(100000004,'TestStockroom',100000000,1,1,0,0,0,0,1),
+            (100000005,'TestDummyLocation',100000001,0,0,1,0,0,0,5),
+            (100000006,'TestSCRAP',100000000,0,0,0,0,0,1,6);");
 
         //------------------- products
         $this->execute("INSERT INTO `products` (`id`, `name`, `category_id`, `gender_id`, `sizegroup_id`, `camp_id`, `value`, `amountneeded`, `created`, `created_by`, `modified`, `modified_by`, `maxperadult`, `maxperchild`, `stockincontainer`, `comments`, `deleted`) VALUES

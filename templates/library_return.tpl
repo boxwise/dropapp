@@ -10,5 +10,5 @@
 	</div>
 
 <div class="fc"></div>
-<a href="?action=library_edit&return={$data['id']}&user={$data['people_id']}" class="btn btn-success">Return the book</a>
+<a href="?action=library_edit&return={$data['id']}&user={$data['people_id']}" class="btn">Return the book</a>
 </div>

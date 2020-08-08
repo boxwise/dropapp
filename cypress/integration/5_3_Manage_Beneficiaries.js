@@ -94,12 +94,14 @@ describe('Manage beneficiaries', () => {
         cy.get("ul[data-testid='listTab'] li a")
             .contains("Deactivated")
             .click();
+        cy.url().should('include', 'people_deactivated');
     }
 
     function selectAllTab() {
         cy.get("ul[data-testid='listTab'] a")
             .contains("All")
             .click();
+        cy.url().should('not.include', 'deactivated');
     }
 
     function selectFilterOption(option){
@@ -114,6 +116,7 @@ describe('Manage beneficiaries', () => {
         cy.inputFill("lastname_id", lastname);
         cy.inputFill("container_id", testCaseId);
         cy.get("button").contains("Save and close").click();
+        cy.url().should('not.include', 'edit');
     }
 
     function clickDeleteButtonAndCheckConfirmation(){
@@ -192,6 +195,7 @@ describe('Manage beneficiaries', () => {
 
     it('Navigation, page elements and list visibility', () => {
         cy.visit('/');
+        cy.viewport(1280, 720);
         cy.get("a[class='menu_people']").last().contains("Manage beneficiaries").click();
         // page elements visibility checks
         getBeneficiariesTable().should('be.visible');
@@ -222,12 +226,12 @@ describe('Manage beneficiaries', () => {
     //no cleanup ahead is needed because the delete action doesn't depend on other users and if they're present
     it('Delete beneficiary', () => {
         createTestBeneficiary(TEST_FIRSTNAME1, TEST_LASTNAME1, TEST_CASE_ID);
+        getBeneficiaryRow(TEST_LASTNAME1).should('exist');
         cy.checkGridCheckboxByText(TEST_LASTNAME1);
         clickDeleteButtonAndCheckConfirmation();
+        //cleanup - full delete of the test user
         selectDeactivatedTab();
         getBeneficiaryRow(TEST_LASTNAME1).should('exist');
-
-        //cleanup - full delete of the test user
         cy.checkGridCheckboxByText(TEST_LASTNAME1);
         clickFullDeleteButton();
     });
@@ -289,6 +293,7 @@ describe('Manage beneficiaries', () => {
             }
             //create our test user
             createTestBeneficiary(TEST_FIRSTNAME3, TEST_LASTNAME3, TEST_CASE_ID);
+            getBeneficiaryRow(TEST_LASTNAME3).should('exist');
             cy.checkGridCheckboxByText(TEST_LASTNAME3)
             clickDeleteButtonAndCheckConfirmation();
             selectDeactivatedTab();

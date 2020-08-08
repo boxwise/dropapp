@@ -64,7 +64,8 @@
                         (SELECT 
                             prod_a.group_id as group_id, 
                             prod_a.name as group_name,
-                            prod_b.id as id,prod_b.name as name,
+                            prod_b.id as id,
+                            prod_b.name as name,
                             prod_b.category_id as category_id,
                             prod_b.gender_id as gender_id
                         FROM
@@ -76,7 +77,7 @@
                             INNER JOIN
                                 products as b ON upper(a.name)=upper(b.name) 
                             WHERE 
-                                a.id != b.id and a.sizegroup_id = b.sizegroup_id and a.camp_id = :camp_id and b.camp_id = :camp_id and a.id<b.id 
+                                a.camp_id = :camp_id and b.camp_id = :camp_id and a.id<=b.id 
                             GROUP BY 
                                 upper(a.name)
                             ) prod_a 
@@ -92,11 +93,12 @@
                     INNER JOIN
                         locations on stock.location_id = locations.id 
                     WHERE 
-                        locations.camp_id = :camp_id '.
+                        locations.camp_id = :camp_id 
+                        AND (NOT stock.deleted OR stock.deleted IS NULL)'.
                         ($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
                         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
                         .('lost' == $_SESSION['filter']['stock_overview'] ? 'AND locations.is_lost=1' :
-                            ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND (stock.ordered OR stock.picked)' :
+                            ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND (stock.ordered OR stock.picked) AND locations.visible' :
                                 ('untouched' == $_SESSION['filter']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND locations.visible' :
                                     (is_numeric($_SESSION['filter']['stock_overview']) ? ' AND (locations.id = '.intval($_SESSION['filter']['stock_overview']).')' : '
                                         AND locations.visible')))).
@@ -165,6 +167,7 @@
             ON 
                 complete.id=num_locations.id
             ORDER BY 
+                CAST(SUBSTRING_INDEX(complete.id, "-",1) AS SIGNED), 
                 complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
 
         // Add what rows are expanded and collapsed

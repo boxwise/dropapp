@@ -174,7 +174,7 @@ function AjaxCheckSuccess(result){
 function AjaxError(result) {
     var n = noty({
         text:
-            "Cannot connect to Boxwise - please check your Internet connection.",
+            "Cannot connect to Boxtribute - please check your Internet connection.",
         type: "error"
     });
 }

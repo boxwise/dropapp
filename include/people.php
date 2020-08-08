@@ -43,7 +43,7 @@ $table = $action;
 				COALESCE(people.modified,0),COALESCE(people.created,0))
 			)) > (SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
 			people.*, 
-			DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
+			IF(DATEDIFF(NOW(), people.date_of_birth)>730,CONCAT(TIMESTAMPDIFF(YEAR, people.date_of_birth, NOW()), " yrs"), CONCAT(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW()), IF(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW())>1," mos"," mo"))) AS age, 
 			IF(people.gender="M","Male",IF(people.gender="F","Female","")) AS gender2, 
 			IF(people.parent_id,"",SUM(t2.drops)) AS drops,  
 			IF(people.notregistered,"NR","") AS nr,

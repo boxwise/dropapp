@@ -1,38 +1,35 @@
 body {
-	font-family: Arial, sans-serif;
+	font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size:2em;
 	margin:0 10px;
 	padding:0;
-	color: #395c6b;
 }
 hr{
 	border-color: #fff;
 	margin-bottom: 40px;
 }
 button, .btn {
-	font-family: Arial, sans-serif;
+	font-family: Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size:24px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	border:none;
-	background-color: #009DAD;
+	background-color:var(--boxwiseButtons);
 	width:100%;
 	padding:10px;
 	color: #fff;
 }
 button:hover, .btn:hover{
-	background: rgba(97, 196, 239, 0.74);
 	color: #fff;
 }
 button:active, .btn:active{
-	background: #49b5e4;
 	color: #fff;
 }
 .btn.disabled{
-	border: 2px solid #009DAD;
+	border: 2px solid var(--boxwiseButtons);
 	background: #fff;
-	color: #009DAD;
+	color: var(--boxwiseButtons);
 }
 .btn-light{
 	background: #ddd;
@@ -57,13 +54,14 @@ button:active, .btn:active{
 	font-size: 0.7em;
 }
 header{
-	background: #395c6b;
+	background: #fff;
 	margin: 0 -10px 10px -10px;
 	padding: 10px;
-	color: #fff;
+	color: #000;
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 header a, header a:hover, header a:active{
-	color: #fff;
+	color: #000;
 	text-decoration: none;
 }
 .page-header{
@@ -72,8 +70,7 @@ header a, header a:hover, header a:active{
 #box-info {
 	margin-bottom: 15px;
 	border-radius: 3px;
-	background-color: #009DAD;
-	color: #fff;
+	background-color: var(--boxwiseYellow);
 }
 #box-info-content{
 	padding: 10px;
@@ -112,7 +109,7 @@ input[type="text"].form-control, input[type="password"].form-control, input[type
 	font-size: 17px;
 }
 input[type="text"].form-control:focus, input[type="password"].form-control:focus, input[type="number"].form-control:focus, input[type="email"].form-control:focus{
-	border-color: #009DAD;
+	border-color: var(--boxwiseBlue);
 	box-shadow: none;
 	-webkit-box-shadow: none;
 }
@@ -187,16 +184,17 @@ label.error{
 }
 a {
 	text-decoration: none;
-	color:#009DAD;
+	color:var(--boxwiseButtons);
 }
 .orgcamp{
+	margin-top: 10px;
 	float: right;
 }
 #campselect{
 	position: relative;
 }
 #campselect select{
-	color: #fff;
+	color: #000;
 	background: none;
 	border:none;
 	cursor: pointer;
@@ -208,7 +206,6 @@ a {
 }
 #campselect select option{
 	text-align: right;
-	background: #395c6b;
 }
 #campselect:after{
 	content: '';
@@ -252,7 +249,7 @@ footer a{
 }
 
 .cp-spinner{width:48px;height:48px;display:inline-block;box-sizing:border-box;position:relative;top: 50%;transform: translateY(-50%);}
-.cp-round:before{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #fff;border-right:solid 6px #fff;border-bottom:solid 6px #fff;border-left:solid 6px #fff;position:absolute;top:0;left:0}.cp-round:after{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #009DAD;border-right:solid 6px transparent;border-bottom:solid 6px transparent;border-left:solid 6px transparent;position:absolute;top:0;left:0;animation:cp-round-animate 1s ease-in-out infinite}@keyframes cp-round-animate{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.cp-round:before{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px #fff;border-right:solid 6px #fff;border-bottom:solid 6px #fff;border-left:solid 6px #fff;position:absolute;top:0;left:0}.cp-round:after{border-radius:50%;content:" ";width:48px;height:48px;display:inline-block;box-sizing:border-box;border-top:solid 6px var(--boxwiseBlue);;border-right:solid 6px transparent;border-bottom:solid 6px transparent;border-left:solid 6px transparent;position:absolute;top:0;left:0;animation:cp-round-animate 1s ease-in-out infinite}@keyframes cp-round-animate{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 
 tr.title h3 {
 	margin:15px 0

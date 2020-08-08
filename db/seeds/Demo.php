@@ -2,12 +2,12 @@
 
 use Phinx\Seed\AbstractSeed;
 
-class DemoDb extends AbstractSeed
+class Demo extends AbstractSeed
 {
     public function getDependencies()
     {
         return [
-            'MinimalDb',
+            'Minimal',
         ];
     }
 
@@ -54,13 +54,13 @@ class DemoDb extends AbstractSeed
 			(145,1),
 			(146,1),
 			(158,1),
-			(165,1),
+			(160,1),
 			(67,2),
 			(90,2),
 			(110,2),
 			(112,2),
 			(115,2),
-			(165,2),
+			(160,2),
 			(67,3),
 			(87,3),
 			(92,3),
@@ -127,7 +127,7 @@ class DemoDb extends AbstractSeed
 			(146,1),
 			(156,1),
 			(158,1),
-			(165,1),
+			(160,1),
 			(43,2),
 			(67,2),
 			(87,2),
@@ -144,11 +144,11 @@ class DemoDb extends AbstractSeed
 			(145,2),
 			(146,2),
 			(158,2),
-			(165,2),
+			(160,2),
 			(90,3),
 			(110,3),
 			(112,3),
-			(165,3),
+			(160,3),
 			(87,4),
 			(96,4),
 			(102,4),
@@ -171,7 +171,7 @@ class DemoDb extends AbstractSeed
 			(145,6),
 			(146,6),
 			(158,6),
-			(165,6),
+			(160,6),
 			(43,10),
 			(67,10),
 			(87,10),
@@ -187,14 +187,14 @@ class DemoDb extends AbstractSeed
 			(130,10),
 			(156,10),
 			(158,10),
-			(165,10),
+			(160,10),
 			(43,11),
 			(67,11),
 			(90,11),
 			(110,11),
 			(112,11),
 			(115,11),
-			(165,11),
+			(160,11),
 			(43,12),
 			(67,12),
 			(87,12),
@@ -209,7 +209,7 @@ class DemoDb extends AbstractSeed
 			(90,13),
 			(110,13),
 			(112,13),
-			(165,13),
+			(160,13),
 			(87,14),
 			(96,14),
 			(102,14),
@@ -231,7 +231,7 @@ class DemoDb extends AbstractSeed
 			(118,15),
 			(130,15),
 			(158,15),
-			(165,15),
+			(160,15),
 			(87,16),
 			(90,16),
 			(96,16),
@@ -241,18 +241,25 @@ class DemoDb extends AbstractSeed
 			(118,16),
 			(130,16),
 			(158,16),
-			(165,16);');
+			(160,16);');
 
         //------------------- cms_users
-
-        $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `organisation_id`,`email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
-            (2,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe',1,'jane.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
-            (3,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe',1,'joe.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
-            (10,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe',2,'jane.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00'),
-            (11,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe',2,'joe.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',11,'0000-00-00','0000-00-00'),
-            (12,'5f4dcc3b5aa765d61d8327deb882cf99','Sam Sample',2,'sam.sample@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',12,'0000-00-00','0000-00-00'),
-            (15,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Bloggs',2,'joe.bloggs@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00');");
-
+        $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
+            (2,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe','jane.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
+            (3,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe','joe.doe@boxaid.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
+			(4,'7a53ac982b06d7b9aed4eec5e18693d3','Volunteer','stagingenv_volunteer@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',3,'0000-00-00','0000-00-00'),
+			(5,'ca02bab14acaa85afd14dfbc73c285bf','Coordinator','stagingenv_coordinator@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
+			(6,'7dfc3d2ee682b299cf33aacabcf55e26','Head of Operations','stagingenv_headofops@boxwise.co',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
+			(7,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Volunteer','dev_volunteer@boxaid.org',0,NULL,2,'0000-00-00 00:00:00',3,'0000-00-00','0000-00-00'),
+			(8,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Coordinator','dev_coordinator@boxaid.org',0,NULL,2,'0000-00-00 00:00:00',2,'0000-00-00','0000-00-00'),
+			(9,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Head of Operations','dev_headofops@boxaid.org',0,NULL,2,'0000-00-00 00:00:00',1,'0000-00-00','0000-00-00'),
+			(10,'5f4dcc3b5aa765d61d8327deb882cf99','Jane Doe','jane.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00'),
+            (11,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Doe','joe.doe@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',11,'0000-00-00','0000-00-00'),
+            (12,'5f4dcc3b5aa765d61d8327deb882cf99','Sam Sample','sam.sample@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',12,'0000-00-00','0000-00-00'),
+            (15,'5f4dcc3b5aa765d61d8327deb882cf99','Joe Bloggs','joe.bloggs@boxcare.co',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00'),
+			(16,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Volunteer','dev_volunteer@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',16,'0000-00-00','0000-00-00'),
+			(17,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Coordinator','dev_coordinator@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00'),
+			(18,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Head of Operations','dev_headofops@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00');");
         $users = [];
         for ($i = 20; $i <= 120; ++$i) {
             $tempdata = [
@@ -284,8 +291,112 @@ class DemoDb extends AbstractSeed
         }
         $this->table('cms_users')->insert($users)->save();
         // fix password, email and name of the users for auth0
-        $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`,`email`) VALUES (20,'5f4dcc3b5aa765d61d8327deb882cf99','Kallie Johnson','owaters@hotmail.com'),(21,'5f4dcc3b5aa765d61d8327deb882cf99','Jamey Paucek','predovic.dena@hilpert.biz'),(22,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Guillermo Cormier PhD','goodwin.mollie@gmail.com'),(23,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Herman Fadel I','anya18@gmail.com'),(24,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Price Kuphal','chanelle53@yahoo.com'),(25,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Percy Bruen DVM','spencer.matilde@stehr.org'),(26,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Janice Schultz Jr.','nyah.konopelski@kohler.com'),(27,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Sim Abernathy Jr.','norma02@gaylord.info'),(28,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Lea Kovacek II','denis48@hotmail.com'),(29,'5f4dcc3b5aa765d61d8327deb882cf99','Molly Jones','kaelyn88@gmail.com'),(30,'5f4dcc3b5aa765d61d8327deb882cf99','Lesley Johnston','adell.hermann@schmeler.info'),(31,'5f4dcc3b5aa765d61d8327deb882cf99','Irving Murray DVM','kunze.helene@dare.biz'),(32,'5f4dcc3b5aa765d61d8327deb882cf99','Declan Mayert','aliya33@hotmail.com'),(33,'5f4dcc3b5aa765d61d8327deb882cf99','Lavonne Collier','nsipes@cartwright.com'),(34,'5f4dcc3b5aa765d61d8327deb882cf99','Miss Patience O\\'Conner','littel.dashawn@schaefer.org'),(35,'5f4dcc3b5aa765d61d8327deb882cf99','Mrs. Mireille Hodkiewicz PhD','clind@yahoo.com'),(36,'5f4dcc3b5aa765d61d8327deb882cf99','Miss Ashtyn Stehr','elroy.reilly@rolfson.org'),(37,'5f4dcc3b5aa765d61d8327deb882cf99','Darion Schaefer','carrie.kuhlman@turcotte.net'),(38,'5f4dcc3b5aa765d61d8327deb882cf99','Miss Norene Hartmann MD','sporer.winfield@hotmail.com'),(39,'5f4dcc3b5aa765d61d8327deb882cf99','Alejandra Davis','unique35@mueller.info.deleted.39'),(40,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Sydni Baumbach','oconnell.keshawn@bosco.org'),(41,'5f4dcc3b5aa765d61d8327deb882cf99','Kamryn Quigley III','carter.ilene@hotmail.com'),(42,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Joaquin Hand Jr.','swaniawski.jarret@kihn.com'),(43,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Vern Romaguera MD','sanford.daryl@hotmail.com'),(44,'5f4dcc3b5aa765d61d8327deb882cf99','Megane Kozey','jerde.rosie@quitzon.com'),(45,'5f4dcc3b5aa765d61d8327deb882cf99','Edison Bartoletti','xlind@herman.biz'),(46,'5f4dcc3b5aa765d61d8327deb882cf99','Jaydon Hoeger','bartholome55@hotmail.com'),(47,'5f4dcc3b5aa765d61d8327deb882cf99','Emma Eichmann','ilene.lind@gmail.com'),(48,'5f4dcc3b5aa765d61d8327deb882cf99','Quinton Boyle','dkeebler@johnson.biz'),(49,'5f4dcc3b5aa765d61d8327deb882cf99','Desmond Renner','cassandre07@damore.biz.deleted.49'),(50,'5f4dcc3b5aa765d61d8327deb882cf99','Dusty Schultz','claudia.frami@gmail.com.deleted.50'),(51,'5f4dcc3b5aa765d61d8327deb882cf99','Coby Bergstrom PhD','hallie62@gmail.com.deleted.51'),(52,'5f4dcc3b5aa765d61d8327deb882cf99','Dion Hauck','alessandra78@schulist.com'),(53,'5f4dcc3b5aa765d61d8327deb882cf99','Reymundo Crona','gflatley@yahoo.com'),(54,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Nannie Schmeler DDS','lisette.quitzon@rice.com'),(55,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Kirk Brown','shyanne63@hotmail.com'),(56,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Reginald Schaefer IV','shanna90@hotmail.com'),(57,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Carlie Balistreri MD','keshaun01@yahoo.com'),(58,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Winnifred Nolan','emmanuelle64@auer.org'),(59,'5f4dcc3b5aa765d61d8327deb882cf99','Domenic Gutmann','leffler.kattie@schiller.com'),(60,'5f4dcc3b5aa765d61d8327deb882cf99','Marianna Boyer','awelch@hotmail.com'),(61,'5f4dcc3b5aa765d61d8327deb882cf99','Brycen Jenkins','gislason.buster@considine.info'),(62,'5f4dcc3b5aa765d61d8327deb882cf99','Fausto Doyle','ullrich.horace@gmail.com'),(63,'5f4dcc3b5aa765d61d8327deb882cf99','Damian Kassulke','abdiel.pagac@gmail.com'),(64,'5f4dcc3b5aa765d61d8327deb882cf99','Edison Wolff I','marie.wuckert@gmail.com'),(65,'5f4dcc3b5aa765d61d8327deb882cf99','Leila Olson','lillie.dubuque@okon.info'),(66,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Sigurd Herman DVM','morissette.helene@gmail.com'),(67,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Gage Boyer','funk.tanya@hotmail.com'),(68,'5f4dcc3b5aa765d61d8327deb882cf99','Jewel Murray','balistreri.precious@nienow.net'),(69,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Neil Cruickshank','nvandervort@emard.com'),(70,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Janice Donnelly','shickle@blanda.com'),(71,'5f4dcc3b5aa765d61d8327deb882cf99','Marian Kuhlman DVM','swaniawski.alanis@yahoo.com'),(72,'5f4dcc3b5aa765d61d8327deb882cf99','Perry Kirlin','miller.dena@yahoo.com'),(73,'5f4dcc3b5aa765d61d8327deb882cf99','Gerhard Feeney','lily.klocko@yahoo.com'),(74,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Osborne Erdman PhD','shields.jordan@green.com'),(75,'5f4dcc3b5aa765d61d8327deb882cf99','Fannie Welch','durgan.delphia@hotmail.com'),(76,'5f4dcc3b5aa765d61d8327deb882cf99','Ruthie Smith','sister.jacobs@vandervort.org'),(77,'5f4dcc3b5aa765d61d8327deb882cf99','Fern Barrows','roob.elnora@yahoo.com'),(78,'5f4dcc3b5aa765d61d8327deb882cf99','Alana Lang','price.laila@koelpin.com'),(79,'5f4dcc3b5aa765d61d8327deb882cf99','Rowland Bayer','kirsten72@luettgen.net'),(80,'5f4dcc3b5aa765d61d8327deb882cf99','Kelton Grant','cparisian@kemmer.net'),(81,'5f4dcc3b5aa765d61d8327deb882cf99','Nannie Erdman','shane63@gmail.com'),(82,'5f4dcc3b5aa765d61d8327deb882cf99','Kirstin O\\'Kon','reece.conroy@ruecker.org'),(83,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Rosie Bashirian Jr.','mayert.rhett@dare.com'),(84,'5f4dcc3b5aa765d61d8327deb882cf99','Dorthy Hartmann','alvina09@gmail.com'),(85,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Sanford Leffler IV','gkulas@hotmail.com'),(86,'5f4dcc3b5aa765d61d8327deb882cf99','Armani Wuckert','dheidenreich@kub.com'),(87,'5f4dcc3b5aa765d61d8327deb882cf99','Elenora Pouros PhD','egerhold@fadel.com'),(88,'5f4dcc3b5aa765d61d8327deb882cf99','Elijah Daugherty','price.danielle@beier.org'),(89,'5f4dcc3b5aa765d61d8327deb882cf99','Earl Botsford','heller.tre@skiles.info'),(90,'5f4dcc3b5aa765d61d8327deb882cf99','Kayleigh Lemke','ydaugherty@yahoo.com'),(91,'5f4dcc3b5aa765d61d8327deb882cf99','Adella Hagenes','mstehr@yahoo.com'),(92,'5f4dcc3b5aa765d61d8327deb882cf99','Keyon Fritsch','mathias.reichel@hotmail.com'),(93,'5f4dcc3b5aa765d61d8327deb882cf99','Eladio Ryan','ltrantow@hotmail.com'),(94,'5f4dcc3b5aa765d61d8327deb882cf99','Amari Wuckert','goldner.camren@gmail.com'),(95,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Carmel Zboncak','dbrown@gmail.com'),(96,'5f4dcc3b5aa765d61d8327deb882cf99','Lucie Ledner IV','angelita.will@hotmail.com'),(97,'5f4dcc3b5aa765d61d8327deb882cf99','Geraldine Smith','diana54@rippin.info'),(98,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Ona Shields','lucinda.huels@gutkowski.com.deleted.98'),(99,'5f4dcc3b5aa765d61d8327deb882cf99','Abigayle Wyman','esther.strosin@sauer.com'),(100,'5f4dcc3b5aa765d61d8327deb882cf99','Taya Osinski','jamaal68@hotmail.com'),(101,'5f4dcc3b5aa765d61d8327deb882cf99','Edison Gusikowski','mattie.nader@jerde.com'),(102,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Letha Douglas','vjohns@lemke.biz'),(103,'5f4dcc3b5aa765d61d8327deb882cf99','Giovanna Hand','kavon00@mosciski.com'),(104,'5f4dcc3b5aa765d61d8327deb882cf99','Baby Armstrong','erau@yahoo.com'),(105,'5f4dcc3b5aa765d61d8327deb882cf99','Rebecca Ebert','champlin.shawna@stiedemann.biz'),(106,'5f4dcc3b5aa765d61d8327deb882cf99','Vergie Kshlerin','walker.janis@yahoo.com'),(107,'5f4dcc3b5aa765d61d8327deb882cf99','Vena Franecki','lexi.skiles@jast.com'),(108,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Anastasia Stoltenberg IV','rmedhurst@hotmail.com'),(109,'5f4dcc3b5aa765d61d8327deb882cf99','Dion Mayer','gislason.garland@hotmail.com.deleted.109'),(110,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Skye Hessel Jr.','rdeckow@schmitt.info'),(111,'5f4dcc3b5aa765d61d8327deb882cf99','Vincenzo Bartoletti V','felicity.berge@hotmail.com'),(112,'5f4dcc3b5aa765d61d8327deb882cf99','Ona Predovic','tlangworth@yahoo.com'),(113,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Itzel Reynolds III','kuhic.reuben@yahoo.com'),(114,'5f4dcc3b5aa765d61d8327deb882cf99','Letha Hand','cara07@lindgren.net'),(115,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Einar Okuneva','jklocko@gmail.com'),(116,'5f4dcc3b5aa765d61d8327deb882cf99','Mikayla Anderson','meffertz@ebert.com'),(117,'5f4dcc3b5aa765d61d8327deb882cf99','Ward Hintz','fstanton@hotmail.com.deleted.117'),(118,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Leatha Bechtelar IV','elbert.strosin@yahoo.com'),(119,'5f4dcc3b5aa765d61d8327deb882cf99','Mylene Spinka','qhowe@bahringer.com'),(120,'5f4dcc3b5aa765d61d8327deb882cf99','Janae Fay DVM','doris14@schaden.com') 
-		ON DUPLICATE KEY UPDATE id = Values(id),naam=Values(naam),email=Values(email),pass=Values(pass);");
+        $this->execute("
+			INSERT INTO 
+				`cms_users` (`id`, `pass`, `naam`,`email`) 
+			VALUES 
+				(20,'5f4dcc3b5aa765d61d8327deb882cf99','Kallie Johnson','owaters@hotmail.com'),
+				(21,'5f4dcc3b5aa765d61d8327deb882cf99','Jamey Paucek','predovic.dena@hilpert.biz'),
+				(22,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Guillermo Cormier PhD','goodwin.mollie@gmail.com'),
+				(23,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Herman Fadel I','anya18@gmail.com'),
+				(24,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Price Kuphal','chanelle53@yahoo.com'),
+				(25,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Percy Bruen DVM','spencer.matilde@stehr.org'),
+				(26,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Janice Schultz Jr.','nyah.konopelski@kohler.com'),
+				(27,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Sim Abernathy Jr.','norma02@gaylord.info'),
+				(28,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Lea Kovacek II','denis48@hotmail.com'),
+				(29,'5f4dcc3b5aa765d61d8327deb882cf99','Molly Jones','kaelyn88@gmail.com'),
+				(30,'5f4dcc3b5aa765d61d8327deb882cf99','Lesley Johnston','adell.hermann@schmeler.info'),
+				(31,'5f4dcc3b5aa765d61d8327deb882cf99','Irving Murray DVM','kunze.helene@dare.biz'),
+				(32,'5f4dcc3b5aa765d61d8327deb882cf99','Declan Mayert','aliya33@hotmail.com'),
+				(33,'5f4dcc3b5aa765d61d8327deb882cf99','Lavonne Collier','nsipes@cartwright.com'),
+				(34,'5f4dcc3b5aa765d61d8327deb882cf99','Miss Patience O\\'Conner','littel.dashawn@schaefer.org'),
+				(35,'5f4dcc3b5aa765d61d8327deb882cf99','Mrs. Mireille Hodkiewicz PhD','clind@yahoo.com'),
+				(36,'5f4dcc3b5aa765d61d8327deb882cf99','Miss Ashtyn Stehr','elroy.reilly@rolfson.org'),
+				(37,'5f4dcc3b5aa765d61d8327deb882cf99','Darion Schaefer','carrie.kuhlman@turcotte.net'),
+				(38,'5f4dcc3b5aa765d61d8327deb882cf99','Miss Norene Hartmann MD','sporer.winfield@hotmail.com'),
+				(39,'5f4dcc3b5aa765d61d8327deb882cf99','Alejandra Davis','unique35@mueller.info.deleted.39'),
+				(40,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Sydni Baumbach','oconnell.keshawn@bosco.org'),
+				(41,'5f4dcc3b5aa765d61d8327deb882cf99','Kamryn Quigley III','carter.ilene@hotmail.com'),
+				(42,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Joaquin Hand Jr.','swaniawski.jarret@kihn.com'),
+				(43,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Vern Romaguera MD','sanford.daryl@hotmail.com'),
+				(44,'5f4dcc3b5aa765d61d8327deb882cf99','Megane Kozey','jerde.rosie@quitzon.com'),
+				(45,'5f4dcc3b5aa765d61d8327deb882cf99','Edison Bartoletti','xlind@herman.biz'),
+				(46,'5f4dcc3b5aa765d61d8327deb882cf99','Jaydon Hoeger','bartholome55@hotmail.com'),
+				(47,'5f4dcc3b5aa765d61d8327deb882cf99','Emma Eichmann','ilene.lind@gmail.com'),
+				(48,'5f4dcc3b5aa765d61d8327deb882cf99','Quinton Boyle','dkeebler@johnson.biz'),
+				(49,'5f4dcc3b5aa765d61d8327deb882cf99','Desmond Renner','cassandre07@damore.biz.deleted.49'),
+				(50,'5f4dcc3b5aa765d61d8327deb882cf99','Dusty Schultz','claudia.frami@gmail.com.deleted.50'),
+				(51,'5f4dcc3b5aa765d61d8327deb882cf99','Coby Bergstrom PhD','hallie62@gmail.com.deleted.51'),
+				(52,'5f4dcc3b5aa765d61d8327deb882cf99','Dion Hauck','alessandra78@schulist.com'),
+				(53,'5f4dcc3b5aa765d61d8327deb882cf99','Reymundo Crona','gflatley@yahoo.com'),
+				(54,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Nannie Schmeler DDS','lisette.quitzon@rice.com'),
+				(55,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Kirk Brown','shyanne63@hotmail.com'),
+				(56,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Reginald Schaefer IV','shanna90@hotmail.com'),
+				(57,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Carlie Balistreri MD','keshaun01@yahoo.com'),
+				(58,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Winnifred Nolan','emmanuelle64@auer.org'),
+				(59,'5f4dcc3b5aa765d61d8327deb882cf99','Domenic Gutmann','leffler.kattie@schiller.com'),
+				(60,'5f4dcc3b5aa765d61d8327deb882cf99','Marianna Boyer','awelch@hotmail.com'),
+				(61,'5f4dcc3b5aa765d61d8327deb882cf99','Brycen Jenkins','gislason.buster@considine.info'),
+				(62,'5f4dcc3b5aa765d61d8327deb882cf99','Fausto Doyle','ullrich.horace@gmail.com'),
+				(63,'5f4dcc3b5aa765d61d8327deb882cf99','Damian Kassulke','abdiel.pagac@gmail.com'),
+				(64,'5f4dcc3b5aa765d61d8327deb882cf99','Edison Wolff I','marie.wuckert@gmail.com'),
+				(65,'5f4dcc3b5aa765d61d8327deb882cf99','Leila Olson','lillie.dubuque@okon.info'),
+				(66,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Sigurd Herman DVM','morissette.helene@gmail.com'),
+				(67,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Gage Boyer','funk.tanya@hotmail.com'),
+				(68,'5f4dcc3b5aa765d61d8327deb882cf99','Jewel Murray','balistreri.precious@nienow.net'),
+				(69,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Neil Cruickshank','nvandervort@emard.com'),
+				(70,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Janice Donnelly','shickle@blanda.com'),
+				(71,'5f4dcc3b5aa765d61d8327deb882cf99','Marian Kuhlman DVM','swaniawski.alanis@yahoo.com'),
+				(72,'5f4dcc3b5aa765d61d8327deb882cf99','Perry Kirlin','miller.dena@yahoo.com'),
+				(73,'5f4dcc3b5aa765d61d8327deb882cf99','Gerhard Feeney','lily.klocko@yahoo.com'),
+				(74,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Osborne Erdman PhD','shields.jordan@green.com'),
+				(75,'5f4dcc3b5aa765d61d8327deb882cf99','Fannie Welch','durgan.delphia@hotmail.com'),
+				(76,'5f4dcc3b5aa765d61d8327deb882cf99','Ruthie Smith','sister.jacobs@vandervort.org'),
+				(77,'5f4dcc3b5aa765d61d8327deb882cf99','Fern Barrows','roob.elnora@yahoo.com'),
+				(78,'5f4dcc3b5aa765d61d8327deb882cf99','Alana Lang','price.laila@koelpin.com'),
+				(79,'5f4dcc3b5aa765d61d8327deb882cf99','Rowland Bayer','kirsten72@luettgen.net'),
+				(80,'5f4dcc3b5aa765d61d8327deb882cf99','Kelton Grant','cparisian@kemmer.net'),
+				(81,'5f4dcc3b5aa765d61d8327deb882cf99','Nannie Erdman','shane63@gmail.com'),
+				(82,'5f4dcc3b5aa765d61d8327deb882cf99','Kirstin O\\'Kon','reece.conroy@ruecker.org'),
+				(83,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Rosie Bashirian Jr.','mayert.rhett@dare.com'),
+				(84,'5f4dcc3b5aa765d61d8327deb882cf99','Dorthy Hartmann','alvina09@gmail.com'),
+				(85,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Sanford Leffler IV','gkulas@hotmail.com'),
+				(86,'5f4dcc3b5aa765d61d8327deb882cf99','Armani Wuckert','dheidenreich@kub.com'),
+				(87,'5f4dcc3b5aa765d61d8327deb882cf99','Elenora Pouros PhD','egerhold@fadel.com'),
+				(88,'5f4dcc3b5aa765d61d8327deb882cf99','Elijah Daugherty','price.danielle@beier.org'),
+				(89,'5f4dcc3b5aa765d61d8327deb882cf99','Earl Botsford','heller.tre@skiles.info'),
+				(90,'5f4dcc3b5aa765d61d8327deb882cf99','Kayleigh Lemke','ydaugherty@yahoo.com'),
+				(91,'5f4dcc3b5aa765d61d8327deb882cf99','Adella Hagenes','mstehr@yahoo.com'),
+				(92,'5f4dcc3b5aa765d61d8327deb882cf99','Keyon Fritsch','mathias.reichel@hotmail.com'),
+				(93,'5f4dcc3b5aa765d61d8327deb882cf99','Eladio Ryan','ltrantow@hotmail.com'),
+				(94,'5f4dcc3b5aa765d61d8327deb882cf99','Amari Wuckert','goldner.camren@gmail.com'),
+				(95,'5f4dcc3b5aa765d61d8327deb882cf99','Prof. Carmel Zboncak','dbrown@gmail.com'),
+				(96,'5f4dcc3b5aa765d61d8327deb882cf99','Lucie Ledner IV','angelita.will@hotmail.com'),
+				(97,'5f4dcc3b5aa765d61d8327deb882cf99','Geraldine Smith','diana54@rippin.info'),
+				(98,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Ona Shields','lucinda.huels@gutkowski.com.deleted.98'),
+				(99,'5f4dcc3b5aa765d61d8327deb882cf99','Abigayle Wyman','esther.strosin@sauer.com'),
+				(100,'5f4dcc3b5aa765d61d8327deb882cf99','Taya Osinski','jamaal68@hotmail.com'),
+				(101,'5f4dcc3b5aa765d61d8327deb882cf99','Edison Gusikowski','mattie.nader@jerde.com'),
+				(102,'5f4dcc3b5aa765d61d8327deb882cf99','Dr. Letha Douglas','vjohns@lemke.biz'),
+				(103,'5f4dcc3b5aa765d61d8327deb882cf99','Giovanna Hand','kavon00@mosciski.com'),
+				(104,'5f4dcc3b5aa765d61d8327deb882cf99','Baby Armstrong','erau@yahoo.com'),
+				(105,'5f4dcc3b5aa765d61d8327deb882cf99','Rebecca Ebert','champlin.shawna@stiedemann.biz'),
+				(106,'5f4dcc3b5aa765d61d8327deb882cf99','Vergie Kshlerin','walker.janis@yahoo.com'),
+				(107,'5f4dcc3b5aa765d61d8327deb882cf99','Vena Franecki','lexi.skiles@jast.com'),
+				(108,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Anastasia Stoltenberg IV','rmedhurst@hotmail.com'),
+				(109,'5f4dcc3b5aa765d61d8327deb882cf99','Dion Mayer','gislason.garland@hotmail.com.deleted.109'),
+				(110,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Skye Hessel Jr.','rdeckow@schmitt.info'),
+				(111,'5f4dcc3b5aa765d61d8327deb882cf99','Vincenzo Bartoletti V','felicity.berge@hotmail.com'),
+				(112,'5f4dcc3b5aa765d61d8327deb882cf99','Ona Predovic','tlangworth@yahoo.com'),
+				(113,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Itzel Reynolds III','kuhic.reuben@yahoo.com'),
+				(114,'5f4dcc3b5aa765d61d8327deb882cf99','Letha Hand','cara07@lindgren.net'),
+				(115,'5f4dcc3b5aa765d61d8327deb882cf99','Mr. Einar Okuneva','jklocko@gmail.com'),
+				(116,'5f4dcc3b5aa765d61d8327deb882cf99','Mikayla Anderson','meffertz@ebert.com'),
+				(117,'5f4dcc3b5aa765d61d8327deb882cf99','Ward Hintz','fstanton@hotmail.com.deleted.117'),
+				(118,'5f4dcc3b5aa765d61d8327deb882cf99','Ms. Leatha Bechtelar IV','elbert.strosin@yahoo.com'),
+				(119,'5f4dcc3b5aa765d61d8327deb882cf99','Mylene Spinka','qhowe@bahringer.com'),
+				(120,'5f4dcc3b5aa765d61d8327deb882cf99','Janae Fay DVM','doris14@schaden.com') 
+			ON DUPLICATE KEY UPDATE id = Values(id),naam=Values(naam),email=Values(email),pass=Values(pass);");
 
         //------------------- library_type
         $this->execute("INSERT INTO `library_type` (`id`, `label`, `camp_id`) VALUES
@@ -309,29 +420,29 @@ class DemoDb extends AbstractSeed
         $this->table('library')->insert($library)->save();
 
         //------------------- locations
-        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`) VALUES
-			(1,'Shop',1,1,0,0,1,0,0,0),
-			(2,'LOST',1,2,0,0,0,0,1,0),
-			(3,'SCRAP',1,3,0,0,0,0,0,1),
-			(4,'Stockroom',1,4,1,1,0,0,0,0),
-			(5,'WH',1,5,1,0,0,0,0,0),
-			(6,'WH Women',1,6,1,0,0,0,0,0),
-			(7,'WH Men',1,7,1,0,0,0,0,0),
-			(8,'WH Children',1,8,1,0,0,0,0,0),
-			(9,'WH Babies',1,9,1,0,0,0,0,0),
-			(10,'WH Shoes',1,10,1,0,0,0,0,0),
-			(11,'WH New arrivals',1,11,1,0,0,0,0,0),
-			(12,'WH Hygiene',1,12,1,0,0,0,0,0),
-			(13,'WH Seasonal',1,12,1,0,0,0,0,0),
-			(14,'LOST',2,14,0,0,0,0,1,0),
-			(15,'SCRAP',2,15,0,0,0,0,0,1),
-			(16,'Stockroom',2,16,1,1,0,0,0,0),
-			(17,'WH1',2,17,1,0,0,0,0,0),
-			(18,'WH2',2,18,1,0,0,0,0,0),
-			(19,'Shop',3,19,0,0,1,0,0,0),
-			(20,'LOST',3,20,0,0,0,0,1,0),
-			(21,'SCRAP',3,21,0,0,0,0,0,1),
-			(22,'Stockroom',3,21,1,1,0,0,0,0);");
+        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`,`box_state_id`) VALUES
+			(1,'Shop',1,1,0,0,1,0,0,0,5),
+			(2,'LOST',1,2,0,0,0,0,1,0,2),
+			(3,'SCRAP',1,3,0,0,0,0,0,1,6),
+			(4,'Stockroom',1,4,1,1,0,0,0,0,1),
+			(5,'WH',1,5,1,0,0,0,0,0,1),
+			(6,'WH Women',1,6,1,0,0,0,0,0,1),
+			(7,'WH Men',1,7,1,0,0,0,0,0,1),
+			(8,'WH Children',1,8,1,0,0,0,0,0,1),
+			(9,'WH Babies',1,9,1,0,0,0,0,0,1),
+			(10,'WH Shoes',1,10,1,0,0,0,0,0,1),
+			(11,'WH New arrivals',1,11,1,0,0,0,0,0,1),
+			(12,'WH Hygiene',1,12,1,0,0,0,0,0,1),
+			(13,'WH Seasonal',1,12,1,0,0,0,0,0,1),
+			(14,'LOST',2,14,0,0,0,0,1,0,2),
+			(15,'SCRAP',2,15,0,0,0,0,0,1,6),
+			(16,'Stockroom',2,16,1,1,0,0,0,0,1),
+			(17,'WH1',2,17,1,0,0,0,0,0,1),
+			(18,'WH2',2,18,1,0,0,0,0,0,1),
+			(19,'Shop',3,19,0,0,1,0,0,0,5),
+			(20,'LOST',3,20,0,0,0,0,1,0,2),
+			(21,'SCRAP',3,21,0,0,0,0,0,1,6),
+			(22,'Stockroom',3,21,1,1,0,0,0,0,1);");
 
         //------------------- people
         $people = [];
@@ -1026,6 +1137,29 @@ class DemoDb extends AbstractSeed
         $products = ['1' => range(1, 219), '2' => range(220, 414), '3' => range(415, 609)];
         // key is campid
         $locations = ['1' => range(1, 13), '2' => range(14, 18), '3' => range(19, 22)];
+        // key is location
+        $box_state = ['1' => 5,
+            '2' => 2,
+            '3' => 6,
+            '4' => 1,
+            '5' => 1,
+            '6' => 1,
+            '7' => 1,
+            '8' => 1,
+            '9' => 1,
+            '10' => 1,
+            '11' => 1,
+            '12' => 1,
+            '13' => 1,
+            '14' => 2,
+            '15' => 6,
+            '16' => 1,
+            '17' => 1,
+            '18' => 1,
+            '19' => 5,
+            '20' => 2,
+            '21' => 6,
+            '22' => 1, ];
         // key is productid
         $sizes = ['1' => [1, 2, 3, 4, 5, 71],
             '2' => [1, 2, 3, 4, 5, 71],
@@ -1640,12 +1774,14 @@ class DemoDb extends AbstractSeed
         $stock = [];
         for ($i = 1; $i <= 1000; ++$i) {
             $campid = $faker->randomElement(['1', '2', '3']);
+            $locationid = $faker->randomElement($locations[$campid]);
             $tempdata = [
                 'id' => $i,
                 'box_id' => $faker->unique()->randomNumber($nbDigits = 6, $strict = true),
                 'product_id' => $faker->randomElement($products[$campid]),
                 'items' => $faker->numberBetween($min = 1, $max = 100),
-                'location_id' => $faker->randomElement($locations[$campid]),
+                'location_id' => $locationid,
+                'box_state_id' => $box_state[$locationid],
                 'qr_id' => $i,
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
@@ -1654,6 +1790,7 @@ class DemoDb extends AbstractSeed
             $rand_num = $faker->numberBetween($min = 0, $max = 1000);
             if (($rand_num < 20)) {
                 $tempdata['ordered'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d');
+                $tempdata['box_state_id'] = 3;
             }
 
             $stock[] = $tempdata;

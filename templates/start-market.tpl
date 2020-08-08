@@ -43,6 +43,7 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "lineAlpha": 0.2,
     "type": "column",
     "valueField": "sales"
+    "fillColors": "#848689",
   } ],
   "chartCursor": {
     "categoryBalloonEnabled": false,

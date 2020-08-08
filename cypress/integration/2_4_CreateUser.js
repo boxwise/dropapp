@@ -43,6 +43,7 @@ Cypress.config("defaultCommandTimeout",200000)
         DeleteTestUser(Testaddress);
         FillForm(Testname, Testaddress, Testgroup);
         cy.getButtonWithText("Save and close").click();
+        cy.url().should('not.include', 'edit');
         cy.get("tr").contains(Testaddress).should("be.visible");
         
     })

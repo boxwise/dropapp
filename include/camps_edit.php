@@ -62,7 +62,7 @@
     // addfield('checkbox', 'You run a laundry station for beneficiaries?', 'laundry', array('tab'=>'general'));
     addfield('line', '', '', ['tab' => 'general']);
 
-    addfield('number', 'Deactivate inactive beneficiaries', 'delete_inactive_users', ['tab' => 'beneficiaries', 'width' => 2, 'tooltip' => 'Beneficiaries without activity in Boxwise will be deactivated. Deactivated beneficiaries will remain visible in the Deactivated tab in the Beneficiaries page.']);
+    addfield('number', 'Deactivate inactive beneficiaries', 'delete_inactive_users', ['tab' => 'beneficiaries', 'width' => 2, 'tooltip' => 'Beneficiaries without activity in Boxtribute will be deactivated. Deactivated beneficiaries will remain visible in the Deactivated tab in the Beneficiaries page.']);
     addfield('number', 'Days to keep deactivated persons', 'daystokeepdeletedpersons', ['tab' => 'beneficiaries', 'width' => 2, 'tooltip' => 'Deactivate beneficiaries will remain visible in the Deactivated tab in the beneficiaries page and will be completely deleted after a while. Here you can define how long they will remain in the Deactivated list.']);
     addfield('number', 'Adult age', 'adult_age', ['tab' => 'beneficiaries', 'width' => 2, 'tooltip' => 'For some functions we distinct between children and adults. Fill in here the lowest age considered adult for this base.']);
     addfield('text', 'Location identifier for beneficiaries', 'familyidentifier', ['tab' => 'beneficiaries', 'tooltip' => 'beneficiariesly this refers to the kind of housing that people have: tent, container, house or something else.']);

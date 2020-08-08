@@ -1,4 +1,4 @@
-/* Helper functions to wrap interactions with boxwise-custom select dropdown DOM element */
+/* Helper functions to wrap interactions with boxtribute-custom select dropdown DOM element */
 /* field_id is a unique identifier in a form this dropdown is used to select values for */
 
 Cypress.Commands.add("selectOptionByText", (field_id, optionText) => {

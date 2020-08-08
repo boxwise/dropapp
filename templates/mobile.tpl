@@ -5,8 +5,9 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Boxwise - Simple</title>
+		<title>Boxtribute - Simple</title>
 		
+		<link href="/assets/css/theme.css?v=1" rel="stylesheet">    
 		<link href="/assets/css/bootstrap.min.css" rel="stylesheet">    
 		<link href="/assets/css/select2.css" rel="stylesheet" />
 		<link href="/assets/css/select2-bootstrap.css" rel="stylesheet" />
@@ -19,13 +20,13 @@
 		<script src="/assets/js/mobile.js?v=2"></script>
 
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
-		<link rel="icon" type="image/png" href="/assets/img/favicon-32x32.png" sizes="32x32">
-		<link rel="icon" type="image/png" href="/assets/img/favicon-16x16.png" sizes="16x16">	
+		<link rel="icon" type="image/png" href="/assets/img/favicon-32x32-boxtribute.png" sizes="32x32">
+		<link rel="icon" type="image/png" href="/assets/img/favicon-16x16-boxtribute.png" sizes="16x16">	
    
 	</head>
 	<body class="mobile" data-testid="mobileBody">
 		<header>
-			<strong><a href="/mobile.php">{$translate['site_name']}</a></strong>
+			<strong><a href="/mobile.php"><img src="../assets/img/boxtribute.png" width="120"></img></a></strong>
 			{if $smarty.session.user}
 				<div class="orgcamp" data-testid="orgcampDiv">
 					{if $org && $camps|count==1}

@@ -7,6 +7,7 @@ context("5_2_Add_Beneficiary_Test", () => {
 
 
     beforeEach(function () {
+        cy.setupAjaxActionHook();
         cy.loginAsVolunteer();
         cy.visit('/?action=people');
     });
@@ -14,15 +15,17 @@ context("5_2_Add_Beneficiary_Test", () => {
     function DeleteTestedBeneficiary(lastname) {
         cy.get('body').then(($body) => {
             if ($body.text().includes(lastname)) {
-                cy.log("found" + lastname)
+                cy.log("found " + lastname)
                 cy.checkGridCheckboxByText(lastname);
                 cy.get("button[data-operation='delete']").click();
                 cy.getConfirmActionButton().click();
                 // delete the user also from deactivated
                 cy.get("ul[data-testid='listTab'] a").contains("Deactivated").click();
+                cy.url().should('include', 'people_deactivated');
                 cy.checkGridCheckboxByText(lastname);
                 cy.get("button").contains("Full delete").click();
                 cy.getConfirmActionButton().click();
+                cy.waitForAjaxAction("Item deleted");
             }
         })
     }
