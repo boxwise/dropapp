@@ -6,7 +6,7 @@
 
 You just found the Drop App (first version of [Boxtribute](https://www.boxtribute.org) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
 
-We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users are [Intervolve](https://intervolvegr.com/), [R4R](https://www.refugees4refugees.gr), [IHA](https://www.iha.help/), and [Hermine](https://mfh.global/hermine/).
+We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users include [Lifting Hands International](https://www.liftinghandsinternational.org/), [No Name Kitchen](https://www.nonamekitchen.org/),  [Intervolve](https://intervolvegr.com/), [Refugees4Refugees](https://www.refugees4refugees.gr), [Intereuropean Human Aid Association (IHA)](https://www.iha.help/), [Chios Eastern Shore Response Team](https://www.cesrt.org/) and [Hermine](https://mfh.global/hermine/).
 
 We have evolved the app to now be centrally hosted to we can offer the product to many more organisations, and are working to improve the quality of the product. 
 
