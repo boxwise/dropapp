@@ -8,7 +8,6 @@ class AddTagTable extends AbstractMigration
     {
         $tag = $this->table('tags');
         $tag->addColumn('label', 'string')
-            ->addIndex(['label'], ['unique' => true])
             ->addColumn('color', 'string')
             ->addColumn('camp_id', 'integer', [
                 'null' => false,
@@ -20,6 +19,24 @@ class AddTagTable extends AbstractMigration
             ->addColumn('deleted', 'datetime', [
                 'null' => true,
                 'default' => null,
+            ])
+            ->addColumn('created', 'datetime', [
+                'null' => true,
+            ])
+            ->addColumn('created_by', 'integer', [
+                'null' => true,
+            ])
+            ->addForeignKey('created_by', 'cms_users', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->addColumn('modified', 'datetime', [
+                'null' => true,
+            ])
+            ->addColumn('modified_by', 'integer', [
+                'null' => true,
+            ])
+            ->addForeignKey('modified_by', 'cms_users', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->create()
         ;
