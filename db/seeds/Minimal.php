@@ -25,7 +25,7 @@ class Minimal extends AbstractSeed
         $this->execute("INSERT INTO `cms_functions` (`id`,`parent_id`,`title_en`,`include`,`seq`,`alert`,`adminonly`,`visible`,`allusers`,`allcamps`) VALUES 
             (35,NULL,'Free Shop','',1,0,0,1,0,0),
 			(42,NULL,'Admin','',7,0,0,1,0,0),
-			(43,42,'Manage Users','cms_users',19,0,0,1,0,1),
+			(43,42,'Manage Users','cms_users',21,0,0,1,0,1),
 			(44,155,'Settings','cms_settings',25,0,1,1,0,1),
 			(45,155,'Texts','cms_translate',26,0,1,1,0,1),
 			(50,155,'Manage menu functions','cms_functions',24,0,1,1,0,1),
@@ -65,11 +65,12 @@ class Minimal extends AbstractSeed
 			(152,149,'Laundry start new cycle','laundry_startcycle',5,0,0,1,1,0),
 			(154,155,'Organisations','organisations',23,0,1,1,0,1),
 			(155,NULL,'Boxtribute Gods','',8,0,1,1,0,0),
-			(156,42,'User groups','cms_usergroups',20,0,0,1,0,1),
+			(156,42,'User groups','cms_usergroups',22,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
 			(158,161,'Add beneficiary','people_add',3,0,0,1,0,0),
 			(160,99,'Stock Overview (<span>beta</span>)','stock_overview',13,0,0,1,0,0),
-			(161,NULL,'Beneficiaries','',0,0,0,1,0,0);");
+			(161,NULL,'Beneficiaries','',0,0,0,1,0,0),
+			(162,42,'Tags','tags',20,0,1,1,1,1);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings
