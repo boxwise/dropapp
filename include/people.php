@@ -145,15 +145,14 @@ $table = $action;
                     addcolumn('datetime', 'Created', 'created');
                 }
                 addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
+                $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND DELETED IS NULL', ['camp_id' => $_SESSION['camp']['id']]);
+                addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
                 addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
                 addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
                 addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false, 'testid' => 'detachFromFamily']);
 
                 if ($_SESSION['camp']['bicycle']) {
                     $options['bicycle'] = 'Bicycle card';
-                }
-                if (1 == $_SESSION['camp']['id']) {
-                    $options['occ'] = 'OCCycle card';
                 }
                 if ($_SESSION['camp']['bicycle']) {
                     $options['workshop'] = 'Workshop card';
@@ -163,7 +162,7 @@ $table = $action;
                 }
 
                 addbutton('print', 'Print', ['icon' => 'fa-print', 'options' => $options]);
-                addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer']);
+                addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer-o']);
 
                 $cmsmain->assign('data', $data);
                 $cmsmain->assign('listconfig', $listconfig);
@@ -288,6 +287,22 @@ $table = $action;
                 $success = true;
                 $_SESSION['export_ids_people'] = $_POST['ids'];
                 $redirect = '?action=people_export';
+
+                break;
+            case 'tag':
+                // set tag id
+                $tag_id = $_POST['option'];
+                $people_ids = $ids;
+
+                foreach ($people_ids as $people_id) {
+                    if (!db_numrows('SELECT * FROM people_tags WHERE tag_id=:tag_id AND people_id=:people_id', ['tag_id' => $tag_id, 'people_id' => $people_id])) {
+                        db_query('INSERT INTO people_tags SET tag_id = :tag_id, people_id = :people_id', ['tag_id' => $tag_id, 'people_id' => $people_id]);
+                    }
+                }
+
+                $success = true;
+                $message = 'Tag added';
+                $redirect = true;
 
                 break;
             }
