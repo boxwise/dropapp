@@ -18,7 +18,7 @@
                 deleted IS NULL AND
                 camp_id = '.$_SESSION['camp']['id']);
 
-        addcolumn('text', 'Name', 'label');
+        addcolumn('tag', 'Name', 'label');
 
         listsetting('allowsort', true);
         listsetting('add', 'Add a tag');

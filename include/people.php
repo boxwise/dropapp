@@ -48,7 +48,8 @@ $table = $action;
 			IF(people.parent_id,"",SUM(t2.drops)) AS drops,  
 			IF(people.notregistered,"NR","") AS nr,
             people.comments,
-            IF(people.parent_id,1,0) AS level
+            IF(people.parent_id,1,0) AS level,
+            (SELECT GROUP_CONCAT(tags.label) FROM tags LEFT JOIN people_tags ON people_tags.tag_id = tags.id WHERE people_tags.people_id = people.id GROUP BY people_tags.people_id) AS taglabels
         FROM people 
         LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
         LEFT OUTER JOIN people AS parent ON parent.id = people.parent_id
@@ -124,6 +125,9 @@ $table = $action;
                     if ($data[$key]['notregistered']) {
                         $data[$key]['expired'] .= '<i class="fa fa-times blue tooltip-this" title="This beneficiary is not officially registered."></i> ';
                     }
+                    if ($data[$key]['taglabels']) {
+                        $data[$key]['taglabels'] = explode(',', $data[$key]['taglabels']);
+                    }
                 }
             }
         );
@@ -139,6 +143,7 @@ $table = $action;
                 //addcolumn('text','NR','nr');
                 addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
                 addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
+                addcolumn('tag', 'Tags', 'taglabels');
                 addcolumn('text', 'Comments', 'comments');
                 addcolumn('html', '&nbsp;', 'expired');
                 if ($listconfig['filtervalue']) {
