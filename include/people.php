@@ -26,6 +26,8 @@ $table = $action;
         addpagemenu('all', 'All', ['link' => '?action=people', 'active' => true]);
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=people_deactivated']);
 
+        $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Select Tags', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
+        listsetting('multiplefilter', $tagfilter);
         $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'expired' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
         listfilter(['label' => 'Show all people', 'options' => $statusarray, 'filter' => '"show"']);
 
@@ -150,7 +152,7 @@ $table = $action;
                     addcolumn('datetime', 'Created', 'created');
                 }
                 addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
-                $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND DELETED IS NULL', ['camp_id' => $_SESSION['camp']['id']]);
+                $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']]);
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
                 addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
                 addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
