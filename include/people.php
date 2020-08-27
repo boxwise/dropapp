@@ -1,7 +1,5 @@
 <?php
 
-use OpenCensus\Trace\Tracer;
-
 $table = $action;
     $ajax = checkajax();
 
@@ -52,7 +50,7 @@ $table = $action;
         // Filter
         $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Select Tags', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
         listsetting('multiplefilter', $tagfilter);
-        $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'expired' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
+        $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
         listfilter(['label' => 'Show all people', 'options' => $statusarray, 'filter' => '"show"']);
 
         // Search
@@ -68,11 +66,12 @@ $table = $action;
         addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
         addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'tokens');
         addcolumn('tag', 'Tags', 'taglabels');
-        // addcolumn('text', 'Comments', 'comments');
-        addcolumn('text', 'Last_Purchase', 'last_purchase');
+        addcolumn('text', 'Comments', 'comments');
+        addcolumn('text', 'Last Activity', 'last_activity');
         addcolumn('text', 'Created', 'created');
         addcolumn('text', 'Modified', 'modified');
-        // addcolumn('html', '&nbsp;', 'expired');
+        addcolumn('text', 'Days', 'days_last_active');
+        addcolumn('html', '&nbsp;', 'icons');
         // if ($listconfig['filtervalue']) {
         //     addcolumn('datetime', 'Created', 'created');
         // }
@@ -82,7 +81,7 @@ $table = $action;
             SELECT
                 people_filtered.*,
                 IF(people_filtered.parent_id,"",(SELECT SUM(drops) FROM transactions WHERE people_id = people_filtered.id)) AS tokens,
-                MAX(transactions.transaction_date) AS last_purchase
+                MAX(transactions.transaction_date) AS last_activity
             FROM
                 (SELECT 
                     IF(people.parent_id,1,0) AS level,
@@ -96,6 +95,7 @@ $table = $action;
                     people.comments,
                     people.created,
                     people.modified,
+                    people.approvalsigned,
                     GROUP_CONCAT(tags.label) AS taglabels,
                     GROUP_CONCAT(tags.color) AS tagcolors
                 FROM
@@ -116,7 +116,7 @@ $table = $action;
                     ($listconfig['searchvalue'] ? ' AND
                         (people.lastname LIKE "%'.$search.'%" OR 
                         people.firstname LIKE "%'.$search.'%" OR 
-                        people.container = "'.$search.'" OR 
+                        people.container = "%'.$search.'%" OR 
                         people.comments LIKE "%'.$search.'%")
                     ' : ' ').
                     ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ()' : '').'
@@ -125,7 +125,11 @@ $table = $action;
             LEFT JOIN
                 people AS parent ON people_filtered.parent_id = parent.id
             LEFT JOIN
-                transactions ON transactions.people_id = CASE WHEN people_filtered.parent_id IS NULL THEN people_filtered.id ELSE people_filtered.parent_id END AND transactions.product_id IS NOT NULL
+                transactions ON transactions.people_id = CASE WHEN people_filtered.parent_id IS NULL THEN people_filtered.id ELSE people_filtered.parent_id END AND transactions.product_id IS NOT NULL '.
+            ('approvalsigned' == $listconfig['filtervalue'] ? '
+                WHERE 
+                    ((NOT people_filtered.approvalsigned AND people_filtered.parent_id IS NULL) OR NOT parent.approvalsigned)' : ''
+            ).'
             GROUP BY
                 people_filtered.id
             ORDER BY
@@ -140,146 +144,42 @@ $table = $action;
                 IF(people_filtered.parent_id, people_filtered.lastname, ""),
                 IF(people_filtered.parent_id, people_filtered.firstname, "")');
 
-        // LEFT JOIN
-        //     (SELECT
-        //     (SELECT
-        //         parents.id,
-        //         SUM(t.drops) AS tokens,
-
-        //     FROM
-        //         people AS parents
-        //     LEFT JOIN
-        //         transactions AS t ON t.people_id = parents.id
-        //     WHERE
-        //         parents.parent_id IS NULL AND
-        //         NOT parents.deleted AND
-        //         parents.camp_id = '.$_SESSION['camp']['id'].
-
-        // SELECT
-        // IF(people.parent_id,1,0) AS level,
-        //     IF(DATEDIFF(NOW(),
-        //     IF(people.parent_id,NULL,GREATEST(COALESCE((
-        //         SELECT
-        //             transaction_date
-        //         FROM
-        //             transactions AS t
-        //         WHERE
-        //             t.people_id = people.id AND
-        //             people.parent_id IS NULL AND
-        //             product_id IS NOT NULL
-        //         ORDER BY
-        //             transaction_date DESC LIMIT 1),0),
-        //             COALESCE(people.modified,0),
-        //             COALESCE(people.created,0))
-        //     )) > (
-        //         SELECT
-        //             delete_inactive_users/2
-        //         FROM
-        //             camps
-        //         WHERE
-        //             id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
-        //     IF(people.parent_id,"",(
-        //         SELECT
-        //             SUM(drops)
-        //         FROM
-        //             transactions
-        //         WHERE
-        //             people_id = people.id)) AS drops,
-
-        //     IF(people.parent_id,1,0) AS level,
-        //     (
-        //         SELECT
-        //             GROUP_CONCAT(tags.label)
-        //         FROM
-        //             tags
-        //         LEFT JOIN
-        //             people_tags ON people_tags.tag_id = tags.id
-        //         WHERE
-        //             people_tags.people_id = people.id
-        //         GROUP BY
-        //             people_tags.people_id) AS taglabels
-        // FROM
-        //     people
-        // LEFT OUTER JOIN
-        //     people AS parent ON parent.id = people.parent_id
-        // WHERE
-        //     NOT people.deleted AND
-        //     '.('week' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") AND ' : '').
-        //     ('month' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") AND ' : '').
-        //     ('approvalsigned' == $listconfig['filtervalue'] ? ' ((NOT people.approvalsigned AND people.parent_id IS NULL) OR people.parent_id IN
-        //         (SELECT peop.id
-        //         FROM people peop
-        //         WHERE peop.parent_id IS NULL AND NOT peop.approvalsigned)) AND ' : '').
-        //     ('volunteer' == $listconfig['filtervalue'] ? ' people.volunteer AND ' : '').
-        //     ('notregistered' == $listconfig['filtervalue'] ? ' people.notregistered AND ' : '').'
-        //     people.camp_id = '.$_SESSION['camp']['id'].
-        //     ($listconfig['searchvalue'] ? ' AND
-        //         (people.lastname LIKE "%'.$search.'%" OR
-        //         people.firstname LIKE "%'.$search.'%" OR
-        //         people.container = "'.$search.'" OR
-        //         people.comments LIKE "%'.$search.'%" OR
-        //             (SELECT
-        //                 COUNT(id)
-        //             FROM people AS p
-        //             WHERE
-        //                 (p.lastname LIKE "%'.$search.'%" OR
-        //                 p.firstname LIKE "%'.$search.'%" OR
-        //                 p.container = "'.$search.'" OR
-        //                 p.comments LIKE "%'.$search.'%") AND
-        //                 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
-        //             )
-        //         )
-        //     ' : ' ')
-        // .'GROUP BY people.id '.
-        // ('expired' == $listconfig['filtervalue'] ? 'HAVING expired ' : '').
-        // 'ORDER BY
-        //     -- sort by *parent* first & last name (or own first/last if no parent)
-        //     IF(people.parent_id, parent.lastname, people.lastname),
-        //     IF(people.parent_id, parent.firstname, people.firstname),
-        //     -- children should be grouped with their parents
-        //     If(people.parent_id, parent.id, people.id),
-        //     -- parents should appear before children
-        //     IF(people.parent_id, 1, 0),
-        //     -- children ordered by first name & last name too
-        //     IF(people.parent_id, people.lastname, ""),
-        //     IF(people.parent_id, people.firstname, "")');
-
+        // Prepare data
         $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
-        Tracer::inSpan(
-            ['name' => ('people.php:addhtmldata')],
-            function () use (&$data) {
-                foreach ($data as $key => $value) {
-                    // if ($data[$key]['expired']) {
-                    //     $data[$key]['expired'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
-                    // } else {
-                    //     $data[$key]['expired'] = '';
-                    // }
-                    // if (0 == $data[$key]['parent_id'] && !$data[$key]['approvalsigned']) {
-                    //     $data[$key]['expired'] .= '<i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i> ';
-                    // }
-                    // if ($data[$key]['bicycletraining'] && $_SESSION['camp']['bicycle']) {
-                    //     $data[$key]['expired'] .= '<i class="fa fa-bicycle tooltip-this" title="This person has a bicycle certificate."></i> ';
-                    // }
-                    // if ($data[$key]['workshoptraining'] && $_SESSION['camp']['workshop']) {
-                    //     $data[$key]['expired'] .= '<i class="fa fa-wrench tooltip-this '.($data[$key]['workshopsupervisor'] ? 'blue' : '').'" title="This person has a workshop certificate."></i> ';
-                    // }
+        foreach ($data as $key => $value) {
+            $created = new DateTime($data[$key]['created']);
+            $modified = is_null($data[$key]['modified']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['modified']);
+            $last_activity = is_null($data[$key]['last_activity']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['last_activity']);
+            $data[$key]['last_activity'] = $last_activity->format('Y-m-d');
+            $data[$key]['days_last_active'] = max($created, $modified, $last_activity)->diff(new DateTime())->format('%a');
 
-                    // if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
-                    //     $data[$key]['expired'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
-                    // }
-                    // if ($data[$key]['volunteer']) {
-                    //     $data[$key]['expired'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
-                    // }
-                    // if ($data[$key]['notregistered']) {
-                    //     $data[$key]['expired'] .= '<i class="fa fa-times blue tooltip-this" title="This beneficiary is not officially registered."></i> ';
-                    // }
-                    if ($data[$key]['taglabels']) {
-                        $data[$key]['taglabels'] = explode(',', $data[$key]['taglabels']);
-                    }
+            if ($data[$key]['days_last_active'] > $daysinactive) {
+                $data[$key]['icons'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
+            } else {
+                if ('inactive' == $listconfig['filtervalue']) {
+                    unset($data[$key]);
+                    continue;
+                } else {
+                    $data[$key]['icons'] = '';
                 }
             }
-        );
+            if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
+                $data[$key]['icons'] .= '<i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i> ';
+            }
+            if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
+                $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
+            }
+            if ($data[$key]['volunteer']) {
+                $data[$key]['icons'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
+            }
+            if ($data[$key]['notregistered']) {
+                $data[$key]['icons'] .= '<i class="fa fa-times blue tooltip-this" title="This beneficiary is not officially registered."></i> ';
+            }
+            if ($data[$key]['taglabels']) {
+                $data[$key]['taglabels'] = explode(',', $data[$key]['taglabels']);
+            }
+        }
 
         // Pass information to template
         $cmsmain->assign('data', $data);
