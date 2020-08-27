@@ -159,16 +159,18 @@ $table = $action;
                 addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false, 'testid' => 'detachFromFamily']);
 
                 if ($_SESSION['camp']['bicycle']) {
-                    $options['bicycle'] = 'Bicycle card';
+                    $printoptions['bicycle'] = 'Bicycle card';
                 }
                 if ($_SESSION['camp']['bicycle']) {
-                    $options['workshop'] = 'Workshop card';
+                    $printoptions['workshop'] = 'Workshop card';
                 }
                 if ($_SESSION['camp']['idcard']) {
-                    $options['id'] = 'ID Card';
+                    $printoptions['id'] = 'ID Card';
+                }
+                if (isset($printoptions)) {
+                    addbutton('print', 'Print', ['icon' => 'fa-print', 'options' => $printoptions]);
                 }
 
-                addbutton('print', 'Print', ['icon' => 'fa-print', 'options' => $options]);
                 addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer-o']);
 
                 $cmsmain->assign('data', $data);
