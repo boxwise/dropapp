@@ -68,7 +68,10 @@ $table = $action;
         addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
         addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'tokens');
         addcolumn('tag', 'Tags', 'taglabels');
-        addcolumn('text', 'Comments', 'comments');
+        // addcolumn('text', 'Comments', 'comments');
+        addcolumn('text', 'Last_Purchase', 'last_purchase');
+        addcolumn('text', 'Created', 'created');
+        addcolumn('text', 'Modified', 'modified');
         // addcolumn('html', '&nbsp;', 'expired');
         // if ($listconfig['filtervalue']) {
         //     addcolumn('datetime', 'Created', 'created');
@@ -78,7 +81,8 @@ $table = $action;
         $data = getlistdata('
             SELECT
                 people_filtered.*,
-                IF(people_filtered.parent_id,"",(SELECT SUM(drops) FROM transactions WHERE people_id = people_filtered.id)) AS tokens
+                IF(people_filtered.parent_id,"",(SELECT SUM(drops) FROM transactions WHERE people_id = people_filtered.id)) AS tokens,
+                MAX(transactions.transaction_date) AS last_purchase
             FROM
                 (SELECT 
                     IF(people.parent_id,1,0) AS level,
@@ -120,6 +124,10 @@ $table = $action;
                     people.id) AS people_filtered
             LEFT JOIN
                 people AS parent ON people_filtered.parent_id = parent.id
+            LEFT JOIN
+                transactions ON transactions.people_id = CASE WHEN people_filtered.parent_id IS NULL THEN people_filtered.id ELSE people_filtered.parent_id END AND transactions.product_id IS NOT NULL
+            GROUP BY
+                people_filtered.id
             ORDER BY
                 -- sort by *parent* first & last name (or own first/last if no parent)
                 IF(people_filtered.parent_id, parent.lastname, people_filtered.lastname),

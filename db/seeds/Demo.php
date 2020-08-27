@@ -502,6 +502,7 @@ class Demo extends AbstractSeed
                 $tempdata['firstname'] = $faker->firstname('female');
                 $tempdata['gender'] = 'F';
             }
+            $tempdata['created'] = date('Y-m-d H:i:s');
 
             $people[] = $tempdata;
         }
