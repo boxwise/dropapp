@@ -61,7 +61,13 @@ $table = $action;
                 people.*, 
                 IF(DATEDIFF(NOW(), people.date_of_birth)>730,CONCAT(TIMESTAMPDIFF(YEAR, people.date_of_birth, NOW()), " yrs"), CONCAT(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW()), IF(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW())>1," mos"," mo"))) AS age, 
                 IF(people.gender="M","Male",IF(people.gender="F","Female","")) AS gender2, 
-                IF(people.parent_id,"",(SUM(t2.drops)) AS drops,  
+                IF(people.parent_id,"",(
+                    SELECT 
+                        SUM(drops)
+                    FROM 
+                        transactions
+                    WHERE 
+                        people_id = people.id)) AS drops,  
                 IF(people.notregistered,"NR","") AS nr,
                 people.comments,
                 IF(people.parent_id,1,0) AS level,
@@ -78,8 +84,6 @@ $table = $action;
                         people_tags.people_id) AS taglabels
             FROM 
                 people 
-            LEFT OUTER JOIN 
-                transactions AS t2 ON t2.people_id = people.id 
             LEFT OUTER JOIN 
                 people AS parent ON parent.id = people.parent_id
             WHERE 
