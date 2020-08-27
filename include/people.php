@@ -66,7 +66,7 @@ $table = $action;
         addcolumn('text', 'Gender', 'gender');
         addcolumn('text', 'Age', 'age');
         addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
-        // addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
+        addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'tokens');
         addcolumn('tag', 'Tags', 'taglabels');
         addcolumn('text', 'Comments', 'comments');
         // addcolumn('html', '&nbsp;', 'expired');
@@ -76,44 +76,62 @@ $table = $action;
 
         // Query
         $data = getlistdata('
-            SELECT 
-                IF(people.parent_id,1,0) AS level,
-                people.id,
-                people.lastname,
-                people.firstname,
-                IF(people.gender="M","Male",IF(people.gender="F","Female","")) AS gender, 
-                IF(DATEDIFF(NOW(), people.date_of_birth)>730,CONCAT(TIMESTAMPDIFF(YEAR, people.date_of_birth, NOW()), " yrs"), CONCAT(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW()), IF(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW())>1," mos"," mo"))) AS age, 
-                people.container,
-                people.comments,
-                people.parent_id,
-                GROUP_CONCAT(tags.label) AS taglabels,
-                GROUP_CONCAT(tags.color) AS tagcolors
+            SELECT
+                people_filtered.*,
+                IF(people_filtered.parent_id,"",(SELECT SUM(drops) FROM transactions WHERE people_id = people_filtered.id)) AS tokens
             FROM
-                people
+                (SELECT 
+                    IF(people.parent_id,1,0) AS level,
+                    people.id,
+                    people.parent_id,
+                    people.lastname,
+                    people.firstname,
+                    IF(people.gender="M","Male",IF(people.gender="F","Female","")) AS gender, 
+                    IF(DATEDIFF(NOW(), people.date_of_birth)>730,CONCAT(TIMESTAMPDIFF(YEAR, people.date_of_birth, NOW()), " yrs"), CONCAT(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW()), IF(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW())>1," mos"," mo"))) AS age, 
+                    people.container,
+                    people.comments,
+                    people.created,
+                    people.modified,
+                    GROUP_CONCAT(tags.label) AS taglabels,
+                    GROUP_CONCAT(tags.color) AS tagcolors
+                FROM
+                    people
+                LEFT JOIN
+                    people_tags ON people_tags.people_id = people.id
+                LEFT JOIN
+                    tags ON tags.id = people_tags.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
+                LEFT JOIN
+                    tags AS tags_filter ON tags_filter.id = people_tags.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'].'
+                WHERE
+                    NOT people.deleted AND
+                    people.camp_id = '.$_SESSION['camp']['id'].
+                    ('week' == $listconfig['filtervalue'] ? ' AND DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") ' : '').
+                    ('month' == $listconfig['filtervalue'] ? ' AND DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") ' : '').
+                    ('volunteer' == $listconfig['filtervalue'] ? ' AND people.volunteer ' : '').
+                    ('notregistered' == $listconfig['filtervalue'] ? ' AND people.notregistered ' : '').
+                    ($listconfig['searchvalue'] ? ' AND
+                        (people.lastname LIKE "%'.$search.'%" OR 
+                        people.firstname LIKE "%'.$search.'%" OR 
+                        people.container = "'.$search.'" OR 
+                        people.comments LIKE "%'.$search.'%")
+                    ' : ' ').
+                    ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ()' : '').'
+                GROUP BY 
+                    people.id) AS people_filtered
             LEFT JOIN
-                people_tags ON people_tags.people_id = people.id
-            LEFT JOIN
-                tags ON tags.id = people_tags.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
-            LEFT JOIN
-                tags AS tags2 ON tags2.id = people_tags.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
-            WHERE
-                NOT people.deleted AND
-                people.camp_id = '.$_SESSION['camp']['id'].
-                ('week' == $listconfig['filtervalue'] ? ' AND DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") ' : '').
-                ('month' == $listconfig['filtervalue'] ? ' AND DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") ' : '').
-                ('volunteer' == $listconfig['filtervalue'] ? ' AND people.volunteer ' : '').
-                ('notregistered' == $listconfig['filtervalue'] ? ' AND people.notregistered ' : '').
-                ($listconfig['searchvalue'] ? ' AND
-                    (people.lastname LIKE "%'.$search.'%" OR 
-                    people.firstname LIKE "%'.$search.'%" OR 
-                    people.container = "'.$search.'" OR 
-                    people.comments LIKE "%'.$search.'%")
-                ' : ' ').
-                ($listconfig['multiplefilter_selected'] ? ' AND tags2.id IN ()' : '').'
-            GROUP BY 
-                people.id');
+                people AS parent ON people_filtered.parent_id = parent.id
+            ORDER BY
+                -- sort by *parent* first & last name (or own first/last if no parent)
+                IF(people_filtered.parent_id, parent.lastname, people_filtered.lastname),
+                IF(people_filtered.parent_id, parent.firstname, people_filtered.firstname),
+                -- children should be grouped with their parents
+                If(people_filtered.parent_id, parent.id, people_filtered.id),
+                -- parents should appear before children
+                IF(people_filtered.parent_id, 1, 0),
+                -- children ordered by first name & last name too
+                IF(people_filtered.parent_id, people_filtered.lastname, ""),
+                IF(people_filtered.parent_id, people_filtered.firstname, "")');
 
-        //     ) AS people_filtered
         // LEFT JOIN
         //     (SELECT
         //     (SELECT
