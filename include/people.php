@@ -36,66 +36,93 @@ $table = $action;
         $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
 
         $data = getlistdata('
-		SELECT 
-			IF(DATEDIFF(NOW(),
-			IF(people.parent_id,NULL,GREATEST(COALESCE((SELECT transaction_date 
-				FROM transactions AS t 
-				WHERE t.people_id = people.id AND people.parent_id IS NULL AND product_id IS NOT NULL 
-				ORDER BY transaction_date DESC LIMIT 1),0),
-				COALESCE(people.modified,0),COALESCE(people.created,0))
-			)) > (SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
-			people.*, 
-			IF(DATEDIFF(NOW(), people.date_of_birth)>730,CONCAT(TIMESTAMPDIFF(YEAR, people.date_of_birth, NOW()), " yrs"), CONCAT(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW()), IF(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW())>1," mos"," mo"))) AS age, 
-			IF(people.gender="M","Male",IF(people.gender="F","Female","")) AS gender2, 
-			IF(people.parent_id,"",SUM(t2.drops)) AS drops,  
-			IF(people.notregistered,"NR","") AS nr,
-            people.comments,
-            IF(people.parent_id,1,0) AS level,
-            (SELECT GROUP_CONCAT(tags.label) FROM tags LEFT JOIN people_tags ON people_tags.tag_id = tags.id WHERE people_tags.people_id = people.id GROUP BY people_tags.people_id) AS taglabels
-        FROM people 
-        LEFT OUTER JOIN transactions AS t2 ON t2.people_id = people.id 
-        LEFT OUTER JOIN people AS parent ON parent.id = people.parent_id
-		WHERE 
-			NOT people.deleted AND 
-			'.('week' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") AND ' : '').
-            ('month' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") AND ' : '').
-            ('approvalsigned' == $listconfig['filtervalue'] ? ' ((NOT people.approvalsigned AND people.parent_id IS NULL) OR people.parent_id IN 
-                (SELECT peop.id
-                FROM people peop
-                WHERE peop.parent_id IS NULL AND NOT peop.approvalsigned)) AND ' : '').
-            ('volunteer' == $listconfig['filtervalue'] ? ' people.volunteer AND ' : '').
-            ('notregistered' == $listconfig['filtervalue'] ? ' people.notregistered AND ' : '').'
-			people.camp_id = '.$_SESSION['camp']['id'].
-            ($listconfig['searchvalue'] ? ' AND
-			(people.lastname LIKE "%'.$search.'%" OR 
-			 people.firstname LIKE "%'.$search.'%" OR 
-			 people.container = "'.$search.'" OR 
-			 people.comments LIKE "%'.$search.'%" OR 
-			 (SELECT 
-			 	COUNT(id)
-			 FROM people AS p 
-			 WHERE 
-			 	(p.lastname LIKE "%'.$search.'%" OR 
-                 p.firstname LIKE "%'.$search.'%" OR 
-                 p.container = "'.$search.'" OR 
-                 p.comments LIKE "%'.$search.'%") AND 
-			 	 p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
-			 ))
-			' : ' ')
-        .'GROUP BY people.id '.
-        ('expired' == $listconfig['filtervalue'] ? 'HAVING expired ' : '').
-        'ORDER BY 
-            -- sort by *parent* first & last name (or own first/last if no parent)
-            IF(people.parent_id, parent.lastname, people.lastname), 
-            IF(people.parent_id, parent.firstname, people.firstname),
-            -- children should be grouped with their parents
-            If(people.parent_id, parent.id, people.id),
-            -- parents should appear before children
-            IF(people.parent_id, 1, 0),
-            -- children ordered by first name & last name too
-            IF(people.parent_id, people.lastname, ""), 
-            IF(people.parent_id, people.firstname, "")
-            ');
+            SELECT 
+                IF(DATEDIFF(NOW(),
+                IF(people.parent_id,NULL,GREATEST(COALESCE((
+                    SELECT 
+                        transaction_date 
+                    FROM 
+                        transactions AS t 
+                    WHERE 
+                        t.people_id = people.id AND 
+                        people.parent_id IS NULL AND 
+                        product_id IS NOT NULL 
+                    ORDER BY 
+                        transaction_date DESC LIMIT 1),0),
+                        COALESCE(people.modified,0),
+                        COALESCE(people.created,0))
+                )) > (
+                    SELECT 
+                        delete_inactive_users/2 
+                    FROM 
+                        camps 
+                    WHERE 
+                        id = '.$_SESSION['camp']['id'].'),1,NULL) AS expired,
+                people.*, 
+                IF(DATEDIFF(NOW(), people.date_of_birth)>730,CONCAT(TIMESTAMPDIFF(YEAR, people.date_of_birth, NOW()), " yrs"), CONCAT(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW()), IF(TIMESTAMPDIFF(MONTH, people.date_of_birth, NOW())>1," mos"," mo"))) AS age, 
+                IF(people.gender="M","Male",IF(people.gender="F","Female","")) AS gender2, 
+                IF(people.parent_id,"",(SUM(t2.drops)) AS drops,  
+                IF(people.notregistered,"NR","") AS nr,
+                people.comments,
+                IF(people.parent_id,1,0) AS level,
+                (
+                    SELECT 
+                        GROUP_CONCAT(tags.label) 
+                    FROM 
+                        tags 
+                    LEFT JOIN 
+                        people_tags ON people_tags.tag_id = tags.id 
+                    WHERE 
+                        people_tags.people_id = people.id 
+                    GROUP BY 
+                        people_tags.people_id) AS taglabels
+            FROM 
+                people 
+            LEFT OUTER JOIN 
+                transactions AS t2 ON t2.people_id = people.id 
+            LEFT OUTER JOIN 
+                people AS parent ON parent.id = people.parent_id
+            WHERE 
+                NOT people.deleted AND 
+                '.('week' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") AND ' : '').
+                ('month' == $listconfig['filtervalue'] ? ' DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") AND ' : '').
+                ('approvalsigned' == $listconfig['filtervalue'] ? ' ((NOT people.approvalsigned AND people.parent_id IS NULL) OR people.parent_id IN 
+                    (SELECT peop.id
+                    FROM people peop
+                    WHERE peop.parent_id IS NULL AND NOT peop.approvalsigned)) AND ' : '').
+                ('volunteer' == $listconfig['filtervalue'] ? ' people.volunteer AND ' : '').
+                ('notregistered' == $listconfig['filtervalue'] ? ' people.notregistered AND ' : '').'
+                people.camp_id = '.$_SESSION['camp']['id'].
+                ($listconfig['searchvalue'] ? ' AND
+                    (people.lastname LIKE "%'.$search.'%" OR 
+                    people.firstname LIKE "%'.$search.'%" OR 
+                    people.container = "'.$search.'" OR 
+                    people.comments LIKE "%'.$search.'%" OR 
+                        (SELECT 
+                            COUNT(id)
+                        FROM people AS p 
+                        WHERE 
+                            (p.lastname LIKE "%'.$search.'%" OR 
+                            p.firstname LIKE "%'.$search.'%" OR 
+                            p.container = "'.$search.'" OR 
+                            p.comments LIKE "%'.$search.'%") AND 
+                            p.parent_id = people.id AND NOT p.deleted AND p.camp_id = '.$_SESSION['camp']['id'].'
+                        )
+                    )
+                ' : ' ')
+            .'GROUP BY people.id '.
+            ('expired' == $listconfig['filtervalue'] ? 'HAVING expired ' : '').
+            'ORDER BY 
+                -- sort by *parent* first & last name (or own first/last if no parent)
+                IF(people.parent_id, parent.lastname, people.lastname), 
+                IF(people.parent_id, parent.firstname, people.firstname),
+                -- children should be grouped with their parents
+                If(people.parent_id, parent.id, people.id),
+                -- parents should appear before children
+                IF(people.parent_id, 1, 0),
+                -- children ordered by first name & last name too
+                IF(people.parent_id, people.lastname, ""), 
+                IF(people.parent_id, people.firstname, "")');
 
         $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
