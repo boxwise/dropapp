@@ -31,17 +31,8 @@
             $savekeys[] = 'laundrycomment';
         }
         $id = $handler->savePost($savekeys, ['parent_id']);
+        $handler->saveMultiple('tags', 'people_tags', 'people_id', 'tag_id');
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
-
-        // Set parent_id IS NULL if a family does not have the same container ID
-        // if($_POST['id'] && $oldcontainer != $_POST['container']) {
-        // 	if($_POST['parent_id']) {
-        // 		$parentcontainer = db_value('SELECT container FROM people WHERE parent_id = :id',array('id'=>$_POST['id']));
-        // 		if($parentcontainer != $_POST['container']) db_query('UPDATE people SET parent_id IS NULL WHERE id = :id', array('id'=>$_POST['id']));
-        // 	} else {
-        // 		db_query('UPDATE people SET container = :container WHERE parent_id = :id', array('id'=>$_POST['id'], 'container'=>$_POST['container']));
-        // 	}
-        // }
 
         $postid = ($_POST['id'] ? $_POST['id'] : $id);
         if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
@@ -148,6 +139,7 @@
         'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);
     addfield('date', 'Date of birth', 'date_of_birth', ['testid' => 'date_of_birth_id', 'tab' => 'people', 'date' => true, 'time' => false]);
     addfield('line', '', '', ['tab' => 'people']);
+    addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(people_tags.people_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN people_tags ON tags.id = people_tags.tag_id AND people_tags.people_id = '.intval($id).' WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL']);
     addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
     addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
     addfield('line', '', '', ['tab' => 'people']);
