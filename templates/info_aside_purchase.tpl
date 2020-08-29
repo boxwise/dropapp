@@ -3,14 +3,20 @@
 		{foreach $data['people'] as $person}
 			<li {if $person['id']==$data['people_id']}class="parent"{/if}>
 				<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
-				{if $person['taglabels']}
-					<div class="people-tags">	
-						{foreach $person['taglabels'] as $tag}
-							<span class="badge">{$tag}</span>
-						{/foreach}
+				{if $person['taglabels'] || $person['comments']}
+					<div class="people-info">
+						{if $person['taglabels']}
+							<div class="people-tags">	
+								{foreach $person['taglabels'] as $tag}
+									<span class="badge">{$tag}</span>
+								{/foreach}
+							</div>
+						{/if}
+						{if $person['comments']}
+							<span class="people-comment">{$person['comments']}</span>
+						{/if}
 					</div>
 				{/if}
-				{if $person['comments']}<span class="people-comment">{$person['comments']}</span>{/if}
 			</li>
 		{/foreach}
 	</ul>
