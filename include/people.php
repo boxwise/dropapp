@@ -22,14 +22,13 @@ $table = $action;
         listsetting('search', ['firstname', 'lastname', 'container', 'comments']);
         $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
 
-        $is_filtered = (isset($listconfig['filtervalue']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
-
         // List Settings
         initlist();
         listsetting('allowcopy', false);
         listsetting('allowshowhide', false);
         listsetting('add', 'New person');
         listsetting('delete', 'Deactivate');
+        $is_filtered = (isset($listconfig['filtervalue']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
         if ($is_filtered) {
             listsetting('allowsort', true);
             listsetting('allowmove', false);
@@ -112,7 +111,9 @@ $table = $action;
                 LEFT JOIN
                     tags ON tags.id = people_tags.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
                 LEFT JOIN
-                    tags AS tags_filter ON tags_filter.id = people_tags.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'].'
+					people_tags AS people_tags_filter ON people_tags_filter.people_id = people.id 
+                LEFT JOIN
+                    tags AS tags_filter ON tags_filter.id = people_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'].'
                 WHERE
                     NOT people.deleted AND
                     people.camp_id = '.$_SESSION['camp']['id'].
@@ -126,7 +127,7 @@ $table = $action;
                         people.container = "%'.$search.'%" OR 
                         people.comments LIKE "%'.$search.'%")
                     ' : ' ').
-                    ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ()' : '').'
+                    ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
                 GROUP BY 
                     people.id) AS people_filtered
             LEFT JOIN
