@@ -11,14 +11,22 @@
 
         $data = getlistdata('
             SELECT 
-                * 
+                tags.*,
+                COUNT(people.id) AS peoplecount 
             FROM 
-                tags 
+                tags
+            LEFT JOIN
+                people_tags ON people_tags.tag_id = tags.id
+            LEFT JOIN
+                people ON people_tags.people_id= people.id
             WHERE 
-                deleted IS NULL AND
-                camp_id = '.$_SESSION['camp']['id']);
+                tags.deleted IS NULL AND
+                tags.camp_id = '.$_SESSION['camp']['id'].'
+            GROUP BY
+                tags.id');
 
         addcolumn('tag', 'Name', 'label');
+        addcolumn('text', 'People', 'peoplecount');
 
         listsetting('allowsort', true);
         listsetting('add', 'Add a tag');
