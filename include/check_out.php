@@ -134,7 +134,30 @@
         // the aside
         $ajaxaside = new Zmarty();
 
-        $data['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE id = :id OR parent_id = :id AND visible AND NOT deleted ORDER BY parent_id, seq', ['id' => $data['people_id']]);
+        $data['people'] = db_array('
+            SELECT 
+                people.*, 
+                DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
+                GROUP_CONCAT(DISTINCT tags.label) AS taglabels,
+                GROUP_CONCAT(DISTINCT tags.color) AS tagcolors
+            FROM 
+                people 
+            LEFT JOIN
+                people_tags ON people_tags.people_id = people.id
+            LEFT JOIN
+                tags ON tags.id = people_tags.tag_id 
+            WHERE 
+                (people.parent_id = :id OR people.id = :id) AND 
+                NOT people.deleted 
+            GROUP BY
+                people.id
+            ORDER BY 
+                people.parent_id, people.seq', ['id' => $data['people_id']]);
+        foreach ($data['people'] as $key => $person) {
+            if ($data['people'][$key]['taglabels']) {
+                $data['people'][$key]['taglabels'] = explode(',', $data['people'][$key]['taglabels']);
+            }
+        }
 
         $adults = $camp['maxfooddrops_adult'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$camp['adult_age'].', 0, 1)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $data['people_id']]);
         $children = $camp['maxfooddrops_child'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < '.$camp['adult_age'].', 1, 0)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $data['people_id']]);

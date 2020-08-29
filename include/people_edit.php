@@ -99,7 +99,30 @@
         $side['adults'] = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$_SESSION['camp']['adult_age'].' AND visible AND NOT deleted', ['id' => $sideid]);
         $side['adults'] += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$_SESSION['camp']['adult_age'].' AND visible AND NOT deleted', ['id' => $sideid]);
 
-        $side['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE (parent_id = :id OR id = :id) AND NOT deleted ORDER BY parent_id, seq', ['id' => $sideid]);
+        $side['people'] = db_array('
+            SELECT 
+                people.*, 
+                DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
+                GROUP_CONCAT(DISTINCT tags.label) AS taglabels,
+                GROUP_CONCAT(DISTINCT tags.color) AS tagcolors
+            FROM 
+                people 
+            LEFT JOIN
+                people_tags ON people_tags.people_id = people.id
+            LEFT JOIN
+                tags ON tags.id = people_tags.tag_id 
+            WHERE 
+                (people.parent_id = :id OR people.id = :id) AND 
+                NOT people.deleted 
+            GROUP BY
+                people.id
+            ORDER BY 
+                people.parent_id, people.seq', ['id' => $sideid]);
+        foreach ($side['people'] as $key => $person) {
+            if ($side['people'][$key]['taglabels']) {
+                $side['people'][$key]['taglabels'] = explode(',', $side['people'][$key]['taglabels']);
+            }
+        }
 
         $adults = $_SESSION['camp']['maxfooddrops_adult'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 0, 1)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $sideid]);
         $children = $_SESSION['camp']['maxfooddrops_child'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 1, 0)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $sideid]);
