@@ -102,8 +102,8 @@ $table = $action;
                     people.created,
                     people.modified,
                     people.approvalsigned,
-                    GROUP_CONCAT(tags.label) AS taglabels,
-                    GROUP_CONCAT(tags.color) AS tagcolors
+                    GROUP_CONCAT(DISTINCT tags.label) AS taglabels,
+                    GROUP_CONCAT(DISTINCT tags.color) AS tagcolors
                 FROM
                     people
                 LEFT JOIN
