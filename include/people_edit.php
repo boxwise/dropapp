@@ -162,7 +162,7 @@
         'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);
     addfield('date', 'Date of birth', 'date_of_birth', ['testid' => 'date_of_birth_id', 'tab' => 'people', 'date' => true, 'time' => false]);
     addfield('line', '', '', ['tab' => 'people']);
-    addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(people_tags.people_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN people_tags ON tags.id = people_tags.tag_id AND people_tags.people_id = '.intval($id).' WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL']);
+    addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(people_tags.people_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN people_tags ON tags.id = people_tags.tag_id AND people_tags.people_id = '.intval($id).' WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL ORDER BY label']);
     addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
     addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
     addfield('line', '', '', ['tab' => 'people']);
