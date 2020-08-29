@@ -11,15 +11,34 @@ $table = $action;
         // Title
         $cmsmain->assign('title', 'Beneficiaries');
 
+        // Filter
+        $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Select Tags', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
+        listsetting('multiplefilter', $tagfilter);
+        $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
+        listfilter(['label' => 'Show all people', 'options' => $statusarray, 'filter' => '"show"']);
+
+        // Search
+        listsetting('manualquery', true);
+        listsetting('search', ['firstname', 'lastname', 'container', 'comments']);
+        $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
+
+        $is_filtered = (isset($listconfig['filtervalue']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
+
         // List Settings
         initlist();
         listsetting('allowcopy', false);
-        listsetting('allowmove', true);
-        listsetting('allowmoveto', 1);
-        listsetting('allowsort', false);
         listsetting('allowshowhide', false);
         listsetting('add', 'New person');
         listsetting('delete', 'Deactivate');
+        if ($is_filtered) {
+            listsetting('allowsort', true);
+            listsetting('allowmove', false);
+            listsetting('noindent', true);
+        } else {
+            listsetting('allowsort', false);
+            listsetting('allowmove', true);
+            listsetting('allowmoveto', 1);
+        }
 
         // Toplevel tabs
         listsetting('haspagemenu', true);
@@ -47,17 +66,6 @@ $table = $action;
         }
         addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer-o']);
 
-        // Filter
-        $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Select Tags', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
-        listsetting('multiplefilter', $tagfilter);
-        $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
-        listfilter(['label' => 'Show all people', 'options' => $statusarray, 'filter' => '"show"']);
-
-        // Search
-        listsetting('manualquery', true);
-        listsetting('search', ['firstname', 'lastname', 'container', 'comments']);
-        $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
-
         // Columns
         addcolumn('text', 'Surname', 'lastname');
         addcolumn('text', 'Firstname', 'firstname');
@@ -67,10 +75,9 @@ $table = $action;
         addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'tokens');
         addcolumn('tag', 'Tags', 'taglabels');
         addcolumn('text', 'Comments', 'comments');
-        addcolumn('text', 'Last Activity', 'last_activity');
-        addcolumn('text', 'Created', 'created');
-        addcolumn('text', 'Modified', 'modified');
-        addcolumn('text', 'Days', 'days_last_active');
+        if ($is_filtered) {
+            addcolumn('text', 'Last Activity', 'last_activity');
+        }
         addcolumn('html', '&nbsp;', 'icons');
         // if ($listconfig['filtervalue']) {
         //     addcolumn('datetime', 'Created', 'created');
@@ -167,9 +174,9 @@ $table = $action;
             if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
                 $data[$key]['icons'] .= '<i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i> ';
             }
-            if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
-                $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
-            }
+            // if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
+            //     $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
+            // }
             if ($data[$key]['volunteer']) {
                 $data[$key]['icons'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
             }
