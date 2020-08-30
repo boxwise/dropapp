@@ -153,8 +153,7 @@ function get_text_color($hexColor)
     // If contrast is more than 5, return black color
     if ($contrastRatio > 5) {
         return '#000000';
-    } else {
-        // if not, return white color.
-        return '#FFFFFF';
     }
+    // if not, return white color.
+    return '#FFFFFF';
 }
