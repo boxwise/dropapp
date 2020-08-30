@@ -149,7 +149,7 @@
     addfield('line', '', '', ['aside' => true]);
 
     addfield('hidden', 'camp_id', 'camp_id');
-    addfield('select', 'Familyhead', 'parent_id', ['multiple' => false, 'tab' => 'people', 'onchange' => 'selectFamilyhead("parent_id","container")', 'query' => '
+    addfield('select', 'Familyhead', 'parent_id', ['multiple' => false, 'tab' => 'people', 'tooltip' => 'If noone is selected, the person is a familyhead.', 'onchange' => 'selectFamilyhead("parent_id","container")', 'query' => '
 		SELECT p.id AS value, p.container AS value2, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled 
 		FROM people AS p 
 		WHERE parent_id IS NULL AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 

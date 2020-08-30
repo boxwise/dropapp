@@ -8,7 +8,7 @@
 
         $handler = new formHandler($table);
 
-        $savekeys = ['label', 'camp_id'];
+        $savekeys = ['label', 'color', 'camp_id'];
         $id = $handler->savePost($savekeys);
 
         redirect('?action='.$_POST['_origin']);
@@ -26,6 +26,7 @@
             AND deleted IS NULL ', ['id' => $id]);
 
     addfield('text', 'Name', 'label');
+    addfield('color', 'Color', 'color');
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);
 
