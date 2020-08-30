@@ -25,7 +25,11 @@
             GROUP BY
                 tags.id');
 
-        addcolumn('tag', 'Name', 'label');
+        foreach ($data as $key => $value) {
+            $data[$key]['tag'] = [['label' => $data[$key]['label'], 'color' => $data[$key]['color']]];
+        }
+
+        addcolumn('tag', 'Name', 'tag');
         addcolumn('text', 'People', 'peoplecount');
 
         listsetting('allowsort', true);
