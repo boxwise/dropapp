@@ -12,10 +12,10 @@ $table = $action;
         $cmsmain->assign('title', 'Beneficiaries');
 
         // Filter
-        $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Select Tags', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
+        $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
         listsetting('multiplefilter', $tagfilter);
         $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
-        listfilter(['label' => 'Show all people', 'options' => $statusarray, 'filter' => '"show"']);
+        listfilter(['label' => 'Quick filters', 'options' => $statusarray, 'filter' => '"show"']);
 
         // Search
         listsetting('manualquery', true);
