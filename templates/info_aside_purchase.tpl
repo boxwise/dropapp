@@ -2,21 +2,21 @@
 	<ul class="people-list">
 		{foreach $data['people'] as $person}
 			<li {if $person['id']==$data['people_id']}class="parent"{/if}>
+				<div class="people-info">
 				<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
 				{if $person['taglabels'] || $person['comments']}
-					<div class="people-info">
-						{if $person['taglabels']}
-							<div class="people-tags">	
-								{foreach $person['tags'] as $tag}
-									<span class="badge" {if $tag['color']}style="background-color:{$tag['color']}"{/if}>{$tag['label']}</span>
-								{/foreach}
-							</div>
-						{/if}
-						{if $person['comments']}
-							<span class="people-comment">{$person['comments']}</span>
-						{/if}
-					</div>
+					{if $person['taglabels']}
+						<div class="people-tags">	
+							{foreach $person['tags'] as $tag}
+								<span class="badge" {if $tag['color']}style="background-color:{$tag['color']}"{/if}>{$tag['label']}</span>
+							{/foreach}
+						</div>
+					{/if}
+					{if $person['comments']}
+						<span class="people-comment">{$person['comments']}</span>
+					{/if}
 				{/if}
+				</div>
 			</li>
 		{/foreach}
 	</ul>
