@@ -7,8 +7,8 @@
 					<div class="people-info">
 						{if $person['taglabels']}
 							<div class="people-tags">	
-								{foreach $person['taglabels'] as $tag}
-									<span class="badge">{$tag}</span>
+								{foreach $person['tags'] as $tag}
+									<span class="badge" {if $tag['color']}style="background-color:{$tag['color']}"{/if}>{$tag['label']}</span>
 								{/foreach}
 							</div>
 						{/if}
