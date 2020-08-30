@@ -194,7 +194,7 @@ $table = $action;
                 $taglabels = explode(',', $data[$key]['taglabels']);
                 $tagcolors = explode(',', $data[$key]['tagcolors']);
                 foreach ($taglabels as $tagkey => $taglabel) {
-                    $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey]];
+                    $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
                 }
             }
         }

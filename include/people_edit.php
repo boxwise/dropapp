@@ -123,7 +123,7 @@
                 $taglabels = explode(',', $side['people'][$key]['taglabels']);
                 $tagcolors = explode(',', $side['people'][$key]['tagcolors']);
                 foreach ($taglabels as $tagkey => $taglabel) {
-                    $side['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey]];
+                    $side['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
                 }
             }
         }

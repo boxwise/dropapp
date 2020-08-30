@@ -158,7 +158,7 @@
                 $taglabels = explode(',', $data['people'][$key]['taglabels']);
                 $tagcolors = explode(',', $data['people'][$key]['tagcolors']);
                 foreach ($taglabels as $tagkey => $taglabel) {
-                    $data['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey]];
+                    $data['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
                 }
             }
         }

@@ -26,7 +26,7 @@
                 tags.id');
 
         foreach ($data as $key => $value) {
-            $data[$key]['tag'] = [['label' => $data[$key]['label'], 'color' => $data[$key]['color']]];
+            $data[$key]['tag'] = [['label' => $data[$key]['label'], 'color' => $data[$key]['color'], 'textcolor' => get_text_color($data[$key]['color'])]];
         }
 
         addcolumn('tag', 'Name', 'tag');
