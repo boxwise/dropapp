@@ -31,17 +31,8 @@
             $savekeys[] = 'laundrycomment';
         }
         $id = $handler->savePost($savekeys, ['parent_id']);
+        $handler->saveMultiple('tags', 'people_tags', 'people_id', 'tag_id');
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
-
-        // Set parent_id IS NULL if a family does not have the same container ID
-        // if($_POST['id'] && $oldcontainer != $_POST['container']) {
-        // 	if($_POST['parent_id']) {
-        // 		$parentcontainer = db_value('SELECT container FROM people WHERE parent_id = :id',array('id'=>$_POST['id']));
-        // 		if($parentcontainer != $_POST['container']) db_query('UPDATE people SET parent_id IS NULL WHERE id = :id', array('id'=>$_POST['id']));
-        // 	} else {
-        // 		db_query('UPDATE people SET container = :container WHERE parent_id = :id', array('id'=>$_POST['id'], 'container'=>$_POST['container']));
-        // 	}
-        // }
 
         $postid = ($_POST['id'] ? $_POST['id'] : $id);
         if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
@@ -108,7 +99,34 @@
         $side['adults'] = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$_SESSION['camp']['adult_age'].' AND visible AND NOT deleted', ['id' => $sideid]);
         $side['adults'] += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$_SESSION['camp']['adult_age'].' AND visible AND NOT deleted', ['id' => $sideid]);
 
-        $side['people'] = db_array('SELECT *, DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 AS age FROM people WHERE (parent_id = :id OR id = :id) AND NOT deleted ORDER BY parent_id, seq', ['id' => $sideid]);
+        $side['people'] = db_array('
+            SELECT 
+                people.*, 
+                DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
+                GROUP_CONCAT(tags.label) AS taglabels,
+                GROUP_CONCAT(tags.color) AS tagcolors
+            FROM 
+                people 
+            LEFT JOIN
+                people_tags ON people_tags.people_id = people.id
+            LEFT JOIN
+                tags ON tags.id = people_tags.tag_id 
+            WHERE 
+                (people.parent_id = :id OR people.id = :id) AND 
+                NOT people.deleted 
+            GROUP BY
+                people.id
+            ORDER BY 
+                people.parent_id, people.seq', ['id' => $sideid]);
+        foreach ($side['people'] as $key => $person) {
+            if ($side['people'][$key]['taglabels']) {
+                $taglabels = explode(',', $side['people'][$key]['taglabels']);
+                $tagcolors = explode(',', $side['people'][$key]['tagcolors']);
+                foreach ($taglabels as $tagkey => $taglabel) {
+                    $side['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                }
+            }
+        }
 
         $adults = $_SESSION['camp']['maxfooddrops_adult'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 0, 1)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $sideid]);
         $children = $_SESSION['camp']['maxfooddrops_child'] * db_value('SELECT SUM(IF((DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0) < 13, 1, 0)) AS adults FROM people WHERE id = :id OR parent_id = :id AND NOT deleted ', ['id' => $sideid]);
@@ -135,7 +153,7 @@
     addfield('line', '', '', ['aside' => true]);
 
     addfield('hidden', 'camp_id', 'camp_id');
-    addfield('select', 'Familyhead', 'parent_id', ['multiple' => false, 'tab' => 'people', 'onchange' => 'selectFamilyhead("parent_id","container")', 'query' => '
+    addfield('select', 'Familyhead', 'parent_id', ['multiple' => false, 'tab' => 'people', 'tooltip' => 'If noone is selected, the person is a familyhead.', 'onchange' => 'selectFamilyhead("parent_id","container")', 'query' => '
 		SELECT p.id AS value, p.container AS value2, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled 
 		FROM people AS p 
 		WHERE parent_id IS NULL AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
@@ -148,6 +166,7 @@
         'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);
     addfield('date', 'Date of birth', 'date_of_birth', ['testid' => 'date_of_birth_id', 'tab' => 'people', 'date' => true, 'time' => false]);
     addfield('line', '', '', ['tab' => 'people']);
+    addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(people_tags.people_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN people_tags ON tags.id = people_tags.tag_id AND people_tags.people_id = '.intval($id).' WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL ORDER BY label']);
     addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
     addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
     addfield('line', '', '', ['tab' => 'people']);

@@ -18,6 +18,7 @@
         'jquery.qtip.js',
         'jquery.are-you-sure.js',
         'jquery.fancybox.pack.js',
+        'jquery.tinycolorpicker.js',
         'bootstrap-datetimepicker.min.js',
         'pnotify.custom.min.js',
         'jquery.noty.packaged.min.js',

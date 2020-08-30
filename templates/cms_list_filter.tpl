@@ -93,3 +93,29 @@
 		</div>
 	</li>
 {/if}
+
+{if $listconfig['multiplefilter']}
+	<li>
+		<form method="post">
+			<div class="input-group form-inline search-group">
+				<div class="has-feedback">
+					<input type="hidden" name="__multiplefilter" value="select multiple">
+					<select id="{$listconfig['multiplefilter']['id']}" name="multiplefilter[]" multiple class="select2 form-control input-sm" 
+					data-placeholder="{if isset($listconfig['multiplefilter']['placeholder'])}{$listconfig['multiplefilter']['placeholder']}{else}{$translate['cms_form_selectplaceholder']}{/if}"
+					>
+						<option></option>
+						{foreach $listconfig['multiplefilter']['options'] as $option}
+							<option 
+								{if in_array($option['value'],$listconfig['multiplefilter_selected'])}selected {/if}
+								value="{$option['value']}" >{$option['label']}
+							</option> 
+						{/foreach}
+					</select>	
+				</div>
+				<span class="input-group-btn listSearchButtonDiv">
+					<button class="btn btn-sm btn-default" type="submit"><span class="fa fa-filter"></button>
+				</span>
+			</div>
+		</form>
+	</li>
+{/if}

@@ -1,8 +1,24 @@
 <div class="info-aside" id="people_id_selected" data-testid="info-aside">{$data['test']}
 	<ul class="people-list">
-	{foreach $data['people'] as $person}
-		<li {if $person['id']==$data['people_id']}class="parent"{/if}><a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{$person['firstname']} {$person['lastname']} ({$person['age']} yr, {$person['gender']})</a>{if $person['comments']}<span class="people-comment">{$person['comments']}</span>{/if}</li>
-	{/foreach}
+		{foreach $data['people'] as $person}
+			<li {if $person['id']==$data['people_id']}class="parent"{/if}>
+				<div class="people-info">
+				<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
+				{if $person['taglabels'] || $person['comments']}
+					{if $person['taglabels']}
+						<div class="people-tags">	
+							{foreach $person['tags'] as $tag}
+								<span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
+							{/foreach}
+						</div>
+					{/if}
+					{if $person['comments']}
+						<span class="people-comment">{$person['comments']}</span>
+					{/if}
+				{/if}
+				</div>
+			</li>
+		{/foreach}
 	</ul>
 
 	{if $data['shoeswarning']}<p class="warningbox">This beneficiary has already bought<br />winter shoes or light shoes for men in this or the previous cycle.</p>{/if}

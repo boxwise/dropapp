@@ -37,6 +37,7 @@ class ClearDb extends AbstractSeed
         $this->execute('DELETE FROM `log`');
         $this->execute('DELETE FROM `numbers`');
         $this->execute('DELETE FROM `people`');
+        $this->execute('DELETE FROM `people_tags`');
         $this->execute('DELETE FROM `products`');
         $this->execute('DELETE FROM `product_categories`');
         $this->execute('DELETE FROM `camps`');
@@ -44,6 +45,7 @@ class ClearDb extends AbstractSeed
         $this->execute('DELETE FROM `qr`');
         $this->execute('DELETE FROM `stock`');
         $this->execute('DELETE FROM `sizegroup`');
+        $this->execute('DELETE FROM `tags`');
         $this->execute('DELETE FROM `tipofday`');
         $this->execute('DELETE FROM `transactions`');
         $this->execute('DELETE FROM `translate`');

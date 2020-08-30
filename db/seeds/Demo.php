@@ -55,6 +55,7 @@ class Demo extends AbstractSeed
 			(146,1),
 			(158,1),
 			(160,1),
+			(162,1),
 			(67,2),
 			(90,2),
 			(110,2),
@@ -71,7 +72,8 @@ class Demo extends AbstractSeed
 			(115,3),
 			(118,3),
 			(130,3),
-			(158,3);');
+			(158,3),
+			(162,3);');
 
         //------------------- cms_usergroups
         $this->execute("INSERT INTO `cms_usergroups` (`id`, `label`, `organisation_id`, `userlevel`) VALUES
@@ -128,6 +130,7 @@ class Demo extends AbstractSeed
 			(156,1),
 			(158,1),
 			(160,1),
+			(162,1),
 			(43,2),
 			(67,2),
 			(87,2),
@@ -145,6 +148,7 @@ class Demo extends AbstractSeed
 			(146,2),
 			(158,2),
 			(160,2),
+			(162,2),
 			(90,3),
 			(110,3),
 			(112,3),
@@ -188,6 +192,7 @@ class Demo extends AbstractSeed
 			(156,10),
 			(158,10),
 			(160,10),
+			(162,10),
 			(43,11),
 			(67,11),
 			(90,11),
@@ -206,6 +211,7 @@ class Demo extends AbstractSeed
 			(118,12),
 			(130,12),
 			(158,12),
+			(162,12),
 			(90,13),
 			(110,13),
 			(112,13),
@@ -232,6 +238,7 @@ class Demo extends AbstractSeed
 			(130,15),
 			(158,15),
 			(160,15),
+			(162,15),
 			(87,16),
 			(90,16),
 			(96,16),
@@ -502,6 +509,8 @@ class Demo extends AbstractSeed
                 $tempdata['firstname'] = $faker->firstname('female');
                 $tempdata['gender'] = 'F';
             }
+            $tempdata['created'] = new DateTime();
+            $tempdata['created'] = $tempdata['created']->sub(new DateInterval('P6M'))->format('Y-m-d H:i:s');
 
             $people[] = $tempdata;
         }

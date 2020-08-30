@@ -322,6 +322,16 @@ $(function() {
             .minDate(MIN_VALID_DATE);
     });
 
+    // ColorPicker https://baijs.com/tinycolorpicker/
+    var $colorPicker = $('#colorPicker');
+    if ($colorPicker.length) {
+        $colorPicker.tinycolorpicker();
+        $chosenColor = $colorPicker.find("input")[0].value;
+        if ($chosenColor.length){
+            $colorPicker.data("plugin_tinycolorpicker").setColor($chosenColor);
+        }
+    }
+
     // select2, more info: http://ivaynberg.github.io/select2/
     $(".select2").each(function() {
         var el = $(this);

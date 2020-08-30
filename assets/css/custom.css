@@ -148,11 +148,13 @@ p#familyname{
 .people-list li a{
 	color: black;
 }
+.people-info {
+	margin-bottom: 10px;
+}
 .people-comment {
 	font-weight: normal;
 	display: block;
 	font-style: italic;
-	margin: 0 0 10px 10px;
 	color: #999;
 	font-size: 12px;
 }

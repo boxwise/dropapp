@@ -387,6 +387,17 @@ function initlist()
     } elseif ($_SESSION['search'][$action]) {
         $listconfig['searchvalue'] = $_SESSION['search'][$action];
     }
+
+    if (isset($_POST['__multiplefilter'])) {
+        if (isset($_POST['multiplefilter'])) {
+            $listconfig['multiplefilter_selected'] = $_POST['multiplefilter'];
+            $_SESSION['multiplefilter'][$action] = $listconfig['multiplefilter_selected'];
+        } else {
+            unset($_SESSION['multiplefilter'][$action]);
+        }
+    } elseif ($_SESSION['multiplefilter'][$action]) {
+        $listconfig['multiplefilter_selected'] = $_SESSION['multiplefilter'][$action];
+    }
 }
 
 function listsetting($set, $value)
