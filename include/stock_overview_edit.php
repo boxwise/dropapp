@@ -76,7 +76,7 @@
         listsetting('allowdelete', false);
         listsetting('allowselectall', true);
         listsetting('allowselect', true);
-        listsetting('allowselectinvisible', false);
+        listsetting('allowselectinvisible', true);
 
         $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
         addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
