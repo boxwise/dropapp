@@ -33,3 +33,4 @@
   </head>
 
   <body class="{$action} loading" data-action="{$action}">
+  <div id="loading"><div class="cp-spinner cp-round"></div></div>
