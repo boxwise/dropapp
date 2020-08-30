@@ -140,7 +140,8 @@ $table = $action;
                 people AS parent ON people_filtered_with_tags.parent_id = parent.id
             LEFT JOIN
                 transactions ON transactions.people_id = CASE WHEN people_filtered_with_tags.parent_id IS NULL THEN people_filtered_with_tags.id ELSE people_filtered_with_tags.parent_id END AND transactions.product_id IS NOT NULL '.
-            ('approvalsigned' == $listconfig['filtervalue'] ? '
+            (
+                'approvalsigned' == $listconfig['filtervalue'] ? '
                 WHERE 
                     ((NOT people_filtered_with_tags.approvalsigned AND people_filtered_with_tags.parent_id IS NULL) OR NOT parent.approvalsigned)' : ''
             ).'
@@ -173,10 +174,10 @@ $table = $action;
             } else {
                 if ('inactive' == $listconfig['filtervalue']) {
                     unset($data[$key]);
+
                     continue;
-                } else {
-                    $data[$key]['icons'] = '';
                 }
+                $data[$key]['icons'] = '';
             }
             if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
                 $data[$key]['icons'] .= '<i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i> ';

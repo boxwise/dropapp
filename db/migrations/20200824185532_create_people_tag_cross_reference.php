@@ -8,9 +8,9 @@ class CreatePeopleTagCrossReference extends AbstractMigration
     {
         $people_tags = $this->table('people_tags', ['id' => false, 'primary_key' => ['people_id', 'tag_id']]);
         $people_tags->addColumn('people_id', 'integer', [
-                'null' => false,
-                'signed' => true,
-            ])
+            'null' => false,
+            'signed' => true,
+        ])
             ->addForeignKey('people_id', 'people', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
