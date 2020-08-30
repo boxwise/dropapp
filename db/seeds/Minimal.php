@@ -70,7 +70,7 @@ class Minimal extends AbstractSeed
 			(158,161,'Add beneficiary','people_add',3,0,0,1,0,0),
 			(160,99,'Stock Overview (<span>beta</span>)','stock_overview',13,0,0,1,0,0),
 			(161,NULL,'Beneficiaries','',0,0,0,1,0,0),
-			(162,161,'Manage tags','tags',5,0,1,1,1,1);");
+			(162,161,'Manage tags','tags',5,0,0,1,0,0);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings
