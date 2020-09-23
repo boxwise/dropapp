@@ -30,6 +30,7 @@
         }
 
         addcolumn('tag', 'Name', 'tag');
+        addcolumn('text', 'Description', 'description');
         addcolumn('text', 'People', 'peoplecount');
 
         listsetting('allowsort', true);
