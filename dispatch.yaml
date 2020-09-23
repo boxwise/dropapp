@@ -1,9 +1,9 @@
 dispatch:
-- url: "staging.boxwise.co/v2/*"
+- url: "staging.boxwise.co/v2*"
   service: v2-staging
-- url: "demo.boxwise.co/v2/*"
+- url: "demo.boxwise.co/v2*"
   service: v2-demo
-- url: "app.boxwise.co/v2/*"
+- url: "app.boxwise.co/v2*"
   service: v2-production
 - url: "staging.boxwise.co/*"
   service: default
