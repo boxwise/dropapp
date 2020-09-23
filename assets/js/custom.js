@@ -172,11 +172,19 @@ function AjaxCheckSuccess(result){
 }
 
 function AjaxError(result) {
-    var n = noty({
-        text:
-            "Cannot connect to Boxtribute - please check your Internet connection.",
-        type: "error"
-    });
+    if ([0,404,408,429].includes(result.status)) {
+        var n = noty({
+            text:
+                "Cannot connect to Boxtribute - please check your Internet connection.",
+            type: "error"
+        });
+    } else {
+        var n = noty({
+            text: "Something went wrong - please inform your coordinator.",
+            type: "error"
+            });
+    }
+
 }
 // Captures click events of all <a> elements with href starting with #
 $(document).on("click", 'a[href^="#"]', function(event) {
