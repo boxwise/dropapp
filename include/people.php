@@ -325,19 +325,25 @@ $table = $action;
 
                 break;
             case 'tag':
-                // set tag id
-                $tag_id = $_POST['option'];
-                $people_ids = $ids;
+                if ('undefined' == $_POST['option']) {
+                    $success = false;
+                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
+                    $redirect = false;
+                } else {
+                    // set tag id
+                    $tag_id = $_POST['option'];
+                    $people_ids = $ids;
 
-                foreach ($people_ids as $people_id) {
-                    if (!db_numrows('SELECT * FROM people_tags WHERE tag_id=:tag_id AND people_id=:people_id', ['tag_id' => $tag_id, 'people_id' => $people_id])) {
-                        db_query('INSERT INTO people_tags SET tag_id = :tag_id, people_id = :people_id', ['tag_id' => $tag_id, 'people_id' => $people_id]);
+                    foreach ($people_ids as $people_id) {
+                        if (!db_numrows('SELECT * FROM people_tags WHERE tag_id=:tag_id AND people_id=:people_id', ['tag_id' => $tag_id, 'people_id' => $people_id])) {
+                            db_query('INSERT INTO people_tags SET tag_id = :tag_id, people_id = :people_id', ['tag_id' => $tag_id, 'people_id' => $people_id]);
+                        }
                     }
-                }
 
-                $success = true;
-                $message = 'Tag added';
-                $redirect = true;
+                    $success = true;
+                    $message = 'Tag added';
+                    $redirect = true;
+                }
 
                 break;
             }
