@@ -9,6 +9,7 @@ class AddTagDescription extends AbstractMigration
     {
         $tag = $this->table('tags');
         $tag->addColumn('description', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR])
-        ->save();
+            ->save()
+        ;
     }
 }
