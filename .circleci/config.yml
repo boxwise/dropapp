@@ -162,6 +162,8 @@ workflows:
         filters:
           tags:
             only: /^v.*/
+          branches:
+            ignore: /.*/
     - create-sentry-release:
         name: create-sentry-release-for-production
         requires:
@@ -169,3 +171,5 @@ workflows:
         filters:
           tags:
             only: /^v.*/
+          branches:
+            ignore: /.*/
