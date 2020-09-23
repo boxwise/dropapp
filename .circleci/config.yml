@@ -144,11 +144,6 @@ workflows:
         filters:
           branches:
             only: master
-    - build:
-        name: build-production
-        filters:
-          branches:
-            only: production
     - deploy:
         name: deploy-demo
         envVariablePrefix: BOXWISE_DEMO_
@@ -165,8 +160,6 @@ workflows:
         requires:
           - build
         filters:
-          branches:
-            only: production
           tags:
             only: /^v.*/
     - create-sentry-release:
@@ -174,7 +167,5 @@ workflows:
         requires:
           - deploy-prod
         filters:
-          branches:
-            only: production
           tags:
             only: /^v.*/
