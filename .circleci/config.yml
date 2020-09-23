@@ -149,8 +149,6 @@ workflows:
         filters:
           branches:
             only: production
-          tags:
-            only: /^v.*/
     - deploy:
         name: deploy-demo
         envVariablePrefix: BOXWISE_DEMO_
@@ -160,8 +158,6 @@ workflows:
         filters:
           branches:
             only: production
-          tags:
-            only: /^v.*/
     - deploy:
         name: deploy-prod
         envVariablePrefix: BOXWISE_PROD_
