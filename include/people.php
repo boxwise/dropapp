@@ -325,7 +325,7 @@ $table = $action;
 
                 break;
             case 'tag':
-                if ($_POST['option'] == 'undefined') {
+                if ('undefined' == $_POST['option']) {
                     $success = false;
                     $message = 'No tags exist. Please go to "Manage tags" to create tags.';
                     $redirect = false;
