@@ -25,8 +25,8 @@
             id = :id 
             AND deleted IS NULL ', ['id' => $id]);
 
-    addfield('text', 'Name', 'label');
-    addfield('color', 'Color', 'color');
+    addfield('text', 'Name', 'label', ['required' => true]);
+    addfield('color', 'Color', 'color', ['required' => true]);
     addfield('textarea', 'Description', 'description');
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);

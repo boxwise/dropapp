@@ -340,7 +340,9 @@ $(function() {
             showInput: "true",
             showInitial: "true",
             showAlpha: "false",
-            allowEmpty: "false"
+            allowEmpty: "false",
+            preferredFormat: "hex",
+            palette: [["#f37167", "#aacfe3", "#f8aa9e", "#315c88", "#f4e6a0", "#d89016" ]]
           });
     }
 
