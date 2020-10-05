@@ -796,7 +796,6 @@ function initiateList() {
                                             break;
                                         case "extendActive":
                                             $.each( allTargets, function( key, value ) {
-                                                debugger;
                                                 if (result.data[key] === "0000-00-00"){
                                                     $(value).find('.list-column-valid_lastday')[0].innerText = "";  // empty if expiry date isn't set at all
                                                 }
