@@ -11,6 +11,8 @@ $table = $action;
         // Title
         $cmsmain->assign('title', 'Beneficiaries');
 
+        initlist();
+
         // Filter
         $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
         listsetting('multiplefilter', $tagfilter);
@@ -23,7 +25,6 @@ $table = $action;
         $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
 
         // List Settings
-        initlist();
         listsetting('allowcopy', false);
         listsetting('allowshowhide', false);
         listsetting('add', 'New person');
