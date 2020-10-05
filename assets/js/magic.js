@@ -322,14 +322,26 @@ $(function() {
             .minDate(MIN_VALID_DATE);
     });
 
-    // ColorPicker https://baijs.com/tinycolorpicker/
+    // ColorPicker https://seballot.github.io/
     var $colorPicker = $('#colorPicker');
     if ($colorPicker.length) {
-        $colorPicker.tinycolorpicker();
-        $chosenColor = $colorPicker.find("input")[0].value;
-        if ($chosenColor.length){
-            $colorPicker.data("plugin_tinycolorpicker").setColor($chosenColor);
+        debugger;
+        $chosenColor = $colorPicker[0].value;
+        if (!$chosenColor.length){
+            $chosenColor = '#f37167';
         }
+        $colorPicker.spectrum({
+            color: $chosenColor,
+            type: "component",
+            showPalette: "false",
+            showPaletteOnly: "true",
+            togglePaletteOnly: "true",
+            hideAfterPaletteSelect: "true",
+            showInput: "true",
+            showInitial: "true",
+            showAlpha: "false",
+            allowEmpty: "false"
+          });
     }
 
     // select2, more info: http://ivaynberg.github.io/select2/

@@ -15,7 +15,7 @@
         'select2.css',
         'select2-bootstrap.css',
         'animate.css',
-        'spectrum.min.css',
+        'spectrum.css',
     ];
 
     $css = '';
