@@ -158,14 +158,14 @@ workflows:
         envVariablePrefix: BOXWISE_PROD_
         serviceName: production
         requires:
-          - build
+          - deploy-demo
         filters:
-          branches:
-            only: production
+          tags:
+            only: /^v.*/
     - create-sentry-release:
         name: create-sentry-release-for-production
         requires:
           - deploy-prod
         filters:
-          branches:
-            only: production
+          tags:
+            only: /^v.*/
