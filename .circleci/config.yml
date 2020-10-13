@@ -160,16 +160,12 @@ workflows:
         requires:
           - build
         filters:
-          tags:
-            only: /^v.*/
           branches:
-            ignore: /.*/
+            only: production
     - create-sentry-release:
         name: create-sentry-release-for-production
         requires:
           - deploy-prod
         filters:
-          tags:
-            only: /^v.*/
           branches:
-            ignore: /.*/
+            only: production
