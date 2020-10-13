@@ -164,7 +164,7 @@ For everything else, please see our [contribution guidelines](https://github.com
 
 ### Who do I talk to? ###
 
-Drop us an email to hello@boxwise.co
+Drop us an email to hello@boxwise.co!
 
 ### License ###
 
