@@ -124,7 +124,7 @@ $table = $action;
                         ($listconfig['searchvalue'] ? ' AND
                             (people.lastname LIKE "%'.$search.'%" OR 
                             people.firstname LIKE "%'.$search.'%" OR 
-                            people.container = "%'.$search.'%" OR 
+                            people.container = "'.$search.'" OR 
                             people.comments LIKE "%'.$search.'%")
                         ' : ' ').
                         ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
