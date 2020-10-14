@@ -147,7 +147,7 @@ workflows:
         filters:
           branches:
             only: master
-    - deploy:
+    - deploy:   # this will always run on any commit on production
         name: deploy-demo
         envVariablePrefix: BOXWISE_DEMO_
         serviceName: demo
@@ -158,7 +158,7 @@ workflows:
             only: /^v.*/
           branches:
             only: production
-    - deploy:
+    - deploy:   # this can only be triggered by a tag
         name: deploy-prod
         envVariablePrefix: BOXWISE_PROD_
         serviceName: production
@@ -168,7 +168,7 @@ workflows:
           tags:
             only: /^v.*/
           branches:
-            only: production
+            ignore: /.*/
     - create-sentry-release:
         name: create-sentry-release-for-production
         requires:
@@ -177,4 +177,4 @@ workflows:
           tags:
             only: /^v.*/
           branches:
-            only: production
+            ignore: /.*/
