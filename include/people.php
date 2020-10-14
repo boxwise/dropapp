@@ -79,9 +79,6 @@ $table = $action;
             addcolumn('text', 'Last Activity', 'last_activity');
         }
         addcolumn('html', '&nbsp;', 'icons');
-        // if ($listconfig['filtervalue']) {
-        //     addcolumn('datetime', 'Created', 'created');
-        // }
 
         // Query
         $data = getlistdata('
@@ -124,7 +121,7 @@ $table = $action;
                         ($listconfig['searchvalue'] ? ' AND
                             (people.lastname LIKE "%'.$search.'%" OR 
                             people.firstname LIKE "%'.$search.'%" OR 
-                            people.container = "%'.$search.'%" OR 
+                            people.container = "'.$search.'" OR 
                             people.comments LIKE "%'.$search.'%")
                         ' : ' ').
                         ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
@@ -183,9 +180,9 @@ $table = $action;
             if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
                 $data[$key]['icons'] .= '<i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i> ';
             }
-            // if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
-            //     $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
-            // }
+            if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
+                $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
+            }
             if ($data[$key]['volunteer']) {
                 $data[$key]['icons'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
             }
