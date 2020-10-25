@@ -62,78 +62,7 @@ var chart = AmCharts.makeChart( "chartdiv", {
   }
 
 } );
-var chart = AmCharts.makeChart( "chartdiv2", {
-  "type": "serial",
-  "theme": "light",
-  "fontFamily": "Helvetica Neue ,Helvetica,Arial,sans-serif",
-  "dataProvider": [
 
-	{foreach $data['borrow'] as $date=>$borrow name=borrow}
-		{
-        "date": "{$date}",
-			{foreach $borrow as $key=>$value name=groups}
-		        "{$key}": {$value['count']},
-			{/foreach}
-		}
-		{if not $smarty.foreach.days.last},{/if}
-	{/foreach}
-
-
-
-	],
-  "valueAxes": [ {
-    "gridColor": "#999999",
-	"minimum": 0,
-    "gridAlpha": 0.2,
-    "dashLength": 0,
-        "stackType": "regular",
-  } ],
-  "gridAboveGraphs": true,
-  "startDuration": 1,
-  "graphs": [ {
-    "balloonText": "<b>[[value]]</b> Bicycles Male", 
-    "fillAlphas": 0.8,
-    "lineAlpha": 0.2,
-    "type": "column",
-    "fillColors": "#4cbac5",
-    "valueField": "Bicycles M"
-  },{
-    "balloonText": "<b>[[value]]</b> Bicycles Female", 
-    "fillAlphas": 0.8,
-    "lineAlpha": 0.2,
-    "type": "column",
-    "fillColors": "#db57bd",
-    "valueField": "Bicycles F"
-  },{
-    "balloonText": "<b>[[value]]</b> Gym gear items Male",
-    "fillAlphas": 0.8,
-    "lineAlpha": 0.2,
-    "type": "column",
-    "valueField": "Gym gear M"
-  },{
-    "balloonText": "<b>[[value]]</b> Gym gear items Female",
-    "fillAlphas": 0.8,
-    "lineAlpha": 0.2,
-    "type": "column",
-    "valueField": "Gym gear F"
-  } ],
-  "chartCursor": {
-    "categoryBalloonEnabled": false,
-    "cursorAlpha": 0,
-    "zoomable": false
-  },
-  "categoryField": "date",
-  "categoryAxis": {
-    "gridPosition": "start",
-    "gridAlpha": 0,
-    "tickPosition": "start",
-    "tickLength": 5
-  },
-  "export": {
-    "enabled": false
-  }
-
-} );
 </script>
 
 <!-- HTML -->
@@ -188,9 +117,6 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 <div id="chartdiv"></div>
 {/if}
 <hr />
-{if isset($data['borrow']) && isset($smarty.session.camp['bicycle'])}<h1>Items lent out in the last 21 days</h1>
-<div id="chartdiv2"></div>
-{/if}
 
 <!-- Disabled Tipofday since the data is outdated
 	<aside id="aside-container" class="noprint">
