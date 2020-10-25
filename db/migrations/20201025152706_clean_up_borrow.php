@@ -6,17 +6,18 @@ class CleanUpBorrow extends AbstractMigration
 {
     public function up()
     {
-        $this->table('borrow_categories')->drop()->save();
-        $this->table('borrow_items')->drop()->save();
-        $this->table('borrow_locations')->drop()->save();
         $this->table('borrow_transactions')->drop()->save();
+        $this->table('borrow_items')->drop()->save();
+        $this->table('borrow_categories')->drop()->save();
+        $this->table('borrow_locations')->drop()->save();
         $this->table('camps')
             ->removeColumn('bicycle')
             ->removeColumn('bicycle_closingtime')
             ->removeColumn('bicycle_closingtime_saturday')
             ->removeColumn('bicyclerenttime')
             ->removeColumn('workshop')
-            ->save();
+            ->save()
+        ;
         $this->table('people')
             ->removeColumn('bicycleban')
             ->removeColumn('bicyclebancomment')
@@ -25,7 +26,8 @@ class CleanUpBorrow extends AbstractMigration
             ->removeColumn('workshopbancomment')
             ->removeColumn('workshopsupervisor')
             ->removeColumn('workshoptraining')
-            ->save();
+            ->save()
+        ;
     }
 
     // reverse
@@ -178,58 +180,58 @@ class CleanUpBorrow extends AbstractMigration
         ;
 
         $this->table('camps')
-        ->addColumn('bicycle', 'integer', [
-            'null' => false,
-            'default' => '0',
-            'limit' => MysqlAdapter::INT_TINY,
-        ])
-        ->addColumn('bicyclerenttime', 'integer', [
-            'null' => false,
-            'default' => '0',
-            'limit' => MysqlAdapter::INT_REGULAR,
-        ])->addColumn('bicycle_closingtime', 'string', [
-            'null' => true,
-            'limit' => 255,
-        ])
-        ->addColumn('bicycle_closingtime_saturday', 'string', [
-            'null' => true,
-            'limit' => 255,
-        ])
-        ->addColumn('workshop', 'integer', [
-            'null' => false,
-            'default' => '0',
-            'limit' => MysqlAdapter::INT_TINY,
-        ])->save();
+            ->addColumn('bicycle', 'integer', [
+                'null' => false,
+                'default' => '0',
+                'limit' => MysqlAdapter::INT_TINY,
+            ])
+            ->addColumn('bicyclerenttime', 'integer', [
+                'null' => false,
+                'default' => '0',
+                'limit' => MysqlAdapter::INT_REGULAR,
+            ])->addColumn('bicycle_closingtime', 'string', [
+                'null' => true,
+                'limit' => 255,
+            ])
+            ->addColumn('bicycle_closingtime_saturday', 'string', [
+                'null' => true,
+                'limit' => 255,
+            ])
+            ->addColumn('workshop', 'integer', [
+                'null' => false,
+                'default' => '0',
+                'limit' => MysqlAdapter::INT_TINY,
+            ])->save();
 
         $this->table('people')
-        ->addColumn('bicycleban', 'date', [
-            'null' => true,
-        ])
-        ->addColumn('bicyclebancomment', 'text', [
-            'null' => false,
-            'limit' => 65535,
-        ])
-        ->addColumn('bicycletraining', 'integer', [
-            'null' => false,
-            'default' => '0',
-            'limit' => MysqlAdapter::INT_REGULAR,
-        ])
-        ->addColumn('workshopban', 'date', [
-            'null' => true,
-        ])
-        ->addColumn('workshopbancomment', 'text', [
-            'null' => false,
-            'limit' => 65535,
-        ])
-        ->addColumn('workshopsupervisor', 'integer', [
-            'null' => false,
-            'default' => '0',
-            'limit' => MysqlAdapter::INT_REGULAR,
-        ])
-        ->addColumn('workshoptraining', 'integer', [
-            'null' => false,
-            'default' => '0',
-            'limit' => MysqlAdapter::INT_REGULAR,
-        ])->save();
+            ->addColumn('bicycleban', 'date', [
+                'null' => true,
+            ])
+            ->addColumn('bicyclebancomment', 'text', [
+                'null' => false,
+                'limit' => 65535,
+            ])
+            ->addColumn('bicycletraining', 'integer', [
+                'null' => false,
+                'default' => '0',
+                'limit' => MysqlAdapter::INT_REGULAR,
+            ])
+            ->addColumn('workshopban', 'date', [
+                'null' => true,
+            ])
+            ->addColumn('workshopbancomment', 'text', [
+                'null' => false,
+                'limit' => 65535,
+            ])
+            ->addColumn('workshopsupervisor', 'integer', [
+                'null' => false,
+                'default' => '0',
+                'limit' => MysqlAdapter::INT_REGULAR,
+            ])
+            ->addColumn('workshoptraining', 'integer', [
+                'null' => false,
+                'default' => '0',
+                'limit' => MysqlAdapter::INT_REGULAR,
+            ])->save();
     }
 }
