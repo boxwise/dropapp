@@ -57,6 +57,7 @@ Tracer::inSpan(
         case '/reseed-db.php':
         case '/fake-error.php':
             require substr($parsedUrl, 1); // trim /
+
             break;
         default:
             http_response_code(404);
