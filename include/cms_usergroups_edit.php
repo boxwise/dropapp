@@ -58,18 +58,16 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     $cmsmain->assign('title', 'User group');
 
     $tabs['general'] = 'General';
-    $tabs['bicycle'] = 'Bicycles';
     $tabs['laundry'] = 'Laundry';
     $cmsmain->assign('tabs', $tabs);
 
     // Specify when tabs should be hidden
     $hidden = db_row('
-		SELECT MAX(c.bicycle) AS bicycle, MAX(c.laundry) AS laundry
+		SELECT MAX(c.laundry) AS laundry
 		FROM cms_usergroups ug
 		LEFT JOIN cms_usergroups_camps ugc ON ug.id = ugc.cms_usergroups_id
 		LEFT JOIN camps c ON ugc.camp_id=c.id
 		WHERE ug.id=:id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $id]);
-    $hiddentabs['bicycle'] = !$hidden['bicycle'];
     $hiddentabs['laundry'] = !$hidden['laundry'];
     $cmsmain->assign('hiddentabs', $hiddentabs);
 
@@ -99,10 +97,6 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id IS NOT NULL AND a.visible'.($_SESSION['user']['is_admin'] ? '' : ' AND y.cms_usergroups_id = '.$_SESSION['usergroup']['id']).'
 	GROUP BY a.id
 	ORDER BY a.title_en, seq', 'required' => true, 'testid' => 'userGroupFunctions']);
-
-    // addfield('checkbox', 'Users can add or remove Bicycle/sport items', 'allow_borrow_adddelete', array('tab' => 'bicycle'));
-    // addfield('checkbox', 'Users can start a new laundry cycle', 'allow_laundry_startcycle', array('tab' => 'laundry'));
-    // addfield('checkbox', 'Users can block beneficiaries from using the laundry', 'allow_laundry_block', array('tab' => 'laundry'));
 
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);

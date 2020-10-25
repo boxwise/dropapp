@@ -49,7 +49,7 @@
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
                     if ($id) {
-                        db_query('DELETE FROM borrow_transactions WHERE id = :id', ['id' => $id]);
+                        db_query('DELETE FROM library_transactions WHERE id = :id', ['id' => $id]);
                     }
                 }
                 $message = 'Transactions cancelled';

@@ -25,7 +25,7 @@
 
         $handler = new formHandler($table);
         $handler->makeURL('fullname');
-        $savekeys = ['parent_id', 'firstname', 'lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield', 'date_of_signature'];
+        $savekeys = ['parent_id', 'firstname', 'lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'phone', 'notregistered', 'volunteer', 'approvalsigned', 'signaturefield', 'date_of_signature'];
         if ($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) {
             $savekeys[] = 'laundryblock';
             $savekeys[] = 'laundrycomment';
@@ -176,34 +176,16 @@
     }
     addfield('checkbox', 'This beneficiary is a volunteer with <i>'.$_SESSION['organisation']['label'].'</i>', 'volunteer', ['testid' => 'volunteer_id', 'tab' => 'people']);
 
-    if ($_SESSION['camp']['bicycle'] || $_SESSION['camp']['workshop'] || $_SESSION['camp']['idcard']) {
+    if ($_SESSION['camp']['idcard']) {
         $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);
         if ($data['picture']) {
             $exif = exif_read_data($settings['upload_dir'].'/people/'.$id.'.jpg');
             $data['rotate'] = (3 == $exif['Orientation'] ? 180 : (6 == $exif['Orientation'] ? 90 : (8 == $exif['Orientation'] ? 270 : 0)));
         }
-        addfield('photo', 'Picture for cards', 'picture', ['tab' => 'bicycle']);
-        addfield('line', '', '', ['tab' => 'bicycle']);
-        addfield('text', 'Phone number', 'phone', ['tab' => 'bicycle']);
+        addfield('photo', 'Picture', 'picture', ['tab' => 'idcard']);
+        addfield('line', '', '', ['tab' => 'idcard']);
+        addfield('text', 'Phone number', 'phone', ['tab' => 'idcard']);
     }
-    if ($_SESSION['camp']['bicycle']) {
-        addfield('line', '', '', ['tab' => 'bicycle']);
-        addfield('checkbox', 'This person succesfully passed the bicycle training', 'bicycletraining', ['tab' => 'bicycle']);
-        addfield('bicyclecard', 'Card', 'bicyclecard', ['tab' => 'bicycle']);
-        addfield('line', '', '', ['tab' => 'bicycle']);
-        addfield('date', 'Bicycle ban until', 'bicycleban', ['tab' => 'bicycle', 'time' => false, 'date' => true, 'tooltip' => 'Ban this person from the borrowing system until (and including) this date. Empty this field to cancel the ban.']);
-        addfield('textarea', 'Comment', 'bicyclebancomment', ['tab' => 'bicycle', 'width' => 6, 'tooltip' => 'Please always make a note with a bicycle ban, stating the reason of the ban, your name and the date the ban started.']);
-    }
-    if ($_SESSION['camp']['workshop']) {
-        addfield('line', '', '', ['tab' => 'bicycle']);
-        addfield('checkbox', 'This person succesfully passed the workshop training', 'workshoptraining', ['tab' => 'bicycle']);
-        addfield('checkbox', 'This person is a workshop supervisor', 'workshopsupervisor', ['tab' => 'bicycle']);
-        addfield('workshopcard', 'Card', 'workshopcard', ['tab' => 'bicycle']);
-        addfield('line', '', '', ['tab' => 'bicycle']);
-        addfield('date', 'Workshop ban until', 'workshopban', ['tab' => 'bicycle', 'time' => false, 'date' => true, 'tooltip' => 'Ban this person from the workshop until (and including) this date. Empty this field to cancel the ban.']);
-        addfield('textarea', 'Comment', 'workshopbancomment', ['tab' => 'bicycle', 'width' => 6, 'tooltip' => 'Please always make a note with a workshop ban, stating the reason of the ban, your name and the date the ban started.']);
-    }
-
     if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) && (!$data['parent_id'] && $data['id']) && $_SESSION['camps']['laundry']) {
         addfield('checkbox', 'This family/beneficiary has no access to laundry', 'laundryblock', ['tab' => 'laundry']);
         addfield('text', 'Comment', 'laundrycomment', ['tab' => 'laundry']);
@@ -246,16 +228,6 @@
 				LIMIT 5',
                 'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
                 'allowedit' => false, 'allowadd' => $data['allowdrops'], 'add' => 'Give '.ucwords($_SESSION['camp']['currencyname']), 'addaction' => 'give&ids='.intval($id), 'allowsort' => false, 'allowselect' => true, 'allowselectall' => false, 'action' => 'people_edit', 'redirect' => true, 'modal' => false, ]);
-
-            //show borrow history
-            addfield('line', '', '', ['tab' => 'bicycle']);
-            if (db_value('SELECT id FROM borrow_transactions WHERE people_id ='.$id)) {
-                addfield('list', 'Last 10 transactions', 'bicycles', ['tab' => 'bicycle', 'width' => 10, 'query' => '
-					SELECT DATE_FORMAT(transaction_date,"%e-%m-%Y %H:%i:%S") AS dateout, 
-(SELECT DATE_FORMAT(transaction_date,"%e-%m-%Y %H:%i:%S") FROM borrow_transactions AS t2 WHERE t.bicycle_id = t2.bicycle_id AND t2.transaction_date > t.transaction_date ORDER BY transaction_date LIMIT 1) AS datein, (SELECT label FROM borrow_items WHERE id = t.bicycle_id) AS name FROM borrow_transactions AS t LEFT OUTER JOIN people AS p ON p.id = t.people_id WHERE p.id = '.intval($id).' AND status = "out" ORDER BY transaction_date DESC LIMIT 10',
-                    'columns' => ['name' => 'Bicycle', 'dateout' => 'Start', 'datein' => 'End'],
-                    'allowedit' => false, 'allowadd' => false, 'allowsort' => false, 'allowselect' => false, 'allowselectall' => false, 'redirect' => false, 'modal' => false, ]);
-            }
         }
     }
     addfield('created', 'Created', 'created', ['aside' => true]);
@@ -267,14 +239,8 @@
 
     // Tabs
     $tabs['people'] = 'Personal';
-    if ($_SESSION['camp']['bicycle'] && $_SESSION['camp']['workshop']) {
-        $tabs['bicycle'] = 'Bicycle & Workshop';
-    } elseif ($_SESSION['camp']['bicycle']) {
-        $tabs['bicycle'] = 'Bicycle';
-    } elseif ($_SESSION['camp']['workshop']) {
-        $tabs['bicycle'] = 'Workshop';
-    } elseif ($_SESSION['camp']['idcard']) {
-        $tabs['bicycle'] = 'ID Card';
+    if ($_SESSION['camp']['idcard']) {
+        $tabs['idcard'] = 'ID Card';
     }
 
     if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $S_SESSION['camps']['laundry']) {
