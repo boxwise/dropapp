@@ -81,7 +81,7 @@ jobs:
           version_order: creation" > phinx.yml
           # generate google app engine config for target environment
           sed 's/service: default/service: << parameters.serviceName >>/g' app.yaml > app-<< parameters.serviceName >>.yaml
-          if [ << parameters.serviceName >> == production ]; then echo -e "\ninstance_class: F2" >> app-production.yaml; fi;
+          if [ << parameters.serviceName >> == production ]; then echo -e "\ninstance_class: F4" >> app-production.yaml; fi;
       - run: |
           # get google credentials
           echo $GOOGLE_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
