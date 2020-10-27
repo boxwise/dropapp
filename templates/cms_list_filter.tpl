@@ -113,7 +113,7 @@
 					</select>	
 				</div>
 				<span class="input-group-btn listSearchButtonDiv">
-					<button class="btn btn-sm btn-default" type="submit"><span class="fa fa-filter"></button>
+					<button class="btn btn-sm btn-default" type="submit" data-testid = "tagfilter-button"><span class="fa fa-filter"></button>
 				</span>
 			</div>
 		</form>
