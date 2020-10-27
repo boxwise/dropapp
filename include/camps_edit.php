@@ -6,7 +6,7 @@
     if ($_POST) {
         $handler = new formHandler($table);
 
-        $savekeys = ['name', 'market', 'familyidentifier', 'delete_inactive_users', 'food', 'bicycle', 'idcard', 'workshop', 'laundry', 'schedulestart', 'schedulestop', 'schedulebreak', 'schedulebreakstart', 'schedulebreakduration', 'scheduletimeslot', 'currencyname', 'dropsperadult', 'dropsperchild', 'dropcapadult', 'dropcapchild', 'bicyclerenttime', 'adult_age', 'daystokeepdeletedpersons', 'extraportion', 'maxfooddrops_adult', 'maxfooddrops_child', 'bicycle_closingtime', 'bicycle_closingtime_saturday', 'organisation_id', 'resettokens'];
+        $savekeys = ['name', 'market', 'familyidentifier', 'delete_inactive_users', 'food', 'idcard', 'laundry', 'schedulestart', 'schedulestop', 'schedulebreak', 'schedulebreakstart', 'schedulebreakduration', 'scheduletimeslot', 'currencyname', 'dropsperadult', 'dropsperchild', 'dropcapadult', 'dropcapchild', 'adult_age', 'daystokeepdeletedpersons', 'extraportion', 'maxfooddrops_adult', 'maxfooddrops_child', 'organisation_id', 'resettokens'];
         $id = $handler->savePost($savekeys);
         $handler->saveMultiple('functions', 'cms_functions_camps', 'camps_id', 'cms_functions_id');
 
@@ -35,13 +35,11 @@
     $tabs['beneficiaries'] = 'Beneficiaries';
     $tabs['market'] = 'Free Shop';
     $tabs['food'] = 'Food Distribution';
-    $tabs['bicycle'] = 'Rent Bicycles';
     $cmsmain->assign('tabs', $tabs);
 
     // Specify when tabs should be hidden
     $hiddentabs['market'] = !$data['market'];
     $hiddentabs['food'] = !$data['food'];
-    $hiddentabs['bicycle'] = !$data['bicycle'];
     $cmsmain->assign('hiddentabs', $hiddentabs);
 
     addfield('text', 'Base name', 'name', ['setformtitle' => true, 'tab' => 'general', 'required' => true]);
@@ -57,9 +55,7 @@
 
     addfield('checkbox', 'You have a Free Shop?', 'market', ['tab' => 'general', 'onchange' => 'toggleShop()']);
     addfield('checkbox', 'You run a food distribution program in the Free Shop?', 'food', ['tab' => 'general', 'onchange' => 'toggleFood()']);
-    // addfield('checkbox', 'You run a Bicycle/tools borrowing program?', 'bicycle', array('tab'=>'general', 'onchange'=>'toggleBikes()'));
-    // addfield('checkbox', 'You have a workshop for beneficiaries?', 'workshop', array('tab'=>'general'));
-    // addfield('checkbox', 'You run a laundry station for beneficiaries?', 'laundry', array('tab'=>'general'));
+    addfield('checkbox', 'You run a laundry station for beneficiaries?', 'laundry', ['tab' => 'general']);
     addfield('line', '', '', ['tab' => 'general']);
 
     addfield('number', 'Deactivate inactive beneficiaries', 'delete_inactive_users', ['tab' => 'beneficiaries', 'width' => 2, 'tooltip' => 'Beneficiaries without activity in Boxtribute will be deactivated. Deactivated beneficiaries will remain visible in the Deactivated tab in the Beneficiaries page.']);
@@ -98,10 +94,6 @@
         ['value' => '1.5', 'label' => '1,5 hour'],
         ['value' => '2', 'label' => '2 hours'],
     ]]);
-
-    addfield('number', 'Max duration to rent a bicycle', 'bicyclerenttime', ['tab' => 'bicycle']);
-    addfield('date', 'Closing time', 'bicycle_closingtime', ['tab' => 'bicycle', 'date' => false, 'time' => true]);
-    addfield('date', 'Closing time on Saturday', 'bicycle_closingtime_saturday', ['tab' => 'bicycle', 'date' => false, 'time' => true]);
 
     addfield('checkbox', 'Do you give out extraportions?', 'extraportion', ['tab' => 'food']);
     addfield('number', 'Maximum '.$_SESSION['camp']['currencyname'].' for food per adult', 'maxfooddrops_adult', ['tab' => 'food']);

@@ -10,8 +10,7 @@ const AllFunctions = ['Free Shop', 'Admin','Users','Settings','Texts','Manage me
 'Checkout','Boxes','Give tokens to all','Sales reports','Inventory','Fancy graphs',
 'Stockroom','Generate market schedule','Generate QR labels','Actions','Warehouses','Containers List',
 'Stock Overview','Manage beneficiaries','Hidden menu items','Start page','Give tokens to selected families',
-'User profile','Exit login as','Sales List Download','Insight','General stock','Lists','Services',
-'Bicycles / Sport','Borrow edit','Borrow history ','Library','Borrow books','Library history',
+'User profile','Exit login as','Sales List Download','Insight','General stock','Lists','Services','Library','Borrow books','Library history',
 'Library','Laundry','All Residents export','Laundry No show','Laundry start new cycle','Organisations',
 'Boxtribute Gods','User groups','Bases','Add beneficiary'];
 const AdminAvailableFunctions = ['Users','Manage products',

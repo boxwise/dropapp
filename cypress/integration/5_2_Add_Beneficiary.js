@@ -57,7 +57,6 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.checkInputIsEmpty("registered_id");
         CheckLanguageFieldIsEmpty();
         cy.checkCommentFieldIsEmpty();
-        Checktab("tabid_bicycle");
         Checktab('tabid_signature');
         cy.getButtonWithText("Save and close").should("be.visible");
         cy.getButtonWithText("Save and new").should("be.visible");

@@ -13,9 +13,6 @@ class ClearDb extends AbstractSeed
         // and replacement pattern:
         // $this->execute("DELETE FROM `$1`");\n
         $this->execute('SET FOREIGN_KEY_CHECKS=0;');
-        $this->execute('DELETE FROM `borrow_categories`');
-        $this->execute('DELETE FROM `borrow_items`');
-        $this->execute('DELETE FROM `borrow_locations`');
         $this->execute('DELETE FROM `cms_users`');
         $this->execute('DELETE FROM `cms_functions`');
         $this->execute('DELETE FROM `cms_functions_camps`');

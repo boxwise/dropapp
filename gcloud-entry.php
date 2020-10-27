@@ -51,14 +51,13 @@ Tracer::inSpan(
         case '/mobile.php':
         case '/reset.php':
         case '/dailyroutine.php':
-        case '/pdf/workshopcard.php':
-        case '/pdf/bicyclecard.php':
         case '/pdf/idcard.php':
         case '/pdf/qr.php':
         case '/pdf/dryfood.php':
         case '/reseed-db.php':
         case '/fake-error.php':
             require substr($parsedUrl, 1); // trim /
+
             break;
         default:
             http_response_code(404);
