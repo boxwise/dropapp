@@ -25,7 +25,7 @@ context("5_2_Add_Beneficiary_Test", () => {
                 cy.checkGridCheckboxByText(lastname);
                 cy.get("button").contains("Full delete").click();
                 cy.getConfirmActionButton().click();
-                cy.waitForAjaxAction("Item deleted");
+                cy.waitForAjaxAction("do=delete","Item deleted");
             }
         })
     }
@@ -87,8 +87,7 @@ context("5_2_Add_Beneficiary_Test", () => {
     it("5_2_2 Prevent empty submit",() => {
         NavigateToEditBeneficiaryForm();
         cy.getButtonWithText("Save and close").click();
-        cy.checkQtip("qtip-0-content");
-        cy.checkQtip("qtip-1-content");
+        cy.checkQtipWithText("qtip-content","This field is required");
     });    
 
     it("5_2_4 Save and New",()=> {

@@ -17,6 +17,10 @@ const TEST_CASE_ID = "ManageBeneficiariesTest";
 
 const ITEM_RECOVERED = "Item recovered";
 const ITEM_DELETED = "Item deleted";
+const BENEFICIARY_DEACTVATE_REQUEST = "do=delete"
+const BENEFICIARY_REACTVATE_REQUEST = "do=undelete";
+const BENEFICIARY_MERGE_REQUEST = "do=merge";
+const BENEFICIARY_MERGE_RESPONSE = null;
 
 describe('Manage beneficiaries', () => {
 
@@ -122,12 +126,12 @@ describe('Manage beneficiaries', () => {
     function clickDeleteButtonAndCheckConfirmation(){
         cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
-        cy.waitForAjaxAction(ITEM_DELETED);
+        cy.waitForAjaxAction(BENEFICIARY_DEACTVATE_REQUEST,ITEM_DELETED);
     }
 
     function clickMergeButton(){
         cy.get("button[data-testid='mergeToFamily']").click();
-        cy.waitForAjaxAction(null);
+        cy.waitForAjaxAction(BENEFICIARY_MERGE_REQUEST,BENEFICIARY_MERGE_RESPONSE);
 
     }
 
@@ -153,7 +157,7 @@ describe('Manage beneficiaries', () => {
 
     function clickDetachButton(){
         cy.get("button[data-testid='detachFromFamily']").click();
-        cy.waitForAjaxAction(null);
+        cy.waitForAjaxAction(BENEFICIARY_MERGE_REQUEST,BENEFICIARY_MERGE_RESPONSE);
     }
 
     function createMergedFamily(firstname1, lastname1, firstname2, lastname2, testCaseId){

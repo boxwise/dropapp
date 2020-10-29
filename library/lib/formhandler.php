@@ -41,10 +41,12 @@ class formHandler
                         $value = str_replace('€', '', $value);
                         $value = str_replace('.', '', $value); // remove thousands indicator
                         $value = str_replace(',', '.', $value); // change decimal into point
+
                         break;
                     case 'float':
                         $value = str_replace('.', '', $value); // remove thousands indicator
                         $value = str_replace(',', '.', $value); // change decimal into point
+
                         break;
                     case 'select':
                         if (!in_array('multiple', $properties)) {
