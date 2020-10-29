@@ -178,7 +178,7 @@ $table = $action;
                 $data[$key]['icons'] = '';
             }
             if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
-                $data[$key]['icons'] .= '<i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i> ';
+                $data[$key]['icons'] .= '<a href="?action=people_edit&id='.$data[$key]['id'].'&active=signature"><i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i></a> ';
             }
             if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
                 $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
