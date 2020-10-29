@@ -283,7 +283,7 @@
         $tabs['transaction'] = 'Transactions';
     }
     $tabs['signature'] = 'Privacy declaration';
-    if (isset($_GET['active']) && isset($tabs[$_GET['active']])) {
+    if (isset($_GET['active'], $tabs[$_GET['active']])) {
         $cmsmain->assign('activetab', $_GET['active']);
     }
 
