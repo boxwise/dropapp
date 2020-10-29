@@ -276,16 +276,16 @@
     } elseif ($_SESSION['camp']['idcard']) {
         $tabs['bicycle'] = 'ID Card';
     }
-
     if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $S_SESSION['camps']['laundry']) {
         $tabs['laundry'] = 'Laundry';
     }
-
     if (!$data['parent_id'] && $data['id']) {
         $tabs['transaction'] = 'Transactions';
     }
-
     $tabs['signature'] = 'Privacy declaration';
+    if (isset($_GET['active'], $tabs[$_GET['active']])) {
+        $cmsmain->assign('activetab', $_GET['active']);
+    }
 
     $cmsmain->assign('tabs', $tabs);
     $cmsmain->assign('data', $data);
