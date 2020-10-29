@@ -21,6 +21,8 @@ const BENEFICIARY_DEACTVATE_REQUEST = "do=delete"
 const BENEFICIARY_REACTVATE_REQUEST = "do=undelete";
 const BENEFICIARY_MERGE_REQUEST = "do=merge";
 const BENEFICIARY_MERGE_RESPONSE = null;
+const BENEFICIARY_DETACH_REQUEST = "do=detach";
+const BENEFICIARY_DETACH_RESPONSE = null;
 const BENEFICIARY_DELETE_REQUEST = "do=realdelete"
 
 describe('Manage beneficiaries', () => {
@@ -158,7 +160,7 @@ describe('Manage beneficiaries', () => {
 
     function clickDetachButton(){
         cy.get("button[data-testid='detachFromFamily']").click();
-        cy.waitForAjaxAction(BENEFICIARY_MERGE_REQUEST,BENEFICIARY_MERGE_RESPONSE);
+        cy.waitForAjaxAction(BENEFICIARY_DETACH_REQUEST,BENEFICIARY_DETACH_RESPONSE);
     }
 
     function createMergedFamily(firstname1, lastname1, firstname2, lastname2, testCaseId){
