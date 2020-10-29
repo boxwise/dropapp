@@ -25,7 +25,7 @@
 
 	{if isset($data['approvalsigned']) && !$data['approvalsigned'] && $data['parent_id']==0} 
 		<span class="privacyNoteSpan">Needs Data Privacy Agreement!</span>
-		<a class="btn privacySignButton" data-toggle="tooltip" href="?action=people_edit&id={$data['people_id']}" data-testid="privacyDeclarationMissingButton" >
+		<a class="btn privacySignButton" data-toggle="tooltip" href="?action=people_edit&id={$data['people_id']}&active=signature" data-testid="privacyDeclarationMissingButton" >
 			<span class="fa fa-edit"></span> 
 				Sign
 		</a>{/if}
