@@ -1,7 +1,10 @@
 const deactivateTestUserName = "BrowserTestUser_DeactivateTest";
+const USER_DEACTVATED_MSG = "Item deleted";
+const USER_REACTVATED_MSG = "Item recovered";
 
 describe('User management', () => {
     beforeEach(function () {
+        cy.setupAjaxActionHook();
         cy.loginAsAdmin();
         cy.visit('/?action=cms_users');
     });
@@ -32,6 +35,7 @@ describe('User management', () => {
         cy.getConfirmActionButton().should('not.exist');
         cy.getListDeleteButton().click();
         cy.getConfirmActionButton().click();
+        cy.waitForAjaxAction(USER_DEACTVATED_MSG);
         getDeactivatedUsersTab().click();
         getDeactivatedUsersTab().should('have.class', 'active')
         cy.getRowWithText(deactivateTestUserName).should('exist');
@@ -43,6 +47,7 @@ describe('User management', () => {
         cy.getConfirmActionButton().should('not.exist');
         getReactivateButton().click();
         cy.getConfirmActionButton().click();
+        cy.waitForAjaxAction(USER_REACTVATED_MSG);
         getActiveUsersTab().click();
         cy.getRowWithText(deactivateTestUserName).should('exist');
     });
