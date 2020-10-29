@@ -21,6 +21,7 @@ const BENEFICIARY_DEACTVATE_REQUEST = "do=delete"
 const BENEFICIARY_REACTVATE_REQUEST = "do=undelete";
 const BENEFICIARY_MERGE_REQUEST = "do=merge";
 const BENEFICIARY_MERGE_RESPONSE = null;
+const BENEFICIARY_DELETE_REQUEST = "do=realdelete"
 
 describe('Manage beneficiaries', () => {
 
@@ -138,14 +139,14 @@ describe('Manage beneficiaries', () => {
     function clickRecoverButton(){
         //cy.get("button[data-testid='recoverDeactivatedUser']").click();
         cy.get("button[data-operation='undelete']").click();
-        cy.waitForAjaxAction(ITEM_RECOVERED);
+        cy.waitForAjaxAction(BENEFICIARY_REACTVATE_REQUEST,ITEM_RECOVERED);
     }
 
     function clickFullDeleteButton(){
         //cy.get("button[data-testid='fullDeleteUser']").click();
         cy.get("button[data-operation='realdelete']").click();
         cy.getConfirmActionButton().click();
-        cy.waitForAjaxAction(ITEM_DELETED);
+        cy.waitForAjaxAction(BENEFICIARY_DELETE_REQUEST,ITEM_DELETED);
 
     }
 
