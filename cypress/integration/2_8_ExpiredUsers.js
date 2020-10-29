@@ -11,6 +11,8 @@ const EXPIRED_COORDINATOR_ROLE = "TestUserGroup_Coordinator";
 const EXPIRED_ADMIN_ROLE = "TestUserGroup_Admin";
 const EXPIRED_COORDINATOR_VALID_FROM = "11 April 2017";
 const EXPIRED_COORDINATOR_VALID_TO = "28 May 2017";
+const USER_DEACTVATE_REQUEST = "do=delete"
+const USER_REACTVATE_REQUEST = "do=undelete";
 
 describe("2_8_ExpiredUsers_Test", () => {
 
@@ -73,14 +75,14 @@ describe("2_8_ExpiredUsers_Test", () => {
         cy.clickOnElementByTypeAndTestId("button", "list-delete-button");
         cy.checkElementIsVisibleByText("h3", ARE_YOU_SURE_POPUP);
         cy.clickOnElementBySelectorAndText("div.popover-content a", DEACTIVATE_BUTTON);
-        cy.waitForAjaxAction(ITEM_DELETED);
+        cy.waitForAjaxAction(USER_DEACTVATE_REQUEST,ITEM_DELETED);
 
         cy.visit('/?action=cms_users_deactivated');
         cy.checkElementIsVisibleByText("p", EXPIRED_COORDINATOR_NAME);
         cy.checkGridCheckboxByText(EXPIRED_COORDINATOR_NAME);
         cy.clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
         cy.clickOnElementBySelectorAndText("a", OK_BUTTON);
-        cy.waitForAjaxAction(ITEM_RECOVERED);
+        cy.waitForAjaxAction(USER_REACTVATE_REQUEST,ITEM_RECOVERED);
 
         // test cancel button
         cy.visit('/?action=cms_users_expired');

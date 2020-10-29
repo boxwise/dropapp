@@ -25,7 +25,7 @@ context("5_2_Add_Beneficiary_Test", () => {
                 cy.checkGridCheckboxByText(lastname);
                 cy.get("button").contains("Full delete").click();
                 cy.getConfirmActionButton().click();
-                cy.waitForAjaxAction("Item deleted");
+                cy.waitForAjaxAction("do=delete","Item deleted");
             }
         })
     }
