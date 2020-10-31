@@ -1,7 +1,7 @@
 # Security Policy
 
 ## Supported Versions
-Boxtribute is provided open source on an "as-is" basis with no warranties, implied or otherwise (see license).  As such will patch reported vulnerabilities for the latest release on a best-effort basis. 
+Boxtribute is provided open source on an "as-is" basis with no warranties, implied or otherwise (see license).  As such security patches on reported vulnerabilities will be provided for the latest release only on a best-effort basis. 
 
 ## Reporting a Vulnerability
 
