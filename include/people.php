@@ -5,7 +5,7 @@ use OpenCensus\Trace\Tracer;
 Tracer::inSpan(
     ['name' => ('people.php')],
     function () use ($action, &$cmsmain) {
-        global $table, $listconfig, $listdata;
+        global $settings, $table, $listconfig, $listdata;
 
         $table = $action;
         $ajax = checkajax();
