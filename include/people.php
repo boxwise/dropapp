@@ -3,7 +3,7 @@
 use OpenCensus\Trace\Tracer;
 
 Tracer::inSpan(
-    ['name' => ('people.php')],
+    ['name' => ('include/people.php')],
     function () use ($action, &$cmsmain) {
         global $settings, $table, $listconfig, $listdata;
 
@@ -167,49 +167,91 @@ Tracer::inSpan(
             // Prepare data
             $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
-            foreach ($data as $key => $value) {
-                $created = new DateTime($data[$key]['created']);
-                $modified = is_null($data[$key]['modified']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['modified']);
-                $last_activity = is_null($data[$key]['last_activity']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['last_activity']);
-                $data[$key]['last_activity'] = $last_activity->format('Y-m-d');
-                $data[$key]['days_last_active'] = max($created, $modified, $last_activity)->diff(new DateTime())->format('%a');
+            Tracer::inSpan(
+                ['name' => ('include/people.php:inactive')],
+                function () use (&$data, $daysinactive) {
+                    global $listconfig;
 
-                if ($data[$key]['days_last_active'] > $daysinactive) {
-                    $data[$key]['icons'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
-                } else {
-                    if ('inactive' == $listconfig['filtervalue']) {
-                        unset($data[$key]);
+                    foreach ($data as $key => $value) {
+                        $created = new DateTime($data[$key]['created']);
+                        $modified = is_null($data[$key]['modified']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['modified']);
+                        $last_activity = is_null($data[$key]['last_activity']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['last_activity']);
+                        $data[$key]['last_activity'] = $last_activity->format('Y-m-d');
+                        $data[$key]['days_last_active'] = max($created, $modified, $last_activity)->diff(new DateTime())->format('%a');
 
-                        continue;
-                    }
-                    $data[$key]['icons'] = '';
-                }
-                if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
-                    $data[$key]['icons'] .= '<a href="?action=people_edit&id='.$data[$key]['id'].'&active=signature"><i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i></a> ';
-                }
-                if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
-                    $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
-                }
-                if ($data[$key]['volunteer']) {
-                    $data[$key]['icons'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
-                }
-                if ($data[$key]['notregistered']) {
-                    $data[$key]['icons'] .= '<i class="fa fa-times blue tooltip-this" title="This beneficiary is not officially registered."></i> ';
-                }
-                if ($data[$key]['taglabels']) {
-                    $taglabels = explode(',', $data[$key]['taglabels']);
-                    $tagcolors = explode(',', $data[$key]['tagcolors']);
-                    foreach ($taglabels as $tagkey => $taglabel) {
-                        $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                        if ($data[$key]['days_last_active'] > $daysinactive) {
+                            $data[$key]['icons'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
+                        } else {
+                            if ('inactive' == $listconfig['filtervalue']) {
+                                unset($data[$key]);
+
+                                continue;
+                            }
+                            $data[$key]['icons'] = '';
+                        }
                     }
                 }
-            }
+            );
 
-            // Pass information to template
-            $cmsmain->assign('data', $data);
-            $cmsmain->assign('listconfig', $listconfig);
-            $cmsmain->assign('listdata', $listdata);
-            $cmsmain->assign('include', 'cms_list.tpl');
+            Tracer::inSpan(
+                ['name' => ('include/people.php:approvalsigned_volunteer_unregistered')],
+                function () use (&$data) {
+                    foreach ($data as $key => $value) {
+                        if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
+                            $data[$key]['icons'] .= '<a href="?action=people_edit&id='.$data[$key]['id'].'&active=signature"><i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i></a> ';
+                        }
+                        if ($data[$key]['volunteer']) {
+                            $data[$key]['icons'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
+                        }
+                        if ($data[$key]['notregistered']) {
+                            $data[$key]['icons'] .= '<i class="fa fa-times blue tooltip-this" title="This beneficiary is not officially registered."></i> ';
+                        }
+                    }
+                }
+            );
+
+            Tracer::inSpan(
+                ['name' => ('include/people.php:idcard')],
+                function () use (&$data) {
+                    global $settings;
+
+                    if ($_SESSION['camp']['idcard']) {
+                        foreach ($data as $key => $value) {
+                            // if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg')) {
+                            //     $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
+                            // }
+                        }
+                    }
+                }
+            );
+
+            Tracer::inSpan(
+                ['name' => ('include/people.php:idcard')],
+                function () use (&$data) {
+                    foreach ($data as $key => $value) {
+                        if ($data[$key]['taglabels']) {
+                            $taglabels = explode(',', $data[$key]['taglabels']);
+                            $tagcolors = explode(',', $data[$key]['tagcolors']);
+                            foreach ($taglabels as $tagkey => $taglabel) {
+                                $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                            }
+                        }
+                    }
+                }
+            );
+
+            Tracer::inSpan(
+                ['name' => ('people.php:addtemplatedata')],
+                function () use ($cmsmain, $data) {
+                    global $listdata, $listdata, $listconfig;
+
+                    // Pass information to template
+                    $cmsmain->assign('data', $data);
+                    $cmsmain->assign('listconfig', $listconfig);
+                    $cmsmain->assign('listdata', $listdata);
+                    $cmsmain->assign('include', 'cms_list.tpl');
+                }
+            );
         } else {
             $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
             $ids = [];
