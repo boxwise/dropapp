@@ -3,7 +3,7 @@
 use OpenCensus\Trace\Tracer;
 
 Tracer::inSpan(
-    ['name' => ('core.php')],
+    ['name' => ('library/core.php')],
     function () use ($login, $mobile, $ajax, &$checksession_result) {
         global $settings, $lan, $translate;
 
