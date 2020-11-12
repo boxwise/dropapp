@@ -4,8 +4,8 @@ use OpenCensus\Trace\Tracer;
 
 Tracer::inSpan(
     ['name' => ('core.php')],
-    function () {
-        global $settings, $lan;
+    function () use ($login, $mobile, $ajax, &$checksession_result) {
+        global $settings, $lan, $translate;
 
         if (!defined('LOADED_VIA_SINGLE_ENTRY_POINT')) {
             throw new Exception('This app must now be running through the single entry point. Is your web server config directing all php traffic to gcloud-entry.php?');

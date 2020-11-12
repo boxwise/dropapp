@@ -2,6 +2,7 @@
 
 // Check session
 $mobile = true;
+$checksession_result = [];
 require_once 'library/core.php';
 
 date_default_timezone_set('Europe/Athens');
