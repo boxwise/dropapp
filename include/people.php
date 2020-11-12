@@ -1,87 +1,94 @@
 <?php
 
-$table = $action;
-    $ajax = checkajax();
+use OpenCensus\Trace\Tracer;
 
-    if (!$ajax) {
-        if (!$_SESSION['camp']['id']) {
-            throw new Exception('The list of beneficiaries is not available when there is no camp selected');
-        }
+Tracer::inSpan(
+    ['name' => ('people.php')],
+    function () use ($action, &$cmsmain) {
+        global $settings, $table, $listconfig, $listdata;
 
-        // Title
-        $cmsmain->assign('title', 'Beneficiaries');
+        $table = $action;
+        $ajax = checkajax();
 
-        initlist();
+        if (!$ajax) {
+            if (!$_SESSION['camp']['id']) {
+                throw new Exception('The list of beneficiaries is not available when there is no camp selected');
+            }
 
-        // Filter
-        $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
-        listsetting('multiplefilter', $tagfilter);
-        $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
-        listfilter(['label' => 'Quick filters', 'options' => $statusarray, 'filter' => '"show"']);
+            // Title
+            $cmsmain->assign('title', 'Beneficiaries');
 
-        // Search
-        listsetting('manualquery', true);
-        listsetting('search', ['firstname', 'lastname', 'container', 'comments']);
-        $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
+            initlist();
 
-        // List Settings
-        listsetting('allowcopy', false);
-        listsetting('allowshowhide', false);
-        listsetting('add', 'New person');
-        listsetting('delete', 'Deactivate');
-        $is_filtered = (isset($listconfig['filtervalue']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
-        if ($is_filtered) {
-            listsetting('allowsort', true);
-            listsetting('allowmove', false);
-            listsetting('noindent', true);
-        } else {
-            listsetting('allowsort', false);
-            listsetting('allowmove', true);
-            listsetting('allowmoveto', 1);
-        }
+            // Filter
+            $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
+            listsetting('multiplefilter', $tagfilter);
+            $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
+            listfilter(['label' => 'Quick filters', 'options' => $statusarray, 'filter' => '"show"']);
 
-        // Toplevel tabs
-        listsetting('haspagemenu', true);
-        addpagemenu('all', 'All', ['link' => '?action=people', 'active' => true]);
-        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=people_deactivated']);
+            // Search
+            listsetting('manualquery', true);
+            listsetting('search', ['firstname', 'lastname', 'container', 'comments']);
+            $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
 
-        // List Buttons
-        addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
-        $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL ORDER BY label', ['camp_id' => $_SESSION['camp']['id']]);
-        addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
-        addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
-        addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
-        addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false, 'testid' => 'detachFromFamily']);
-        if ($_SESSION['camp']['bicycle']) {
-            $printoptions['bicycle'] = 'Bicycle card';
-        }
-        if ($_SESSION['camp']['bicycle']) {
-            $printoptions['workshop'] = 'Workshop card';
-        }
-        if ($_SESSION['camp']['idcard']) {
-            $printoptions['id'] = 'ID Card';
-        }
-        if (isset($printoptions)) {
-            addbutton('print', 'Print', ['icon' => 'fa-print', 'options' => $printoptions]);
-        }
-        addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer-o']);
+            // List Settings
+            listsetting('allowcopy', false);
+            listsetting('allowshowhide', false);
+            listsetting('add', 'New person');
+            listsetting('delete', 'Deactivate');
+            $is_filtered = (isset($listconfig['filtervalue']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
+            if ($is_filtered) {
+                listsetting('allowsort', true);
+                listsetting('allowmove', false);
+                listsetting('noindent', true);
+            } else {
+                listsetting('allowsort', false);
+                listsetting('allowmove', true);
+                listsetting('allowmoveto', 1);
+            }
 
-        // Columns
-        addcolumn('text', 'Surname', 'lastname');
-        addcolumn('text', 'Firstname', 'firstname');
-        addcolumn('text', 'Gender', 'gender');
-        addcolumn('text', 'Age', 'age');
-        addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
-        addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'tokens');
-        addcolumn('tag', 'Tags', 'tags');
-        addcolumn('text', 'Comments', 'comments');
-        if ($is_filtered) {
-            addcolumn('text', 'Last Activity', 'last_activity');
-        }
-        addcolumn('html', '&nbsp;', 'icons');
+            // Toplevel tabs
+            listsetting('haspagemenu', true);
+            addpagemenu('all', 'All', ['link' => '?action=people', 'active' => true]);
+            addpagemenu('deactivated', 'Deactivated', ['link' => '?action=people_deactivated']);
 
-        // Query
-        $data = getlistdata('
+            // List Buttons
+            addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
+            $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL ORDER BY label', ['camp_id' => $_SESSION['camp']['id']]);
+            addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
+            addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
+            addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
+            addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false, 'testid' => 'detachFromFamily']);
+            if ($_SESSION['camp']['bicycle']) {
+                $printoptions['bicycle'] = 'Bicycle card';
+            }
+            if ($_SESSION['camp']['bicycle']) {
+                $printoptions['workshop'] = 'Workshop card';
+            }
+            if ($_SESSION['camp']['idcard']) {
+                $printoptions['id'] = 'ID Card';
+            }
+            if (isset($printoptions)) {
+                addbutton('print', 'Print', ['icon' => 'fa-print', 'options' => $printoptions]);
+            }
+            addbutton('touch', 'Touch', ['icon' => 'fa-hand-pointer-o']);
+
+            // Columns
+            addcolumn('text', 'Surname', 'lastname');
+            addcolumn('text', 'Firstname', 'firstname');
+            addcolumn('text', 'Gender', 'gender');
+            addcolumn('text', 'Age', 'age');
+            addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
+            addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'tokens');
+            addcolumn('tag', 'Tags', 'tags');
+            addcolumn('text', 'Comments', 'comments');
+            if ($is_filtered) {
+                addcolumn('text', 'Last Activity', 'last_activity');
+            }
+            addcolumn('html', '&nbsp;', 'icons');
+
+            // Query
+            $data = getlistdata('
             SELECT
                 people_filtered_with_tags.*,
                 IF(people_filtered_with_tags.parent_id,"",(SELECT SUM(drops) FROM transactions WHERE people_id = people_filtered_with_tags.id)) AS tokens,
@@ -157,69 +164,69 @@ $table = $action;
                 IF(people_filtered_with_tags.parent_id, people_filtered_with_tags.lastname, ""),
                 IF(people_filtered_with_tags.parent_id, people_filtered_with_tags.firstname, "")');
 
-        // Prepare data
-        $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
+            // Prepare data
+            $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
-        foreach ($data as $key => $value) {
-            $created = new DateTime($data[$key]['created']);
-            $modified = is_null($data[$key]['modified']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['modified']);
-            $last_activity = is_null($data[$key]['last_activity']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['last_activity']);
-            $data[$key]['last_activity'] = $last_activity->format('Y-m-d');
-            $data[$key]['days_last_active'] = max($created, $modified, $last_activity)->diff(new DateTime())->format('%a');
+            foreach ($data as $key => $value) {
+                $created = new DateTime($data[$key]['created']);
+                $modified = is_null($data[$key]['modified']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['modified']);
+                $last_activity = is_null($data[$key]['last_activity']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['last_activity']);
+                $data[$key]['last_activity'] = $last_activity->format('Y-m-d');
+                $data[$key]['days_last_active'] = max($created, $modified, $last_activity)->diff(new DateTime())->format('%a');
 
-            if ($data[$key]['days_last_active'] > $daysinactive) {
-                $data[$key]['icons'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
+                if ($data[$key]['days_last_active'] > $daysinactive) {
+                    $data[$key]['icons'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
+                } else {
+                    if ('inactive' == $listconfig['filtervalue']) {
+                        unset($data[$key]);
+
+                        continue;
+                    }
+                    $data[$key]['icons'] = '';
+                }
+                if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
+                    $data[$key]['icons'] .= '<a href="?action=people_edit&id='.$data[$key]['id'].'&active=signature"><i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i></a> ';
+                }
+                if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
+                    $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
+                }
+                if ($data[$key]['volunteer']) {
+                    $data[$key]['icons'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
+                }
+                if ($data[$key]['notregistered']) {
+                    $data[$key]['icons'] .= '<i class="fa fa-times blue tooltip-this" title="This beneficiary is not officially registered."></i> ';
+                }
+                if ($data[$key]['taglabels']) {
+                    $taglabels = explode(',', $data[$key]['taglabels']);
+                    $tagcolors = explode(',', $data[$key]['tagcolors']);
+                    foreach ($taglabels as $tagkey => $taglabel) {
+                        $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                    }
+                }
+            }
+
+            // Pass information to template
+            $cmsmain->assign('data', $data);
+            $cmsmain->assign('listconfig', $listconfig);
+            $cmsmain->assign('listdata', $listdata);
+            $cmsmain->assign('include', 'cms_list.tpl');
+        } else {
+            $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
+            $ids = [];
+            if ('move' == $_POST['do']) { // move passes the ids in pairs with the level the id is moved to. Therefore, it needs to be handled differently.
+                foreach (json_decode($_POST['ids']) as $pair) {
+                    $ids[] = $pair[0];
+                }
             } else {
-                if ('inactive' == $listconfig['filtervalue']) {
-                    unset($data[$key]);
-
-                    continue;
-                }
-                $data[$key]['icons'] = '';
+                $ids = explode(',', $_POST['ids']);
             }
-            if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
-                $data[$key]['icons'] .= '<a href="?action=people_edit&id='.$data[$key]['id'].'&active=signature"><i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i></a> ';
-            }
-            if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg') && $_SESSION['camp']['idcard']) {
-                $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
-            }
-            if ($data[$key]['volunteer']) {
-                $data[$key]['icons'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
-            }
-            if ($data[$key]['notregistered']) {
-                $data[$key]['icons'] .= '<i class="fa fa-times blue tooltip-this" title="This beneficiary is not officially registered."></i> ';
-            }
-            if ($data[$key]['taglabels']) {
-                $taglabels = explode(',', $data[$key]['taglabels']);
-                $tagcolors = explode(',', $data[$key]['tagcolors']);
-                foreach ($taglabels as $tagkey => $taglabel) {
-                    $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
-                }
-            }
-        }
-
-        // Pass information to template
-        $cmsmain->assign('data', $data);
-        $cmsmain->assign('listconfig', $listconfig);
-        $cmsmain->assign('listdata', $listdata);
-        $cmsmain->assign('include', 'cms_list.tpl');
-    } else {
-        $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
-        $ids = [];
-        if ('move' == $_POST['do']) { // move passes the ids in pairs with the level the id is moved to. Therefore, it needs to be handled differently.
-            foreach (json_decode($_POST['ids']) as $pair) {
-                $ids[] = $pair[0];
-            }
-        } else {
-            $ids = explode(',', $_POST['ids']);
-        }
-        $delta = array_diff($ids, $valid_ids);
-        if (0 != count($delta)) {
-            $message = 'You do not have access to this beneficiary record!';
-            trigger_error($message, E_USER_ERROR);
-            $success = false;
-        } else {
-            switch ($_POST['do']) {
+            $delta = array_diff($ids, $valid_ids);
+            if (0 != count($delta)) {
+                $message = 'You do not have access to this beneficiary record!';
+                trigger_error($message, E_USER_ERROR);
+                $success = false;
+            } else {
+                switch ($_POST['do']) {
             case 'merge':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $key => $value) {
@@ -345,33 +352,35 @@ $table = $action;
 
                 break;
             }
-        }
+            }
 
-        $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
+            $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
-        echo json_encode($return);
-        die();
-    }
-
-    function correctchildren()
-    {
-        $result = db_query('SELECT (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AS newparent, p1.id FROM people AS p1 WHERE p1.parent_id > 0 AND (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AND NOT deleted');
-        while ($row = db_fetch($result)) {
-            db_query('UPDATE people SET parent_id = :newparent WHERE id = :id', ['newparent' => $row['newparent'], 'id' => $row['id']]);
+            echo json_encode($return);
+            die();
         }
     }
+);
 
-    function correctdrops($id)
-    {
-        $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
-        $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
-
-        if ($drops && $person['parent_id']) {
-            db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
-            db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
-            $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
-            $aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
-
-            return $aftermove;
+        function correctchildren()
+        {
+            $result = db_query('SELECT (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AS newparent, p1.id FROM people AS p1 WHERE p1.parent_id > 0 AND (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AND NOT deleted');
+            while ($row = db_fetch($result)) {
+                db_query('UPDATE people SET parent_id = :newparent WHERE id = :id', ['newparent' => $row['newparent'], 'id' => $row['id']]);
+            }
         }
-    }
+
+        function correctdrops($id)
+        {
+            $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
+            $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
+
+            if ($drops && $person['parent_id']) {
+                db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
+                db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+                $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
+                $aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
+
+                return $aftermove;
+            }
+        }
