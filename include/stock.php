@@ -21,14 +21,14 @@ Tracer::inSpan(
             $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND NOT is_scrap AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
 
             $statusarray = [
-            'boxes_in_stock' => 'In Stock',
-            'showall' => 'Everything',
-            'ordered' => 'Ordered',
-            'dispose' => 'Untouched for 3 months',
-            'shop' => 'Moved to Free Shop',
-            'lost_boxes' => 'Lost',
-            'scrap' => 'Scrap',
-        ];
+                'boxes_in_stock' => 'In Stock',
+                'showall' => 'Everything',
+                'ordered' => 'Ordered',
+                'dispose' => 'Untouched for 3 months',
+                'shop' => 'Moved to Free Shop',
+                'lost_boxes' => 'Lost',
+                'scrap' => 'Scrap',
+            ];
             $statusarray += (is_null($outgoinglocations) ? [] : $outgoinglocations);
             listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);
 
