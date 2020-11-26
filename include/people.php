@@ -91,7 +91,7 @@ Tracer::inSpan(
             $data = getlistdata('
             SELECT
                 people_filtered_with_tags.*,
-                SUM(CASE WHEN people_filtered_with_tags.level = 0 THEN transactions.drops ELSE 0 END) AS tokens,
+                IFNULL(SUM(CASE WHEN people_filtered_with_tags.level = 0 THEN transactions.drops ELSE 0 END),0) AS tokens,
                 MAX(transactions.transaction_date) AS last_activity
             FROM
                 (SELECT
@@ -152,7 +152,7 @@ Tracer::inSpan(
             LEFT JOIN
                 people AS parent ON people_filtered_with_tags.parent_id = parent.id
             LEFT JOIN
-                transactions ON transactions.people_id = people_filtered_with_tags.id AND transactions.product_id IS NOT NULL '.
+                transactions ON transactions.people_id = people_filtered_with_tags.id '.
             (
                 'approvalsigned' == $listconfig['filtervalue'] ? '
                 WHERE 
@@ -186,6 +186,7 @@ Tracer::inSpan(
                         $last_activity = is_null($data[$key]['last_activity']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['last_activity']);
                         $data[$key]['last_activity'] = $last_activity->format('Y-m-d');
                         $data[$key]['days_last_active'] = max($created, $modified, $last_activity)->diff(new DateTime())->format('%a');
+                        $data[$key]['tokens'] = $data[$key]['level'] ? null : $data[$key]['tokens'];
 
                         if ($data[$key]['days_last_active'] > $daysinactive) {
                             $data[$key]['icons'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
