@@ -56,7 +56,7 @@ for ($i = 0; $i < intval($_GET['count']); ++$i) {
         simpleSaveChangeHistory('qr', $id, 'New QR-code generated');
     }
 
-    $url = 'https://api.qrserver.cm/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash;
+    $url = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash;
     try {
         $pdf->Image($url, 88, 12 + $y, 34, 34, 'png');
     } catch (Exception $e) {
