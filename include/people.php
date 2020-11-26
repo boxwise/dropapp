@@ -91,7 +91,7 @@ Tracer::inSpan(
             $data = getlistdata('
             SELECT
                 people_filtered_with_tags.*,
-                IF(people_filtered_with_tags.parent_id,"",(SELECT SUM(drops) FROM transactions WHERE people_id = people_filtered_with_tags.id)) AS tokens,
+                SUM(CASE WHEN people_filtered_with_tags.level = 0 THEN transactions.drops ELSE 0 END) AS tokens,
                 MAX(transactions.transaction_date) AS last_activity
             FROM
                 (SELECT
@@ -113,13 +113,15 @@ Tracer::inSpan(
                         people.modified,
                         people.approvalsigned
                     FROM
-                        people
-                    LEFT JOIN
-                        people_tags AS people_tags_filter ON people_tags_filter.people_id = people.id 
-                    LEFT JOIN
-                        tags AS tags_filter ON tags_filter.id = people_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'].'
+                        people'.
+                    // Join tags here only if a tag filter is selected and only people with a certain tag should be returned
+                    ($listconfig['multiplefilter_selected'] ? '
+                        LEFT JOIN
+                            people_tags AS people_tags_filter ON people_tags_filter.people_id = people.id
+                        LEFT JOIN
+                            tags AS tags_filter ON tags_filter.id = people_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').'
                     WHERE
-                        NOT people.deleted AND
+                        people.deleted IS NULL AND
                         people.camp_id = '.$_SESSION['camp']['id'].
                         ('week' == $listconfig['filtervalue'] ? ' AND DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") ' : '').
                         ('month' == $listconfig['filtervalue'] ? ' AND DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") ' : '').
@@ -131,20 +133,26 @@ Tracer::inSpan(
                             people.container = "'.$search.'" OR 
                             people.comments LIKE "%'.$search.'%")
                         ' : ' ').
+                        // filter for selected tags
                         ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
                     GROUP BY 
-                        people.id) AS people_filtered
+                        people.id
+                    ) AS people_filtered
                 LEFT JOIN
-                    people_tags ON people_tags.people_id = people_filtered.id
+                    people_tags 
+                    ON people_tags.people_id = people_filtered.id
                 LEFT JOIN
-                    tags ON tags.id = people_tags.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
+                    tags 
+                    ON tags.id = people_tags.tag_id 
+                    AND tags.deleted IS NULL 
+                    AND tags.camp_id = '.$_SESSION['camp']['id'].'
                 GROUP BY 
                     people_filtered.id
                 ) AS people_filtered_with_tags
             LEFT JOIN
                 people AS parent ON people_filtered_with_tags.parent_id = parent.id
             LEFT JOIN
-                transactions ON transactions.people_id = CASE WHEN people_filtered_with_tags.parent_id IS NULL THEN people_filtered_with_tags.id ELSE people_filtered_with_tags.parent_id END AND transactions.product_id IS NOT NULL '.
+                transactions ON transactions.people_id = people_filtered_with_tags.id AND transactions.product_id IS NOT NULL '.
             (
                 'approvalsigned' == $listconfig['filtervalue'] ? '
                 WHERE 
