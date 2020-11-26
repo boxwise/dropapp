@@ -57,11 +57,18 @@ for ($i = 0; $i < intval($_GET['count']); ++$i) {
     }
 
     $url = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash;
-    $valid = remoteFileExists($url);
-    if (!$valid) {
-        trigger_error('The service that we use to create QR-codes seem to be offline. Try again in a few minutes!');
+
+    try {
+        $pdf->Image($url, 88, 12 + $y, 34, 34, 'png');
+    } catch (Exception $e) {
+        $valid = remoteFileExists($url);
+        if (!$valid) {
+            throw new Exception('The service that we use to create QR-codes seem to be offline. Try again in a few minutes!');
+        }
+        trigger_error('QR-code not found, but url is valid.');
+
+        $pdf->Text(88, 12 + $y, 'QR-code not found!');
     }
-    $pdf->Image($url, 88, 12 + $y, 34, 34, 'png');
 
     $pdf->Image($_SERVER['DOCUMENT_ROOT'].'/pdf/logo.png', 85, 100 + $y, 40, 36);
 
