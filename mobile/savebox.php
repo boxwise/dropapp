@@ -30,7 +30,8 @@ if ($new) {
             do {
                 $_POST['box_id'] = generateBoxID();
             } while (db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id', ['box_id' => $_POST['box_id']]));
-        });
+        }
+    );
 } else {
     // unset order state
     if ($box['location_id'] != $_POST['location_id']) {
