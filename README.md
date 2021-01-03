@@ -10,7 +10,7 @@ We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/
 
 We have evolved the app to now be centrally hosted to we can offer the product to many more organisations, and are working to improve the quality of the product. 
 
-If you are interested in being part of this project, write us at ([hello@boxwise.co](mailto:hello@boxwise.co)! You can check out our [website](https://www.boxtribute.org/#join) for more details.
+If you are interested in being part of this project, write us at ([jointheteam@boxwise.co](mailto:jointheteam@boxwise.co)! You can check out our [website](https://www.boxtribute.org/#join) for more details.
 
 ### Preparation for Installation
 
