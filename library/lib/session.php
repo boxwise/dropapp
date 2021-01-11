@@ -10,7 +10,7 @@ function login($email, $pass, $autologin, $mobile = false)
     if ($user) { //e-mailaddress exists in database
         if ($user['pass'] == $pass) { // password is correct
             // Check if account is not expired
-            $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday']);
+            $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'], $user['email']);
             $success = $in_valid_dates['success'];
             $message = $in_valid_dates['message'];
 
@@ -45,7 +45,7 @@ function login($email, $pass, $autologin, $mobile = false)
     } else { // user not found
         $success = false;
         $redirect = false;
-        $deleted = db_value('SELECT email FROM cms_users WHERE email != "" AND email LIKE "'.$_POST['email'].'%" AND deleted Limit 1');
+        $deleted = db_value('SELECT email FROM cms_users WHERE email != "" AND email = :email AND deleted Limit 1', ['email' => $email]);
         if ($deleted) {
             $message = GENERIC_LOGIN_ERROR;
             $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as deleted user '.$email;
@@ -77,7 +77,7 @@ function checksession()
     // check if user was loaded
     if ($user) {
         // Check if account is not expired
-        $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday']);
+        $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'], $user['email']);
         if (!$in_valid_dates['success']) {
             $result['success'] = false;
             $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
@@ -113,7 +113,7 @@ function logout($redirect = false)
     redirect($redirect);
 }
 
-function check_valid_from_until_date($valid_from, $valid_until)
+function check_valid_from_until_date($valid_from, $valid_until, $email)
 {
     $today = new DateTime();
     $success = true;
@@ -124,6 +124,9 @@ function check_valid_from_until_date($valid_from, $valid_until)
         if ($today < $valid_firstday) {
             $success = false;
             $message = GENERIC_LOGIN_ERROR;
+            $detailed_msg = 'Attempt to login as pending user '.$email;
+            logfile($detailed_msg);
+            trigger_error($detailed_msg);
         }
     }
     if ($valid_until && ('0000-00-00' != substr($valid_until, 0, 10))) {
@@ -131,6 +134,9 @@ function check_valid_from_until_date($valid_from, $valid_until)
         if ($today > $valid_lastday) {
             $success = false;
             $message = GENERIC_LOGIN_ERROR;
+            $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as expired user '.$email;
+            logfile($detailed_msg);
+            trigger_error($detailed_msg);
         }
     }
 
