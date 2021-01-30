@@ -38,8 +38,13 @@
     addfield('line');
     addfield('textarea', 'Description', 'comments');
     addfield('line');
-    if (db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock ')) {
-        addfield('checkbox', 'Always show product in Stockroom?', 'stockincontainer');
+    $stockroomlocationexists = db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock ');
+    if ($stockroomlocationexists || $_SESSION['camp']['separateshopandwhproducts']) {
+        if ($stockroomlocationexists) {
+            addfield('checkbox', 'in Free Shop?', 'stockincontainer', ['tooltip' => 'Always show product in Stockroom menu?']);
+        } else {
+            addfield('checkbox', 'in Free Shop?', 'stockincontainer');
+        }
     }
     $table = 'stock';
     if ($id) {

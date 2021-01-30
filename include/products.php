@@ -33,8 +33,8 @@
             addcolumn('text', ucfirst($_SESSION['camp']['currencyname']), 'drops');
         }
         addcolumn('text', 'Description', 'comments');
-        if (db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock ')) {
-            addcolumn('toggle', 'In Stockroom?', 'stockincontainer', ['do' => 'togglecontainer']);
+        if (db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock ') || $_SESSION['camp']['separateshopandwhproducts']) {
+            addcolumn('toggle', 'In Shop?', 'stockincontainer', ['do' => 'togglecontainer']);
         }
 
         addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
