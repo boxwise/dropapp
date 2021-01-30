@@ -18,7 +18,7 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 * Install [PHP 7.2 or later](https://www.php.net/downloads.php).
 * Ensure you have the `mbstring` and `curl` PHP extensions installed. On Ubuntu:
 
-       apt install php-curl php-mbstring
+       apt install php-curl php-mbstring php-mysql
 
 ### How do I get set up?
 
