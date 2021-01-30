@@ -23,7 +23,13 @@ Tracer::inSpan(
             // Filter
             $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
             listsetting('multiplefilter', $tagfilter);
-            $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'volunteer' => 'Volunteers', 'notregistered' => 'Not registered'];
+            $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'notregistered' => 'Not registered'];
+            if ($_SESSION['camp']['beneficiaryisregistered']) {
+                $statusarray['notregistered'] = 'Not registered';
+            }
+            if ($_SESSION['camp']['beneficiaryisvolunteer']) {
+                $statusarray['volunteer'] = 'Volunteers';
+            }
             listfilter(['label' => 'Quick filters', 'options' => $statusarray, 'filter' => '"show"']);
 
             // Search
@@ -208,12 +214,6 @@ Tracer::inSpan(
                     foreach ($data as $key => $value) {
                         if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
                             $data[$key]['icons'] .= '<a href="?action=people_edit&id='.$data[$key]['id'].'&active=signature"><i class="fa fa-edit warning tooltip-this" title="Please have the familyhead/beneficiary read and sign the approval form for storing and processing their data."></i></a> ';
-                        }
-                        if ($data[$key]['volunteer']) {
-                            $data[$key]['icons'] .= '<i class="fa fa-heart blue tooltip-this" title="This beneficiary is a volunteer."></i> ';
-                        }
-                        if ($data[$key]['notregistered']) {
-                            $data[$key]['icons'] .= '<i class="fa fa-times blue tooltip-this" title="This beneficiary is not officially registered."></i> ';
                         }
                     }
                 }

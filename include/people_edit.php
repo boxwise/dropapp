@@ -170,11 +170,15 @@
     addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
     addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
     addfield('line', '', '', ['tab' => 'people']);
-    addfield('checkbox', 'This person is not officially registered.', 'notregistered', ['testid' => 'registered_id', 'tab' => 'people']);
+    if ($_SESSION['camp']['beneficiaryisregistered']) {
+        addfield('checkbox', 'This person is not officially registered.', 'notregistered', ['testid' => 'registered_id', 'tab' => 'people']);
+    }
     if ($_SESSION['camp']['extraportion'] && $_SESSION['camp']['food']) {
         addfield('checkbox', 'Extra food due to health condition (as indicated by Red Cross)', 'extraportion', ['tab' => 'people']);
     }
-    addfield('checkbox', 'This beneficiary is a volunteer with <i>'.$_SESSION['organisation']['label'].'</i>', 'volunteer', ['testid' => 'volunteer_id', 'tab' => 'people']);
+    if ($_SESSION['camp']['beneficiaryisvolunteer']) {
+        addfield('checkbox', 'This beneficiary is a volunteer with <i>'.$_SESSION['organisation']['label'].'</i>', 'volunteer', ['testid' => 'volunteer_id', 'tab' => 'people']);
+    }
 
     if ($_SESSION['camp']['bicycle'] || $_SESSION['camp']['workshop'] || $_SESSION['camp']['idcard']) {
         $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);
