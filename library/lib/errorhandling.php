@@ -17,6 +17,9 @@ function boxwise_sentry_scope(Sentry\State\Scope $scope): void
         $scope->setUser([
             'id' => $session['user']['id'],
         ]);
+
+        // add additional sentry tags to search in UI
+        $scope->setTag('base', $session['camp']['id']);
     } else {
         $scope->setTag('logged in', 'false');
     }
