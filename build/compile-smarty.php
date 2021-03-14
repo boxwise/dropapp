@@ -6,7 +6,7 @@ require_once __DIR__.'/../library/lib/smarty.php';
 // as the compiled filenames have the absolute path of the source files encoded.
 
 // /srv is the root path on google app engine
-$deploymentRootFolder = '/srv';
+$deploymentRootFolder = '/workspace';
 
 // So, this is a cheeky work-around that rewrites the hashes
 // in the templates and on the file system so they will match

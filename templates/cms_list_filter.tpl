@@ -1,6 +1,6 @@
 {if $listconfig['filter']}
 	<li>
-		<div class="btn-group">
+		<div class="btn-group {if $listconfig['filtercssclass']}{$listconfig['filtercssclass']}{/if}">
 			<div type="button" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filtervalue']}filter-applied{/if}" data-toggle="dropdown" data-testId="filter1Button">
 				{if $listconfig['filtervalue']}
 					{$listconfig['filter']['options'][$listconfig['filtervalue']]}
@@ -24,7 +24,7 @@
 
 {if $listconfig['filter2']}
 	<li>
-		<div class="btn-group">
+		<div class="btn-group {if $listconfig['filter2cssclass']}{$listconfig['filter2cssclass']}{/if}">
 			<div type="button" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filtervalue2']}filter-applied{/if}" data-toggle="dropdown" data-testId="filter2Button">
 				{if $listconfig['filtervalue2']}
 					{$listconfig['filter2']['options'][$listconfig['filtervalue2']]}
@@ -45,9 +45,10 @@
 		</div>
 	</li>
 {/if}
+
 {if $listconfig['filter3']}
 	<li>
-		<div class="btn-group">
+		<div class="btn-group {if $listconfig['filter3cssclass']}{$listconfig['filter3cssclass']}{/if}">
 			<div type="button" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filtervalue3']}filter-applied{/if}" data-toggle="dropdown" data-testId="filter3Button">
 				{if $listconfig['filtervalue3']}
 					{$listconfig['filter3']['options'][$listconfig['filtervalue3']]}
@@ -71,7 +72,7 @@
 
 {if $listconfig['filter4']}
 	<li>
-		<div class="btn-group">
+		<div class="btn-group {if $listconfig['filter4cssclass']}{$listconfig['filter4cssclass']}{/if}">
 			<div type="button" title="Chose among Products existing in boxes" class="btn btn-sm btn-default dropdown-toggle {if $listconfig['filtervalue4']}filter-applied{/if}" data-toggle="dropdown">
 				{if $listconfig['filtervalue4']}
 					{$listconfig['filter4']['options'][$listconfig['filtervalue4']]}
@@ -90,5 +91,31 @@
 				{/foreach}
 			</ul>
 		</div>
+	</li>
+{/if}
+
+{if $listconfig['multiplefilter']}
+	<li>
+		<form method="post">
+			<div class="input-group form-inline search-group">
+				<div class="has-feedback">
+					<input type="hidden" name="__multiplefilter" value="select multiple">
+					<select id="{$listconfig['multiplefilter']['id']}" name="multiplefilter[]" multiple class="select2 form-control input-sm" 
+					data-placeholder="{if isset($listconfig['multiplefilter']['placeholder'])}{$listconfig['multiplefilter']['placeholder']}{else}{$translate['cms_form_selectplaceholder']}{/if}"
+					>
+						<option></option>
+						{foreach $listconfig['multiplefilter']['options'] as $option}
+							<option 
+								{if in_array($option['value'],$listconfig['multiplefilter_selected'])}selected {/if}
+								value="{$option['value']}" >{$option['label']}
+							</option> 
+						{/foreach}
+					</select>	
+				</div>
+				<span class="input-group-btn listSearchButtonDiv">
+					<button class="btn btn-sm btn-default" type="submit" data-testid = "tagfilter-button"><span class="fa fa-filter"></button>
+				</span>
+			</div>
+		</form>
 	</li>
 {/if}

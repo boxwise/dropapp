@@ -1,25 +1,10 @@
 describe('QR labels tests - user with rights', () => {
 
-    function typeNumberOfLabels(number){
-        cy.get("input[id='field_count']").clear().type(number);
-    }
-
     function labelsCountInputIsVisible(number){
         cy.get("input[data-testid='numberOfLabelsInput']").should("be.visible");
     }
 
-    function clickMakeLabelsButton(){
-        cy.get("button").contains("Make labels").click();
-    }
-
-    function uncheckBigLabelsCheckbox(){
-        cy.get("input[data-testid='field_fulllabel']").uncheck();
-    }
-
-    function checkBigLabelsCheckbox(){
-        cy.get("input[data-testid='field_fulllabel']").check();
-    }
-
+    
     function isQrsNumberCorrect(numberOfQrs){
         cy.url().should('include', 'count='+numberOfQrs);
     }
@@ -36,6 +21,7 @@ describe('QR labels tests - user with rights', () => {
 
     it('Left panel navigation', () => {
         cy.visit('/');
+        cy.viewport(1280, 720);
         cy.get("a[class='menu_qr']").last().contains("Generate QR labels").click();
         labelsCountInputIsVisible();
         cy.verifyActiveSideMenuNavigation('menu_qr');
@@ -43,9 +29,9 @@ describe('QR labels tests - user with rights', () => {
 
     it('(Desktop) Generate 10 QR codes - small', () => {
         let numberOfQrs = 10;
-        typeNumberOfLabels(numberOfQrs);
-        uncheckBigLabelsCheckbox();
-        clickMakeLabelsButton();
+        cy.typeNumberOfLabels(numberOfQrs);
+        cy.uncheckBigLabelsCheckbox();
+        cy.clickMakeLabelsButton();
         cy.get("div[data-testid='boxlabel-small']").then($smallLabels => {
             expect($smallLabels.length).to.equal(numberOfQrs);
         })
@@ -54,9 +40,9 @@ describe('QR labels tests - user with rights', () => {
     // QRs shown in PDF cause issues when run in CircleCI
     // it('(Desktop) Generate 10 QR codes - big', () => {
     //     let numberOfQrs = 1;
-    //     typeNumberOfLabels(numberOfQrs);
-    //     checkBigLabelsCheckbox();
-    //     clickMakeLabelsButton();
+    //     cy.typeNumberOfLabels(numberOfQrs);
+    //     cy.checkBigLabelsCheckbox();
+    //     cy.clickMakeLabelsButton();
     //     isQrsNumberCorrect(numberOfQrs);
     //     isUsingBigLabels();
     // });
@@ -64,9 +50,9 @@ describe('QR labels tests - user with rights', () => {
     it('(iPhone 6 viewport) Generate 10 QR codes - small', () => {
         cy.viewport('iphone-6')
         let numberOfQrs = 10;
-        typeNumberOfLabels(numberOfQrs);
-        uncheckBigLabelsCheckbox();
-        clickMakeLabelsButton();
+        cy.typeNumberOfLabels(numberOfQrs);
+        cy.uncheckBigLabelsCheckbox();
+        cy.clickMakeLabelsButton();
         cy.get("div[data-testid='boxlabel-small']").then($smallLabels => {
             expect($smallLabels.length).to.equal(numberOfQrs);
         })
@@ -76,9 +62,9 @@ describe('QR labels tests - user with rights', () => {
     // it('(iPhone 6 viewport) Generate 10 QR codes - big', () => {
     //     cy.viewport('iphone-6')
     //     let numberOfQrs = 1;
-    //     typeNumberOfLabels(numberOfQrs);
-    //     checkBigLabelsCheckbox();
-    //     clickMakeLabelsButton();
+    //     cy.typeNumberOfLabels(numberOfQrs);
+    //     cy.checkBigLabelsCheckbox();
+    //     cy.clickMakeLabelsButton();
     //     isQrsNumberCorrect(numberOfQrs);
     //     isUsingBigLabels();
     // });
@@ -87,7 +73,7 @@ describe('QR labels tests - user with rights', () => {
 describe('QR labels tests - user without rights', () => {
 
     function labelsCountInputDoesntExist(number){
-        cy.get("input[data-testid='numberOfLabelsInput']").should('not.exist');
+        cy.getElementByTypeAndTestId("input", "numberOfLabelsInput").should('not.exist');
     }  
 
     function generateQrsMenuDoesntExist(){

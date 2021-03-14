@@ -23,27 +23,27 @@ describe('Checkout tests', () => {
   }
 
   function typeProductQuantity(quantity) {
-    cy.get("input[data-testid='productQuantityInput'").clear().type(quantity);
+    cy.getElementByTypeAndTestId("input","productQuantityInput").clear().type(quantity);
   }
 
   function getCartValue() {
-    return cy.get("span[data-testid='cartvalue_aside']").invoke("text");
+    return cy.getElementByTypeAndTestId("span","cartvalue_aside").invoke("text");
   }
 
   function clickCheckoutSubmitButton() {
-    cy.get("button[data-testid='submitShoppingCart']").click();
+    cy.getElementByTypeAndTestId("button","submitShoppingCart").click();
   }
 
   function getChangeQuantityCartInputs() {
-    return cy.get("input[data-testid='changeQuantity']");
+    return cy.getElementByTypeAndTestId("input","changeQuantity");
   }
 
   function getAddToCartButton() {
-    return cy.get("button[data-testid='add-to-cart-button']");
+    return cy.getElementByTypeAndTestId("button","add-to-cart-button");
   }
 
   function getDeleteFromCartButtons() {
-    return cy.get("button[data-testid='deleteFromCart']");
+    return cy.getElementByTypeAndTestId("button","deleteFromCart");
   }
 
   function getFamilyTokensSpan() {
@@ -61,7 +61,8 @@ describe('Checkout tests', () => {
   }
 
   it('Left panel navigation', () => {
-	  cy.visit('/');
+    cy.visit('/');
+    cy.viewport(1280, 720);
 	  cy.get("a[class='menu_check_out']").last().contains("Checkout").click();
     cy.get("button[data-testid='submitShoppingCart']").should("be.visible");
     cy.verifyActiveSideMenuNavigation('menu_check_out');

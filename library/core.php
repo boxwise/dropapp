@@ -1,57 +1,66 @@
 <?php
 
-if (!defined('LOADED_VIA_SINGLE_ENTRY_POINT')) {
-    throw new Exception('This app must now be running through the single entry point. Is your web server config directing all php traffic to gcloud-entry.php?');
-}
-define('CORE', true);
-session_start();
+use OpenCensus\Trace\Tracer;
 
-// load database library
-require_once 'lib/database.php';
+Tracer::inSpan(
+    ['name' => ('library/core.php')],
+    function () use ($login, $mobile, $ajax, &$checksession_result) {
+        global $settings, $lan, $translate;
 
-if (!array_key_exists('upload_dir', $settings)) {
-    $settings['upload_dir'] = $_SERVER['DOCUMENT_ROOT'].'/uploads';
-}
+        if (!defined('LOADED_VIA_SINGLE_ENTRY_POINT')) {
+            throw new Exception('This app must now be running through the single entry point. Is your web server config directing all php traffic to gcloud-entry.php?');
+        }
+        define('CORE', true);
+        session_start();
 
-// connect to database
-if (array_key_exists('db_socket', $settings)) {
-    $db_dsn = 'mysql:dbname='.$settings['db_database'].';unix_socket='.$settings['db_socket'];
-} else {
-    $db_dsn = 'mysql:host='.$settings['db_host'].';dbname='.$settings['db_database'];
-}
-db_connect($db_dsn, $settings['db_user'], $settings['db_pass']);
+        // load database library
+        require_once 'lib/database.php';
 
-// get settings from settings table
-$result = db_query('SELECT code, value FROM cms_settings');
-while ($row = db_fetch($result)) {
-    $settings[$row['code']] = $row['value'];
-}
+        if (!array_key_exists('upload_dir', $settings)) {
+            $settings['upload_dir'] = $_SERVER['DOCUMENT_ROOT'].'/uploads';
+        }
 
-$locale = db_row('SELECT locale FROM languages WHERE code = :lan', ['lan' => $settings['cms_language']]);
-setlocale(LC_ALL, $locale);
-mb_internal_encoding('UTF-8');
+        // connect to database
+        if (array_key_exists('db_socket', $settings)) {
+            $db_dsn = 'mysql:dbname='.$settings['db_database'].';unix_socket='.$settings['db_socket'];
+        } else {
+            $db_dsn = 'mysql:host='.$settings['db_host'].';dbname='.$settings['db_database'];
+        }
+        db_connect($db_dsn, $settings['db_user'], $settings['db_pass']);
 
-// load translate library
-require_once 'lib/translate.php';
+        // get settings from settings table
+        $result = db_query('SELECT code, value FROM cms_settings');
+        while ($row = db_fetch($result)) {
+            $settings[$row['code']] = $row['value'];
+        }
 
-// load other libraries
-require_once 'lib/session.php';
-require_once 'lib/tools.php';
-require_once 'lib/mail.php';
-require_once 'lib/csvexport.php';
+        $locale = db_row('SELECT locale FROM languages WHERE code = :lan', ['lan' => $settings['cms_language']]);
+        setlocale(LC_ALL, $locale);
+        mb_internal_encoding('UTF-8');
 
-// load CMS specific libraries
-require_once 'lib/form.php';
-require_once 'lib/list.php';
-require_once 'lib/formhandler.php';
+        // load translate library
+        require_once 'lib/translate.php';
 
-// functions that are app specific but need to available globally
-require_once 'functions.php';
+        // load other libraries
+        require_once 'lib/session.php';
+        require_once 'lib/tools.php';
+        require_once 'lib/mail.php';
+        require_once 'lib/csvexport.php';
 
-require_once 'lib/loginNotifications.php';
+        // load CMS specific libraries
+        require_once 'lib/form.php';
+        require_once 'lib/list.php';
+        require_once 'lib/formhandler.php';
 
-$checksession_result = (!$login ? checksession() : ['success' => true]); //check if a valid session exists; if none, redirect to loginpage
-if (!$ajax && !$mobile && !$checksession_result['success']) {
-    // WARNING, this is an open redirect (security issue)
-    redirect($checksession_result['redirect'].(isset($checksession_result['message']) ? '&warning=1&message='.$checksession_result['message'] : ''));
-}
+        // functions that are app specific but need to available globally
+        require_once 'functions.php';
+
+        require_once 'lib/loginNotifications.php';
+
+        $checksession_result = (!$login ? checksession() : ['success' => true]); //check if a valid session exists; if none, redirect to loginpage
+        if (!$ajax && !$mobile && !$checksession_result['success']) {
+            // WARNING, this is an open redirect (security issue)
+            redirect($checksession_result['redirect'].(isset($checksession_result['message']) ? '&warning=1&message='.$checksession_result['message'] : ''));
+        }
+    }
+);

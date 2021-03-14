@@ -43,6 +43,7 @@ var chart = AmCharts.makeChart( "chartdiv", {
     "lineAlpha": 0.2,
     "type": "column",
     "valueField": "sales"
+    "fillColors": "#848689",
   } ],
   "chartCursor": {
     "categoryBalloonEnabled": false,
@@ -191,6 +192,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 <div id="chartdiv2"></div>
 {/if}
 
+<!-- Disabled Tipofday since the data is outdated
 	<aside id="aside-container" class="noprint">
 		<div class="affix aside-content">
 		<div class="tipofday">
@@ -198,6 +200,6 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 			<p>{$data['tip']['content'] nofilter}</p>
 		</div>
 		</div>
-	</aside>
+	</aside> -->
 </div>
 

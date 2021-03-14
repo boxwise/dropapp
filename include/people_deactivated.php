@@ -38,7 +38,7 @@
 				GROUP BY people.id
 				ORDER BY deleted DESC');
 
-        addcolumn('text', 'Lastname', 'lastname');
+        addcolumn('text', 'Surname', 'lastname');
         addcolumn('text', 'Firstname', 'firstname');
         addcolumn('text', 'Gender', 'gender2');
         addcolumn('text', 'Age', 'age');

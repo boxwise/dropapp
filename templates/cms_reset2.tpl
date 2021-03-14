@@ -1,5 +1,5 @@
 {include file="cms_header.tpl"}
-	<div class="login-reset-template" style="background-image: url(assets/img/background-1.jpg);">
+	<div class="login-reset-template" style="background: white">
 		<h1>{$translate['site_name']}</h1>
 		<form id="reset" class="well-center login-reset-form form" data-ajax="1" data-action="reset2" method="post">
 			<input type="hidden" name="hash" value="{$smarty.get.hash}" />
@@ -13,7 +13,7 @@
 			<div class="form-group">
 				<input class="form-control" type="password" name="pass2" id="pass2" equalTo="#pass" placeholder="{$translate['cms_login_repeatpassword']}" required />	
 			</div>
-			<input class="btn btn-success" type="submit" value="{$translate['cms_reset2_submit']}" />
+			<input class="btn" type="submit" value="{$translate['cms_reset2_submit']}" />
 			<a class="forgot-password" href="/login.php">{$translate['cms_login_pagetitle']}</a>
 		</form>
 	</div> 

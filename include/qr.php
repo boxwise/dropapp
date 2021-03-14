@@ -26,7 +26,7 @@
                     $data['labels'][$i]['hash'] = md5($id);
                     db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$data['labels'][$i]['hash'].'",NOW())');
                     db_query('UPDATE stock AS s SET qr_id = :qr_id, modified = NOW() WHERE id = :id', ['id' => $l, 'qr_id' => $id]);
-                    simpleSaveChangeHistory('qr', $id, 'New QR-code generated');
+                    simpleSaveChangeHistory('qr', $id, 'New QR-code generated for existing box without QR-code');
                 }
                 ++$i;
             }
@@ -36,6 +36,11 @@
                 $data['labels'][$i]['hash'] = md5($id);
                 db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$data['labels'][$i]['hash'].'",NOW())');
                 simpleSaveChangeHistory('qr', $id, 'New QR-code generated');
+
+                //test if generated qr-code is already connected to a box
+                if (db_value('SELECT id FROM stock WHERE qr_id = :id', ['id' => $id])) {
+                    throw new Exception('QR-Genereation error! Please report to the Boxtribute team!');
+                }
             }
         }
         $cmsmain->assign('include', 'boxlabels.tpl');

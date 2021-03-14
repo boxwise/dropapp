@@ -12,7 +12,7 @@
 var chart = AmCharts.makeChart("chartdiv", {
     "type": "serial",
     "theme": "light",
-    "fontFamily": "Helvetica Neue ,Helvetica,Arial,sans-serif",
+    "fontFamily": "Open Sans, Helvetica Neue ,Helvetica,Arial,sans-serif",
     "rotate": true,
     "legend": {
         "useGraphSettings": true
@@ -34,8 +34,8 @@ var chart = AmCharts.makeChart("chartdiv", {
     }],
     "startDuration": 0.5,
     "graphs": [{
-        "fillColors": "#4cbac5",
-        "lineColor": "#4cbac5",
+        "fillColors": "#29335f",
+        "lineColor": "#29335f",
 	    "fillAlphas": 1,
 	    "lineAlpha": 0,
 	    "type": "column",
@@ -50,8 +50,8 @@ var chart = AmCharts.makeChart("chartdiv", {
 	    }
 
     }, {
-        "fillColors": "#db57bd",
-        "lineColor": "#db57bd",
+        "fillColors": "#ef404a",
+        "lineColor": "#ef404a",
 	    "fillAlphas": 1,
 	    "lineAlpha": 0,
 	    "type": "column",
@@ -87,7 +87,7 @@ var chart = AmCharts.makeChart("chartdiv", {
 var chart2 = AmCharts.makeChart("chartdiv2", {
     "type": "serial",
     "theme": "light",
-    "fontFamily": "Helvetica Neue ,Helvetica,Arial,sans-serif",
+    "fontFamily": "Open Sans,Helvetica Neue ,Helvetica,Arial,sans-serif",
     "legend": {
         "useGraphSettings": true
     },
@@ -111,8 +111,8 @@ var chart2 = AmCharts.makeChart("chartdiv2", {
     "startDuration": 0.5,
     "graphs": [{
        "balloonText": "[[value]] men in families of [[category]] persons",
-        "fillColors": "#4cbac5",
-        "lineColor": "#4cbac5",
+        "fillColors": "#29335f",
+        "lineColor": "#29335f",
         "title": "Number of men per family size",
         "type": "column",
         "valueField": "male",
@@ -120,8 +120,8 @@ var chart2 = AmCharts.makeChart("chartdiv2", {
 		"lineAlphas": 0
     },{
         "balloonText": "[[value]] boys in families of [[category]] persons",
-        "fillColors": "#8ac9de",
-        "lineColor": "#8ac9de",
+        "fillColors": "#aacfe3",
+        "lineColor": "#aacfe3",
         "title": "Number of boys per family size",
         "type": "column",
         "valueField": "boys",
@@ -129,8 +129,8 @@ var chart2 = AmCharts.makeChart("chartdiv2", {
 		"lineAlphas": 0
     },{
         "balloonText": "[[value]] women in families of [[category]] persons",
-        "fillColors": "#db57bd",
-        "lineColor": "#db57bd",
+        "fillColors": "#ef404a",
+        "lineColor": "#ef404a",
         "title": "Number of women per family size",
         "type": "column",
         "valueField": "female",
@@ -138,16 +138,15 @@ var chart2 = AmCharts.makeChart("chartdiv2", {
 		"lineAlphas": 0
      },{
        "balloonText": "[[value]] girls in families of [[category]] persons",
-        "fillColors": "#eaa3da",
-        "lineColor": "#eaa3da",
+        "fillColors": "#f8aa9e",
+        "lineColor": "#f8aa9e",
         "title": "Number of girls per family size",
         "type": "column",
         "valueField": "girls",
 		"fillAlphas": 0.85,
 		"lineAlphas": 0
     }],
-    "depth3D": 20,
-	"angle": 30,
+    "depth3D": 0,
     "chartCursor": {
         "categoryBalloonEnabled": false,
         "cursorAlpha": 0,

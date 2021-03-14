@@ -1,6 +1,6 @@
 {include file="cms_header.tpl"}
 
-<nav class="pushy pushy-open visible-xs">
+<nav class="pushy pushy-open visible-xs visible-sm visible-md">
     <a href="#" class="pushy-close fa fa-times"></a>
     <ul class="level0">
     {foreach $menu as $item}
@@ -8,7 +8,7 @@
       <li>
           <ul class="level1">
     {foreach $item['sub'] as $subitem}
-            <li{if isset($subitem['active'])} class="active"{/if}><a class="menu_{$subitem['include']|default:''}" href="?action={$subitem['include']|default:''}">{$subitem['title']}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
+            <li{if isset($subitem['active'])} class="active"{/if}><a class="menu_{$subitem['include']|default:''}" href="?action={$subitem['include']|default:''}">{$subitem['title'] nofilter}{if $subitem['alert']}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
       {/foreach}
           </ul>
       </li>
@@ -25,7 +25,7 @@
 
   <div class="container-fluid">
   	{if !$modal}
-	    <div class="nav-aside hidden-xs">
+	    <div class="nav-aside hidden-xs hidden-sm hidden-md">
 	      <ul class="level0">
 	      {foreach $menu as $item}
 	        <li class="nav-header">{$item['title']}</li>

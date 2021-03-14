@@ -1,9 +1,13 @@
-/* Helper functions to wrap interactions with boxwise-custom select dropdown DOM element */
+/* Helper functions to wrap interactions with boxtribute-custom select dropdown DOM element */
 /* field_id is a unique identifier in a form this dropdown is used to select values for */
 
 Cypress.Commands.add("selectOptionByText", (field_id, optionText) => {
     cy.get("div[id='s2id_field_" + field_id + "']").click();
-    cy.get("ul[class='select2-results'] li").contains(optionText).click();
+    cy.getOptionByText(optionText).click();
+});
+
+Cypress.Commands.add("getOptionByText", (optionText) => {
+    cy.get("ul[class='select2-results'] li").contains(optionText);
 });
 
 Cypress.Commands.add("getSelectedValueInDropDown", (field_id, text) => {

@@ -6,7 +6,7 @@
     if ($_POST) {
         $handler = new formHandler($table);
 
-        $savekeys = ['name', 'market', 'familyidentifier', 'delete_inactive_users', 'food', 'bicycle', 'idcard', 'workshop', 'laundry', 'schedulestart', 'schedulestop', 'schedulebreak', 'schedulebreakstart', 'schedulebreakduration', 'scheduletimeslot', 'currencyname', 'dropsperadult', 'dropsperchild', 'dropcapadult', 'dropcapchild', 'bicyclerenttime', 'adult_age', 'daystokeepdeletedpersons', 'extraportion', 'maxfooddrops_adult', 'maxfooddrops_child', 'bicycle_closingtime', 'bicycle_closingtime_saturday', 'organisation_id', 'resettokens'];
+        $savekeys = ['name', 'market', 'familyidentifier', 'delete_inactive_users', 'food', 'bicycle', 'idcard', 'workshop', 'laundry', 'schedulestart', 'schedulestop', 'schedulebreak', 'schedulebreakstart', 'schedulebreakduration', 'scheduletimeslot', 'currencyname', 'dropsperadult', 'dropsperchild', 'dropcapadult', 'dropcapchild', 'bicyclerenttime', 'adult_age', 'daystokeepdeletedpersons', 'extraportion', 'maxfooddrops_adult', 'maxfooddrops_child', 'bicycle_closingtime', 'bicycle_closingtime_saturday', 'organisation_id', 'resettokens', 'beneficiaryisregistered', 'beneficiaryisvolunteer'];
         $id = $handler->savePost($savekeys);
         $handler->saveMultiple('functions', 'cms_functions_camps', 'camps_id', 'cms_functions_id');
 
@@ -62,11 +62,13 @@
     // addfield('checkbox', 'You run a laundry station for beneficiaries?', 'laundry', array('tab'=>'general'));
     addfield('line', '', '', ['tab' => 'general']);
 
-    addfield('number', 'Deactivate inactive beneficiaries', 'delete_inactive_users', ['tab' => 'beneficiaries', 'width' => 2, 'tooltip' => 'Beneficiaries without activity in Boxwise will be deactivated. Deactivated beneficiaries will remain visible in the Deactivated tab in the Beneficiaries page.']);
+    addfield('number', 'Deactivate inactive beneficiaries', 'delete_inactive_users', ['tab' => 'beneficiaries', 'width' => 2, 'tooltip' => 'Beneficiaries without activity in Boxtribute will be deactivated. Deactivated beneficiaries will remain visible in the Deactivated tab in the Beneficiaries page.']);
     addfield('number', 'Days to keep deactivated persons', 'daystokeepdeletedpersons', ['tab' => 'beneficiaries', 'width' => 2, 'tooltip' => 'Deactivate beneficiaries will remain visible in the Deactivated tab in the beneficiaries page and will be completely deleted after a while. Here you can define how long they will remain in the Deactivated list.']);
     addfield('number', 'Adult age', 'adult_age', ['tab' => 'beneficiaries', 'width' => 2, 'tooltip' => 'For some functions we distinct between children and adults. Fill in here the lowest age considered adult for this base.']);
     addfield('text', 'Location identifier for beneficiaries', 'familyidentifier', ['tab' => 'beneficiaries', 'tooltip' => 'beneficiariesly this refers to the kind of housing that people have: tent, container, house or something else.']);
     addfield('checkbox', 'Do you give out beneficiaries ID-cards?', 'idcard', ['tab' => 'beneficiaries']);
+    addfield('checkbox', 'Do you track if your beneficiaries are officially registered?', 'beneficiaryisregistered', ['tab' => 'beneficiaries']);
+    addfield('checkbox', 'Can your beneficiaries be volunteers in your organisation?', 'beneficiaryisvolunteer', ['tab' => 'beneficiaries']);
 
     addfield('text', 'Currency name', 'currencyname', ['tab' => 'market', 'required' => true, 'width' => 2, 'tooltip' => 'Will get active after first page reload']);
     addfield('line', '', '', ['tab' => 'market']);

@@ -18,7 +18,7 @@
 var chart = AmCharts.makeChart("chartdiv", {
     "type": "serial",
 	"theme": "light",
-    "fontFamily": "Helvetica Neue ,Helvetica,Arial,sans-serif",
+    "fontFamily": "Open Sans,Helvetica Neue ,Helvetica,Arial,sans-serif",
     "legend": {
         "horizontalGap": 10,
         "maxColumns": 1,

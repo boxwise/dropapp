@@ -218,7 +218,7 @@ $(function() {
     });
 
     function closeModal(event) {
-        if (event.data == "close") {
+        if (event.data == "close" || event.data.hasOwnProperty('eventName')) {
             $.fancybox.close();
         } else {
             $.fancybox.close();
@@ -321,6 +321,30 @@ $(function() {
             .data("DateTimePicker")
             .minDate(MIN_VALID_DATE);
     });
+
+    // ColorPicker https://seballot.github.io/
+    var $colorPicker = $('#colorPicker');
+    if ($colorPicker.length) {
+        debugger;
+        $chosenColor = $colorPicker[0].value;
+        if (!$chosenColor.length){
+            $chosenColor = '#f37167';
+        }
+        $colorPicker.spectrum({
+            color: $chosenColor,
+            type: "component",
+            showPalette: "false",
+            showPaletteOnly: "true",
+            togglePaletteOnly: "true",
+            hideAfterPaletteSelect: "true",
+            showInput: "true",
+            showInitial: "true",
+            showAlpha: "false",
+            allowEmpty: "false",
+            preferredFormat: "hex",
+            palette: [["#f37167", "#aacfe3", "#f8aa9e", "#315c88", "#f4e6a0", "#d89016" ]]
+          });
+    }
 
     // select2, more info: http://ivaynberg.github.io/select2/
     $(".select2").each(function() {
@@ -425,11 +449,12 @@ $(function() {
                                 AjaxFormSubmit(form);
                             }
                             $("body").removeClass("loading");
+
                         },
                         error: function(checkresult) {
                             var n = noty({
                                 text:
-                                    "We cannot connect to the Boxwise server.<br> Do you have internet?",
+                                    "We cannot connect to the Boxtribute server.<br> Do you have internet?",
                                 type: "error"
                             });
                             $("body").removeClass("loading");
@@ -623,7 +648,7 @@ function initiateList() {
                 var el = $(this);
                 var options = $.extend(
                     {
-                        dateFormat : "ddmmyyyy", // set the default date format
+                        dateFormat: "ddmmyyyy", // set the default date format
                         widgets: ["stickyHeaders", "saveSort"],
                         widgetOptions: {
                             stickyHeaders_attachTo: el.closest(
@@ -639,10 +664,7 @@ function initiateList() {
                     el.data()
                 );
                 el.tablesorter(options);
-                // 				$('body').removeClass('loading');
             });
-        } else {
-            // 			$('body').removeClass('loading');
         }
         $(".table").on("change", ".item-select", function(e) {
             var el = $(this);
@@ -750,13 +772,11 @@ function initiateList() {
                                                 $(this).remove();
                                             });
                                             break;
-
                                         case "undelete":
                                             allTargets.fadeOut(200, function() {
                                                 $(this).remove();
                                             });
                                             break;
-
                                         case "hide":
                                             if (
                                                 parent.data("inheritvisibility")
@@ -783,6 +803,25 @@ function initiateList() {
                                                 );
                                             }
                                             break;
+                                        case "extend":
+                                            $.each( allTargets, function( key, value ) {
+                                                $(this).fadeOut(200);   // remove from expired list if extended
+                                            });
+                                            break;
+                                        case "extendActive":
+                                            $.each( allTargets, function( key, value ) {
+                                                if (result.data[key] === "0000-00-00"){
+                                                    $(value).find('.list-column-valid_lastday')[0].innerText = "";  // empty if expiry date isn't set at all
+                                                }
+                                                else if (result.data[key]){
+                                                    // replace cell value with new date string
+                                                    var parsedDate = parseReturnedDateString(result.data[key]);
+                                                    var date = new Date(parsedDate[0], parsedDate[1]-1, parsedDate[2]);
+                                                    const newCellText =  parsedDate[2] + " " + monthName(date) + " " + parsedDate[0];
+                                                    $(value).find('.list-column-valid_lastday')[0].innerText = newCellText;
+                                                }
+                                            });
+                                            break;
                                         default:
                                         // nothing
                                     }
@@ -799,42 +838,16 @@ function initiateList() {
                                         parent
                                             .find(".item-select:visible:first")
                                             .closest("tr")
-                                            .toggleClass(
-                                                "selected",
-                                                true
-                                            );
+                                            .toggleClass("selected", true);
                                         parent
                                             .find(".item-select:visible:first")
                                             .trigger("change");
                                     });
                                 // .trigger("change");
                             }
-                            if (result.message) {
-                                var n = noty({
-                                    text: result.message,
-                                    type: result.success ? "success" : "error"
-                                });
-                            }
-                            if (result.redirect) {
-                                if (result.message) {
-                                    setTimeout(function() {
-                                        execReload(result.redirect);
-                                    }, 1500);
-                                } else {
-                                    execReload(result.redirect);
-                                }
-                            }
-                            if (result.action) {
-                                eval(result.action);
-                            }
+                            AjaxCheckSuccess(result);
                         },
-                        error: function(result) {
-                            var n = noty({
-                                text:
-                                    "This file cannot be found or what's being returned is not json.",
-                                type: "error"
-                            });
-                        }
+                        error: AjaxError
                     });
                 } else {
                     var n = noty({
@@ -877,29 +890,9 @@ function initiateList() {
                         }
                         el.prev(".list-toggle-value").text(result.newvalue);
                     }
-                    if (result.message) {
-                        var n = noty({
-                            text: result.message,
-                            type: result.success ? "success" : "error"
-                        });
-                    }
-                    if (result.redirect) {
-                        if (result.message) {
-                            setTimeout(function() {
-                                execReload(result.redirect);
-                            }, 1500);
-                        } else {
-                            execReload(result.redirect);
-                        }
-                    }
+                    AjaxCheckSuccess(result);
                 },
-                error: function(result) {
-                    var n = noty({
-                        text:
-                            "This file cannot be found or what's being returned is not json.",
-                        type: "error"
-                    });
-                }
+                error: AjaxError
             });
             e.preventDefault();
         });
@@ -923,10 +916,116 @@ function initiateList() {
             );
             el.confirmation(options);
         });
-    } else {
-        // 		$('body').removeClass('loading');
+
+        // collapse functions for stock-overview
+        $(".collapsebutton").each(function() {
+            var parentRow = $(this).closest("tr");
+            if ($(this).data("notcollapsed")) {
+                var directChildRows = $(
+                    "tr[data-collapseparent='" +
+                        $(this).data("collapseid") +
+                        "']"
+                );
+                directChildRows.collapse("show");
+                $(this).append('<i class="fa fa-chevron-down"></i>');
+            } else if (
+                parentRow.next().data("level") > parentRow.data("level")
+            ) {
+                $(this).append('<i class="fa fa-chevron-right"></i>');
+            }
+        });
+        $(".collapsebutton").click(function() {
+            // prepare collapseList for ajax request
+            var tableParent = $(this).closest(".table-parent");
+            var collapseList = new Array();
+            tableParent.find(".collapsebutton").each(function() {
+                if ($(this).data("notcollapsed")) {
+                    collapseList.push(
+                        $(this)
+                            .closest("tr")
+                            .data("id")
+                    );
+                }
+            });
+            var parentRow = $(this).closest("tr");
+            var directChildRows = $(
+                "tr[data-collapseparent='" + $(this).data("collapseid") + "']"
+            );
+            var allChildRows = $(
+                "tr[data-hidecollapseparent" +
+                    parentRow.data("level") +
+                    "='" +
+                    $(this).data("collapseid") +
+                    "']"
+            );
+            if ($(this).data("notcollapsed")) {
+                // remove rows from collapseList
+                collapseList = collapseList.filter(
+                    el => el != parentRow.data("id")
+                );
+                // update rows in UI
+                allChildRows.collapse("hide");
+                allChildRows
+                    .find(".collapsebutton")
+                    .data("notcollapsed", 0)
+                    .find("i")
+                    .removeClass("fa-chevron-down")
+                    .addClass("fa-chevron-right");
+                $(this)
+                    .data("notcollapsed", 0)
+                    .find("i")
+                    .removeClass("fa-chevron-down")
+                    .addClass("fa-chevron-right");
+            } else {
+                // add rows to collapseList
+                collapseList.push(parentRow.data("id"));
+                // update rows in UI
+                directChildRows.collapse("show");
+                $(this)
+                    .data("notcollapsed", 1)
+                    .find("i")
+                    .removeClass("fa-chevron-right")
+                    .addClass("fa-chevron-down");
+            }
+            // send ajax to memorize which rows are collapsed
+            $.ajax({
+                type: "post",
+                url: tableParent.data("action"),
+                data: { do: "collapse", ids: collapseList },
+                dataType: "json"
+            });
+        });
+        // Collapse All button
+        $("#collapseall").click(function() {
+            var tableParent = $(this).closest(".table-parent");
+            tableParent.find("tr[class*='collapse']").collapse("hide");
+            tableParent
+                .find(".collapsebutton")
+                .data("notcollapsed", 0)
+                .find("i")
+                .removeClass("fa-chevron-down")
+                .addClass("fa-chevron-right");
+            $.ajax({
+                type: "post",
+                url: tableParent.data("action"),
+                data: { do: "collapseall" },
+                dataType: "json"
+            });
+        });
     }
     $("body").removeClass("loading");
+}
+
+function monthName(dt){
+    mlist = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+    return mlist[dt.getMonth()];
+};
+
+function parseReturnedDateString(dateString){
+    var year = dateString.substring(0,4);
+    var month = dateString.substring(5,7);
+    var day = dateString.substring(8,10);
+    return [year, month, day];
 }
 
 // format select2 for the parent select
@@ -1002,29 +1101,12 @@ function AjaxFormSubmit(form) {
             dataType: "json",
             success: function(result) {
                 $("#form-submit").prop("disabled", false);
-                if (result.message) {
-                    var n = noty({
-                        text: result.message,
-                        type: result.success ? "success" : "error"
-                    });
-                }
-                if (result.redirect) {
-                    if (result.message) {
-                        setTimeout(function() {
-                            execReload(result.redirect);
-                        }, 1500);
-                    } else {
-                        execReload(result.redirect);
-                    }
-                }
                 $("body").removeClass("loading");
+                AjaxCheckSuccess(result);
+
             },
             error: function(result) {
-                var n = noty({
-                    text:
-                        "This file cannot be found or what's being returned is not json.",
-                    type: "error"
-                });
+                AjaxError(result);
                 $("body").removeClass("loading");
             }
         });

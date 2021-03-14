@@ -1,15 +1,16 @@
 [![CircleCI](https://circleci.com/gh/boxwise/dropapp.svg?style=svg)](https://circleci.com/gh/boxwise/dropapp)
+<a width="105" height="35" href="https://auth0.com/?utm_source=oss&utm_medium=gp&utm_campaign=oss" target="_blank" alt="Single Sign On & Token Based Authentication - Auth0">
+       <img width="105" height="35" alt="JWT Auth for open source projects" src="https://cdn.auth0.com/oss/badges/a0-badge-dark.png"></a>
 
 # Readme #
 
-You just found the Drop App (first version of [Boxwise](https://www.boxwise.co) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
+You just found the Drop App (first version of [Boxtribute](https://www.boxtribute.org) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
 
-We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users are [Intervolve](https://intervolvegr.com/), [R4R](https://www.refugees4refugees.gr) and [IHA](iha.help).
+We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users include [Lifting Hands International](https://www.liftinghandsinternational.org/), [No Name Kitchen](https://www.nonamekitchen.org/),  [Intervolve](https://intervolvegr.com/), [Refugees4Refugees](https://www.refugees4refugees.gr), [Intereuropean Human Aid Association (IHA)](https://www.iha.help/), [Chios Eastern Shore Response Team](https://www.cesrt.org/) and [Hermine](https://mfh.global/hermine/).
 
 We have evolved the app to now be centrally hosted to we can offer the product to many more organisations, and are working to improve the quality of the product. 
 
-To support the development of the new version we started a [crowdfunding campaign](https://donate.boxwise.co)!  
-Write or call Hans ([hans@boxwise.co](mailto:hans@boxwise.co) & +4917652181647) if you want to be part of our next step. 
+If you are interested in being part of this project, write us at [jointheteam@boxwise.co](mailto:jointheteam@boxwise.co)! You can also check out our [website](https://www.boxtribute.org/#join) for more details about the kind of help we need on this project.
 
 ### Preparation for Installation
 
@@ -17,7 +18,7 @@ Write or call Hans ([hans@boxwise.co](mailto:hans@boxwise.co) & +4917652181647) 
 * Install [PHP 7.2 or later](https://www.php.net/downloads.php).
 * Ensure you have the `mbstring` and `curl` PHP extensions installed. On Ubuntu:
 
-       apt install php-curl php-mbstring
+       apt install php-curl php-mbstring php-mysql
 
 ### How do I get set up?
 
@@ -140,7 +141,20 @@ We use [Cypress](https://www.cypress.io) for Browser-test. To run Cypress tests 
 2. Set the variable `baseURL` to your local address, e.g. `localhost:8100` in cypress.json.
 3. Open Cypress and this repo in Cypress
 
-All tests in `cypress/integrations` should be found and can be directly executed. 
+All tests in `cypress/integrations` should be found and can be directly executed. When writing tests, try to follow these guidelines if possible:
+
++ Avoid any duplication of helper functions across several files! If testing the same page in several test suites (files), there's a tendency to copy-paste the whole file and then rewrite tests. This leads to code duplication of helper functions. Instead, helper functions needed in several locations should be defined in one of `cypress/support` files - then they're available globally. Find the matching one by name or create a new one. In latter case, don't forget to import it in `cypress/integrations/index.js`. Avoid creating miscellaneuos file names as it tends to lead to chaos.
++ Local helper functions defined in test files should have functional and easy-to-understand rather than technical names. Meaning, `clickNewUserButton()` is better than `clickElementByTypeAndTestId('button','new-user-button')`.
++ More general use helpers like 'clickElementByTypeAndTestId' can be used within the local helper functions if preferred. The reason for functional naming preference lies in increased readability of tests.
++ Current codebase doesn't 100% follow everything stated above but it'd definitely help organising the test helpers accordingly from now on.
+
+![Selection_599](https://user-images.githubusercontent.com/8964422/77221481-6a190d00-6b4a-11ea-88d7-9fc70ce1c982.png)
+
+#### Known Cypress Issues
+We experienced before that tests can fail in CircleCI, but not in the local environment. The main reason for it is that Cypress is usually executing the commands slower in a local dev environment.
+Therefore, a few additional guidelines when writing test:
++ When you want to execute a redirect, e.g. example by clicking a button or tab, please add an assertion after the click, e.g. of the url `cy.url().should('include', 'people_deactivated')`. Due to this assertion cypress will definitely wait until the redirect is executed.  
++ Only if you use `cy.visit()` you can be sure that the cypress test wait until a page is fully loaded. Therefore, try to navigate as much as possible with `cy.visit()`.
 
 ### Contribution guidelines ###
 
@@ -149,8 +163,8 @@ For everything else, please see our [contribution guidelines](https://github.com
 
 ### Who do I talk to? ###
 
-Right now best talk to [Hans](mailto:hans@boxwise.co)!
+Drop us an email to hello@boxwise.co!
 
 ### License ###
 
-See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
+See the [LICENSE](./LICENSE) file for license rights and limitations (Apache 2.0).

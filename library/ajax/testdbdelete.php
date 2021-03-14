@@ -27,7 +27,7 @@
             $ids = explode(',', $_POST['ids']);
         }
         //if ids that are submitted are in database, delete them, otherwise just return true
-        if ($ids != []) {
+        if ([] != $ids) {
             //Define all ids which are allowed to be deleted
             $allowed['people'] = array_column(db_array(
                 'SELECT p.id

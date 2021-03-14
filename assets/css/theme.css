@@ -1,0 +1,25 @@
+:root {
+    --boxwiseBlue: #009DAD;
+    --boxwiseYellow: #f4e6a0;
+    --boxwiseButtons: #315c88;
+    --headerBackground: #ffffff;
+    --sidebarBackground: #ffffff;
+    --sidebarFontColor: #000000;
+    --inactiveTabsBackground: #eee;
+    --activeOrHoverTabsBackground: #fff;
+    --buttonTextColor: #fff !important;
+    --rightPanelTextColor: #EF404A;
+
+    /* GRAPHS, CHARTS*/
+    --graphsMenColor: #315c88;
+    --graphsBoysColor: #aacfe3;
+    --graphsWomenColor: #ef404a;
+    --graphsGirlsColor: #f8aa9e;
+
+    /* STOCK OVERVIEW  */
+    --stockOverviewLevel1: #aacfe3;
+    --stockOverviewLevel2: #315c88;
+    --stockOverviewLevel3: #f37167;
+    --stockOverviewLevel4: #e4aa4f;
+    
+}

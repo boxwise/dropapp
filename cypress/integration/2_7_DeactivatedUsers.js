@@ -13,6 +13,8 @@ const OK_BUTTON = "OK";
 const ITEM_RECOVERED = "Item recovered";
 const ITEM_DELETED = "Item deleted";
 const DEACTIVATE_BUTTON = "Deactivate";
+const USER_DEACTVATE_REQUEST = "do=delete"
+const USER_REACTVATE_REQUEST = "do=undelete";
 
 describe("2_7_DeactivatedUsers_Test", () => {
 
@@ -22,118 +24,70 @@ describe("2_7_DeactivatedUsers_Test", () => {
         cy.visit('/?action=cms_users_deactivated');
     });
 
-    function checkForElementByText(selector, text) {
-        cy.get(selector).contains(text).should("be.visible");
-    }
-
-    function checkElementDoesNotExistByText(selector, text) {
-        cy.get(selector).contains(text).should('not.exist');
-    }
-
-    function checkClassByTypeAndTestId(type, testId, _class, hasClass) {
-        if (hasClass == true) {
-            cy.get(type + "[data-testid = '" + testId + "']").should("have.class", _class);
-        } else {
-            cy.get(type + "[data-testid = '" + testId + "']").should("not.have.class", _class);
-        }
-    }
-
-    function clickOnElement(selector) {
-        cy.get(selector).first().click();
-    }
-
-    function clickOnElementByText(selector, text) {
-        cy.get(selector).contains(text).click();
-    }
-
-    function checkForElementByTypeAndTestId(type, testId) {
-        cy.get(type + "[data-testid = '" + testId + "']").should("be.visible");
-    }
-
-    function clickOnElementByTypeAndTestId(type, testId) {
-        cy.get(type + "[data-testid = '" + testId + "']").click();
-    }
-
-    function getUserRow(name){
-        return cy.get('tr').contains(name);
-    }
-
-    function checkUserCheckboxByName(name){
-        getUserRow(name).parent().parent().parent().within(() => {
-            cy.get("input[type='checkbox']").check();
-        });
-    }
-
-    function checkAllUsersSelected() {
-        cy.get('tbody tr').each(($tr) => {
-            expect($tr).to.have.class('selected');
-        });
-    }
-
     it("2_7 Check for list elements in Deactivated tab", () => {
-        checkForElementByTypeAndTestId("input", "select_all");
-        checkForElementByText("p", DELETED_COORDINATOR_NAME);
-        checkForElementByText("div", DELETED_COORDINATOR_EMAIL);
-        checkForElementByText("div", DELETED_COORDINATOR_ROLE);
-        checkForElementByText("div", DELETED_COORDINATOR_VALID_FROM);
-        checkForElementByText("div", DELETED_COORDINATOR_VALID_TO);
+        cy.checkForElementByTypeAndTestId("input", "select_all");
+        cy.checkElementIsVisibleByText("p", DELETED_COORDINATOR_NAME);
+        cy.checkElementIsVisibleByText("div", DELETED_COORDINATOR_EMAIL);
+        cy.checkElementIsVisibleByText("div", DELETED_COORDINATOR_ROLE);
+        cy.checkElementIsVisibleByText("div", DELETED_COORDINATOR_VALID_FROM);
+        cy.checkElementIsVisibleByText("div", DELETED_COORDINATOR_VALID_TO);
 
         // check that admin can see roles Coordinator and User
-        checkForElementByText("div", DELETED_COORDINATOR_ROLE);
-        checkForElementByText("div", DELETED_USER_ROLE);
+        cy.checkElementIsVisibleByText("div", DELETED_COORDINATOR_ROLE);
+        cy.checkElementIsVisibleByText("div", DELETED_USER_ROLE);
 
         // login as coodrinator; check that coordinator can see roles User but not Admin
         cy.visit('/?logout=1');
         cy.loginAsCoordinator();
         cy.visit('/?action=cms_users_deactivated');
-        checkForElementByText("div", DELETED_USER_ROLE);
-        checkElementDoesNotExistByText("div", DELETED_ADMIN_ROLE);
+        cy.checkElementIsVisibleByText("div", DELETED_USER_ROLE);
+        cy.checkElementDoesNotExistByText("div", DELETED_ADMIN_ROLE);
     });
 
     it("2_7_1 Check that clicking disabled user does not load user edit page", () => {
-        clickOnElementByText("p", DELETED_COORDINATOR_NAME);
+        cy.clickOnElementBySelectorAndText("p", DELETED_COORDINATOR_NAME);
         cy.url().should('not.include', 'cms_users_edit');
         cy.url().should('include', 'cms_users_deactivated');
     });
 
     it("2_7_2 Tick box for deactivated user", () => {
-        checkUserCheckboxByName(DELETED_COORDINATOR_NAME);
-        checkForElementByTypeAndTestId("button", "reactivate-cms-user");
+        cy.checkGridCheckboxByText(DELETED_COORDINATOR_NAME);
+        cy.checkForElementByTypeAndTestId("button", "reactivate-cms-user");
     });
 
     it("2_7_3 Select all deactivated users", () => {
-        checkForElementByTypeAndTestId("input", "select_all");
-        clickOnElement("input[data-testid = 'select_all']");
-        checkAllUsersSelected();
-        checkForElementByTypeAndTestId("button", "reactivate-cms-user");
+        cy.checkForElementByTypeAndTestId("input", "select_all");
+        cy.clickOnFirstElementBySelector("input[data-testid = 'select_all']");
+        cy.checkAllUsersSelected();
+        cy.checkForElementByTypeAndTestId("button", "reactivate-cms-user");
     });
 
     it("2_7_4 Activate deactivated user", () => {
-        checkUserCheckboxByName(DELETED_USER_NAME);
-        clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
-        checkForElementByText("h3", ARE_YOU_SURE_POPUP);
-        clickOnElementByText("a", OK_BUTTON);
-        cy.waitForAjaxAction(ITEM_RECOVERED);
+        cy.checkGridCheckboxByText(DELETED_USER_NAME);
+        cy.clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
+        cy.checkElementIsVisibleByText("h3", ARE_YOU_SURE_POPUP);
+        cy.clickOnElementBySelectorAndText("a", OK_BUTTON);
+        cy.waitForAjaxAction(USER_REACTVATE_REQUEST,ITEM_RECOVERED);
         
-        checkForElementByText("span", ITEM_RECOVERED);
-        checkElementDoesNotExistByText("p", DELETED_USER_NAME);
+        cy.checkElementIsVisibleByText("span", ITEM_RECOVERED);
+        cy.checkElementDoesNotExistByText("p", DELETED_USER_NAME);
         
         // check that re-activated user appears in Active Users tab
         cy.visit('/?action=cms_users');
-        checkForElementByText("a", DELETED_USER_NAME);
+        cy.checkElementIsVisibleByText("a", DELETED_USER_NAME);
 
-        checkUserCheckboxByName(DELETED_USER_NAME);
-        clickOnElementByTypeAndTestId("button", "list-delete-button");
-        clickOnElementByText("div.popover-content a", DEACTIVATE_BUTTON);
-        cy.waitForAjaxAction(ITEM_DELETED);
+        cy.checkGridCheckboxByText(DELETED_USER_NAME);
+        cy.clickOnElementByTypeAndTestId("button", "list-delete-button");
+        cy.clickOnElementBySelectorAndText("div.popover-content a", DEACTIVATE_BUTTON);
+        cy.waitForAjaxAction(USER_DEACTVATE_REQUEST,ITEM_DELETED);
        
         // test cancel button
         cy.visit('/?action=cms_users_deactivated');
-        checkUserCheckboxByName(DELETED_USER_NAME);
-        clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
-        checkClassByTypeAndTestId("button", "reactivate-cms-user", "open", true);
-        clickOnElementByText("a", CANCEL_BUTTON);
-        checkClassByTypeAndTestId("button", "reactivate-cms-user", "open", false);
+        cy.checkGridCheckboxByText(DELETED_USER_NAME);
+        cy.clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
+        cy.checkClassByTypeAndTestId("button", "reactivate-cms-user", "open", true);
+        cy.clickOnElementBySelectorAndText("a", CANCEL_BUTTON);
+        cy.checkClassByTypeAndTestId("button", "reactivate-cms-user", "open", false);
     });
 
 });

@@ -41,22 +41,10 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         createQrCode();
     });
 
-    function typeNumberOfLabels(number){
-        cy.get("input[id='field_count']").clear().type(number);
-    }
-
-    function uncheckBigLabelsCheckbox(){
-        cy.get("input[data-testid='field_fulllabel']").uncheck();
-    }
-
-    function clickMakeLabelsButton(){
-        cy.get("button").contains("Make labels").click();
-    }
-
     function createQrCode(){
-        typeNumberOfLabels(1);
-        uncheckBigLabelsCheckbox();
-        clickMakeLabelsButton();
+        cy.typeNumberOfLabels(1);
+        cy.uncheckBigLabelsCheckbox();
+        cy.clickMakeLabelsButton();
     }
 
     function getQrCode(){
@@ -68,23 +56,23 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
     }
 
     function selectSize(size){
-        cy.get("select[data-testid='size_id']").select(size);
+        cy.getElementByTypeAndTestId("select","size_id").select(size);
     }
 
     function selectLocation(location){
-        cy.get("select[data-testid='location_id']").select(location);
+        cy.getElementByTypeAndTestId("select","location_id").select(location);
     }
 
     function defineItemsCount(count){
-        cy.get("input[data-testid='items_count']").clear().type(count);
+        cy.getElementByTypeAndTestId("input","items_count").type(count);
     }
 
     function writeComment(comment){
-        cy.get("input[data-testid='comments']").clear().type(comment);
+        cy.getElementByTypeAndTestId("input","comments").clear().type(comment);
     }
 
     function clickNewBoxButton(){
-        cy.get("input[data-testid='submit_new_box']").click();
+        cy.getElementByTypeAndTestId("input","submit_new_box").click();
     }
 
 

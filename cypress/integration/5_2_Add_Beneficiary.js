@@ -7,6 +7,7 @@ context("5_2_Add_Beneficiary_Test", () => {
 
 
     beforeEach(function () {
+        cy.setupAjaxActionHook();
         cy.loginAsVolunteer();
         cy.visit('/?action=people');
     });
@@ -14,52 +15,30 @@ context("5_2_Add_Beneficiary_Test", () => {
     function DeleteTestedBeneficiary(lastname) {
         cy.get('body').then(($body) => {
             if ($body.text().includes(lastname)) {
-                cy.log("found" + lastname)
-                cy.get('tr').contains(lastname).parent().parent().parent().within(() => {
-                    cy.get("input[type='checkbox']").check();
-                });
+                cy.log("found " + lastname)
+                cy.checkGridCheckboxByText(lastname);
                 cy.get("button[data-operation='delete']").click();
-                cy.get("a[data-apply='confirmation']").click();
+                cy.getConfirmActionButton().click();
                 // delete the user also from deactivated
                 cy.get("ul[data-testid='listTab'] a").contains("Deactivated").click();
-                cy.get('tr').contains(lastname).parent().parent().parent().within(() => {
-                    cy.get("input[type='checkbox']").check();
-                });
+                cy.url().should('include', 'people_deactivated');
+                cy.checkGridCheckboxByText(lastname);
                 cy.get("button").contains("Full delete").click();
-                cy.get("a[data-apply='confirmation']").click();
+                cy.getConfirmActionButton().click();
+                cy.waitForAjaxAction("do=delete","Item deleted");
             }
         })
-    }
-
-    function ClickButtonWithText(buttontext) {
-        cy.get("button").contains(buttontext).click();
-    }
-
-    function CheckInput(Field_id) {
-        cy.get("input[data-testid = '" + Field_id + "']").should("be.empty");
     }
 
     function Checktab(Tab_id) {
         cy.get("a[id='" + Tab_id + "']").should("be.visible");
     }
 
-    function CheckButtonVisibility(buttontext) {
-        cy.get("button").contains(buttontext).should("be.visible");
-    }
-
     function CheckAssociation(name, name2) {
         cy.get("tr").contains(name2).parent("td").parent("tr").prev().prev().should('contain', name);
     }
 
-    function CheckCommentField() {
-        cy.get("textarea[data-testid='comments_id']").should("be.empty");
-    }
-
-    function CheckCancelButton() {
-        cy.get("a").contains("Cancel").should("be.visible");
-    }
-
-    function CheckLanguageField() {
+    function CheckLanguageFieldIsEmpty() {
         cy.get("input[id='s2id_autogen3']").should("be.empty");
     }
 
@@ -67,22 +46,22 @@ context("5_2_Add_Beneficiary_Test", () => {
         cy.visit('/?action=people_edit&origin=people');
     }
 
-    function CheckEmptyForm() {
+    function CheckEmptyBeneficiaryForm() {
         cy.getSelectedValueInDropDown("parent_id").contains("Please select").should('exist');
-        CheckInput("firstname_id");
-        CheckInput("lastname_id");
-        CheckInput("container_id");
+        cy.checkInputIsEmpty("firstname_id");
+        cy.checkInputIsEmpty("lastname_id");
+        cy.checkInputIsEmpty("container_id");
         cy.getSelectedValueInDropDown("gender").contains("Please select").should('exist');
-        CheckInput("date_of_birth_id");
-        CheckInput("volunteer_id");
-        CheckInput("registered_id");
-        CheckLanguageField();
-        CheckCommentField();
+        cy.checkInputIsEmpty("date_of_birth_id");
+        cy.checkInputIsEmpty("volunteer_id");
+        cy.checkInputIsEmpty("registered_id");
+        CheckLanguageFieldIsEmpty();
+        cy.checkCommentFieldIsEmpty();
         Checktab("tabid_bicycle");
         Checktab('tabid_signature');
-        CheckButtonVisibility("Save and close");
-        CheckButtonVisibility("Save and new");
-        CheckCancelButton();
+        cy.getButtonWithText("Save and close").should("be.visible");
+        cy.getButtonWithText("Save and new").should("be.visible");
+        cy.checkCancelButton();
     }
 
 
@@ -94,53 +73,44 @@ context("5_2_Add_Beneficiary_Test", () => {
         }
     }
 
-    function CheckQtip(qtip_id) {
-        cy.get("div[id='" + qtip_id + "']").should("be.visible");
-    }
-
-    function getBeneficiaryRow(familyName){
-        return cy.get('tr').contains(familyName);
-    }
-
     it("5_2_1 Fill form, Save and close", () => {
         DeleteTestedBeneficiary(Test_lastname)
         NavigateToEditBeneficiaryForm()
-        CheckEmptyForm();
+        CheckEmptyBeneficiaryForm();
         //check all the forms 
         FillForm(Test_firstname, Test_lastname, Test_case_id);
-        ClickButtonWithText("Save and close");
+        cy.getButtonWithText("Save and close").click();
         cy.notificationWithTextIsVisible(Test_firstname + " " + Test_lastname + " was added");
-        getBeneficiaryRow(Test_lastname).should('exist');
+        cy.getRowWithText(Test_lastname).should('exist');
     });
 
     it("5_2_2 Prevent empty submit",() => {
         NavigateToEditBeneficiaryForm();
-        ClickButtonWithText("Save and close");
-        CheckQtip("qtip-0-content");
-        CheckQtip("qtip-1-content");
+        cy.getButtonWithText("Save and close").click();
+        cy.checkQtipWithText("qtip-content","This field is required");
     });    
 
     it("5_2_4 Save and New",()=> {
         DeleteTestedBeneficiary(Test_lastname);
         NavigateToEditBeneficiaryForm();
         FillForm(Test_firstname,Test_lastname,Test_case_id);
-        ClickButtonWithText("Save and new");
+        cy.getButtonWithText("Save and new").click();
         cy.notyTextNotificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added");
         cy.notyTextNotificationWithTextIsVisible(Test_case_id);
-        CheckEmptyForm();
+        CheckEmptyBeneficiaryForm();
     });
 
     it("5_2_5 Save and new check if new person in familyhead-dropdown + check if empty",() => {
         DeleteTestedBeneficiary(Test_lastname);
         NavigateToEditBeneficiaryForm();
         FillForm(Test_firstname,Test_lastname,Test_case_id);
-        ClickButtonWithText("Save and new");
+        cy.getButtonWithText("Save and new").click();
         cy.notyTextNotificationWithTextIsVisible(Test_firstname+" "+Test_lastname + " was added");
         cy.notyTextNotificationWithTextIsVisible(Test_case_id);
         // Check for the familyhead after adding it above
         cy.selectOptionByText("parent_id",Test_case_id +" "+ Test_firstname); // having an issue checking the dropdown list here
         FillForm(Test_firstname2,Test_lastname,"");
-        ClickButtonWithText("Save and close");
+        cy.getButtonWithText("Save and close").click();
         cy.notificationWithTextIsVisible(Test_firstname2+" "+Test_lastname + " was added");
         CheckAssociation(Test_firstname,Test_firstname2);
     });

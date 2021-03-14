@@ -1,103 +1,161 @@
 <?php
 
-    $table = $action;
-    $ajax = checkajax();
+use OpenCensus\Trace\Tracer;
 
-    if (!$ajax) {
-        initlist();
+Tracer::inSpan(
+    ['name' => ('stock.php')],
+    function () use ($action, &$cmsmain) {
+        global $table, $listconfig, $listdata;
 
-        $cmsmain->assign('title', 'Boxes');
-        listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
+        $table = $action;
+        $ajax = checkajax();
 
-        listfilter(['label' => 'By location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
+        if (!$ajax) {
+            initlist();
 
-        $statusarray = ['showall' => 'All boxes', 'ordered' => 'Ordered boxes', 'dispose' => 'Untouched for 3 month'];
-        listfilter2(['label' => 'Only active boxes', 'options' => $statusarray, 'filter' => '"show"']);
+            $cmsmain->assign('title', 'Boxes');
+            listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
-        $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
-        listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
+            listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
 
-        $itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
-        listfilter4(['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
-        listsetting('manualquery', true);
+            $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND NOT is_scrap AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
 
-        //dump($listconfig);
-        $data = getlistdata('SELECT stock.*, cu.naam AS ordered_name, cu2.naam AS picked_name, SUBSTRING(stock.comments,1, 25) AS shortcomment, g.label AS gender, p.name AS product, s.label AS size, l.label AS location, IF(DATEDIFF(now(),stock.modified) > 90,1,0) AS oldbox ,
-		IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
-		FROM '.$table.'
-			LEFT OUTER JOIN cms_users AS cu ON cu.id = stock.ordered_by
-			LEFT OUTER JOIN cms_users AS cu2 ON cu2.id = stock.picked_by
-			LEFT OUTER JOIN products AS p ON p.id = stock.product_id
-			LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
-			LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
-			LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id
-		WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND l.deleted IS NULL AND l.camp_id = '.$_SESSION['camp']['id'].
+            $statusarray = [
+                'boxes_in_stock' => 'In Stock',
+                'showall' => 'Everything',
+                'ordered' => 'Ordered',
+                'dispose' => 'Untouched for 3 months',
+                'shop' => 'Moved to Free Shop',
+                'lost_boxes' => 'Lost',
+                'scrap' => 'Scrap',
+            ];
+            $statusarray += (is_null($outgoinglocations) ? [] : $outgoinglocations);
+            listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);
+
+            $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
+            listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
+
+            $itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
+            listfilter4(['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
+            listsetting('manualquery', true);
+
+            function get_filter2_query($applied_filter, $custom_outgoing_locations)
+            {
+                if (!is_null($custom_outgoing_locations) && array_key_exists($applied_filter, $custom_outgoing_locations)) {
+                    return ' AND l.id = '.$applied_filter;
+                }
+                switch ($applied_filter) {
+                case 'boxes_in_stock':
+                    return ' AND l.visible';
+                case 'ordered':
+                    return ' AND (stock.ordered OR stock.picked) AND l.visible';
+                case 'dispose':
+                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible';
+                case 'lost_boxes':
+                    return ' AND l.is_lost';
+                case 'shop':
+                    return ' AND l.is_market';
+                case 'scrap':
+                    return ' AND l.is_scrap';
+                case 'showall':
+                    return ' ';
+                default:
+                    return ' AND l.visible';
+            }
+            }
+
+            $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock'], $outgoinglocations);
+
+            $query = '
+            SELECT 
+                stock.*, 
+                cu.naam AS ordered_name, 
+                cu2.naam AS picked_name, 
+                SUBSTRING(stock.comments,1, 25) AS shortcomment, 
+                g.label AS gender, p.name AS product, 
+                s.label AS size, l.label AS location, 
+                IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage,
+                IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
+            FROM 
+                stock
+            LEFT OUTER JOIN 
+                cms_users AS cu ON cu.id = stock.ordered_by
+            LEFT OUTER JOIN 
+                cms_users AS cu2 ON cu2.id = stock.picked_by
+            LEFT OUTER JOIN 
+                products AS p ON p.id = stock.product_id
+            LEFT OUTER JOIN 
+                locations AS l ON l.id = stock.location_id
+            LEFT OUTER JOIN 
+                genders AS g ON g.id = p.gender_id
+            LEFT OUTER JOIN 
+                sizes AS s ON s.id = stock.size_id
+            WHERE 
+                (NOT stock.deleted OR stock.deleted IS NULL) AND 
+                l.deleted IS NULL AND 
+                l.camp_id = '.$_SESSION['camp']['id'].
 
         ($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '').
 
-        ('ordered' == $_SESSION['filter2']['stock'] ? ' AND (stock.ordered OR stock.picked) AND l.visible' : ('dispose' == $_SESSION['filter2']['stock'] ? ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible' : (!$_SESSION['filter2']['stock'] ? ' AND l.visible' : ''))).
+        $applied_filter2_query.
 
         ($_SESSION['filter3']['stock'] ? ' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')' : '').
 
         ($_SESSION['filter']['stock'] ? ' AND (stock.location_id = '.$_SESSION['filter']['stock'].')' : '').
-        ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : ''));
+        ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : '');
 
-        foreach ($data as $key => $value) {
-            /*
-                        if($data[$key]['oldbox']) {
-                            $data[$key]['oldbox'] = '<span class="hide">1</span><i class="fa fa-exclamation-triangle warning tooltip-this" title="This box hasn\'t been touched in 3 months or more and may be disposed"></i>';
-                        } else {
-                            $data[$key]['oldbox'] ='<span class="hide">0</span>';
-                        }
-            */
-            if ($data[$key]['ordered']) {
-                $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
-            } elseif ($data[$key]['picked']) {
-                $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the shop by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['picked'])).'"></i>';
-            } else {
-                $data[$key]['order'] = '<span class="hide">0</span>';
+            $data = getlistdata($query);
+
+            foreach ($data as $key => $value) {
+                if ($data[$key]['ordered']) {
+                    $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
+                } elseif ($data[$key]['picked']) {
+                    $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the shop by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['picked'])).'"></i>';
+                } else {
+                    $data[$key]['order'] = '<span class="hide">0</span>';
+                }
             }
-        }
 
-        foreach ($data as $key => $d) {
-            ++$totalboxes;
-            $totalitems += $d['items'];
-        }
+            $totalboxes = 0;
+            $totalitems = 0;
+            foreach ($data as $key => $d) {
+                ++$totalboxes;
+                $totalitems += $d['items'];
+            }
 
-        addcolumn('text', 'Box ID', 'box_id');
-        addcolumn('text', 'Product', 'product');
-        addcolumn('text', 'Gender', 'gender');
-        addcolumn('text', 'Size', 'size');
-        addcolumn('text', 'Comments', 'shortcomment');
-        addcolumn('text', 'Items', 'items');
-        addcolumn('text', 'Location', 'location');
-        // 		addcolumn('html','&nbsp;','oldbox');
-        addcolumn('html', '&nbsp;', 'order');
+            addcolumn('text', 'Box ID', 'box_id');
+            addcolumn('text', 'Product', 'product');
+            addcolumn('text', 'Gender', 'gender');
+            addcolumn('text', 'Size', 'size');
+            addcolumn('text', 'Comments', 'shortcomment');
+            addcolumn('text', 'Items', 'items');
+            addcolumn('text', 'Location', 'location');
+            addcolumn('text', 'Age', 'boxage');
+            addcolumn('html', '&nbsp;', 'order');
 
-        listsetting('allowsort', true);
-        listsetting('allowcopy', false);
-        listsetting('add', 'Add');
+            listsetting('allowsort', true);
+            listsetting('allowcopy', false);
+            listsetting('add', 'Add');
 
-        $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
-        addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
-        addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
-        addbutton('qr', 'Make label', ['icon' => 'fa-print']);
-        addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
-        addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
+            $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+            addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
+            addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
+            addbutton('qr', 'Make label', ['icon' => 'fa-print']);
+            addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
+            addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
 
-        $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
-        $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
+            $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
+            $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
 
-        //dump($data);
-
-        $cmsmain->assign('data', $data);
-        $cmsmain->assign('listconfig', $listconfig);
-        $cmsmain->assign('listdata', $listdata);
-        $cmsmain->assign('include', 'cms_list.tpl');
-    } else {
-        switch ($_POST['do']) {
+            $cmsmain->assign('data', $data);
+            $cmsmain->assign('listconfig', $listconfig);
+            $cmsmain->assign('listdata', $listdata);
+            $cmsmain->assign('include', 'cms_list.tpl');
+        } else {
+            switch ($_POST['do']) {
             case 'movebox':
                 $ids = explode(',', $_POST['ids']);
+                $count = 0;
                 foreach ($ids as $id) {
                     $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $id]);
 
@@ -176,8 +234,10 @@
                 break;
         }
 
-        $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
+            $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
-        echo json_encode($return);
-        die();
+            echo json_encode($return);
+            die();
+        }
     }
+);

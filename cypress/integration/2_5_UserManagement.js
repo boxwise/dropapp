@@ -1,28 +1,15 @@
 const deactivateTestUserName = "BrowserTestUser_DeactivateTest";
+const USER_DEACTVATE_REQUEST = "do=delete"
+const USER_DEACTVATE_RESPONSE = "Item deleted";
+const USER_REACTVATE_REQUEST = "do=undelete";
+const USER_REACTVATE_RESPONSE = "Item recovered";
 
 describe('User management', () => {
     beforeEach(function () {
+        cy.setupAjaxActionHook();
         cy.loginAsAdmin();
         cy.visit('/?action=cms_users');
     });
-
-    function getUserRow(name){
-        return cy.get('tr').contains(name);
-    }
-
-    function checkUserCheckboxByName(name){
-        getUserRow(name).parent().parent().parent().within(() => {
-            cy.get("input[type='checkbox']").check();
-        });
-    }
-
-    function getDeactivateButton(){
-        return cy.get("button[data-testid='list-delete-button']");
-    }
-
-    function getConfirmActionButton(){
-        return cy.get("a[data-apply='confirmation']");
-    }
 
     function getCancelAction(){
         return cy.get("a[data-dismiss='confirmation']");
@@ -41,27 +28,29 @@ describe('User management', () => {
     }
 
     it('Deactivate & reactivate user', () => {
-        checkUserCheckboxByName(deactivateTestUserName);
-        getDeactivateButton().should('be.visible');
-        getDeactivateButton().click();
-        getConfirmActionButton().should('be.visible');
+        cy.checkGridCheckboxByText(deactivateTestUserName);
+        cy.getListDeleteButton().should('be.visible');
+        cy.getListDeleteButton().click();
+        cy.getConfirmActionButton().should('be.visible');
         getCancelAction().should('be.visible');
         getCancelAction().click();
-        getConfirmActionButton().should('not.exist');
-        getDeactivateButton().click();
-        getConfirmActionButton().click();
+        cy.getConfirmActionButton().should('not.exist');
+        cy.getListDeleteButton().click();
+        cy.getConfirmActionButton().click();
+        cy.waitForAjaxAction(USER_DEACTVATE_REQUEST, USER_DEACTVATE_RESPONSE);
         getDeactivatedUsersTab().click();
         getDeactivatedUsersTab().should('have.class', 'active')
-        getUserRow(deactivateTestUserName).should('exist');
-        checkUserCheckboxByName(deactivateTestUserName);
+        cy.getRowWithText(deactivateTestUserName).should('exist');
+        cy.checkGridCheckboxByText(deactivateTestUserName);
         getReactivateButton().click();
-        getConfirmActionButton().should('be.visible');
+        cy.getConfirmActionButton().should('be.visible');
         getCancelAction().should('be.visible');
         getCancelAction().click();
-        getConfirmActionButton().should('not.exist');
+        cy.getConfirmActionButton().should('not.exist');
         getReactivateButton().click();
-        getConfirmActionButton().click();
+        cy.getConfirmActionButton().click();
+        cy.waitForAjaxAction(USER_REACTVATE_REQUEST, USER_REACTVATE_RESPONSE);
         getActiveUsersTab().click();
-        getUserRow(deactivateTestUserName).should('exist');
+        cy.getRowWithText(deactivateTestUserName).should('exist');
     });
 });

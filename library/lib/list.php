@@ -208,6 +208,58 @@ function listUnDeleteAction($table, $id, $count = 0, $recursive = false)
     return $count;
 }
 
+function listExtend($table, $ids, $period)
+{
+    global $translate;
+
+    $hasExpireDate = db_fieldexists($table, 'valid_lastday');
+    $updatedValue = [];
+    foreach ($ids as $id) {
+        if ($hasExpireDate) {
+            $updatedCount = listExtendAction($table, $id, $period);
+            $count += $updatedCount;
+            if ($updatedCount > 0) {
+                $getUpdatedValue = 'SELECT valid_lastday from cms_users where id = '.$id;
+                $updatedValue[] = db_value($getUpdatedValue);
+            }
+        }
+    }
+    if ($count) {
+        return [true, $translate['cms_list_extendsuccess'], false, $updatedValue];
+    }
+
+    return [false, $translate['cms_list_extenderror'], false];
+}
+
+function listExtendAction($table, $id, $period)
+{
+    switch ($period) {
+        case 0:
+            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()),  INTERVAL 1 WEEK) WHERE id = :id;';
+
+            break;
+        case 1:
+            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()), INTERVAL 1 MONTH) WHERE id = :id;';
+
+            break;
+        case 2:
+            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()), INTERVAL 2 MONTH) WHERE id = :id;';
+
+            break;
+        case 3:
+        default:
+            $extendQuery = 'UPDATE '.$table." SET valid_lastday = '0000-00-00 00:00:00' WHERE id = :id;";
+    }
+    $result = db_query($extendQuery, ['id' => $id]);
+
+    $count += $result->rowCount();
+    if ($count) {
+        simpleSaveChangeHistory($table, $id, 'Record extended');
+    }
+
+    return $count;
+}
+
 function listCopy($table, $ids, $field)
 {
     global $translate;
@@ -334,6 +386,17 @@ function initlist()
         $_SESSION['search'][$action] = $listconfig['searchvalue'];
     } elseif ($_SESSION['search'][$action]) {
         $listconfig['searchvalue'] = $_SESSION['search'][$action];
+    }
+
+    if (isset($_POST['__multiplefilter'])) {
+        if (isset($_POST['multiplefilter'])) {
+            $listconfig['multiplefilter_selected'] = $_POST['multiplefilter'];
+            $_SESSION['multiplefilter'][$action] = $listconfig['multiplefilter_selected'];
+        } else {
+            unset($_SESSION['multiplefilter'][$action]);
+        }
+    } elseif ($_SESSION['multiplefilter'][$action]) {
+        $listconfig['multiplefilter_selected'] = $_SESSION['multiplefilter'][$action];
     }
 }
 
