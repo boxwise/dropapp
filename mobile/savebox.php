@@ -43,6 +43,28 @@ if ($new) {
     if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {
         db_query('UPDATE stock SET deleted = "0000-00-00 00:00" WHERE id = :id', ['id' => $_POST['id']]);
     }
+
+    // Tracker if box is moved from one base to another
+    $old_base = db_row('
+        SELECT 
+            o.label as organisation, b.name as base, b.id as base_id
+        FROM 
+            stock s
+        LEFT JOIN 
+            locations l ON l.id=s.location_id
+        LEFT JOIN 
+            camps b ON b.id =l.camp_id
+        LEFT JOIN 
+            organisations o ON o.id=b.organisation_id
+        WHERE 
+            s.id = :id', ['id' => $_POST['id']]
+    );
+    $new_base = ['organisation' => $_SESSION['organisation']['label'], 'base' => $_SESSION['camp']['name'], 'base_id' => $_SESSION['camp']['id']];
+    if ($old_base != $new_base) {
+        $message = 'Box moved from '.($old_base['organisation'] != $new_base['organisation'] ? 'organisation '.$old_base['organisation'].' to organisation '.$new_base['organisation'] : 'base '.$old_base['base'].' to base '.$new_base['base'].' of organisation '.$new_base['organisation']);
+        simpleSaveChangeHistory('stock', $box['id'], $message);
+        trigger_error($message);
+    }
 }
 
 // keys of POST to be saved
