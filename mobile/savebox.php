@@ -45,7 +45,8 @@ if ($new) {
     }
 
     // Tracker if box is moved from one base to another
-    $old_base = db_row('
+    $old_base = db_row(
+        '
         SELECT 
             o.label as organisation, b.name as base, b.id as base_id
         FROM 
@@ -57,7 +58,8 @@ if ($new) {
         LEFT JOIN 
             organisations o ON o.id=b.organisation_id
         WHERE 
-            s.id = :id', ['id' => $_POST['id']]
+            s.id = :id',
+        ['id' => $_POST['id']]
     );
     $new_base = ['organisation' => $_SESSION['organisation']['label'], 'base' => $_SESSION['camp']['name'], 'base_id' => $_SESSION['camp']['id']];
     if ($old_base != $new_base) {
