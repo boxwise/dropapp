@@ -1,10 +1,10 @@
 dispatch:
-- url: "staging.boxwise.co/api/*"
-  service: api-staging
-- url: "demo.boxwise.co/api/*"
-  service: api-demo
-- url: "app.boxwise.co/api/*"
-  service: api-production
+- url: "staging.boxwise.co/v2*"
+  service: v2-staging
+- url: "demo.boxwise.co/v2*"
+  service: v2-demo
+- url: "app.boxwise.co/v2*"
+  service: v2-production
 - url: "staging.boxwise.co/*"
   service: default
 - url: "demo.boxwise.co/*"

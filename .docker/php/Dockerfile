@@ -1,4 +1,4 @@
-FROM php:7.2.2-apache
+FROM php:7.4-apache
 # enable mod_rewrite
 RUN a2enmod rewrite
 # PHP extensions

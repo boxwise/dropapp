@@ -322,6 +322,30 @@ $(function() {
             .minDate(MIN_VALID_DATE);
     });
 
+    // ColorPicker https://seballot.github.io/
+    var $colorPicker = $('#colorPicker');
+    if ($colorPicker.length) {
+        debugger;
+        $chosenColor = $colorPicker[0].value;
+        if (!$chosenColor.length){
+            $chosenColor = '#f37167';
+        }
+        $colorPicker.spectrum({
+            color: $chosenColor,
+            type: "component",
+            showPalette: "false",
+            showPaletteOnly: "true",
+            togglePaletteOnly: "true",
+            hideAfterPaletteSelect: "true",
+            showInput: "true",
+            showInitial: "true",
+            showAlpha: "false",
+            allowEmpty: "false",
+            preferredFormat: "hex",
+            palette: [["#f37167", "#aacfe3", "#f8aa9e", "#315c88", "#f4e6a0", "#d89016" ]]
+          });
+    }
+
     // select2, more info: http://ivaynberg.github.io/select2/
     $(".select2").each(function() {
         var el = $(this);
@@ -786,7 +810,6 @@ function initiateList() {
                                             break;
                                         case "extendActive":
                                             $.each( allTargets, function( key, value ) {
-                                                debugger;
                                                 if (result.data[key] === "0000-00-00"){
                                                     $(value).find('.list-column-valid_lastday')[0].innerText = "";  // empty if expiry date isn't set at all
                                                 }

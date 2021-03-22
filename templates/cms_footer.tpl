@@ -1,4 +1,3 @@
-	<div id="loading"><div class="cp-spinner cp-round"></div></div>
     <script src="/assets/js/moment-with-locales.min.js"></script>
     <script src="/assets/js/minified.js"></script>
     <script src="/assets/js/jquery-ui-1.10.4.custom.min.js"></script>

@@ -33,7 +33,7 @@ function logout($redirect = false)
     header('Location: https://'.$settings['auth0_domain'].'/v2/logout', true, 301); //$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
 }
 
-function check_valid_from_until_date($valid_from, $valid_until)
+function check_valid_from_until_date($valid_from, $valid_until, $email)
 {
     $today = new DateTime();
     $success = true;

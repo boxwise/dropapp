@@ -1,6 +1,6 @@
-const MIN_VALID_DATE = new Date('January 1, 1900 00:00:00');
+const MIN_VALID_DATE = new Date("January 1, 1900 00:00:00");
 
-$(document).ready(function() {
+$(document).ready(function () {
     // Notification throught the redirect command
     var parts = window.location.search.substr(1).split("&");
     var $_GET = {};
@@ -11,12 +11,12 @@ $(document).ready(function() {
     if ($_GET["warning"]) {
         var n = noty({
             text: $_GET["message"],
-            type: "error"
+            type: "error",
         });
     } else if ($_GET["message"]) {
         var n = noty({
             text: $_GET["message"],
-            type: "success"
+            type: "success",
         });
     }
 
@@ -26,24 +26,24 @@ $(document).ready(function() {
             type: "post",
             url: "ajax.php?file=checkusersmenu",
             dataType: "json",
-            success: function(result) {
+            success: function (result) {
                 AjaxCheckSuccess(result);
-            
+
                 if (!result.showusermenu) {
                     $(".menu_cms_users").hide();
                 }
             },
-            error: AjaxError
+            error: AjaxError,
         });
     }
 });
 
-$(function() {
-    $(".bar").click(function(e) {
+$(function () {
+    $(".bar").click(function (e) {
         $("body").toggleClass("different-view");
     });
 
-    $(".laundry-showhide").click(function(e) {
+    $(".laundry-showhide").click(function (e) {
         i = $(this).data("day");
         $("#laundry-table-" + i).toggleClass("hidden");
         $(".icon-close-" + i).toggleClass("hidden");
@@ -54,82 +54,98 @@ $(function() {
     // http://keith-wood.name/signature.html
     old = $("#signaturefield").val();
     // Set old for beneficiaries without a signature
-    if (old==="") old={"lines":[]};
+    if (old === "") old = { lines: [] };
     // disable signature field if old signature exis
-   
+
     $("#sig").signature({
-        change: function(event, ui) {
+        change: function (event, ui) {
             //change hidden approvalsigned field
-            $("#field_approvalsigned").prop("checked", !$("#sig").signature("isEmpty"));
+            $("#field_approvalsigned").prop(
+                "checked",
+                !$("#sig").signature("isEmpty")
+            );
             // field for signature date
-            if (!$("#sig").signature("isEmpty") && ($('#field_date_of_signature').val() == '0000-00-00 00:00:00')) {
-                $("#field_date_of_signature").val((new Date()).toISOString().slice(0, 19).replace('T', ' '));
+            if (
+                !$("#sig").signature("isEmpty") &&
+                $("#field_date_of_signature").val() == "0000-00-00 00:00:00"
+            ) {
+                $("#field_date_of_signature").val(
+                    new Date().toISOString().slice(0, 19).replace("T", " ")
+                );
             }
-        }
+        },
     });
 
     $("#sig").signature({
         color: "#0000ff",
         guideline: true,
         syncField: "#signaturefield",
-        syncFormat: "JSON"
+        syncFormat: "JSON",
     });
 
     $("#sig").signature("draw", old);
 
-    $("#sig").signature({disabled: !$("#sig").signature("isEmpty")});
+    $("#sig").signature({ disabled: !$("#sig").signature("isEmpty") });
 
-    $("#clear").click(function() {
-        $("#sig").signature('enable');
+    $("#clear").click(function () {
+        $("#sig").signature("enable");
         $("#sig").signature("clear");
-        $("#field_date_of_signature").val('0000-00-00 00:00:00')
+        $("#field_date_of_signature").val("0000-00-00 00:00:00");
         return false;
     });
 
     if ($("#field_valid_firstday_datepicker").length) {
-        $("#field_valid_firstday_datepicker").data("DateTimePicker").useCurrent(false);
-        let today = new Date(Date.now());
-        today.setHours(0,0,0,0)
-        $("#field_valid_firstday_datepicker").data("DateTimePicker").minDate(today);
-    }
-    if ($("#field_valid_lastday_datepicker").length) {
-        $("#field_valid_lastday_datepicker").data("DateTimePicker").useCurrent(false);
-        let today = new Date(Date.now());
-        today.setHours(0,0,0,0)
-        $("#field_valid_lastday_datepicker").data("DateTimePicker").minDate(today);
-    }
-
-    $("#field_valid_firstday_datepicker").on("dp.change", function(e) {
-        var today = new Date(Date.now());
-        today.setHours(0,0,0,0)
-        field_date = $("#field_valid_lastday_datepicker").data("DateTimePicker").date()
-        $("#field_valid_lastday_datepicker")
-            .data("DateTimePicker")
-            .minDate((today > e.date._d) ? today: e.date._d)
-        if (field_date)
-        {
-            if (field_date < e.date._d) {
-                $("#field_valid_lastday_datepicker").data("DateTimePicker")
-                    .clear()
-            }
-        }
-    })
-    $("#field_valid_lastday_datepicker").on("dp.change", function(e) {
         $("#field_valid_firstday_datepicker")
             .data("DateTimePicker")
+            .useCurrent(false);
+        let today = new Date(Date.now());
+        today.setHours(0, 0, 0, 0);
+        $("#field_valid_firstday_datepicker")
+            .data("DateTimePicker")
+            .minDate(today);
+    }
+    if ($("#field_valid_lastday_datepicker").length) {
+        $("#field_valid_lastday_datepicker")
+            .data("DateTimePicker")
+            .useCurrent(false);
+        let today = new Date(Date.now());
+        today.setHours(0, 0, 0, 0);
+        $("#field_valid_lastday_datepicker")
+            .data("DateTimePicker")
+            .minDate(today);
+    }
+
+    $("#field_valid_firstday_datepicker").on("dp.change", function (e) {
+        var today = new Date(Date.now());
+        today.setHours(0, 0, 0, 0);
+        field_date = $("#field_valid_lastday_datepicker")
+            .data("DateTimePicker")
+            .date();
+        $("#field_valid_lastday_datepicker")
+            .data("DateTimePicker")
+            .minDate(today > e.date._d ? today : e.date._d);
+        if (field_date) {
+            if (field_date < e.date._d) {
+                $("#field_valid_lastday_datepicker")
+                    .data("DateTimePicker")
+                    .clear();
+            }
+        }
+    });
+    $("#field_valid_lastday_datepicker").on("dp.change", function (e) {
+        $("#field_valid_firstday_datepicker").data("DateTimePicker");
     });
 });
 
-
 //limit date of beneficiary birth to max today
-$(document).ready(function() {
+$(document).ready(function () {
     if ($("#field_date_of_birth_datepicker").length) {
         var DateValue = $("#field_date_of_birth").val();
         var date = new Date();
         $("#field_date_of_birth_datepicker")
             .data("DateTimePicker")
-            .maxDate(date.toLocaleDateString('en-GB'))
-            .viewMode('years');
+            .maxDate(date.toLocaleDateString("en-GB"))
+            .viewMode("years");
         $("#field_date_of_birth").val(DateValue);
     }
 });
@@ -141,48 +157,53 @@ function offsetAnchor() {
     }
 }
 
-function AjaxCheckSuccess(result){
-        if (result.message){
-            var n = noty({
-                text: result.message,
-                type: result.success ? "success" : "error"
-                });
-        }
-        if (result.redirect){
-            if (result.message){
-            setTimeout(function() {
-            execReload(result.redirect);
+function AjaxCheckSuccess(result) {
+    if (result.message) {
+        var n = noty({
+            text: result.message,
+            type: result.success ? "success" : "error",
+        });
+    }
+    if (result.redirect) {
+        if (result.message) {
+            setTimeout(function () {
+                execReload(result.redirect);
             }, 1500);
-            } else {
+        } else {
             execReload(result.redirect);
-            }
         }
+    }
 
-        if (result.action) {
-            eval(result.action);
-            }
-        if (typeof result.success == 'undefined') {
-            var n = noty({
-                text: "Something went wrong - please inform your coordinator.",
-                type: "error"
-                });
-        }
-
-
+    if (result.action) {
+        eval(result.action);
+    }
+    if (typeof result.success == "undefined") {
+        var n = noty({
+            text: "Something went wrong - please inform your coordinator.",
+            type: "error",
+        });
+    }
 }
 
 function AjaxError(result) {
-    var n = noty({
-        text:
-            "Cannot connect to Boxtribute - please check your Internet connection.",
-        type: "error"
-    });
+    if ([0, 404, 408, 429].includes(result.status)) {
+        var n = noty({
+            text:
+                "Cannot connect to Boxtribute - please check your Internet connection.",
+            type: "error",
+        });
+    } else {
+        var n = noty({
+            text: "Something went wrong - please inform your coordinator.",
+            type: "error",
+        });
+    }
 }
 // Captures click events of all <a> elements with href starting with #
-$(document).on("click", 'a[href^="#"]', function(event) {
+$(document).on("click", 'a[href^="#"]', function (event) {
     // Click events are captured before hashchanges. Timeout
     // causes offsetAnchor to be called after the page jump.
-    window.setTimeout(function() {
+    window.setTimeout(function () {
         offsetAnchor();
     }, 0);
 });
@@ -194,9 +215,7 @@ function cms_form_valutaCO(field) {
     if (value.substr(0, 2) == "� ") value = value.replace(/\./g, "");
     if (value.substr(0, 1) == "�") value = value.substr(1);
     if (value.substr(0, 1) == " ") value = value.substr(1);
-    value = parseFloat(value.replace(/,/g, "."))
-        .toFixed(2)
-        .replace(/\./g, ",");
+    value = parseFloat(value.replace(/,/g, ".")).toFixed(2).replace(/\./g, ",");
     if (value == "NaN") value = "";
     if (value == "") {
         $("#field_" + field).val();
@@ -205,13 +224,13 @@ function cms_form_valutaCO(field) {
     }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     if ($("#field_laundryblock").length) {
         if (!$("#field_laundryblock").is(":checked"))
             $("#div_laundrycomment").hide();
     }
 });
-$("#field_laundryblock").click(function() {
+$("#field_laundryblock").click(function () {
     if ($(this).is(":checked")) {
         $("#div_laundrycomment").show();
     } else {
@@ -229,9 +248,7 @@ function toggleSomething() {
 }
 
 function toggleDiscountFields() {
-    var selectedVal = $("#field_discount_type")
-        .find(":selected")
-        .val();
+    var selectedVal = $("#field_discount_type").find(":selected").val();
 
     $("#div_discount_amount").addClass("hidden");
     $("#div_discount_perc").addClass("hidden");
@@ -260,10 +277,10 @@ function updateLaundry(field, offset) {
             data: {
                 people_id: value,
                 offset: offset,
-                timeslot: timeslot
+                timeslot: timeslot,
             },
             dataType: "json",
-            success: function(result) {
+            success: function (result) {
                 var url = window.location;
                 var action = $("body").data("action");
                 if (result.success) {
@@ -273,27 +290,27 @@ function updateLaundry(field, offset) {
                 }
                 AjaxCheckSuccess(result);
             },
-            error: AjaxError
+            error: AjaxError,
         });
     }
 }
 
-function selectFamily(field,  reload, target) {
+function selectFamily(field, reload, target) {
     value = $("#field_" + field).val();
-    product =  $("#field_product_id").val();
+    product = $("#field_product_id").val();
 
     $("#add-to-cart-button").prop("disabled", !(product && value));
     var queryDict = {};
     location.search
         .substr(1)
         .split("&")
-        .forEach(function(item) {
+        .forEach(function (item) {
             queryDict[item.split("=")[0]] = item.split("=")[1];
         });
 
     if (value) {
         if (queryDict["people_id"] != value && reload)
-            window.location = "?action="+target+"&people_id=" + value;
+            window.location = "?action=" + target + "&people_id=" + value;
 
         if (value != $("#div_purch").data("listid")) {
             $("#div_purch").hide();
@@ -303,12 +320,12 @@ function selectFamily(field,  reload, target) {
         $("body").addClass("loading");
         $.ajax({
             type: "post",
-            url: "ajax.php?file="+target,
+            url: "ajax.php?file=" + target,
             data: {
-                people_id: value
+                people_id: value,
             },
             dataType: "json",
-            success: function(result) {
+            success: function (result) {
                 var url = window.location;
                 var action = $("body").data("action");
                 window.history.pushState(
@@ -330,8 +347,7 @@ function selectFamily(field,  reload, target) {
                 }
                 AjaxCheckSuccess(result);
             },
-            error: AjaxError
-
+            error: AjaxError,
         });
     } else {
         $("#dropcredit").data({ dropCredit: 0 });
@@ -339,15 +355,17 @@ function selectFamily(field,  reload, target) {
     }
 
     //clear cart
-    sessionStorage.setItem('shoppingCart', JSON.stringify([]));
+    sessionStorage.setItem("shoppingCart", JSON.stringify([]));
 }
 
 function selectFamilyhead(field, targetfield) {
     value = $("#field_" + field).val();
     if (value === "") {
-        $("#field_"+targetfield).val("");
+        $("#field_" + targetfield).val("");
     } else {
-        $("#field_"+targetfield).val($("#field_"+field+ " option[value=" + value + "]").data("value2"));
+        $("#field_" + targetfield).val(
+            $("#field_" + field + " option[value=" + value + "]").data("value2")
+        );
     }
 }
 
@@ -366,10 +384,10 @@ function getSizes() {
         type: "post",
         url: "ajax.php?file=getsizes",
         data: {
-            product_id: value
+            product_id: value,
         },
         dataType: "json",
-        success: function(result) {
+        success: function (result) {
             if (result.success) {
                 $("#field_size_id").html(result.html);
                 $("#field_size_id").trigger("change");
@@ -378,8 +396,7 @@ function getSizes() {
             }
             AjaxCheckSuccess(result);
         },
-        error: AjaxError
-
+        error: AjaxError,
     });
     /*
 	$('#field_size_id').html('<option>Something</option>');
@@ -430,7 +447,7 @@ function selectFood(field_array, dist_id_fieldval){
 }
 */
 
-$(".check-minmax").on("input", function(ev) {
+$(".check-minmax").on("input", function (ev) {
     var min = 0;
     var max = Number($(this).attr("placeholder"));
     var that = $(this);
@@ -439,7 +456,7 @@ $(".check-minmax").on("input", function(ev) {
         that.addClass("error");
     }
     setTimeout(
-        function(that, min, max) {
+        function (that, min, max) {
             if (that.val() < min) that.val(min).removeClass("error");
             if (that.val() > max) that.val(max).removeClass("error");
             $("#form-submit").prop("disabled", false);
@@ -452,7 +469,7 @@ $(".check-minmax").on("input", function(ev) {
 });
 
 // Delete button in cms_profile
-$(".delete-user").on("click", function(e) {
+$(".delete-user").on("click", function (e) {
     var el = $(this);
     e.preventDefault();
 
@@ -462,10 +479,10 @@ $(".delete-user").on("click", function(e) {
             singleton: true,
             popout: true,
             trigger: "manual",
-            onConfirm: function(e, element) {
+            onConfirm: function (e, element) {
                 element.data("confirmed", true).trigger("click");
                 e.preventDefault();
-            }
+            },
         },
         el.data()
     );
@@ -479,13 +496,13 @@ $(".delete-user").on("click", function(e) {
             type: "post",
             url: "ajax.php?file=deleteprofile",
             data: {
-                cms_user_id: el.data("id")
+                cms_user_id: el.data("id"),
             },
             dataType: "json",
-            success: function(result) {
+            success: function (result) {
                 AjaxCheckSuccess(result);
             },
-            error: AjaxError
+            error: AjaxError,
         });
     }
 });

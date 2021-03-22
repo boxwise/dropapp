@@ -13,6 +13,8 @@ const OK_BUTTON = "OK";
 const ITEM_RECOVERED = "Item recovered";
 const ITEM_DELETED = "Item deleted";
 const DEACTIVATE_BUTTON = "Deactivate";
+const USER_DEACTVATE_REQUEST = "do=delete"
+const USER_REACTVATE_REQUEST = "do=undelete";
 
 describe("2_7_DeactivatedUsers_Test", () => {
 
@@ -65,7 +67,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
         cy.clickOnElementByTypeAndTestId("button", "reactivate-cms-user");
         cy.checkElementIsVisibleByText("h3", ARE_YOU_SURE_POPUP);
         cy.clickOnElementBySelectorAndText("a", OK_BUTTON);
-        cy.waitForAjaxAction(ITEM_RECOVERED);
+        cy.waitForAjaxAction(USER_REACTVATE_REQUEST,ITEM_RECOVERED);
         
         cy.checkElementIsVisibleByText("span", ITEM_RECOVERED);
         cy.checkElementDoesNotExistByText("p", DELETED_USER_NAME);
@@ -77,7 +79,7 @@ describe("2_7_DeactivatedUsers_Test", () => {
         cy.checkGridCheckboxByText(DELETED_USER_NAME);
         cy.clickOnElementByTypeAndTestId("button", "list-delete-button");
         cy.clickOnElementBySelectorAndText("div.popover-content a", DEACTIVATE_BUTTON);
-        cy.waitForAjaxAction(ITEM_DELETED);
+        cy.waitForAjaxAction(USER_DEACTVATE_REQUEST,ITEM_DELETED);
        
         // test cancel button
         cy.visit('/?action=cms_users_deactivated');

@@ -827,6 +827,9 @@ tr td:first-child{
 tr.level-1 td:first-child{
 	border-left-width: 32px
 }
+tr.level-1 td:first-child.no-indent{
+	border-left-width: 0px
+}
 tr.level-2 td:first-child{
 	border-left-width: 64px
 }

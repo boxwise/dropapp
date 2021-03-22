@@ -81,7 +81,7 @@ jobs:
           version_order: creation" > phinx.yml
           # generate google app engine config for target environment
           sed 's/service: default/service: << parameters.serviceName >>/g' app.yaml > app-<< parameters.serviceName >>.yaml
-          if [ << parameters.serviceName >> == production ]; then echo -e "\ninstance_class: F2" >> app-production.yaml; fi;
+          if [ << parameters.serviceName >> == production ]; then echo -e "\ninstance_class: F4" >> app-production.yaml; fi;
       - run: |
           # get google credentials
           echo $GOOGLE_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
@@ -94,7 +94,7 @@ jobs:
           background: true
       - run: |
           # wait for cloud sql proxy to initialize
-          sleep 1s
+          sleep 3s
           cd workspace
           # apply db changes 
           echo "Migrating << parameters.serviceName >> database"
@@ -120,7 +120,10 @@ jobs:
 workflows:
   build-and-deploy:
     jobs:
-    - build
+    - build:
+        filters:  # required since `deploy-prod` has tag filters AND requires `build`
+          tags:
+            only: /^v.*/
     # baseUrl for cypress is set in cypress.json (currently staging.boxwise.co)
     - cypress/run:
         yarn: true
@@ -144,41 +147,34 @@ workflows:
         filters:
           branches:
             only: master
-    - build:
-        name: build-production
-        filters:
-          branches:
-            only: production
-          tags:
-            only: /^v.*/
-    - deploy:
+    - deploy:   # this will always run on any commit on production
         name: deploy-demo
         envVariablePrefix: BOXWISE_DEMO_
         serviceName: demo
         requires:
           - build
         filters:
-          branches:
-            only: production
           tags:
             only: /^v.*/
-    - deploy:
+          branches:
+            only: production
+    - deploy:   # this can only be triggered by a tag
         name: deploy-prod
         envVariablePrefix: BOXWISE_PROD_
         serviceName: production
         requires:
           - build
         filters:
-          branches:
-            only: production
           tags:
             only: /^v.*/
+          branches:
+            ignore: /.*/
     - create-sentry-release:
         name: create-sentry-release-for-production
         requires:
           - deploy-prod
         filters:
-          branches:
-            only: production
           tags:
             only: /^v.*/
+          branches:
+            ignore: /.*/
