@@ -18,14 +18,15 @@ services:
       - db_mysql
     volumes:
       - .:/var/www/html/
+      - ./.docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./.docker/php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
     ports:
       - "8100:80"
     environment:
       # WARNING: you do *not* want these environment variables set
       # in a production environment, as they enable remote
       # debugging
-      GOOGLE_CLOUD_PROJECT: DUMMY_ID 
-      XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9000 remote_enable=1 idekey=IDEA_DEBUG profiler_enable=1 profiler_output_dir=/tmp/xdebug-profiler
+      GOOGLE_CLOUD_PROJECT: DUMMY_ID
     stdin_open: true
     tty: true
 
