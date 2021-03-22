@@ -26,7 +26,7 @@ services:
       # WARNING: you do *not* want these environment variables set
       # in a production environment, as they enable remote
       # debugging
-      GOOGLE_CLOUD_PROJECT: dropapp-242214
+      GOOGLE_CLOUD_PROJECT: DUMMY_ID
     stdin_open: true
     tty: true
 
