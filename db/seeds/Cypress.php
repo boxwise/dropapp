@@ -153,8 +153,8 @@ class Cypress extends AbstractSeed
          	(100000005,'b1cf83ae73adfce0d14dbe81b53cb96b');");
 
         //------------------- stock
-        $this->execute("INSERT INTO `stock` (`id`, `box_id`, `product_id`, `size_id`,`items`,`location_id`,`qr_id`,`comments`,`created`,`created_by`) VALUES
-			(100000000, 328765, 1163, 68, 50, 100000002, 100000000, 'Cypress seed test box', '2015-01-01 11:15:32', 1),
-            (100000001, 235563, 1165, 68, 50, 100000005, 100000001, '50 dummy products', '2019-09-29 18:15:32', 1);");
+        $this->execute("INSERT INTO `stock` (`id`, `box_id`, `product_id`, `size_id`,`items`,`location_id`,`qr_id`,`comments`,`created`,`created_by`, `box_state_id`) VALUES
+			(100000000, 328765, 1163, 68, 50, 100000002, 100000000, 'Cypress seed test box', '2015-01-01 11:15:32', 1, 1),
+            (100000001, 235563, 1165, 68, 50, 100000005, 100000001, '50 dummy products', '2019-09-29 18:15:32', 1, 1);");
     }
 }
