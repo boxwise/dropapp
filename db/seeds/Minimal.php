@@ -151,14 +151,16 @@ class Minimal extends AbstractSeed
             (8,'Baby',18,12),
             (9,'Other',6,NULL),
             (10,'Hygiene',2,NULL),
-            (11,'Food',3,NULL),
+            (11,'Food & Kitchen',3,NULL),
             (12,'Clothing',1,NULL),
             (13,'Equipment',4,NULL),
             (14,'Toys & Games',41,13),
             (15,'Medication',5,9),
             (16,'Fresh food',31,11),
             (17,'Dry food',32,11),
-			(18,'Books & Stationery',42,13);");
+			(18,'Books & Stationery',42,13),
+			(19,'Water',43,NULL),
+			(20,'Shelter',44,NULL);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- sizegroup
