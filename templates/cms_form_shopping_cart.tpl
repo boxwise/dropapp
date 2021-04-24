@@ -11,4 +11,5 @@
         </thead>
         </table>
     </div>
+    <hr />
 </div>
