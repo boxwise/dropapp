@@ -8,27 +8,32 @@ class MakeBoxStateIdUnsigned extends AbstractMigration
     {
         $this->table('stock')
             ->dropForeignKey('box_state_id')
-            ->save();
+            ->save()
+        ;
 
         $this->table('locations')
             ->dropForeignKey('box_state_id')
-            ->save();
+            ->save()
+        ;
 
         $this->table('box_state')->changeColumn('id', 'integer', ['signed' => false])
-              ->save();
+            ->save()
+        ;
 
         $this->table('stock')
             ->changeColumn('box_state_id', 'integer', ['signed' => false])
             ->addForeignKey('box_state_id', 'box_state', 'id', [
-            'delete' => 'RESTRICT', 'update' => 'CASCADE',
-        ])
-            ->save();
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->save()
+        ;
 
         $this->table('locations')->addForeignKey('box_state_id', 'box_state', 'id', [
             'delete' => 'RESTRICT', 'update' => 'CASCADE',
         ])
             ->changeColumn('box_state_id', 'integer', ['signed' => false])
-            ->save();
+            ->save()
+        ;
     }
 
     /**
