@@ -65,9 +65,33 @@
         }
     }
 
-    $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
     verify_campaccess_people($id);
     verify_deletedrecord($table, $id);
+
+    $data = db_row('
+        SELECT 
+            people.*,
+            DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age,
+            GROUP_CONCAT(tags.label) AS taglabels,
+            GROUP_CONCAT(tags.color) AS tagcolors
+        FROM 
+            people
+        LEFT JOIN
+            people_tags ON people_tags.people_id = people.id
+        LEFT JOIN
+            tags ON tags.id = people_tags.tag_id 
+        WHERE 
+            people.id = :id
+        GROUP BY
+            people.id', ['id' => $id]);
+
+    if ($data['taglabels']) {
+        $taglabels = explode(',', $data['taglabels']);
+        $tagcolors = explode(',', $data['tagcolors']);
+        foreach ($taglabels as $tagkey => $taglabel) {
+            $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+        }
+    }
 
     if (!$id) {
         $data['visible'] = 1;
@@ -119,6 +143,9 @@
             ORDER BY 
                 people.parent_id, people.seq', ['id' => $sideid]);
         foreach ($side['people'] as $key => $person) {
+            if ($person['id'] == $id) {
+                $side['people'][$key]['hide'] = true;
+            }
             if ($side['people'][$key]['taglabels']) {
                 $taglabels = explode(',', $side['people'][$key]['taglabels']);
                 $tagcolors = explode(',', $side['people'][$key]['tagcolors']);
@@ -150,15 +177,14 @@
         addfield('html', '', $htmlaside, ['aside' => true, 'asidetop' => true]);
     }
 
-    addfield('line', '', '', ['aside' => true]);
-
     addfield('hidden', 'camp_id', 'camp_id');
-    addfield('select', 'Familyhead', 'parent_id', ['multiple' => false, 'tab' => 'people', 'tooltip' => 'If noone is selected, the person is a familyhead.', 'onchange' => 'selectFamilyhead("parent_id","container")', 'query' => '
+    addfield('select', 'Familyhead', 'parent_id', ['multiple' => false, 'tab' => 'people', 'tooltip' => 'Leave item blank if this beneficiary is the family head.', 'onchange' => 'selectFamilyhead("parent_id","container")', 'query' => '
 		SELECT p.id AS value, p.container AS value2, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled 
 		FROM people AS p 
 		WHERE parent_id IS NULL AND (NOT p.deleted OR p.deleted IS NULL) AND camp_id = '.$_SESSION['camp']['id'].' 
 		GROUP BY p.id 
 		ORDER BY label']);
+    addfield('line', '', '', ['tab' => 'people']);
     addfield('text', 'Firstname', 'firstname', ['testid' => 'firstname_id', 'tab' => 'people', 'required' => true]);
     addfield('text', 'Surname', 'lastname', ['testid' => 'lastname_id', 'tab' => 'people']);
     addfield('text', $_SESSION['camp']['familyidentifier'], 'container', ['testid' => 'container_id', 'tab' => 'people', 'required' => true, 'onchange' => 'capitalize("container")']);
@@ -262,9 +288,10 @@
             }
         }
     }
-    addfield('created', 'Created', 'created', ['aside' => true]);
+
     if ($id) {
-        addformbutton('submitandedit', $translate['cms_form_save']);
+        addfield('line', '', '', ['aside' => true]);
+        addfield('created', 'Created', 'created', ['aside' => true]);
     } else {
         addformbutton('submitandnew', 'Save and new');
     }

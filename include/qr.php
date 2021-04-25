@@ -50,6 +50,7 @@
         // open the template
         $cmsmain->assign('include', 'cms_form.tpl');
         $cmsmain->assign('title', 'Print Box Labels');
+        addfield('html', '', '<p>To register a new box to the system, scan the QR code on the label and follow the instructions from the mobile site.</p>');
 
         $data['count'] = 1;
         $data['fulllabel'] = 1;
@@ -67,8 +68,6 @@
             addfield('number', 'How many box labels do you need?', 'count', ['min' => 0, 'max' => 999, 'testid' => 'numberOfLabelsInput']);
         }
         addfield('checkbox', 'Make big labels including fields for box number and contents', 'fulllabel', ['testid' => 'field_fulllabel']);
-
-        addfield('html', '', '<p style="color:#000000"> To register a new box to the system, scan the QR code on the label and follow the instructions from the mobile site.', ['aside' => true, 'asidetop' => true]);
 
         // place the form elements and data in the template
         $cmsmain->assign('data', $data);

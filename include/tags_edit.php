@@ -28,7 +28,6 @@
     addfield('text', 'Name', 'label', ['required' => true]);
     addfield('color', 'Color', 'color', ['required' => true]);
     addfield('textarea', 'Description', 'description');
-    addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);
 
     $cmsmain->assign('include', 'cms_form.tpl');
