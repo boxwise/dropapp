@@ -2,8 +2,8 @@
 	<div class="header-top-inner container-fluid" data-testid="dropapp-header">
  		<div class="pull-left">
 			<a href="#" class="menu-btn visible-xs visible-sm visible-md"><i class="fa fa-ellipsis-v"></i></a>
-			<a href="/" class="boxtributeLogoLink"><img class="visible-xs visible-sm visible-md" src="../assets/img/boxtribute_small.png" width="35"></img></a>
-			<a href="/" class="boxtributeLogoLink"><img class="visible-lg" src="../assets/img/boxtribute.png" width="120"></img></a>
+			<a href="/" class="boxtributeLogoLink"><img class="visible-xs visible-sm visible-md" src="../assets/img/boxtribute_small.png" height="40"></img></a>
+			<a href="/" class="boxtributeLogoLink"><img class="visible-lg" src="../assets/img/boxtribute.png" height="40"></img></a>
 			{* <a href="/" class="brand">{$translate['site_name']}</a> *}
  		</div>
 		<span class="orgCampHeaderSpan">
