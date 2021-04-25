@@ -49,13 +49,13 @@
     } else {
         // open the template
         $cmsmain->assign('include', 'cms_form.tpl');
-        $cmsmain->assign('title', 'New QR Box Labels');
+        $cmsmain->assign('title', 'Print Box Labels');
 
         $data['count'] = 1;
         $data['fulllabel'] = 1;
         $data['hidecancel'] = true;
 
-        $translate['cms_form_submit'] = 'Make labels';
+        $translate['cms_form_submit'] = 'Print label(s)';
         $cmsmain->assign('translate', $translate);
 
         if ($_GET['label']) {
@@ -64,9 +64,11 @@
             addfield('hidden', '', 'label');
         } else {
             $data['count'] = 2;
-            addfield('number', 'Number of labels', 'count', ['min' => 0, 'max' => 999, 'testid' => 'numberOfLabelsInput']);
+            addfield('number', 'How many box labels do you need?', 'count', ['min' => 0, 'max' => 999, 'testid' => 'numberOfLabelsInput']);
         }
         addfield('checkbox', 'Make big labels including fields for box number and contents', 'fulllabel', ['testid' => 'field_fulllabel']);
+
+        addfield('html', '', '<p style="color:#000000"> To register a new box to the system, scan the QR code on the label and follow the instructions from the mobile site.', ['aside' => true, 'asidetop' => true]);
 
         // place the form elements and data in the template
         $cmsmain->assign('data', $data);
