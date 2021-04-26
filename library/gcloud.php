@@ -23,8 +23,11 @@ function registerGoogleCloudServices($projectId)
     Tracer::start($exporter, [
         'sampler' => $sampler,
     ]);
-    Mysql::load();
-    PDO::load();
+
+    if (extension_loaded('opencensus')) {
+        Mysql::load();
+        PDO::load();
+    }
 
     $client = new StorageClient(['projectId' => $projectId]);
     $client->registerStreamWrapper();
