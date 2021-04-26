@@ -1,146 +1,81 @@
 <?php
 
-function login($email, $pass, $autologin, $mobile = false)
-{
-    global $settings;
-    $pass = md5($pass);
+require 'vendor/autoload.php';
+use Auth0\SDK\Auth0;
 
-    $user = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)', ['email' => $email]);
-
-    if ($user) { //e-mailaddress exists in database
-        if ($user['pass'] == $pass) { // password is correct
-            // Check if account is not expired
-            $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'], $user['email']);
-            $success = $in_valid_dates['success'];
-            $message = $in_valid_dates['message'];
-
-            if ($success) {
-                loadSessionData($user);
-
-                db_query('UPDATE cms_users SET lastlogin = NOW() WHERE id = :id', ['id' => $user['id']]);
-                logfile(($mobile ? 'Mobile user ' : 'User ').'logged in with '.$_SERVER['HTTP_USER_AGENT']);
-
-                if (isset($autologin)) {
-                    setcookie('autologin_user', $email, time() + (3600 * 24 * 90), '/');
-                    setcookie('autologin_pass', $pass, time() + (3600 * 24 * 90), '/');
-                } else {
-                    setcookie('autologin_user', null, time() - 3600, '/');
-                    setcookie('autologin_pass', null, time() - 3600, '/');
-                }
-
-                if (isset($_GET['destination'])) {
-                    $redirect = urldecode($_GET['destination']);
-                } else {
-                    $redirect = '/?action=start';
-                }
-            }
-        } else { // password is not correct
-            $success = false;
-            $message = INCORRECT_LOGIN_ERROR;
-            $redirect = false;
-            $detailed_msg = 'Attempt to login with '.($mobile ? 'mobile and ' : '').' wrong password for '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
-        }
-    } else { // user not found
-        $success = false;
-        $redirect = false;
-        $deleted = db_value('SELECT email FROM cms_users WHERE email != "" AND email LIKE :email AND deleted Limit 1', ['email' => $email.'%']);
-        if ($deleted) {
-            $message = GENERIC_LOGIN_ERROR;
-            $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as deleted user '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
-        } else {
-            $message = UNKNOWN_EMAIL_LOGIN_ERROR;
-            $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as unknown user '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
-        }
-    }
-
-    return ['success' => $success, 'message' => $message, 'redirect' => $redirect];
-}
-
-function checksession()
+function authorize($settings, $mobile, $ajax)
 {
     global $settings;
     $result = ['success' => true];
+    $auth0 = new Auth0([
+        'domain' => $settings['auth0_domain'],
+        'client_id' => $settings['auth0_client_id'],
+        'client_secret' => $settings['auth0_client_secret'],
+        'redirect_uri' => $settings['auth0_redirect_uri'],
+    ]);
 
-    $user = false;
-    if (isset($_SESSION['user'])) { // a valid session exists
-        $user = db_row('SELECT * FROM cms_users WHERE id = :id', ['id' => $_SESSION['user']['id']]);
-    } elseif (isset($_COOKIE['autologin_user'])) { // a autologin cookie exists
-        $user = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND pass = :pass', ['email' => $_COOKIE['autologin_user'], 'pass' => $_COOKIE['autologin_pass']]);
-    }
-
-    // check if user was loaded
-    if ($user) {
-        // Check if account is not expired
-        $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'], $user['email']);
-        if (!$in_valid_dates['success']) {
-            $result['success'] = false;
-            $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
-            $result['message'] = $in_valid_dates['message'];
+    $userInfo = $auth0->getUser();
+    if (!$userInfo) {
+        if ($ajax) {
+            echo json_encode(['success' => false]);
+        } elseif ($mobile) {
+            $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/mobile.php']);
         } else {
+            $auth0->login();
+        }
+
+        return;
+    }
+    $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $_SESSION['auth0__user']['email']]);
+    if ($user) { // does user exist in the app db and in the auth0 db
+        if (check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'])) { // is the user account still valid?
             loadSessionData($user);
+        } else {
+            throw new Exception(GENERIC_LOGIN_ERROR);
         }
     } else {
-        $result['success'] = false;
-        $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
-        if (isset($_COOKIE['autologin_user'])) { //cookie is invalid
-            setcookie('autologin_user', null, time() - 3600, '/');
-            setcookie('autologin_pass', null, time() - 3600, '/');
-        }
+        throw new Exception('No user found connected to authenticated email!');
     }
-
-    return $result;
 }
 
-function logout($redirect = false)
+function logout()
 {
     global $settings;
 
-    setcookie('autologin_user', null, time() - 3600, '/');
-    setcookie('autologin_pass', null, time() - 3600, '/');
-
     session_unset();
     session_destroy();
-
-    if (!$redirect) {
-        $redirect = '?';
-    }
-    redirect($redirect);
+    $auth0 = new Auth0([
+        'domain' => $settings['auth0_domain'],
+        'client_id' => $settings['auth0_client_id'],
+        'client_secret' => $settings['auth0_client_secret'],
+        'redirect_uri' => $settings['auth0_redirect_uri'],
+    ]);
+    $auth0->logout();
+    // the auth0 client method
+    // $auth0->logout() simply clears local variables
+    // so we also redirect to auth0
+    redirect('https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
 }
 
-function check_valid_from_until_date($valid_from, $valid_until, $email)
+function check_valid_from_until_date($valid_from, $valid_until)
 {
     $today = new DateTime();
     $success = true;
-    $message = '';
 
     if ($valid_from && ('0000-00-00' != substr($valid_from, 0, 10))) {
         $valid_firstday = new DateTime($valid_from);
         if ($today < $valid_firstday) {
             $success = false;
-            $message = GENERIC_LOGIN_ERROR;
-            $detailed_msg = 'Attempt to login as pending user '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
         }
     }
     if ($valid_until && ('0000-00-00' != substr($valid_until, 0, 10))) {
         $valid_lastday = new DateTime($valid_until);
         if ($today > $valid_lastday) {
             $success = false;
-            $message = GENERIC_LOGIN_ERROR;
-            $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as expired user '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
         }
     }
 
-    return ['success' => $success, 'message' => $message];
+    return $success;
 }
 
 function sendlogindata($table, $ids)
