@@ -4,7 +4,7 @@ use OpenCensus\Trace\Tracer;
 
 Tracer::inSpan(
     ['name' => ('library/core.php')],
-    function () use ($login, $mobile, $ajax, &$checksession_result) {
+    function () use ($bypassAuthorization, $mobile, $ajax) {
         global $settings, $lan, $translate;
 
         if (!defined('LOADED_VIA_SINGLE_ENTRY_POINT')) {
@@ -54,13 +54,8 @@ Tracer::inSpan(
 
         // functions that are app specific but need to available globally
         require_once 'functions.php';
-
-        require_once 'lib/loginNotifications.php';
-
-        $checksession_result = (!$login ? checksession() : ['success' => true]); //check if a valid session exists; if none, redirect to loginpage
-        if (!$ajax && !$mobile && !$checksession_result['success']) {
-            // WARNING, this is an open redirect (security issue)
-            redirect($checksession_result['redirect'].(isset($checksession_result['message']) ? '&warning=1&message='.$checksession_result['message'] : ''));
+        if (!$bypassAuthorization) {
+            authorize($settings, $mobile, $ajax);
         }
     }
 );
