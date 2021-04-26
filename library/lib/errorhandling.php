@@ -7,7 +7,7 @@ use Google\Cloud\ErrorReporting\Bootstrap;
  */
 function boxwise_sentry_scope(Sentry\State\Scope $scope): void
 {
-    $session = $_SESSION;
+    $session = isset($_SESSION) ? $_SESSION : [];
     if (isset($_SESSION['user'])) {
         // Do not pass private data
         unset($session['user']['email'], $session['user']['naam'], $session['user']['pass']);

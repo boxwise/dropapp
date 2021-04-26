@@ -2,7 +2,6 @@
 
 // Check session
 $mobile = true;
-$checksession_result = [];
 require_once 'library/core.php';
 
 date_default_timezone_set('Europe/Athens');
@@ -12,11 +11,6 @@ $tpl = new Zmarty();
 
 if ('' != $_GET['logout']) {
     logout('/mobile.php');
-}
-
-// Hangle login form
-if ($_POST && 'login' == $_POST['action']) {
-    require_once 'mobile/login.php';
 }
 
 // new: fill the camp selection menu --------------------------------------------
@@ -42,16 +36,7 @@ if ($_GET['messageAnchorTarget']) {
 if ($_GET['messageAnchorTargetValue']) {
     $data['messageAnchorTargetValue'] = $_GET['messageAnchorTargetValue'];
 }
-
-// Forward to login
-if (!$checksession_result['success']) {
-    if ($checksession_result['message']) {
-        $data['message'] = $checksession_result['message'];
-        $data['warning'] = true;
-    }
-    $data['destination'] = $_SERVER['REQUEST_URI'];
-    $tpl->assign('include', 'mobile_login.tpl');
-} elseif (!$_SESSION['camp']['id']) {
+if (!$_SESSION['camp']['id']) {
     //No organisation selected for admin
     if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
         require_once 'mobile/selectorganisation.php';
