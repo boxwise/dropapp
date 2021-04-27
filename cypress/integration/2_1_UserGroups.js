@@ -3,24 +3,24 @@ const BrowserTestUserGroup_Coordinator = "BrowserTestUserGroup_Coordinator";
 const BrowserTestUserGroup_User = "BrowserTestUserGroup_User";
 const TestBase = "TestBase";
 const TestBaseOfAnotherOrg = "DummyTestBaseWithBoxes"
-const TestUserGroupFunctions = ["Boxes", "Checkout"];
+const TestUserGroupFunctions = ["Manage boxes", "Checkout"];
 
 // data from seed
 const AllFunctions = ['Free Shop', 'Admin','Users','Settings','Texts','Manage menu functions','Manage products',
-'Checkout','Boxes','Give tokens to all','Sales reports','Inventory','Fancy graphs',
-'Stockroom','Generate market schedule','Generate QR labels','Actions','Warehouses','Containers List',
+'Checkout','Manage boxes','Give tokens to all','Sales reports','Inventory','Fancy graphs',
+'Stockroom','Generate market schedule','Print box labels','Actions','Warehouses','Containers List',
 'Stock Overview','Manage beneficiaries','Hidden menu items','Start page','Give tokens to selected families',
 'User profile','Exit login as','Sales List Download','Insight','General stock','Lists','Services',
 'Bicycles / Sport','Borrow edit','Borrow history ','Library','Borrow books','Library history',
 'Library','Laundry','All Residents export','Laundry No show','Laundry start new cycle','Organisations',
 'Boxtribute Gods','User groups','Bases','Add beneficiary'];
 const AdminAvailableFunctions = ['Users','Manage products',
-'Checkout','Boxes','Give tokens to all','Fancy graphs',
-'Stockroom','Generate market schedule','Generate QR labels',
+'Checkout','Manage boxes','Give tokens to all','Fancy graphs',
+'Stockroom','Generate market schedule','Print box labels',
 'Stock Overview','Manage beneficiaries', 'Sales reports',
 'User groups','Add beneficiary'];
-const CoordinatorAvailableFunctions = ['Checkout','Boxes','Fancy graphs',
-'Stockroom','Generate QR labels','Users','Manage products','Generate market schedule',
+const CoordinatorAvailableFunctions = ['Checkout','Manage boxes','Fancy graphs',
+'Stockroom','Print box labels','Users','Manage products','Generate market schedule',
 'Stock Overview','Manage beneficiaries', 'Sales reports','Give tokens to all',
 'User groups','Add beneficiary'];
 

@@ -24,7 +24,7 @@ Cypress.Commands.add("deleteAllBoxesExceptSeed", () => {
 });
 
 Cypress.Commands.add("clickMakeLabelsButton", () => {
-    cy.get("button").contains("Make labels").click();
+    cy.get("button").contains("Print label(s)").click();
     // cy.getButtonWithText("Make labels").click({force: true});
 });
 
