@@ -3,7 +3,7 @@
 require 'vendor/autoload.php';
 use Auth0\SDK\Auth0;
 
-function authorize($settings, $mobile, $ajax)
+function authorize($settings, $ajax)
 {
     global $settings;
     $result = ['success' => true];
@@ -15,17 +15,30 @@ function authorize($settings, $mobile, $ajax)
     ]);
 
     $userInfo = $auth0->getUser();
-    if (!$userInfo) {
-        if ($ajax) {
-            echo json_encode(['success' => false]);
-        } elseif ($mobile) {
-            $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/mobile.php']);
-        } else {
-            $auth0->login();
-        }
+    if ($userInfo) {
+        // ideally we wouldn't need to do this, but because loadSessionData
+        // is crazy and looks for $_GET parameters hidden here to
+        // change current org or camp, we have to load this every request
+        auth0callback();
 
         return;
     }
+    if ($ajax) {
+        http_response_code(401);
+        echo json_encode(['success' => false]);
+    }
+
+    logout();
+    // because auth0 will only callback to specific known urls
+    // we record the full redirect url in a session variable
+    // and redirect there once we've had the auth0 callback
+    $_SESSION['auth0_callback_redirect_uri'] = $_SERVER['REQUEST_URI'];
+    $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
+
+    return;
+}
+function auth0callback()
+{
     $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $_SESSION['auth0__user']['email']]);
     if ($user) { // does user exist in the app db and in the auth0 db
         if (check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'])) { // is the user account still valid?
@@ -36,8 +49,10 @@ function authorize($settings, $mobile, $ajax)
     } else {
         throw new Exception('No user found connected to authenticated email!');
     }
+    $redirectUrl = $_SESSION['auth0_callback_redirect_uri'] ?? '/';
+    unset($_SESSION['auth0_callback_redirect_uri']);
+    redirect($redirectUrl);
 }
-
 function logout()
 {
     global $settings;
@@ -51,6 +66,13 @@ function logout()
         'redirect_uri' => $settings['auth0_redirect_uri'],
     ]);
     $auth0->logout();
+}
+
+function logoutWithRedirect()
+{
+    global $settings;
+    logout();
+
     // the auth0 client method
     // $auth0->logout() simply clears local variables
     // so we also redirect to auth0
