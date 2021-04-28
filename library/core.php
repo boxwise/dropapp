@@ -55,7 +55,7 @@ Tracer::inSpan(
         // functions that are app specific but need to available globally
         require_once 'functions.php';
         if (!$bypassAuthorization) {
-            authorize($settings, $mobile, $ajax);
+            authorize($settings, $ajax);
         }
     }
 );

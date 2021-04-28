@@ -17,8 +17,13 @@ Tracer::inSpan(
         // action set by POST will override GET
         $action = (isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : 'start'));
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        // eghhhh. shouldn't be doing any of this here
+        // but leaving auth0 callback here to keep changes
+        // to the minimum
         if ('logout' == $action) {
-            logout();
+            logoutWithRedirect();
+        } elseif ('auth0callback' == $action) {
+            auth0callback();
         }
 
         $cmsmain = new Zmarty();
