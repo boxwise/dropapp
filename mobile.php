@@ -10,7 +10,7 @@ db_query('SET time_zone = "+02:00"');
 $tpl = new Zmarty();
 
 if ('' != $_GET['logout']) {
-    logout('/mobile.php');
+    logoutWithRedirect('/mobile.php');
 }
 
 // new: fill the camp selection menu --------------------------------------------
