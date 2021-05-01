@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "553964ff719afd45d357605aa660ff10",
+    "content-hash": "72d60edfd502e04152da8205e4ec459d",
     "packages": [
         {
             "name": "cache/adapter-common",
@@ -1624,21 +1624,21 @@
         },
         {
             "name": "opencensus/opencensus",
-            "version": "v0.5.2",
+            "version": "v0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/census-instrumentation/opencensus-php.git",
-                "reference": "31dc521ba3fab9653a215a10e65d5b7fe9e2c6ac"
+                "reference": "007b35d8f7ed21cab9aa47406578ae02f73f91c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/census-instrumentation/opencensus-php/zipball/31dc521ba3fab9653a215a10e65d5b7fe9e2c6ac",
-                "reference": "31dc521ba3fab9653a215a10e65d5b7fe9e2c6ac",
+                "url": "https://api.github.com/repos/census-instrumentation/opencensus-php/zipball/007b35d8f7ed21cab9aa47406578ae02f73f91c5",
+                "reference": "007b35d8f7ed21cab9aa47406578ae02f73f91c5",
                 "shasum": ""
             },
             "require": {
                 "cache/adapter-common": "^1.0",
-                "php": ">=5.6",
+                "php": ">=7.1",
                 "psr/cache": "^1.0",
                 "psr/log": "^1.0",
                 "ramsey/uuid": "~3"
@@ -1677,10 +1677,18 @@
                 {
                     "name": "Jeff Ching",
                     "email": "chingor@google.com"
+                },
+                {
+                    "name": "Bas van Beek",
+                    "email": "bas.vanbeek@gmail.com"
                 }
             ],
             "description": "OpenCensus Trace Client for PHP",
-            "time": "2018-09-25T20:57:09+00:00"
+            "support": {
+                "issues": "https://github.com/census-instrumentation/opencensus-php/issues",
+                "source": "https://github.com/census-instrumentation/opencensus-php/tree/master"
+            },
+            "time": "2020-06-12T18:56:55+00:00"
         },
         {
             "name": "opencensus/opencensus-exporter-stackdriver",
