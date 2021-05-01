@@ -41,11 +41,7 @@ function auth0callback()
 {
     $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $_SESSION['auth0__user']['email']]);
     if ($user) { // does user exist in the app db and in the auth0 db
-        if (check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'])) { // is the user account still valid?
-            loadSessionData($user);
-        } else {
-            throw new Exception(GENERIC_LOGIN_ERROR);
-        }
+        loadSessionData($user);
     } else {
         throw new Exception('No user found connected to authenticated email!');
     }
@@ -79,26 +75,6 @@ function logoutWithRedirect()
     redirect('https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
 }
 
-function check_valid_from_until_date($valid_from, $valid_until)
-{
-    $today = new DateTime();
-    $success = true;
-
-    if ($valid_from && ('0000-00-00' != substr($valid_from, 0, 10))) {
-        $valid_firstday = new DateTime($valid_from);
-        if ($today < $valid_firstday) {
-            $success = false;
-        }
-    }
-    if ($valid_until && ('0000-00-00' != substr($valid_until, 0, 10))) {
-        $valid_lastday = new DateTime($valid_until);
-        if ($today > $valid_lastday) {
-            $success = false;
-        }
-    }
-
-    return $success;
-}
 
 function sendlogindata($table, $ids)
 {
