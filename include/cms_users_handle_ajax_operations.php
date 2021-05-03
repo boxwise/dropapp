@@ -3,11 +3,6 @@
 if ($ajax) {
     $data = null;
     switch ($_POST['do']) {
-        case 'move':
-            $ids = json_decode($_POST['ids']);
-            list($success, $message, $redirect) = listMove($table, $ids);
-
-            break;
         case 'delete':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = listDelete($table, $ids);
@@ -34,20 +29,7 @@ if ($ajax) {
                 list($success, $message, $redirect, $data) = listExtend($table, $ids, $_POST['option']);
 
                 break;
-        case 'copy':
             $ids = explode(',', $_POST['ids']);
-            list($success, $message, $redirect) = listCopy($table, $ids, 'code');
-
-            break;
-        case 'hide':
-            $ids = explode(',', $_POST['ids']);
-            list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-
-            break;
-        case 'show':
-            $ids = explode(',', $_POST['ids']);
-            list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-
             break;
         case 'sendlogindata':
             $ids = explode(',', $_POST['ids']);
