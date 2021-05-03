@@ -5,9 +5,9 @@
 				<li class="highlight">Family Members</li>
 			{/if}
 			{if !$person['hide']}
-				<li {if $person['id']==$data['people_id']}class="parent"{/if}>
+				<li>
 					<div class="people-info">
-					<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
+					<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{if is_null($person['parent_id'])}FH: {/if}{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
 					{if $person['taglabels'] || $person['comments']}
 						{if $person['taglabels']}
 							<div class="people-tags">	
