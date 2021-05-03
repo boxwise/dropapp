@@ -15,23 +15,13 @@
         addpagemenu('deactivated', 'Deactivated', ['link' => '?action=cms_users_deactivated', 'active' => true, 'testid' => 'deactivated']);
         addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'reactivate-cms-user']);
 
-        $camps = db_value(
-            '
-			SELECT GROUP_CONCAT(c.id) 
-			FROM cms_usergroups_camps AS uc, camps AS c 
-			WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup',
-            ['usergroup' => $_SESSION['usergroup']['id']]
-        );
-
         // Execution of queries in cms_users_page.php
         $cms_users_lower_level_query = 'SELECT u.id, u.naam, SUBSTR(u.email, 1, LENGTH(u.email)-LENGTH(".deleted.")-LENGTH(u.id)) AS email, u.valid_firstday, u.valid_lastday, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete, 1 as disableifistrue
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
-			LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
 			LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 			WHERE 
 				'.(!$_SESSION['user']['is_admin'] ? 'l.level <'.intval($_SESSION['usergroup']['userlevel']).' AND ' : '').'
-				'.($_SESSION['user']['is_admin'] ? '' : '(uc.camp_id IN ('.($camps ? $camps : 0).')) AND ').' 
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL)
 				AND u.deleted
