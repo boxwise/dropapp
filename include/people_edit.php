@@ -100,7 +100,8 @@
 
     $cmsmain->assign('include', 'cms_form.tpl');
     if ($data['firstname'] || $data['lastname']) {
-        $cmsmain->assign('title', $data['firstname'].' '.$data['lastname']);
+        $peopletitle = $data['firstname'].' '.$data['lastname'].(is_null($data['parent_id']) ? ' - Family head -' : '');
+        $cmsmain->assign('peopletitle', $peopletitle);
     } else {
         $cmsmain->assign('title', 'Add a new beneficiary');
     }
