@@ -1,6 +1,7 @@
 <?php
 
 require 'vendor/autoload.php';
+use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Auth0;
 
 function authorize($settings, $ajax)
@@ -19,7 +20,7 @@ function authorize($settings, $ajax)
         // ideally we wouldn't need to do this, but because loadSessionData
         // is crazy and looks for $_GET parameters hidden here to
         // change current org or camp, we have to load this every request
-        auth0callback();
+        loadSessionDataFromAuth0($settings);
 
         return;
     }
@@ -37,18 +38,28 @@ function authorize($settings, $ajax)
 
     return;
 }
-function auth0callback()
+function loadSessionData($settings)
 {
-    $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $_SESSION['auth0__user']['email']]);
+    $auth0 = getAuth0($settings);
+    $userInfo = $auth0->getUser();
+    // update local user info with auth0 info
+    $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $userInfo['email']]);
     if ($user) { // does user exist in the app db and in the auth0 db
-        loadSessionData($user);
+        loadSessionDataForUser($user);
     } else {
-        throw new Exception('No user found connected to authenticated email!');
+        // TODO: create the user
+        throw new Exception("Currently can't create these users automatically");
     }
+}
+
+function auth0callback($settings)
+{
+    loadSessionData($settings);
     $redirectUrl = $_SESSION['auth0_callback_redirect_uri'] ?? '/';
     unset($_SESSION['auth0_callback_redirect_uri']);
     redirect($redirectUrl);
 }
+
 function logout()
 {
     global $settings;
@@ -122,7 +133,7 @@ function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkK
 
 // session data requires user, usergroup, organisation, camp
 // organistion and usergroup is optional for Boxtribute Gods
-function loadSessionData($user)
+function loadSessionDataForUser($user)
 {
     $_SESSION['user'] = $user;
     // update last action
@@ -209,8 +220,10 @@ function loginasuser($table, $ids)
     $_SESSION['camp2'] = $_SESSION['camp'];
     $_SESSION['usergroup2'] = $_SESSION['usergroup'];
     $_SESSION['organisation2'] = $_SESSION['organisation'];
+
     $user = db_row('SELECT * FROM cms_users WHERE id=:id', ['id' => $id]);
-    loadSessionData($user);
+    loadSessionDataForUser($user);
+
     $success = true;
     $message = 'Logged in as '.$_SESSION['user']['naam'];
 
