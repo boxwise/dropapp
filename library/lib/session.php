@@ -4,17 +4,19 @@ require 'vendor/autoload.php';
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Auth0;
 
-function authorize($settings, $ajax)
+function getAuth0($settings)
 {
-    global $settings;
-    $result = ['success' => true];
-    $auth0 = new Auth0([
+    return new Auth0([
         'domain' => $settings['auth0_domain'],
         'client_id' => $settings['auth0_client_id'],
         'client_secret' => $settings['auth0_client_secret'],
         'redirect_uri' => $settings['auth0_redirect_uri'],
     ]);
+}
 
+function authorize($settings, $ajax)
+{
+    $auth0 = getAuth0($settings);
     $userInfo = $auth0->getUser();
     if ($userInfo) {
         // ideally we wouldn't need to do this, but because loadSessionData
@@ -86,49 +88,23 @@ function logoutWithRedirect()
     redirect('https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
 }
 
-
 function sendlogindata($table, $ids)
 {
-    global $translate, $settings;
+    global $settings;
+
+    $auth0Authentication = new Authentication(
+        $settings['auth0_domain'],
+        $settings['auth0_client_id'],
+        $settings['auth0_client_secret']
+    );
 
     foreach ($ids as $id) {
-        $row = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
-
-        $newpassword = createPassword();
-
-        $mail = $translate['cms_sendlogin_mail'];
-        $mail = str_ireplace('{sitename}', $_SERVER['HTTP_HOST'], $mail);
-        $mail = str_ireplace('{password}', $newpassword, $mail);
-        $mail = str_ireplace('{orgname}', $_SESSION['organisation']['label'], $mail);
-        $mail = str_ireplace('{user}', $_SESSION['user']['naam'], $mail);
-
-        $result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);
-        if ($result) {
-            $message = $result;
-            $success = false;
-        } else {
-            $success = true;
-            db_query('UPDATE '.$table.' SET pass = :pass WHERE id = :id', ['pass' => md5($newpassword), 'id' => $id]);
-            $message = translate('cms_sendlogin_confirm');
-        }
+        $email = db_value('SELECT email FROM cms_users WHERE id=:id LIMIT 1', ['id' => $id]);
+        // TODO: Auth 0 send for user id $id
+        $auth0Authentication->dbconnections_change_password($email, 'Username-Password-Authentication');
     }
 
-    return [$success, $message];
-}
-
-function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkKLMmNnoPpQqRrSsTtUuVvWwXxYyZz!$-_@#%^*()+=')
-{
-    $password = '';
-    $i = 0;
-    while ($i < $length) {
-        $char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
-        if (!strstr($password, $char)) {
-            $password .= $char;
-            ++$i;
-        }
-    }
-
-    return $password;
+    return [true, 'Passwords reset'];
 }
 
 // session data requires user, usergroup, organisation, camp
