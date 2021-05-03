@@ -23,7 +23,7 @@ Tracer::inSpan(
         if ('logout' == $action) {
             logoutWithRedirect();
         } elseif ('auth0callback' == $action) {
-            auth0callback();
+            auth0callback($settings);
         }
 
         $cmsmain = new Zmarty();
