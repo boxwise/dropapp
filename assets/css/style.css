@@ -166,6 +166,7 @@ p{
 }
 .nav-aside ul li a:hover, .nav-aside ul li a:active, .nav-aside ul li a:focus, .nav-aside ul li a:active:focus {
 	color: #000;
+	background: #cecece;
 	text-decoration: none;
 }
 /* used to prevent capitalization of certain words intentionally wrapped in a span */

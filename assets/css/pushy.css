@@ -49,12 +49,9 @@
     font-weight: bold;
 }
 
-.pushy a:hover{
-    color: #FFF;
-}
-
 .pushy ul li a:hover, .pushy ul li a:active, .pushy ul li a:focus, .pushy ul li a:active:focus {
 	color: var(--sidebarFontColor);
+    background: #cecece;
     text-decoration: none;
 }
 
