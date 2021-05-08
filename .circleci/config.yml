@@ -124,11 +124,11 @@ workflows:
         filters:  # required since `deploy-prod` has tag filters AND requires `build`
           tags:
             only: /^v.*/
-    # baseUrl for cypress is set in cypress.json (currently staging.boxwise.co)
+    # baseUrl for cypress is set in cypress.json (currently staging.boxtribute.org)
     - cypress/run:
         yarn: true
         record: true
-        wait-on: 'https://staging.boxwise.co/'
+        wait-on: 'https://staging.boxtribute.org/'
         no-workspace: true
         requires:
           - deploy-staging
