@@ -42,7 +42,7 @@ context('Login tests - Mobile', () => {
 
   it('Login with unknown user', () => {
     loginUsing(config.testUnknownUser, config.testPwd);
-    cy.notificationWithTextIsVisible(config.unknownEmailErrLoginNotif);
+    cy.mobileWarningNotificationWithTextIsVisible(config.unknownEmailErrLoginNotif);
   })
 
   it('Login with wrong password', () => {
