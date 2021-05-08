@@ -28,7 +28,7 @@
         addfield('hidden', '', 'id');
 
         // put a title above the form
-        $cmsmain->assign('title', 'Product Checkout');
+        $cmsmain->assign('title', 'Checkout');
 
         addfield('select', 'Family/Beneficiary', 'people_id', ['placeholder' => 'Type to search', 'testid' => 'familyDropdown', 'onchange' => 'selectFamily("people_id",false,"check_out")', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.container, " ",p.firstname, " ", p.lastname) AS label, NOT visible AS disabled FROM people AS p WHERE parent_id IS NULL AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1']);
         addfield('select', 'Product', 'product_id', ['placeholder' => 'Type to search', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label, p.value as price FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].($_SESSION['camp']['separateshopandwhproducts'] ? ' AND p.stockincontainer' : '').' ORDER BY name']);

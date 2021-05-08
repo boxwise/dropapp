@@ -30,7 +30,7 @@ class Minimal extends AbstractSeed
 			(45,155,'Texts','cms_translate',26,0,1,1,0,1),
 			(50,155,'Manage menu functions','cms_functions',24,0,1,1,0,1),
 			(67,42,'Manage products','products',18,0,0,1,0,0),
-			(87,35,'Checkout Products','check_out',7,0,0,1,0,0),
+			(87,35,'Checkout','check_out',7,0,0,1,0,0),
 			(90,99,'Manage boxes','stock',2,0,0,1,0,0),
 			(92,35,'Give tokens <span>to</span> all','give2all',10,0,0,1,0,0),
 			(96,128,'Sales reports','sales_list',16,0,0,1,0,0),
