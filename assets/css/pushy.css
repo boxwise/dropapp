@@ -53,6 +53,11 @@
     color: #FFF;
 }
 
+.pushy ul li a:hover, .pushy ul li a:active, .pushy ul li a:focus, .pushy ul li a:active:focus {
+	color: var(--sidebarFontColor);
+    text-decoration: none;
+}
+
 .pushy a i{
 	margin-left: 4px;
 	top: -3px;
