@@ -1,17 +1,38 @@
 dispatch:
-- url: "staging.boxwise.co/v2*"
-  service: v2-staging
-- url: "demo.boxwise.co/v2*"
-  service: v2-demo
-- url: "app.boxwise.co/v2*"
-  service: v2-production
+# Legacy 
+## Staging
 - url: "staging.boxwise.co/*"
   service: default
+- url: "staging.boxtribute.org/*"
+  service: default
+## Demo
 - url: "demo.boxwise.co/*"
   service: demo
+- url: "demo.boxtribute.org/*"
+  service: demo
+## Production
 - url: "app.boxwise.co/*"
+  service: production
+- url: "app.boxtribute.org/*"
   service: production
 - url: "market.drapenihavet.no/*"
   service: production
 - url: "www.market.drapenihavet.no/*"
   service: production
+
+# New
+## Staging
+- url: "staging.boxwise.co/v2*"
+  service: v2-staging
+- url: "staging.boxtribute.org/v2*"
+  service: v2-staging
+## Demo
+- url: "demo.boxwise.co/v2*"
+  service: v2-demo
+- url: "demo.boxtribute.org/v2*"
+  service: v2-demo
+## Production
+- url: "app.boxwise.co/v2*"
+  service: v2-production
+- url: "app.boxtribute.org/v2*"
+  service: v2-production
