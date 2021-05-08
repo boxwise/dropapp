@@ -57,7 +57,7 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
 Once the docker containers are running the app is accessible at http://localhost:8100/
 
-After this you should be able to login to the app using email address: some.admin@boxwise.co with password: admin
+After this you should be able to login to the app using email address: some.admin@boxtribute.org with password: admin
 
 ### Our dev environment recommendation
 
