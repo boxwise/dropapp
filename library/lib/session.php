@@ -45,14 +45,14 @@ function login($email, $pass, $autologin, $mobile = false)
     } else { // user not found
         $success = false;
         $redirect = false;
-        $deleted = db_value('SELECT email FROM cms_users WHERE email != "" AND email = :email AND deleted Limit 1', ['email' => $email]);
+        $deleted = db_value('SELECT email FROM cms_users WHERE email != "" AND email LIKE :email AND deleted Limit 1', ['email' => $email.'%']);
         if ($deleted) {
             $message = GENERIC_LOGIN_ERROR;
             $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as deleted user '.$email;
             logfile($detailed_msg);
             trigger_error($detailed_msg);
         } else {
-            $message = GENERIC_LOGIN_ERROR;
+            $message = UNKNOWN_EMAIL_LOGIN_ERROR;
             $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as unknown user '.$email;
             logfile($detailed_msg);
             trigger_error($detailed_msg);
