@@ -40,6 +40,11 @@ context('Login tests - Mobile', () => {
     cy.mobileWarningNotificationWithTextIsVisible(config.genericErrLoginNotif);
   })
 
+  it('Login with unknown user', () => {
+    loginUsing(config.testUnknownUser, config.testPwd);
+    cy.notificationWithTextIsVisible(config.unknownEmailErrLoginNotif);
+  })
+
   it('Login with wrong password', () => {
     loginUsing(config.testAdmin, config.testWrongPwd);
     cy.mobileWarningNotificationWithTextIsVisible(config.incorrectLoginNotif);
@@ -57,7 +62,7 @@ context('Login tests - Mobile', () => {
     cy.get("form[data-testid='resetForm']").should('be.visible');
     cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
     cy.get("input[data-testid='submitForgottenPwd']").click();
-    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
+    cy.notificationWithTextIsVisible(config.unknownEmailErrLoginNotif);
   });
 
   it('Forgot password form success confirmation', () => {
