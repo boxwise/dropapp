@@ -137,6 +137,14 @@ describe('Mobile box creation using QR scanning (logged-out user)', () => {
         checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
     });
 
+    it('Scan QR code with associated box (same organisation) from staging.boxwise.co', () => {
+        cy.visit('https://staging.boxwise.co/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
+        cy.viewport('iphone-6');
+        fillLoginForm(); 
+        cy.url().should('include', 'https://staging.boxtribute.org/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
+        checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
+    });
+
     it('Scan QR code without associated box (same organisation)', () => {
         cy.visit('/mobile.php?barcode=' + SAME_ORG_QR_URL_WITHOUT_BOX);
         cy.viewport('iphone-6');
