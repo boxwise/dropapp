@@ -15,7 +15,7 @@
     "testWrongPwd": "wrongPwd",
     "incorrectLoginNotif": "Incorrect login.",
     "genericErrLoginNotif": "This email either does not have an active account associated with it, or access has expired. Contact your coordinator to enable your account.",
-    "unknownEmailErrLoginNotif": "There is no user with the email address in our systems. Check your spelling and try again.",
+    "unknownEmailErrLoginNotif": "There is no user with this email address in our systems. Check your spelling and try again.",
     "successPwdChangeNotif": "Within a few minutes you will receive an e-mail with further instructions to reset your password.",
     "orgName": "TestOrganisation"
   }
