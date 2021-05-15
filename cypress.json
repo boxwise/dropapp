@@ -1,6 +1,6 @@
 {
   "projectId": "tip3z9",
-  "baseUrl": "https://staging.boxwise.co",
+  "baseUrl": "https://staging.boxtribute.org",
   "chromeWebSecurity": false,
   "env": {
     "testAdmin": "admin@admin.co",

@@ -437,7 +437,8 @@ $(function() {
                         $(form).data("action")
                     )
                 ) {
-                    AjaxFormSubmit(form);
+                    var $destination = getUrlVars()["destination"];
+                    AjaxFormSubmit(form, (($destination == undefined) ? "" : "&destination="+getUrlVars()["destination"]));
                 } else {
                     // Test internet connection
                     $.ajax({
@@ -1091,19 +1092,18 @@ function execReload(v) {
 }
 
 // form-submit function
-function AjaxFormSubmit(form) {
+function AjaxFormSubmit(form, addparams="") {
     // Submit Form
     if ($(form).data("ajax")) {
         $.ajax({
             type: "post",
-            url: "ajax.php?file=" + $(form).data("action"),
+            url: "ajax.php?file=" + $(form).data("action") + addparams,
             data: $(form).serialize(),
             dataType: "json",
             success: function(result) {
                 $("#form-submit").prop("disabled", false);
                 $("body").removeClass("loading");
                 AjaxCheckSuccess(result);
-
             },
             error: function(result) {
                 AjaxError(result);
@@ -1113,4 +1113,12 @@ function AjaxFormSubmit(form) {
     } else {
         form.submit();
     }
+}
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
 }
