@@ -10,7 +10,7 @@ We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/
 
 We have evolved the app to now be centrally hosted to we can offer the product to many more organisations, and are working to improve the quality of the product. 
 
-If you are interested in being part of this project, write us at [jointheteam@boxwise.co](mailto:jointheteam@boxwise.co)! You can also check out our [website](https://www.boxtribute.org/#join) for more details about the kind of help we need on this project.
+If you are interested in being part of this project, write us at [jointheteam@boxtribute.org](mailto:jointheteam@boxtribute.org)! You can also check out our [website](https://www.boxtribute.org/#join) for more details about the kind of help we need on this project.
 
 ### Preparation for Installation
 
@@ -57,7 +57,7 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
 Once the docker containers are running the app is accessible at http://localhost:8100/
 
-After this you should be able to login to the app using email address: some.admin@boxwise.co with password: admin
+After this you should be able to login to the app using email address: some.admin@boxtribute.org with password: admin
 
 ### Our dev environment recommendation
 
@@ -163,7 +163,7 @@ For everything else, please see our [contribution guidelines](https://github.com
 
 ### Who do I talk to? ###
 
-Drop us an email to hello@boxwise.co!
+Drop us an email to hello@boxtribute.org!
 
 ### License ###
 

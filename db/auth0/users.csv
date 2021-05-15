@@ -1,10 +1,10 @@
 id,email,naam,pass,is_admin,cms_usergroups_id,valid_firstday,valid_lastday
-1,some.admin@boxwise.co,"some admin",21232f297a57a5a743894a0e4a801fc3,1,NULL,NULL,NULL
+1,some.admin@boxtribute.org,"some admin",21232f297a57a5a743894a0e4a801fc3,1,NULL,NULL,NULL
 2,jane.doe@boxaid.co,"Jane Doe",5f4dcc3b5aa765d61d8327deb882cf99,0,1,0000-00-00,0000-00-00
 3,joe.doe@boxaid.co,"Joe Doe",5f4dcc3b5aa765d61d8327deb882cf99,0,2,0000-00-00,0000-00-00
-4,stagingenv_volunteer@boxwise.co,Volunteer,7a53ac982b06d7b9aed4eec5e18693d3,0,3,0000-00-00,0000-00-00
-5,stagingenv_coordinator@boxwise.co,Coordinator,ca02bab14acaa85afd14dfbc73c285bf,0,2,0000-00-00,0000-00-00
-6,stagingenv_headofops@boxwise.co,"Head of Operations",7dfc3d2ee682b299cf33aacabcf55e26,0,1,0000-00-00,0000-00-00
+4,stagingenv_volunteer@boxtribute.org,Volunteer,7a53ac982b06d7b9aed4eec5e18693d3,0,3,0000-00-00,0000-00-00
+5,stagingenv_coordinator@boxtribute.org,Coordinator,ca02bab14acaa85afd14dfbc73c285bf,0,2,0000-00-00,0000-00-00
+6,stagingenv_headofops@boxtribute.org,"Head of Operations",7dfc3d2ee682b299cf33aacabcf55e26,0,1,0000-00-00,0000-00-00
 7,dev_volunteer@boxaid.org,"Dev Volunteer",5f4dcc3b5aa765d61d8327deb882cf99,0,3,0000-00-00,0000-00-00
 8,dev_coordinator@boxaid.org,"Dev Coordinator",5f4dcc3b5aa765d61d8327deb882cf99,0,2,0000-00-00,0000-00-00
 9,dev_headofops@boxaid.org,"Dev Head of Operations",5f4dcc3b5aa765d61d8327deb882cf99,0,1,0000-00-00,0000-00-00

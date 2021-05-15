@@ -57,6 +57,6 @@
         foreach ($_SERVER as $key => $value) {
             $mail .= $key.' -> '.$value.'<br />';
         }
-        $result = sendmail('hans@boxwise.co', 'hans@boxwise.co', 'New installation of Boxwise', $mail);
+        $result = sendmail('admin@boxtribute.org', 'admin@boxtribute.org', 'New installation of Boxtribute', $mail);
         db_query('INSERT INTO settings (category_id, type, code, description_en, value) VALUES (1,"text","installed","Date and time of installation and first run",NOW())');
     }

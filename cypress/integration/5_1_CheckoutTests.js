@@ -56,7 +56,7 @@ describe('Checkout tests', () => {
 
   function checkoutFormIsResetted() {
     cy.get("body").then($body => {
-      expect($body.find("select[data-placeholder='Please select']").length).to.equal(2);
+      expect($body.find("select[data-placeholder='Type to search']").length).to.equal(2);
     });
   }
 
@@ -66,8 +66,8 @@ describe('Checkout tests', () => {
 	  cy.get("a[class='menu_check_out']").last().contains("Checkout").click();
     cy.get("button[data-testid='submitShoppingCart']").should("be.visible");
     cy.verifyActiveSideMenuNavigation('menu_check_out');
-    cy.getSelectedValueInDropDown("people_id").contains("Please select").should('exist');
-    cy.getSelectedValueInDropDown("product_id").contains("Please select").should('exist');
+    cy.getSelectedValueInDropDown("people_id").contains("Type to search").should('exist');
+    cy.getSelectedValueInDropDown("product_id").contains("Type to search").should('exist');
   });
 
   it('Select family in dropdown', () => {
@@ -80,7 +80,7 @@ describe('Checkout tests', () => {
   it('Select product in dropdown', () => {
     cy.selectOptionByText("product_id", PRODUCT1);
     cy.getSelectedValueInDropDown("product_id").contains(PRODUCT1).should('exist');
-    getFamilyCredit().should('not.be.visible');
+    getFamilyCredit().should('not.exist');
     getAddToCartButton().should('be.disabled');
   });
 
@@ -92,7 +92,7 @@ describe('Checkout tests', () => {
     // family should stay selected
     cy.getSelectedValueInDropDown("people_id").contains(FAMILY3).should('exist');
     // product dropdown should get resetted
-    cy.getSelectedValueInDropDown("product_id").contains("Please select").should('exist');
+    cy.getSelectedValueInDropDown("product_id").contains("Type to search").should('exist');
     getFamilyTokensSpan().should('exist');  // isn't necessarily visible in mobile version
     cy.contains("h2", "Shopping cart");
     cy.get("body").then($body => {

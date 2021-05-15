@@ -60,6 +60,12 @@
                 $tpl->assign('locations', $locations);
                 $tpl->assign('include', 'mobile_scan.tpl');
             } else {
+                // Test to figure out QR bug
+                if ($_GET['barcode'] && db_row('SELECT s.* FROM stock s LEFT JOIN qr ON qr.id=s.qr_id WHERE qr.code= :code', ['code' => $_GET['barcode']])) {
+                    trigger_error('Existing box forwarded to new box.', E_USER_ERROR);
+                    redirect('?warning=1&message=Something went wrong! Please try again!');
+                }
+
                 // no box was loaded --> newbox
                 redirect('?newbox='.$data['barcode'].(isset($_GET['qrlegacy']) ? '&qrlegacy=1' : ''));
             }

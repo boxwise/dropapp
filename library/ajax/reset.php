@@ -31,7 +31,7 @@ $row = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != ""
         logfile('Password reset requested by '.$_POST['email']);
     } else { // user not found
         $success = false;
-        $message = GENERIC_LOGIN_ERROR;
+        $message = UNKNOWN_EMAIL_LOGIN_ERROR;
         $redirect = '';
         logfile('Attempted password reset by unknown user:'.$_POST['email']);
         trigger_error($message);

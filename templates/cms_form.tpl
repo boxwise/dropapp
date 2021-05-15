@@ -1,7 +1,13 @@
 <div class="content-form">
 	<div class="row row-title">
 		<div class="col-sm-12">
-			<h1 id="form-title">{if $title}{$title nofilter}{else}{if !$data['id']}{$translate['cms_form_new']}{else}{$translate['cms_form_edit']}{/if}{/if}
+			<h1 id="form-title">
+				{if $title}
+					{$title nofilter}
+				{elseif $peopletitle}
+					{include file="cms_form_people_title.tpl"}
+				{else}{if !$data['id']}{$translate['cms_form_new']}{else}{$translate['cms_form_edit']}{/if}
+				{/if}
 			</h1> 
 		</div>
 	</div>

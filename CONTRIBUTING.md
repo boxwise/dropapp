@@ -1,15 +1,15 @@
-# Contributing to Boxwise
+# Contributing to Boxtribute
 
 First off: **thank you**. You will be helping build software that distributes clothes and food to thousands of refugees and other people in need. It gives comfort and dignity to people in a vulnerable situation. That can't be said for most open source contributions.
 
-If you haven't done so already, [join the #dev channel in our Slack group](https://join.slack.com/t/boxwise/shared_invite/enQtMzE4NzExMjkxNTM2LTk0MzY2Mjg0MTY5ZmJjMjI1ODNmODZiNmJlNTAwM2Y4MmJkZDJjZWEyNzk0YTQyZGI0ZTYxMTc2NTgxNjk1ZTM). That is where all the people who build Boxwise are. It's a great place to ask questions.
+If you haven't done so already, [join the #dev channel in our Slack group](https://join.slack.com/t/boxwise/shared_invite/enQtMzE4NzExMjkxNTM2LTk0MzY2Mjg0MTY5ZmJjMjI1ODNmODZiNmJlNTAwM2Y4MmJkZDJjZWEyNzk0YTQyZGI0ZTYxMTc2NTgxNjk1ZTM). That is where all the people who build Boxtribute are. It's a great place to ask questions.
 If you are new, please introduce yourself in the #introductions channel.
 
 A couple of quick things:
 
 - **Once a week we e-meet!** We meet online usually once a week on the weekend to distribute tasks. This call usually takes about an hour. Check out the [slack #dev channel]((https://join.slack.com/t/boxwise/shared_invite/esksnQtMzE4NzExMjkxNTM2LTk0MzY2Mjg0MTY5ZmJjMjI1ODNmODZiNmJlNTAwM2Y4MmJkZDJjZWEyNzk0YTQyZGI0ZTYxMTc2NTgxNjk1ZTM)) for more details.
-- **Do you need help using Boxwise?** [Join our Slack group and ask in the #support channel.](https://join.slack.com/t/boxwise/shared_invite/enQtMzE4NzExMjkxNTM2LTk0MzY2Mjg0MTY5ZmJjMjI1ODNmODZiNmJlNTAwM2Y4MmJkZDJjZWEyNzk0YTQyZGI0ZTYxMTc2NTgxNjk1ZTM) Psst. We also wrote [some doc about how to use Boxwise](https://helpme.boxwise.co)
-- **Have you found a bug, or got an idea for a feature?** [Write us!](mailto:hello@boxwise.co)
+- **Do you need help using Boxtribute?** [Join our Slack group and ask in the #support channel.](https://join.slack.com/t/boxwise/shared_invite/enQtMzE4NzExMjkxNTM2LTk0MzY2Mjg0MTY5ZmJjMjI1ODNmODZiNmJlNTAwM2Y4MmJkZDJjZWEyNzk0YTQyZGI0ZTYxMTc2NTgxNjk1ZTM) Psst. We also wrote [some doc about how to use Boxtribute](https://helpme.boxtribute.org)
+- **Have you found a bug, or got an idea for a feature?** [Write us!](mailto:hello@boxtribute.org)
 
 For everything else, please read on...
 
@@ -33,16 +33,13 @@ If you haven't contributed to open source before, take a look at [this guide](ht
 You can contribute in lots of ways that aren't code, too. For example:
 
 - [Join our Slack group and help people in the #support channel.](https://join.slack.com/t/boxwise/shared_invite/enQtMzE4NzExMjkxNTM2LTk0MzY2Mjg0MTY5ZmJjMjI1ODNmODZiNmJlNTAwM2Y4MmJkZDJjZWEyNzk0YTQyZGI0ZTYxMTc2NTgxNjk1ZTM).
-- Report bugs and feature suggestions in [our issue tracker](https://github.com/boxwise/boxwise/issues).
-- Spread the word! We are always on the lookout for contributors. Blog, tweet, all those things. We are on [facebook](www.facebook.com/pg/boxwise.co) and [LinkedIn](https://www.linkedin.com/company/12997513).
-- [Donate to our cause if you have some spare money lying around!](https://donate.boxwise.co)
-- [Get in touch!](mailto:hans@boxwise.co) If you want to give us your opinion or just generally offer your time to help us, feel always welcome to contact us!
+- [Get in touch!](mailto:hello@boxtribute.org) If you want to give us your opinion or just generally offer your time to help us, feel always welcome to contact us!
 
 ## Development principles
 
 These are the principles that have guided our development so far. If you're making a major contribution, it may be worth keeping them in mind.
 
-- **Use boring, well-established technology.** Boxwise needs to keep on working for a long time with minimal work. We don't want to have to rewrite it every year because a technology we are using has gone out of fashion.
+- **Use boring, well-established technology.** Boxtribute needs to keep on working for a long time with minimal work. We don't want to have to rewrite it every year because a technology we are using has gone out of fashion.
 - **Minimal maintenance.** We don't have an operations team, nor anyone who can commit to being on-call. The app should run with minimal server-poking.
 - **Keep it simple.** 50 lines of straightforward, readable code is better than 10 lines of magic that nobody can understand. ([source](https://github.com/moby/moby/blob/master/project/PRINCIPLES.md))
 - **Optimize for contributions.** The code needs to be approachable and easy to understand, particularly for junior developers. Consider whether that clever new technology is worth it if a junior developer will struggle to get their head around it.

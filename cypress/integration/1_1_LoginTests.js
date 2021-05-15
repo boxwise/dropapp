@@ -45,6 +45,11 @@ context('Login tests', () => {
     cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
   })
 
+  it('Login with unknown user', () => {
+    loginUsing(config.testUnknownUser, config.testPwd);
+    cy.notificationWithTextIsVisible(config.unknownEmailErrLoginNotif);
+  })
+
   it('Login with wrong password', () => {
     loginUsing(config.testAdmin, config.testWrongPwd);
     cy.notificationWithTextIsVisible(config.incorrectLoginNotif);
@@ -60,9 +65,9 @@ context('Login tests', () => {
     cy.visit('/login.php');
     cy.get("a[data-testid='forgotPassword']").click();
     cy.get("form[data-testid='resetForm']").should('be.visible');
-    cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
+    cy.get("input[data-testid='forgotPwdEmailField']").type(config.testUnknownUser);
     cy.get("input[data-testid='submitForgottenPwd']").click();
-    cy.notificationWithTextIsVisible(config.genericErrLoginNotif)
+    cy.notificationWithTextIsVisible(config.unknownEmailErrLoginNotif)
   });
 
   it('Forgot password form success confirmation', () => {

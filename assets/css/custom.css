@@ -64,7 +64,13 @@ hr{
 	margin-top: 0;
 }
 .info-aside{
-	padding: 0 0 20px 0;
+	padding: 0 0 0 0;
+}
+.info-aside .highlight{
+	font-weight: bold;
+	color: var(--rightPanelTextColor);
+    font-size: 1.33em;
+	margin-bottom: 10px;
 }
 #people_id_selected p{
 	margin-bottom: 0;
@@ -80,7 +86,6 @@ p#familyname{
 	color: #333;
 	margin-top: 10px;
 	padding-bottom: 15px;
-	border-bottom: 1px solid #ddd;
 }
 .familycredit #dropcredit{
 	font-weight: bold;

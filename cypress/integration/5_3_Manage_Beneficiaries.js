@@ -60,7 +60,7 @@ describe('Manage beneficiaries', () => {
 
     function beneficiaryInfoAsideIsVisible(familyName){
         cy.getElementByTypeAndTestId("div", "info-aside").should('be.visible'); 
-        cy.getElementByTypeAndTestId("a", "familyMember").contains(familyName).should('be.visible'); 
+        // cy.getElementByTypeAndTestId("a", "familyMember").contains(familyName).should('be.visible'); 
         cy.getElementByTypeAndTestId("span", "dropcredit").should('be.visible');
     }
 

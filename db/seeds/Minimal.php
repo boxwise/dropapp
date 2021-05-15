@@ -23,60 +23,60 @@ class Minimal extends AbstractSeed
         //------------------- cms_functions
         $this->execute('SET FOREIGN_KEY_CHECKS=0;');
         $this->execute("INSERT INTO `cms_functions` (`id`,`parent_id`,`title_en`,`include`,`seq`,`alert`,`adminonly`,`visible`,`allusers`,`allcamps`) VALUES 
-            (35,NULL,'Free Shop','',1,0,0,1,0,0),
-			(42,NULL,'Admin','',7,0,0,1,0,0),
-			(43,42,'Manage Users','cms_users',21,0,0,1,0,1),
+            (35,NULL,'Free Shop','',3,0,0,1,0,0),
+			(42,NULL,'Admin','',8,0,0,1,0,0),
+			(43,42,'Manage Users','cms_users',20,0,0,1,0,1),
 			(44,155,'Settings','cms_settings',25,0,1,1,0,1),
 			(45,155,'Texts','cms_translate',26,0,1,1,0,1),
 			(50,155,'Manage menu functions','cms_functions',24,0,1,1,0,1),
 			(67,42,'Manage products','products',18,0,0,1,0,0),
-			(87,35,'Checkout','check_out',2,0,0,1,0,0),
-			(90,99,'Boxes','stock',13,0,0,1,0,0),
-			(92,35,'Give tokens <span>to</span> all','give2all',7,0,0,1,0,0),
-			(96,128,'Sales reports','sales_list',15,0,0,1,0,0),
-			(99,NULL,'Inventory','',4,0,0,1,0,0),
+			(87,35,'Checkout','check_out',7,0,0,1,0,0),
+			(90,99,'Manage boxes','stock',2,0,0,1,0,0),
+			(92,35,'Give tokens <span>to</span> all','give2all',10,0,0,1,0,0),
+			(96,128,'Sales reports','sales_list',16,0,0,1,0,0),
+			(99,NULL,'Inventory','',1,0,0,1,0,0),
 			(102,128,'Fancy graphs (<span>beta</span>)','fancygraphs',17,0,0,1,0,0),
-			(110,35,'Stockroom','container-stock',5,0,0,1,0,0),
-			(111,35,'Generate market schedule','market_schedule',6,0,0,1,0,0),
-			(112,99,'Generate QR labels','qr',14,0,0,1,0,0),
-			(113,NULL,'Actions','',6,0,0,1,0,0),
+			(110,35,'Stockroom','container-stock',8,0,0,1,0,0),
+			(111,35,'Generate market schedule','market_schedule',9,0,0,1,0,0),
+			(112,99,'Print box labels','qr',1,0,0,1,0,0),
+			(113,NULL,'Actions','',7,0,0,1,0,0),
 			(115,42,'Edit Warehouses','locations',19,0,0,1,0,0),
 			(116,110,'Containers List','printed_list_containers',2,0,0,1,1,0),
-			(118,161,'Manage beneficiaries','people',4,0,0,1,0,0),
-			(121,NULL,'Hidden menu items','',9,0,0,0,1,0),
+			(118,161,'Manage beneficiaries','people',5,0,0,1,0,0),
+			(121,NULL,'Hidden menu items','',10,0,0,0,1,0),
 			(123,121,'Start page','start',27,0,0,0,1,0),
 			(124,92,'Give tokens <span>to</span> selected families','give',3,0,0,1,1,0),
 			(125,121,'User profile','cms_profile',28,0,0,0,1,0),
 			(126,121,'Exit login as','exitloginas',29,0,0,0,1,0),
 			(127,96,'Sales List Download','sales_list_download',9,0,0,1,1,0),
-			(128,NULL,'Insight','',5,0,0,1,0,0),
-			(130,35,'Lists','food_lists',8,0,0,1,0,0),
-			(131,NULL,'Services','',2,0,0,1,0,0),
-			(132,131,'Bicycles / Sport','borrow',10,0,0,1,0,0),
+			(128,NULL,'Insight','',6,0,0,1,0,0),
+			(130,35,'Lists','food_lists',11,0,0,1,0,0),
+			(131,NULL,'Services','',4,0,0,1,0,0),
+			(132,131,'Bicycles / Sport','borrow',13,0,0,1,0,0),
 			(140,132,'Borrow edit','borrowedititem',6,0,0,1,1,0),
 			(144,132,'Borrow history ','borrowhistory',7,0,0,1,1,0),
-			(145,148,'Library titles (<span>beta</span>)','library_inventory',11,0,0,1,0,0),
-			(146,148,'Lent out (<span>beta</span>)','library',12,0,0,1,0,0),
+			(145,148,'Library titles (<span>beta</span>)','library_inventory',14,0,0,1,0,0),
+			(146,148,'Lent out (<span>beta</span>)','library',15,0,0,1,0,0),
 			(147,146,'Library history','libraryhistory',8,0,0,1,1,0),
-			(148,NULL,'Library','',3,0,0,1,0,0),
-			(149,131,'Laundry','laundry',9,0,0,1,0,0),
+			(148,NULL,'Library','',5,0,0,1,0,0),
+			(149,131,'Laundry','laundry',12,0,0,1,0,0),
 			(150,118,'All Residents export','people_export',1,0,0,1,1,0),
 			(151,149,'Laundry No show','laundry_noshow',4,0,0,1,1,0),
 			(152,149,'Laundry start new cycle','laundry_startcycle',5,0,0,1,1,0),
 			(154,155,'Organisations','organisations',23,0,1,1,0,1),
-			(155,NULL,'Boxtribute Gods','',8,0,1,1,0,0),
-			(156,42,'User groups','cms_usergroups',22,0,0,1,0,1),
+			(155,NULL,'Boxtribute Gods','',9,0,1,1,0,0),
+			(156,42,'User groups','cms_usergroups',21,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
-			(158,161,'Add beneficiary','people_add',3,0,0,1,0,0),
-			(160,99,'Stock Overview (<span>beta</span>)','stock_overview',13,0,0,1,0,0),
-			(161,NULL,'Beneficiaries','',0,0,0,1,0,0),
-			(162,161,'Manage tags','tags',5,0,0,1,0,0);");
+			(158,161,'Add beneficiary','people_add',4,0,0,1,0,0),
+			(160,99,'Stock Overview (<span>beta</span>)','stock_overview',3,0,0,1,0,0),
+			(161,NULL,'Beneficiaries','',2,0,0,1,0,0),
+			(162,161,'Manage tags','tags',6,0,0,1,0,0);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings
         $this->execute("INSERT INTO `cms_settings` (`id`, `category_id`, `type`, `code`, `description`, `options`, `value`, `hidden`, `created`, `created_by`, `modified`, `modified_by`) VALUES
 			(83,1,'select','cms_language','Language used for CMS interface','en=English','en',1,NULL,NULL,NULL,NULL),
-			(86,1,'text','mail_sender','Sender address for e-mails sent by Boxtribute','','hello@boxwise.co',1,NULL,NULL,NULL,NULL),
+			(86,1,'text','mail_sender','Sender address for e-mails sent by Boxtribute','','hello@boxtribute.org',1,NULL,NULL,NULL,NULL),
 			(87,1,'text','mail_sender_name','Sender name for e-mails sent by Boxtribute','','Boxtribute',1,NULL,NULL,NULL,NULL),
 			(92,1,'text','apple-mobile-web-app-title','Title for Apple Mobile Web App','','Boxtribute',1,NULL,NULL,NULL,NULL),
 			(137,1,'text','dailyroutine','Last date the daily routine did run','','2019-06-26',1,NULL,NULL,NULL,NULL),
@@ -108,7 +108,7 @@ class Minimal extends AbstractSeed
 
         //------------------- cms_users
         $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
-			(1,'21232f297a57a5a743894a0e4a801fc3','some admin','some.admin@boxwise.co',1,'',2,'0000-00-00 00:00:00',NULL,NULL,NULL);");
+			(1,'21232f297a57a5a743894a0e4a801fc3','some admin','some.admin@boxtribute.org',1,'',2,'0000-00-00 00:00:00',NULL,NULL,NULL);");
 
         //------------------- genders
         $this->execute("INSERT INTO `genders` (`id`,`label`,`shortlabel`,`seq`,`male`,`female`,`adult`,`child`,`baby`,`color`) VALUES 
@@ -151,14 +151,14 @@ class Minimal extends AbstractSeed
             (8,'Baby',18,12),
             (9,'Other',6,NULL),
             (10,'Hygiene',2,NULL),
-            (11,'Food',3,NULL),
+            (11,'Food & Kitchen',3,NULL),
             (12,'Clothing',1,NULL),
             (13,'Equipment',4,NULL),
             (14,'Toys & Games',41,13),
             (15,'Medication',5,9),
-            (16,'Fresh food',31,11),
-            (17,'Dry food',32,11),
-			(18,'Books & Stationery',42,13);");
+			(18,'Books & Stationery',42,13),
+			(19,'Water',43,NULL),
+			(20,'Shelter',44,NULL);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- sizegroup
@@ -361,7 +361,7 @@ class Minimal extends AbstractSeed
 			(538,13,'text','cms_function_users',NULL,'Beschikbaar voor deze gebruikers','Available voor these users','',1,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(539,13,'text','cms_form_cancel','','Annuleren','Cancel','',1,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(542,13,'text','cms_email_salutation',NULL,'Beste','Dear','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
-			(543,13,'textarea','cms_email_boilerplate','','Deze e-mail is verstuurd vanuit','You\\'ve received this email because you were created an account for Boxtribute through {orgname}. If you think you got this email by mistake, please contact us at [mailto:helpme@boxwise.co]. ','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
+			(543,13,'textarea','cms_email_boilerplate','','Deze e-mail is verstuurd vanuit','You\\'ve received this email because you were created an account for Boxtribute through {orgname}. If you think you got this email by mistake, please contact us at [mailto:helpme@boxtribute.org]. ','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(544,13,'textarea','cms_reset_mail','','Je hebt aangegeven dat je een nieuw wachtwoord wilt instellen voor het CMS op {sitename}.<br /><br />\r\n<a href=\"{link}\">Klik hier om een nieuw wachtwoord in te stellen</a><br /><br />\r\nHeb je geen nieuw wachtwoord aangevraagd, dan hoef je geen actie te ondernemen.\r\n','You have requested a new password for {sitename}.<br /><br />\r\n<a href=\"{link}\">Click here to enter a new password</a><br /><br />\r\nIf you didn\\'t requested this yourself, you don\\'t have to do anything.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(545,13,'text','cms_reset2_pagetitle',NULL,'Kies een nieuw wachtwoord','Choose a new password','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00')");
         $this->execute("INSERT INTO `translate` (`id`, `category_id`, `type`, `code`, `description`, `nl`, `en`, `fr`, `hidden`, `created`, `created_by`, `modified`, `modified_by`, `deleted`) VALUES
@@ -403,7 +403,7 @@ class Minimal extends AbstractSeed
 			(649,13,'text','tooltip_url','','Als je de URL leeg laat, maakt het systeem automatisch een goeie url voor je pagina. Je kan de URL veranderen door dit veld te ontgrendelen. Realiseer je wel dat door het veranderen van een URL bestaande verwijzingen naar deze pagina kunnen verdwijnen.','If you leave this field empty, the system will fill it in for you. If you want to change a value, you can unlock this field and do so. But realise that this can result in broken links.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(654,13,'text','cms_list_showhidesuccess',NULL,'Tonen/verbergen succesvol','','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(655,13,'text','cms_reset_mailsubject',NULL,'Nieuw wachtwoord','New password','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
-			(656,13,'textarea','cms_sendlogin_mail','','Hierbij ontvang je een wachtwoord om in te loggen op het systeem van {sitename}.<br /><br /> Je nieuwe wachtwoord is <strong>{password}</strong><br /><br /> Let op: Het systeem maakt onderscheid tussen hoofd- en kleine letters.<br /><br /> Als je bent ingelogd kan je het wachtwoord zelf wijzigen, door op je naam te klikken in de rechterbovenhoek en dan voor \\'Instellingen\\' te kiezen. Kies dan wel voor een niet al te makkelijk te raden password van minimaal acht tekens.','{user} from <strong>{orgname}</strong> has set you up with a Boxtribute account! <br/><br/> Please use this email address and the password below to log in to Boxtribute ({sitename}) through your browser. <strong>If you are an iOS user, we recommend you use Safari.</strong> <br /><br /> Your password is <strong>{password}</strong><br /><br /> We encourage you to update your password to something secure and memorable by logging in, clicking on your name in the upper right corner and choosing \\'Settings\\'. <br /> <br /> <strong>Need help getting started?</strong> <br /><br /> - Check our manual (boxwise.freshdesk.com), or  <br /> - Message us through facebook (facebook.com/boxtribute), or  <br /> - Write us an email (helpme@boxwise.co) <br /><br /> The Boxtribute Team ','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
+			(656,13,'textarea','cms_sendlogin_mail','','Hierbij ontvang je een wachtwoord om in te loggen op het systeem van {sitename}.<br /><br /> Je nieuwe wachtwoord is <strong>{password}</strong><br /><br /> Let op: Het systeem maakt onderscheid tussen hoofd- en kleine letters.<br /><br /> Als je bent ingelogd kan je het wachtwoord zelf wijzigen, door op je naam te klikken in de rechterbovenhoek en dan voor \\'Instellingen\\' te kiezen. Kies dan wel voor een niet al te makkelijk te raden password van minimaal acht tekens.','{user} from <strong>{orgname}</strong> has set you up with a Boxtribute account! <br/><br/> Please use this email address and the password below to log in to Boxtribute ({sitename}) through your browser. <strong>If you are an iOS user, we recommend you use Safari.</strong> <br /><br /> Your password is <strong>{password}</strong><br /><br /> We encourage you to update your password to something secure and memorable by logging in, clicking on your name in the upper right corner and choosing \\'Settings\\'. <br /> <br /> <strong>Need help getting started?</strong> <br /><br /> - Check our manual (boxwise.freshdesk.com), or  <br /> - Message us through facebook (facebook.com/boxtribute), or  <br /> - Write us an email (helpme@boxtribute.org) <br /><br /> The Boxtribute Team ','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(657,13,'text','cms_sendlogin_mailsubject','','Nieuw wachtwoord','Welcome to Boxtribute!','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(658,13,'text','cms_sendlogin_confirm',NULL,'De logingegevens zijn verstuurd.','Within a few minutes you will receive an e-mail with further instructions to reset your password.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(660,13,'text','cms_email_signature','','Met veel liefde...','Much love...','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),

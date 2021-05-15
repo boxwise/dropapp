@@ -1,41 +1,6 @@
-<!-- Global site tag (gtag.js) - Google Analytics -->
-
-{if $smarty.server.HTTP_HOST == 'staging.boxwise.co'}
-    {literal}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-135092361-3"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'UA-135092361-3');
-        </script>
-    {/literal}
-{elseif $smarty.server.HTTP_HOST == 'demo.boxwise.co'}
-    {literal}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-135092361-4"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'UA-135092361-4');
-        </script>
-    {/literal}
-{elseif $smarty.server.HTTP_HOST == 'app.boxwise.co' || $smarty.server.HTTP_HOST == 'market.drapenihavet.no'}
-    {literal}   
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-135092361-2"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'UA-135092361-2');
-        </script>
-    {/literal}
-{/if}
-{if $smarty.server.HTTP_HOST == 'app.boxwise.co' || $smarty.server.HTTP_HOST == 'market.drapenihavet.no' || $smarty.server.HTTP_HOST == 'staging.boxwise.co'}
+{if $smarty.server.HTTP_HOST == 'app.boxtribute.org' || $smarty.server.HTTP_HOST == 'demo.boxtribute.org' || $smarty.server.HTTP_HOST == 'staging.boxtribute.org'}
 <script>
-    const heapProjectId = {($smarty.server.HTTP_HOST == 'app.boxwise.co' || $smarty.server.HTTP_HOST == 'market.drapenihavet.no') ? '1677886010' : '17989829' };
+    const heapProjectId = {($smarty.server.HTTP_HOST == 'app.boxtribute.org') ? '1677886010' : '17989829' };
     const userId = "{$smarty.session.user.id}";
     const organisationId = "{$smarty.session.organisation.label}";
     const isAdmin = "{$smarty.session.user.is_admin}";

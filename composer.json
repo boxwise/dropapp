@@ -19,6 +19,7 @@
         "sendgrid/sendgrid": "^7.3",
         "google/cloud-logging": "^1.18",
         "google/cloud-error-reporting": "^0.15.0",
-        "fzaninotto/faker": "^1.8"
+        "fzaninotto/faker": "^1.8",
+        "opencensus/opencensus": "^0.6.0"
     }
 }

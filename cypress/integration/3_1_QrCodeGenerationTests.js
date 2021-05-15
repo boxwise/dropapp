@@ -22,7 +22,7 @@ describe('QR labels tests - user with rights', () => {
     it('Left panel navigation', () => {
         cy.visit('/');
         cy.viewport(1280, 720);
-        cy.get("a[class='menu_qr']").last().contains("Generate QR labels").click();
+        cy.get("a[class='menu_qr']").last().contains("Print box labels").click();
         labelsCountInputIsVisible();
         cy.verifyActiveSideMenuNavigation('menu_qr');
     });
@@ -85,11 +85,11 @@ describe('QR labels tests - user without rights', () => {
         cy.visit('/?action=qr');
     });
   
-    it("'Generate QR labels' menu is hidden", () => {
+    it("'Print box labels' menu is hidden", () => {
         generateQrsMenuDoesntExist();
     });
   
-    it('Generate QR labels page empty', () => {
+    it('Print box labels page empty', () => {
         labelsCountInputDoesntExist();
     });    
   });

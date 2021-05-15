@@ -13,4 +13,5 @@
         trigger_error($message);
         redirect('?barcode=&warning=1&message='.$message);
     }
-    die();
+
+    exit();
