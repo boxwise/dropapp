@@ -7,8 +7,11 @@ if (!$_POST) {
     trigger_error('No POST data was passed to mobile savebox script.', E_USER_ERROR);
     redirect('?warning=1&message=Something went wrong! Please try again!');
 }
-$box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $_POST['id']]);
-$new = !$box;
+if (!$_POST['id']) {
+    trigger_error('No id data was passed to mobile savebox script.', E_USER_ERROR);
+    redirect('?warning=1&message=Something went wrong! Please try again!');
+}
+$new = ($_POST['id'] == 'new');
 // Validate that an qr_id was submitted
 if (!$_POST['qr_id']) {
     trigger_error('No QR-code associated to '.($new ? 'new' : 'existing').'box.', E_USER_ERROR);
@@ -21,6 +24,8 @@ if (!$_POST['qr_id']) {
         redirect('?warning=1&message='.$message);
     }
 }
+
+$box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $_POST['id']]);
 
 // Updates and Preparation
 if ($new) {

@@ -1,5 +1,6 @@
 <?php
 
+    $box['id'] = 'new';
     $box['qr_id'] = db_value('SELECT id FROM qr WHERE code = :barcode AND legacy = :legacy', ['barcode' => $_GET['newbox'], 'legacy' => (isset($_GET['qrlegacy']) ? 1 : 0)]);
     if (!isset($box['qr_id'])) {
         throw new Exception('No QR-code assigned for new box!');
