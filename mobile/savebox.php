@@ -11,7 +11,7 @@ if (!$_POST['id']) {
     trigger_error('No id data was passed to mobile savebox script.', E_USER_ERROR);
     redirect('?warning=1&message=Something went wrong! Please try again!');
 }
-$new = ($_POST['id'] == 'new');
+$new = ('new' == $_POST['id']);
 // Validate that an qr_id was submitted
 if (!$_POST['qr_id']) {
     trigger_error('No QR-code associated to '.($new ? 'new' : 'existing').'box.', E_USER_ERROR);
