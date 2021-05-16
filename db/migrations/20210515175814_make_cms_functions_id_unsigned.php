@@ -26,22 +26,25 @@ class MakeCmsFunctionsIdUnsigned extends AbstractMigration
         ;
 
         $this->table('cms_functions')
-            ->changeColumn('parent_id', 'integer', ['signed' => false])
+            ->changeColumn('parent_id', 'integer', ['signed' => false, 'null' => true])
+            ->addForeignKey('parent_id', 'cms_functions', 'id', [
+                'delete' => 'SET_NULL', 'update' => 'CASCADE',
+            ])
             ->save()
             ;
 
         $this->table('cms_functions_camps')
-            ->changeColumn('cms_functions_id', 'integer', ['signed' => false])
+            ->changeColumn('cms_functions_id', 'integer', ['signed' => false, 'null' => false])
             ->addForeignKey('cms_functions_id', 'cms_functions', 'id', [
-                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                'delete' => 'CASCADE', 'update' => 'CASCADE',
             ])
             ->save()
         ;
 
         $this->table('cms_usergroups_functions')
-            ->changeColumn('cms_functions_id', 'integer', ['signed' => false])
+            ->changeColumn('cms_functions_id', 'integer', ['signed' => false, 'null' => false])
             ->addForeignKey('cms_functions_id', 'cms_functions', 'id', [
-                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+                'delete' => 'CASCADE', 'update' => 'CASCADE',
             ])
             ->save()
         ;
