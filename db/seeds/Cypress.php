@@ -138,10 +138,10 @@ class Cypress extends AbstractSeed
             (100000006, 'DeactivatedBeneficiary', 'DeactivatedBeneficiary',100000000,'004','1978-07-10','2019-09-02',1,NULL,'2019-09-02', '2019-10-25 11:01:30')");
 
         //------------------- transactions
-        $this->execute("INSERT INTO `transactions` (`id`,`people_id`,`product_id`,`size_id`,`count`,`drops`,`transaction_date`, `user_id`) VALUES
-        	(100000000, 100000002, 1158, 1, 0 , 2147483647 ,'2019-09-02', 1),
-        	(100000001, 100000003, 1161, 1, 0 , 2147483647 ,'2019-09-02', 1),
-			(100000002, 100000004, 1162, 1, 0 , 2147483647 ,'2019-09-02', 1)");
+        $this->execute("INSERT INTO `transactions` (`id`,`people_id`,`product_id`,`count`,`drops`,`transaction_date`, `user_id`) VALUES
+        	(100000000, 100000002, 1158, 0 , 2147483647 ,'2019-09-02', 1),
+        	(100000001, 100000003, 1161, 0 , 2147483647 ,'2019-09-02', 1),
+			(100000002, 100000004, 1162, 0 , 2147483647 ,'2019-09-02', 1)");
 
         //------------------- qr
         $this->execute("INSERT INTO `qr` (`id`, `code`) VALUES
@@ -153,8 +153,8 @@ class Cypress extends AbstractSeed
          	(100000005,'b1cf83ae73adfce0d14dbe81b53cb96b');");
 
         //------------------- stock
-        $this->execute("INSERT INTO `stock` (`id`, `box_id`, `product_id`, `size_id`,`items`,`location_id`,`qr_id`,`comments`,`created`,`created_by`) VALUES
-			(100000000, 328765, 1163, 68, 50, 100000002, 100000000, 'Cypress seed test box', '2015-01-01 11:15:32', 1),
-            (100000001, 235563, 1165, 68, 50, 100000005, 100000001, '50 dummy products', '2019-09-29 18:15:32', 1);");
+        $this->execute("INSERT INTO `stock` (`id`, `box_id`, `product_id`, `size_id`,`items`,`location_id`,`qr_id`,`comments`,`created`,`created_by`, `box_state_id`) VALUES
+			(100000000, 328765, 1163, 68, 50, 100000002, 100000000, 'Cypress seed test box', '2015-01-01 11:15:32', 1, 1),
+            (100000001, 235563, 1165, 68, 50, 100000005, 100000001, '50 dummy products', '2019-09-29 18:15:32', 1, 1);");
     }
 }

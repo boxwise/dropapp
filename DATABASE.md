@@ -2,15 +2,6 @@
 
 This list describes the database setup, indicating for which part of the dropapp the table is used. And also it indicates whether some records need to be present in that table in order for the app to work. 
 
-### Obsolete ###
-
-These tables can possible be deleted
-
-- pagetree (part of the CMS functions of the framework, but not used)
-- numbers 
-- products_prices
-- redirect (part of the CMS functions of the framework, but not used)
-- units (used for the old food functions, can be deleted)
 
 ### Maybe obsolete? ###
 
