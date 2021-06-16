@@ -2,6 +2,10 @@
   "projectId": "tip3z9",
   "baseUrl": "https://staging.boxtribute.org",
   "chromeWebSecurity": false,
+  "retries": {
+    "runMode": 2,
+    "openMode": 0
+  },
   "env": {
     "testAdmin": "admin@admin.co",
     "testCoordinator": "coordinator@coordinator.co",

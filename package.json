@@ -9,7 +9,7 @@
     "wait-on": "^5.3.0"
   },
   "scripts": {
-    "cypress": "CYPRESS_baseUrl=http://localhost:8100 CYPRESS_RETRIES=2 cypress"
+    "cypress": "CYPRESS_baseUrl=http://localhost:8100 cypress"
   },
   "browserslist": {
     "production": [
