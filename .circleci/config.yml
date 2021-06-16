@@ -137,7 +137,7 @@ workflows:
             only: master
         post-steps:
           - store_test_results:
-              path: cypress/results
+              path: cypress
     - deploy:
         name: deploy-staging
         envVariablePrefix: BOXWISE_STAGING_
