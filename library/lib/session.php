@@ -61,7 +61,12 @@ function authenticate($settings, $ajax)
         // we record the full redirect url in a session variable
         // and redirect there once we've had the auth0 callback
         $_SESSION['auth0_callback_redirect_uri'] = $_SERVER['REQUEST_URI'];
-        $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
+        // we use the prompt=login paramter to ensure the login screen
+        // always displays - rather than redirecting back
+        // mainly, this is because we're using an auth0 rule to raise errors
+        // and this then leaves us forever stuck without this
+        // see https://community.auth0.com/t/can-i-show-errors-raised-in-rules-in-the-login-page/51143
+        $auth0->login(null, null, ['prompt' => 'login', 'redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
     }
 
     // ideally we wouldn't need to do this, but because loadSessionData
