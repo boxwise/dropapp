@@ -48,6 +48,7 @@ Tracer::inSpan(
             break;
         case '/ajax.php':
         case '/mobile.php':
+        case '/cypress-session.php':
         case '/dailyroutine.php':
         case '/pdf/workshopcard.php':
         case '/pdf/bicyclecard.php':
