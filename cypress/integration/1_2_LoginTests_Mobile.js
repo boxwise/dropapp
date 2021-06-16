@@ -3,74 +3,27 @@ import { getLoginConfiguration } from '../config';
 context('Login tests - Mobile', () => {
   let config = getLoginConfiguration();
 
-  function loginUsing(userMail, userPassword) {
-    cy.visit("/mobile.php");
-    cy.get("input[data-testid='email']").type(`${userMail}`);
-    cy.get("input[data-testid='password']").type(`${userPassword}`);
-    cy.get("input[data-testid='signInButton']").click();
-  };
-
   it('Login test (Admin)', () => {
-    loginUsing(config.testAdmin, config.testPwd);
+    cy.backgroundLoginUsing(config.testAdmin, config.testPwd);
+    cy.visit('/mobile.php');
     cy.get("h2[data-testid='mobileHeader']").should('be.visible');
   });
 
   it('Login test (Coordinator)', () => {
-    loginUsing(config.testCoordinator, config.testPwd);
+    cy.backgroundLoginUsing(config.testCoordinator, config.testPwd);
+    cy.visit('/mobile.php');
     cy.get("h2[data-testid='mobileHeader']").should('be.visible');
   })
 
   it('Login test (Volunteer)', () => {
-    loginUsing(config.testVolunteer, config.testPwd);
+    cy.backgroundLoginUsing(config.testVolunteer, config.testPwd);
+    cy.visit('/mobile.php');
     cy.get("h2[data-testid='mobileHeader']").should('be.visible');
   })
 
-  it('Login with non-activated user', () => {
-    loginUsing(config.testNotActivatedUser, config.testPwd);
-    cy.mobileWarningNotificationWithTextIsVisible(config.genericErrLoginNotif);
-  })
+  // it('Should be redirected without login', () => {
+  //   cy.visit('/mobile.php');
+  //   cy.location('host').should('eq', Cypress.env('auth0_domain'));
+  // })
 
-  it('Login with expired user', () => {
-    loginUsing(config.testExpiredUser, config.testPwd);
-    cy.mobileWarningNotificationWithTextIsVisible(config.genericErrLoginNotif);
-  })
-
-  it('Login with deleted user', () => {
-    loginUsing(config.testDeletedUser, config.testPwd);
-    cy.mobileWarningNotificationWithTextIsVisible(config.genericErrLoginNotif);
-  })
-
-  it('Login with unknown user', () => {
-    loginUsing(config.testUnknownUser, config.testPwd);
-    cy.mobileWarningNotificationWithTextIsVisible(config.unknownEmailErrLoginNotif);
-  })
-
-  it('Login with wrong password', () => {
-    loginUsing(config.testAdmin, config.testWrongPwd);
-    cy.mobileWarningNotificationWithTextIsVisible(config.incorrectLoginNotif);
-  })
-
-  it('Forgot password form', () => {
-    cy.visit('/mobile.php');
-    cy.get("a[data-testid='forgotPassword']").click();
-    cy.get("form[data-testid='resetForm']").should('be.visible');
-  });
-
-  it('Forgot password form - nonexistent user', () => {
-    cy.visit('/mobile.php');
-    cy.get("a[data-testid='forgotPassword']").click();
-    cy.get("form[data-testid='resetForm']").should('be.visible');
-    cy.get("input[data-testid='forgotPwdEmailField']").type("nonexistent@address.com");
-    cy.get("input[data-testid='submitForgottenPwd']").click();
-    cy.notificationWithTextIsVisible(config.unknownEmailErrLoginNotif);
-  });
-
-  it('Forgot password form success confirmation', () => {
-    cy.visit('/mobile.php');
-    cy.get("a[data-testid='forgotPassword']").click();
-    cy.get("form[data-testid='resetForm']").should('be.visible');
-    cy.get("input[data-testid='forgotPwdEmailField']").type(config.testAdmin);
-    cy.get("input[data-testid='submitForgottenPwd']").click();
-    cy.notificationWithTextIsVisible(config.successPwdChangeNotif);
-  });
 });
