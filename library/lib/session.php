@@ -33,7 +33,7 @@ function getAuth0Management($settings)
 
     return new Management($auth0ClientCredentials['access_token'], $settings['auth0_domain']);
 }
-function authorize($settings, $ajax)
+function authenticate($settings, $ajax)
 {
     $auth0 = getAuth0($settings);
     $userInfo = $auth0->getUser();
@@ -57,6 +57,7 @@ function authorize($settings, $ajax)
     $_SESSION['auth0_callback_redirect_uri'] = $_SERVER['REQUEST_URI'];
     $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
 }
+
 function loadSessionData($settings)
 {
     $auth0 = getAuth0($settings);
