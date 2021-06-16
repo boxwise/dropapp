@@ -117,16 +117,21 @@ The password for the root-user for the db `dropapp_dev` is `dropapp_root`.
 
 Most of use use workbench to acces the MySQL database. To establish a connection you need to enter your `localhost`-address, e.g. `127.0.0.1`, for 'Hostname' and `9906` for 'Port'.
 
-#### Phinx migrations and seeds
+#### Phinx migrations
 
 We're using [Phinx](https://phinx.org/) to run database migration and create database seeds.
+
+To migrate to the current database version run
+
+        vendor/bin/phinx migrate
+
 To create an migration run
 
         vendor/bin/phinx create <NameOfMigrationInCamelCaseFormat>
 
 It creates an file in `db/migrations`. Please use this file to write your db migration.
 
-#### Re-seed your database
+#### Phinx database seeding
 
 If you want to re-seed your database, just run
 
