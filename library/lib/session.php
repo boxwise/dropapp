@@ -37,25 +37,44 @@ function authenticate($settings, $ajax)
 {
     $auth0 = getAuth0($settings);
     $userInfo = $auth0->getUser();
-    if ($userInfo) {
-        // ideally we wouldn't need to do this, but because loadSessionData
-        // is crazy and looks for $_GET parameters hidden here to
-        // change current org or camp, we have to load this every request
-        loadSessionData($settings);
-
-        return;
+    // ick, but given how broken our routing is, have to check here
+    // otherwise we fail the authenticate check
+    $isAuth0Callback = 'auth0callback' == $_GET['action'];
+    // this can be triggered by an unexpected auth0 error
+    // or an expired user
+    if ($isAuth0Callback && $_GET['error']) {
+        $error = new Zmarty();
+        $error->assign('error', $_GET['error_description']);
+        $error->assign('title', 'Sorry, an error occured while logging in');
+        $error->display('cms_error.tpl');
+        die();
     }
-    if ($ajax) {
-        http_response_code(401);
-        echo json_encode(['success' => false]);
+
+    if (!$userInfo) {
+        if ($ajax) {
+            http_response_code(401);
+            echo json_encode(['success' => false]);
+        }
+        // there's no valid user, so ensure we're all signed out locally
+        logout();
+        // because auth0 will only callback to specific known urls
+        // we record the full redirect url in a session variable
+        // and redirect there once we've had the auth0 callback
+        $_SESSION['auth0_callback_redirect_uri'] = $_SERVER['REQUEST_URI'];
+        $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
     }
 
-    logout();
-    // because auth0 will only callback to specific known urls
-    // we record the full redirect url in a session variable
-    // and redirect there once we've had the auth0 callback
-    $_SESSION['auth0_callback_redirect_uri'] = $_SERVER['REQUEST_URI'];
-    $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
+    // ideally we wouldn't need to do this, but because loadSessionData
+    // is crazy and looks for $_GET parameters hidden here to
+    // change current org or camp, we have to load this every request
+    loadSessionData($settings);
+    if ($isAuth0Callback) {
+        $redirectUrl = $_SESSION['auth0_callback_redirect_uri'] ?? '/';
+        unset($_SESSION['auth0_callback_redirect_uri']);
+        redirect($redirectUrl);
+    }
+
+    return;
 }
 
 function loadSessionData($settings)
@@ -71,13 +90,6 @@ function loadSessionData($settings)
     }
 }
 
-function auth0callback($settings)
-{
-    loadSessionData($settings);
-    $redirectUrl = $_SESSION['auth0_callback_redirect_uri'] ?? '/';
-    unset($_SESSION['auth0_callback_redirect_uri']);
-    redirect($redirectUrl);
-}
 // because users are updated in all kinds of ways and the
 // changes are buried within things like generic formhandlers
 // we just fetch the user record from the database again

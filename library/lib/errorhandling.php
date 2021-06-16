@@ -45,7 +45,7 @@ function bootstrap_exception_handler(Throwable $ex)
     if ('localhost' == @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST)) {
         $error->assign('exception', $ex);
     }
-    $error->assign('title', 'Sorry, an error occured');
+    $error->assign('title', 'Sorry, something went wrong');
     $error->display('cms_error.tpl');
     die();
 }
