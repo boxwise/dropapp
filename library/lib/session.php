@@ -2,6 +2,7 @@
 
 require 'vendor/autoload.php';
 use Auth0\SDK\API\Authentication;
+use Auth0\SDK\API\Management;
 use Auth0\SDK\Auth0;
 
 function getAuth0($settings)
@@ -13,7 +14,25 @@ function getAuth0($settings)
         'redirect_uri' => $settings['auth0_redirect_uri'],
     ]);
 }
+function getAuth0Authentication($settings)
+{
+    return new Authentication(
+        $settings['auth0_domain'],
+        $settings['auth0_client_id'],
+        $settings['auth0_client_secret']
+    );
+}
+function getAuth0Management($settings)
+{
+    $auth0Authentication = getAuth0Authentication($settings);
 
+    $config = [
+        'audience' => 'https://'.$settings['auth0_domain'].'/api/v2/',
+    ];
+    $auth0ClientCredentials = $auth0Authentication->client_credentials($config);
+
+    return new Management($auth0ClientCredentials['access_token'], $settings['auth0_domain']);
+}
 function authorize($settings, $ajax)
 {
     $auth0 = getAuth0($settings);
@@ -22,7 +41,7 @@ function authorize($settings, $ajax)
         // ideally we wouldn't need to do this, but because loadSessionData
         // is crazy and looks for $_GET parameters hidden here to
         // change current org or camp, we have to load this every request
-        loadSessionDataFromAuth0($settings);
+        loadSessionData($settings);
 
         return;
     }
@@ -37,8 +56,6 @@ function authorize($settings, $ajax)
     // and redirect there once we've had the auth0 callback
     $_SESSION['auth0_callback_redirect_uri'] = $_SERVER['REQUEST_URI'];
     $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
-
-    return;
 }
 function loadSessionData($settings)
 {
@@ -49,8 +66,7 @@ function loadSessionData($settings)
     if ($user) { // does user exist in the app db and in the auth0 db
         loadSessionDataForUser($user);
     } else {
-        // TODO: create the user
-        throw new Exception("Currently can't create these users automatically");
+        throw new Exception('User not found in database');
     }
 }
 
@@ -61,6 +77,50 @@ function auth0callback($settings)
     unset($_SESSION['auth0_callback_redirect_uri']);
     redirect($redirectUrl);
 }
+// because users are updated in all kinds of ways and the
+// changes are buried within things like generic formhandlers
+// we just fetch the user record from the database again
+// (after any changes are made), and push the whole lot to auth0
+// rather than having any specific actions like change email, disable account etc
+function updateAuth0UserFromDb($user_id)
+{
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+
+    $userDataDb = db_row('SELECT email, naam, deleted, is_admin, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE id=:id LIMIT 1', ['id' => $user_id]);
+    $userDataAuth0 = [
+        'email' => $userDataDb['email'],
+        'name' => $userDataDb['naam'],
+        'blocked' => '0000-00-00 00:00:00' != $userDataDb['deleted'] && !is_null($userDataDb['deleted']),
+        'app_metadata' => [
+            'is_god' => $userDataDb['is_admin'],
+            'usergroup_id' => $userDataDb['cms_usergroups_id'],
+        ],
+    ];
+    if ($userDataDb['valid_firstday'] && '0000-00-00' != $userDataDb['valid_firstday']) {
+        $userDataAuth0['app_metadata']['valid_firstday'] = $userDataDb['valid_firstday'];
+    }
+    if ($userDataDb['valid_lastday'] && '0000-00-00' != $userDataDb['valid_lastday']) {
+        $userDataAuth0['app_metadata']['valid_lastday'] = $userDataDb['valid_lastday'];
+    }
+
+    try {
+        $mgmtAPI->users()->update('auth0|'.intval($user_id), $userDataAuth0);
+    } catch (GuzzleHttp\Exception\ClientException $e) {
+        $response = $e->getResponse();
+        // get non-truncated error message from auth0
+        $responseBodyAsString = $response->getBody()->getContents();
+
+        throw $e;
+    }
+}
+
+function updateAuth0Password($user_id, $password)
+{
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $mgmtAPI->users()->update('auth0|'.intval($user_id), ['password' => $password, 'connection' => 'Username-Password-Authentication']);
+}
 
 function logout()
 {
@@ -68,12 +128,7 @@ function logout()
 
     session_unset();
     session_destroy();
-    $auth0 = new Auth0([
-        'domain' => $settings['auth0_domain'],
-        'client_id' => $settings['auth0_client_id'],
-        'client_secret' => $settings['auth0_client_secret'],
-        'redirect_uri' => $settings['auth0_redirect_uri'],
-    ]);
+    $auth0 = getAuth0($settings);
     $auth0->logout();
 }
 
@@ -92,11 +147,7 @@ function sendlogindata($table, $ids)
 {
     global $settings;
 
-    $auth0Authentication = new Authentication(
-        $settings['auth0_domain'],
-        $settings['auth0_client_id'],
-        $settings['auth0_client_secret']
-    );
+    $auth0Authentication = getAuth0Authentication($settings);
 
     foreach ($ids as $id) {
         $email = db_value('SELECT email FROM cms_users WHERE id=:id LIMIT 1', ['id' => $id]);

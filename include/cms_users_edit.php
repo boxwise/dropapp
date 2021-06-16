@@ -37,6 +37,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 
             $handler = new formHandler($table);
             $userId = $handler->savePost($keys);
+            updateAuth0UserFromDb($userId);
             $row = db_row('SELECT * FROM '.$table.' WHERE id = :id ', ['id' => $_SESSION['user']['id']]);
             $_SESSION['user'] = array_merge($_SESSION['user'], $row);
             if (!$existinguser) {
