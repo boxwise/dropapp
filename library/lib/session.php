@@ -78,8 +78,6 @@ function authenticate($settings, $ajax)
         unset($_SESSION['auth0_callback_redirect_uri']);
         redirect($redirectUrl);
     }
-
-    return;
 }
 
 function loadSessionData($settings)
