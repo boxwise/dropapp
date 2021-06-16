@@ -4,7 +4,7 @@ use OpenCensus\Trace\Tracer;
 
 Tracer::inSpan(
     ['name' => ('library/core.php')],
-    function () use ($bypassAuthorization, $mobile, $ajax) {
+    function () use ($bypassAuthentication, $mobile, $ajax) {
         global $settings, $lan, $translate;
 
         if (!defined('LOADED_VIA_SINGLE_ENTRY_POINT')) {
@@ -54,8 +54,8 @@ Tracer::inSpan(
 
         // functions that are app specific but need to available globally
         require_once 'functions.php';
-        if (!$bypassAuthorization) {
-            authorize($settings, $ajax);
+        if (!$bypassAuthentication) {
+            authenticate($settings, $ajax);
         }
     }
 );
