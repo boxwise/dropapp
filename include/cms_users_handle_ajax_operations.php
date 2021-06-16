@@ -9,6 +9,7 @@ if ($ajax) {
             if ($success) {
                 foreach ($ids as $id) {
                     db_query('UPDATE '.$table.' SET email = CONCAT(email,".deleted.",id) WHERE id = :id', ['id' => $id]);
+                    updateAuth0UserFromDb($id);
                 }
             }
 
@@ -19,17 +20,21 @@ if ($ajax) {
             if ($success) {
                 foreach ($ids as $id) {
                     db_query('UPDATE '.$table.' SET email = SUBSTR(email, 1, LENGTH(email)-LENGTH(".deleted.")-LENGTH(id)) WHERE id = :id', ['id' => $id]);
+                    updateAuth0UserFromDb($id);
                 }
             }
 
             break;
         case 'extendActive':
         case 'extend':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect, $data) = listExtend($table, $ids, $_POST['option']);
-
-                break;
             $ids = explode(',', $_POST['ids']);
+            list($success, $message, $redirect, $data) = listExtend($table, $ids, $_POST['option']);
+            if ($success) {
+                foreach ($ids as $id) {
+                    updateAuth0UserFromDb($id);
+                }
+            }
+
             break;
         case 'sendlogindata':
             $ids = explode(',', $_POST['ids']);
