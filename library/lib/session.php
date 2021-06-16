@@ -72,7 +72,7 @@ function authenticate($settings, $ajax)
     // ideally we wouldn't need to do this, but because loadSessionData
     // is crazy and looks for $_GET parameters hidden here to
     // change current org or camp, we have to load this every request
-    loadSessionData($settings);
+    loadSessionData($userInfo);
     if ($isAuth0Callback) {
         $redirectUrl = $_SESSION['auth0_callback_redirect_uri'] ?? '/';
         unset($_SESSION['auth0_callback_redirect_uri']);
@@ -80,10 +80,8 @@ function authenticate($settings, $ajax)
     }
 }
 
-function loadSessionData($settings)
+function loadSessionData($userInfo)
 {
-    $auth0 = getAuth0($settings);
-    $userInfo = $auth0->getUser();
     // update local user info with auth0 info
     $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $userInfo['email']]);
     if ($user) { // does user exist in the app db and in the auth0 db
