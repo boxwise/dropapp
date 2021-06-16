@@ -486,5 +486,12 @@ class Minimal extends AbstractSeed
 			(911,0,'text','listtitle_vegetables','Food list for vegetables','','Vegetables','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(912,0,'textarea','workshop-rules','Rules for workshop access','','Workshop access is only available for beneficiaries of Nea Kavala. / You can access the workshop when you have succesfully finished the training and have signed the contract with us / To get access to the workshop and use tools you show us this card, you will get it back after returning the tools and leaving the workshop  / You are responsible for your own safety and to return all tools in a clean and good state / You have to be 16 years old minimum. / Always return all the tools before closing time of the workshop (17:00) / If you not follow these rules, we can ban you for two weeks and if you repeatedly not follow the rules we can ban you permanently.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(913,0,'text','site_name','','','Boxtribute','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00');");
+
+        //------------------- units
+        $this->execute("INSERT INTO `units` (`id`, `label`, `longlabel`, `seq`, `created`, `created_by`, `modified`, `modified_by`) VALUES
+			(1,'liter','liter',3,NULL,NULL,NULL,NULL),
+			(2,'kg','kilogram',2,NULL,NULL,NULL,NULL),
+			(3,'g','gram',1,NULL,NULL,NULL,NULL),
+            (4,'piece','piece',4,NULL,NULL,NULL,NULL);");
     }
 }
