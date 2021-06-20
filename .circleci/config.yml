@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   gcp-cli: circleci/gcp-cli@1.5.0
-  cypress: cypress-io/cypress@1.25.0
+  cypress: cypress-io/cypress@1.28.0
 jobs:
   build:
     docker:
@@ -127,7 +127,7 @@ workflows:
     # baseUrl for cypress is set in cypress.json (currently staging.boxtribute.org)
     - cypress/run:
         yarn: true
-        record: true
+        record: true # cypress tests are uploaded to https://dashboard.cypress.io/
         wait-on: 'https://staging.boxtribute.org/'
         no-workspace: true
         requires:
@@ -135,9 +135,6 @@ workflows:
         filters:
           branches:
             only: master
-        post-steps:
-          - store_test_results:
-              path: cypress/results
     - deploy:
         name: deploy-staging
         envVariablePrefix: BOXWISE_STAGING_
