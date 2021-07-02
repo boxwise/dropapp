@@ -35,9 +35,13 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
         if ($is_admin || ($organisation_allowed && $userlevel_allowed)) {
             $keys = ['naam', 'email', 'cms_usergroups_id', 'valid_firstday', 'valid_lastday'];
 
-            $handler = new formHandler($table);
-            $userId = $handler->savePost($keys);
-            updateAuth0UserFromDb($userId);
+            $userId = db_transaction(function () use ($table, $keys, $userId) {
+                $handler = new formHandler($table);
+                $userId = $handler->savePost($keys);
+                updateAuth0UserFromDb($userId);
+
+                return $userId;
+            });
             $row = db_row('SELECT * FROM '.$table.' WHERE id = :id ', ['id' => $_SESSION['user']['id']]);
             $_SESSION['user'] = array_merge($_SESSION['user'], $row);
             if (!$existinguser) {

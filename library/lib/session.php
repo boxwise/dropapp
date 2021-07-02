@@ -96,6 +96,8 @@ function loadSessionData($userInfo)
 // we just fetch the user record from the database again
 // (after any changes are made), and push the whole lot to auth0
 // rather than having any specific actions like change email, disable account etc
+// note: you should wrap calls to this in a db transaction so if the API
+// call fails, the previous db update is not applied
 function updateAuth0UserFromDb($user_id)
 {
     global $settings;
