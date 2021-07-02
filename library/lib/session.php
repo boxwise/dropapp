@@ -127,7 +127,7 @@ function updateAuth0UserFromDb($user_id)
         // get non-truncated error message from auth0
         $responseBodyAsString = $response->getBody()->getContents();
 
-        throw $e;
+        throw new Exception("Received an error from Auth0: $responseBodyAsString", 0, $e);
     }
 }
 
