@@ -130,7 +130,7 @@ function updateAuth0UserFromDb($user_id)
                 $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
             } catch (GuzzleHttp\Exception\ClientException $e) {
                 // user doesn't exist, so try creating it instead
-                if ($e->getResponse()->getStatusCode() == 404) {
+                if (404 == $e->getResponse()->getStatusCode()) {
                     $auth0UserData['user_id'] = $auth0UserId;
                     $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
                     $mgmtAPI->users()->create($auth0UserData);
@@ -144,7 +144,7 @@ function updateAuth0UserFromDb($user_id)
         // get non-truncated error message from auth0
         $responseBodyAsString = $response->getBody()->getContents();
 
-        throw new Exception("Received an error from Auth0: $responseBodyAsString", 0, $e);
+        throw new Exception("Received an error from Auth0: {$responseBodyAsString}", 0, $e);
     }
 }
 

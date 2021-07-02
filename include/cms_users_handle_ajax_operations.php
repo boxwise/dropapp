@@ -16,6 +16,7 @@ if ($ajax) {
 
                 return $result;
             });
+
             break;
         case 'undelete':
             $ids = explode(',', $_POST['ids']);
@@ -45,6 +46,7 @@ if ($ajax) {
 
                 return $result;
             });
+
             break;
         case 'sendlogindata':
             $ids = explode(',', $_POST['ids']);
