@@ -1,6 +1,5 @@
 <?php
 
-    $return = ['success' => true];
     // allowed databases
     $devdbs = ['dropapp_dev', 'dropapp_staging'];
     // confirmed testusers
@@ -50,20 +49,19 @@
             ), 'id');
             // Test if table is key in $allowed and the ids can be deleted
             foreach ($ids as $id) {
-                $permission = ($return['success'] && isset($allowed[$_POST['table']]) && in_array($id, $allowed[$_POST['table']]));
-                if ($permission) {
-                    listRealDelete($_POST['table'], $ids);
-                    $return = 'true';
-                } else {
-                    $return = 'false';
+                $permission = isset($allowed[$_POST['table']]) && in_array($id, $allowed[$_POST['table']]);
+                if (!$permission) {
                     trigger_error('No permission to delete this data', E_USER_ERROR);
-
-                    break;
+                    exit;
                 }
             }
-        } else {
-            $return = 'true';
+            db_transaction(function () use ($ids) {
+                listRealDelete($_POST['table'], $ids);
+                foreach ($ids as $id) {
+                    deleteAuth0User($id);
+                }
+            });
         }
     }
 
-    echo $return;
+    echo 'true';

@@ -11,6 +11,5 @@ Cypress.Commands.add("testdbdelete", (table, ids, emails = null) => {
     }).then(response => {
         expect(response.status).to.eq(200);
         expect(response.body).to.contain("true");
-
     });
 });

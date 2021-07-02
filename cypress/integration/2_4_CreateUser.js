@@ -27,6 +27,7 @@ Cypress.config("defaultCommandTimeout",200000)
         cy.loginAsAdmin();
         cy.visit('/?action=cms_users_edit&origin=cms_users');
     })
+    
     it("2_4_0_A Check empty form + empty submit",() => {
         cy.get("input[data-testid='user_name']").should("be.visible");
         cy.get("input[data-testid='user_email']").should("be.visible");

@@ -91,6 +91,14 @@ function loadSessionData($userInfo)
     }
 }
 
+function deleteAuth0User($user_id)
+{
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $auth0UserId = 'auth0|'.intval($user_id);
+    $mgmtAPI->users()->delete($auth0UserId);
+}
+
 // because users are updated in all kinds of ways and the
 // changes are buried within things like generic formhandlers
 // we just fetch the user record from the database again
