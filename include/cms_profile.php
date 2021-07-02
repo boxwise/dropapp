@@ -4,17 +4,18 @@
 
     if ($_POST) {
         $keys = ['naam', 'email', 'language'];
-        if ($_POST['pass']) {
-            $_POST['pass'] = md5($_POST['pass']);
-            array_push($keys, 'pass');
-        }
 
-        $handler = new formHandler($table);
-        $handler->savePost($keys, ['language']);
+        db_transaction(function () use ($table, $keys) {
+            $handler = new formHandler($table);
+            $handler->savePost($keys, ['language']);
+            $row = db_row('SELECT * FROM '.$table.' WHERE id = :id ', ['id' => $_SESSION['user']['id']]);
+            $_SESSION['user'] = array_merge($_SESSION['user'], $row);
 
-        $row = db_row('SELECT * FROM '.$table.' WHERE id = :id ', ['id' => $_SESSION['user']['id']]);
-        $_SESSION['user'] = array_merge($_SESSION['user'], $row);
-
+            updateAuth0UserFromDb($_SESSION['user']['id']);
+            if ($_POST['pass']) {
+                updateAuth0Password($_SESSION['user']['id'], $_POST['pass']);
+            }
+        });
         redirect('?action='.$action);
     }
 

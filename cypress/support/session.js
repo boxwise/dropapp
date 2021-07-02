@@ -1,18 +1,18 @@
 import { getLoginConfiguration } from '../config';
 
 // Standard Login method for all tests
-function loginWithAjax(userMail, userPassword) {
+function backgroundLoginUsing(userMail, userPassword) {
+    cy.log(`Logging in as ${userMail}`);
     cy.request({
         method: "POST",
-        url: '/ajax.php?file=login',
+        url: '/cypress-session.php',
         body: {
             email: userMail,
-            pass: userPassword
+            password: userPassword
         },
-        form: true
+        form: true // submit as POST fields not JSON encoded body
     }).then(response => {
         expect(response.status).to.eq(200);
-        expect(response.body.message).to.be.empty;
         expect(response.body.success).to.be.true;
     });
 };
@@ -22,20 +22,22 @@ function loginWithAjax(userMail, userPassword) {
 // tests
 Cypress.Commands.add("loginAsVolunteer", () => {
     let config = getLoginConfiguration();
-    loginWithAjax(config.testVolunteer, config.testPwd);
+    backgroundLoginUsing(config.testVolunteer, config.testPwd);
 });
+
+Cypress.Commands.add("backgroundLoginUsing", backgroundLoginUsing);
 
 Cypress.Commands.add("loginAsVolunteerWithNoPermissions", () => {
     let config = getLoginConfiguration();
-    loginWithAjax(config.testVolunteerWithNoPermissions, config.testPwd);
+    backgroundLoginUsing(config.testVolunteerWithNoPermissions, config.testPwd);
 });
 
 Cypress.Commands.add("loginAsAdmin", () => {
     let config = getLoginConfiguration();
-    loginWithAjax(config.testAdmin, config.testPwd);
+    backgroundLoginUsing(config.testAdmin, config.testPwd);
 });
 
 Cypress.Commands.add("loginAsCoordinator", () => {
     let config = getLoginConfiguration();
-    loginWithAjax(config.testCoordinator, config.testPwd);
+    backgroundLoginUsing(config.testCoordinator, config.testPwd);
 });

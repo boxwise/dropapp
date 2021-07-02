@@ -4,78 +4,44 @@ import { getLoginConfiguration } from '../config';
 context('Login tests', () => {
   let config = getLoginConfiguration();
 
-  // Login commands trhough login page
-  function loginUsing(userMail, userPassword) {
-    cy.visit("/login.php");
-    cy.get("input[data-testid='email']").type(`${userMail}`);
-    cy.get("input[data-testid='password']").type(`${userPassword}`);
-    cy.get("input[data-testid='signInButton']").click();
-  };
-
   it('Login test (Admin)', () => {
-    console.log(config.testAdmin);
-
-    console.log(config);
-    loginUsing(config.testAdmin, config.testPwd);
+    cy.backgroundLoginUsing(config.testAdmin, config.testPwd);
+    cy.visit('/');
     cy.get("div[data-testid='dropapp-header']").should('be.visible');
+    cy.get("div[data-testid='dropapp-header']")
+      .contains('BrowserTestUser_Admin');
   });
 
   it('Login test (Coordinator)', () => {
-    loginUsing(config.testCoordinator, config.testPwd);
+    cy.backgroundLoginUsing(config.testCoordinator, config.testPwd);
+    cy.visit('/');
     cy.get("div[data-testid='dropapp-header']").should('be.visible');
+    cy.get("div[data-testid='dropapp-header']")
+      .contains('BrowserTestUser_Coordinator');
   })
 
   it('Login test (Volunteer)', () => {
-    loginUsing(config.testVolunteer, config.testPwd);
-    cy.get("div[data-testid='dropapp-header']").should('be.visible');
+    cy.backgroundLoginUsing(config.testVolunteer, config.testPwd);
+    cy.visit('/');
+    cy.get("div[data-testid='dropapp-header']")
+      .should('be.visible');
+    cy.get("div[data-testid='dropapp-header']")
+      .contains('BrowserTestUser_User');
   })
 
-  it('Login with non-activated user', () => {
-    loginUsing(config.testNotActivatedUser, config.testPwd);
-    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
-  })
+  // it('Should be redirected without credentials', () => {
+  //   cy.visit('/');
+  //   cy.location('host').should('eq', Cypress.env('auth0_domain'));
+  // })
 
-  it('Login with expired user', () => {
-    loginUsing(config.testExpiredUser, config.testPwd);
-    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
-  })
-
-  it('Login with deleted user', () => {
-    loginUsing(config.testDeletedUser, config.testPwd);
-    cy.notificationWithTextIsVisible(config.genericErrLoginNotif);
-  })
-
-  it('Login with unknown user', () => {
-    loginUsing(config.testUnknownUser, config.testPwd);
-    cy.notificationWithTextIsVisible(config.unknownEmailErrLoginNotif);
-  })
-
-  it('Login with wrong password', () => {
-    loginUsing(config.testAdmin, config.testWrongPwd);
-    cy.notificationWithTextIsVisible(config.incorrectLoginNotif);
-  })
-
-  it('Forgot password form', () => {
-    cy.visit('/login.php');
-    cy.get("a[data-testid='forgotPassword']").click();
-    cy.get("form[data-testid='resetForm']").should('be.visible');
-  });
-
-  it('Forgot password form - nonexistent user', () => {
-    cy.visit('/login.php');
-    cy.get("a[data-testid='forgotPassword']").click();
-    cy.get("form[data-testid='resetForm']").should('be.visible');
-    cy.get("input[data-testid='forgotPwdEmailField']").type(config.testUnknownUser);
-    cy.get("input[data-testid='submitForgottenPwd']").click();
-    cy.notificationWithTextIsVisible(config.unknownEmailErrLoginNotif)
-  });
-
-  it('Forgot password form success confirmation', () => {
-    cy.visit('/login.php');
-    cy.get("a[data-testid='forgotPassword']").click();
-    cy.get("form[data-testid='resetForm']").should('be.visible');
-    cy.get("input[data-testid='forgotPwdEmailField']").type(config.testAdmin);
-    cy.get("input[data-testid='submitForgottenPwd']").click();
-    cy.notificationWithTextIsVisible(config.successPwdChangeNotif)
-  });
+  // // we're testing our expired user rule configured in auth0
+  // // not auth0 itself here
+  // it('Login with expired user', () => {
+  //   cy.visit('/');
+  //   cy.get("input[type='email']").type(config.testExpiredUser)
+  //   cy.get("input[type='password']").type(config.testPwd)
+  //   cy.get("button[type='submit']").click();
+  //   cy.location('host').should('not.eq', Cypress.env('auth0_domain'))
+  //   cy.get("body").contains('This user is not currently active.')
+  // })
 });

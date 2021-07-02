@@ -7,7 +7,7 @@ use Google\Cloud\ErrorReporting\Bootstrap;
  */
 function boxwise_sentry_scope(Sentry\State\Scope $scope): void
 {
-    $session = $_SESSION;
+    $session = isset($_SESSION) ? $_SESSION : [];
     if (isset($_SESSION['user'])) {
         // Do not pass private data
         unset($session['user']['email'], $session['user']['naam'], $session['user']['pass']);
@@ -45,7 +45,7 @@ function bootstrap_exception_handler(Throwable $ex)
     if ('localhost' == @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST)) {
         $error->assign('exception', $ex);
     }
-    $error->assign('title', 'Sorry, an error occured');
+    $error->assign('title', 'Sorry, something went wrong');
     $error->display('cms_error.tpl');
     die();
 }

@@ -17,6 +17,6 @@ export function getLoginConfiguration() {
         testUnknownUser: Cypress.env("testUnknownUser"),
         testPwd: Cypress.env("testPwd"),
         testWrongPwd: Cypress.env("testWrongPwd"),
-        orgName: Cypress.env("orgName")
+        orgName: Cypress.env("orgName"),
      };
 };
