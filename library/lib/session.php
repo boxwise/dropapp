@@ -72,7 +72,7 @@ function authenticate($settings, $ajax)
     // ideally we wouldn't need to do this, but because loadSessionData
     // is crazy and looks for $_GET parameters hidden here to
     // change current org or camp, we have to load this every request
-    loadSessionData($settings);
+    loadSessionData($userInfo);
     if ($isAuth0Callback) {
         $redirectUrl = $_SESSION['auth0_callback_redirect_uri'] ?? '/';
         unset($_SESSION['auth0_callback_redirect_uri']);
@@ -80,10 +80,8 @@ function authenticate($settings, $ajax)
     }
 }
 
-function loadSessionData($settings)
+function loadSessionData($userInfo)
 {
-    $auth0 = getAuth0($settings);
-    $userInfo = $auth0->getUser();
     // update local user info with auth0 info
     $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $userInfo['email']]);
     if ($user) { // does user exist in the app db and in the auth0 db
@@ -93,41 +91,68 @@ function loadSessionData($settings)
     }
 }
 
+function deleteAuth0User($user_id)
+{
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $auth0UserId = 'auth0|'.intval($user_id);
+    $mgmtAPI->users()->delete($auth0UserId);
+}
+
 // because users are updated in all kinds of ways and the
 // changes are buried within things like generic formhandlers
 // we just fetch the user record from the database again
 // (after any changes are made), and push the whole lot to auth0
 // rather than having any specific actions like change email, disable account etc
+// note: you should wrap calls to this in a db transaction so if the API
+// call fails, the previous db update is not applied
 function updateAuth0UserFromDb($user_id)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
+    $auth0UserId = 'auth0|'.intval($user_id);
+    $dbUserData = db_row('SELECT email, naam, deleted, is_admin, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE id=:id LIMIT 1', ['id' => $user_id]);
 
-    $userDataDb = db_row('SELECT email, naam, deleted, is_admin, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE id=:id LIMIT 1', ['id' => $user_id]);
-    $userDataAuth0 = [
-        'email' => $userDataDb['email'],
-        'name' => $userDataDb['naam'],
-        'blocked' => '0000-00-00 00:00:00' != $userDataDb['deleted'] && !is_null($userDataDb['deleted']),
+    $auth0UserData = [
+        'email' => $dbUserData['email'],
+        'name' => $dbUserData['naam'],
         'app_metadata' => [
-            'is_god' => $userDataDb['is_admin'],
-            'usergroup_id' => $userDataDb['cms_usergroups_id'],
+            'is_god' => $dbUserData['is_admin'],
+            'usergroup_id' => $dbUserData['cms_usergroups_id'],
         ],
+        'connection' => 'Username-Password-Authentication',
     ];
-    if ($userDataDb['valid_firstday'] && '0000-00-00' != $userDataDb['valid_firstday']) {
-        $userDataAuth0['app_metadata']['valid_firstday'] = $userDataDb['valid_firstday'];
+    if ($dbUserData['valid_firstday'] && '0000-00-00' != $dbUserData['valid_firstday']) {
+        $auth0UserData['app_metadata']['valid_firstday'] = $auth0UserData['valid_firstday'];
     }
-    if ($userDataDb['valid_lastday'] && '0000-00-00' != $userDataDb['valid_lastday']) {
-        $userDataAuth0['app_metadata']['valid_lastday'] = $userDataDb['valid_lastday'];
+    if ($dbUserData['valid_lastday'] && '0000-00-00' != $dbUserData['valid_lastday']) {
+        $auth0UserData['app_metadata']['valid_lastday'] = $auth0UserData['valid_lastday'];
     }
 
     try {
-        $mgmtAPI->users()->update('auth0|'.intval($user_id), $userDataAuth0);
+        if ('0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted'])) {
+            // remove entirely from auth0, as we can't support adding random characters to the email account anyway (ie .deleted.id)
+            $mgmtAPI->users()->delete($auth0UserId);
+        } else {
+            try {
+                $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
+            } catch (GuzzleHttp\Exception\ClientException $e) {
+                // user doesn't exist, so try creating it instead
+                if (404 == $e->getResponse()->getStatusCode()) {
+                    $auth0UserData['user_id'] = $auth0UserId;
+                    $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
+                    $mgmtAPI->users()->create($auth0UserData);
+                } else {
+                    throw $e;
+                }
+            }
+        }
     } catch (GuzzleHttp\Exception\ClientException $e) {
         $response = $e->getResponse();
         // get non-truncated error message from auth0
         $responseBodyAsString = $response->getBody()->getContents();
 
-        throw $e;
+        throw new Exception("Received an error from Auth0: {$responseBodyAsString}", 0, $e);
     }
 }
 
