@@ -24,6 +24,11 @@ function checkURL($url)
     return (bool) preg_match('#^HTTP/.*\s+[(200|301|302)]+\s#i', $headers);
 }
 
+function checkEmail($email)
+{
+    return (bool) (filter_var($email, FILTER_VALIDATE_EMAIL));
+}
+
 function grammarRealign($row)
 {
     $parts = explode(' ', $row);

@@ -21,6 +21,11 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
             }
         }
 
+        // Validate if E-mail address is correct
+        if ($_POST['email'] && !checkEmail($_POST['email'])) {
+            redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message=This email is not valid');
+        }
+
         // Validate if user can access this user account
         // TODO Coordinator can see volunteers of other bases of the same organization.
         $posteduser = db_row('
@@ -35,13 +40,9 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
         if ($is_admin || ($organisation_allowed && $userlevel_allowed)) {
             $keys = ['naam', 'email', 'cms_usergroups_id', 'valid_firstday', 'valid_lastday'];
 
-            $userId = db_transaction(function () use ($table, $keys, $userId) {
-                $handler = new formHandler($table);
-                $userId = $handler->savePost($keys);
-                updateAuth0UserFromDb($userId);
-
-                return $userId;
-            });
+            $handler = new formHandler($table);
+            $userId = $handler->savePost($keys);
+            updateAuth0UserFromDb($userId);
             $row = db_row('SELECT * FROM '.$table.' WHERE id = :id ', ['id' => $_SESSION['user']['id']]);
             $_SESSION['user'] = array_merge($_SESSION['user'], $row);
             if (!$existinguser) {
@@ -81,7 +82,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 
     // define tabs
     addfield('text', $translate['cms_users_naam'], 'naam', ['required' => true, 'testid' => 'user_name']);
-    addfield('email', $translate['cms_users_email'], 'email', ['required' => true, 'tooltip' => $translate['cms_users_email_tooltip'], 'testid' => 'user_email']);
+    addfield('email', $translate['cms_users_email'], 'email', ['required' => true, 'tooltip' => $translate['cms_users_email_tooltip'], 'testid' => 'user_email', 'repeat' => !$data]);
 
     $usergroups = db_array('
 		SELECT ug.id AS value, ug.label 
