@@ -26,7 +26,9 @@ function checkURL($url)
 
 function checkEmail($email)
 {
-    return (bool) (filter_var($email, FILTER_VALIDATE_EMAIL));
+    list($user, $domain) = preg_split('/@/', $email);
+
+    return (bool) (filter_var($email, FILTER_VALIDATE_EMAIL) && checkdnsrr($domain, 'MX'));
 }
 
 function grammarRealign($row)
