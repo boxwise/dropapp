@@ -181,7 +181,8 @@ class Minimal extends AbstractSeed
 			(20,'Children by month (2-5)',100),
 			(21,'Baby by month (0-2, 3-6, 7-12, 13-18, 19-24)',19),
 			(22,'Baby by month (0-6, 7-24)',20),
-			(23,'Children by year (2-3, 4-5, 6-7, 8-9, 10-11, 12-13, 14-15)',11);");
+			(23,'Children by year (2-3, 4-5, 6-7, 8-9, 10-11, 12-13, 14-15)',11),
+			(24,'Children by year (individual years)', 12);");
 
         //------------------- sizes
         $this->execute("INSERT INTO `sizes` (`id`,`label`,`sizegroup_id`,`portion`,`seq`) VALUES 
@@ -288,7 +289,22 @@ class Minimal extends AbstractSeed
 			(145,'10-11 years',23,20,201),
             (146,'12-13 years',23,20,202),
             (147,'14-15 years',23,20,203),
-			(148,'All ages',23,100,204);");
+			(148,'All ages',23,100,204),
+			(149,'2 years',24,8,210),
+            (150,'3 years',24,8,211),
+            (151,'4 years',24,8,212),
+            (152,'5 years',24,8,213),            
+			(153,'6 years',24,8,214),
+            (154,'7 years',24,8,215),
+            (155,'8 years',24,8,216),
+			(156,'9 years',24,8,217),
+            (157,'10 years',24,8,218),
+            (158,'11 years',24,8,219),
+            (159,'12 years',24,8,220),            
+			(160,'13 years',24,8,221),
+            (161,'14 years',24,8,222),
+            (162,'15 years',24,8,223),
+			(163,'All ages',24,100,234);");
 
         //------------------- tipofday
         $this->execute("INSERT INTO `tipofday` (`id`, `title`, `content`) VALUES

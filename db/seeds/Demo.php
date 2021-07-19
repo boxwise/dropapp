@@ -267,36 +267,39 @@ class Demo extends AbstractSeed
 			(16,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Volunteer','dev_volunteer@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',16,'0000-00-00','0000-00-00'),
 			(17,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Coordinator','dev_coordinator@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00'),
 			(18,'5f4dcc3b5aa765d61d8327deb882cf99','Dev Head of Operations','dev_headofops@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00');");
-        $users = [];
-        for ($i = 20; $i <= 120; ++$i) {
-            $tempdata = [
-                'id' => $i,
-                'cms_usergroups_id' => $faker->randomElement([3, 4, 5, 6, 13, 14, 16]),
-                'email' => $faker->unique()->email,
-                'language' => 2,
-                'naam' => $faker->name,
-                'pass' => '5f4dcc3b5aa765d61d8327deb882cf99',
-            ];
 
-            // set valid dates for 70 per cent of users
-            $rand_num = $faker->numberBetween($min = 0, $max = 100);
-            if ($rand_num < 71) {
-                $tempdata['valid_firstday'] = $faker->dateTimeBetween($startDate = '-350 days', $endDate = '+250 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
-                $tempdata['valid_lastday'] = $faker->dateTimeBetween($startDate = $tempdata['valid_firstday'], $endDate = '+255 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
-            } else {
-                $tempdata['valid_firstday'] = '0000-00-00 00:00:00';
-                $tempdata['valid_lastday'] = '0000-00-00 00:00:00';
-            }
+        // user generation fixed for Auth0
+        // Uncomment if you want to generate new users.
+        // $users = [];
+        // for ($i = 20; $i <= 120; ++$i) {
+        //     $tempdata = [
+        //         'id' => $i,
+        //         'cms_usergroups_id' => $faker->randomElement([3, 4, 5, 6, 13, 14, 16]),
+        //         'email' => $faker->unique()->email,
+        //         'language' => 2,
+        //         'naam' => $faker->name,
+        //         'pass' => '5f4dcc3b5aa765d61d8327deb882cf99',
+        //     ];
 
-            // deactivate 5 per cent of the users
-            $rand_num = $faker->numberBetween($min = 0, $max = 100);
-            if ($rand_num < 5) {
-                $tempdata['deleted'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
-                $tempdata['email'] = $tempdata['email'].'.deleted.'.$i;
-            }
-            $users[] = $tempdata;
-        }
-        $this->table('cms_users')->insert($users)->save();
+        //     // set valid dates for 70 per cent of users
+        //     $rand_num = $faker->numberBetween($min = 0, $max = 100);
+        //     if ($rand_num < 71) {
+        //         $tempdata['valid_firstday'] = $faker->dateTimeBetween($startDate = '-350 days', $endDate = '+250 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+        //         $tempdata['valid_lastday'] = $faker->dateTimeBetween($startDate = $tempdata['valid_firstday'], $endDate = '+255 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+        //     } else {
+        //         $tempdata['valid_firstday'] = '0000-00-00 00:00:00';
+        //         $tempdata['valid_lastday'] = '0000-00-00 00:00:00';
+        //     }
+
+        //     // deactivate 5 per cent of the users
+        //     $rand_num = $faker->numberBetween($min = 0, $max = 100);
+        //     if ($rand_num < 5) {
+        //         $tempdata['deleted'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+        //         $tempdata['email'] = $tempdata['email'].'.deleted.'.$i;
+        //     }
+        //     $users[] = $tempdata;
+        // }
+        // $this->table('cms_users')->insert($users)->save();
         // fix password, email and name of the users for auth0
         $this->execute("
 			INSERT INTO 
