@@ -139,7 +139,7 @@ function updateAuth0UserFromDb($user_id)
     } catch (GuzzleHttp\Exception\ClientException $e) {
         // user doesn't exist, so try creating it instead
         if (404 == $e->getResponse()->getStatusCode()) {
-            $auth0UserData['user_id'] = $auth0UserId;
+            $auth0UserData['user_id'] = preg_replace('/auth0\|/', '', $auth0UserId);
             $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
             $mgmtAPI->users()->create($auth0UserData);
         } else {
