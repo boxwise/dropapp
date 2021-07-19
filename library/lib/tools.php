@@ -24,6 +24,13 @@ function checkURL($url)
     return (bool) preg_match('#^HTTP/.*\s+[(200|301|302)]+\s#i', $headers);
 }
 
+function checkEmail($email)
+{
+    list($user, $domain) = preg_split('/@/', $email);
+
+    return (bool) (filter_var($email, FILTER_VALIDATE_EMAIL) && checkdnsrr($domain, 'MX'));
+}
+
 function grammarRealign($row)
 {
     $parts = explode(' ', $row);
