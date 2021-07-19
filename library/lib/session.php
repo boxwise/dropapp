@@ -116,12 +116,17 @@ function updateAuth0UserFromDb($user_id)
     $auth0UserData = [
         'email' => $dbUserData['email'],
         'name' => $dbUserData['naam'],
+        'blocked' => '0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted']),
         'app_metadata' => [
             'is_god' => $dbUserData['is_admin'],
             'usergroup_id' => $dbUserData['cms_usergroups_id'],
         ],
         'connection' => 'Username-Password-Authentication',
     ];
+    if ('0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted'])) {
+        $auth0UserData['app_metadata']['last_blocked_date'] = $dbUserData['deleted'];
+        $auth0UserData['email'] = preg_replace('/\.deleted\.\d+/', '', $dbUserData['email']);
+    }
     if ($dbUserData['valid_firstday'] && '0000-00-00' != $dbUserData['valid_firstday']) {
         $auth0UserData['app_metadata']['valid_firstday'] = $dbUserData['valid_firstday'];
     }
@@ -130,29 +135,20 @@ function updateAuth0UserFromDb($user_id)
     }
 
     try {
-        if ('0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted'])) {
-            // remove entirely from auth0, as we can't support adding random characters to the email account anyway (ie .deleted.id)
-            $mgmtAPI->users()->delete($auth0UserId);
-        } else {
-            try {
-                $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
-            } catch (GuzzleHttp\Exception\ClientException $e) {
-                // user doesn't exist, so try creating it instead
-                if (404 == $e->getResponse()->getStatusCode()) {
-                    $auth0UserData['user_id'] = $auth0UserId;
-                    $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
-                    $mgmtAPI->users()->create($auth0UserData);
-                } else {
-                    throw $e;
-                }
-            }
-        }
+        $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
     } catch (GuzzleHttp\Exception\ClientException $e) {
-        $response = $e->getResponse();
-        // get non-truncated error message from auth0
-        $responseBodyAsString = $response->getBody()->getContents();
+        // user doesn't exist, so try creating it instead
+        if (404 == $e->getResponse()->getStatusCode()) {
+            $auth0UserData['user_id'] = $auth0UserId;
+            $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
+            $mgmtAPI->users()->create($auth0UserData);
+        } else {
+            $response = $e->getResponse();
+            // get non-truncated error message from auth0
+            $responseBodyAsString = $response->getBody()->getContents();
 
-        throw new Exception("Received an error from Auth0: {$responseBodyAsString}", 0, $e);
+            throw new Exception("Received an error from Auth0: {$responseBodyAsString}", 0, $e);
+        }
     }
 }
 
