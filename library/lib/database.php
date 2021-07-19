@@ -95,6 +95,17 @@ function db_fetch($result, $mode = PDO::FETCH_ASSOC)
     return $result->fetch($mode);
 }
 
+function db_transaction(callable $body)
+{
+    db_query('SET autocommit = 0');
+    db_query('START TRANSACTION');
+    $result = $body();
+    db_query('COMMIT');
+    db_query('SET autocommit = 1');
+
+    return $result;
+}
+
 function db_query($query, $array = [], $dbid = false)
 {
     global $defaultdbid;

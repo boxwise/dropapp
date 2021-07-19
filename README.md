@@ -161,6 +161,13 @@ Therefore, a few additional guidelines when writing test:
 + When you want to execute a redirect, e.g. example by clicking a button or tab, please add an assertion after the click, e.g. of the url `cy.url().should('include', 'people_deactivated')`. Due to this assertion cypress will definitely wait until the redirect is executed.  
 + Only if you use `cy.visit()` you can be sure that the cypress test wait until a page is fully loaded. Therefore, try to navigate as much as possible with `cy.visit()`.
 
+### Notes for setting up an Auth0 tenant
+
+If you are setting up a new Auth0 tenant, we require access to the Auth0 Management API. In order to do this
+
++ Under 'APIs' select Auth0 Management API, go to 'Machine to Machine Applications' and enable access
++ Grant scopes for read/update/delete/create users and users_app_metadata.
+
 ### Contribution guidelines ###
 
 You gotta be awesome and kind.
@@ -173,3 +180,4 @@ Drop us an email to hello@boxtribute.org!
 ### License ###
 
 See the [LICENSE](./LICENSE) file for license rights and limitations (Apache 2.0).
+

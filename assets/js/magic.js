@@ -432,36 +432,27 @@ $(function() {
                 $("#form-submit").prop("disabled", true);
                 $("body").addClass("loading");
 
-                if (
-                    ["login", "reset", "reset2"].includes(
-                        $(form).data("action")
-                    )
-                ) {
-                    var $destination = getUrlVars()["destination"];
-                    AjaxFormSubmit(form, (($destination == undefined) ? "" : "&destination="+getUrlVars()["destination"]));
-                } else {
-                    // Test internet connection
-                    $.ajax({
-                        type: "post",
-                        url: "ajax.php?file=checkconnection",
-                        dataType: "json",
-                        success: function(checkresult) {
-                            if (checkresult.success) {
-                                AjaxFormSubmit(form);
-                            }
-                            $("body").removeClass("loading");
-
-                        },
-                        error: function(checkresult) {
-                            var n = noty({
-                                text:
-                                    "We cannot connect to the Boxtribute server.<br> Do you have internet?",
-                                type: "error"
-                            });
-                            $("body").removeClass("loading");
+                // Test internet connection
+                $.ajax({
+                    type: "post",
+                    url: "ajax.php?file=checkconnection",
+                    dataType: "json",
+                    success: function(checkresult) {
+                        if (checkresult.success) {
+                            AjaxFormSubmit(form);
                         }
-                    });
-                }
+                        $("body").removeClass("loading");
+
+                    },
+                    error: function(checkresult) {
+                        var n = noty({
+                            text:
+                                "We cannot connect to the Boxtribute server.<br> Do you have internet?",
+                            type: "error"
+                        });
+                        $("body").removeClass("loading");
+                    }
+                });
             },
             errorPlacement: function(error, element) {
                 if ($(error).text() != "") {

@@ -1,195 +1,203 @@
 <?php
 
-function login($email, $pass, $autologin, $mobile = false)
+require 'vendor/autoload.php';
+use Auth0\SDK\API\Authentication;
+use Auth0\SDK\API\Management;
+use Auth0\SDK\Auth0;
+
+function getAuth0($settings)
 {
-    global $settings;
-    $pass = md5($pass);
+    return new Auth0([
+        'domain' => $settings['auth0_domain'],
+        'client_id' => $settings['auth0_client_id'],
+        'client_secret' => $settings['auth0_client_secret'],
+        'redirect_uri' => $settings['auth0_redirect_uri'],
+    ]);
+}
+function getAuth0Authentication($settings)
+{
+    return new Authentication(
+        $settings['auth0_domain'],
+        $settings['auth0_client_id'],
+        $settings['auth0_client_secret']
+    );
+}
+function getAuth0Management($settings)
+{
+    $auth0Authentication = getAuth0Authentication($settings);
 
-    $user = db_row('SELECT *, "org" AS usertype FROM cms_users WHERE email != "" AND email = :email AND (NOT deleted OR deleted IS NULL)', ['email' => $email]);
+    $config = [
+        'audience' => 'https://'.$settings['auth0_domain'].'/api/v2/',
+    ];
+    $auth0ClientCredentials = $auth0Authentication->client_credentials($config);
 
-    if ($user) { //e-mailaddress exists in database
-        if ($user['pass'] == $pass) { // password is correct
-            // Check if account is not expired
-            $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'], $user['email']);
-            $success = $in_valid_dates['success'];
-            $message = $in_valid_dates['message'];
-
-            if ($success) {
-                loadSessionData($user);
-
-                db_query('UPDATE cms_users SET lastlogin = NOW() WHERE id = :id', ['id' => $user['id']]);
-                logfile(($mobile ? 'Mobile user ' : 'User ').'logged in with '.$_SERVER['HTTP_USER_AGENT']);
-
-                if (isset($autologin)) {
-                    setcookie('autologin_user', $email, time() + (3600 * 24 * 90), '/');
-                    setcookie('autologin_pass', $pass, time() + (3600 * 24 * 90), '/');
-                } else {
-                    setcookie('autologin_user', null, time() - 3600, '/');
-                    setcookie('autologin_pass', null, time() - 3600, '/');
-                }
-
-                if (isset($_GET['destination'])) {
-                    $redirect = urldecode($_GET['destination']);
-                } else {
-                    $redirect = '/?action=start';
-                }
-            }
-        } else { // password is not correct
-            $success = false;
-            $message = INCORRECT_LOGIN_ERROR;
-            $redirect = false;
-            $detailed_msg = 'Attempt to login with '.($mobile ? 'mobile and ' : '').' wrong password for '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
-        }
-    } else { // user not found
-        $success = false;
-        $redirect = false;
-        $deleted = db_value('SELECT email FROM cms_users WHERE email != "" AND email LIKE :email AND deleted Limit 1', ['email' => $email.'%']);
-        if ($deleted) {
-            $message = GENERIC_LOGIN_ERROR;
-            $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as deleted user '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
-        } else {
-            $message = UNKNOWN_EMAIL_LOGIN_ERROR;
-            $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as unknown user '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
-        }
+    return new Management($auth0ClientCredentials['access_token'], $settings['auth0_domain']);
+}
+function authenticate($settings, $ajax)
+{
+    $auth0 = getAuth0($settings);
+    $userInfo = $auth0->getUser();
+    // ick, but given how broken our routing is, have to check here
+    // otherwise we fail the authenticate check
+    $isAuth0Callback = 'auth0callback' == $_GET['action'];
+    // this can be triggered by an unexpected auth0 error
+    // or an expired user
+    if ($isAuth0Callback && $_GET['error']) {
+        $error = new Zmarty();
+        $error->assign('error', $_GET['error_description']);
+        $error->assign('title', 'Sorry, an error occured while logging in');
+        $error->display('cms_error.tpl');
+        die();
     }
 
-    return ['success' => $success, 'message' => $message, 'redirect' => $redirect];
+    if (!$userInfo) {
+        if ($ajax) {
+            http_response_code(401);
+            echo json_encode(['success' => false]);
+        }
+        // there's no valid user, so ensure we're all signed out locally
+        logout();
+        // because auth0 will only callback to specific known urls
+        // we record the full redirect url in a session variable
+        // and redirect there once we've had the auth0 callback
+        $_SESSION['auth0_callback_redirect_uri'] = $_SERVER['REQUEST_URI'];
+        // we use the prompt=login paramter to ensure the login screen
+        // always displays - rather than redirecting back
+        // mainly, this is because we're using an auth0 rule to raise errors
+        // and this then leaves us forever stuck without this
+        // see https://community.auth0.com/t/can-i-show-errors-raised-in-rules-in-the-login-page/51143
+        $auth0->login(null, null, ['prompt' => 'login', 'redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
+    }
+
+    // ideally we wouldn't need to do this, but because loadSessionData
+    // is crazy and looks for $_GET parameters hidden here to
+    // change current org or camp, we have to load this every request
+    loadSessionData($userInfo);
+    if ($isAuth0Callback) {
+        $redirectUrl = $_SESSION['auth0_callback_redirect_uri'] ?? '/';
+        unset($_SESSION['auth0_callback_redirect_uri']);
+        redirect($redirectUrl);
+    }
 }
 
-function checksession()
+function loadSessionData($userInfo)
 {
-    global $settings;
-    $result = ['success' => true];
-
-    $user = false;
-    if (isset($_SESSION['user'])) { // a valid session exists
-        $user = db_row('SELECT * FROM cms_users WHERE id = :id', ['id' => $_SESSION['user']['id']]);
-    } elseif (isset($_COOKIE['autologin_user'])) { // a autologin cookie exists
-        $user = db_row('SELECT * FROM cms_users WHERE email != "" AND email = :email AND pass = :pass', ['email' => $_COOKIE['autologin_user'], 'pass' => $_COOKIE['autologin_pass']]);
-    }
-
-    // check if user was loaded
-    if ($user) {
-        // Check if account is not expired
-        $in_valid_dates = check_valid_from_until_date($user['valid_firstday'], $user['valid_lastday'], $user['email']);
-        if (!$in_valid_dates['success']) {
-            $result['success'] = false;
-            $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
-            $result['message'] = $in_valid_dates['message'];
-        } else {
-            loadSessionData($user);
-        }
+    // update local user info with auth0 info
+    $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $userInfo['email']]);
+    if ($user) { // does user exist in the app db and in the auth0 db
+        loadSessionDataForUser($user);
     } else {
-        $result['success'] = false;
-        $result['redirect'] = '/login.php?destination='.urlencode($_SERVER['REQUEST_URI']);
-        if (isset($_COOKIE['autologin_user'])) { //cookie is invalid
-            setcookie('autologin_user', null, time() - 3600, '/');
-            setcookie('autologin_pass', null, time() - 3600, '/');
-        }
+        throw new Exception('User not found in database');
     }
-
-    return $result;
 }
 
-function logout($redirect = false)
+function deleteAuth0User($user_id)
 {
     global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $auth0UserId = 'auth0|'.intval($user_id);
+    $mgmtAPI->users()->delete($auth0UserId);
+}
 
-    setcookie('autologin_user', null, time() - 3600, '/');
-    setcookie('autologin_pass', null, time() - 3600, '/');
+// because users are updated in all kinds of ways and the
+// changes are buried within things like generic formhandlers
+// we just fetch the user record from the database again
+// (after any changes are made), and push the whole lot to auth0
+// rather than having any specific actions like change email, disable account etc
+// note: you should wrap calls to this in a db transaction so if the API
+// call fails, the previous db update is not applied
+function updateAuth0UserFromDb($user_id)
+{
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $auth0UserId = 'auth0|'.intval($user_id);
+    $dbUserData = db_row('SELECT email, naam, deleted, is_admin, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE id=:id LIMIT 1', ['id' => $user_id]);
+
+    $auth0UserData = [
+        'email' => $dbUserData['email'],
+        'name' => $dbUserData['naam'],
+        'blocked' => '0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted']),
+        'app_metadata' => [
+            'is_god' => $dbUserData['is_admin'],
+            'usergroup_id' => $dbUserData['cms_usergroups_id'],
+        ],
+        'connection' => 'Username-Password-Authentication',
+    ];
+    if ('0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted'])) {
+        $auth0UserData['app_metadata']['last_blocked_date'] = $dbUserData['deleted'];
+        $auth0UserData['email'] = preg_replace('/\.deleted\.\d+/', '', $dbUserData['email']);
+    }
+    if ($dbUserData['valid_firstday'] && '0000-00-00' != $dbUserData['valid_firstday']) {
+        $auth0UserData['app_metadata']['valid_firstday'] = $dbUserData['valid_firstday'];
+    }
+    if ($dbUserData['valid_lastday'] && '0000-00-00' != $dbUserData['valid_lastday']) {
+        $auth0UserData['app_metadata']['valid_lastday'] = $dbUserData['valid_lastday'];
+    }
+
+    try {
+        $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
+    } catch (GuzzleHttp\Exception\ClientException $e) {
+        // user doesn't exist, so try creating it instead
+        if (404 == $e->getResponse()->getStatusCode()) {
+            $auth0UserData['user_id'] = $auth0UserId;
+            $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
+            $mgmtAPI->users()->create($auth0UserData);
+        } else {
+            $response = $e->getResponse();
+            // get non-truncated error message from auth0
+            $responseBodyAsString = $response->getBody()->getContents();
+
+            throw new Exception("Received an error from Auth0: {$responseBodyAsString}", 0, $e);
+        }
+    }
+}
+
+function updateAuth0Password($user_id, $password)
+{
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $mgmtAPI->users()->update('auth0|'.intval($user_id), ['password' => $password, 'connection' => 'Username-Password-Authentication']);
+}
+
+function logout()
+{
+    global $settings;
 
     session_unset();
     session_destroy();
-
-    if (!$redirect) {
-        $redirect = '?';
-    }
-    redirect($redirect);
+    $auth0 = getAuth0($settings);
+    $auth0->logout();
 }
 
-function check_valid_from_until_date($valid_from, $valid_until, $email)
+function logoutWithRedirect()
 {
-    $today = new DateTime();
-    $success = true;
-    $message = '';
+    global $settings;
+    logout();
 
-    if ($valid_from && ('0000-00-00' != substr($valid_from, 0, 10))) {
-        $valid_firstday = new DateTime($valid_from);
-        if ($today < $valid_firstday) {
-            $success = false;
-            $message = GENERIC_LOGIN_ERROR;
-            $detailed_msg = 'Attempt to login as pending user '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
-        }
-    }
-    if ($valid_until && ('0000-00-00' != substr($valid_until, 0, 10))) {
-        $valid_lastday = new DateTime($valid_until);
-        if ($today > $valid_lastday) {
-            $success = false;
-            $message = GENERIC_LOGIN_ERROR;
-            $detailed_msg = 'Attempt to login '.($mobile ? 'with mobile ' : '').'as expired user '.$email;
-            logfile($detailed_msg);
-            trigger_error($detailed_msg);
-        }
-    }
-
-    return ['success' => $success, 'message' => $message];
+    // the auth0 client method
+    // $auth0->logout() simply clears local variables
+    // so we also redirect to auth0
+    redirect('https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
 }
 
 function sendlogindata($table, $ids)
 {
-    global $translate, $settings;
+    global $settings;
+
+    $auth0Authentication = getAuth0Authentication($settings);
 
     foreach ($ids as $id) {
-        $row = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
-
-        $newpassword = createPassword();
-
-        $mail = $translate['cms_sendlogin_mail'];
-        $mail = str_ireplace('{sitename}', $_SERVER['HTTP_HOST'], $mail);
-        $mail = str_ireplace('{password}', $newpassword, $mail);
-        $mail = str_ireplace('{orgname}', $_SESSION['organisation']['label'], $mail);
-        $mail = str_ireplace('{user}', $_SESSION['user']['naam'], $mail);
-
-        $result = sendmail($row['email'], $row['naam'], $translate['cms_sendlogin_mailsubject'], $mail);
-        if ($result) {
-            $message = $result;
-            $success = false;
-        } else {
-            $success = true;
-            db_query('UPDATE '.$table.' SET pass = :pass WHERE id = :id', ['pass' => md5($newpassword), 'id' => $id]);
-            $message = translate('cms_sendlogin_confirm');
-        }
+        $email = db_value('SELECT email FROM cms_users WHERE id=:id LIMIT 1', ['id' => $id]);
+        // TODO: Auth 0 send for user id $id
+        $auth0Authentication->dbconnections_change_password($email, 'Username-Password-Authentication');
     }
 
-    return [$success, $message];
-}
-
-function createPassword($length = 10, $possible = '23456789AaBbCcDdEeFfGgHhijJkKLMmNnoPpQqRrSsTtUuVvWwXxYyZz!$-_@#%^*()+=')
-{
-    $password = '';
-    $i = 0;
-    while ($i < $length) {
-        $char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
-        if (!strstr($password, $char)) {
-            $password .= $char;
-            ++$i;
-        }
-    }
-
-    return $password;
+    return [true, 'Passwords reset'];
 }
 
 // session data requires user, usergroup, organisation, camp
 // organistion and usergroup is optional for Boxtribute Gods
-function loadSessionData($user)
+function loadSessionDataForUser($user)
 {
     $_SESSION['user'] = $user;
     // update last action
@@ -276,8 +284,10 @@ function loginasuser($table, $ids)
     $_SESSION['camp2'] = $_SESSION['camp'];
     $_SESSION['usergroup2'] = $_SESSION['usergroup'];
     $_SESSION['organisation2'] = $_SESSION['organisation'];
+
     $user = db_row('SELECT * FROM cms_users WHERE id=:id', ['id' => $id]);
-    loadSessionData($user);
+    loadSessionDataForUser($user);
+
     $success = true;
     $message = 'Logged in as '.$_SESSION['user']['naam'];
 

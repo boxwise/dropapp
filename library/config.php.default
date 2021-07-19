@@ -1,4 +1,9 @@
 <?php
+    // auth0
+    $settings['auth0_domain'] = 'boxtribute-dev.eu.auth0.com';
+    $settings['auth0_client_id'] = '';
+    $settings['auth0_client_secret'] = '';
+    $settings['auth0_redirect_uri'] = 'http://localhost:8100';
     // api key for sending email
     $settings['sendgrid_key'] = '';
     $settings['sentry_key'] = '';
@@ -10,4 +15,3 @@
     $settings['db_host'] = 'db_mysql';
     $settings['db_user'] = 'root';
     $settings['db_pass'] = 'dropapp_root';
-

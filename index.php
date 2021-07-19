@@ -8,10 +8,8 @@ Tracer::inSpan(
         global $settings,$translate,$action,$lan,$pdf,$_txt,$formbuttons;
         global $error,$listdata,$data,$table,$listconfig,$thisfile,$formdata;
 
-        $login = false;
         $ajax = false;
         $mobile = false;
-
         require_once 'library/core.php';
         date_default_timezone_set('Europe/Athens');
         db_query('SET time_zone = "+'.(date('Z') / 3600).':00"');
@@ -19,8 +17,9 @@ Tracer::inSpan(
         // action set by POST will override GET
         $action = (isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : 'start'));
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
         if ('logout' == $action) {
-            logout();
+            logoutWithRedirect();
         }
 
         $cmsmain = new Zmarty();
