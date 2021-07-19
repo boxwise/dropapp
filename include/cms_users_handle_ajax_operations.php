@@ -6,30 +6,30 @@ if ($ajax) {
         case 'delete':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = db_transaction(function () use ($table, $ids) {
-                $result = listDelete($table, $ids);
-                if ($result['success']) {
+                [$success, $message, $redirect] = listDelete($table, $ids);
+                if ($success) {
                     foreach ($ids as $id) {
                         db_query('UPDATE '.$table.' SET email = CONCAT(email,".deleted.",id) WHERE id = :id', ['id' => $id]);
                         updateAuth0UserFromDb($id);
                     }
                 }
 
-                return $result;
+                return [$success, $message, $redirect];
             });
 
             break;
         case 'undelete':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = db_transaction(function () use ($table, $ids) {
-                $result = listUndelete($table, $ids);
-                if ($result['success']) {
+                [$success, $message, $redirect] = listUndelete($table, $ids);
+                if ($success) {
                     foreach ($ids as $id) {
                         db_query('UPDATE '.$table.' SET email = SUBSTR(email, 1, LENGTH(email)-LENGTH(".deleted.")-LENGTH(id)) WHERE id = :id', ['id' => $id]);
                         updateAuth0UserFromDb($id);
                     }
                 }
 
-                return $result;
+                return [$success, $message, $redirect];
             });
 
             break;
@@ -37,14 +37,14 @@ if ($ajax) {
         case 'extend':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect, $data) = db_transaction(function () use ($table, $ids) {
-                $result = listExtend($table, $ids, $_POST['option']);
-                if ($result['success']) {
+                [$success, $message, $redirect] = listExtend($table, $ids, $_POST['option']);
+                if ($success) {
                     foreach ($ids as $id) {
                         updateAuth0UserFromDb($id);
                     }
                 }
 
-                return $result;
+                return [$success, $message, $redirect];
             });
 
             break;
