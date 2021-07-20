@@ -430,7 +430,7 @@ $(function() {
                 // when a password is not set
                 return (value == "") || ( 
                     /^[A-Za-z0-9\d`!@#$%^&*\-_=+'\/.,]*$/.test(value) // consists of only these
-                    && value.length >= 12 // at least 8 character
+                    && value.length >= 12 // at least 12 character
                     && /[a-zA-Z]/.test(value) // has a letter
                     && /(?:[^\d`!@#$%^&*\-_=+'\/.,]*[`\d!@#$%^&*\-_=+'\/.,]){2}/.test(value) // has at least 2 symbol or numbers
                 ) 
