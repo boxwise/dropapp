@@ -5,6 +5,11 @@
     if ($_POST) {
         $keys = ['naam', 'email', 'language'];
 
+        // validate password strength and also check the password is equal to confirm password
+        if ($_POST['pass'] && !checkPassword($_POST['pass'], $_POST['pass2'])) {
+            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=The password is not match with the confirm password Or its not strength enough!');
+        }
+
         db_transaction(function () use ($table, $keys) {
             $handler = new formHandler($table);
             $handler->savePost($keys, ['language']);
@@ -35,7 +40,7 @@
     addfield('line');
 
     addfield('email', $translate['cms_users_email'], 'email', ['required' => true]);
-    addfield('password', $translate['cms_users_password'], 'pass', ['repeat' => true]);
+    addfield('password', $translate['cms_users_password'], 'pass', ['repeat' => true, 'pwcheck' => true]);
 
     //addfield('line');
     //addfield('select',$translate['cms_settings_language'],'language',array('query'=>'SELECT id AS value, name AS label FROM languages WHERE visible ORDER BY seq'));

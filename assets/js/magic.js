@@ -425,6 +425,19 @@ $(function() {
             })
             .appendTo(el);
 
+
+        $.validator.addMethod("pwcheck", function(value) {
+                // when a password is not set
+                return (value == "") || ( 
+                    /^[A-Za-z0-9\d=!\-@\^\&\%\#._*]*$/.test(value) // consists of only these
+                    && value.length >= 8 // at least 8 character
+                    && /[a-z]/.test(value) // has a lowercase letter
+                    && /[A-Z]/.test(value) // has a uppercase letter
+                    && /\d/.test(value)) // has a digit
+        }, "Password can consist of alphanumerals characters and special character (such as !@#$%^&*) and should has minimum of 8 characters lenght includes a lower-case letter, an upper-case letter, and a number");
+
+        
+
         $(".form").validate({
             // https://jqueryvalidation.org/
             ignore: ".no-validate",

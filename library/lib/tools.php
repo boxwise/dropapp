@@ -31,6 +31,11 @@ function checkEmail($email)
     return (bool) (filter_var($email, FILTER_VALIDATE_EMAIL) && checkdnsrr($domain, 'MX'));
 }
 
+function checkPassword($pass, $confirmPass)
+{
+    return (bool) (strlen($pass) >= 8 && preg_match('/^[A-Za-z0-9\d=!\-@\^\&\%\#._*]*$/', $pass) && $pass === $confirmPass);
+}
+
 function grammarRealign($row)
 {
     $parts = explode(' ', $row);
