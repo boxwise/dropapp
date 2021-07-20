@@ -427,16 +427,25 @@ $(function() {
 
 
         $.validator.addMethod("pwcheck", function(value) {
-                // when a password is not set
-                return (value == "") || ( 
-                    /^[A-Za-z0-9\d`!@#$%^&*\-_=+'\/.,]*$/.test(value) // consists of only these
-                    && value.length >= 12 // at least 12 character
-                    && /[a-zA-Z]/.test(value) // has a letter
-                    && /(?:[^\d`!@#$%^&*\-_=+'\/.,]*[`\d!@#$%^&*\-_=+'\/.,]){2}/.test(value) // has at least 2 symbol or numbers
-                ) 
-        }, "Password can consist of alphanumerals characters and special character (such as `!@#$%^&*-_=+) and should has minimum of 12 characters lenght includes at least a letter and 2 symbol or numbers");
+            
+            // when a password is not set
+            if (value == "")
+                return true;
 
+            let minLength = 12,
+                minSuccess = 3,
+                isDigit = + /\d+/.test(value),
+                isUppercase = + /[A-Z]+/.test(value),
+                isLowercase = + /[a-z]+/.test(value),
+                isSymbol = + /[!@#$%&\/=\?_\.,:;\-]+/.test(value);
         
+            if (value.length <= minLength) { // check lenght validity 
+                return false;
+            }
+        
+            return ((isDigit + isUppercase  + isLowercase + isSymbol) >= minSuccess) 
+            
+        }, "Your password must be at least 12 characters including at least 3 of the following 4 types of characters: a lowercase letter, an uppercase letter, a number, a special character (such as !@#$%^&*).");
 
         $(".form").validate({
             // https://jqueryvalidation.org/

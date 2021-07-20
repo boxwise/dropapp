@@ -31,14 +31,12 @@ function checkEmail($email)
     return (bool) (filter_var($email, FILTER_VALIDATE_EMAIL) && checkdnsrr($domain, 'MX'));
 }
 
-function checkPassword($pass, $confirmPass)
+function checkPasswordStrength($pass)
 {
     return (bool) (
         strlen($pass) >= 12
-        && preg_match('/^[A-Za-z0-9\d!@#$%^&*\-_=+\'\/.,]*$/', $pass)
-        && preg_match('/[A-Za-z]/', $pass)
-        && preg_match('/(?:[^`!@#$%^&*\-_=+\'\/.,]*[`!@#$%^&*\-_=+\'\/.,]){2}/', $pass)
-        && $pass === $confirmPass
+        // a regular expression to check at least 12 characters including at least 3 of the following 4 types of characters: a lower-case letter, an upper-case letter, a number, a special character (such as !@#$%^&*).
+        && preg_match('/((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])).{12,}$/m', $pass)
     );
 }
 

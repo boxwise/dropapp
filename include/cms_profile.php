@@ -5,9 +5,13 @@
     if ($_POST) {
         $keys = ['naam', 'email', 'language'];
 
-        // validate password strength and also check the password is equal to confirm password
-        if ($_POST['pass'] && !checkPassword($_POST['pass'], $_POST['pass2'])) {
-            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=The password is not match with the confirm password OR its not strong enough!');
+        // check the password is equal to confirm password
+        if ($_POST['pass'] && ($_POST['pass'] !== $_POST['pass2'])) {
+            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=The password does not match with your previously confirmed password');
+        }
+        //  check the password strenght
+        if ($_POST['pass'] && !checkPasswordStrength($_POST['pass'])) {
+            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=Your password must be at least 12 characters long and include a letter and two symbols or numbers');
         }
 
         db_transaction(function () use ($table, $keys) {
