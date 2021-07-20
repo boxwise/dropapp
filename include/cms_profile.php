@@ -7,7 +7,7 @@
 
         // validate password strength and also check the password is equal to confirm password
         if ($_POST['pass'] && !checkPassword($_POST['pass'], $_POST['pass2'])) {
-            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=The password is not match with the confirm password Or its not strength enough!');
+            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=The password is not match with the confirm password OR its not strong enough!');
         }
 
         db_transaction(function () use ($table, $keys) {

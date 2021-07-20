@@ -429,12 +429,12 @@ $(function() {
         $.validator.addMethod("pwcheck", function(value) {
                 // when a password is not set
                 return (value == "") || ( 
-                    /^[A-Za-z0-9\d=!\-@\^\&\%\#._*]*$/.test(value) // consists of only these
-                    && value.length >= 8 // at least 8 character
-                    && /[a-z]/.test(value) // has a lowercase letter
-                    && /[A-Z]/.test(value) // has a uppercase letter
-                    && /\d/.test(value)) // has a digit
-        }, "Password can consist of alphanumerals characters and special character (such as !@#$%^&*) and should has minimum of 8 characters lenght includes a lower-case letter, an upper-case letter, and a number");
+                    /^[A-Za-z0-9\d`!@#$%^&*\-_=+'\/.,]*$/.test(value) // consists of only these
+                    && value.length >= 12 // at least 8 character
+                    && /[a-zA-Z]/.test(value) // has a letter
+                    && /(?:[^\d`!@#$%^&*\-_=+'\/.,]*[`\d!@#$%^&*\-_=+'\/.,]){2}/.test(value) // has at least 2 symbol or numbers
+                ) 
+        }, "Password can consist of alphanumerals characters and special character (such as `!@#$%^&*-_=+) and should has minimum of 12 characters lenght includes at least a letter and 2 symbol or numbers");
 
         
 

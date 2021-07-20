@@ -33,7 +33,12 @@ function checkEmail($email)
 
 function checkPassword($pass, $confirmPass)
 {
-    return (bool) (strlen($pass) >= 8 && preg_match('/^[A-Za-z0-9\d=!\-@\^\&\%\#._*]*$/', $pass) && $pass === $confirmPass);
+    return (bool) (strlen($pass) >= 12
+        && preg_match('/^[A-Za-z0-9\d!@#$%^&*\-_=+\'\/.,]*$/', $pass)
+        && preg_match('/[A-Za-z]/', $pass)
+        && preg_match('/(?:[^`!@#$%^&*\-_=+\'\/.,]*[`!@#$%^&*\-_=+\'\/.,]){2}/', $pass)
+        && $pass === $confirmPass
+    );
 }
 
 function grammarRealign($row)
