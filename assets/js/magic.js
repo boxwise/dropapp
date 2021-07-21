@@ -445,7 +445,7 @@ $(function() {
         
             return ((isDigit + isUppercase  + isLowercase + isSymbol) >= minSuccess) 
             
-        }, "Your password must be at least 12 characters including at least 3 of the following 4 types of characters: a lowercase letter, an uppercase letter, a number, a special character (such as !@#$%^&*).");
+        }, "Your password must be at least 12 characters including at least 3 of the following 4 types of characters: a lowercase letter, an uppercase letter, a number, a special character (such as !@#$%&/=?_.,:;-).");
 
         $(".form").validate({
             // https://jqueryvalidation.org/

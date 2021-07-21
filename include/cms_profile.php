@@ -7,11 +7,11 @@
 
         // check the password is equal to confirm password
         if ($_POST['pass'] && ($_POST['pass'] !== $_POST['pass2'])) {
-            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=The password does not match with your previously confirmed password');
+            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=The password does not match with your confirmed password');
         }
         //  check the password strenght
         if ($_POST['pass'] && !checkPasswordStrength($_POST['pass'])) {
-            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=Your password must be at least 12 characters long and include a letter and two symbols or numbers');
+            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=Your password must be at least 12 characters including at least 3 of the following 4 types of characters: a lowercase letter, an uppercase letter, a number, a special character (such as !@#$%&/=?_.,:;-).');
         }
 
         db_transaction(function () use ($table, $keys) {
