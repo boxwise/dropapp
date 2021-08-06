@@ -32,6 +32,11 @@ Cypress.Commands.add("loginAsVolunteerWithNoPermissions", () => {
     backgroundLoginUsing(config.testVolunteerWithNoPermissions, config.testPwd);
 });
 
+Cypress.Commands.add("loginAs", (user, pass) => {
+    let config = getLoginConfiguration();
+    backgroundLoginUsing(user, pass);
+});
+
 Cypress.Commands.add("loginAsAdmin", () => {
     let config = getLoginConfiguration();
     backgroundLoginUsing(config.testAdmin, config.testPwd);

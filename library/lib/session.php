@@ -12,6 +12,7 @@ function getAuth0($settings)
         'client_id' => $settings['auth0_client_id'],
         'client_secret' => $settings['auth0_client_secret'],
         'redirect_uri' => $settings['auth0_redirect_uri'],
+        'response_mode' => 'form_post',
     ]);
 }
 function getAuth0Authentication($settings)
@@ -39,14 +40,15 @@ function authenticate($settings, $ajax)
     $userInfo = $auth0->getUser();
     // ick, but given how broken our routing is, have to check here
     // otherwise we fail the authenticate check
-    $isAuth0Callback = 'auth0callback' == $_GET['action'];
+    $isAuth0Callback = 'auth0callback' == $_REQUEST['action'];
     // this can be triggered by an unexpected auth0 error
     // or an expired user
-    if ($isAuth0Callback && $_GET['error']) {
-        $error = new Zmarty();
-        $error->assign('error', $_GET['error_description']);
-        $error->assign('title', 'Sorry, an error occured while logging in');
-        $error->display('cms_error.tpl');
+    if ($isAuth0Callback && $_REQUEST['error']) {
+        // $error = new Zmarty();
+        // $error->assign('error', $_REQUEST['error_description']);
+        // $error->assign('title', 'Sorry, an error occured while logging in');
+        // $error->display('cms_error.tpl');
+        throw new Exception($_REQUEST['error_description'], 401);
         die();
     }
 
@@ -80,14 +82,15 @@ function authenticate($settings, $ajax)
     }
 }
 
-function loadSessionData($userInfo)
+function loadSessionData($userInfo = null)
 {
+    $userId = ($userInfo['email'] !== $_SESSION['user']['email']) ? preg_replace('/auth0\|/', '', $userInfo['sub']) : $_SESSION['user']['id'];
     // update local user info with auth0 info
-    $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE email = :email', ['email' => $userInfo['email']]);
+    $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE id = :id', ['id' => $userId]);
     if ($user) { // does user exist in the app db and in the auth0 db
         loadSessionDataForUser($user);
     } else {
-        throw new Exception('User not found in database');
+        throw new Exception('User not found in database', 404);
     }
 }
 
@@ -145,9 +148,9 @@ function updateAuth0UserFromDb($user_id)
         } else {
             $response = $e->getResponse();
             // get non-truncated error message from auth0
-            $responseBodyAsString = $response->getBody()->getContents();
-
-            throw new Exception("Received an error from Auth0: {$responseBodyAsString}", 0, $e);
+            //$responseBodyAsString = $response->getBody()->getContents();
+            //throw new Exception("Received an error from Auth0: {$responseBodyAsString}", $e->getResponse()->getStatusCode(), $e);
+            throw new Exception($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         }
     }
 }
@@ -278,7 +281,7 @@ function loginasuser($table, $ids)
 {
     $id = $ids[0];
     if ($_SESSION['user2'] or !$_SESSION['user']['is_admin']) {
-        throw new Exception('You don\'t have access. Either you are not a Boxtribute God or you are already logged in as a different user!');
+        throw new Exception('You don\'t have access. Either you are not a Boxtribute God or you are already logged in as a different user!', 403);
     }
     $_SESSION['user2'] = $_SESSION['user'];
     $_SESSION['camp2'] = $_SESSION['camp'];
@@ -292,4 +295,42 @@ function loginasuser($table, $ids)
     $message = 'Logged in as '.$_SESSION['user']['naam'];
 
     return [$success, $message, true];
+}
+
+function getAuth0UserByEmail($email)
+{
+    if (checkEmail($email)) {
+        try {
+            global $settings;
+            $mgmtAPI = getAuth0Management($settings);
+            $results = $mgmtAPI->usersByEmail()->get([
+                'email' => $email,
+            ]);
+
+            return json_encode($results);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            // user doesn't exist in auth0
+            if (404 == $e->getResponse()->getStatusCode()) {
+                return null;
+            }
+        }
+    } else {
+        return null;
+    }
+}
+
+function getAuth0User($userId)
+{
+    try {
+        global $settings;
+        $mgmtAPI = getAuth0Management($settings);
+        $user = $mgmtAPI->users()->get('auth0|'.intval($userId));
+
+        return $user;
+    } catch (GuzzleHttp\Exception\ClientException $e) {
+        // user doesn't exist in auth0
+        if (404 == $e->getResponse()->getStatusCode()) {
+            return null;
+        }
+    }
 }

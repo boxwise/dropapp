@@ -21,6 +21,24 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
             }
         }
 
+        // Validate if E-mail is already deactivated and in used before
+        $deactiveduser = db_row('SELECT u.id FROM cms_users u WHERE email LIKE :email', ['email' => $_POST['email'].'.deleted%']);
+        if ($deactiveduser && ($deactiveduser['id'] != $_POST['id'])) {
+            redirect('?action=cms_users_edit&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in the system but currently deactivated, please use different email to create a new user.');
+        }
+        // check auth0 if an email addrress is already created but with different id
+        global $settings;
+        $mgmtAPI = getAuth0Management($settings);
+        $authUser = $mgmtAPI->usersByEmail()->get([
+            'email' => $_POST['email'],
+        ]);
+
+        if ($authUser && $authUser[0]['blocked']) {
+            redirect('?action=cms_users_edit&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in the system but currently deactivated, please use different email to create a new user.');
+        } elseif (!$existinguser && $authUser && !$authUser[0]['blocked']) {
+            throw new Exception('The user already exists in AUTH0 but its not sync', 409);
+        }
+
         // Validate if E-mail address is correct
         if ($_POST['email'] && !checkEmail($_POST['email'])) {
             redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message=This email is not valid');
@@ -59,7 +77,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
                 redirect('?action='.$_POST['_origin']);
             }
         } else {
-            throw new Exception('You do not have the rights to change this user!');
+            throw new Exception('You do not have the rights to change this user!', 403);
         }
     }
 
@@ -74,7 +92,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
 		WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $data['cms_usergroups_id']]);
     if (!$_SESSION['user']['is_admin'] && ($data && ($data['is_admin'] || ($_SESSION['organisation']['id'] != $requesteduser['organisation_id']) || ($_SESSION['usergroup']['userlevel'] <= $requesteduser['userlevel'])))) {
-        throw new Exception('You do not have access to this user!');
+        throw new Exception('You do not have access to this user!', 403);
     }
 
     // open the template
@@ -111,5 +129,5 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     $cmsmain->assign('data', $data);
     $cmsmain->assign('formelements', $formdata);
 } else {
-    trigger_error('You do not have access to this menu. Please ask your admin to change this!');
+    trigger_error('You do not have access to this menu. Please ask your admin to change this!', 403);
 }

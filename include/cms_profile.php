@@ -19,7 +19,6 @@
             $handler->savePost($keys, ['language']);
             $row = db_row('SELECT * FROM '.$table.' WHERE id = :id ', ['id' => $_SESSION['user']['id']]);
             $_SESSION['user'] = array_merge($_SESSION['user'], $row);
-
             updateAuth0UserFromDb($_SESSION['user']['id']);
             if ($_POST['pass']) {
                 updateAuth0Password($_SESSION['user']['id'], $_POST['pass']);
@@ -40,11 +39,11 @@
 
     // define tabs
 
-    addfield('text', $translate['cms_users_naam'], 'naam', ['required' => true, 'readonly' => ('family' == $_SESSION['user']['usertype'])]);
+    addfield('text', $translate['cms_users_naam'], 'naam', ['required' => true, 'readonly' => ('family' == $_SESSION['user']['usertype']), 'testid' => 'user_name']);
     addfield('line');
 
-    addfield('email', $translate['cms_users_email'], 'email', ['required' => true]);
-    addfield('password', $translate['cms_users_password'], 'pass', ['repeat' => true, 'pwcheck' => true]);
+    addfield('email', $translate['cms_users_email'], 'email', ['required' => true, 'testid' => 'user_email']);
+    addfield('password', $translate['cms_users_password'], 'pass', ['repeat' => true, 'pwcheck' => true, 'testid' => 'user_pass']);
 
     //addfield('line');
     //addfield('select',$translate['cms_settings_language'],'language',array('query'=>'SELECT id AS value, name AS label FROM languages WHERE visible ORDER BY seq'));
