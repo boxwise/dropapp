@@ -63,7 +63,11 @@ jobs:
             \$settings['db_user'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_pass'] = '${<< parameters.envVariablePrefix >>DBPASS}';
             \$settings['sendgrid_key'] = '${BOXWISE_SENDGRID}';
-            \$settings['sentry_key'] = '${BOXWISE_SENTRY}';" > library/config.php
+            \$settings['sentry_key'] = '${BOXWISE_SENTRY}';
+            \$settings['auth0_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_DOMAIN}';
+            \$settings['auth0_client_id'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_ID}';
+            \$settings['auth0_client_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_SECRET}';
+            \$settings['auth0_redirect_uri'] = '${<< parameters.envVariablePrefix >>AUTH0_REDIRECT_URI}';" > library/config.php
           echo "paths:
             migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'
             seeds: '%%PHINX_CONFIG_DIR%%/db/seeds'
