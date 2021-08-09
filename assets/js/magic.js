@@ -425,6 +425,28 @@ $(function() {
             })
             .appendTo(el);
 
+
+        $.validator.addMethod("pwcheck", function(value) {
+            
+            // when a password is not set
+            if (value == "")
+                return true;
+
+            let minLength = 12,
+                minSuccess = 3,
+                isDigit = + /\d+/.test(value),
+                isUppercase = + /[A-Z]+/.test(value),
+                isLowercase = + /[a-z]+/.test(value),
+                isSymbol = + /[!@#$%&\/=\?_\.,:;\-]+/.test(value);
+        
+            if (value.length <= minLength) { // check lenght validity 
+                return false;
+            }
+        
+            return ((isDigit + isUppercase  + isLowercase + isSymbol) >= minSuccess) 
+            
+        }, "Your password must be at least 12 characters including at least 3 of the following 4 types of characters: a lowercase letter, an uppercase letter, a number, a special character (such as !@#$%&/=?_.,:;-).");
+
         $(".form").validate({
             // https://jqueryvalidation.org/
             ignore: ".no-validate",

@@ -5,6 +5,15 @@
     if ($_POST) {
         $keys = ['naam', 'email', 'language'];
 
+        // check the password is equal to confirm password
+        if ($_POST['pass'] && ($_POST['pass'] !== $_POST['pass2'])) {
+            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=The password does not match with your confirmed password');
+        }
+        //  check the password strenght
+        if ($_POST['pass'] && !checkPasswordStrength($_POST['pass'])) {
+            redirect('?action=cms_profile&origin='.$_POST['_origin'].'&warning=1&message=Your password must be at least 12 characters including at least 3 of the following 4 types of characters: a lowercase letter, an uppercase letter, a number, a special character (such as !@#$%&/=?_.,:;-).');
+        }
+
         db_transaction(function () use ($table, $keys) {
             $handler = new formHandler($table);
             $handler->savePost($keys, ['language']);
@@ -35,7 +44,7 @@
     addfield('line');
 
     addfield('email', $translate['cms_users_email'], 'email', ['required' => true]);
-    addfield('password', $translate['cms_users_password'], 'pass', ['repeat' => true]);
+    addfield('password', $translate['cms_users_password'], 'pass', ['repeat' => true, 'pwcheck' => true]);
 
     //addfield('line');
     //addfield('select',$translate['cms_settings_language'],'language',array('query'=>'SELECT id AS value, name AS label FROM languages WHERE visible ORDER BY seq'));

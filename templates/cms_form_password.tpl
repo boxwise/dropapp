@@ -5,6 +5,7 @@
 			<input type="password" id="field_{$element['field']}" 
 				name="{$element['field']}" 
 				{if $element['minlength']}minlength="{$element['minlength']}"{/if} 
+				{if $element['pwcheck']}pwcheck="true"{/if} 
 				class="form-control"  
 				
  				{if $element['onblur']}onblur="{$element['onblur']};"{/if}
