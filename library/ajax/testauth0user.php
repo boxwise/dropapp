@@ -26,7 +26,7 @@
 
             if ('0000-00-00 00:00:00' != $db_user['deleted'] && !is_null($db_user['deleted'])) {
                 array_push($validation_result, (!empty($auth0User[0]->app_metadata->last_blocked_date) && $auth0User[0]->app_metadata->last_blocked_date == $db_user['deleted']) ? 'true' : 'false');
-                array_push($validation_result, (!empty($auth0User[0]->blocked) && $auth0User[0]->app_metadata->blocked) ? 'true' : 'false');
+                array_push($validation_result, (!empty($auth0User[0]->blocked) && $auth0User[0]->blocked) ? 'true' : 'false');
             }
 
             echo in_array('false', $validation_result) ? 'false' : 'true';

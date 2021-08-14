@@ -11,7 +11,6 @@ context('Login tests', () => {
   })
 
   it('1.1.2 - Should be redirected to initialy requested page when authenticated', () => {
-    Cypress.Cookies.debug(true);
     cy.visit('/?action=cms_profile');
     cy.get("input[id='username']").type(config.testCoordinator);
     cy.get("input[type='password']").type(config.testPwd);
@@ -23,6 +22,8 @@ context('Login tests', () => {
       }
     });
     cy.url().should('include', 'action=cms_profile');
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
+    cy.get("div[data-testid='dropapp-header']").contains(Cypress.env('orgName'));
   })
 
 
@@ -44,32 +45,9 @@ context('Login tests', () => {
     });
     cy.url().should('include', 'mobile.php');
     cy.url().should('include', 'vieworders');
+    cy.get('[data-testid=orgcampDiv]').should('be.visible');
+    cy.get('[data-testid=orgcampDiv]').contains(Cypress.env('orgName'));
+    
   })
-
-
-    // it('Login test (Admin)', () => {
-  //   cy.backgroundLoginUsing(config.testAdmin, config.testPwd);
-  //   cy.visit('/');
-  //   cy.get("div[data-testid='dropapp-header']").should('be.visible');
-  //   cy.get("div[data-testid='dropapp-header']")
-  //     .contains('BrowserTestUser_Admin');
-  // });
-
-  // it('Login test (Coordinator)', () => {
-  //   cy.backgroundLoginUsing(config.testCoordinator, config.testPwd);
-  //   cy.visit('/');
-  //   cy.get("div[data-testid='dropapp-header']").should('be.visible');
-  //   cy.get("div[data-testid='dropapp-header']")
-  //     .contains('BrowserTestUser_Coordinator');
-  // })
-
-  // it('Login test (Volunteer)', () => {
-  //   cy.backgroundLoginUsing(config.testVolunteer, config.testPwd);
-  //   cy.visit('/');
-  //   cy.get("div[data-testid='dropapp-header']")
-  //     .should('be.visible');
-  //   cy.get("div[data-testid='dropapp-header']")
-  //     .contains('BrowserTestUser_User');
-  // })
 
 });

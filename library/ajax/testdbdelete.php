@@ -16,11 +16,13 @@
         if (isset($_POST['emails'])) {
             $emails = $_POST['emails'];
             foreach ($emails as $email) {
-                $found_id = db_value('SELECT id FROM cms_users WHERE email = :email', ['email' => $email]);
+                $found_id = db_value('SELECT id FROM cms_users WHERE email = :email OR (email LIKE :deletedEmail AND deleted IS NOT NULL)', ['email' => $email, 'deletedEmail' => $email.'.deleted%']);
                 //test necessary, because otherwise null is added to ids
                 if ($found_id) {
                     array_push($ids, $found_id);
                 }
+
+                deleteAuth0UserByEmail($email);
             }
         } else {
             $ids = explode(',', $_POST['ids']);
