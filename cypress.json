@@ -1,6 +1,6 @@
 {
   "projectId": "tip3z9",
-  "baseUrl": "https://staging.boxtribute.org",
+  "baseUrl": "http://localhost:8100",
   "chromeWebSecurity": false,
   "retries": {
     "runMode": 2,
@@ -14,7 +14,7 @@
     "testExpiredUser": "expired@expired.co",
     "testNotActivatedUser": "notactivated@notactivated.com",
     "testDeletedUser": "deleted@deleted.co",
-    "testUnknownUser": "unknown2@unknown.co",
+    "testUnknownUser": "unknown@unknown.co",
     "testPwd": "browsertests",
     "testWrongPwd": "wrongPwd",
     "incorrectLoginNotif": "Incorrect login.",
@@ -22,6 +22,6 @@
     "unknownEmailErrLoginNotif": "There is no user with this email address in our systems. Check your spelling and try again.",
     "successPwdChangeNotif": "Within a few minutes you will receive an e-mail with further instructions to reset your password.",
     "orgName": "TestOrganisation",
-    "auth0Domain": "boxtribute-dev.eu.auth0.com"
+    "auth0Domain": "boxtribute-staging.eu.auth0.com"
   }
 }
