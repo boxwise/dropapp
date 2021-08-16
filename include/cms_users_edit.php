@@ -13,7 +13,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 			WHERE (NOT u.deleted OR u.deleted = NULL) AND (NOT ug.deleted OR ug.deleted IS NULL) AND email = :email', ['email' => $_POST['email']]);
         if ($existinguser && ($existinguser['id'] != $_POST['id'])) {
             if ($existinguser['organisation_id'] != $_SESSION['organisation']['id']) {
-                redirect('?action=cms_users&warning=1&message=This email already exists in another organisation.<br>Please ask the corresponding person to deactivate their other account!');
+                redirect('?action=cms_users&warning=1&message=This email already exists in another organisation.<br>Please use a different email to create a new user!');
             } elseif (!$_SESSION['user']['is_admin'] && ($_SESSION['usergroup']['userlevel'] <= $existinguser['userlevel'])) {
                 redirect('?action=cms_users&warning=1&message=This email already exists in your organisation. You do not have access to this account.');
             } else {
