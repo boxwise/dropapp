@@ -87,6 +87,8 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     cy.waitForAjaxAction(USER_DEACTVATE_REQUEST, USER_DEACTVATE_RESPONSE);
     cy.url().should('include', 'action=cms_users');
     CheckUserSyncedAuth0(Testaddress);
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
+    DeleteTestUser(Testaddress);
   
   });
     
@@ -109,8 +111,9 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     cy.getButtonWithText('Save and close').click();
     cy.url().should('include', '/?action=cms_profile');
     cy.get('.created').should('be.visible');
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
     CheckUserSyncedAuth0(TestAdminEmail);
-    DeleteTestUser(Testaddress);
+    
   });
 
   // it('2.9.8 - When an error happens while a user is editing himself is the db and Auth0 out of sync', () => {

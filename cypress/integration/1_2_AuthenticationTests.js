@@ -5,10 +5,6 @@ context('Authentication tests', () => {
 
   let config = getLoginConfiguration();
 
-  beforeEach(function () {
-    cy.wait(3000);
-  });
-
   it('1.2.1 - Should not get to authenticated page when enter invalid user', () => {
     cy.visit('/');
     cy.get("input[id='username']").type(config.testUnknownUser)
@@ -29,7 +25,7 @@ context('Authentication tests', () => {
 
   it('1.2.3 - Should not get to authenticated page with user before valid dates ', () => {
     cy.visit('/');
-    cy.get("input[id='username']").type(config.testExpiredUser)
+    cy.get("input[id='username']").type(config.testNotActivatedUser)
     cy.get("input[type='password']").type(config.testPwd)
     cy.get("button[type='submit']").click();
     cy.url().should('include', Cypress.env('auth0Domain'))
@@ -41,6 +37,7 @@ context('Authentication tests', () => {
     cy.get("input[id='username']").type(config.testExpiredUser)
     cy.get("input[type='password']").type(config.testPwd)
     cy.get("button[type='submit']").click();
+    cy.url().should('include', Cypress.env('auth0Domain'))
     cy.get("h3").contains('This user is not currently active')
   })
 

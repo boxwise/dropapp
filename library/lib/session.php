@@ -82,7 +82,7 @@ function authenticate($settings, $ajax)
     }
 }
 
-function loadSessionData($userInfo = null)
+function loadSessionData($userInfo)
 {
     $userId = ($userInfo['email'] !== $_SESSION['user']['email']) ? preg_replace('/auth0\|/', '', $userInfo['sub']) : $_SESSION['user']['id'];
     // update local user info with auth0 info
@@ -100,6 +100,20 @@ function deleteAuth0User($user_id)
     $mgmtAPI = getAuth0Management($settings);
     $auth0UserId = 'auth0|'.intval($user_id);
     $mgmtAPI->users()->delete($auth0UserId);
+}
+
+function deleteAuth0UserByEmail($email)
+{
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $results = $mgmtAPI->usersByEmail()->get([
+        'email' => $email,
+    ]);
+
+    if ($results) {
+        $auth0UserId = 'auth0|'.intval($results[0]->identities[0]->user_id);
+        $mgmtAPI->users()->delete($auth0UserId);
+    }
 }
 
 // because users are updated in all kinds of ways and the
