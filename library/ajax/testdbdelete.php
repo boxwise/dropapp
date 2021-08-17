@@ -21,8 +21,6 @@
                 if ($found_id) {
                     array_push($ids, $found_id);
                 }
-
-                deleteAuth0UserByEmail($email);
             }
         } else {
             $ids = explode(',', $_POST['ids']);

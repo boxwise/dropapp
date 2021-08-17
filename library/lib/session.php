@@ -102,20 +102,6 @@ function deleteAuth0User($user_id)
     $mgmtAPI->users()->delete($auth0UserId);
 }
 
-function deleteAuth0UserByEmail($email)
-{
-    global $settings;
-    $mgmtAPI = getAuth0Management($settings);
-    $results = $mgmtAPI->usersByEmail()->get([
-        'email' => $email,
-    ]);
-
-    if ($results) {
-        $auth0UserId = 'auth0|'.intval($results[0]->identities[0]->user_id);
-        $mgmtAPI->users()->delete($auth0UserId);
-    }
-}
-
 // because users are updated in all kinds of ways and the
 // changes are buried within things like generic formhandlers
 // we just fetch the user record from the database again
