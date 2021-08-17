@@ -4,6 +4,7 @@ import { getLoginConfiguration } from '../config';
 context('Login tests', () => {
 
   let config = getLoginConfiguration();
+  Cypress.config('defaultCommandTimeout',200000);
 
   it('1.1.1 - Should be redirected to auth0 login when unauthenticated', () => {
     cy.visit('/');
