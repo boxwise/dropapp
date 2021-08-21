@@ -44,10 +44,6 @@ function authenticate($settings, $ajax)
     // this can be triggered by an unexpected auth0 error
     // or an expired user
     if ($isAuth0Callback && $_REQUEST['error']) {
-        // $error = new Zmarty();
-        // $error->assign('error', $_REQUEST['error_description']);
-        // $error->assign('title', 'Sorry, an error occured while logging in');
-        // $error->display('cms_error.tpl');
         throw new Exception($_REQUEST['error_description'], 401);
         die();
     }
@@ -102,20 +98,6 @@ function deleteAuth0User($user_id)
     $mgmtAPI->users()->delete($auth0UserId);
 }
 
-function deleteAuth0UserByEmail($email)
-{
-    global $settings;
-    $mgmtAPI = getAuth0Management($settings);
-    $results = $mgmtAPI->usersByEmail()->get([
-        'email' => $email,
-    ]);
-
-    if ($results) {
-        $auth0UserId = 'auth0|'.intval($results[0]->identities[0]->user_id);
-        $mgmtAPI->users()->delete($auth0UserId);
-    }
-}
-
 // because users are updated in all kinds of ways and the
 // changes are buried within things like generic formhandlers
 // we just fetch the user record from the database again
@@ -160,10 +142,6 @@ function updateAuth0UserFromDb($user_id)
             $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
             $mgmtAPI->users()->create($auth0UserData);
         } else {
-            $response = $e->getResponse();
-            // get non-truncated error message from auth0
-            //$responseBodyAsString = $response->getBody()->getContents();
-            //throw new Exception("Received an error from Auth0: {$responseBodyAsString}", $e->getResponse()->getStatusCode(), $e);
             throw new Exception($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         }
     }

@@ -13,18 +13,22 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 			WHERE (NOT u.deleted OR u.deleted = NULL) AND (NOT ug.deleted OR ug.deleted IS NULL) AND email = :email', ['email' => $_POST['email']]);
         if ($existinguser && ($existinguser['id'] != $_POST['id'])) {
             if ($existinguser['organisation_id'] != $_SESSION['organisation']['id']) {
-                redirect('?action=cms_users&warning=1&message=This email already exists in another organisation.<br>Please ask the corresponding person to deactivate their other account!');
+                redirect('?action=cms_users&warning=1&message=This email already exists in another organisation.<br>Please use a different email to create a new user!');
+                trigger_error('This email already exists in another organisation.<br>Please use a different email to create a new user!', E_USER_NOTICE);
             } elseif (!$_SESSION['user']['is_admin'] && ($_SESSION['usergroup']['userlevel'] <= $existinguser['userlevel'])) {
                 redirect('?action=cms_users&warning=1&message=This email already exists in your organisation. You do not have access to this account.');
+                trigger_error('This email already exists in your organisation. You do not have access to this account.', E_USER_NOTICE);
             } else {
                 redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in your organisation. You are forwarded to the corresponding account.');
+                trigger_error('This email already exists in your organisation. You are forwarded to the corresponding account.', E_USER_NOTICE);
             }
         }
 
         // Validate if E-mail is already deactivated and in used before
         $deactiveduser = db_row('SELECT u.id FROM cms_users u WHERE email LIKE :email', ['email' => $_POST['email'].'.deleted%']);
         if ($deactiveduser && ($deactiveduser['id'] != $_POST['id'])) {
-            redirect('?action=cms_users_edit&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in the system but currently deactivated, please use different email to create a new user.');
+            redirect('?action=cms_users_edit&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in another organisation.<br>Please use a different email to create a new user!');
+            trigger_error('This email already exists in another organisation.<br>Please use a different email to create a new user!', E_USER_NOTICE);
         }
         // check auth0 if an email addrress is already created but with different id
         global $settings;
@@ -34,7 +38,8 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
         ]);
 
         if ($authUser && $authUser[0]['blocked']) {
-            redirect('?action=cms_users_edit&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in the system but currently deactivated, please use different email to create a new user.');
+            redirect('?action=cms_users_edit&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in the system. Please use a different email to create a new user!');
+            trigger_error('This email already exists in the system. Please use a different email to create a new user!', E_USER_NOTICE);
         } elseif (!$existinguser && $authUser && !$authUser[0]['blocked']) {
             throw new Exception('The user already exists in AUTH0 but its not sync', 409);
         }

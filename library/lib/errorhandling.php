@@ -125,9 +125,7 @@ function bootstrap_exception_handler(Throwable $ex)
         $error->assign('error', "{$ex->getMessage()}");
         $error->assign('sentry', "For additional information, please contact support and quote Sentry #{$eventId}.");
     }
-    // if ('localhost' == @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST)) {
-    //     $error->assign('exception', $ex);
-    // }
+
     global $settings;
     if ('development' == $settings['app_env']) {
         $error->assign('exception', $ex);

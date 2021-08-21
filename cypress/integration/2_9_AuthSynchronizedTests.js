@@ -9,16 +9,16 @@ context('2.9 Auth0 synchronized on CRUD', () => {
 
   let config = getLoginConfiguration();
   
-  let Testname = 'paul';
-  let Testgroup = "TestUserGroup_User";
-  let Testaddress = 'pauli@pauli.co';
-  let ModifiedTestName = 'paul2';
-  let ModifiedValidFrom = '02-08-2021';
+  let testName = 'Test New User';
+  let testGroup = "TestUserGroup_User";
+  let testEmail = 'testnewuser@boxtribute.org';
+  let modifiedTestName = 'Test New User Edited';
+  let modifiedValidFrom = '02-08-2021';
 
-  let TestAdminName = 'BrowserTestUser_Admin';
-  let TestAdminEmail = 'admin@admin.co';
-  let ModifiedTestAdminName = 'BrowserTestUser_Admin2';
-  let ModifiedTestAdminEmail = 'admin@admin.com';
+  let testAdminName = config.testAdminName;
+  let testAdminEmail = config.testAdmin;
+  let modifiedTestAdminName = 'm' + config.testAdminName;
+  let modifiedTestAdminEmail = 'm' + config.testAdmin;
   
 
   Cypress.config('defaultCommandTimeout',200000);
@@ -44,7 +44,7 @@ context('2.9 Auth0 synchronized on CRUD', () => {
   });
     
   it('2.9.1 - When creating a new user is the user synchronized to Auth0',() => {
-    DeleteTestUser(Testaddress);
+    DeleteTestUser(testEmail);
     cy.visit('/?action=cms_users_edit&origin=cms_users');
     cy.get('input[data-testid=\'user_name\']').should('be.visible');
     cy.get('input[data-testid=\'user_email\']').should('be.visible');
@@ -53,11 +53,11 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     cy.get('input[data-testid=\'user_valid_to\']').should('be.visible');
     cy.getButtonWithText('Save and close').should('be.visible');
     cy.get('a').contains('Cancel').should('be.visible');
-    FillForm(Testname,Testaddress,Testgroup);
+    FillForm(testName,testEmail,testGroup);
     cy.getButtonWithText('Save and close').click();
     cy.url().should('include', 'action=cms_users');
     cy.notyTextNotificationWithTextIsVisible("User will receive an email with instructions and their password within couple of minutes!");
-    CheckUserSyncedAuth0(Testaddress);
+    CheckUserSyncedAuth0(testEmail);
   });
     
   // // it('2.9.2 - When an error happens during creation of a user is the db and Auth0 out of sync', () => {
@@ -66,12 +66,12 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     
   it('2.9.3 - When updating an existing user is the user synchronized to Auth0', () => {
     cy.visit('/?action=cms_users');
-    cy.clickOnElementBySelectorAndText('a', Testname);
-    cy.get('[data-testid=user_name]').clear().type(ModifiedTestName);
-    cy.get('[data-testid=user_valid_from]').clear().type(ModifiedValidFrom);
+    cy.clickOnElementBySelectorAndText('a', testName);
+    cy.get('[data-testid=user_name]').clear().type(modifiedTestName);
+    cy.get('[data-testid=user_valid_from]').clear().type(modifiedValidFrom);
     cy.getButtonWithText('Save and close').click();
-    cy.get('tr').contains(Testaddress).should('be.visible');
-    CheckUserSyncedAuth0(Testaddress);
+    cy.get('tr').contains(testEmail).should('be.visible');
+    CheckUserSyncedAuth0(testEmail);
   });
 
   // // it('2.9.4 - When an error happens during updating a user is the db and Auth0 out of sync', () => {
@@ -80,15 +80,15 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     
   it('2.9.5 - When soft deleting an existing user is the user synchronized to Auth0', () => {
     cy.visit('/?action=cms_users');
-    cy.checkGridCheckboxByText(ModifiedTestName);
+    cy.checkGridCheckboxByText(modifiedTestName);
     cy.getListDeleteButton().should('be.visible');
     cy.getListDeleteButton().click();
     cy.getConfirmActionButton().click();
     cy.waitForAjaxAction(USER_DEACTVATE_REQUEST, USER_DEACTVATE_RESPONSE);
     cy.url().should('include', 'action=cms_users');
-    CheckUserSyncedAuth0(Testaddress);
+    CheckUserSyncedAuth0(testEmail);
     cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    DeleteTestUser(Testaddress);
+    DeleteTestUser(testEmail);
   
   });
     
@@ -100,23 +100,58 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     cy.visit('/?action=cms_profile');
     cy.get('input[data-testid=\'user_name\']').should('be.visible');
     cy.get('input[data-testid=\'user_email\']').should('be.visible');
-    cy.get('input[data-testid=\'user_name\']').clear().type(ModifiedTestAdminName);
-    cy.get('input[data-testid=\'user_email\']').clear().type(ModifiedTestAdminEmail);
+    cy.get('input[data-testid=\'user_name\']').clear().type(modifiedTestAdminName);
+    cy.get('input[data-testid=\'user_email\']').clear().type(modifiedTestAdminEmail);
     cy.getButtonWithText('Save and close').click();
     cy.url().should('include', '/?action=cms_profile');
     cy.get('.created').should('be.visible');
-    CheckUserSyncedAuth0(ModifiedTestAdminName);
-    cy.get('input[data-testid=\'user_name\']').clear().type(TestAdminName);
-    cy.get('input[data-testid=\'user_email\']').clear().type(TestAdminEmail);
+    CheckUserSyncedAuth0(modifiedTestAdminName);
+    cy.get('input[data-testid=\'user_name\']').clear().type(testAdminName);
+    cy.get('input[data-testid=\'user_email\']').clear().type(testAdminEmail);
     cy.getButtonWithText('Save and close').click();
     cy.url().should('include', '/?action=cms_profile');
     cy.get('.created').should('be.visible');
     cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    CheckUserSyncedAuth0(TestAdminEmail);
+    CheckUserSyncedAuth0(testAdminEmail);
     
   });
 
-  // it('2.9.8 - When an error happens while a user is editing himself is the db and Auth0 out of sync', () => {
+  it('2.9.8 - When an error happens while a user is editing himself is the db and Auth0 out of sync', () => {
     
-  // });
+  });
+
+  it('2.9.9 - When a user edits its own password is the user in sync with Auth0 and do all warnings appear.', () => {
+    cy.visit('/?action=cms_profile');
+    cy.get('input[data-testid=\'user_name\']').should('be.visible');
+    cy.get('input[data-testid=\'user_email\']').should('be.visible');
+    cy.get('input[data-testid=\'user_pass\']').clear().type(config.testWeekPwd);
+    cy.get('input[data-testid=\'user_pass2\']').clear().type(config.testWeekPwd);
+    cy.checkQtipWithText("qtip-content","Your password must be at least 12 characters including at least 3 of the following 4 types of characters: a lowercase letter, an uppercase letter, a number, a special character (such as !@#$%&/=?_.,:;-).");
+    cy.get('input[data-testid=\'user_pass\']').clear().type(config.testNewPwd);
+    cy.get('input[data-testid=\'user_pass2\']').clear().type(config.testNewPwd);
+    cy.getButtonWithText('Save and close').click();
+    cy.get('.created').should('be.visible');
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
+    cy.get('.dropdown-toggle').click();
+    cy.get('.nav.navbar-nav.pull-right > li.dropdown.open > ul > li:nth-child(4)').click();
+    cy.url().should('include', Cypress.env('auth0Domain'));
+    cy.get("input[id='username']").type(config.testAdmin);
+    cy.get("input[type='password']").type(config.testPwd);
+    cy.get("button[type='submit']").click();
+    cy.url().should('include', Cypress.env('auth0Domain'))
+    cy.get("span[id='error-element-password']").contains('Wrong email or password')
+    cy.get("input[id='username']").clear().type(config.testAdmin);
+    cy.get("input[type='password']").clear().type(config.testNewPwd);
+    cy.get("button[type='submit']").click();
+    cy.get('[data-testid=dropapp-header]').should('be.visible');
+    cy.get('[data-testid=dropapp-header]').contains(Cypress.env('orgName'));
+    cy.visit('/?action=cms_profile');
+    cy.get('input[data-testid=\'user_name\']').should('be.visible');
+    cy.get('input[data-testid=\'user_email\']').should('be.visible');
+    cy.get('input[data-testid=\'user_pass\']').clear().type(config.testPwd);
+    cy.get('input[data-testid=\'user_pass2\']').clear().type(config.testPwd);
+    cy.getButtonWithText('Save and close').click();
+    cy.get('.created').should('be.visible');
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
+  });
 });

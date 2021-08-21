@@ -1,6 +1,6 @@
 {
   "projectId": "tip3z9",
-  "baseUrl": "http://localhost:8100",
+  "baseUrl": "https://staging.boxtribute.org",
   "chromeWebSecurity": false,
   "retries": {
     "runMode": 2,
@@ -8,6 +8,7 @@
   },
   "env": {
     "testAdmin": "admin@admin.co",
+    "testAdminName": "BrowserTestUser_Admin",
     "testCoordinator": "coordinator@coordinator.co",
     "testVolunteer": "user@user.co",
     "testVolunteerWithNoPermissions": "noPermissions@noPermissions.co",
@@ -15,7 +16,9 @@
     "testNotActivatedUser": "notactivated@notactivated.com",
     "testDeletedUser": "deleted@deleted.co",
     "testUnknownUser": "unknown@unknown.co",
-    "testPwd": "browsertests",
+    "testPwd": "Browser_tests",
+    "testNewPwd": "Browser_tests_2",
+    "testWeekPwd": "browsertests",
     "testWrongPwd": "wrongPwd",
     "incorrectLoginNotif": "Incorrect login.",
     "genericErrLoginNotif": "This email either does not have an active account associated with it, or access has expired. Contact your coordinator to enable your account.",
