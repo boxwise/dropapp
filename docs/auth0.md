@@ -8,9 +8,9 @@ To mirror the development lifecycle of boxtribute there are four Auth0 tenants:
 - [boxtribute-dev](https://boxtribute-dev.eu.auth0.com/)
 This is the tenant for development. Every developer of Boxtribute has access to it. Just write Hans in slack if this is not the case.
 - [boxtribute-staging](https://boxtribute-staging.eu.auth0.com/)
-- [boxtribute-demo](https://boxtribute-staging.eu.auth0.com/)
+- [boxtribute-demo](https://boxtribute-demo.eu.auth0.com/)
 This is the tenant for the demo instance for interested ngos.
-- [boxtribute-production](https://boxtribute-staging.eu.auth0.com/)
+- [boxtribute-production](https://boxtribute-production.eu.auth0.com/)
 
 ## Authentication
 We are only using [email-password authentication](https://auth0.com/docs/connections/database) and do not have any social logins enabled at the moment. We are using the Auth0 user store to administrate the user accounts. 
@@ -38,6 +38,10 @@ The following data of each user are currently saved in the [auth0 user db](https
 `naam`-column in `cms_users` table.
 - `email` (string)
 `email`-column in `cms_users` table. Must be in email format.
+- `blocked` (boolean)
+`deleted`-column in `cms_users` table.
+- `app_metadata['last_blocked_date']` (date)
+`deleted`-column in `cms_users` table.
 - `app_metadata['usergroup_id']` (int)
 `cms_usergroups_id`-column in `cms_users` table. OPTIONAL, not filled if user is a God Admin.
 - `app_metadata['is_god']` (int)
@@ -46,3 +50,8 @@ The following data of each user are currently saved in the [auth0 user db](https
 `valid_firstday`-column in `cms_users` table. OPTIONAL, only filled if user has a time-limited access.
 - `app_metadata['valid_lastday']` (int)
 `valid_lastday`-column in `cms_users` table. OPTIONAL, only filled if user has a time-limited access.
+
+## Auth0 re-seeding
+If you want to re-seed the users in Auth0, start the dropapp-php server and call in any Browser the following script.
+
+              http://localhost:8100/reseed-db.php

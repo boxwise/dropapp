@@ -1,121 +1,30 @@
-id,email,naam,pass,is_admin,cms_usergroups_id,valid_firstday,valid_lastday
-1,some.admin@boxtribute.org,"some admin",21232f297a57a5a743894a0e4a801fc3,1,NULL,NULL,NULL
-2,jane.doe@boxaid.co,"Jane Doe",5f4dcc3b5aa765d61d8327deb882cf99,0,1,0000-00-00,0000-00-00
-3,joe.doe@boxaid.co,"Joe Doe",5f4dcc3b5aa765d61d8327deb882cf99,0,2,0000-00-00,0000-00-00
-4,stagingenv_volunteer@boxtribute.org,Volunteer,7a53ac982b06d7b9aed4eec5e18693d3,0,3,0000-00-00,0000-00-00
-5,stagingenv_coordinator@boxtribute.org,Coordinator,ca02bab14acaa85afd14dfbc73c285bf,0,2,0000-00-00,0000-00-00
-6,stagingenv_headofops@boxtribute.org,"Head of Operations",7dfc3d2ee682b299cf33aacabcf55e26,0,1,0000-00-00,0000-00-00
-7,dev_volunteer@boxaid.org,"Dev Volunteer",5f4dcc3b5aa765d61d8327deb882cf99,0,3,0000-00-00,0000-00-00
-8,dev_coordinator@boxaid.org,"Dev Coordinator",5f4dcc3b5aa765d61d8327deb882cf99,0,2,0000-00-00,0000-00-00
-9,dev_headofops@boxaid.org,"Dev Head of Operations",5f4dcc3b5aa765d61d8327deb882cf99,0,1,0000-00-00,0000-00-00
-10,jane.doe@boxcare.co,"Jane Doe",5f4dcc3b5aa765d61d8327deb882cf99,0,10,0000-00-00,0000-00-00
-11,joe.doe@boxcare.co,"Joe Doe",5f4dcc3b5aa765d61d8327deb882cf99,0,11,0000-00-00,0000-00-00
-12,sam.sample@boxcare.co,"Sam Sample",5f4dcc3b5aa765d61d8327deb882cf99,0,12,0000-00-00,0000-00-00
-15,joe.bloggs@boxcare.co,"Joe Bloggs",5f4dcc3b5aa765d61d8327deb882cf99,0,15,0000-00-00,0000-00-00
-16,dev_volunteer@boxcare.org,"Dev Volunteer",5f4dcc3b5aa765d61d8327deb882cf99,0,16,0000-00-00,0000-00-00
-17,dev_coordinator@boxcare.org,"Dev Coordinator",5f4dcc3b5aa765d61d8327deb882cf99,0,15,0000-00-00,0000-00-00
-18,dev_headofops@boxcare.org,"Dev Head of Operations",5f4dcc3b5aa765d61d8327deb882cf99,0,10,0000-00-00,0000-00-00
-20,owaters@hotmail.com,"Kallie Johnson",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2020-09-15,2020-10-17
-21,predovic.dena@hilpert.biz,"Jamey Paucek",5f4dcc3b5aa765d61d8327deb882cf99,0,5,0000-00-00,0000-00-00
-22,goodwin.mollie@gmail.com,"Dr. Guillermo Cormier PhD",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2019-08-29,2020-06-22
-23,anya18@gmail.com,"Dr. Herman Fadel I",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2020-11-16,2020-12-18
-24,chanelle53@yahoo.com,"Dr. Price Kuphal",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2020-08-17,2020-11-15
-25,spencer.matilde@stehr.org,"Dr. Percy Bruen DVM",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2020-09-24,2021-01-14
-26,nyah.konopelski@kohler.com,"Dr. Janice Schultz Jr.",5f4dcc3b5aa765d61d8327deb882cf99,0,13,0000-00-00,0000-00-00
-27,norma02@gaylord.info,"Mr. Sim Abernathy Jr.",5f4dcc3b5aa765d61d8327deb882cf99,0,14,0000-00-00,0000-00-00
-28,denis48@hotmail.com,"Ms. Lea Kovacek II",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2020-01-05,2020-01-26
-29,kaelyn88@gmail.com,"Molly Jones",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2020-04-06,2020-06-06
-30,adell.hermann@schmeler.info,"Lesley Johnston",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2021-03-17,2021-03-25
-31,kunze.helene@dare.biz,"Irving Murray DVM",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2021-01-25,2021-02-22
-32,aliya33@hotmail.com,"Declan Mayert",5f4dcc3b5aa765d61d8327deb882cf99,0,16,0000-00-00,0000-00-00
-33,nsipes@cartwright.com,"Lavonne Collier",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2021-01-16,2021-03-05
-34,littel.dashawn@schaefer.org,"Miss Patience O'Conner",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2020-10-29,2021-03-23
-35,clind@yahoo.com,"Mrs. Mireille Hodkiewicz PhD",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2020-12-28,2021-02-27
-36,elroy.reilly@rolfson.org,"Miss Ashtyn Stehr",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2020-11-26,2021-04-07
-37,carrie.kuhlman@turcotte.net,"Darion Schaefer",5f4dcc3b5aa765d61d8327deb882cf99,0,13,2020-10-17,2021-02-20
-38,sporer.winfield@hotmail.com,"Miss Norene Hartmann MD",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2019-11-18,2020-12-17
-40,oconnell.keshawn@bosco.org,"Prof. Sydni Baumbach",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2020-08-12,2020-08-17
-41,carter.ilene@hotmail.com,"Kamryn Quigley III",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2021-03-31,2021-04-09
-42,swaniawski.jarret@kihn.com,"Prof. Joaquin Hand Jr.",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2019-11-20,2020-02-22
-43,sanford.daryl@hotmail.com,"Mr. Vern Romaguera MD",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2020-05-28,2020-09-09
-44,jerde.rosie@quitzon.com,"Megane Kozey",5f4dcc3b5aa765d61d8327deb882cf99,0,3,0000-00-00,0000-00-00
-45,xlind@herman.biz,"Edison Bartoletti",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2021-02-25,2021-03-24
-46,bartholome55@hotmail.com,"Jaydon Hoeger",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2019-09-02,2020-11-29
-47,ilene.lind@gmail.com,"Emma Eichmann",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2020-09-17,2020-10-02
-48,dkeebler@johnson.biz,"Quinton Boyle",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2019-12-27,2021-01-02
-52,alessandra78@schulist.com,"Dion Hauck",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2020-09-07,2020-09-12
-53,gflatley@yahoo.com,"Reymundo Crona",5f4dcc3b5aa765d61d8327deb882cf99,0,4,0000-00-00,0000-00-00
-54,lisette.quitzon@rice.com,"Prof. Nannie Schmeler DDS",5f4dcc3b5aa765d61d8327deb882cf99,0,14,2020-04-24,2020-12-05
-55,shyanne63@hotmail.com,"Mr. Kirk Brown",5f4dcc3b5aa765d61d8327deb882cf99,0,3,0000-00-00,0000-00-00
-56,shanna90@hotmail.com,"Prof. Reginald Schaefer IV",5f4dcc3b5aa765d61d8327deb882cf99,0,3,0000-00-00,0000-00-00
-57,keshaun01@yahoo.com,"Ms. Carlie Balistreri MD",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2020-01-23,2020-10-14
-58,emmanuelle64@auer.org,"Dr. Winnifred Nolan",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2019-11-20,2020-06-26
-59,leffler.kattie@schiller.com,"Domenic Gutmann",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2020-01-10,2020-07-27
-60,awelch@hotmail.com,"Marianna Boyer",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2020-12-06,2021-01-28
-61,gislason.buster@considine.info,"Brycen Jenkins",5f4dcc3b5aa765d61d8327deb882cf99,0,13,2021-03-19,2021-03-25
-62,ullrich.horace@gmail.com,"Fausto Doyle",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2021-01-15,2021-02-21
-63,abdiel.pagac@gmail.com,"Damian Kassulke",5f4dcc3b5aa765d61d8327deb882cf99,0,14,2019-11-04,2019-11-09
-64,marie.wuckert@gmail.com,"Edison Wolff I",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2019-11-11,2020-07-25
-65,lillie.dubuque@okon.info,"Leila Olson",5f4dcc3b5aa765d61d8327deb882cf99,0,13,0000-00-00,0000-00-00
-66,morissette.helene@gmail.com,"Dr. Sigurd Herman DVM",5f4dcc3b5aa765d61d8327deb882cf99,0,13,2020-05-23,2020-12-03
-67,funk.tanya@hotmail.com,"Prof. Gage Boyer",5f4dcc3b5aa765d61d8327deb882cf99,0,13,2020-07-24,2021-02-16
-68,balistreri.precious@nienow.net,"Jewel Murray",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2020-01-24,2021-03-02
-69,nvandervort@emard.com,"Mr. Neil Cruickshank",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2020-08-25,2020-08-29
-70,shickle@blanda.com,"Ms. Janice Donnelly",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2020-10-14,2020-10-21
-71,swaniawski.alanis@yahoo.com,"Marian Kuhlman DVM",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2020-08-16,2020-10-01
-72,miller.dena@yahoo.com,"Perry Kirlin",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2020-09-09,2020-11-02
-73,lily.klocko@yahoo.com,"Gerhard Feeney",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2020-02-25,2020-05-22
-74,shields.jordan@green.com,"Dr. Osborne Erdman PhD",5f4dcc3b5aa765d61d8327deb882cf99,0,6,0000-00-00,0000-00-00
-75,durgan.delphia@hotmail.com,"Fannie Welch",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2020-07-01,2020-12-28
-76,sister.jacobs@vandervort.org,"Ruthie Smith",5f4dcc3b5aa765d61d8327deb882cf99,0,6,0000-00-00,0000-00-00
-77,roob.elnora@yahoo.com,"Fern Barrows",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2020-01-19,2020-10-06
-78,price.laila@koelpin.com,"Alana Lang",5f4dcc3b5aa765d61d8327deb882cf99,0,3,0000-00-00,0000-00-00
-79,kirsten72@luettgen.net,"Rowland Bayer",5f4dcc3b5aa765d61d8327deb882cf99,0,13,2019-09-15,2020-09-13
-80,cparisian@kemmer.net,"Kelton Grant",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2020-01-05,2020-10-10
-81,shane63@gmail.com,"Nannie Erdman",5f4dcc3b5aa765d61d8327deb882cf99,0,14,2021-03-14,2021-03-19
-82,reece.conroy@ruecker.org,"Kirstin O'Kon",5f4dcc3b5aa765d61d8327deb882cf99,0,6,0000-00-00,0000-00-00
-83,mayert.rhett@dare.com,"Ms. Rosie Bashirian Jr.",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2020-02-20,2020-07-24
-84,alvina09@gmail.com,"Dorthy Hartmann",5f4dcc3b5aa765d61d8327deb882cf99,0,3,0000-00-00,0000-00-00
-85,gkulas@hotmail.com,"Mr. Sanford Leffler IV",5f4dcc3b5aa765d61d8327deb882cf99,0,13,0000-00-00,0000-00-00
-86,dheidenreich@kub.com,"Armani Wuckert",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2020-02-20,2021-01-20
-87,egerhold@fadel.com,"Elenora Pouros PhD",5f4dcc3b5aa765d61d8327deb882cf99,0,14,2019-09-13,2020-06-28
-88,price.danielle@beier.org,"Elijah Daugherty",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2019-11-28,2020-09-19
-89,heller.tre@skiles.info,"Earl Botsford",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2020-03-31,2020-07-28
-90,ydaugherty@yahoo.com,"Kayleigh Lemke",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2021-03-11,2021-03-20
-91,mstehr@yahoo.com,"Adella Hagenes",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2020-04-04,2021-02-04
-92,mathias.reichel@hotmail.com,"Keyon Fritsch",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2020-04-02,2020-07-14
-93,ltrantow@hotmail.com,"Eladio Ryan",5f4dcc3b5aa765d61d8327deb882cf99,0,13,2020-02-15,2020-12-26
-94,goldner.camren@gmail.com,"Amari Wuckert",5f4dcc3b5aa765d61d8327deb882cf99,0,14,2019-09-03,2020-02-08
-95,dbrown@gmail.com,"Prof. Carmel Zboncak",5f4dcc3b5aa765d61d8327deb882cf99,0,14,2020-12-10,2021-02-21
-96,angelita.will@hotmail.com,"Lucie Ledner IV",5f4dcc3b5aa765d61d8327deb882cf99,0,5,0000-00-00,0000-00-00
-97,diana54@rippin.info,"Geraldine Smith",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2021-01-13,2021-01-14
-99,esther.strosin@sauer.com,"Abigayle Wyman",5f4dcc3b5aa765d61d8327deb882cf99,0,6,0000-00-00,0000-00-00
-100,jamaal68@hotmail.com,"Taya Osinski",5f4dcc3b5aa765d61d8327deb882cf99,0,6,2020-06-12,2020-06-30
-101,mattie.nader@jerde.com,"Edison Gusikowski",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2020-12-14,2020-12-22
-102,vjohns@lemke.biz,"Dr. Letha Douglas",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2020-10-06,2021-02-07
-103,kavon00@mosciski.com,"Giovanna Hand",5f4dcc3b5aa765d61d8327deb882cf99,0,5,2019-11-15,2020-07-07
-104,erau@yahoo.com,"Baby Armstrong",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2019-10-27,2020-10-16
-105,champlin.shawna@stiedemann.biz,"Rebecca Ebert",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2020-10-22,2020-11-15
-106,walker.janis@yahoo.com,"Vergie Kshlerin",5f4dcc3b5aa765d61d8327deb882cf99,0,4,0000-00-00,0000-00-00
-107,lexi.skiles@jast.com,"Vena Franecki",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2020-01-14,2020-07-26
-108,rmedhurst@hotmail.com,"Ms. Anastasia Stoltenberg IV",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2019-08-16,2020-11-05
-110,rdeckow@schmitt.info,"Mr. Skye Hessel Jr.",5f4dcc3b5aa765d61d8327deb882cf99,0,14,2020-09-01,2020-12-28
-111,felicity.berge@hotmail.com,"Vincenzo Bartoletti V",5f4dcc3b5aa765d61d8327deb882cf99,0,3,2019-10-04,2020-03-24
-112,tlangworth@yahoo.com,"Ona Predovic",5f4dcc3b5aa765d61d8327deb882cf99,0,4,0000-00-00,0000-00-00
-113,kuhic.reuben@yahoo.com,"Ms. Itzel Reynolds III",5f4dcc3b5aa765d61d8327deb882cf99,0,5,0000-00-00,0000-00-00
-114,cara07@lindgren.net,"Letha Hand",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2020-08-17,2020-09-04
-115,jklocko@gmail.com,"Mr. Einar Okuneva",5f4dcc3b5aa765d61d8327deb882cf99,0,4,2020-01-03,2020-05-23
-116,meffertz@ebert.com,"Mikayla Anderson",5f4dcc3b5aa765d61d8327deb882cf99,0,14,2020-10-01,2021-03-01
-118,elbert.strosin@yahoo.com,"Ms. Leatha Bechtelar IV",5f4dcc3b5aa765d61d8327deb882cf99,0,13,2020-06-01,2020-10-02
-119,qhowe@bahringer.com,"Mylene Spinka",5f4dcc3b5aa765d61d8327deb882cf99,0,16,2021-03-29,2021-04-03
-120,doris14@schaden.com,"Janae Fay DVM",5f4dcc3b5aa765d61d8327deb882cf99,0,13,2020-08-10,2021-02-28
-100000000,admin@admin.co,BrowserTestUser_Admin,bb1f40afbf093afa5b9b343625ed08bd,0,100000002,0000-00-00,0000-00-00
-100000001,coordinator@coordinator.co,BrowserTestUser_Coordinator,bb1f40afbf093afa5b9b343625ed08bd,0,100000001,0000-00-00,0000-00-00
-100000002,user@user.co,BrowserTestUser_User,bb1f40afbf093afa5b9b343625ed08bd,0,100000000,0000-00-00,0000-00-00
-100000003,notactivated@notactivated.com,NotActived,bb1f40afbf093afa5b9b343625ed08bd,0,100000000,2019-07-20,2019-07-31
-100000004,expired@expired.co,"Expired User",bb1f40afbf093afa5b9b343625ed08bd,0,100000000,2019-07-01,2019-07-09
-100000006,noPermissions@noPermissions.co,BrowserTestUser_UserWithNoPermissions,bb1f40afbf093afa5b9b343625ed08bd,0,100000003,0000-00-00,0000-00-00
-100000007,deactivateTest@deactivateTest.co,BrowserTestUser_DeactivateTest,1c962d7d2e90e539d64bca1be5257724,0,100000000,0000-00-00,0000-00-00
-100000008,pending@pending.co,BrowserTestUser_Pending,bb1f40afbf093afa5b9b343625ed08bd,0,100000000,2022-12-20,2023-12-20
-100000011,expired_coordinator@expired.co,"Expired Coordinator",bb1f40afbf093afa5b9b343625ed08bd,0,100000001,2017-04-11,2017-05-28
-100000012,expired_admin@expired.co,"Expired Admin",bb1f40afbf093afa5b9b343625ed08bd,0,100000002,2017-04-11,2017-05-28
+id,email,naam,pass,is_admin,cms_usergroups_id,valid_firstday,valid_lastday,deleted
+1,some.admin@boxtribute.org,"some admin",bf13b44feae208fc808b1d6b2266edb7,1,NULL,NULL,NULL,"0000-00-00 00:00:00"
+2,jane.doe@boxaid.co,"Jane Doe",bf13b44feae208fc808b1d6b2266edb7,0,1,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+3,joe.doe@boxaid.co,"Joe Doe",bf13b44feae208fc808b1d6b2266edb7,0,2,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+4,stagingenv_volunteer@boxtribute.org,Volunteer,bf13b44feae208fc808b1d6b2266edb7,0,3,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+5,stagingenv_coordinator@boxtribute.org,Coordinator,bf13b44feae208fc808b1d6b2266edb7,0,2,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+6,stagingenv_headofops@boxtribute.org,"Head of Operations",bf13b44feae208fc808b1d6b2266edb7,0,1,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+7,dev_volunteer@boxaid.org,"Dev Volunteer",bf13b44feae208fc808b1d6b2266edb7,0,3,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+8,dev_coordinator@boxaid.org,"Dev Coordinator",bf13b44feae208fc808b1d6b2266edb7,0,2,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+9,dev_headofops@boxaid.org,"Dev Head of Operations",bf13b44feae208fc808b1d6b2266edb7,0,1,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+10,jane.doe@boxcare.co,"Jane Doe",bf13b44feae208fc808b1d6b2266edb7,0,10,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+11,joe.doe@boxcare.co,"Joe Doe",bf13b44feae208fc808b1d6b2266edb7,0,11,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+12,sam.sample@boxcare.co,"Sam Sample",bf13b44feae208fc808b1d6b2266edb7,0,12,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+15,joe.bloggs@boxcare.co,"Joe Bloggs",bf13b44feae208fc808b1d6b2266edb7,0,15,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+16,dev_volunteer@boxcare.org,"Dev Volunteer",bf13b44feae208fc808b1d6b2266edb7,0,16,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+17,dev_coordinator@boxcare.org,"Dev Coordinator",bf13b44feae208fc808b1d6b2266edb7,0,15,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+18,dev_headofops@boxcare.org,"Dev Head of Operations",bf13b44feae208fc808b1d6b2266edb7,0,10,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+100000000,admin@admin.co,BrowserTestUser_Admin,bf13b44feae208fc808b1d6b2266edb7,0,100000002,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+100000001,coordinator@coordinator.co,BrowserTestUser_Coordinator,bf13b44feae208fc808b1d6b2266edb7,0,100000001,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+100000002,user@user.co,BrowserTestUser_User,bf13b44feae208fc808b1d6b2266edb7,0,100000000,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+100000003,notactivated@notactivated.com,NotActived,bf13b44feae208fc808b1d6b2266edb7,0,100000000,2119-07-20,2119-07-31,"0000-00-00 00:00:00"
+100000004,expired@expired.co,"Expired User",bf13b44feae208fc808b1d6b2266edb7,0,100000000,2019-07-01,2019-07-09,"0000-00-00 00:00:00"
+100000005,deleted@deleted.co.deleted.100000005,"Deleted User",bf13b44feae208fc808b1d6b2266edb7,0,100000000,0000-00-00,0000-00-00,"2019-07-10 08:15:50"
+100000006,noPermissions@noPermissions.co,BrowserTestUser_UserWithNoPermissions,bf13b44feae208fc808b1d6b2266edb7,0,100000003,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+100000007,deactivateTest@deactivateTest.co,BrowserTestUser_DeactivateTest,bf13b44feae208fc808b1d6b2266edb7,0,100000000,0000-00-00,0000-00-00,"0000-00-00 00:00:00"
+100000008,pending@pending.co,BrowserTestUser_Pending,bf13b44feae208fc808b1d6b2266edb7,0,100000000,2022-12-20,2023-12-20,"0000-00-00 00:00:00"
+100000009,deleted_coordinator@deleted.co.deleted.100000009,"Deleted Coordinator",bf13b44feae208fc808b1d6b2266edb7,0,100000001,2018-05-26,2019-05-26,"2019-07-10 08:15:50"
+100000010,deleted_admin@deleted.co.deleted.100000010,"Deleted Admin",bf13b44feae208fc808b1d6b2266edb7,0,100000002,0000-00-00,0000-00-00,"2019-07-10 08:15:50"
+100000011,expired_coordinator@expired.co,"Expired Coordinator",bf13b44feae208fc808b1d6b2266edb7,0,100000001,2017-04-11,2017-05-28,"0000-00-00 00:00:00"
+100000012,expired_admin@expired.co,"Expired Admin",bf13b44feae208fc808b1d6b2266edb7,0,100000002,2017-04-11,2017-05-28,"0000-00-00 00:00:00"

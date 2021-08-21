@@ -8,6 +8,7 @@
   },
   "env": {
     "testAdmin": "admin@admin.co",
+    "testAdminName": "BrowserTestUser_Admin",
     "testCoordinator": "coordinator@coordinator.co",
     "testVolunteer": "user@user.co",
     "testVolunteerWithNoPermissions": "noPermissions@noPermissions.co",
@@ -15,12 +16,15 @@
     "testNotActivatedUser": "notactivated@notactivated.com",
     "testDeletedUser": "deleted@deleted.co",
     "testUnknownUser": "unknown@unknown.co",
-    "testPwd": "browsertests",
+    "testPwd": "Browser_tests",
+    "testNewPwd": "Browser_tests_2",
+    "testWeekPwd": "browsertests",
     "testWrongPwd": "wrongPwd",
     "incorrectLoginNotif": "Incorrect login.",
     "genericErrLoginNotif": "This email either does not have an active account associated with it, or access has expired. Contact your coordinator to enable your account.",
     "unknownEmailErrLoginNotif": "There is no user with this email address in our systems. Check your spelling and try again.",
     "successPwdChangeNotif": "Within a few minutes you will receive an e-mail with further instructions to reset your password.",
-    "orgName": "TestOrganisation"
+    "orgName": "TestOrganisation",
+    "auth0Domain": "boxtribute-staging.eu.auth0.com"
   }
 }

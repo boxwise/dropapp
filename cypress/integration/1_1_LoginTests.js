@@ -2,46 +2,53 @@
 import { getLoginConfiguration } from '../config';
 
 context('Login tests', () => {
+
   let config = getLoginConfiguration();
+  Cypress.config('defaultCommandTimeout',200000);
 
-  it('Login test (Admin)', () => {
-    cy.backgroundLoginUsing(config.testAdmin, config.testPwd);
+  it('1.1.1 - Should be redirected to auth0 login when unauthenticated', () => {
     cy.visit('/');
-    cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    cy.get("div[data-testid='dropapp-header']")
-      .contains('BrowserTestUser_Admin');
-  });
-
-  it('Login test (Coordinator)', () => {
-    cy.backgroundLoginUsing(config.testCoordinator, config.testPwd);
-    cy.visit('/');
-    cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    cy.get("div[data-testid='dropapp-header']")
-      .contains('BrowserTestUser_Coordinator');
+    cy.url().should('include', Cypress.env('auth0Domain'));
   })
 
-  it('Login test (Volunteer)', () => {
-    cy.backgroundLoginUsing(config.testVolunteer, config.testPwd);
-    cy.visit('/');
-    cy.get("div[data-testid='dropapp-header']")
-      .should('be.visible');
-    cy.get("div[data-testid='dropapp-header']")
-      .contains('BrowserTestUser_User');
+  it('1.1.2 - Should be redirected to initialy requested page when authenticated', () => {
+    cy.visit('/?action=cms_profile');
+    cy.get("input[id='username']").type(config.testCoordinator);
+    cy.get("input[type='password']").type(config.testPwd);
+    cy.get("button[type='submit']").click();
+    cy.url().then((url) => {
+      // first time login with the user prompt for consent
+      if (url.includes('consent?')) {
+        cy.get('button[value="accept"]').click()
+      }
+    });
+    cy.url().should('include', 'action=cms_profile');
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
+    cy.get("div[data-testid='dropapp-header']").contains(Cypress.env('orgName'));
   })
 
-  // it('Should be redirected without credentials', () => {
-  //   cy.visit('/');
-  //   cy.location('host').should('eq', Cypress.env('auth0_domain'));
-  // })
 
-  // // we're testing our expired user rule configured in auth0
-  // // not auth0 itself here
-  // it('Login with expired user', () => {
-  //   cy.visit('/');
-  //   cy.get("input[type='email']").type(config.testExpiredUser)
-  //   cy.get("input[type='password']").type(config.testPwd)
-  //   cy.get("button[type='submit']").click();
-  //   cy.location('host').should('not.eq', Cypress.env('auth0_domain'))
-  //   cy.get("body").contains('This user is not currently active.')
-  // })
+  it('1.1.3 -Should be redirected to auth0 login when unauthenticated on mobile', () => {
+    cy.visit('/mobile.php');
+    cy.url().should('include', Cypress.env('auth0Domain'));
+  })
+
+  it('1.1.4 - Should be redirected to initialy requested page when authenticated on mobile', () => {
+    cy.visit('mobile.php?vieworders');
+    cy.get("input[id='username']").type(config.testCoordinator);
+    cy.get("input[type='password']").type(config.testPwd);
+    cy.get("button[type='submit']").click();
+    cy.url().then((url) => {
+      // first time login with the user prompt for consent
+      if (url.includes('consent?')) {
+        cy.get('button[value="accept"]').click()
+      }
+    });
+    cy.url().should('include', 'mobile.php');
+    cy.url().should('include', 'vieworders');
+    cy.get('[data-testid=orgcampDiv]').should('be.visible');
+    cy.get('[data-testid=orgcampDiv]').contains(Cypress.env('orgName'));
+    
+  })
+
 });

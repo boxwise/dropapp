@@ -1,13 +1,20 @@
 import json
 import pandas as pd
 import os
-
+import re
 
 def create_entry(raw_entry,hashfunction,encoding):
     return_dict = {}
+    app_metadata = {'is_god':raw_entry['is_admin']}
     return_dict['user_id']=str(raw_entry['id'])
+    print(return_dict)
     return_dict['name']=raw_entry['naam']
-    return_dict['email']=raw_entry['email']
+    if not pd.isna(raw_entry['deleted']) and raw_entry['deleted'] != '0000-00-00 00:00:00':
+        return_dict['email']=re.sub(r'\.deleted\.\d+', '',raw_entry['email'])
+        app_metadata['last_blocked_date']=raw_entry['deleted']
+        return_dict['blocked']=True
+    else:
+        return_dict['email']=raw_entry['email']
     return_dict['email_verified']=False
     return_dict['custom_password_hash']= {
         "algorithm":hashfunction, 
@@ -16,7 +23,6 @@ def create_entry(raw_entry,hashfunction,encoding):
             "encoding":encoding
         }
     }
-    app_metadata = {'is_god':raw_entry['is_admin']}
     if not pd.isna(raw_entry['cms_usergroups_id']):
         app_metadata['usergroup_id']=int(round(raw_entry['cms_usergroups_id']))
     if not pd.isna(raw_entry['valid_firstday']) and raw_entry['valid_firstday'] != '0000-00-00':
@@ -30,7 +36,7 @@ def create_entry(raw_entry,hashfunction,encoding):
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # load users for auth0 connection
 users = pd.read_csv('users.csv')
-usersdict = users[['id','email','pass','naam','cms_usergroups_id','is_admin','valid_firstday','valid_lastday']].T.to_dict()
+usersdict = users[['id','email','pass','naam','cms_usergroups_id','is_admin','valid_firstday','valid_lastday','deleted']].T.to_dict()
 # convert to auth0 readable data
 auth0_dict = {}
 for key in usersdict:
