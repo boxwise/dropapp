@@ -44,10 +44,6 @@ function authenticate($settings, $ajax)
     // this can be triggered by an unexpected auth0 error
     // or an expired user
     if ($isAuth0Callback && $_REQUEST['error']) {
-        // $error = new Zmarty();
-        // $error->assign('error', $_REQUEST['error_description']);
-        // $error->assign('title', 'Sorry, an error occured while logging in');
-        // $error->display('cms_error.tpl');
         throw new Exception($_REQUEST['error_description'], 401);
         die();
     }
@@ -147,9 +143,6 @@ function updateAuth0UserFromDb($user_id)
             $mgmtAPI->users()->create($auth0UserData);
         } else {
             $response = $e->getResponse();
-            // get non-truncated error message from auth0
-            //$responseBodyAsString = $response->getBody()->getContents();
-            //throw new Exception("Received an error from Auth0: {$responseBodyAsString}", $e->getResponse()->getStatusCode(), $e);
             throw new Exception($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         }
     }
