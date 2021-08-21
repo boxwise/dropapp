@@ -105,7 +105,7 @@ function deleteAuth0User($user_id)
 // rather than having any specific actions like change email, disable account etc
 // note: you should wrap calls to this in a db transaction so if the API
 // call fails, the previous db update is not applied
-function updateAuth0UserFromDb($user_id)
+function updateAuth0UserFromDb($user_id, $set_pwd = false)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
@@ -144,6 +144,10 @@ function updateAuth0UserFromDb($user_id)
         } else {
             throw new Exception($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         }
+    }
+    if ($set_pwd) {
+        // needed for reseeding test env
+        $mgmtAPI->users()->update($auth0UserId, ['password' => $set_pwd]);
     }
 }
 

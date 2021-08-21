@@ -2,7 +2,7 @@ cron:
 - description: "reseed staging job"
   url: /reseed-db.php
   target: staging
-  schedule: every 99999 hours
+  schedule: every day 00:00
 - description: "reseed demo job"
   url: /reseed-db.php
   target: demo
