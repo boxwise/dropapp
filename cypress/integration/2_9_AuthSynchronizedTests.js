@@ -9,9 +9,9 @@ context('2.9 Auth0 synchronized on CRUD', () => {
 
   let config = getLoginConfiguration();
   
-  let testname = 'Test New User';
-  let testgroup = "TestUserGroup_User";
-  let testaddress = 'testnewuser@boxtribute.org';
+  let testName = 'Test New User';
+  let testGroup = "TestUserGroup_User";
+  let testEmail = 'testnewuser@boxtribute.org';
   let modifiedTestName = 'Test New User Edited';
   let modifiedValidFrom = '02-08-2021';
 
@@ -44,7 +44,7 @@ context('2.9 Auth0 synchronized on CRUD', () => {
   });
     
   it('2.9.1 - When creating a new user is the user synchronized to Auth0',() => {
-    DeleteTestUser(testaddress);
+    DeleteTestUser(testEmail);
     cy.visit('/?action=cms_users_edit&origin=cms_users');
     cy.get('input[data-testid=\'user_name\']').should('be.visible');
     cy.get('input[data-testid=\'user_email\']').should('be.visible');
@@ -53,11 +53,11 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     cy.get('input[data-testid=\'user_valid_to\']').should('be.visible');
     cy.getButtonWithText('Save and close').should('be.visible');
     cy.get('a').contains('Cancel').should('be.visible');
-    FillForm(testname,testaddress,testgroup);
+    FillForm(testName,testEmail,testGroup);
     cy.getButtonWithText('Save and close').click();
     cy.url().should('include', 'action=cms_users');
     cy.notyTextNotificationWithTextIsVisible("User will receive an email with instructions and their password within couple of minutes!");
-    CheckUserSyncedAuth0(testaddress);
+    CheckUserSyncedAuth0(testEmail);
   });
     
   // // it('2.9.2 - When an error happens during creation of a user is the db and Auth0 out of sync', () => {
@@ -66,12 +66,12 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     
   it('2.9.3 - When updating an existing user is the user synchronized to Auth0', () => {
     cy.visit('/?action=cms_users');
-    cy.clickOnElementBySelectorAndText('a', testname);
+    cy.clickOnElementBySelectorAndText('a', testName);
     cy.get('[data-testid=user_name]').clear().type(modifiedTestName);
     cy.get('[data-testid=user_valid_from]').clear().type(modifiedValidFrom);
     cy.getButtonWithText('Save and close').click();
-    cy.get('tr').contains(testaddress).should('be.visible');
-    CheckUserSyncedAuth0(testaddress);
+    cy.get('tr').contains(testEmail).should('be.visible');
+    CheckUserSyncedAuth0(testEmail);
   });
 
   // // it('2.9.4 - When an error happens during updating a user is the db and Auth0 out of sync', () => {
@@ -86,9 +86,9 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     cy.getConfirmActionButton().click();
     cy.waitForAjaxAction(USER_DEACTVATE_REQUEST, USER_DEACTVATE_RESPONSE);
     cy.url().should('include', 'action=cms_users');
-    CheckUserSyncedAuth0(testaddress);
+    CheckUserSyncedAuth0(testEmail);
     cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    DeleteTestUser(testaddress);
+    DeleteTestUser(testEmail);
   
   });
     
