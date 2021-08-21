@@ -17,8 +17,10 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
                 trigger_error('This email already exists in another organisation.<br>Please use a different email to create a new user!', E_USER_NOTICE);
             } elseif (!$_SESSION['user']['is_admin'] && ($_SESSION['usergroup']['userlevel'] <= $existinguser['userlevel'])) {
                 redirect('?action=cms_users&warning=1&message=This email already exists in your organisation. You do not have access to this account.');
+                trigger_error('This email already exists in your organisation. You do not have access to this account.', E_USER_NOTICE);
             } else {
                 redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in your organisation. You are forwarded to the corresponding account.');
+                trigger_error('This email already exists in your organisation. You are forwarded to the corresponding account.', E_USER_NOTICE);
             }
         }
 
