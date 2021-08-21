@@ -50,3 +50,8 @@ The following data of each user are currently saved in the [auth0 user db](https
 `valid_firstday`-column in `cms_users` table. OPTIONAL, only filled if user has a time-limited access.
 - `app_metadata['valid_lastday']` (int)
 `valid_lastday`-column in `cms_users` table. OPTIONAL, only filled if user has a time-limited access.
+
+## Auth0 re-seeding
+If you want to re-seed the users in Auth0, start the dropapp-php server and call in any Browser the following script.
+
+              http://localhost:8100/reseed-db.php
