@@ -1,6 +1,6 @@
 <?php
 
-    if (!array_key_exists('HTTP_X_APPENGINE_CRON', $_SERVER) && $settings['db_database'] != 'dropapp_dev') {
+    if (!array_key_exists('HTTP_X_APPENGINE_CRON', $_SERVER) && 'dropapp_dev' != $settings['db_database']) {
         throw new Exception('Not called from AppEngine cron service');
     }
     $permittedDatabases = ['dropapp_dev', 'dropapp_demo', 'dropapp_staging'];

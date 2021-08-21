@@ -36,7 +36,7 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
        composer install
 
-3. To configure the app, copy `/library/config.php.default` and remove the `.default` in the filename. The default configuration does not need to change if you are using Docker (see below).
+3. To configure the app, copy `/library/config.php.default` and remove the `.default` in the filename. Then fill the Auth0 credentials from the Auth0 client. Please check [docs/auth0.md](docs/auth0.md) for further information regarding Auth0.
 
 4. To run the application, we assume you have Docker installed. You can then run:
 
@@ -57,7 +57,15 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
 Once the docker containers are running the app is accessible at http://localhost:8100/
 
-After this you should be able to login to the app using email address: some.admin@boxtribute.org with password: admin
+After this you should be able to login to the app using the password Browser_tests and one of the following emails:
+- some.admin@boxtribute.org (God User)
+- dev_volunteer@boxaid.org
+- dev_coordinator@boxaid.org
+- dev_headofops@boxaid.org
+- dev_volunteer@boxcare.org
+- dev_coordinator@boxcare.org
+- dev_headofops@boxcare.org
+
 
 ### Our dev environment recommendation
 
@@ -131,13 +139,17 @@ To create an migration run
 
 It creates an file in `db/migrations`. Please use this file to write your db migration.
 
-#### Phinx database seeding
+#### Database seeding
 
 If you want to re-seed your database, just run
 
         vendor/bin/phinx seed:run -e development
 
 The `ClearMinimalDb` phinx-seeder clears all old tables before re-inserting the seed.
+
+If you want to re-seed the users in Auth0 at the same time, call in any Browser the following script instead of running the command above.
+
+              http://localhost:8100/reseed-db.php
 
 ### Cypress and testing
 

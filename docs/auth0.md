@@ -38,6 +38,10 @@ The following data of each user are currently saved in the [auth0 user db](https
 `naam`-column in `cms_users` table.
 - `email` (string)
 `email`-column in `cms_users` table. Must be in email format.
+- `blocked` (boolean)
+`deleted`-column in `cms_users` table.
+- `app_metadata['last_blocked_date']` (date)
+`deleted`-column in `cms_users` table.
 - `app_metadata['usergroup_id']` (int)
 `cms_usergroups_id`-column in `cms_users` table. OPTIONAL, not filled if user is a God Admin.
 - `app_metadata['is_god']` (int)
