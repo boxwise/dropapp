@@ -38,6 +38,7 @@
 
     // update Auth0
     $bypassAuthentication = true;
+    require_once 'library/core.php';
     $db_users = db_query('SELECT id FROM cms_users;');
     while ($db_user = db_fetch($db_users)) {
         updateAuth0UserFromDb($db_user['id'], $settings['test_pwd']);
