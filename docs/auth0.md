@@ -8,9 +8,9 @@ To mirror the development lifecycle of boxtribute there are four Auth0 tenants:
 - [boxtribute-dev](https://boxtribute-dev.eu.auth0.com/)
 This is the tenant for development. Every developer of Boxtribute has access to it. Just write Hans in slack if this is not the case.
 - [boxtribute-staging](https://boxtribute-staging.eu.auth0.com/)
-- [boxtribute-demo](https://boxtribute-staging.eu.auth0.com/)
+- [boxtribute-demo](https://boxtribute-demo.eu.auth0.com/)
 This is the tenant for the demo instance for interested ngos.
-- [boxtribute-production](https://boxtribute-staging.eu.auth0.com/)
+- [boxtribute-production](https://boxtribute-production.eu.auth0.com/)
 
 ## Authentication
 We are only using [email-password authentication](https://auth0.com/docs/connections/database) and do not have any social logins enabled at the moment. We are using the Auth0 user store to administrate the user accounts. 
