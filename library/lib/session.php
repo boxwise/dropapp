@@ -142,7 +142,6 @@ function updateAuth0UserFromDb($user_id)
             $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
             $mgmtAPI->users()->create($auth0UserData);
         } else {
-            $response = $e->getResponse();
             throw new Exception($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
         }
     }
