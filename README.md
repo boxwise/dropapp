@@ -156,8 +156,8 @@ If you want to re-seed the users in Auth0 at the same time, call in any Browser 
 We use [Cypress](https://www.cypress.io) for Browser-test. To run Cypress tests on your local environment, please
 1. [Install Cypress via direct Download](https://docs.cypress.io/guides/getting-started/installing-cypress.html#Direct-download)
 2. Set the variable `baseURL` to your local address, e.g. `localhost:8100` in cypress.json.
-3. Set the env variable `auth0Domain` to the development Auth0 tanent, 
-e.g. `dev-login.boxtribute.com` in cypress.json.
+3. Set the env variable `auth0Domain` to the development Auth0 tenant, 
+e.g. `boxtribute-dev.eu.auth0.com` in cypress.json.
 4. Open Cypress and this repo in Cypress
 
 All tests in `cypress/integrations` should be found and can be directly executed. When writing tests, try to follow these guidelines if possible:
