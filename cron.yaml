@@ -1,8 +1,12 @@
 cron:
-- description: "reseed staging job"
+- description: "reseed db staging job"
   url: /reseed-db.php
   target: staging
   schedule: every day 00:00
+- description: "reseed auth0 staging job"
+  url: /reseed-auth0.php
+  target: staging
+  schedule: every day 01:00
 - description: "reseed demo job"
   url: /reseed-db.php
   target: demo
