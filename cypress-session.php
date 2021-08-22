@@ -37,6 +37,7 @@ $oauth_token = $auth->login_with_default_directory([
 // https://auth0.com/blog/end-to-end-testing-with-cypress-and-auth0/
 // otherwise doesn't seem to work for a PHP server-side scenario vs react SPA
 // as the client won't process access_token automatically
+// u need to enable grant Type "Password in your Auth0 application for this to work.
 
 if (empty($oauth_token['access_token'])) {
     throw new Exception('Invalid access_token - Retry login.');
