@@ -21,7 +21,7 @@ class MakeBoxStateIdUnsigned extends AbstractMigration
         ;
 
         $this->table('stock')
-            ->changeColumn('box_state_id', 'integer', ['signed' => false, 'null' => false])
+            ->changeColumn('box_state_id', 'integer', ['signed' => false, 'null' => false, 'default' => 1])
             ->addForeignKey('box_state_id', 'box_state', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
@@ -31,7 +31,10 @@ class MakeBoxStateIdUnsigned extends AbstractMigration
         $this->table('locations')->addForeignKey('box_state_id', 'box_state', 'id', [
             'delete' => 'RESTRICT', 'update' => 'CASCADE',
         ])
-            ->changeColumn('box_state_id', 'integer', ['signed' => false, 'null' => false])
+            ->changeColumn('box_state_id', 'integer', ['signed' => false, 'null' => false, 'default' => 1])
+            ->addForeignKey('box_state_id', 'box_state', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
             ->save()
         ;
     }
