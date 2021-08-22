@@ -2,7 +2,7 @@
   "name": "dropapp",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "http://github.com/jamescrowley/dropapp/",
+  "repository": "http://github.com/boxtribute/dropapp/",
   "license": "MIT",
   "devDependencies": {
     "cypress": "^8.3.0",
