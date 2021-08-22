@@ -157,7 +157,7 @@ We use [Cypress](https://www.cypress.io) for Browser-test. To run Cypress tests 
 1. [Install Cypress via direct Download](https://docs.cypress.io/guides/getting-started/installing-cypress.html#Direct-download)
 2. Set the variable `baseURL` to your local address, e.g. `localhost:8100` in cypress.json.
 3. Set the env variable `auth0Domain` to the development Auth0 tanent, 
-e.g. `boxtribute-dev.eu.auth0.com` in cypress.json.
+e.g. `dev-login.boxtribute.com` in cypress.json.
 4. Open Cypress and this repo in Cypress
 
 All tests in `cypress/integrations` should be found and can be directly executed. When writing tests, try to follow these guidelines if possible:

@@ -26,6 +26,7 @@ Every Auth0 tenant has two [applications](https://auth0.com/docs/applications) s
 
 ## [Custom Domains](https://auth0.com/docs/custom-domains)
 The domains for the Auth0 tenants are linked to the following domains:
+- dev-login.boxtribute.org --> boxtribute-dev.eu.auth0.com
 - staging-login.boxtribute.org --> boxtribute-staging.eu.auth0.com
 - demo-login.boxtribute.org --> boxtribute-demo.eu.auth0.com
 - login.boxtribute.org --> boxtribute-production.eu.auth0.com
