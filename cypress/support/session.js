@@ -12,9 +12,6 @@ function backgroundLoginUsing(userMail, userPassword) {
         },
         form: true // submit as POST fields not JSON encoded body
     }).then(response => {
-        console.log(response);
-        console.log(response.status);
-        console.log(response.body.success);
         expect(response.status).to.eq(200);
         expect(response.body.success).to.be.true;
     });
