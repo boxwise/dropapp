@@ -138,10 +138,10 @@ class Cypress extends AbstractSeed
             (100000006, 'DeactivatedBeneficiary', 'DeactivatedBeneficiary',100000000,'004','1978-07-10','2019-09-02',1,NULL,'2019-09-02', '2019-10-25 11:01:30')");
 
         //------------------- transactions
-        $this->execute("INSERT INTO `transactions` (`id`,`people_id`,`product_id`,`size_id`,`count`,`drops`,`transaction_date`, `user_id`) VALUES
-        	(100000000, 100000002, 1158, 1, 0 , 2147483647 ,'2019-09-02', 1),
-        	(100000001, 100000003, 1161, 1, 0 , 2147483647 ,'2019-09-02', 1),
-			(100000002, 100000004, 1162, 1, 0 , 2147483647 ,'2019-09-02', 1)");
+        $this->execute("INSERT INTO `transactions` (`id`,`people_id`,`product_id`,`count`,`drops`,`transaction_date`, `user_id`) VALUES
+        	(100000000, 100000002, 1158, 0 , 2147483647 ,'2019-09-02', 1),
+        	(100000001, 100000003, 1161, 0 , 2147483647 ,'2019-09-02', 1),
+			(100000002, 100000004, 1162, 0 , 2147483647 ,'2019-09-02', 1)");
 
         //------------------- qr
         $this->execute("INSERT INTO `qr` (`id`, `code`) VALUES
