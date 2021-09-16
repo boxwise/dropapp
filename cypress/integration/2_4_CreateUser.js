@@ -14,6 +14,7 @@ Cypress.config("defaultCommandTimeout",200000)
     function FillForm(name, address, group) {
         cy.get("input[data-testid='user_name']").type(name);
         cy.get("input[data-testid='user_email']").type(address);
+        cy.get("input[data-testid='user_email2']").type(address);
         cy.selectOptionByText("cms_usergroups_id", group);
     }
 
@@ -31,6 +32,7 @@ Cypress.config("defaultCommandTimeout",200000)
     it("2_4_0_A Check empty form + empty submit",() => {
         cy.get("input[data-testid='user_name']").should("be.visible");
         cy.get("input[data-testid='user_email']").should("be.visible");
+        cy.get("input[data-testid='user_email2']").should("be.visible");
         cy.CheckDropDownEmpty("cms_usergroups_id");
         cy.get("input[data-testid='user_valid_from']").should("be.visible");
         cy.get("input[data-testid='user_valid_to']").should("be.visible");
