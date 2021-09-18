@@ -27,6 +27,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
         // Validate if E-mail address is correct
         if ($_POST['email'] && !checkEmail($_POST['email'])) {
             redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message=This email is not valid');
+            trigger_error('This email is not valid', E_USER_NOTICE);
         }
 
         // Validate if E-mail is already deactivated and in used before
