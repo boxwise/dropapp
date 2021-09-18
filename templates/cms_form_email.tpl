@@ -19,7 +19,15 @@
 		<div class="form-group">
 			<label for="field_{$element['field']}2" class="control-label col-sm-2">{"E-Mail Confirm"}</label>
 			<div class="col-sm-6">
-				<input type="email" id="field_{$element['field']}2" name="{$element['field']}2" class="form-control" equalTo="#field_{$element['field']}" {if $element['required']}required{/if}>
+				<input 
+					type="email" 
+					id="field_{$element['field']}2" 
+					name="{$element['field']}2" 
+					class="form-control" 
+					equalTo="#field_{$element['field']}" 
+					{if isset($element['testid'])}data-testid="{$element['testid']}2"{/if}
+					{if $element['required']}required{/if}
+				>
 			</div>
 		</div>
 	{/if}
