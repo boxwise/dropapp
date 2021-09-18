@@ -128,9 +128,14 @@ function updateAuth0UserFromDb($user_id, $set_pwd = false)
     }
     if ($dbUserData['valid_firstday'] && '0000-00-00' != $dbUserData['valid_firstday']) {
         $auth0UserData['app_metadata']['valid_firstday'] = $dbUserData['valid_firstday'];
+    } else {
+        $auth0UserData['app_metadata']['valid_firstday'] = null;
     }
+
     if ($dbUserData['valid_lastday'] && '0000-00-00' != $dbUserData['valid_lastday']) {
         $auth0UserData['app_metadata']['valid_lastday'] = $dbUserData['valid_lastday'];
+    } else {
+        $auth0UserData['app_metadata']['valid_lastday'] = null;
     }
 
     try {
