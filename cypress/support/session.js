@@ -51,6 +51,7 @@ Cypress.Commands.add("loginAsCoordinator", () => {
 });
 
 Cypress.Commands.add("fillLoginForm", () => {
+    let config = getLoginConfiguration();
     cy.get("input[id='username']").type(config.testVolunteer);
     cy.get("input[type='password']").type(config.testPwd);
     cy.get("button[type='submit']").click();
