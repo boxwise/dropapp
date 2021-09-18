@@ -221,7 +221,7 @@ describe('Manage beneficiaries', () => {
         beneficiaryNameIsVisible(FAMILY1);
         beneficiaryDataFormIsVisible(FAMILY1);
         beneficiaryInfoAsideIsVisible(FAMILY1);
-        getPrivacyDeclarationButton().should('not.be.visible');
+        getPrivacyDeclarationButton().should('not.exist');
     });
 
     it('Select beneficiary without privacy declaration', () => {
