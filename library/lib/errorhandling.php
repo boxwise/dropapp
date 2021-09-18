@@ -119,7 +119,7 @@ function bootstrap_exception_handler(Throwable $ex)
     $error = new Zmarty();
     if (0 === $ex->getCode() && 'Invalid state' === $ex->getMessage()) {
         // This will call logout and redirect to renew the session when the authentication login page remains longer than expected
-        trigger_error('The user received an invalid state error since the state code is outdated', E_USER_NOTICE);
+        trigger_error('The user received an invalid state error since the state code is outdated', E_USER_ERROR);
         logoutWithRedirect();
     } elseif (500 === $ex->getCode() || !$http_status_codes[$ex->getCode()]) {
         $error->assign('title', 'Sorry, something went wrong');
