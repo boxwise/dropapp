@@ -110,7 +110,17 @@ function updateAuth0UserFromDb($user_id, $set_pwd = false)
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
     $auth0UserId = 'auth0|'.intval($user_id);
-    $dbUserData = db_row('SELECT email, naam, deleted, is_admin, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE id=:id LIMIT 1', ['id' => $user_id]);
+    $dbUserData = db_row('
+        SELECT 
+            u.email, u.naam, u.deleted, u.is_admin, u.cms_usergroups_id, u.valid_firstday, u.valid_lastday,
+            ug.organisation_id
+        FROM 
+            cms_users u
+        LEFT JOIN 
+            cms_usergroups ug ON u.cms_usergroups_id=ug.id
+        WHERE 
+            u.id=:id', ['id' => $user_id]);
+    $dbUserData['base_ids'] = db_simplearray('SELECT camp_id FROM cms_usergroups_camps WHERE cms_usergroups_id=:ugid', ['ugid' => $dbUserData['cms_usergroups_id']], false, false);
 
     $auth0UserData = [
         'email' => $dbUserData['email'],
@@ -119,6 +129,8 @@ function updateAuth0UserFromDb($user_id, $set_pwd = false)
         'app_metadata' => [
             'is_god' => $dbUserData['is_admin'],
             'usergroup_id' => $dbUserData['cms_usergroups_id'],
+            'organisation_id' => $dbUserData['organisation_id'],
+            'base_ids' => $dbUserData['base_ids'],
         ],
         'connection' => 'Username-Password-Authentication',
     ];

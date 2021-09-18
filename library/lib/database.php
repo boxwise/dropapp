@@ -71,7 +71,7 @@ function db_array($query, $array = [], $dbid = false, $idaskey = false)
     return $resultarray;
 }
 
-function db_simplearray($query, $array = [], $dbid = false)
+function db_simplearray($query, $array = [], $dbid = false, $keyneeded = true)
 {
     global $defaultdbid;
     if (!$dbid) {
@@ -80,7 +80,11 @@ function db_simplearray($query, $array = [], $dbid = false)
 
     $result = db_query($query, $array, $dbid);
     while ($row = db_fetch($result, PDO::FETCH_NUM)) {
-        $resultarray[$row[0]] = $row[1];
+        if ($keyneeded) {
+            $resultarray[$row[0]] = $row[1];
+        } else {
+            $resultarray[] = $row[0];
+        }
     }
 
     return $resultarray;
