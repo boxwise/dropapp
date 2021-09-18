@@ -1,5 +1,6 @@
 <?php
 
+    // This is the function for mailing with sendgrid. Since most of our emails are triggered through Auth0 and then sent by SendGrid, this function is not in use at the moment.
     function sendmail($to_email, $to_name, $subject, $content, $email_template = 'cms_email.tpl', $from_email = '', $from_name = '', $debug = false)
     {
         global $settings, $translate;
