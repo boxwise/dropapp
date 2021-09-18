@@ -24,6 +24,11 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
             }
         }
 
+        // Validate if E-mail address is correct
+        if ($_POST['email'] && !checkEmail($_POST['email'])) {
+            redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message=This email is not valid');
+        }
+
         // Validate if E-mail is already deactivated and in used before
         $deactiveduser = db_row('SELECT u.id FROM cms_users u WHERE email LIKE :email', ['email' => $_POST['email'].'.deleted%']);
         if ($deactiveduser && ($deactiveduser['id'] != $_POST['id'])) {
@@ -42,11 +47,6 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
             trigger_error('This email already exists in the system. Please use a different email to create a new user!', E_USER_NOTICE);
         } elseif (!$existinguser && $authUser && !$authUser[0]['blocked']) {
             throw new Exception('The user already exists in AUTH0 but its not sync', 409);
-        }
-
-        // Validate if E-mail address is correct
-        if ($_POST['email'] && !checkEmail($_POST['email'])) {
-            redirect('?action=cms_users_edit&id='.$existinguser['id'].'&origin='.$_POST['_origin'].'&warning=1&message=This email is not valid');
         }
 
         // Validate if user can access this user account
