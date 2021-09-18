@@ -117,10 +117,9 @@ class Minimal extends AbstractSeed
             (3,'Unisex Adult','Unisex',3,1,1,1,0,0,'0'),
             (4,'Girl','Girl',4,0,1,0,1,0,'0'),
             (5,'Boy','Boy',5,1,0,0,1,0,'0'),
-            (6,'Unisex Child','Child',7,1,1,0,1,0,'0'),
+            (6,'Unisex Kid','Kid',7,1,1,0,1,0,'0'),
             (9,'Unisex Baby','Baby',8,1,1,0,0,0,'1'),
             (10,'-',NULL,0,1,1,1,1,1,'1'),
-            (11,'Unisex Kid','Kid',9,1,1,0,0,1,'0'),
 			(12,'Teen Girl','Girl',4,0,1,1,0,0,'0'),
             (13,'Teen Boy','Boy',5,1,0,1,0,0,'0');");
 
