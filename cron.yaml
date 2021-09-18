@@ -11,6 +11,10 @@ cron:
   url: /reseed-db.php
   target: demo
   schedule: every 99999 hours
+- description: "reseed auth0 demo job"
+  url: /reseed-auth0.php
+  target: demo
+  schedule: every 99999 hours
 - description: "dailyroutine staging job"
   url: /dailyroutine.php
   target: staging
