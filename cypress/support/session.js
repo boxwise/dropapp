@@ -49,3 +49,15 @@ Cypress.Commands.add("loginAsCoordinator", () => {
     let config = getLoginConfiguration();
     backgroundLoginUsing(config.testCoordinator, config.testPwd);
 });
+
+Cypress.Commands.add("fillLoginForm", () => {
+    cy.get("input[id='username']").type(config.testVolunteer);
+    cy.get("input[type='password']").type(config.testPwd);
+    cy.get("button[type='submit']").click();
+    cy.url().then((url) => {
+        // first time login with the user prompt for consent
+        if (url.includes('consent?')) {
+          cy.get('button[value="accept"]').click()
+        }
+      });
+});

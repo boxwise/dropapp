@@ -124,23 +124,17 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
 describe('Mobile box creation using QR scanning (logged-out user)', () => {
     let config = getLoginConfiguration();
 
-    function fillLoginForm(){
-        cy.get("input[data-testid='email']").type(config.testVolunteer);
-        cy.get("input[data-testid='password']").type(config.testPwd);
-        cy.get("input[data-testid='signInButton']").click();
-    }
-
     it('Scan QR code with associated box (same organisation)', () => {
         cy.visit('/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
         cy.viewport('iphone-6');
-        fillLoginForm(); 
+        cy.fillLoginForm(); 
         checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
     });
 
     it('Scan QR code with associated box (same organisation) from staging.boxwise.co', () => {
         cy.visit('https://staging.boxwise.co/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
         cy.viewport('iphone-6');
-        fillLoginForm(); 
+        cy.fillLoginForm(); 
         cy.url().should('include', 'https://staging.boxtribute.org/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
         checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
     });
@@ -148,28 +142,28 @@ describe('Mobile box creation using QR scanning (logged-out user)', () => {
     it('Scan QR code without associated box (same organisation)', () => {
         cy.visit('/mobile.php?barcode=' + SAME_ORG_QR_URL_WITHOUT_BOX);
         cy.viewport('iphone-6');
-        fillLoginForm(); 
+        cy.fillLoginForm(); 
         createBoxFormIsVisible();
     });
 
     it('Scan QR code with associated box (diff organisation)', () => {
         cy.visit('/mobile.php?barcode=' + DIFFERENT_ORG_QR_URL);
         cy.viewport('iphone-6');
-        fillLoginForm(); 
+        cy.fillLoginForm(); 
         cy.mobileWarningNotificationWithTextIsVisible("Oops!! This box is registered in");
     });
 
     // TEST IMPLEMENTED BUT THE APP BEHAVIOR DOESN'T MIRROR IT
     // it('Scan QR code without associated box (diff organisation)', () => {
     //     cy.visit('/mobile.php?barcode=' + DIFFERENT_ORG_QR_URL_WITHOUT_BOX);
-    //     fillLoginForm(); 
+    //     cy.fillLoginForm(); 
     //     cy.mobileWarningNotificationWithTextIsVisible("This is not a valid QR-code for " + config.orgName);
     // });
 
     it('Scan non-existent QR code (diff organisation)', () => {
         cy.visit('/mobile.php?barcode=' + NON_EXISTENT_QR_ULR);
         cy.viewport('iphone-6');
-        fillLoginForm(); 
+        cy.fillLoginForm(); 
         cy.mobileWarningNotificationWithTextIsVisible("This is not a valid QR-code for " + config.orgName);
     });    
 });
