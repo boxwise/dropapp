@@ -12,7 +12,7 @@ include 'library/lib/session.php';
 header('Content-type:application/json;charset=utf-8');
 
 $hostName = @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST);
-if (('localhost' !== $hostName && 'staging.boxwise.co' !== $hostName)) {
+if (('localhost' !== $hostName && 'staging.boxtribute.org' !== $hostName)) {
     echo json_encode(['success' => false]);
 
     return;
