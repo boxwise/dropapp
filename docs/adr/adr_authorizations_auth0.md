@@ -17,7 +17,10 @@ DropApp currently uses embedded SQL queries to handle authorization. Right now, 
 2. Identity Types
 3. Underling’s Protocols
 4. Flexibility of Rules
-5. Ease of Implementation 
+5. Ease of Implementation
+6. Security / Risk for us
+7.  Ease of Use
+8.  Cost
 
 ## Considered Options
 
@@ -56,7 +59,7 @@ The summary of the permissions taken from the system is:
 | Admin  | *products:read* - *products:update* - *users:read* - *users:write* - *locations:read* - *locations:write*| `transations, people, stock, products, product_categories`
 | Boxtribute God  | *organization:read* - *organization:write* - *bases:read* - *bases:write* | `organizations, camps`
 
-Suggested Roles
+Suggested Roles based End-User
 -
 
 |Role|Permissions|
@@ -106,9 +109,9 @@ Suggested Roles
 | |history:write|
 | |bases:edit|
 
-### Example of flattened authorization based on Auth0:
+## Example of Flattened Authorization based on Auth0:
 
-*Organization X* which has two bases in Europe named *Base X1* and *Base X2*. User with Admin and Coordinator roles can access *Base X1* , while only Coordinator should able to access Base X2. 
+ *Organization 10001* which has two bases in Europe named *Base X1* and *Base X2*. User with Admin and Coordinator roles can access *Base X1* , while only Coordinator should able to access Base X2. 
 
 **Roles:**
 
@@ -121,33 +124,67 @@ Suggested Roles
 
 In order to give the system the flexibility to create various kind of roles which can be used for various organization and bases, we can create dynamic permissions. This mean all the bases that already created in the system will be added as permission to Auth0. For that, we can create permission as:
 
-    'base_' + [base identifier] + ':*' 
+    'base_' + [base identifier]
 
-- base_**x1**:*
-- base_**x2**:*
-- role_coodinator:*
+This way we are able to grant or revoke access to any bases to a specific Role in our system. Further, we will create base as Role with the following pattern:
+
+    'role_' + [system level roles: admin / coordinator / volunteer ]
+    
+This above mentioned role has created to restrict some specific permissions for a specific base. 
+
+So considers the following roles:
+
+- base_**x1**
+- base_**x2**
+- role_coordinator:*
 - role_**admin**:*
 - role_**volunteer**:*
  - users:read
  - users:write
- - beneficiaries:read
- - beneficiaries:write
+ - beneficiaries:read 
+	 *- The role contains this permission can have read access  to beneficiaries*
+ - beneficiaries:write 
+	 *- The role contains this permission can have write access to beneficiaries*
 
 **Roles and Permissions Assignment:**
 
 - base_**x1** <--- (role_admin:* , beneficiaries:read)
-- base_**x2** <--- (role_admin:* , role_coodinator:*, beneficiaries:read, beneficiaries:write)
+- base_**x2** <--- (role_admin:* , role_coordinator:*, beneficiaries:read, beneficiaries:write)
 - admin <--- (beneficiaries:read, users:write)
 - coordinator  <--- (beneficiaries:read, users:read)
 
+**Assumptions:**
+
+We considered to add organization_id and base_ids as part of JWT for all the users. This will reduce complexity of design for time being but we still need to keep our DB in sync with Auth0 user for any changes.
+
+**Implementation:**
+
+Auth0 by default includes all the **permissions** for the roles assigned to a user in permissions array inside **JWT**, but in order to add custom permissions according to the user assigned bases, we need to use Auth0 Rules (Actions - newly introduced) feature that acts as a middleware within token generation process. The following picture captured from Auth0 depicted the how Rules applies during the authentication.
+
+![enter image description here](https://images.ctfassets.net/cdy7uua7fh8z/1IdyXP3cxbukXrMYuCk3VG/ac5a8d8bc8b595b79ae544c7bcc0468b/rules-best-practice-pipeline.png)
+
+Having base_ids in the Auth0 app meta data we can use that info to query permissions of the bases and finalized actual users permissions:
+
+    function (user, context, callback) { 
+	    var ManagementClient = require('auth0@2.9.1').ManagementClient; 
+	    var management = new ManagementClient({ token: auth0.accessToken, domain: auth0.domain });
+	    management.getUsers(function (err, users) { 
+			console.log(users); callback(null, user, context);
+	    }); 
+	} 
+
+
+More detail information about this can be access via: https://auth0.com/docs/rules/use-management-api
 
 ## Decision
 
-
+Currently all request within a system handled by HTTP protocol
+ 
+**Using Auth0 Core** 
 
 ## Consequences
 
-###Easier:
-
-###More difficult:
-
+### Easier:
+Auth0 Core simplify the permissions and roles and still with Rule / Action some business rules can be defined as part of generation of JWT.
+### More difficult:
+Auth0 Organizational can be more fitted with the current group_id in use in legacy  system but its make our system so tied into Auth0 any change in their current model.
