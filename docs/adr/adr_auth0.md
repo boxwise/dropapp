@@ -46,10 +46,6 @@ We are going for Auth0 since
 
 - Switching between mobile and desktop application
 
-- Reaching the total users (10K) or API rate limits, and how they impact pricing 
+- Reaching the total users (10K) or [API rate limits](https://auth0.com/docs/support/policies/rate-limit-policy/management-api-endpoint-rate-limits) (*2 requests per seconds with bursts up to 10 requests, GET Token: 50 per minute with bursts up to 500 requests*)
 
-- Changes to the current Auth0 enterprise agreement for open source project
-
-
-
-
+- Auth0 changes to the current enterprise agreement for open source project, and how they impact [pricing](https://auth0.com/pricing) and API limits
