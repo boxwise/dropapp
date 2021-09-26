@@ -35,13 +35,21 @@ We are going for Auth0 since
 - Auth0 has good documentation and active community support (https://auth0.com/docs - https://community.auth0.com/)
 - Auth0 and Google Firebase comparison in detail [https://docs.google.com/document/d/1sWmS_VDHDx3VDX7JFu78fpU8yMF9eUOHvp2PqJ9_dy0/edit?usp=sharing]
 
-
-We are not building our own authentication solution to reduce the security risks coming with handling g passwords.
+- We are not building our own authentication solution to reduce the security risks coming with handling of passwords.
 
 ## Consequences
 
-###Easier:
-We can almost drop a whole user flow.
+### Easier:
+- We can almost drop a whole user flow
 
-###More difficult:
-Switching between mobile and desktop application. 
+### More difficult:
+
+- Switching between mobile and desktop application
+
+- Reaching the total users (10K) or API rate limits, and how they impact pricing 
+
+- Changes to the current Auth0 enterprise agreement for open source project
+
+
+
+
