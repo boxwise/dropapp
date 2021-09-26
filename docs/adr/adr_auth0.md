@@ -22,6 +22,8 @@ Our handling of user data is far from bullet-proof. We have stumbled upon cases 
 - Building our own authentication solution
 - Google Firebase
 - Auth0
+- Good docs & Supports
+- Comparison Auth0 and Google Firebase 
 
 ## Decision
 
@@ -32,8 +34,6 @@ We are going for Auth0 since
 - Auth0 is one of the product leaders in CIAM (Visit Gartner for detail at [https://www.g2.com/categories/customer-identity-and-access-management-ciam#grid] - Read recent Leadership Compass Identity API Platforms By KuppingerCole [https://static.carahsoft.com/concrete/files/6315/6840/5267/kuppingercole-leadership-compass-identity-api-platforms.pdf])
 - Using Auth0 management API and automatic migration and bulk import it can be integrated to PHP app
 - Auth0 offers full featured authentication and authorization solution and it's capable of customized rules and flows.
-- Auth0 has good documentation and active community support (https://auth0.com/docs - https://community.auth0.com/)
-- Auth0 and Google Firebase comparison in detail [https://docs.google.com/document/d/1sWmS_VDHDx3VDX7JFu78fpU8yMF9eUOHvp2PqJ9_dy0/edit?usp=sharing]
 
 - We are not building our own authentication solution to reduce the security risks coming with handling of passwords.
 
@@ -46,6 +46,6 @@ We are going for Auth0 since
 
 - Switching between mobile and desktop application
 
-- Reaching the total users (10K) or [API rate limits](https://auth0.com/docs/support/policies/rate-limit-policy/management-api-endpoint-rate-limits) (*2 requests per seconds with bursts up to 10 requests, GET Token: 50 per minute with bursts up to 500 requests*)
+- Becomes more expensive as either number of users grow more than 10K compare to [Firebase which free for 10K users verfications](https://firebase.google.com/pricing#blaze-calculator) or changes to the current enterprise agreement for open source project (Free) [pricing](https://auth0.com/pricing)
 
-- Auth0 changes to the current enterprise agreement for open source project, and how they impact [pricing](https://auth0.com/pricing) and API limits
+- Reaching to the current [API rate limits](https://auth0.com/docs/support/policies/rate-limit-policy/management-api-endpoint-rate-limits) (*2 requests per seconds with bursts up to 10 requests, GET Token: 50 per minute with bursts up to 500 requests*) cause to get 429 error message
