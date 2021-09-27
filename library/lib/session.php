@@ -64,7 +64,7 @@ function authenticate($settings, $ajax)
         // mainly, this is because we're using an auth0 rule to raise errors
         // and this then leaves us forever stuck without this
         // see https://community.auth0.com/t/can-i-show-errors-raised-in-rules-in-the-login-page/51143
-        $auth0->login(null, null, ['prompt' => 'login', 'redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
+        $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
     }
 
     // ideally we wouldn't need to do this, but because loadSessionData
