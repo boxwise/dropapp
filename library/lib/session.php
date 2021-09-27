@@ -53,8 +53,6 @@ function authenticate($settings, $ajax)
             http_response_code(401);
             echo json_encode(['success' => false]);
         }
-        // there's no valid user, so ensure we're all signed out locally
-        logout();
         // because auth0 will only callback to specific known urls
         // we record the full redirect url in a session variable
         // and redirect there once we've had the auth0 callback

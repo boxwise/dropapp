@@ -6,6 +6,7 @@
 			<h3>{$error}</h3>
 			{if isset($sentry)}
 			<h4>{$sentry}</h4>
+			<h4>{$message}</h4>
 			{/if}
 			{if isset($exception)}
 			<small><pre>{$exception}</pre></small>
