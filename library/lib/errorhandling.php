@@ -128,6 +128,9 @@ function bootstrap_exception_handler(Throwable $ex)
         $error->assign('title', $ex->getCode().' - '.$http_status_codes[$ex->getCode()]);
         $error->assign('error', "{$ex->getMessage()}");
         $error->assign('sentry', "For additional information, please contact support and quote Sentry #{$eventId}.");
+        if (401 === $ex->getCode() && 'This user is not currently active' === $ex->getMessage()) {
+            logout();
+        }
     }
 
     global $settings;
