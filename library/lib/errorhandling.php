@@ -29,6 +29,8 @@ function boxwise_sentry_scope(Sentry\State\Scope $scope): void
 
 function bootstrap_exception_handler(Throwable $ex)
 {
+    global $settings;
+
     if (getenv('GOOGLE_CLOUD_PROJECT')) {
         // report to google stackdriver
         Bootstrap::init();
@@ -123,13 +125,15 @@ function bootstrap_exception_handler(Throwable $ex)
         logoutWithRedirect();
     } elseif (500 === $ex->getCode() || !$http_status_codes[$ex->getCode()]) {
         $error->assign('title', 'Sorry, something went wrong');
-        $error->assign('error', "Sorry, an unexpected error occured and has been reported. Please quote Sentry #{$eventId}.");
+        $error->assign('error', "Sorry, an unexpected error occured and has been reported. Please contact support and quote Sentry #{$eventId}.");
     } else {
         $error->assign('title', $ex->getCode().' - '.$http_status_codes[$ex->getCode()]);
         $error->assign('error', "{$ex->getMessage()}");
         $error->assign('sentry', "For additional information, please contact support and quote Sentry #{$eventId}.");
         if (401 === $ex->getCode() && 'This user is not currently active' === $ex->getMessage()) {
+            $error->assign('message', 'You will be redirected to login.');
             logout();
+            $error->assign('logoutWithRedirect', 'https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
         }
     }
 
