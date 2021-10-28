@@ -19,6 +19,12 @@
         "sendgrid/sendgrid": "^7.3",
         "google/cloud-logging": "^1.18",
         "google/cloud-error-reporting": "^0.15.0",
-        "fzaninotto/faker": "^1.8"
+        "fzaninotto/faker": "^1.8",
+        "auth0/auth0-php": "^8.0.2",
+        "opencensus/opencensus": "^0.6.0",
+        "kriswallsmith/buzz": "^1.2",
+        "nyholm/psr7": "^1.4",
+        "steampixel/simple-php-router": "^0.7.0",
+        "guzzlehttp/guzzle": "^7.3"
     }
 }
