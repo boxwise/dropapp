@@ -1,7 +1,7 @@
 {
     "config": {
         "platform": {
-            "php": "7.2.19"
+            "php": "7.4"
         }
     },
     "require-dev": {
@@ -19,8 +19,6 @@
         "sendgrid/sendgrid": "^7.3",
         "google/cloud-logging": "^1.18",
         "google/cloud-error-reporting": "^0.15.0",
-        "fzaninotto/faker": "^1.8",
-        "auth0/auth0-php": "^7.5",
-        "opencensus/opencensus": "^0.6.0"
+        "fzaninotto/faker": "^1.8"
     }
 }
