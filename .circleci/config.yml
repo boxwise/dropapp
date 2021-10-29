@@ -5,7 +5,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/php:7.3-stretch-node-browsers
+      - image: circleci/php:7.4.25-zts-node-browsers-legacy
       - image: circleci/node:4.8.2
     working_directory: ~/project
     steps:
@@ -42,7 +42,7 @@ jobs:
       envVariablePrefix:
         type: string
     docker:
-      - image: circleci/php:7.3-stretch-node-browsers
+      - image: circleci/php:7.4.25-zts-node-browsers-legacy
     steps:
       - attach_workspace:
           at: workspace
