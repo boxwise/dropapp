@@ -1,15 +1,17 @@
+function DeleteTestUser(address) {
+    cy.testdbdelete('cms_users', [], [address]);
+  }
+
 context("User creation", () => {
     let Testname = "paul";
     let Testgroup = "TestUserGroup_User";
     let Testaddress = "pauli@pauli.co";
     let Alt_org_name = "Coordinator Bob";
     let Alt_org_mail = "coordinator@coordinator.co";
+    
 
 Cypress.config("defaultCommandTimeout",200000)
 
-    function DeleteTestUser(address) {
-        cy.testdbdelete('cms_users', [], [address]);
-    }
 
     function FillForm(name, address, group) {
         cy.get("input[data-testid='user_name']").type(name);
@@ -82,5 +84,6 @@ Cypress.config("defaultCommandTimeout",200000)
         FillForm(Testname,Testaddress,Testgroup);
         cy.getButtonWithText("Save and close").click();
         cy.notyTextNotificationWithTextIsVisible("This email already exists in your organisation");
+        DeleteTestUser(Testaddress);
     })
 })
