@@ -63,6 +63,7 @@
                 addfield('text', $language['name'], $language['code']);
 
                 break;
+
             default:
                 addfield('textarea', $language['name'], $language['code']);
 

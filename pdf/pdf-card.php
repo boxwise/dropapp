@@ -202,6 +202,7 @@ class PDF extends FPDF
                 $this->DrawColor = sprintf('%.3F G', $g / 100);
 
                 break;
+
             case 3:
                 $r = func_get_arg(0);
                 $g = func_get_arg(1);
@@ -209,6 +210,7 @@ class PDF extends FPDF
                 $this->DrawColor = sprintf('%.3F %.3F %.3F RG', $r / 255, $g / 255, $b / 255);
 
                 break;
+
             case 4:
                 $c = func_get_arg(0);
                 $m = func_get_arg(1);
@@ -217,6 +219,7 @@ class PDF extends FPDF
                 $this->DrawColor = sprintf('%.3F %.3F %.3F %.3F K', $c / 100, $m / 100, $y / 100, $k / 100);
 
                 break;
+
             default:
                 $this->DrawColor = '0 G';
         }
@@ -234,6 +237,7 @@ class PDF extends FPDF
                 $this->FillColor = sprintf('%.3F g', $g / 100);
 
                 break;
+
             case 3:
                 $r = func_get_arg(0);
                 $g = func_get_arg(1);
@@ -241,6 +245,7 @@ class PDF extends FPDF
                 $this->FillColor = sprintf('%.3F %.3F %.3F rg', $r / 255, $g / 255, $b / 255);
 
                 break;
+
             case 4:
                 $c = func_get_arg(0);
                 $m = func_get_arg(1);
@@ -249,6 +254,7 @@ class PDF extends FPDF
                 $this->FillColor = sprintf('%.3F %.3F %.3F %.3F k', $c / 100, $m / 100, $y / 100, $k / 100);
 
                 break;
+
             default:
                 $this->FillColor = '0 g';
         }
@@ -267,6 +273,7 @@ class PDF extends FPDF
                 $this->TextColor = sprintf('%.3F g', $g / 100);
 
                 break;
+
             case 3:
                 $r = func_get_arg(0);
                 $g = func_get_arg(1);
@@ -274,6 +281,7 @@ class PDF extends FPDF
                 $this->TextColor = sprintf('%.3F %.3F %.3F rg', $r / 255, $g / 255, $b / 255);
 
                 break;
+
             case 4:
                 $c = func_get_arg(0);
                 $m = func_get_arg(1);
@@ -282,6 +290,7 @@ class PDF extends FPDF
                 $this->TextColor = sprintf('%.3F %.3F %.3F %.3F k', $c / 100, $m / 100, $y / 100, $k / 100);
 
                 break;
+
             default:
                 $this->TextColor = '0 g';
         }

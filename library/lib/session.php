@@ -45,7 +45,8 @@ function authenticate($settings, $ajax)
     // or an expired user
     if ($isAuth0Callback && $_REQUEST['error']) {
         throw new Exception($_REQUEST['error_description'], 401);
-        die();
+
+        exit();
     }
 
     if (!$userInfo) {

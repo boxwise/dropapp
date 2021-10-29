@@ -59,21 +59,25 @@
                 list($success, $message, $redirect) = listMove($table, $ids);
 
                 break;
+
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_users']);
 
                 break;
+
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
 
                 break;
+
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
                 break;
+
             case 'show':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 1);
@@ -84,7 +88,8 @@
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
             echo json_encode($return);
-            die();
+
+            exit();
         }
     } else {
         throw new Exception('You do not have access to this menu. Please ask your admin to change this!');

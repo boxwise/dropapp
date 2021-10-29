@@ -61,21 +61,25 @@
                 $redirect = '?action=give&ids='.$ids;
 
                 break;
+
             case 'move':
                 $ids = json_decode($_POST['ids']);
                 list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
 
                 break;
+
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listDelete($table, $ids);
 
                 break;
+
             case 'undelete':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listUnDelete($table, $ids);
 
                 break;
+
             case 'realdelete':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
@@ -87,16 +91,19 @@
                 list($success, $message, $redirect) = listRealDelete($table, $ids);
 
                 break;
+
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listCopy($table, $ids, 'name');
 
                 break;
+
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
                 break;
+
             case 'show':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 1);
@@ -107,7 +114,8 @@
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
         echo json_encode($return);
-        die();
+
+        exit();
     }
 
     function correctdrops($id)

@@ -57,7 +57,8 @@
                 echo '"","'.trim($l['name']).'",'.$l['age'].','.$l['gender']."\n";
             }
         }
-        die();
+
+        exit();
     }
         $cmsmain->assign('include', 'printed_list_people.tpl');
         $cmsmain->assign('list', $list);

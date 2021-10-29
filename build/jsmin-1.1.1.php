@@ -67,9 +67,9 @@ class JSMin
         $this->b = $this->next();
 
         if ('/' === $this->b && (
-            '(' === $this->a || ',' === $this->a || '=' === $this->a ||
-            ':' === $this->a || '[' === $this->a || '!' === $this->a ||
-            '&' === $this->a || '|' === $this->a || '?' === $this->a
+            '(' === $this->a || ',' === $this->a || '=' === $this->a
+            || ':' === $this->a || '[' === $this->a || '!' === $this->a
+            || '&' === $this->a || '|' === $this->a || '?' === $this->a
         )) {
             $this->output .= $this->a.$this->b;
 
@@ -140,6 +140,7 @@ class JSMin
           }
 
           break;
+
         case "\n":
           switch ($this->b) {
             case '{':
@@ -150,10 +151,12 @@ class JSMin
               $this->action(1);
 
               break;
+
             case ' ':
               $this->action(3);
 
               break;
+
             default:
               if ($this->isAlphaNum($this->b)) {
                   $this->action(1);
@@ -163,6 +166,7 @@ class JSMin
           }
 
           break;
+
         default:
           switch ($this->b) {
             case ' ':
@@ -175,6 +179,7 @@ class JSMin
               $this->action(3);
 
               break;
+
             case "\n":
               switch ($this->a) {
                 case '}':
@@ -187,6 +192,7 @@ class JSMin
                   $this->action(1);
 
                   break;
+
                 default:
                   if ($this->isAlphaNum($this->a)) {
                       $this->action(1);
@@ -196,6 +202,7 @@ class JSMin
               }
 
               break;
+
             default:
               $this->action(1);
 
@@ -236,6 +243,7 @@ class JSMin
                 }
 
                 break;
+
               case null:
                 throw new JSMinException('Unterminated comment.');
             }

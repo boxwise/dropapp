@@ -86,6 +86,7 @@
             addfield('checkbox', $translate['cms_settings_enabled'], 'value');
 
             break;
+
         case 'select':
             foreach (explode(',', $data['options']) as $option) {
                 list($value, $label) = explode('=', $option);
@@ -94,10 +95,12 @@
             addfield('select', $translate['cms_settings_value'], 'value', ['options' => $options]);
 
             break;
+
         case 'text':
             addfield('text', $translate['cms_settings_value'], 'value');
 
             break;
+
         case 'textarea':
         default:
             $data['value'] = str_replace("\n", '&#10;', $data['value']);
