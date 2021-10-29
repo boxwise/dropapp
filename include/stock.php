@@ -44,21 +44,29 @@ Tracer::inSpan(
                 if (!is_null($custom_outgoing_locations) && array_key_exists($applied_filter, $custom_outgoing_locations)) {
                     return ' AND l.id = '.$applied_filter;
                 }
+
                 switch ($applied_filter) {
                 case 'boxes_in_stock':
                     return ' AND l.visible';
+
                 case 'ordered':
                     return ' AND (stock.ordered OR stock.picked) AND l.visible';
+
                 case 'dispose':
                     return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible';
+
                 case 'lost_boxes':
                     return ' AND l.is_lost';
+
                 case 'shop':
                     return ' AND l.is_market';
+
                 case 'scrap':
                     return ' AND l.is_scrap';
+
                 case 'showall':
                     return ' ';
+
                 default:
                     return ' AND l.visible';
             }
@@ -175,6 +183,7 @@ Tracer::inSpan(
                 $redirect = '?action='.$_GET['action'];
 
                 break;
+
             case 'order':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
@@ -186,6 +195,7 @@ Tracer::inSpan(
                 }
 
                 break;
+
             case 'undo-order':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
@@ -197,36 +207,43 @@ Tracer::inSpan(
                 }
 
                 break;
+
             case 'qr':
                 $id = $_POST['ids'];
                 $redirect = '/pdf/qr.php?label='.$id;
 
                 break;
+
             case 'move':
                 $ids = json_decode($_POST['ids']);
                 list($success, $message, $redirect) = listMove($table, $ids);
 
                 break;
+
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listDelete($table, $ids);
 
                 break;
+
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
 
                 break;
+
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
                 break;
+
             case 'show':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
                 break;
+
             case 'export':
                 $_SESSION['export_ids_stock'] = $_POST['ids'];
                 list($success, $message, $redirect) = [true, '', '?action=stock_export'];
@@ -237,7 +254,8 @@ Tracer::inSpan(
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
             echo json_encode($return);
-            die();
+
+            exit();
         }
     }
 );

@@ -143,7 +143,8 @@ function bootstrap_exception_handler(Throwable $ex)
     }
 
     $error->display('cms_error.tpl');
-    die();
+
+    exit();
 }
 
 // Set exception handler
@@ -158,7 +159,7 @@ class boxwise_error_handler_class
     /**
      * error handler returned by set_error_handler() in self::add_error_handler.
      */
-    private static $previous_error_handler = null;
+    private static $previous_error_handler;
 
     /**
      * add boxwise_error_handler to existing error handlers.

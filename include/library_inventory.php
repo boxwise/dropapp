@@ -40,35 +40,42 @@
                 $redirect = '?action=libraryhistory&id='.$id;
 
                 break;
+
             case 'move':
                 $ids = json_decode($_POST['ids']);
                 list($success, $message, $redirect) = listMove($table, $ids);
 
                 break;
+
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listDelete($table, $ids);
 
                 break;
+
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
 
                 break;
+
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
                 break;
+
             case 'show':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
                 break;
+
             case 'togglecontainer':
                 list($success, $message, $redirect, $newvalue) = listSwitch($table, 'stockincontainer', $_POST['id']);
 
                 break;
+
             case 'export':
                 $success = true;
                 $redirect = '?action=products_export';
@@ -79,5 +86,6 @@
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'newvalue' => $newvalue];
 
         echo json_encode($return);
-        die();
+
+        exit();
     }

@@ -164,7 +164,8 @@ function ConvertURL()
 function redirect($url, $status = 301)
 {
     header('Location: '.$url, true, $status);
-    die();
+
+    exit();
 }
 
 function CMSmenu()

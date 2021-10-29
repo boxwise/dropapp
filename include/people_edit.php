@@ -12,7 +12,8 @@
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
             echo json_encode($return);
-            die();
+
+            exit();
         }
 
         // save the People edit form
@@ -206,17 +207,17 @@
     if ($_SESSION['camp']['beneficiaryisvolunteer']) {
         addfield('checkbox', 'This beneficiary is a volunteer with <i>'.$_SESSION['organisation']['label'].'</i>', 'volunteer', ['testid' => 'volunteer_id', 'tab' => 'people']);
     }
-
-    if ($_SESSION['camp']['bicycle'] || $_SESSION['camp']['workshop'] || $_SESSION['camp']['idcard']) {
-        $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);
-        if ($data['picture']) {
-            $exif = exif_read_data($settings['upload_dir'].'/people/'.$id.'.jpg');
-            $data['rotate'] = (3 == $exif['Orientation'] ? 180 : (6 == $exif['Orientation'] ? 90 : (8 == $exif['Orientation'] ? 270 : 0)));
-        }
-        addfield('photo', 'Picture for cards', 'picture', ['tab' => 'bicycle']);
-        addfield('line', '', '', ['tab' => 'bicycle']);
-        addfield('text', 'Phone number', 'phone', ['tab' => 'bicycle']);
-    }
+    // causing google credential error in dev environment when trying to load the photo from google storage
+    // if ($_SESSION['camp']['bicycle'] || $_SESSION['camp']['workshop'] || $_SESSION['camp']['idcard']) {
+    //     $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);
+    //     if ($data['picture']) {
+    //         $exif = exif_read_data($settings['upload_dir'].'/people/'.$id.'.jpg');
+    //         $data['rotate'] = (3 == $exif['Orientation'] ? 180 : (6 == $exif['Orientation'] ? 90 : (8 == $exif['Orientation'] ? 270 : 0)));
+    //     }
+    //     addfield('photo', 'Picture for cards', 'picture', ['tab' => 'bicycle']);
+    //     addfield('line', '', '', ['tab' => 'bicycle']);
+    //     addfield('text', 'Phone number', 'phone', ['tab' => 'bicycle']);
+    // }
     if ($_SESSION['camp']['bicycle']) {
         addfield('line', '', '', ['tab' => 'bicycle']);
         addfield('checkbox', 'This person succesfully passed the bicycle training', 'bicycletraining', ['tab' => 'bicycle']);

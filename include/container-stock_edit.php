@@ -107,6 +107,7 @@
                 $redirect = true;
 
                 break;
+
             case 'order':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
@@ -118,6 +119,7 @@
                 }
 
                 break;
+
             case 'undo-order':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
@@ -129,6 +131,7 @@
                 }
 
                 break;
+
             case 'qr':
                 $id = $_POST['ids'];
                 $boxid = db_value('SELECT box_id FROM stock WHERE id = :id', ['id' => $id]);
@@ -137,26 +140,31 @@
                 $redirect = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$boxid;
 
                 break;
+
             case 'move':
                 $ids = json_decode($_POST['ids']);
                 list($success, $message, $redirect) = listMove($table, $ids);
 
                 break;
+
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listDelete($table, $ids);
 
                 break;
+
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
 
                 break;
+
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
                 break;
+
             case 'show':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 1);
@@ -167,5 +175,6 @@
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
         echo json_encode($return);
-        die();
+
+        exit();
     }
