@@ -110,6 +110,7 @@
                 $redirect = true;
 
                 break;
+
             case 'order':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
@@ -121,6 +122,7 @@
                 }
 
                 break;
+
             case 'undo-order':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
@@ -137,5 +139,6 @@
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
         echo json_encode($return);
-        die();
+
+        exit();
     }

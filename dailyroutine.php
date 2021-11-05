@@ -9,6 +9,7 @@ if (!in_array($settings['db_database'], $permittedDatabases)) {
 }
 
 $bypassAuthentication = true;
+
 require_once 'library/core.php';
 // This file is called about one time daily
 

@@ -52,4 +52,5 @@
 			AND NOT (u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0)
 			AND UNIX_TIMESTAMP(u.deleted) = 0';
     }
+
     require_once 'cms_users_page.php';

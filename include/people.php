@@ -308,6 +308,7 @@ Tracer::inSpan(
                 }
 
                 break;
+
             case 'detach':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $key => $value) {
@@ -327,37 +328,44 @@ Tracer::inSpan(
                 }
 
                 break;
+
             case 'give':
                 $ids = ($_POST['ids']);
                 $success = true;
                 $redirect = '?action=give&ids='.$ids;
 
                 break;
+
             case 'move':
                 $ids = json_decode($_POST['ids']);
                 list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
 
                 break;
+
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listDelete($table, $ids);
 
                 break;
+
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listCopy($table, $ids, 'name');
 
                 break;
+
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
                 break;
+
             case 'show':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
                 break;
+
             case 'touch':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
@@ -369,17 +377,20 @@ Tracer::inSpan(
                 $redirect = true;
 
                 break;
+
             case 'print':
                 $success = true;
                 $redirect = '/pdf/'.$_POST['option'].'card.php?id='.$_POST['ids'];
 
                 break;
+
             case 'export':
                 $success = true;
                 $_SESSION['export_ids_people'] = $_POST['ids'];
                 $redirect = '?action=people_export';
 
                 break;
+
             case 'tag':
                 if ('undefined' == $_POST['option']) {
                     $success = false;
@@ -408,7 +419,8 @@ Tracer::inSpan(
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
             echo json_encode($return);
-            die();
+
+            exit();
         }
     }
 );
