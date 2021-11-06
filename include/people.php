@@ -228,11 +228,10 @@ Tracer::inSpan(
                     global $settings;
 
                     if ($_SESSION['camp']['idcard']) {
-                        foreach ($data as $key => $value) {
-                            // if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg')) {
+                        foreach ($data as $key => $value);
+                        // if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg')) {
                             //     $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
                             // }
-                        }
                     }
                 }
             );
