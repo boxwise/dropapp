@@ -13,6 +13,10 @@ Tracer::inSpan(
         if (!$ajax) {
             initlist();
 
+            // Notify the user of the limit on the number of records
+            $cmsmain->assign('notification', 'Boxes are shown up to 500 records, but you can search and filter out just the ones you want');
+            listsetting('maxlimit', 500);
+
             $cmsmain->assign('title', 'Manage Boxes');
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 

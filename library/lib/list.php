@@ -238,14 +238,17 @@ function listExtendAction($table, $id, $period)
             $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()),  INTERVAL 1 WEEK) WHERE id = :id;';
 
             break;
+
         case 1:
             $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()), INTERVAL 1 MONTH) WHERE id = :id;';
 
             break;
+
         case 2:
             $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()), INTERVAL 2 MONTH) WHERE id = :id;';
 
             break;
+
         case 3:
         default:
             $extendQuery = 'UPDATE '.$table." SET valid_lastday = '0000-00-00 00:00:00' WHERE id = :id;";
@@ -357,6 +360,7 @@ function initlist()
     $listconfig['hide'] = $translate['cms_list_hide'];
 
     $listconfig['width'] = 12;
+    $listconfig['maxlimit'] = null;
 
     $listconfig['maxheight'] = 'window';
 
@@ -562,6 +566,10 @@ function buildlistdataquery($query)
         $query .= ' ORDER BY '.$table.'.seq';
     } elseif ($listconfig['orderby']) {
         $query .= ' ORDER BY '.$listconfig['orderby'];
+    }
+
+    if (!stripos($query, 'LIMIT') && $listconfig['maxlimit']) {
+        $query .= sprintf(' LIMIT %d', intval($listconfig['maxlimit']));
     }
 
     return $query;

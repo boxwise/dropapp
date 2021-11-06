@@ -19,6 +19,9 @@ Tracer::inSpan(
             $cmsmain->assign('title', 'Beneficiaries');
 
             initlist();
+            // Notify the user of the limit on the number of records
+            $cmsmain->assign('notification', 'Beneficiaries are shown up to 500 records, but you can search and filter out just the ones you want');
+            listsetting('maxlimit', 500);
 
             // Filter
             $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
