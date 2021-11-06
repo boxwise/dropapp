@@ -37,39 +37,33 @@ class formHandler
                         $value = intval($value);
 
                         break;
-
                     case 'valuta':
                         $value = str_replace('€', '', $value);
                         $value = str_replace('.', '', $value); // remove thousands indicator
                         $value = str_replace(',', '.', $value); // change decimal into point
 
                         break;
-
                     case 'float':
                         $value = str_replace('.', '', $value); // remove thousands indicator
                         $value = str_replace(',', '.', $value); // change decimal into point
 
                         break;
-
                     case 'select':
                         if (!in_array('multiple', $properties)) {
                             $value = $value[0];
                         }
 
                         break;
-
                     case 'date':
                         if ($value) {
                             $value = strftime('%Y-%m-%d %H:%M:%S', strtotime($value));
                         }
 
                         break;
-
                     case 'readonly':
                         $keys = array_diff($keys, [$key]);
 
                         break;
-
                     case 'fileselect':
                         if (in_array('image', $properties) && $value) {
                             $resizeproperties = ($lan ? $this->post['__'.$lan][$key.'resize'] : $this->post['__'.$key.'resize']);

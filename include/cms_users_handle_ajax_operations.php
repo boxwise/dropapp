@@ -19,7 +19,6 @@ if ($ajax) {
             });
 
             break;
-
         case 'undelete':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = db_transaction(function () use ($table, $ids) {
@@ -35,7 +34,6 @@ if ($ajax) {
             });
 
             break;
-
         case 'extendActive':
         case 'extend':
             $ids = explode(',', $_POST['ids']);
@@ -51,7 +49,6 @@ if ($ajax) {
             });
 
             break;
-
         case 'sendlogindata':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = sendlogindata($table, $ids);
@@ -59,7 +56,6 @@ if ($ajax) {
             $message = 'User will receive an email with instructions and their password within couple of minutes!';
 
             break;
-
         case 'loginasuser':
             $ids = explode(',', $_POST['ids']);
             list($success, $message, $redirect) = loginasuser($table, $ids);

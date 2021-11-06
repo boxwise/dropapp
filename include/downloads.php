@@ -33,25 +33,21 @@
                 list($success, $message, $redirect) = listMove($table, $ids);
 
                 break;
-
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listDelete($table, $ids);
 
                 break;
-
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listCopy($table, $ids, 'source');
 
                 break;
-
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
                 break;
-
             case 'show':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listShowHide($table, $ids, 1);

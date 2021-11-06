@@ -51,7 +51,6 @@ Tracer::inSpan(
             require 'mobile.php';
 
             break;
-
         case '/ajax.php':
         case '/mobile.php':
         case '/cypress-session.php':
@@ -67,7 +66,6 @@ Tracer::inSpan(
             require substr($parsedUrl, 1); // trim /
 
             break;
-
         default:
             http_response_code(404);
 

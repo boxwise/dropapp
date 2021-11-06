@@ -56,17 +56,14 @@
                         $minutes = '00';
 
                         break;
-
                     case '0.25':
                         $minutes = '15';
 
                         break;
-
                     case '0.5':
                         $minutes = '30';
 
                         break;
-
                     case '0.75':
                         $minutes = '45';
 

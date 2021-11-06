@@ -1048,7 +1048,6 @@ protected $PDFVersion;         // PDF version number
             echo $this->buffer;
 
             break;
-
         case 'D':
             // Download file
             $this->_checkoutput();
@@ -1059,7 +1058,6 @@ protected $PDFVersion;         // PDF version number
             echo $this->buffer;
 
             break;
-
         case 'F':
             // Save to local file
             if (!file_put_contents($name, $this->buffer)) {
@@ -1067,11 +1065,9 @@ protected $PDFVersion;         // PDF version number
             }
 
             break;
-
         case 'S':
             // Return as a string
             return $this->buffer;
-
         default:
             $this->Error('Incorrect output destination: '.$dest);
     }

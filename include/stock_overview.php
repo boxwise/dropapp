@@ -186,7 +186,6 @@
                 $_SESSION['stock_overview'] = $_POST['ids'];
 
                 break;
-
             case 'collapseall':
                 unset($_SESSION['stock_overview']);
 

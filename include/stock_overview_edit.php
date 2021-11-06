@@ -110,7 +110,6 @@
                 $redirect = true;
 
                 break;
-
             case 'order':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
@@ -122,7 +121,6 @@
                 }
 
                 break;
-
             case 'undo-order':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
