@@ -1,11 +1,13 @@
 <?php
 
 // Generate random box id
-function generateBoxID($length = 6, $possible = '0123456789')
+function generateBoxID($length = 8, $possible = '0123456789')
 {
     $randomString = '';
     $i = 0;
     while ($i < $length) {
+        $possible = (0 === $i) ? substr($possible, 1, strlen($possible) - 1) : $possible;
+
         $char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
         if (!strstr($randomString, $char)) {
             $randomString .= $char;
