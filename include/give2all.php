@@ -11,6 +11,11 @@
                     db_query('INSERT INTO ration (startration) VALUES (NOW())');
                 }
         */
+        // validate tokens input value
+        if (!preg_match('/[1-9]\d*/', $_POST['dropsadult']) || !preg_match('/[1-9]\d*/', $_POST['dropschild'])) {
+            redirect('?action=give2all&warning=1&message=The number of tokens should be specified');
+            trigger_error('The number of tokens should be specified', E_USER_NOTICE);
+        }
 
         db_query('UPDATE camps SET 
 			dropsperadult = :dropsperadult, 
