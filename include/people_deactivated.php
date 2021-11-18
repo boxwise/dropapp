@@ -73,7 +73,17 @@
                 break;
             case 'undelete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listUnDelete($table, $ids);
+                $finalIds = [];
+                foreach ($ids as $id) {
+                    $parentId = db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $id]);
+                    $hasActiveParent = ($parentId) ? db_value('SELECT (NOT deleted OR deleted IS NULL) as parant FROM people WHERE id = :id', ['id' => $parentId]) : null;
+
+                    if ($parentId && !in_array($parentId, $ids) && !boolval($hasActiveParent)) {
+                        continue;
+                    }
+                    array_push($finalIds, $id);
+                }
+                list($success, $message, $redirect) = listUnDelete($table, $finalIds);
 
                 break;
             case 'realdelete':
