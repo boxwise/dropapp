@@ -72,7 +72,7 @@ use OpenCensus\Trace\Tracer;
 
                 foreach ($data as $key => $value) {
                     if ('1' == $data[$key]['has_not_active_parent']) {
-                        $data[$key]['icons'] .= sprintf('<i class="fa fa-exclamation-triangle warning tooltip-this" title="%s\'s family head (%s) is not active"></i>', $data[$key]['firstname'], $data[$key]['family_head']);
+                        $data[$key]['icons'] .= sprintf('<i class="fa fa-exclamation-triangle warning tooltip-this" title="To reactivate %s please make sure you reactivate their family head first."></i>', $data[$key]['firstname'].' '.$data[$key]['lastname']);
                     }
                 }
             }
@@ -106,10 +106,10 @@ use OpenCensus\Trace\Tracer;
                 foreach ($ids as $id) {
                     $person = db_row('SELECT concat(firstname," ",lastname) as fullname, parent_id FROM people WHERE id = :id', ['id' => $id]);
                     $parentId = $person['parent_id'];
-                    $hasActiveParent = ($parentId) ? db_value('SELECT (NOT deleted OR deleted IS NULL) as parant FROM people WHERE id = :id', ['id' => $parentId]) : null;
-
+                    $parent = ($parentId) ? db_row('SELECT (NOT deleted OR deleted IS NULL) as has_active_parent, concat(firstname," ",lastname) as family_head  FROM people WHERE id = :id', ['id' => $parentId]) : null;
+                    $hasActiveParent = ($parent['has_active_parent']) ?? false;
                     if ($parentId && !in_array($parentId, $ids) && !boolval($hasActiveParent)) {
-                        $errorMessage .= $person['fullname'].' does not have an active family head.<br>';
+                        $errorMessage .= sprintf('Family head %s must be active before %s can be reactivated.<br>', $parent['family_head'], $person['fullname']);
 
                         continue;
                     }
