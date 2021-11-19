@@ -117,7 +117,6 @@ use OpenCensus\Trace\Tracer;
                 }
                 if (empty($errorMessage)) {
                     list($success, $message, $redirect) = listUnDelete($table, $finalIds);
-                    $redirect = true;
                 } else {
                     $success = false;
                     $redirect = false;
