@@ -72,7 +72,7 @@ use OpenCensus\Trace\Tracer;
 
                 foreach ($data as $key => $value) {
                     if ('1' == $data[$key]['has_not_active_parent']) {
-                        $data[$key]['icons'] .= sprintf('<i class="fa fa-exclamation-triangle warning tooltip-this" title="To reactivate %s please make sure you reactivate their family head first."></i>', $data[$key]['firstname'].' '.$data[$key]['lastname']);
+                        $data[$key]['icons'] .= sprintf('<i class="fa fa-exclamation-triangle warning tooltip-this" title="To reactivate %s please make sure you reactivate their family head (%s) first."></i>', $data[$key]['firstname'].' '.$data[$key]['lastname'], $data[$key]['family_head']);
                     }
                 }
             }
