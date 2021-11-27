@@ -42,6 +42,7 @@ Tracer::inSpan(
             $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
 
             // List Settings
+            listsetting('maxlimit', 500);   // limits the number of rows displayed
             listsetting('allowcopy', false);
             listsetting('allowshowhide', false);
             listsetting('add', 'New person');
@@ -233,11 +234,10 @@ Tracer::inSpan(
                     global $settings;
 
                     if ($_SESSION['camp']['idcard']) {
-                        foreach ($data as $key => $value) {
-                            // if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg')) {
+                        foreach ($data as $key => $value);
+                        // if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg')) {
                             //     $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
                             // }
-                        }
                     }
                 }
             );
@@ -261,6 +261,11 @@ Tracer::inSpan(
                 ['name' => ('people.php:addtemplatedata')],
                 function () use ($cmsmain, $data) {
                     global $listdata, $listdata, $listconfig;
+
+                    // Notify the user of the limit on the number of records
+                    if (count($data) >= 500) {
+                        $cmsmain->assign('notification', 'Only the first 500 beneficiaries are shown. Use the filter and search to find the rest.');
+                    }
 
                     // Pass information to template
                     $cmsmain->assign('data', $data);
@@ -444,7 +449,8 @@ Tracer::inSpan(
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
             echo json_encode($return);
-            die();
+
+            exit();
         }
     }
 );

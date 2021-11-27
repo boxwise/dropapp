@@ -123,5 +123,6 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
         echo json_encode($return);
-        die();
+
+        exit();
     }

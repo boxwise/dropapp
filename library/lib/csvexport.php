@@ -18,5 +18,6 @@ function csvexport($data, $filename, $keys)
         }
         echo "\n";
     }
-    die();
+
+    exit();
 }

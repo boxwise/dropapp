@@ -61,7 +61,8 @@
             $return = ['success' => $success, 'message' => $message, 'redirect' => false, 'action' => "$('#field_people_id').trigger('change')"];
 
             echo json_encode($return);
-            die();
+
+            exit();
         }
 
         // verify acces if data of a person is requested
@@ -97,7 +98,8 @@
             $return = ['success' => true, 'message' => $notificationText, 'redirect' => '?action=check_out'];
 
             echo json_encode($return);
-            die();
+
+            exit();
         }
 
         $ajaxform = new Zmarty();

@@ -357,6 +357,7 @@ function initlist()
     $listconfig['hide'] = $translate['cms_list_hide'];
 
     $listconfig['width'] = 12;
+    $listconfig['maxlimit'] = null;
 
     $listconfig['maxheight'] = 'window';
 
@@ -562,6 +563,10 @@ function buildlistdataquery($query)
         $query .= ' ORDER BY '.$table.'.seq';
     } elseif ($listconfig['orderby']) {
         $query .= ' ORDER BY '.$listconfig['orderby'];
+    }
+
+    if (!stripos($query, 'LIMIT') && $listconfig['maxlimit']) {
+        $query .= sprintf(' LIMIT %d', intval($listconfig['maxlimit']));
     }
 
     return $query;

@@ -2,6 +2,7 @@
 
 if ($ajax) {
     $data = null;
+
     switch ($_POST['do']) {
         case 'delete':
             $ids = explode(',', $_POST['ids']);
@@ -65,5 +66,6 @@ if ($ajax) {
     $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'data' => $data];
 
     echo json_encode($return);
-    die();
+
+    exit();
 }

@@ -100,5 +100,6 @@
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'newvalue' => $newvalue];
 
         echo json_encode($return);
-        die();
+
+        exit();
     }

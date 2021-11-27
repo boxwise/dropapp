@@ -84,7 +84,8 @@
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
             echo json_encode($return);
-            die();
+
+            exit();
         }
     } else {
         throw new Exception('You do not have access to this menu. Please ask your admin to change this!');

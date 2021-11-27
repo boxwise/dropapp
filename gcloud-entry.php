@@ -35,6 +35,7 @@ Tracer::inSpan(
         // ideally we wouldn't be using globals at all, but that's for another day :)
         global $settings,$translate,$action,$lan,$pdf,$_txt,$formbuttons;
         global $error,$listdata,$data,$table,$listconfig,$thisfile,$formdata;
+
         switch ($parsedUrl) {
         case '/':
         case '/index.php':
@@ -63,6 +64,7 @@ Tracer::inSpan(
             break;
         default:
             http_response_code(404);
+
             exit('Not Found');
         }
     }

@@ -53,7 +53,7 @@ function allowgivedrops()
 function organisationlist($short = false)
 {
     if ($_SESSION['user']['is_admin']) {
-        return  db_array('SELECT * FROM organisations 
+        return db_array('SELECT * FROM organisations 
             WHERE (NOT organisations.deleted OR organisations.deleted IS NULL) 
             ORDER BY label', [], false, true);
     }

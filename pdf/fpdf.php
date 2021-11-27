@@ -1033,6 +1033,7 @@ protected $PDFVersion;         // PDF version number
         if ('' == $name) {
             $name = 'doc.pdf';
         }
+
         switch (strtoupper($dest)) {
         case 'I':
             // Send to standard output
@@ -1182,6 +1183,7 @@ protected $PDFVersion;         // PDF version number
         if (false !== strpos($font, '/') || false !== strpos($font, '\\')) {
             $this->Error('Incorrect font definition file name: '.$font);
         }
+
         include $this->fontpath.$font;
         if (!isset($name)) {
             $this->Error('Could not include font definition file');

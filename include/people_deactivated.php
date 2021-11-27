@@ -107,7 +107,8 @@
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
         echo json_encode($return);
-        die();
+
+        exit();
     }
 
     function correctdrops($id)

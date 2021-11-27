@@ -13,6 +13,8 @@ Tracer::inSpan(
         if (!$ajax) {
             initlist();
 
+            listsetting('maxlimit', 500);
+
             $cmsmain->assign('title', 'Manage Boxes');
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
@@ -44,6 +46,7 @@ Tracer::inSpan(
                 if (!is_null($custom_outgoing_locations) && array_key_exists($applied_filter, $custom_outgoing_locations)) {
                     return ' AND l.id = '.$applied_filter;
                 }
+
                 switch ($applied_filter) {
                 case 'boxes_in_stock':
                     return ' AND l.visible';
@@ -144,6 +147,11 @@ Tracer::inSpan(
             addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
             addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
 
+            // Notify the user of the limit on the number of records
+            if (count($data) >= 500) {
+                $cmsmain->assign('notification', 'Only the first 500 boxes are shown. Use the filter and search to find the rest.');
+            }
+
             $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
             $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
 
@@ -237,7 +245,8 @@ Tracer::inSpan(
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
             echo json_encode($return);
-            die();
+
+            exit();
         }
     }
 );

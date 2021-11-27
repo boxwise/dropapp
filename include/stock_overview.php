@@ -193,5 +193,6 @@
         }
 
         echo json_encode($return);
-        die();
+
+        exit();
     }

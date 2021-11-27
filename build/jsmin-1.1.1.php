@@ -2,8 +2,8 @@
 
 class JSMin
 {
-    const ORD_LF = 10;
-    const ORD_SPACE = 32;
+    public const ORD_LF = 10;
+    public const ORD_SPACE = 32;
 
     protected $a = '';
     protected $b = '';
@@ -43,7 +43,7 @@ class JSMin
         $this->a = $this->b;
 
         if ("'" === $this->a || '"' === $this->a) {
-            for (;;) {
+            while (true) {
                 $this->output .= $this->a;
                 $this->a = $this->get();
 
@@ -67,13 +67,13 @@ class JSMin
         $this->b = $this->next();
 
         if ('/' === $this->b && (
-            '(' === $this->a || ',' === $this->a || '=' === $this->a ||
-            ':' === $this->a || '[' === $this->a || '!' === $this->a ||
-            '&' === $this->a || '|' === $this->a || '?' === $this->a
+            '(' === $this->a || ',' === $this->a || '=' === $this->a
+            || ':' === $this->a || '[' === $this->a || '!' === $this->a
+            || '&' === $this->a || '|' === $this->a || '?' === $this->a
         )) {
             $this->output .= $this->a.$this->b;
 
-            for (;;) {
+            while (true) {
                 $this->a = $this->get();
 
                 if ('/' === $this->a) {
@@ -214,20 +214,20 @@ class JSMin
         if ('/' === $c) {
             switch ($this->peek()) {
         case '/':
-          for (;;) {
-              $c = $this->get();
+            while (true) {
+                $c = $this->get();
 
-              if (ord($c) <= self::ORD_LF) {
-                  return $c;
-              }
-          }
+                if (ord($c) <= self::ORD_LF) {
+                    return $c;
+                }
+            }
 
           // no break
         case '*':
           $this->get();
 
-          for (;;) {
-              switch ($this->get()) {
+            while (true) {
+                switch ($this->get()) {
               case '*':
                 if ('/' === $this->peek()) {
                     $this->get();
@@ -239,7 +239,7 @@ class JSMin
               case null:
                 throw new JSMinException('Unterminated comment.');
             }
-          }
+            }
 
           // no break
         default:
