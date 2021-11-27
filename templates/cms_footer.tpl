@@ -13,5 +13,17 @@
 	  {if $smarty.session.user}
       {include file="freshdesk.tpl"}
     {/if}
+    {if $notification}
+      {literal}
+      <script language="javascript">
+        $(document).ready(function () {
+          var n = noty({
+              type: "information",
+              text: "{/literal}{$notification}{literal}",
+          });
+        });
+      </script>
+      {/literal}
+    {/if}
   </body>
 </html>

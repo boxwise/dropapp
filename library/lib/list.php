@@ -169,13 +169,17 @@ function listDeleteAction($table, $id, $count = 0, $recursive = false)
     return $count;
 }
 
-function listUndelete($table, $ids, $uri = false)
+function listUndelete($table, $ids, $uri = false, $overwritehastree = false)
 {
     global $translate, $action;
 
     $hasDeletefield = db_fieldexists($table, 'deleted');
     $hasPrevent = db_fieldexists($table, 'preventdelete');
-    $hasTree = db_fieldexists($table, 'parent_id');
+    if ($overwritehastree) {
+        $hastree = false;
+    } else {
+        $hasTree = db_fieldexists($table, 'parent_id');
+    }
 
     foreach ($ids as $id) {
         if ($hasDeletefield) {
@@ -360,6 +364,7 @@ function initlist()
     $listconfig['hide'] = $translate['cms_list_hide'];
 
     $listconfig['width'] = 12;
+    $listconfig['maxlimit'] = null;
 
     $listconfig['maxheight'] = 'window';
 
@@ -565,6 +570,10 @@ function buildlistdataquery($query)
         $query .= ' ORDER BY '.$table.'.seq';
     } elseif ($listconfig['orderby']) {
         $query .= ' ORDER BY '.$listconfig['orderby'];
+    }
+
+    if (!stripos($query, 'LIMIT') && $listconfig['maxlimit']) {
+        $query .= sprintf(' LIMIT %d', intval($listconfig['maxlimit']));
     }
 
     return $query;
