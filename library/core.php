@@ -43,18 +43,13 @@ Tracer::inSpan(
 
         // load other libraries
         require_once 'lib/session.php';
-
         require_once 'lib/tools.php';
-
         require_once 'lib/mail.php';
-
         require_once 'lib/csvexport.php';
 
         // load CMS specific libraries
         require_once 'lib/form.php';
-
         require_once 'lib/list.php';
-
         require_once 'lib/formhandler.php';
 
         // functions that are app specific but need to available globally

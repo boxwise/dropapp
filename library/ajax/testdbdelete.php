@@ -53,7 +53,7 @@
                 if (!$permission) {
                     trigger_error('No permission to delete this data', E_USER_ERROR);
 
-                    exit;
+                    exit();
                 }
             }
             db_transaction(function () use ($ids) {
