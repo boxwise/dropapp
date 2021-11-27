@@ -169,13 +169,17 @@ function listDeleteAction($table, $id, $count = 0, $recursive = false)
     return $count;
 }
 
-function listUndelete($table, $ids, $uri = false)
+function listUndelete($table, $ids, $uri = false, $overwritehastree = false)
 {
     global $translate, $action;
 
     $hasDeletefield = db_fieldexists($table, 'deleted');
     $hasPrevent = db_fieldexists($table, 'preventdelete');
-    $hasTree = db_fieldexists($table, 'parent_id');
+    if ($overwritehastree) {
+        $hastree = false;
+    } else {
+        $hasTree = db_fieldexists($table, 'parent_id');
+    }
 
     foreach ($ids as $id) {
         if ($hasDeletefield) {
