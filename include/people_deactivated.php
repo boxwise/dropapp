@@ -55,6 +55,7 @@ use OpenCensus\Trace\Tracer;
 
         addcolumn('text', 'Surname', 'lastname');
         addcolumn('text', 'Firstname', 'firstname');
+        addcolumn('text', 'Head of Family', 'family_head');
         addcolumn('text', 'Gender', 'gender2');
         addcolumn('text', 'Age', 'age');
         addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
@@ -83,22 +84,6 @@ use OpenCensus\Trace\Tracer;
         $cmsmain->assign('include', 'cms_list.tpl');
     } else {
         switch ($_POST['do']) {
-            case 'give':
-                $ids = ($_POST['ids']);
-                $success = true;
-                $redirect = '?action=give&ids='.$ids;
-
-                break;
-            case 'move':
-                $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
-
-                break;
-            case 'delete':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids);
-
-                break;
             case 'undelete':
                 $ids = explode(',', $_POST['ids']);
                 $finalIds = [];
@@ -116,7 +101,8 @@ use OpenCensus\Trace\Tracer;
                     array_push($finalIds, $id);
                 }
                 if (empty($errorMessage)) {
-                    list($success, $message, $redirect) = listUnDelete($table, $finalIds);
+                    list($success, $message, $redirect) = listUnDelete($table, $finalIds, false, true);
+                    $redirect = true;
                 } else {
                     $success = false;
                     $redirect = false;
@@ -133,21 +119,6 @@ use OpenCensus\Trace\Tracer;
                     db_query('UPDATE people SET parent_id = NULL WHERE parent_id = :id AND deleted', ['id' => $id]);
                 }
                 list($success, $message, $redirect) = listRealDelete($table, $ids);
-
-                break;
-            case 'copy':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listCopy($table, $ids, 'name');
-
-                break;
-            case 'hide':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-
-                break;
-            case 'show':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
                 break;
         }
