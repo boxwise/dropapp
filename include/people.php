@@ -21,8 +21,12 @@ Tracer::inSpan(
             initlist();
 
             // Filter
-            $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
-            listsetting('multiplefilter', $tagfilter);
+            $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL ORDER BY label', ['camp_id' => $_SESSION['camp']['id']]);
+            if (!empty($tags)) {
+                $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
+                listsetting('multiplefilter', $tagfilter);
+            }
+
             $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'notregistered' => 'Not registered'];
             if ($_SESSION['camp']['beneficiaryisregistered']) {
                 $statusarray['notregistered'] = 'Not registered';
@@ -60,8 +64,10 @@ Tracer::inSpan(
 
             // List Buttons
             addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
-            $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL ORDER BY label', ['camp_id' => $_SESSION['camp']['id']]);
-            addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
+            if (!empty($tags)) {
+                addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
+                addbutton('rtag', 'Remove Tag', ['icon' => 'fa-tags', 'options' => $tags]);
+            }
             addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
             addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
             addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false, 'testid' => 'detachFromFamily']);
@@ -86,7 +92,9 @@ Tracer::inSpan(
             addcolumn('text', 'Age', 'age');
             addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
             addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'tokens');
-            addcolumn('tag', 'Tags', 'tags');
+            if (!empty($tags)) {
+                addcolumn('tag', 'Tags', 'tags');
+            }
             addcolumn('text', 'Comments', 'comments');
             if ($is_filtered) {
                 addcolumn('text', 'Last Activity', 'last_activity');
@@ -399,6 +407,34 @@ Tracer::inSpan(
                     $success = true;
                     $message = 'Tag added';
                     $redirect = true;
+                }
+
+                break;
+            case 'rtag':
+                if ('undefined' == $_POST['option']) {
+                    $success = false;
+                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
+                    $redirect = false;
+                } else {
+                    // set tag id
+                    $tag_id = $_POST['option'];
+                    $people_ids = $ids;
+                    // Set a maximum limit of 500 records on the number of tags that can be removed
+                    if (sizeof($people_ids) > 500) {
+                        $success = false;
+                        $message = 'No more than 500 people should be selected to remove tags';
+                        $redirect = false;
+                    } else {
+                        foreach ($people_ids as $people_id) {
+                            if (1 == db_numrows('SELECT * FROM people_tags WHERE tag_id=:tag_id AND people_id=:people_id', ['tag_id' => $tag_id, 'people_id' => $people_id])) {
+                                db_query('DELETE FROM people_tags WHERE tag_id = :tag_id AND people_id = :people_id', ['tag_id' => $tag_id, 'people_id' => $people_id]);
+                            }
+                        }
+
+                        $success = true;
+                        $message = sizeof($people_ids) > 1 ? 'Tags removed' : 'Tags removed';
+                        $redirect = true;
+                    }
                 }
 
                 break;
