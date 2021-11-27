@@ -19,9 +19,6 @@ Tracer::inSpan(
             $cmsmain->assign('title', 'Beneficiaries');
 
             initlist();
-            // Notify the user of the limit on the number of records
-            $cmsmain->assign('notification', 'Beneficiaries are shown up to 500 records, but you can search and filter out just the ones you want');
-            listsetting('maxlimit', 500);
 
             // Filter
             $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']])];
@@ -41,6 +38,7 @@ Tracer::inSpan(
             $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
 
             // List Settings
+            listsetting('maxlimit', 500);   // limits the number of rows displayed
             listsetting('allowcopy', false);
             listsetting('allowshowhide', false);
             listsetting('add', 'New person');
@@ -255,6 +253,11 @@ Tracer::inSpan(
                 ['name' => ('people.php:addtemplatedata')],
                 function () use ($cmsmain, $data) {
                     global $listdata, $listdata, $listconfig;
+
+                    // Notify the user of the limit on the number of records
+                    if (count($data) >= 500) {
+                        $cmsmain->assign('notification', 'Only the first 500 beneficiaries are shown. Use the filter and search to find the rest.');
+                    }
 
                     // Pass information to template
                     $cmsmain->assign('data', $data);

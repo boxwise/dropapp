@@ -13,8 +13,6 @@ Tracer::inSpan(
         if (!$ajax) {
             initlist();
 
-            // Notify the user of the limit on the number of records
-            $cmsmain->assign('notification', 'Boxes are shown up to 500 records, but you can search and filter out just the ones you want');
             listsetting('maxlimit', 500);
 
             $cmsmain->assign('title', 'Manage Boxes');
@@ -148,6 +146,11 @@ Tracer::inSpan(
             addbutton('qr', 'Make label', ['icon' => 'fa-print']);
             addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
             addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
+
+            // Notify the user of the limit on the number of records
+            if (count($data) >= 500) {
+                $cmsmain->assign('notification', 'Only the first 500 boxes are shown. Use the filter and search to find the rest.');
+            }
 
             $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
             $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
