@@ -110,6 +110,7 @@ use OpenCensus\Trace\Tracer;
                 }
 
                 break;
+
             case 'realdelete':
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
