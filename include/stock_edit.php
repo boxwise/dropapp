@@ -6,9 +6,17 @@
     if ($_POST) {
         if (!$_POST['box_id']) {
             $newbox = true;
+            $limit = 10;
             do {
                 $_POST['box_id'] = generateBoxID();
-            } while (db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id', ['box_id' => $_POST['box_id']]));
+                --$limit;
+            } while (0 !== $limit && db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id', ['box_id' => $_POST['box_id']]));
+
+            if (0 === $limit) {
+                trigger_error('Lookup failed in 10 attempts to find a unique box identifier', E_USER_ERROR);
+
+                throw new Exception('There is an issue creating box identifier. Please try again in a few minutes', 409);
+            }
         }
         $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $_POST['id']]);
         if ($box && ($box['location_id'] != $_POST['location_id'][0])) {
