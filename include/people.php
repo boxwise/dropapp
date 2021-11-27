@@ -426,6 +426,7 @@ Tracer::inSpan(
                 }
 
                 break;
+
             case 'rtag':
                 if ('undefined' == $_POST['option']) {
                     $success = false;
