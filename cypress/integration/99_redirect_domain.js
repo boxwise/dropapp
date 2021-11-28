@@ -17,8 +17,6 @@ describe('Redirect domain', () => {
 
     it('Navigate to market.drapenihavet.no and end up at app.boxtribute.org', () => {
         cy.visit('https://market.drapenihavet.no/mobile.php?barcode=test');
-        // cy.url().should('include', 'app.boxtribute.org');
-        cy.url().should('include', 'barcode=test');
-        cy.url().should('include', 'qrlegacy=1');
+        cy.url().should('include', 'boxtribute-production.eu.auth0.com');
     });
 });
