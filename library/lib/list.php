@@ -81,7 +81,7 @@ function listDelete($table, $ids, $uri = false, $fktables = null)
                     if (count($foreignkeys) > 0) {
                         foreach ($foreignkeys as $foreignkey) {
                             // Do we want to check the foreign key and does the foreign key restrict the delete?
-                            if (in_array($foreignkey['TABLE_NAME'], $fktables) && ('RESTRICT' == $foreignkey['DELETE_RULE'])) {
+                            if (in_array($foreignkey['TABLE_NAME'], $fktables) && (('RESTRICT' == $foreignkey['DELETE_RULE']) || ('NO ACTION' == $foreignkey['DELETE_RULE']))) {
                                 if (db_fieldexists($foreignkey['TABLE_NAME'], 'label')) {
                                     $namestring = ',b.label AS label';
                                 } elseif (db_fieldexists($foreignkey['TABLE_NAME'], 'naam')) {
