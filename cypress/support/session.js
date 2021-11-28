@@ -22,7 +22,7 @@ function backgroundLoginUsing(userMail, userPassword) {
 // tests
 Cypress.Commands.add("loginAsVolunteer", () => {
     let config = getLoginConfiguration();
-    cy.wait(1000);
+    cy.wait(2000);
     backgroundLoginUsing(config.testVolunteer, config.testPwd);
 });
 
