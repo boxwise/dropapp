@@ -142,6 +142,24 @@
 						<p>To access the mentioned services provided by {$currentOrg['label']}, you must agree that we can continue to process and retain this information about you.</p>
 						<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree that my personal information is stored and processed as described in the Privacy Policy of OA/CESRT.
 						<p>I also agree that my family ́s personal information is stored and processed as described above.</p>
+					{elseif {$currentOrg['id']}==10}
+						<h3>CONSENT FORM</h3><br />
+						<p>A Drop in the Ocean (DiH) wish to reassert you that we are protecting your private information in accordance with the GDPR regulations applied in EU/EEA countries.</p>
+						<p>For persons receiving assistance or participating in DiH activities, the following information is retained: &bull; Name&nbsp;</p>
+						<ul>
+						<li>Age (date of birth)</li>
+						<li>Nationality&nbsp;</li>
+						<li>Spoken language&nbsp;</li>
+						<li>Address (e.g., container/tent number/room)&nbsp;</li>
+						<li>Telephone / WhatsApp number</li>
+						<li>Gender&nbsp;</li>
+						</ul>
+						<p>The abovementioned information is provided by you in conversation with representatives of DiH. A Drop in the Ocean does not share your personal information with other parties.</p>
+						<ul style="list-style-type: square;">
+						<li>I agree that A Drop in the Ocean can contact me on the phone number provided with information related to A Drop in the Ocean&rsquo;s activities, projects, and distributions.</li>
+						<li>I Agree that my personal information is stored and processed according to A Drop in the Ocean&rsquo;s privacy policy.</li>
+						</ul>
+						<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree that my personal information is stored and processed as described in the Privacy Policy of {$currentOrg['label']}.</p>
 					{else}
 						<h3>Information about privacy policies</h3><br />
 						<p>{$currentOrg['label']} wish to reassert you that we are protecting your private information, with reference to the new privacy policies that applies to EU/EES countries.</p>
@@ -162,6 +180,28 @@
 				</div>
 				
 				<div class="tab-pane fade" id="languagetab_fr">
+				{if {$currentOrg['id']}==10}
+				<h3>FORMULAIRE DE CONSENTEMENT&nbsp;</h3></br>
+				<p>A Drop in the Ocean (DiH) souhaite vous r&eacute;affirmer que nous prot&eacute;geons vos informations priv&eacute;es conform&eacute;ment aux r&eacute;glementations GDPR appliqu&eacute;es dans les pays de l'UE / EEE.&nbsp;</p>
+				<p>Pour les personnes recevant de l'aide ou participant aux activit&eacute;s de DiH, les informations suivantes sont conserv&eacute;es :&nbsp;</p>
+				<ul>
+				<li>Nom&nbsp;</li>
+				<li>Age (date de naissance) </li>
+				<li>Nationalit&eacute;&nbsp;</li>
+				<li>Langue parl&eacute;e&nbsp;</li>
+				<li>Adresse (par exemple conteneur/num&eacute;ro de tente/chambre)&nbsp;</li>
+				<li>T&eacute;l&eacute;phone / num&eacute;ro WhatsApp </li>
+				<li>Genre&nbsp;</li>
+				</ul>
+				<p>Les informations susmentionn&eacute;es sont fournies par vous lors d'une conversation avec des repr&eacute;sentants de DiH.&nbsp;</p>
+				<p>A Drop in the Ocean ne partage pas vos informations personnelles avec d'autres parties.&nbsp;</p>
+				<ul style="list-style-type: square;">
+				<li>J'accepte que A Drop in the Ocean puisse me contacter au num&eacute;ro de t&eacute;l&eacute;phone fourni avec des informations relatives aux activit&eacute;s, projets et distributions de A Drop in the Ocean.&nbsp;</li>
+				<li>J'accepte que mes informations personnelles soient stock&eacute;es et trait&eacute;es conform&eacute;ment &agrave; la politique de confidentialit&eacute; de A Drop in the Ocean.</li>
+				</ul>
+						<p>Je suis d’accord pour que mes données personnelles soient gardées et traitées comme décrit dans les règles de confidentialité de ‘{$currentOrg['label']}’.</p>
+					<p>J’approuve également que les données personnelles de ma famille soient stockées et traitées ainsi que décrit ci-dessus</p>
+				{else}
 					<h3>Informations sur les nouvelles règles de confidentialité</h3><br />
 					<p>‘{$currentOrg['label']}’ souhaite vous réaffirmer que nous protégeons vos données privées, conformément nouvelles règles de confidentialité applicables aux pays de UE/EEA.</p>
 					<p>Pour les réfugiés qui reçoivent aide/assistance de ‘{$currentOrg['label']}’ (vêtements/ chaussures/nourriture/autre assistance ou activités), les données suivantes sont gardées:</p>
@@ -178,8 +218,8 @@
 					<p>Pour accéder aux services mentionnés fournis par ‘{$currentOrg['label']}’ vous devez accepter que nous pouvons continuer à traiter et garder ces données à votre sujet.</p>
 					<p>Je suis d’accord pour que mes données personnelles soient gardées et traitées comme décrit dans les règles de confidentialité de ‘{$currentOrg['label']}’.</p>
 					<p>J’approuve également que les données personnelles de ma famille soient stockées et traitées ainsi que décrit ci-dessus</p>
+				{/if}
 				</div>
-
 				<div class="tab-pane fade" id="languagetab_ar" style="text-align:right" dir="rtl">
 					<h3>
 						معلومات حول سياسات الخصوصية الجديدة
