@@ -13,7 +13,9 @@ Tracer::inSpan(
         if (!$ajax) {
             initlist();
 
-            listsetting('maxlimit', 500);
+            define('MAX_BOX', 500);
+
+            listsetting('maxlimit', MAX_BOX);
 
             $cmsmain->assign('title', 'Manage Boxes');
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
@@ -116,6 +118,9 @@ Tracer::inSpan(
 
             $data = getlistdata($query);
 
+            $totalboxes = 0;
+            $totalitems = 0;
+
             foreach ($data as $key => $value) {
                 if ($data[$key]['ordered']) {
                     $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
@@ -124,13 +129,9 @@ Tracer::inSpan(
                 } else {
                     $data[$key]['order'] = '<span class="hide">0</span>';
                 }
-            }
-
-            $totalboxes = 0;
-            $totalitems = 0;
-            foreach ($data as $key => $d) {
+                // Calculate the total number of boxes and items
                 ++$totalboxes;
-                $totalitems += $d['items'];
+                $totalitems += $value['items'];
             }
 
             addcolumn('text', 'Box ID', 'box_id');
@@ -155,8 +156,13 @@ Tracer::inSpan(
             addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
 
             // Notify the user of the limit on the number of records
-            if (count($data) >= 500) {
+            if (count($data) >= MAX_BOX) {
                 $cmsmain->assign('notification', 'Only the first 500 boxes are shown. Use the filter and search to find the rest.');
+
+                $stockData = db_row('SELECT COUNT(s.id) as totalboxes, SUM(s.items) as totalitems  FROM (stock AS s, products AS p) LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE s.product_id = p.id AND (NOT p.deleted OR p.deleted IS NULL) AND (NOT s.deleted OR s.deleted IS NULL) AND l.visible AND l.deleted IS NULL AND l.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
+
+                $totalboxes = $stockData['totalboxes'] ?? 0;
+                $totalitems = $stockData['totalitems'] ?? 0;
             }
 
             $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
