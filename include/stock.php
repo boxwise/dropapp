@@ -13,8 +13,6 @@ Tracer::inSpan(
         if (!$ajax) {
             initlist();
 
-            listsetting('maxlimit', 500);
-
             $cmsmain->assign('title', 'Manage Boxes');
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
@@ -115,7 +113,8 @@ Tracer::inSpan(
         ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : '');
 
             $data = getlistdata($query);
-
+            $totalboxes = 0;
+            $totalitems = 0;
             foreach ($data as $key => $value) {
                 if ($data[$key]['ordered']) {
                     $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
@@ -124,13 +123,8 @@ Tracer::inSpan(
                 } else {
                     $data[$key]['order'] = '<span class="hide">0</span>';
                 }
-            }
-
-            $totalboxes = 0;
-            $totalitems = 0;
-            foreach ($data as $key => $d) {
                 ++$totalboxes;
-                $totalitems += $d['items'];
+                $totalitems += $value['items'];
             }
 
             addcolumn('text', 'Box ID', 'box_id');
@@ -153,11 +147,6 @@ Tracer::inSpan(
             addbutton('qr', 'Make label', ['icon' => 'fa-print']);
             addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
             addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
-
-            // Notify the user of the limit on the number of records
-            if (count($data) >= 500) {
-                $cmsmain->assign('notification', 'Only the first 500 boxes are shown. Use the filter and search to find the rest.');
-            }
 
             $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
             $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
