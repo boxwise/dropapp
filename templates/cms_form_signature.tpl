@@ -160,7 +160,7 @@
 						<p>The abovementioned information is provided by you in conversation with representatives of DiH. A Drop in the Ocean does not share your personal information with other parties.</p>
 						<ul style="list-style-type: square;">
 						<li>I agree that A Drop in the Ocean can contact me on the phone number provided with information related to A Drop in the Ocean&rsquo;s activities, projects, and distributions.</li>
-						<li>I Agree that my personal information is stored and processed according to A Drop in the Ocean&rsquo;s privacy policy.</li>
+						<li>I agree that my personal information is stored and processed according to A Drop in the Ocean&rsquo;s privacy policy.</li>
 						</ul>
 						<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree that my personal information is stored and processed as described in the Privacy Policy of {$currentOrg['label']}.</p>
 					{else}
