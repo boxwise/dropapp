@@ -13,7 +13,13 @@ Tracer::inSpan(
         if (!$ajax) {
             initlist();
 
-            listsetting('maxlimit', 500);
+            define('MAX_BOX', 500);
+
+            $show_all = (isset($_SESSION['show_all_stock'])) ?? false;
+
+            if (!$show_all) {
+                listsetting('maxlimit', MAX_BOX);
+            }
 
             $cmsmain->assign('title', 'Manage Boxes');
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
@@ -143,11 +149,22 @@ Tracer::inSpan(
             addcolumn('text', 'Age', 'boxage');
             addcolumn('html', '&nbsp;', 'order');
 
-            listsetting('allowsort', true);
+            $is_filtered = (isset($listconfig['filtervalue']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
+
+            listsetting('allowsort', $is_filtered || $show_all || !(count($data) >= MAX_BOX));
             listsetting('allowcopy', false);
             listsetting('add', 'Add');
 
             $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+
+            if (count($data) >= MAX_BOX) {
+                if (!$show_all) {
+                    addbutton('show-all', 'Show All', ['icon' => 'fa-refresh', 'showalways' => true]);
+                } else {
+                    addbutton('show-limited', sprintf('Show %d records', MAX_BOX), ['icon' => 'fa-refresh', 'showalways' => true]);
+                }
+            }
+
             addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
             addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
             addbutton('qr', 'Make label', ['icon' => 'fa-print']);
@@ -155,8 +172,45 @@ Tracer::inSpan(
             addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
 
             // Notify the user of the limit on the number of records
-            if (count($data) >= 500) {
-                $cmsmain->assign('notification', 'Only the first 500 boxes are shown. Use the filter and search to find the rest.');
+            if (count($data) >= MAX_BOX && !$show_all) {
+                $cmsmain->assign('notification', sprintf('Only the first %d boxes are shown. Use the filter and search to find the rest.', MAX_BOX));
+
+                $query = 'SELECT COUNT(stock.id) as totalboxes, SUM(stock.items) as totalitems  
+                          FROM stock
+                          LEFT OUTER JOIN products AS p ON p.id = stock.product_id
+                          LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
+                          LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
+                          LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id
+                          WHERE (NOT stock.deleted OR stock.deleted IS NULL) 
+                          AND l.deleted IS NULL 
+                          AND l.camp_id = :camp_id ';
+
+                // Filter the query
+                $query .= ($listconfig['searchvalue'] ? ' AND (box_id LIKE :searchvalue OR l.label LIKE :searchvalue OR s.label LIKE :searchvalue OR g.label LIKE :searchvalue OR p.name LIKE :searchvalue OR stock.comments LIKE :searchvalue)' : '');
+                $query .= $applied_filter2_query;
+                $query .= ($_SESSION['filter3']['stock'] ? ' AND (p.gender_id = :gender_id)' : '');
+                $query .= ($_SESSION['filter']['stock'] ? ' AND (stock.location_id = :location_id )' : '');
+                $query .= ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = :category_id)' : '');
+
+                // Bind the required parameters
+                $params = ['camp_id' => $_SESSION['camp']['id']];
+                if ($listconfig['searchvalue']) {
+                    $params['searchvalue'] = '%'.$listconfig['searchvalue'].'%';
+                }
+                if ($_SESSION['filter3']['stock']) {
+                    $params['gender_id'] = intval($_SESSION['filter3']['stock']);
+                }
+                if ($_SESSION['filter']['stock']) {
+                    $params['location_id'] = $_SESSION['filter']['stock'];
+                }
+                if ($_SESSION['filter4']['stock']) {
+                    $params['category_id'] = $_SESSION['filter4']['stock'];
+                }
+
+                $stockData = db_row($query, $params);
+
+                $totalboxes = $stockData['totalboxes'] ?? 0;
+                $totalitems = $stockData['totalitems'] ?? 0;
             }
 
             $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
@@ -256,6 +310,20 @@ Tracer::inSpan(
                 list($success, $message, $redirect) = [true, '', '?action=stock_export'];
 
                 break;
+
+            case 'show-all':
+                    $request_uri = $_SERVER['REQUEST_URI'];
+                    list($success, $message, $redirect) = [true, '', $request_uri];
+                    $_SESSION['show_all_stock'] = true;
+
+                    break;
+
+            case 'show-limited':
+                    $request_uri = $_SERVER['REQUEST_URI'];
+                    list($success, $message, $redirect) = [true, '', $request_uri];
+                    unset($_SESSION['show_all_stock']);
+
+                    break;
         }
 
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
