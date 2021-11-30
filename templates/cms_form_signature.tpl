@@ -121,7 +121,9 @@
 				<li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
 				<!-- <li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li> -->
 				<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li> 
-				<li><a href="#languagetab_som" data-toggle="tab">Somali</a></li>
+				{if {$currentOrg['id']} <> 10} 
+				<li><a href="#languagetab_som" data-toggle="tab">Somali</a></li> 
+				{/if}
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane fade in active" id="languagetab_en">
@@ -145,8 +147,9 @@
 					{elseif {$currentOrg['id']}==10}
 						<h3>CONSENT FORM</h3><br />
 						<p>A Drop in the Ocean (DiH) wish to reassert you that we are protecting your private information in accordance with the GDPR regulations applied in EU/EEA countries.</p>
-						<p>For persons receiving assistance or participating in DiH activities, the following information is retained: &bull; Name&nbsp;</p>
+						<p>For persons receiving assistance or participating in DiH activities, the following information is retained:</p>
 						<ul>
+						<li>Name</li>
 						<li>Age (date of birth)</li>
 						<li>Nationality&nbsp;</li>
 						<li>Spoken language&nbsp;</li>
@@ -221,6 +224,26 @@
 				{/if}
 				</div>
 				<div class="tab-pane fade" id="languagetab_ar" style="text-align:right" dir="rtl">
+				{if {$currentOrg['id']}==10}
+				<h3>نموذج الموافقة</h3>
+				<p>ترغب منظمة قطره في المحيط في إعادة تأكيدك على أننا نحمي معلوماتك الخاصة وفقًا للوائح GDPR المطبقة في دول التحاد الوروبي / المنطقة القتصادية الوروبية.</p>
+				<p>بالنسبة للشخاص الذين يتلقون المساعدة أو يشاركون في أنشطة منظمة قطره في المحيط ، يتم الحتفاظ بالمعلومات التالية:</p>
+				<ul>
+				<li >اسم</li>
+				<li >العمر )تاريخ الميلد(</li>
+				<li >جنسية</li>
+				<li >اللغة المتحدثة</li>
+				<li >العنوان )على سبيل المثال ، رقم الكرفانه / الخيمة / الغرفة(</li>
+				<li >رقم الهاتف / واتس أب</li>
+				<li >جنس مذكر أو مؤنث</li>
+				</ul>
+				<p>يتم توفير المعلومات المذكورة أعله من قبلك في محادثة مع ممثلي وزارة الصحة.</p>
+				<ul style="list-style-type: square;">
+				<li>ل تشارك منظمة قطره في المحيط معلوماتك الشخصية مع أطراف أخرى.</li>
+				<li>أوافق على أنه يمكن لـمنظمة قطره في المحيط . التصال بي على رقم الهاتف المقدم مع</li>
+				</ul>
+				<p>أوافق على تخزين معلوماتي الشخصية ومعالجتها وفقًا لسياسة خصوصية .A Drop in the Ocean</p>	
+				{else}	
 					<h3>
 						معلومات حول سياسات الخصوصية الجديدة
 					</h3><br />
@@ -265,6 +288,7 @@
 						أوافق على أن معلوماتي الشخصية يتم تخزينها ومعالجتها كما هو موضح في سياسة الخصوصية الخاصة {$currentOrg['label']}. <br />
 						أوافق أيضًا على أن المعلومات الشخصية لعائلتي يتم تخزينها ومعالجتها كما هو موضح أعلاه.
 					</p>
+				{/if}
 				</div>
 
 				<div class="tab-pane fade" id="languagetab_so">
