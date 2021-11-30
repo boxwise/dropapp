@@ -144,11 +144,14 @@ Tracer::inSpan(
             addcolumn('text', 'Age', 'boxage');
             addcolumn('html', '&nbsp;', 'order');
 
-            listsetting('allowsort', true);
+            $is_filtered = (isset($listconfig['filtervalue']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
+
+            listsetting('allowsort', $is_filtered || !(count($data) >= MAX_BOX));
             listsetting('allowcopy', false);
             listsetting('add', 'Add');
 
             $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+
             addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
             addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
             addbutton('qr', 'Make label', ['icon' => 'fa-print']);
@@ -157,9 +160,41 @@ Tracer::inSpan(
 
             // Notify the user of the limit on the number of records
             if (count($data) >= MAX_BOX) {
-                $cmsmain->assign('notification', 'Only the first 500 boxes are shown. Use the filter and search to find the rest.');
+                $cmsmain->assign('notification', sprintf('Only the first %d boxes are shown. Use the filter and search to find the rest.', MAX_BOX));
 
-                $stockData = db_row('SELECT COUNT(s.id) as totalboxes, SUM(s.items) as totalitems  FROM (stock AS s, products AS p) LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE s.product_id = p.id AND (NOT p.deleted OR p.deleted IS NULL) AND (NOT s.deleted OR s.deleted IS NULL) AND l.visible AND l.deleted IS NULL AND l.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
+                $query = 'SELECT COUNT(stock.id) as totalboxes, SUM(stock.items) as totalitems  
+                          FROM stock
+                          LEFT OUTER JOIN products AS p ON p.id = stock.product_id
+                          LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
+                          LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
+                          LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id
+                          WHERE (NOT stock.deleted OR stock.deleted IS NULL) 
+                          AND l.deleted IS NULL 
+                          AND l.camp_id = :camp_id ';
+
+                // Filter the query
+                $query .= ($listconfig['searchvalue'] ? ' AND (box_id LIKE :searchvalue OR l.label LIKE :searchvalue OR s.label LIKE :searchvalue OR g.label LIKE :searchvalue OR p.name LIKE :searchvalue OR stock.comments LIKE :searchvalue)' : '');
+                $query .= $applied_filter2_query;
+                $query .= ($_SESSION['filter3']['stock'] ? ' AND (p.gender_id = :gender_id)' : '');
+                $query .= ($_SESSION['filter']['stock'] ? ' AND (stock.location_id = :location_id )' : '');
+                $query .= ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = :category_id)' : '');
+
+                // Bind the required parameters
+                $params = ['camp_id' => $_SESSION['camp']['id']];
+                if ($listconfig['searchvalue']) {
+                    $params['searchvalue'] = '%'.$listconfig['searchvalue'].'%';
+                }
+                if ($_SESSION['filter3']['stock']) {
+                    $params['gender_id'] = intval($_SESSION['filter3']['stock']);
+                }
+                if ($_SESSION['filter']['stock']) {
+                    $params['location_id'] = $_SESSION['filter']['stock'];
+                }
+                if ($_SESSION['filter4']['stock']) {
+                    $params['category_id'] = $_SESSION['filter4']['stock'];
+                }
+
+                $stockData = db_row($query, $params);
 
                 $totalboxes = $stockData['totalboxes'] ?? 0;
                 $totalitems = $stockData['totalitems'] ?? 0;
@@ -236,6 +271,20 @@ Tracer::inSpan(
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listDelete($table, $ids);
+
+                break;
+
+            case 'show-all':
+                $request_uri = $_SERVER['REQUEST_URI'];
+                list($success, $message, $redirect) = [true, '', $request_uri];
+                $_SESSION['show_all_stock'] = true;
+
+                break;
+
+            case 'show-limited':
+                $request_uri = $_SERVER['REQUEST_URI'];
+                list($success, $message, $redirect) = [true, '', $request_uri];
+                unset($_SESSION['show_all_stock']);
 
                 break;
 
