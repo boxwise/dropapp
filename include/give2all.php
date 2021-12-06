@@ -11,7 +11,10 @@
                     db_query('INSERT INTO ration (startration) VALUES (NOW())');
                 }
         */
-        // validate tokens input value
+
+        // Validate tokens input value to be a valid integer
+        // Allowance for 0 is specifically for the "reset tokens" feature, as requested by Darbazar
+        // Related to https://trello.com/c/Um44yV7y
         if (!preg_match('/[0-9]\d*/', $_POST['dropsadult']) || !preg_match('/[0-9]\d*/', $_POST['dropschild'])) {
             redirect('?action=give2all&warning=1&message=The number of tokens should be specified');
             trigger_error('The number of tokens should be specified', E_USER_NOTICE);
