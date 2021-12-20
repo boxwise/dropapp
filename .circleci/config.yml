@@ -68,6 +68,7 @@ jobs:
             \$settings['auth0_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_DOMAIN}';
             \$settings['auth0_client_id'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_ID}';
             \$settings['auth0_client_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_SECRET}';
+            \$settings['auth0_cookie_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_COOKIE_SECRET}';
             \$settings['auth0_redirect_uri'] = '${<< parameters.envVariablePrefix >>AUTH0_REDIRECT_URI}';" > library/config.php
           echo "paths:
             migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'

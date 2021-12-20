@@ -1,5 +1,7 @@
 <?php
 
+use Auth0\SDK\Utility\HttpResponse;
+
 $table = 'cms_users';
 
 if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')) {
@@ -39,15 +41,16 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
         // check auth0 if an email addrress is already created but with different id
         global $settings;
         $mgmtAPI = getAuth0Management($settings);
-        $authUser = $mgmtAPI->usersByEmail()->get([
-            'email' => $_POST['email'],
-        ]);
+        $authUser = $mgmtAPI->usersByEmail()->get($_POST['email']);
 
-        if ($authUser && $authUser[0]['blocked']) {
-            redirect('?action=cms_users_edit&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in the system. Please use a different email to create a new user!');
-            trigger_error('This email already exists in the system. Please use a different email to create a new user!', E_USER_NOTICE);
-        } elseif (!$existinguser && $authUser && !$authUser[0]['blocked']) {
-            throw new Exception('The user already exists in AUTH0 but its not sync', 409);
+        if (HttpResponse::wasSuccessful($authUser)) {
+            $authUser = HttpResponse::decodeContent($authUser);
+            if ($authUser && $authUser[0]['blocked']) {
+                redirect('?action=cms_users_edit&origin='.$_POST['_origin'].'&warning=1&message=This email already exists in the system. Please use a different email to create a new user!');
+                trigger_error('This email already exists in the system. Please use a different email to create a new user!', E_USER_NOTICE);
+            } elseif (!$existinguser && $authUser && !$authUser[0]['blocked']) {
+                throw new Exception('The user already exists in AUTH0 but its not sync', 409);
+            }
         }
 
         // Validate if user can access this user account
