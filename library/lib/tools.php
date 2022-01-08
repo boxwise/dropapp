@@ -310,7 +310,9 @@ function simpleBulkSaveChangeHistory($table, $records, $changes, $from = [], $to
             $query .= ',';
         }
     }
-    db_query("INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES {$query}", $params);
+    if (strlen($query) > 0) {
+        db_query("INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES {$query}", $params);
+    }
 }
 
 function displayDate($datum, $time = false, $long = false)

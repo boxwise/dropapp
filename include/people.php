@@ -307,13 +307,16 @@ Tracer::inSpan(
                 } else {
                     $oldest = db_value('SELECT id FROM people WHERE id IN ('.$_POST['ids'].') ORDER BY date_of_birth ASC LIMIT 1');
                     $extradrops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id IN ('.$_POST['ids'].') AND people_id != :oldest', ['oldest' => $oldest]);
-                    foreach ($ids as $id) {
-                        if ($id != $oldest) {
-                            db_query('UPDATE people SET parent_id = :oldest WHERE id = :id', ['oldest' => $oldest, 'id' => $id]);
-                            $drops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $id]);
-                            db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$id.', -'.intval($drops).', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+                    // Transaction block added over update queriesTransaction block added over update and insert queries
+                    db_transaction(function () use ($ids, $oldest) {
+                        foreach ($ids as $id) {
+                            if ($id != $oldest) {
+                                db_query('UPDATE people SET parent_id = :oldest WHERE id = :id', ['oldest' => $oldest, 'id' => $id]);
+                                $drops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $id]);
+                                db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$id.', -'.intval($drops).', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+                            }
                         }
-                    }
+                    });
                     db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$oldest.', '.intval($extradrops).', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
                     $success = true;
                     $redirect = true;
@@ -333,9 +336,12 @@ Tracer::inSpan(
                     $message = 'Please select only members of a family, not family heads';
                     $success = false;
                 } else {
-                    foreach ($ids as $id) {
-                        db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
-                    }
+                    // Transaction block added over update queries
+                    db_transaction(function () use ($ids) {
+                        foreach ($ids as $id) {
+                            db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
+                        }
+                    });
                     $redirect = true;
                     $success = true;
                 }
@@ -351,7 +357,9 @@ Tracer::inSpan(
 
             case 'move':
                 $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
+                // list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
+                // Refactored list move method to use a transaction block and bulk insert for the correctdrops method
+                list($success, $message, $redirect, $aftermove) = listBulkMove($table, $ids, true, 'bulkcorrectdrops');
 
                 break;
 
@@ -388,6 +396,7 @@ Tracer::inSpan(
                         db_query('UPDATE people SET modified = NOW(), modified_by = :user WHERE id = :id', ['id' => $id, 'user' => $userId]);
                     }
                 });
+                // Bulk insert used to insert into history table
                 simpleBulkSaveChangeHistory('people', $ids, 'Touched');
 
                 $success = true;
@@ -490,9 +499,12 @@ Tracer::inSpan(
         function correctchildren()
         {
             $result = db_query('SELECT (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AS newparent, p1.id FROM people AS p1 WHERE p1.parent_id > 0 AND (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AND NOT deleted');
-            while ($row = db_fetch($result)) {
-                db_query('UPDATE people SET parent_id = :newparent WHERE id = :id', ['newparent' => $row['newparent'], 'id' => $row['id']]);
-            }
+            // Optimized update queries by adding transaction blocks around update statements
+            db_transaction(function () use ($result) {
+                while ($row = db_fetch($result)) {
+                    db_query('UPDATE people SET parent_id = :newparent WHERE id = :id', ['newparent' => $row['newparent'], 'id' => $row['id']]);
+                }
+            });
         }
 
         function correctdrops($id)
@@ -501,11 +513,47 @@ Tracer::inSpan(
             $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
 
             if ($drops && $person['parent_id']) {
-                db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
-                db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+                // Combining insert values to create bulk inserts instead of two insert statements
+                db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES 
+                ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), 
+                ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+
                 $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
                 $aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
 
                 return $aftermove;
             }
+        }
+
+        function bulkcorrectdrops($ids)
+        {
+            $query = '';
+            $aftermove = '';
+            for ($i = 0; $i < sizeof($ids); ++$i) {
+                $id = $ids[$i];
+                $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
+                $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
+
+                if ($drops && $person['parent_id']) {
+                    $query .= '('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), ';
+                    $query .= '('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].'), ';
+                }
+            }
+            if ('' !== $query) {
+                // Removing an extra comma from the end of query
+                $query = substr($query, 0, strlen($query) - 2);
+                db_query("INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES {$query}");
+            }
+
+            // Correction of the dropped values - new values must be retrieved through a query
+            for ($i = 0; $i < sizeof($ids); ++$i) {
+                $id = $ids[$i];
+                $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
+                $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
+
+                $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
+                $aftermove .= 'correctDrops({"id":'.$person['id'].', "value": ""}, {"id":'.$person['parent_id'].', "value": '.$newamount.'}); ';
+            }
+
+            return $aftermove;
         }
