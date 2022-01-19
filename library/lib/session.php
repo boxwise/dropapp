@@ -4,6 +4,7 @@ require 'vendor/autoload.php';
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\Auth0Exception;
 use Auth0\SDK\Exception\StateException;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Utility\HttpResponse;
@@ -214,18 +215,21 @@ function updateAuth0UserFromDb($user_id, $set_pwd = false)
         $auth0UserData['app_metadata']['valid_lastday'] = null;
     }
 
-    try {
-        $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
-    } catch (GuzzleHttp\Exception\ClientException $e) {
-        // user doesn't exist, so try creating it instead
-        if (404 == $e->getResponse()->getStatusCode()) {
-            $auth0UserData['user_id'] = preg_replace('/auth0\|/', '', $auth0UserId);
-            $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
-            $mgmtAPI->users()->create($auth0UserData);
-        } else {
-            throw new Exception($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
+    $response = $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
+
+    // user doesn't exist, so try creating it instead
+    if (404 === $response->getStatusCode()) {
+        $auth0UserData['user_id'] = preg_replace('/auth0\|/', '', $auth0UserId);
+        $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
+        $response = $mgmtAPI->users()->create($settings['auth0_db_connection_id'], $auth0UserData);
+        // the status code will be 201 if the user created successfully
+        if (201 !== $response->getStatusCode()) {
+            throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
         }
+    } elseif (200 !== $response->getStatusCode()) {
+        throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
     }
+
     if ($set_pwd) {
         // needed for reseeding test env
         $mgmtAPI->users()->update($auth0UserId, ['password' => $set_pwd]);
@@ -464,9 +468,9 @@ function getAuth0UserByEmail($email)
             if (HttpResponse::wasSuccessful($response)) {
                 return HttpResponse::decodeContent($response);
             }
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (Auth0Exception $e) {
             // user doesn't exist in auth0
-            if (404 == $e->getResponse()->getStatusCode()) {
+            if (404 == $e->getCode()) {
                 return null;
             }
         }
@@ -485,9 +489,9 @@ function getAuth0User($userId)
         if (HttpResponse::wasSuccessful($response)) {
             return HttpResponse::decodeContent($response);
         }
-    } catch (GuzzleHttp\Exception\ClientException $e) {
+    } catch (Auth0Exception $e) {
         // user doesn't exist in auth0
-        if (404 == $e->getResponse()->getStatusCode()) {
+        if (404 == $e->getCode()) {
             return null;
         }
     }
