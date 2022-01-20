@@ -566,7 +566,8 @@ $(function() {
 
     // go to the latest tab, if it exists:
     var lastTab = localStorage.getItem("lastTab");
-    if (lastTab) {
+
+    if (lastTab && window.location.href.indexOf("active") == -1) {
         $('[href="' + lastTab + '"]').tab("show");
     }
 
