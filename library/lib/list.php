@@ -41,6 +41,50 @@ function listMove($table, $ids, $regardparent = true, $hook = '')
     return [true, $return, false, $aftermove];
 }
 
+function listBulkMove($table, $ids, $regardparent = true, $hook = '')
+{
+    $hasSeq = db_fieldexists($table, 'seq');
+    if (!$hasSeq) {
+        return 'This table cannot be sorted';
+    }
+    if ($regardparent) {
+        $hasParent = db_fieldexists($table, 'parent_id');
+    }
+
+    $i = 1;
+    $hookIds = db_transaction(function () use ($ids, $hasParent, $table, $hook, $i) {
+        $hookIds = [];
+        $seq = [];
+        foreach ($ids as $line) {
+            ++$i;
+            list($id, $level) = $line;
+            $parent[$level] = $id;
+            ++$seq[$level];
+
+            if ($hasParent) {
+                $parent_id = ($level ? $parent[$level - 1] : null);
+                db_query('UPDATE '.$table.' SET parent_id = :parent_id, seq = :seq WHERE id = :id', ['parent_id' => $parent_id, 'seq' => $seq[$level], 'id' => $id]);
+                if ($hook) {
+                    $hookIds[] = $id;
+                }
+            } else {
+                db_query('UPDATE '.$table.' SET seq = :seq WHERE id = :id', ['seq' => $seq[$level], 'id' => $id]);
+                if ($hook) {
+                    $hookIds[] = $id;
+                }
+            }
+        }
+
+        return $hookIds;
+    });
+    // If the method has a bulk prefix, then execute the hook
+    if (sizeof($hookIds) > 0 && preg_match('/bulk.+/', $hook)) {
+        $aftermove = $hook($hookIds);
+    }
+
+    return [true, $return, false, $aftermove];
+}
+
 function listRealDelete($table, $ids, $uri = false)
 {
     global $translate, $action;
@@ -55,6 +99,35 @@ function listRealDelete($table, $ids, $uri = false)
             simpleSaveChangeHistory($table, $id, 'Record deleted without undelete');
         }
     }
+
+    if ($count) {
+        return [true, $translate['cms_list_deletesuccess'], true];
+    }
+
+    return [false, $translate['cms_list_deleteerror'], false];
+}
+
+function listBulkRealDelete($table, $ids, $uri = false)
+{
+    global $translate, $action;
+
+    $hasPrevent = db_fieldexists($table, 'preventdelete');
+    $hasTree = db_fieldexists($table, 'parent_id');
+    $count = 0;
+    $deletedIds = [];
+    list($count, $result, $deletedIds) = db_transaction(function () use ($deletedIds, $count, $ids, $hasPrevent, $table) {
+        foreach ($ids as $id) {
+            $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
+            $count += $result->rowCount();
+            if ($result->rowCount()) {
+                $deletedIds[] = $id;
+            }
+        }
+
+        return [$count, $result, $deletedIds];
+    });
+
+    simpleBulkSaveChangeHistory($table, $deletedIds, 'Record deleted without undelete');
 
     if ($count) {
         return [true, $translate['cms_list_deletesuccess'], true];
@@ -208,6 +281,58 @@ function listUnDeleteAction($table, $id, $count = 0, $recursive = false)
             $count += listUnDeleteAction($table, $child['id'], $count, true);
         }
     }
+
+    return $count;
+}
+
+function listBulkUndelete($table, $ids, $uri = false, $overwritehastree = false)
+{
+    global $translate, $action;
+
+    $hasDeletefield = db_fieldexists($table, 'deleted');
+    $hasPrevent = db_fieldexists($table, 'preventdelete');
+    if ($overwritehastree) {
+        $hastree = false;
+    } else {
+        $hasTree = db_fieldexists($table, 'parent_id');
+    }
+
+    $count = listBulkUndeleteAction($table, $ids, 0, $hasTree);
+
+    if ($count) {
+        return [true, $translate['cms_list_undeletesuccess'], false];
+    }
+
+    return [false, $translate['cms_list_undeleteerror'], false];
+}
+
+function listBulkUnDeleteAction($table, $ids, $count = 0, $hasTree = false)
+{
+    list($finalIds, $count) = db_transaction(function () use ($table, $ids, $count, $hasTree) {
+        $finalIds = [];
+        foreach ($ids as $id) {
+            $result = db_query('UPDATE '.$table.' SET deleted = 0, modified = NOW(), modified_by = :user_id WHERE id = :id', ['id' => $id, 'user_id' => $_SESSION['user']['id']]);
+            $count += $result->rowCount();
+            if ($result->rowCount()) {
+                $finalIds[] = $id;
+            }
+
+            if ($hasTree) {
+                $childs = db_array('SELECT id FROM '.$table.' WHERE parent_id = :id', ['id' => $id]);
+                foreach ($childs as $child) {
+                    $result = db_query('UPDATE '.$table.' SET deleted = 0, modified = NOW(), modified_by = :user_id WHERE id = :id', ['id' => $child['id'], 'user_id' => $_SESSION['user']['id']]);
+                    $count += $result->rowCount();
+                    if ($result->rowCount()) {
+                        $finalIds[] = $child['id'];
+                    }
+                }
+            }
+        }
+
+        return [$finalIds, $count];
+    });
+
+    simpleBulkSaveChangeHistory($table, $finalIds, 'Record recovered');
 
     return $count;
 }
