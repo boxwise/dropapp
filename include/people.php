@@ -428,7 +428,6 @@ Tracer::inSpan(
                     $tag_id = $_POST['option'];
                     $people_ids = $ids;
                     if (sizeof($people_ids) > 0) {
-                        $start = microtime(true);
                         // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
                         $query = 'INSERT IGNORE INTO people_tags (tag_id, people_id) VALUES ';
 
