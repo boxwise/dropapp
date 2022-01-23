@@ -98,10 +98,11 @@ use OpenCensus\Trace\Tracer;
 
                         continue;
                     }
-                    array_push($finalIds, $id);
+                    $finalIds[] = $id;
                 }
                 if (empty($errorMessage)) {
-                    list($success, $message, $redirect) = listUnDelete($table, $finalIds, false, true);
+                    // Optimised by using bulk inserts and transactions over update queries
+                    list($success, $message, $redirect) = listBulkUndelete($table, $finalIds, false, false);
                     $redirect = true;
                 } else {
                     $success = false;
@@ -113,13 +114,18 @@ use OpenCensus\Trace\Tracer;
 
             case 'realdelete':
                 $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    // unlink transactions
-                    db_query('UPDATE transactions SET people_id = NULL WHERE people_id = :id', ['id' => $id]);
-                    // unlink parent from children
-                    db_query('UPDATE people SET parent_id = NULL WHERE parent_id = :id AND deleted', ['id' => $id]);
-                }
-                list($success, $message, $redirect) = listRealDelete($table, $ids);
+                // Transaction block added over update queries
+                db_transaction(function () use ($ids) {
+                    foreach ($ids as $id) {
+                        // unlink transactions
+                        db_query('UPDATE transactions SET people_id = NULL WHERE people_id = :id', ['id' => $id]);
+                        // unlink parent from children
+                        db_query('UPDATE people SET parent_id = NULL WHERE parent_id = :id AND deleted', ['id' => $id]);
+                    }
+                });
+                // Optimized by using bulk inserts and transactions over delete queries
+                list($success, $message, $redirect) = listBulkRealDelete($table, $ids);
+                $redirect = false;
 
                 break;
         }
