@@ -121,37 +121,37 @@ context('2.9 Auth0 synchronized on CRUD', () => {
   });
 
   it('2.9.9 - When a user edits its own password is the user in sync with Auth0 and do all warnings appear.', () => {
-    // cy.visit('/?action=cms_profile');
-    // cy.get('input[data-testid=\'user_name\']').should('be.visible');
-    // cy.get('input[data-testid=\'user_email\']').should('be.visible');
-    // cy.get('input[data-testid=\'user_pass\']').clear().type(config.testWeekPwd);
-    // cy.get('input[data-testid=\'user_pass2\']').clear().type(config.testWeekPwd);
-    // cy.checkQtipWithText("qtip-content","Your password must be at least 12 characters including at least 3 of the following 4 types of characters: a lowercase letter, an uppercase letter, a number, a special character (such as !@#$%&/=?_.,:;-).");
-    // cy.get('input[data-testid=\'user_pass\']').clear().type(config.testNewPwd);
-    // cy.get('input[data-testid=\'user_pass2\']').clear().type(config.testNewPwd);
-    // cy.getButtonWithText('Save and close').click();
-    // cy.get('.created').should('be.visible');
-    // cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    // cy.get('.dropdown-toggle').click();
-    // cy.get('.nav.navbar-nav.pull-right > li.dropdown.open > ul > li:nth-child(4)').click();
-    // cy.url().should('include', Cypress.env('auth0Domain'));
-    // cy.get("input[id='username']").type(config.testAdmin);
-    // cy.get("input[type='password']").type(config.testPwd);
-    // cy.get("button[type='submit']").click();
-    // cy.url().should('include', Cypress.env('auth0Domain'))
-    // cy.get("span[id='error-element-password']").contains('Wrong email or password')
-    // cy.get("input[id='username']").clear().type(config.testAdmin);
-    // cy.get("input[type='password']").clear().type(config.testNewPwd);
-    // cy.get("button[type='submit']").click();
-    // cy.get('[data-testid=dropapp-header]').should('be.visible');
-    // cy.get('[data-testid=dropapp-header]').contains(Cypress.env('orgName'));
-    // cy.visit('/?action=cms_profile');
-    // cy.get('input[data-testid=\'user_name\']').should('be.visible');
-    // cy.get('input[data-testid=\'user_email\']').should('be.visible');
-    // cy.get('input[data-testid=\'user_pass\']').clear().type(config.testPwd);
-    // cy.get('input[data-testid=\'user_pass2\']').clear().type(config.testPwd);
-    // cy.getButtonWithText('Save and close').click();
-    // cy.get('.created').should('be.visible');
-    // cy.get("div[data-testid='dropapp-header']").should('be.visible');
+    cy.visit('/?action=cms_profile');
+    cy.get('input[data-testid=\'user_name\']').should('be.visible');
+    cy.get('input[data-testid=\'user_email\']').should('be.visible');
+    cy.get('input[data-testid=\'user_pass\']').clear().type(config.testWeekPwd);
+    cy.get('input[data-testid=\'user_pass2\']').clear().type(config.testWeekPwd);
+    cy.checkQtipWithText("qtip-content","Your password must be at least 12 characters including at least 3 of the following 4 types of characters: a lowercase letter, an uppercase letter, a number, a special character (such as !@#$%&/=?_.,:;-).");
+    cy.get('input[data-testid=\'user_pass\']').clear().type(config.testNewPwd);
+    cy.get('input[data-testid=\'user_pass2\']').clear().type(config.testNewPwd);
+    cy.getButtonWithText('Save and close').click();
+    cy.get('.created').should('be.visible');
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
+    cy.get('.dropdown-toggle').click();
+    cy.get('.nav.navbar-nav.pull-right > li.dropdown.open > ul > li:nth-child(4)').click();
+    cy.url().should('include', Cypress.env('auth0Domain'));
+    cy.get("input[id='username']").type(config.testAdmin);
+    cy.get("input[type='password']").type(config.testPwd);
+    cy.get("button[type='submit']").click();
+    cy.url().should('include', Cypress.env('auth0Domain'))
+    cy.get("span[id='error-element-password']").contains('Wrong email or password')
+  });
+
+  it('2.9.10 - Set the user back to the old password', () => {
+    cy.visit('/?action=cms_profile');
+    cy.get('[data-testid=dropapp-header]').should('be.visible');
+    cy.get('[data-testid=dropapp-header]').contains(Cypress.env('orgName'));
+    cy.get('input[data-testid=\'user_name\']').should('be.visible');
+    cy.get('input[data-testid=\'user_email\']').should('be.visible');
+    cy.get('input[data-testid=\'user_pass\']').clear().type(config.testPwd);
+    cy.get('input[data-testid=\'user_pass2\']').clear().type(config.testPwd);
+    cy.getButtonWithText('Save and close').click();
+    cy.get('.created').should('be.visible');
+    cy.get("div[data-testid='dropapp-header']").should('be.visible');
   });
 });
