@@ -19,12 +19,6 @@ if (('localhost' !== $hostName && 'staging.boxtribute.org' !== $hostName)) {
     return;
 }
 
-if (!isset($_POST['email']) || !isset($_POST['password'])) {
-    echo json_encode(['success' => false]);
-
-    return;
-}
-
 // extracted from Auth0 client source
 // https://docs.cypress.io/guides/testing-strategies/auth0-authentication#Adapting-the-front-end and
 // https://auth0.com/blog/end-to-end-testing-with-cypress-and-auth0/
@@ -42,6 +36,12 @@ if (isset($_POST['logout'])) {
     echo json_encode(['success' => true]);
 
     exit;
+}
+
+if (!isset($_POST['email']) || !isset($_POST['password'])) {
+    echo json_encode(['success' => false]);
+
+    return;
 }
 
 $response = $auth->loginWithDefaultDirectory(

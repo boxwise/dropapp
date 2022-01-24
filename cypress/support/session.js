@@ -34,7 +34,6 @@ Cypress.Commands.add("loginAsVolunteerWithNoPermissions", () => {
 });
 
 Cypress.Commands.add("loginAs", (user, pass) => {
-    let config = getLoginConfiguration();
     backgroundLoginUsing(user, pass);
 });
 
@@ -42,7 +41,7 @@ Cypress.Commands.add("loginAsAdmin", () => {
     let config = getLoginConfiguration();
     //Rate limit of Auth0 reached 
     //One can only request /userinfo 5 times per minute from the same user.
-    cy.wait(6000);
+    // cy.wait(6000);
     backgroundLoginUsing(config.testAdmin, config.testPwd);
 });
 
@@ -62,4 +61,20 @@ Cypress.Commands.add("fillLoginForm", () => {
           cy.get('button[value="accept"]').click()
         }
       });
+});
+
+Cypress.Commands.add("logout", () => {
+    cy.log(`Logout`);
+    cy.request({
+        method: "POST",
+        url: '/cypress-session.php',
+        body: {
+            logout: true,
+        },
+        form: true // submit as POST fields not JSON encoded body
+    }).then(response => {
+        expect(response.status).to.eq(200);
+        expect(response.body.success).to.be.true;
+    });
+
 });
