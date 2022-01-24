@@ -90,7 +90,7 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         getQrCode().then($qr => {
             cy.viewport('iphone-6');
             let qrUrl = $qr[0].src.split('data=https://')[1];
-            cy.visit('https://' + qrUrl);
+            cy.visit('http://' + qrUrl);
             createBoxFormIsVisible();
             // filling out new box form
             let itemsCount = 100;
@@ -114,7 +114,7 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         getQrCode().then($qr => {
             cy.viewport('iphone-6');
             let qrUrl = $qr[0].src.split('data=https://')[1];
-            cy.visit('https://' + qrUrl);
+            cy.visit('http://' + qrUrl);
             clickNewBoxButton();
             checkRequiredFieldsErrors()
         })
@@ -123,33 +123,33 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
 
 describe('Mobile box creation using QR scanning (logged-out user)', () => {
     let config = getLoginConfiguration();
+    beforeEach(() => {
+        cy.loginAsVolunteer();
+    });
 
     it('Scan QR code with associated box (same organisation)', () => {
         cy.visit('/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
         cy.viewport('iphone-6');
-        cy.fillLoginForm(); 
         checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
     });
 
-    it('Scan QR code with associated box (same organisation) from staging.boxwise.co', () => {
-        cy.visit('https://staging.boxwise.co/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
-        cy.viewport('iphone-6');
-        cy.fillLoginForm(); 
-        cy.url().should('include', 'https://staging.boxtribute.org/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
-        checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
-    });
+    // it('Scan QR code with associated box (same organisation) from staging.boxwise.co', () => {
+    //     cy.visit('https://staging.boxwise.co/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
+    //     cy.viewport('iphone-6');
+    //     cy.fillLoginForm(); 
+    //     cy.url().should('include', 'https://staging.boxtribute.org/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
+    //     checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
+    // });
 
     it('Scan QR code without associated box (same organisation)', () => {
         cy.visit('/mobile.php?barcode=' + SAME_ORG_QR_URL_WITHOUT_BOX);
         cy.viewport('iphone-6');
-        cy.fillLoginForm(); 
         createBoxFormIsVisible();
     });
 
     it('Scan QR code with associated box (diff organisation)', () => {
         cy.visit('/mobile.php?barcode=' + DIFFERENT_ORG_QR_URL);
         cy.viewport('iphone-6');
-        cy.fillLoginForm(); 
         cy.mobileWarningNotificationWithTextIsVisible("Oops!! This box is registered in");
     });
 
@@ -163,7 +163,6 @@ describe('Mobile box creation using QR scanning (logged-out user)', () => {
     it('Scan non-existent QR code (diff organisation)', () => {
         cy.visit('/mobile.php?barcode=' + NON_EXISTENT_QR_ULR);
         cy.viewport('iphone-6');
-        cy.fillLoginForm(); 
         cy.mobileWarningNotificationWithTextIsVisible("This is not a valid QR-code for " + config.orgName);
     });    
 });
