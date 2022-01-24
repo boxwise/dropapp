@@ -82,5 +82,6 @@ Cypress.config("defaultCommandTimeout",200000)
         FillForm(Testname,Testaddress,Testgroup);
         cy.getButtonWithText("Save and close").click();
         cy.notyTextNotificationWithTextIsVisible("This email already exists in your organisation");
+        DeleteTestUser(Testaddress);
     })
 })

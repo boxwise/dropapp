@@ -2,7 +2,9 @@
     // auth0
     $settings['auth0_domain'] = 'boxtribute-dev.eu.auth0.com';
     $settings['auth0_client_id'] = '';
+    $settings['auth0_db_connection_id'] = '';
     $settings['auth0_client_secret'] = '';
+    $settings['auth0_cookie_secret'] = '';
     $settings['auth0_redirect_uri'] = 'http://localhost:8100';
     $settings['app_env'] = 'development';
     $settings['test_pwd'] = 'Browser_tests';

@@ -23,6 +23,10 @@ Tracer::inSpan(
             logoutWithRedirect();
         }
 
+        if ('login' == $action) {
+            loginWithRedirect();
+        }
+
         $cmsmain = new Zmarty();
 
         // Fill the organisation menu

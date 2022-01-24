@@ -116,9 +116,9 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     
   });
 
-  it('2.9.8 - When an error happens while a user is editing himself is the db and Auth0 out of sync', () => {
+  // it('2.9.8 - When an error happens while a user is editing himself is the db and Auth0 out of sync', () => {
     
-  });
+  // });
 
   it('2.9.9 - When a user edits its own password is the user in sync with Auth0 and do all warnings appear.', () => {
     cy.visit('/?action=cms_profile');
@@ -132,20 +132,24 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     cy.getButtonWithText('Save and close').click();
     cy.get('.created').should('be.visible');
     cy.get("div[data-testid='dropapp-header']").should('be.visible');
-    cy.get('.dropdown-toggle').click();
-    cy.get('.nav.navbar-nav.pull-right > li.dropdown.open > ul > li:nth-child(4)').click();
-    cy.url().should('include', Cypress.env('auth0Domain'));
-    cy.get("input[id='username']").type(config.testAdmin);
-    cy.get("input[type='password']").type(config.testPwd);
-    cy.get("button[type='submit']").click();
-    cy.url().should('include', Cypress.env('auth0Domain'))
-    cy.get("span[id='error-element-password']").contains('Wrong email or password')
-    cy.get("input[id='username']").clear().type(config.testAdmin);
-    cy.get("input[type='password']").clear().type(config.testNewPwd);
-    cy.get("button[type='submit']").click();
+    cy.logout();
+    cy.log(`Logging in with Wrong Password`)
+    cy.request({
+      method: "POST",
+      url: '/cypress-session.php',
+      body: {
+        email: config.testAdmin,
+        password: config.testPwd
+      },
+      form: true // submit as POST fields not JSON encoded body
+    }).then(response => {
+      expect(response.status).to.eq(200);
+      expect(response.body.success).to.be.false;
+    });
+    cy.loginAs(config.testAdmin, config.testNewPwd)
+    cy.visit('/?action=cms_profile');
     cy.get('[data-testid=dropapp-header]').should('be.visible');
     cy.get('[data-testid=dropapp-header]').contains(Cypress.env('orgName'));
-    cy.visit('/?action=cms_profile');
     cy.get('input[data-testid=\'user_name\']').should('be.visible');
     cy.get('input[data-testid=\'user_email\']').should('be.visible');
     cy.get('input[data-testid=\'user_pass\']').clear().type(config.testPwd);

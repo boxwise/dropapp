@@ -1,55 +1,119 @@
 <?php
 
 require 'vendor/autoload.php';
-use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Auth0;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\Auth0Exception;
+use Auth0\SDK\Exception\StateException;
+use Auth0\SDK\Store\SessionStore;
+use Auth0\SDK\Utility\HttpResponse;
+use Buzz\Client\MultiCurl;
+use Nyholm\Psr7\Factory\Psr17Factory;
+
+function getAuth0SdkConfiguration($settings)
+{
+    $Psr17Library = new Psr17Factory();
+    $Psr18Library = new MultiCurl($Psr17Library);
+    // in the auth0 php sdk 8 configration pass as class
+    return new SdkConfiguration([
+        'httpClient' => $Psr18Library,
+        'httpRequestFactory' => $Psr17Library,
+        'httpResponseFactory' => $Psr17Library,
+        'httpStreamFactory' => $Psr17Library,
+        'domain' => $settings['auth0_domain'],
+        'clientId' => $settings['auth0_client_id'],
+        'clientSecret' => $settings['auth0_client_secret'],
+        'cookieSecret' => $settings['auth0_cookie_secret'],
+        'redirectUri' => $settings['auth0_redirect_uri'],
+        // form_post response mode is no longer working in insecure dev env
+        // 'responseMode' => $settings['auth0_response_mode'],
+        // in order to support refresh-token offline_access needed
+        'scope' => ['openid', 'profile', 'email'],
+    ]);
+}
 
 function getAuth0($settings)
 {
-    return new Auth0([
-        'domain' => $settings['auth0_domain'],
-        'client_id' => $settings['auth0_client_id'],
-        'client_secret' => $settings['auth0_client_secret'],
-        'redirect_uri' => $settings['auth0_redirect_uri'],
-        'response_mode' => 'form_post',
-    ]);
+    $configuration = getAuth0SdkConfiguration($settings);
+    // set session sotarage
+    $configuration->setSessionStorage(new SessionStore($configuration));
+
+    return new Auth0($configuration);
 }
-function getAuth0Authentication($settings)
-{
-    return new Authentication(
-        $settings['auth0_domain'],
-        $settings['auth0_client_id'],
-        $settings['auth0_client_secret']
-    );
-}
+
 function getAuth0Management($settings)
 {
-    $auth0Authentication = getAuth0Authentication($settings);
+    $configuration = getAuth0SdkConfiguration($settings);
 
-    $config = [
-        'audience' => 'https://'.$settings['auth0_domain'].'/api/v2/',
-    ];
-    $auth0ClientCredentials = $auth0Authentication->client_credentials($config);
-
-    return new Management($auth0ClientCredentials['access_token'], $settings['auth0_domain']);
+    return new Management($configuration);
 }
-function authenticate($settings, $ajax)
+
+function getAuth0Authentication($settings)
 {
     $auth0 = getAuth0($settings);
-    $userInfo = $auth0->getUser();
-    // ick, but given how broken our routing is, have to check here
-    // otherwise we fail the authenticate check
+
+    return $auth0->authentication();
+}
+
+function authenticate($settings, $ajax)
+{
     $isAuth0Callback = 'auth0callback' == $_REQUEST['action'];
-    // this can be triggered by an unexpected auth0 error
-    // or an expired user
-    if ($isAuth0Callback && $_REQUEST['error']) {
+    $auth0 = getAuth0($settings);
+
+    $session = $auth0->getCredentials();
+
+    // Dealing with the auth0 rules error -- this should be the first thing to check
+    if ($isAuth0Callback && null === $session && $_REQUEST['error']) {
         throw new Exception($_REQUEST['error_description'], 401);
 
         exit();
     }
 
-    if (!$userInfo) {
+    if (isset($session)) {
+        // Authentication complet -- getting the user info from auth0
+        $userInfo = $auth0->getUser();
+        // ideally we wouldn't need to do this, but because loadSessionData
+        // is crazy and looks for $_GET parameters hidden here to
+        // change current org or camp, we have to load this every request
+        loadSessionData($userInfo);
+    }
+
+    // Is this end-user already signed in?
+    if (null === $session && isset($_REQUEST['code'], $_REQUEST['state']) && $isAuth0Callback) {
+        try {
+            // We must store redirect url after state code verification because state code verification clears session
+            $redirectUrl = $_SESSION['auth0_callback_redirect_uri'] ?? '/';
+            $auth0->exchange();
+            unset($_SESSION['auth0_callback_redirect_uri']);
+            redirect($redirectUrl);
+        } catch (StateException $e) {
+            // clear the session if state code failed
+            $auth0->clear();
+
+            $_SESSION['auth0_callback_redirect_uri'] = $redirectUrl;
+            $loginUrl = $auth0->login($settings['auth0_redirect_uri'].'/?action=auth0callback');
+
+            // Finally, redirect the user to the Auth0 Universal Login Page.
+            redirect($loginUrl);
+
+            exit;
+        }
+    }
+
+    // If refresh_token is enabled at auth0, this will renew the token; offlice_access scope is required
+    if ($session->accessTokenExpired) {
+        try {
+            // Token has expired, attempt to renew it.
+            $auth0->renew();
+        } catch (StateException $e) {
+            // There was an error trying to renew the token. Clear the session.
+            $auth0->clear();
+        }
+    }
+
+    // Lastly, if session is not set, the login page should be displayed
+    if (null === $session) {
         if ($ajax) {
             http_response_code(401);
             echo json_encode(['success' => false]);
@@ -63,17 +127,12 @@ function authenticate($settings, $ajax)
         // mainly, this is because we're using an auth0 rule to raise errors
         // and this then leaves us forever stuck without this
         // see https://community.auth0.com/t/can-i-show-errors-raised-in-rules-in-the-login-page/51143
-        $auth0->login(null, null, ['redirect_uri' => $settings['auth0_redirect_uri'].'/?action=auth0callback']);
-    }
+        $loginUrl = $auth0->login($settings['auth0_redirect_uri'].'/?action=auth0callback');
 
-    // ideally we wouldn't need to do this, but because loadSessionData
-    // is crazy and looks for $_GET parameters hidden here to
-    // change current org or camp, we have to load this every request
-    loadSessionData($userInfo);
-    if ($isAuth0Callback) {
-        $redirectUrl = $_SESSION['auth0_callback_redirect_uri'] ?? '/';
-        unset($_SESSION['auth0_callback_redirect_uri']);
-        redirect($redirectUrl);
+        // Finally, redirect the user to the Auth0 Universal Login Page.
+        redirect($loginUrl);
+
+        exit;
     }
 }
 
@@ -82,9 +141,16 @@ function loadSessionData($userInfo)
     $userId = ($userInfo['email'] !== $_SESSION['user']['email']) ? preg_replace('/auth0\|/', '', $userInfo['sub']) : $_SESSION['user']['id'];
     // update local user info with auth0 info
     $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE id = :id', ['id' => $userId]);
-    if ($user) { // does user exist in the app db and in the auth0 db
+    // does user exist in the app db and in the auth0 db
+    if ($user) {
+        // update last login date and last action
+        $lastLogin = date('Y-m-d H:i:s', $userInfo['iat']);
+        db_query('UPDATE cms_users SET lastaction = NOW(), lastlogin = :lastLogin WHERE id = :id', ['id' => $user['id'], 'lastLogin' => $lastLogin]);
+
         loadSessionDataForUser($user);
     } else {
+        logout();
+
         throw new Exception('User not found in database', 404);
     }
 }
@@ -149,18 +215,21 @@ function updateAuth0UserFromDb($user_id, $set_pwd = false)
         $auth0UserData['app_metadata']['valid_lastday'] = null;
     }
 
-    try {
-        $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
-    } catch (GuzzleHttp\Exception\ClientException $e) {
-        // user doesn't exist, so try creating it instead
-        if (404 == $e->getResponse()->getStatusCode()) {
-            $auth0UserData['user_id'] = preg_replace('/auth0\|/', '', $auth0UserId);
-            $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
-            $mgmtAPI->users()->create($auth0UserData);
-        } else {
-            throw new Exception($e->getMessage(), $e->getResponse()->getStatusCode(), $e);
+    $response = $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
+
+    // user doesn't exist, so try creating it instead
+    if (404 === $response->getStatusCode()) {
+        $auth0UserData['user_id'] = preg_replace('/auth0\|/', '', $auth0UserId);
+        $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
+        $response = $mgmtAPI->users()->create($settings['auth0_db_connection_id'], $auth0UserData);
+        // the status code will be 201 if the user created successfully
+        if (201 !== $response->getStatusCode()) {
+            throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
         }
+    } elseif (200 !== $response->getStatusCode()) {
+        throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
     }
+
     if ($set_pwd) {
         // needed for reseeding test env
         $mgmtAPI->users()->update($auth0UserId, ['password' => $set_pwd]);
@@ -241,18 +310,39 @@ function logout()
     session_unset();
     session_destroy();
     $auth0 = getAuth0($settings);
+    $auth0->clear();
     $auth0->logout();
 }
 
 function logoutWithRedirect()
 {
     global $settings;
-    logout();
+    $auth0 = getAuth0($settings);
+    $session = $auth0->getCredentials();
 
-    // the auth0 client method
-    // $auth0->logout() simply clears local variables
-    // so we also redirect to auth0
-    redirect('https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
+    if ($session) {
+        // Clear the end-user's session, and redirect them to the Auth0 /logout endpoint.
+        redirect($auth0->logout());
+
+        exit;
+    }
+    redirect($auth0->login($settings['auth0_redirect_uri'].'/?action=auth0callback'));
+
+    exit;
+}
+
+function loginWithRedirect()
+{
+    global $settings;
+    $auth0 = getAuth0($settings);
+
+    // Clear the local session.
+    $auth0->clear();
+
+    // Redirect to Auth0's Universal Login page.
+    redirect($auth0->login($settings['auth0_redirect_uri'].'/?action=auth0callback'));
+
+    exit;
 }
 
 function sendlogindata($table, $ids)
@@ -264,7 +354,7 @@ function sendlogindata($table, $ids)
     foreach ($ids as $id) {
         $email = db_value('SELECT email FROM cms_users WHERE id=:id LIMIT 1', ['id' => $id]);
         // TODO: Auth 0 send for user id $id
-        $auth0Authentication->dbconnections_change_password($email, 'Username-Password-Authentication');
+        $auth0Authentication->dbconnectionsChangePassword($email, 'Username-Password-Authentication');
     }
 
     return [true, 'Passwords reset'];
@@ -275,8 +365,6 @@ function sendlogindata($table, $ids)
 function loadSessionDataForUser($user)
 {
     $_SESSION['user'] = $user;
-    // update last action
-    db_query('UPDATE cms_users SET lastaction = NOW() WHERE id = :id', ['id' => $user['id']]);
 
     // ----------- load organisation and usergroup
     if ($user['is_admin']) {
@@ -375,14 +463,14 @@ function getAuth0UserByEmail($email)
         try {
             global $settings;
             $mgmtAPI = getAuth0Management($settings);
-            $results = $mgmtAPI->usersByEmail()->get([
-                'email' => $email,
-            ]);
+            $response = $mgmtAPI->usersByEmail()->get($email);
 
-            return json_encode($results);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+            if (HttpResponse::wasSuccessful($response)) {
+                return HttpResponse::decodeContent($response);
+            }
+        } catch (Auth0Exception $e) {
             // user doesn't exist in auth0
-            if (404 == $e->getResponse()->getStatusCode()) {
+            if (404 == $e->getCode()) {
                 return null;
             }
         }
@@ -396,12 +484,14 @@ function getAuth0User($userId)
     try {
         global $settings;
         $mgmtAPI = getAuth0Management($settings);
-        $user = $mgmtAPI->users()->get('auth0|'.intval($userId));
+        $response = $mgmtAPI->users()->get('auth0|'.intval($userId));
 
-        return $user;
-    } catch (GuzzleHttp\Exception\ClientException $e) {
+        if (HttpResponse::wasSuccessful($response)) {
+            return HttpResponse::decodeContent($response);
+        }
+    } catch (Auth0Exception $e) {
         // user doesn't exist in auth0
-        if (404 == $e->getResponse()->getStatusCode()) {
+        if (404 == $e->getCode()) {
             return null;
         }
     }

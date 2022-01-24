@@ -34,7 +34,6 @@ Cypress.Commands.add("loginAsVolunteerWithNoPermissions", () => {
 });
 
 Cypress.Commands.add("loginAs", (user, pass) => {
-    let config = getLoginConfiguration();
     backgroundLoginUsing(user, pass);
 });
 
@@ -53,8 +52,8 @@ Cypress.Commands.add("loginAsCoordinator", () => {
 
 Cypress.Commands.add("fillLoginForm", () => {
     let config = getLoginConfiguration();
-    cy.get("input[id='username']").type(config.testVolunteer);
-    cy.get("input[type='password']").type(config.testPwd);
+    cy.get("input[name='email']").type(config.testVolunteer);
+    cy.get("input[name='password']").type(config.testPwd);
     cy.get("button[type='submit']").click();
     cy.url().then((url) => {
         // first time login with the user prompt for consent
@@ -62,4 +61,33 @@ Cypress.Commands.add("fillLoginForm", () => {
           cy.get('button[value="accept"]').click()
         }
       });
+});
+
+Cypress.Commands.add("fillLoginFormFor", (email, password) => {
+    let config = getLoginConfiguration();
+    cy.get("input[name='email']").type(email);
+    cy.get("input[name='password']").type(password);
+    cy.get("button[type='submit']").click();
+    cy.url().then((url) => {
+        // first time login with the user prompt for consent
+        if (url.includes('consent?')) {
+          cy.get('button[value="accept"]').click()
+        }
+      });
+});
+
+Cypress.Commands.add("logout", () => {
+    cy.log(`Logout`);
+    cy.request({
+        method: "POST",
+        url: '/cypress-session.php',
+        body: {
+            logout: true,
+        },
+        form: true // submit as POST fields not JSON encoded body
+    }).then(response => {
+        expect(response.status).to.eq(200);
+        expect(response.body.success).to.be.true;
+    });
+
 });

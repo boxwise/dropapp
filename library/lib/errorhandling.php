@@ -135,6 +135,11 @@ function bootstrap_exception_handler(Throwable $ex)
             logout();
             $error->assign('logoutWithRedirect', 'https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
         }
+        if (404 === $ex->getCode() && 'User not found in database' === $ex->getMessage()) {
+            $error->assign('message', 'You will be redirected to login.');
+            logout();
+            $error->assign('logoutWithRedirect', 'https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
+        }
     }
 
     global $settings;
