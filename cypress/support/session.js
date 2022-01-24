@@ -41,7 +41,7 @@ Cypress.Commands.add("loginAsAdmin", () => {
     let config = getLoginConfiguration();
     //Rate limit of Auth0 reached 
     //One can only request /userinfo 5 times per minute from the same user.
-    // cy.wait(6000);
+    cy.wait(6000);
     backgroundLoginUsing(config.testAdmin, config.testPwd);
 });
 
