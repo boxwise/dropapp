@@ -31,7 +31,6 @@ describe('Manage beneficiaries', () => {
         cy.setupAjaxActionHook();
         cy.loginAsVolunteer();
         cy.visit('/?action=people');
-        cy.wait(6000);
     });
 
     function getBeneficiariesTable(){
@@ -186,7 +185,6 @@ describe('Manage beneficiaries', () => {
                 cy.log("Deleting beneficiary " + lastname)
                 cy.checkGridCheckboxByText(lastname)
                 clickDeleteButtonAndCheckConfirmation();
-                deleteFromDeactivated(lastname);
             }
         });
     }
