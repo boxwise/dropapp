@@ -125,7 +125,7 @@ use OpenCensus\Trace\Tracer;
                 });
                 // Optimized by using bulk inserts and transactions over delete queries
                 list($success, $message, $redirect) = listBulkRealDelete($table, $ids);
-                $redirect = false;
+                $redirect = true;
 
                 break;
         }

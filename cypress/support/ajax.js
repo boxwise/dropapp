@@ -33,6 +33,7 @@ Cypress.Commands.add("waitForAjaxAction", (expectedRequest,expectedResponse) => 
                 // but so far doesn't seem to be a problem
                 // possibly because in these scenarios we're immediately
                 // navigating elsewhere
+                cy.reload();
             }
     });
 });
