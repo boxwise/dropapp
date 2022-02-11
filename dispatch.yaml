@@ -26,6 +26,8 @@ dispatch:
   service: v2-staging
 - url: "staging.boxtribute.org/v2*"
   service: v2-staging
+- url: "api-staging.boxtribute.org/*"
+  service: api-staging
 ## Demo
 - url: "demo.boxwise.co/v2*"
   service: v2-demo
