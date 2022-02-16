@@ -33,8 +33,12 @@ dispatch:
   service: v2-demo
 - url: "demo.boxtribute.org/v2*"
   service: v2-demo
+- url: "api-demo.boxtribute.org/*"
+  service: api-demo
 ## Production
 - url: "app.boxwise.co/v2*"
   service: v2-production
 - url: "app.boxtribute.org/v2*"
   service: v2-production
+- url: "api.boxtribute.org/*"
+  service: api-production
