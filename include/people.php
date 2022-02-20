@@ -236,8 +236,8 @@ Tracer::inSpan(
                     if ($_SESSION['camp']['idcard']) {
                         foreach ($data as $key => $value);
                         // if (file_exists($settings['upload_dir'].'/people/'.$data[$key]['id'].'.jpg')) {
-                            //     $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
-                            // }
+                        //     $data[$key]['icons'] .= '<i class="fa fa-id-card-o tooltip-this" title="This person has a picture."></i> ';
+                        // }
                     }
                 }
             );
@@ -319,6 +319,7 @@ Tracer::inSpan(
                     });
                     db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$oldest.', '.intval($extradrops).', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
                     $success = true;
+                    $message = 'The merge has be successfully applied';
                     $redirect = true;
                     correctchildren();
                 }
@@ -344,6 +345,7 @@ Tracer::inSpan(
                     });
                     $redirect = true;
                     $success = true;
+                    $message = ($success) ? 'Selected people have been detached' : 'Something went wronge';
                 }
 
                 break;
@@ -528,12 +530,14 @@ Tracer::inSpan(
         {
             $query = '';
             $aftermove = '';
+            $finalIds = [];
             for ($i = 0; $i < sizeof($ids); ++$i) {
                 $id = $ids[$i];
                 $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
                 $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
 
                 if ($drops && $person['parent_id']) {
+                    $finalIds[] = $id;
                     $query .= '('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), ';
                     $query .= '('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].'), ';
                 }
@@ -545,8 +549,8 @@ Tracer::inSpan(
             }
 
             // Correction of the dropped values - new values must be retrieved through a query
-            for ($i = 0; $i < sizeof($ids); ++$i) {
-                $id = $ids[$i];
+            for ($i = 0; $i < sizeof($finalIds); ++$i) {
+                $id = $finalIds[$i];
                 $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
                 $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
 

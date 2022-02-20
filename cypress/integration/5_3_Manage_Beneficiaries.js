@@ -20,9 +20,9 @@ const ITEM_DELETED = "Item deleted";
 const BENEFICIARY_DEACTVATE_REQUEST = "do=delete"
 const BENEFICIARY_REACTVATE_REQUEST = "do=undelete";
 const BENEFICIARY_MERGE_REQUEST = "do=merge";
-const BENEFICIARY_MERGE_RESPONSE = null;
+const BENEFICIARY_MERGE_RESPONSE = "The merge has be successfully applied";
 const BENEFICIARY_DETACH_REQUEST = "do=detach";
-const BENEFICIARY_DETACH_RESPONSE = null;
+const BENEFICIARY_DETACH_RESPONSE = "Selected people have been detached";
 const BENEFICIARY_DELETE_REQUEST = "do=realdelete"
 
 describe('Manage beneficiaries', () => {
@@ -185,7 +185,6 @@ describe('Manage beneficiaries', () => {
                 cy.log("Deleting beneficiary " + lastname)
                 cy.checkGridCheckboxByText(lastname)
                 clickDeleteButtonAndCheckConfirmation();
-                deleteFromDeactivated(lastname);
             }
         });
     }
