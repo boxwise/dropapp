@@ -22,9 +22,7 @@
 				LEFT OUTER JOIN qr ON s.qr_id = qr.id
 				WHERE s.id = :id', ['id' => $l]);
                 if (!$data['labels'][$i]['hash']) {
-                    $id = db_value('SELECT id FROM qr ORDER BY id DESC LIMIT 1') + 1;
-                    $data['labels'][$i]['hash'] = md5($id);
-                    db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$data['labels'][$i]['hash'].'",NOW())');
+                    list($id, $data['labels'][$i]['hash']) = generateQRIDForDB();
                     db_query('UPDATE stock AS s SET qr_id = :qr_id, modified = NOW() WHERE id = :id', ['id' => $l, 'qr_id' => $id]);
                     simpleSaveChangeHistory('qr', $id, 'New QR-code generated for existing box without QR-code');
                 }
@@ -32,15 +30,8 @@
             }
         } else {
             for ($i = 0; $i < $_POST['count']; ++$i) {
-                $id = db_value('SELECT id FROM qr ORDER BY id DESC LIMIT 1') + 1;
-                $data['labels'][$i]['hash'] = md5($id);
-                db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$data['labels'][$i]['hash'].'",NOW())');
+                list($id, $data['labels'][$i]['hash']) = generateQRIDForDB();
                 simpleSaveChangeHistory('qr', $id, 'New QR-code generated');
-
-                //test if generated qr-code is already connected to a box
-                if (db_value('SELECT id FROM stock WHERE qr_id = :id', ['id' => $id])) {
-                    throw new Exception('QR-Genereation error! Please report to the Boxtribute team!');
-                }
             }
         }
         $cmsmain->assign('include', 'boxlabels.tpl');

@@ -18,6 +18,25 @@ function generateBoxID($length = 8, $possible = '0123456789')
     return $randomString;
 }
 
+function generateQRIDForDB()
+{
+    $id = db_value('SELECT id FROM qr ORDER BY id DESC LIMIT 1') + 1;
+    $qr_id_stock = db_value('SELECT qr_id FROM stock ORDER BY qr_id DESC LIMIT 1');
+    if ($qr_id_stock >= $id) {
+        trigger_error('There are QR IDs in the stock table bigger than the largest id in the qr-table.');
+        $id = $qr_id_stock + 1;
+    }
+    $hash = md5($id);
+    db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$hash.'",NOW())');
+
+    //test if generated qr-code is already connected to a box
+    if (db_value('SELECT id FROM stock WHERE qr_id = :id', ['id' => $id])) {
+        throw new Exception('QR-Generation error! Please report to the Boxtribute team!');
+    }
+
+    return [$id, $hash];
+}
+
 function generateSecureRandomString(
     int $length = 64,
     string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
