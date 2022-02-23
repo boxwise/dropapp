@@ -79,7 +79,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		SELECT id AS value, label 
 		FROM cms_usergroups_levels 
 		WHERE level < '.intval($_SESSION['usergroup']['userlevel']).' OR '.$_SESSION['user']['is_admin'].'
-		ORDER BY level', 'required' => true, 'testid' => 'userGroupLevel']);
+		ORDER BY level', 'disabled' => true, 'testid' => 'userGroupLevel']);
 
     addfield('select', 'Available bases', 'camps', ['tab' => 'general', 'multiple' => true, 'query' => '
 		SELECT a.id AS value, a.name AS label, IF(x.cms_usergroups_id IS NOT NULL, 1,0) AS selected 
@@ -88,7 +88,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		LEFT OUTER JOIN cms_usergroups_camps AS y ON a.id = y.camp_id
 		WHERE (NOT a.deleted OR a.deleted IS NULL) AND a.organisation_id = '.$_SESSION['organisation']['id'].($_SESSION['user']['is_admin'] ? '' : ' AND y.cms_usergroups_id = '.$_SESSION['usergroup']['id']).'
 		GROUP BY a.id
-		ORDER BY seq', 'required' => true, 'testid' => 'userGroupBases']);
+		ORDER BY seq', 'disabled' => true, 'required' => false, 'testid' => 'userGroupBases']);
 
     addfield('select', $translate['cms_users_access'], 'cms_functions', ['tab' => 'general', 'multiple' => true, 'query' => '
 	SELECT 
@@ -98,7 +98,14 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 	LEFT OUTER JOIN cms_usergroups_functions AS y ON a.id = y.cms_functions_id 
 	WHERE NOT a.adminonly AND NOT a.allusers AND a.parent_id IS NOT NULL AND a.visible'.($_SESSION['user']['is_admin'] ? '' : ' AND y.cms_usergroups_id = '.$_SESSION['usergroup']['id']).'
 	GROUP BY a.id
-	ORDER BY a.title_en, seq', 'required' => true, 'testid' => 'userGroupFunctions']);
+	ORDER BY a.title_en, seq', 'disabled' => true, 'required' => false, 'testid' => 'userGroupFunctions']);
+
+    addfield('select', 'Auth0 roles', 'cms_usergroups_roles', ['tab' => 'general', 'multiple' => true, 'query' => '
+	SELECT 
+		a.auth0_role_id AS value, a.auth0_role_name AS label, 1 AS selected 
+	FROM cms_usergroups_roles AS a 
+    WHERE a.cms_usergroups_id = '.intval($id).'
+    ORDER BY a.auth0_role_name', 'required' => false, 'disabled' => true, 'readonly' => true, 'testid' => 'userGroupFunctions']);
 
     // addfield('checkbox', 'Users can add or remove Bicycle/sport items', 'allow_borrow_adddelete', array('tab' => 'bicycle'));
     // addfield('checkbox', 'Users can start a new laundry cycle', 'allow_laundry_startcycle', array('tab' => 'laundry'));
