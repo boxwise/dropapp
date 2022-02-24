@@ -451,6 +451,17 @@ $rolesToActions = [
         'view_beneficiary_graph',
         'view_start_page',
         'be_user',
+        'create_transfer_agreement',
+        'cancel_transfer_agreement',
+        'reject_transfer_agreement',
+        'accept_transfer_agreement',
+        'create_shipment',
+        'send_shipment',
+        'cancel_shipment',
+        'receive_shipment',
+        'view_transfer_agreements',
+        'view_shipments',
+        'fill_shipment',
     ],
 
     'coordinator' => [
@@ -473,6 +484,13 @@ $rolesToActions = [
         'view_beneficiary_graph',
         'view_start_page',
         'be_user',
+        'create_transfer_agreement',
+        'cancel_transfer_agreement',
+        'reject_transfer_agreement',
+        'accept_transfer_agreement',
+        'create_shipment',
+        'send_shipment',
+        'cancel_shipment',
     ],
 
     'warehouse_volunteer' => [
@@ -483,6 +501,10 @@ $rolesToActions = [
         'view_stockroom',
         'view_start_page',
         'be_user',
+        'receive_shipment',
+        'view_transfer_agreements',
+        'view_shipments',
+        'fill_shipment',
     ],
 
     'free_shop_volunteer' => [
