@@ -12,8 +12,8 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 /**
  * Getting Auth0 configurations.
  *
- * @param array $settings. Initial configuration variables requiered by auth0.
- * @param bool  $apiCall   Optional. This will be used to distingush some configuration when custom domain is being used, as API management call does not work with custom domain.
+ * @param bool  $apiCall  Optional. This will be used to distingush some configuration when custom domain is being used, as API management call does not work with custom domain.
+ * @param mixed $settings
  */
 function getAuth0SdkConfiguration($settings, $apiCall = false)
 {
@@ -163,9 +163,15 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
             WHERE 
                 ugr.cms_usergroups_id=:userGroupsId', ['userGroupsId' => $dbUserData['cms_usergroups_id']]);
 
-    sleep(1000);
+    usleep(1000);
     // assign user roles into auth0
-    assignRolesToUser($auth0UserId, $dbUserRoles);
+    $roles = [];
+    foreach ($dbUserRoles as $role) {
+        $roles[] = $role['auth0_role_id'];
+    }
+    if (sizeof($roles) > 0) {
+        assignRolesToUser($auth0UserId, $roles);
+    }
 
     if ($setPwd) {
         // needed for reseeding test env
