@@ -4,38 +4,40 @@ $table = 'cms_usergroups';
 $action = 'cms_usergroups_edit';
 
 if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')) {
-    if ($_POST) {
-        // Distinguish between create and update of a user group
-        if ($_POST['id']) {
-            $postedgroup = db_row('
-			SELECT ug.organisation_id, ugl.level AS userlevel
-			FROM cms_usergroups AS ug
-			LEFT JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
-            WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $_POST['id']]);
+    // disabling edit of user groups
+    // according to this trello card https://trello.com/c/HgKoMDov
+    // if ($_POST) {
+    //     // Distinguish between create and update of a user group
+    //     if ($_POST['id']) {
+    //         $postedgroup = db_row('
+    // 		SELECT ug.organisation_id, ugl.level AS userlevel
+    // 		FROM cms_usergroups AS ug
+    // 		LEFT JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
+    //         WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $_POST['id']]);
 
-            $allowed_group_level = ($_SESSION['usergroup']['userlevel'] > $postedgroup['userlevel']);
-            $allowed_organisation = ($_SESSION['usergroup']['organisation_id'] == $postedgroup['organisation_id']);
-        } else {
-            $allowed_group_level = true;
-            $allowed_organisation = true;
-        }
-        $is_admin = $_SESSION['user']['is_admin'];
-        $allowed_new_level = ($_SESSION['usergroup']['userlevel'] > db_value('SELECT level FROM cms_usergroups_levels WHERE id = :id', ['id' => $_POST['userlevel']]));
+    //         $allowed_group_level = ($_SESSION['usergroup']['userlevel'] > $postedgroup['userlevel']);
+    //         $allowed_organisation = ($_SESSION['usergroup']['organisation_id'] == $postedgroup['organisation_id']);
+    //     } else {
+    //         $allowed_group_level = true;
+    //         $allowed_organisation = true;
+    //     }
+    //     $is_admin = $_SESSION['user']['is_admin'];
+    //     $allowed_new_level = ($_SESSION['usergroup']['userlevel'] > db_value('SELECT level FROM cms_usergroups_levels WHERE id = :id', ['id' => $_POST['userlevel']]));
 
-        if ($is_admin || ($allowed_new_level && $allowed_group_level && $allowed_organisation)) {
-            $_POST['organisation_id'] = $_SESSION['organisation']['id'];
-            $handler = new formHandler($table);
+    //     if ($is_admin || ($allowed_new_level && $allowed_group_level && $allowed_organisation)) {
+    //         $_POST['organisation_id'] = $_SESSION['organisation']['id'];
+    //         $handler = new formHandler($table);
 
-            $savekeys = ['label', 'allow_laundry_startcycle', 'allow_laundry_block', 'allow_borrow_adddelete', 'userlevel', 'organisation_id'];
-            $id = $handler->savePost($savekeys);
-            $handler->saveMultiple('camps', 'cms_usergroups_camps', 'cms_usergroups_id', 'camp_id');
-            $handler->saveMultiple('cms_functions', 'cms_usergroups_functions', 'cms_usergroups_id', 'cms_functions_id');
+    //         $savekeys = ['label', 'allow_laundry_startcycle', 'allow_laundry_block', 'allow_borrow_adddelete', 'userlevel', 'organisation_id'];
+    //         $id = $handler->savePost($savekeys);
+    //         $handler->saveMultiple('camps', 'cms_usergroups_camps', 'cms_usergroups_id', 'camp_id');
+    //         $handler->saveMultiple('cms_functions', 'cms_usergroups_functions', 'cms_usergroups_id', 'cms_functions_id');
 
-            redirect('?action='.$_POST['_origin']);
-        } else {
-            throw new Exception('You do not have access to this user group!');
-        }
-    }
+    //         redirect('?action='.$_POST['_origin']);
+    //     } else {
+    //         throw new Exception('You do not have access to this user group!');
+    //     }
+    // }
 
     $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
     $requestedgroup = db_row('
@@ -73,7 +75,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     $hiddentabs['laundry'] = !$hidden['laundry'];
     $cmsmain->assign('hiddentabs', $hiddentabs);
 
-    addfield('text', 'Name', 'label', ['tab' => 'general', 'required' => true, 'testid' => 'userGroupName']);
+    addfield('text', 'Name', 'label', ['tab' => 'general', 'readonly' => true, 'testid' => 'userGroupName']);
 
     addfield('select', 'Level', 'userlevel', ['tab' => 'general', 'required' => true, 'query' => '
 		SELECT id AS value, label 
