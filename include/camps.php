@@ -30,7 +30,10 @@
 
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids, false, ['library', 'people', 'products', 'locations']);
+                //list($success, $message, $redirect) = listDelete($table, $ids, false, ['library', 'people', 'products', 'locations']);
+                // disabling delete of base according this trello card https://trello.com/c/HgKoMDov
+                $success = false;
+                $message = 'Base cannot be deleted';
 
                 break;
 
