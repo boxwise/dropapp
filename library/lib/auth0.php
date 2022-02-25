@@ -246,6 +246,42 @@ function isUserInSyncWithAuth0($userId)
         trigger_error('User with id '.$userId.' is out of sync between DB and Auth0.', E_USER_ERROR);
     }
 
+    $dbUserRoles = db_array('
+            SELECT 
+                ugr.auth0_role_id
+            FROM 
+                cms_usergroups_roles ugr
+            WHERE 
+                ugr.cms_usergroups_id=:userGroupsId', ['userGroupsId' => $dbUser['cms_usergroups_id']]);
+
+    $auth0UserRoles = getUserAssignedRoles($userId);
+
+    if (!$dbUserRoles && !$auth0UserRoles) {
+        $return_value = true;
+    } elseif ($dbUserRoles && $auth0UserRoles) {
+        $validationResult = [];
+        $dbRoles = [];
+        $auth0Roles = [];
+
+        foreach ($dbUserRoles as $dbUserRole) {
+            $dbRoles[] = $dbUserRole['auth0_role_id'];
+        }
+
+        foreach ($auth0UserRoles as $auth0UserRole) {
+            $auth0Roles[] = $auth0UserRole['id'];
+        }
+
+        array_push($validationResult, ($auth0Roles == $dbRoles) ? 'true' : 'false');
+
+        $return_value = in_array('false', $validationResult) ? false : true;
+    } elseif ((!$dbUserRoles && $auth0UserRoles) || ($dbUserRoles && !$auth0UserRoles)) {
+        $return_value = false;
+    }
+
+    if (!$return_value) {
+        trigger_error('Roles of user with id '.$userId.' is out of sync between DB and Auth0.', E_USER_ERROR);
+    }
+
     return $return_value;
 }
 /**
@@ -322,7 +358,7 @@ function getRolesByBaseIds(array $baseIds)
                     }
                 }
             }
-            usleep(50000);
+            usleep(5000);
         }
 
         return $roles;
@@ -689,20 +725,21 @@ function getMethodByRole($roleName)
 function createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRoleDescription)
 {
     global $rolesToActions;
+    global $settings;
 
     $role = getRolesByName($prefixedRole);
-    usleep(5000);
+    usleep(500);
     if (null === $role) {
         $role = createRole($prefixedRole);
-        usleep(5000);
+        usleep(500);
     }
     if (!in_array($roleName, ['administrator'])) {
         updateRole($role['id'], $prefixedRole, $prefixedRoleDescription);
-        usleep(5000);
+        usleep(500);
         if ($role) {
             $methods = $rolesToActions[$roleName];
-            updateRolePermissions($role['id'], 'boxtribute-dev-api', $methods);
-            usleep(5000);
+            updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
+            usleep(500);
         }
     }
 
@@ -738,6 +775,31 @@ function assignRolesToUser($userId, array $roleIds)
         global $settings;
         $mgmtAPI = getAuth0Management($settings);
         $response = $mgmtAPI->users()->addRoles($userId, $roleIds);
+
+        if (HttpResponse::wasSuccessful($response)) {
+            $res = HttpResponse::decodeContent($response);
+
+            return $res;
+        }
+    } catch (Auth0Exception $e) {
+        // user doesn't exist in auth0
+        if (404 == $e->getCode()) {
+            return null;
+        }
+    }
+}
+
+/**
+ * Getting user assigned roles.
+ *
+ * @param mixed $userId
+ */
+function getUserAssignedRoles($userId)
+{
+    try {
+        global $settings;
+        $mgmtAPI = getAuth0Management($settings);
+        $response = $mgmtAPI->users()->getRoles('auth0|'.intval($userId));
 
         if (HttpResponse::wasSuccessful($response)) {
             $res = HttpResponse::decodeContent($response);
