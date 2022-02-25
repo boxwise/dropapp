@@ -30,7 +30,10 @@
 
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_usergroups', 'cms_users', 'camps']);
+                // disabling delete of organization according this trello card https://trello.com/c/HgKoMDov
+                //list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_usergroups', 'cms_users', 'camps']);
+                $success = false;
+                $message = 'Organization cannot be deleted';
 
                 break;
 
