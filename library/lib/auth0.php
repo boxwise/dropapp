@@ -624,11 +624,11 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
             'Administrator' => ['administrator'],
             'Coordinator' => ['coordinator'],
             'Volunteer' => ['warehouse_volunteer', 'free_shop_volunteer'],
-            'Warehouse Volunteer' => ['warehouse_volunteer'],
-            'Free Shop Volunteer' => ['free_shop_volunteer'],
+            'Volunteer (Warehouse)' => ['warehouse_volunteer'],
+            'Volunteer (Free Shop)' => ['free_shop_volunteer'],
             // this feature removed for the new org
-            // 'Library Volunteer' => ['library_volunteer'],
-            'Label Creation Volunteer' => ['label_creation'],
+            // 'Volunteer (Library)' => ['library_volunteer'],
+            'Label Creation' => ['label_creation'],
         ];
 
         if (!$isFirstBase) {
