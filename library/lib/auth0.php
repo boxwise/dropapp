@@ -633,6 +633,11 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
 
         if (!$isFirstBase) {
             unset($rolesTemplate['Administrator']);
+            $adminUserGroup = db_row("SELECT   id FROM cms_usergroups
+            WHERE label = 'Administrator' AND organisation_id = :orgId", ['orgId' => $orgId]);
+            if (!empty($adminUserGroup)) {
+                db_query("INSERT INTO `cms_usergroups_camps` (`camp_id`, `cms_usergroups_id`) VALUES ({$baseId}, ".$adminUserGroup['id'].')');
+            }
         }
 
         $functionsIds = [];
