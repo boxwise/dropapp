@@ -704,6 +704,34 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         return true;
     });
 }
+
+function updateRolesForBase($baseId, $baseName)
+{
+    return db_transaction(function () use ($baseId, $baseName) {
+        $result = db_query('
+        SELECT 
+            ug.id,
+            ug.label,
+            uc.camp_id
+        FROM
+            cms_usergroups ug
+                INNER JOIN
+            cms_usergroups_camps uc ON uc.cms_usergroups_id = ug.id
+        where uc.camp_id = :baseId AND NOT label = "Administrator" ', ['baseId' => $baseId]);
+
+        // adding 5 roles in the Dropapp
+        while ($usergroup = db_fetch($result)) {
+            $roleName = trim(preg_split('/-/', $usergroup['label'])[1]);
+            $newUserGroupLabel = sprintf('Base %s - %s', ucwords($baseName), $roleName);
+            db_query('UPDATE cms_usergroups SET label = :newUserGroupLabel WHERE id = :userGroupId', [
+                'newUserGroupLabel' => $newUserGroupLabel,
+                'userGroupId' => $usergroup['id'],
+            ]);
+        }
+
+        return true;
+    });
+}
 /**
  * Getting available actions with role name.
  *

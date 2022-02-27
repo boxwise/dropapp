@@ -9,12 +9,16 @@
         db_transaction(function () use ($table, $rolesToActions, $menusToActions) {
             $handler = new formHandler($table);
             $baseName = trim($_POST['name']);
+            $baseIsNew = !(!empty($_POST['id']) && preg_match('/\d+/', $_POST['id']));
 
             $savekeys = ['name', 'market', 'familyidentifier', 'delete_inactive_users', 'food', 'bicycle', 'idcard', 'workshop', 'laundry', 'schedulestart', 'schedulestop', 'schedulebreak', 'schedulebreakstart', 'schedulebreakduration', 'scheduletimeslot', 'currencyname', 'dropsperadult', 'dropsperchild', 'dropcapadult', 'dropcapchild', 'bicyclerenttime', 'adult_age', 'daystokeepdeletedpersons', 'extraportion', 'maxfooddrops_adult', 'maxfooddrops_child', 'bicycle_closingtime', 'bicycle_closingtime_saturday', 'organisation_id', 'resettokens', 'beneficiaryisregistered', 'beneficiaryisvolunteer'];
             $id = $handler->savePost($savekeys);
             // $handler->saveMultiple('functions', 'cms_functions_camps', 'camps_id', 'cms_functions_id');
-            createRolesForBase($_SESSION['organisation']['id'], $_SESSION['organisation']['label'], $id, $baseName, $rolesToActions, $menusToActions, false);
-
+            if ($baseIsNew) {
+                createRolesForBase($_SESSION['organisation']['id'], $_SESSION['organisation']['label'], $id, $baseName, $rolesToActions, $menusToActions, false);
+            } else {
+                updateRolesForBase($id, $baseName);
+            }
             $_SESSION['camp'] = getcampdata($_SESSION['camp']['id']);
 
             redirect('?action='.$_POST['_origin']);
