@@ -62,7 +62,10 @@
 
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_users']);
+                //list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_users']);
+                // disabling delete of usergroups according this trello card https://trello.com/c/HgKoMDov
+                $success = false;
+                $message = 'User Groups cannot be deleted';
 
                 break;
 
