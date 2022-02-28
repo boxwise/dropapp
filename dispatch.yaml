@@ -22,9 +22,7 @@ dispatch:
 
 # New
 ## Staging
-- url: "staging.boxwise.co/v2*"
-  service: v2-staging
-- url: "staging.boxtribute.org/v2*"
+- url: "v2-staging.boxtribute.org/*"
   service: v2-staging
 - url: "api-staging.boxtribute.org/*"
   service: api-staging
