@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddCmsUserGroupsRoles extends AbstractMigration
 {
-    public function change()
+    public function up()
     {
         // create Usergroup Roles table
         $userGroupsRoles = $this->table('cms_usergroups_roles', ['id' => false]);
@@ -20,5 +20,16 @@ class AddCmsUserGroupsRoles extends AbstractMigration
             ->addForeignKey('cms_usergroups_id', 'cms_usergroups', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])->save();
+    }
+
+    public function down()
+    {
+        $table = $this->table('cms_usergroups_roles');
+        $table->removeIndex(['cms_usergroups_id'])
+            ->removeIndex(['cms_usergroups_id', 'auth0_role_id'])
+            ->dropForeignKey('cms_usergroups_id')
+            ->save()
+        ;
+        $table->drop('cms_usergroups_roles')->save();
     }
 }
