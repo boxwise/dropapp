@@ -21,6 +21,9 @@ dispatch:
   service: production
 
 # New
+## tmp (temporary, for exploring better staging setup)
+- url: "v2-tmp.boxtribute.org/*"
+  service: v2-tmp
 ## Staging
 - url: "v2-staging.boxtribute.org/*"
   service: v2-staging
