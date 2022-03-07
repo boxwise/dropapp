@@ -49,7 +49,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
         throw new Exception('You do not have access to this usergroup!');
     }
 
-    $isUserGroupsNew = !(!empty($_POST['id']) && preg_match('/\d+/', $_POST['id']));
+    $isUserGroupsNew = (!empty($_POST['id']) && preg_match('/\d+/', $_POST['id']));
 
     if (!$id) {
         $data['visible'] = 1;
@@ -77,7 +77,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     $hiddentabs['laundry'] = !$hidden['laundry'];
     $cmsmain->assign('hiddentabs', $hiddentabs);
 
-    addfield('text', 'Name', 'label', ['tab' => 'general', 'readonly' => !$isUserGroupsNew, 'testid' => 'userGroupName']);
+    addfield('text', 'Name', 'label', ['tab' => 'general', 'testid' => 'userGroupName']);
 
     addfield('select', 'Level', 'userlevel', ['tab' => 'general', 'required' => true, 'query' => '
 		SELECT id AS value, label 

@@ -46,7 +46,12 @@
             }
 
             listsetting('allowsort', true);
-            listsetting('add', 'Add a User Group');
+            listsetting('allowadd', false);
+            listsetting('allowdelete', false);
+            listsetting('allowselectall', false);
+            listsetting('allowselect', false);
+            // disable usergroup in line with new Boxtribute 2.0
+            //listsetting('add', 'Add a User Group');
 
             $cmsmain->assign('data', $data);
             $cmsmain->assign('listconfig', $listconfig);
