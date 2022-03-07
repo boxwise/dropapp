@@ -510,44 +510,7 @@ function getRoles()
         }
     }
 }
-/**
- * Create new End-Point in Auth0.
- *
- * @param string $resourseServerName
- * @param string $resourseServerIdentifier
- * @param array  $methods
- */
-function createResources($resourseServerName, $resourseServerIdentifier, $methods)
-{
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
 
-        $body = [
-            'name' => $resourseServerName,
-            'identifier' => $resourseServerIdentifier,
-            'scopes' => [],
-        ];
-
-        foreach ($methods as $method) {
-            $body['scopes'][] = [
-                'value' => $method,
-                'description' => $method,
-            ];
-        }
-
-        $response = $mgmtAPI->resourceServers()->create($resourseServerName, $body);
-
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-        }
-    } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
-    }
-}
 /**
  * Update End-Point in Auth0.
  *
@@ -583,31 +546,7 @@ function updateResources($resourseServerIdentifier, $methods)
         }
     }
 }
-/**
- * Getting all avialble End-Points in Auth0.
- *
- * @param string $resourseServerIdentifier
- */
-function getResource($resourseServerIdentifier)
-{
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
 
-        $response = $mgmtAPI->resourceServers()->get($resourseServerIdentifier);
-
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
-    }
-}
 /**
  * Create roles for all bases of an organization.
  *
