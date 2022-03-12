@@ -63,6 +63,7 @@ Tracer::inSpan(
         case '/pdf/dryfood.php':
         case '/reseed-db.php':
         case '/reseed-auth0.php':
+        case '/reseed-roles-auth0.php':
         case '/fake-error.php':
             require substr($parsedUrl, 1); // trim /
 
