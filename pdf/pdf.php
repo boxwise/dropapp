@@ -12,6 +12,20 @@ class PDF extends FPDF
         $this->Text($this->X + $x, $this->Y, $text);
     }
 
+    // related to this trello: https://trello.com/c/OjWZzsGA
+    public function Footer()
+    {
+        // Go to 1.5 cm from bottom
+        $this->SetY(-10);
+        // Select Arial italic 8
+        $this->SetFont('Arial', 'I', 6);
+        // Print centered page number with datetime  and timezone
+        $this->AliasNbPages('{totalPages}');
+        $dt = new DateTime('now');
+        $timezone = date_default_timezone_get();
+        $this->Cell(0, 10, 'Page '.$this->PageNo().' of {totalPages} Printed on '.$dt->format('d-m-Y H:i:s')." {$timezone}", 0, 0, 'C');
+    }
+
     public function PrintLn($text, $x = 0)
     {
         $this->Text($this->X + $x, $this->Y, $text);
