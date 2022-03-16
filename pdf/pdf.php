@@ -15,10 +15,10 @@ class PDF extends FPDF
     // related to this trello: https://trello.com/c/OjWZzsGA
     public function Footer()
     {
-        // Go to 1.5 cm from bottom
+        // Go to 10 cm from bottom
         $this->SetY(-10);
-        // Select Arial italic 8
-        $this->SetFont('Arial', 'I', 6);
+        // Set font to Open Sans
+        $this->SetFont('opensans', 'I', 6);
         // Print centered page number with datetime  and timezone
         $this->AliasNbPages('{totalPages}');
         $dt = new DateTime('now');
