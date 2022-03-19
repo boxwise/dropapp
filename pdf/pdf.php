@@ -21,8 +21,12 @@ class PDF extends FPDF
         $this->SetFont('opensans', 'I', 6);
         // Print centered page number with datetime  and timezone
         $this->AliasNbPages('{totalPages}');
-        $dt = new DateTime('now');
-        $timezone = date_default_timezone_get();
+        // The timezone of the user is retrieved from their Auth0 user's profile if available, otherwise the server time zone is used
+        // related to this trello card https://trello.com/c/OjWZzsGA
+        $timezone = ($_SESSION['auth0_user']['https://www.boxtribute.com/timezone']) ? $_SESSION['auth0_user']['https://www.boxtribute.com/timezone'] : date_default_timezone_get();
+
+        $dt = new DateTime('now', new DateTimeZone($timezone));
+
         $this->Cell(0, 10, 'Page '.$this->PageNo().' of {totalPages} Printed on '.$dt->format('d-m-Y H:i:s')." {$timezone}", 0, 0, 'C');
     }
 
