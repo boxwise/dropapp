@@ -62,9 +62,12 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
             WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $_POST['cms_usergroups_id'][0]]);
         $is_admin = $_SESSION['user']['is_admin'];
         $organisation_allowed = ($_SESSION['organisation']['id'] == $posteduser['organisation_id']);
+        // allow admins to create another admin account
+        // related to this trello card https://trello.com/c/YAF3Az4P
+        $admin_allowed = ($_SESSION['usergroup']['userlevel'] == $posteduser['userlevel'] && '100' == $_SESSION['usergroup']['userlevel']);
         $userlevel_allowed = ($_SESSION['usergroup']['userlevel'] > $posteduser['userlevel']);
 
-        if ($is_admin || ($organisation_allowed && $userlevel_allowed)) {
+        if ($is_admin || ($organisation_allowed && $userlevel_allowed) || $admin_allowed) {
             $keys = ['naam', 'email', 'cms_usergroups_id', 'valid_firstday', 'valid_lastday'];
             $userId = db_transaction(function () use ($table, $keys, $userId) {
                 $handler = new formHandler($table);
@@ -113,12 +116,13 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     // define tabs
     addfield('text', $translate['cms_users_naam'], 'naam', ['required' => true, 'testid' => 'user_name']);
     addfield('email', $translate['cms_users_email'], 'email', ['required' => true, 'tooltip' => $translate['cms_users_email_tooltip'], 'testid' => 'user_email', 'repeat' => !$data]);
-
+    // display admin role in the usergroup - only for user with admin roles
+    // related to this trello card https://trello.com/c/YAF3Az4P
     $usergroups = db_array('
 		SELECT ug.id AS value, ug.label 
 		FROM cms_usergroups AS ug
 		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON (ugl.id=ug.userlevel)
-		WHERE ug.organisation_id = :organisation_id AND (ugl.level < :userlevel OR :is_admin) AND (NOT ug.deleted OR ug.deleted IS NULL)
+		WHERE ug.organisation_id = :organisation_id AND (ugl.level < :userlevel OR :is_admin OR (ugl.level <= :userlevel AND 100 = :userlevel)) AND (NOT ug.deleted OR ug.deleted IS NULL)
 		ORDER BY ug.label', ['organisation_id' => $_SESSION['organisation']['id'], 'userlevel' => $_SESSION['usergroup']['userlevel'], 'is_admin' => $_SESSION['user']['is_admin']]);
     addfield('select', 'Select user group', 'cms_usergroups_id', ['required' => true, 'options' => $usergroups, 'testid' => 'user_group']);
 
