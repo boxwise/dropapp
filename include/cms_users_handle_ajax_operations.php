@@ -39,15 +39,40 @@ if ($ajax) {
         case 'extendActive':
         case 'extend':
             $ids = explode(',', $_POST['ids']);
+
             list($success, $message, $redirect, $data) = db_transaction(function () use ($table, $ids) {
-                [$success, $message, $redirect] = listExtend($table, $ids, $_POST['option']);
+                // check if user have proper permission to extend access of selected the account
+                // related to this trello card https://trello.com/c/KI47eGPI
+                $in = implode(',', array_map('intval', $ids));
+                $result = db_query('SELECT 
+                u.id, l.level
+                FROM
+                cms_users u
+                    INNER JOIN
+                cms_usergroups ug ON ug.id = u.cms_usergroups_id
+                    INNER JOIN
+                cms_usergroups_levels l ON l.id = ug.userlevel
+                WHERE u.id in ('.$in.')');
+                $alowed = true;
+                while ($row = db_fetch($result)) {
+                    if (intval($row['level']) > intval($_SESSION['usergroup']['userlevel'])) {
+                        $alowed = false;
+
+                        break;
+                    }
+                }
+                if (!$alowed) {
+                    return [false, 'You are not allowed to extend access of higher level users', false, null];
+                }
+                [$success, $message, $redirect, $data] = listExtend($table, $ids, $_POST['option']);
+
                 if ($success) {
                     foreach ($ids as $id) {
                         updateAuth0UserFromDb($id);
                     }
                 }
 
-                return [$success, $message, $redirect];
+                return [$success, $message, $redirect, $data];
             });
 
             break;
