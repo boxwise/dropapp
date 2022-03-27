@@ -572,8 +572,13 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
 
         if (!$isFirstBase) {
             unset($rolesTemplate['Administrator']);
-            $adminUserGroup = db_row("SELECT   id FROM cms_usergroups
-            WHERE label = 'Administrator' AND organisation_id = :orgId", ['orgId' => $orgId]);
+            $adminUserGroup = db_row("
+                SELECT 
+                    id 
+                FROM 
+                    cms_usergroups
+                WHERE 
+                    label = 'Administrator' AND organisation_id = :orgId", ['orgId' => $orgId]);
             if (!empty($adminUserGroup)) {
                 db_query("INSERT INTO `cms_usergroups_camps` (`camp_id`, `cms_usergroups_id`) VALUES ({$baseId}, ".$adminUserGroup['id'].')');
             }
@@ -583,23 +588,24 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         $userGroupsRoles = [];
         $baseFunctionIds = [];
 
-        // adding 5 roles in the Dropapp
+        // adding usergroups in the Dropapp
         foreach ($rolesTemplate as $roleName => $auth0Roles) {
             $userLevel = 3;
             $userLevel = (preg_match('/coordinator/i', $roleName)) ? 2 : $userLevel;
             $userLevel = (preg_match('/administrator/i', $roleName)) ? 1 : $userLevel;
             $userLevel = (preg_match('/(.*)?volunteer/i', $roleName)) ? 3 : $userLevel;
             $baseRoleName = 'Administrator' !== $roleName ? 'Base '.ucwords($baseName)." - {$roleName}" : $roleName;
-            $userGroupIdValue = " (NULL, '{$baseRoleName}', CURRENT_TIME(), ".$_SESSION['user']['id'].", NULL, NULL, '{$orgId}', '{$userLevel}', '0', '0', '0', NULL) ";
+            $userGroupIdValue = " (NULL, '{$baseRoleName}', CURRENT_TIME(), ".$_SESSION['user']['id'].", '{$orgId}', '{$userLevel}', NULL) ";
             // check if usergroup already created in dropapp
             $data = db_row('SELECT * FROM cms_usergroups WHERE label = :label AND organisation_id = :organisationId', ['label' => $baseRoleName, 'organisationId' => $orgId]);
             if (!$data) {
-                db_query('INSERT INTO `cms_usergroups` (`id`, `label`, `created`, `created_by`, `modified`, `modified_by`, `organisation_id`, `userlevel`, `allow_laundry_startcycle`, `allow_laundry_block`, `allow_borrow_adddelete`, `deleted`) VALUES '.$userGroupIdValue.';');
+                db_query('INSERT INTO `cms_usergroups` (`id`, `label`, `created`, `created_by`, `organisation_id`, `userlevel`, `deleted`) VALUES '.$userGroupIdValue.';');
                 $userGroupId = db_insertid();
             } else {
                 $userGroupId = $data['id'];
             }
 
+            // preparing $userGroupsRoles for db-table cms_usergroups_roles
             foreach ($auth0Roles as $auth0Role) {
                 $currentRole = 'administrator' !== $auth0Role ? 'base_'.$baseId.'_'.$auth0Role : $auth0Role;
                 $currentRoleDescription = 'administrator' !== $auth0Role ? ucwords($orgName).' - Base '.$baseId.' ('.ucwords($baseName).') - '.ucwords(preg_replace('/\_/', ' ', $auth0Role)) : 'Someone who manage all bases within an organization';
@@ -613,16 +619,19 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
                     ];
                 }
 
+                // get the functions to assign to this usergroup
+                // TO-DO: make independant of the constant $menusToActions and use the action_permissions from cms_functions
                 $functionsIds = array_unique(array_merge($functionsIds, getMenusByRole($auth0Role, $rolesToActions, $menusToActions)));
             }
 
+            // Prepare Insert in cms_usergroups_functions and cms_functions_camps
             $userGroupFunctionIdValues = [];
-
             foreach ($functionsIds as $val) {
                 $userGroupFunctionIdValues[] = " ('{$val}', '".$userGroupId."') ";
                 $baseFunctionIds[] = $val;
             }
 
+            // Prepare Insert in cms_usergroups_camps
             $baseUserGroupValue = "({$baseId}, '".$userGroupId."') ";
 
             $functionsIds = [];
@@ -641,7 +650,7 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         // adding menus for the base
         db_query('INSERT IGNORE INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES '.implode(', ', $baseFunctionIdValues).';');
 
-        // adding 7 roles in the auth0 then also add the reference to cms_usergroups_roles
+        // adding roles in the auth0 then also add the reference to cms_usergroups_roles
         foreach ($userGroupsRoles as $userGroupsRole) {
             // TODO: external service - fast-fail / should be sync
             $auth0Role = createOrUpdateRoleAndPermission($userGroupsRole['roleName'], $userGroupsRole['currentRole'], $userGroupsRole['currentRoleDescription']);
