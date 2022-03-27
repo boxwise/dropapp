@@ -58,7 +58,7 @@
     addfield('line', '', '', ['tab' => 'general']);
 
     addfield('title', 'Features', '', ['tab' => 'general']);
-    addfield('select', 'Functions available for this base', 'functions', ['width' => 6, 'disabled' => true, 'tab' => 'general', 'multiple' => true, 'query' => '
+    addfield('select', 'Functions available for this base', 'functions', ['width' => 6, 'placeholder' => 'This will be automatically filled.', 'disabled' => true, 'tab' => 'general', 'multiple' => true, 'query' => '
     	SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected
     	FROM cms_functions AS a
     	LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).'
