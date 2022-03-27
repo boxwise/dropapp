@@ -58,12 +58,12 @@
     addfield('line', '', '', ['tab' => 'general']);
 
     addfield('title', 'Features', '', ['tab' => 'general']);
-    // addfield('select', 'Functions available for this base', 'functions', ['width' => 6, 'tab' => 'general', 'multiple' => true, 'query' => '
-    // 	SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected
-    // 	FROM cms_functions AS a
-    // 	LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).'
-    // 	WHERE a.parent_id IS NOT NULL AND a.visible AND NOT a.allcamps AND NOT a.adminonly AND NOT a.allusers
-    // 	ORDER BY seq']);
+    addfield('select', 'Functions available for this base', 'functions', ['width' => 6, 'disabled' => true, 'tab' => 'general', 'multiple' => true, 'query' => '
+    	SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected
+    	FROM cms_functions AS a
+    	LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).'
+    	WHERE a.parent_id IS NOT NULL AND a.visible AND NOT a.allcamps AND NOT a.adminonly AND NOT a.allusers
+    	ORDER BY seq']);
 
     addfield('checkbox', 'You have a Free Shop?', 'market', ['tab' => 'general', 'onchange' => 'toggleShop()']);
     // addfield('checkbox', 'You run a food distribution program in the Free Shop?', 'food', ['tab' => 'general', 'onchange' => 'toggleFood()']);
