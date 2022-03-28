@@ -750,7 +750,7 @@ function getMenusByRole($role, array &$rolesToActions, array &$menusToActions)
     return array_unique($menuIds);
 }
 /**
- * Assign roles to auth0 user.
+ * Assign roles to auth0 user. (it will remove all roles alreadys assigned then add new roles).
  *
  * @param int $userId
  */
@@ -759,12 +759,29 @@ function assignRolesToUser($userId, array $roleIds)
     try {
         global $settings;
         $mgmtAPI = getAuth0Management($settings);
-        $response = $mgmtAPI->users()->addRoles($userId, $roleIds);
+        // getting current roles for thr users
+        $response = $mgmtAPI->users()->getRoles($userId);
+
+        $removeRolesIds = [];
 
         if (HttpResponse::wasSuccessful($response)) {
             $res = HttpResponse::decodeContent($response);
+            // preprering the role ids to be removed
+            foreach ($res as $role) {
+                $removeRolesIds[] = $role['id'];
+            }
 
-            return $res;
+            if (sizeof($removeRolesIds) > 0) {
+                // removing current roles
+                $mgmtAPI->users()->removeRoles($userId, $removeRolesIds);
+            }
+            // assigning the new roles to the users
+            $response = $mgmtAPI->users()->addRoles($userId, $roleIds);
+            if (HttpResponse::wasSuccessful($response)) {
+                $res = HttpResponse::decodeContent($response);
+
+                return $res;
+            }
         }
     } catch (Auth0Exception $e) {
         // user doesn't exist in auth0
