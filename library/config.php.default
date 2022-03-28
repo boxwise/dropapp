@@ -1,5 +1,6 @@
 <?php
     // auth0
+    $settings['auth0_api_id'] = '';
     $settings['auth0_api_domain'] = 'boxtribute-dev.eu.auth0.com';
     $settings['auth0_domain'] = 'boxtribute-dev.eu.auth0.com';
     $settings['auth0_client_id'] = '';
@@ -7,8 +8,8 @@
     $settings['auth0_client_secret'] = '';
     $settings['auth0_cookie_secret'] = '';
     $settings['auth0_redirect_uri'] = 'http://localhost:8100';
-    $settings['auth0_cookie_secret'] = ;
-    $settings['auth0_api_audience'] = ;
+    $settings['auth0_cookie_secret'] = '';
+    $settings['auth0_api_audience'] = '';
     
     $settings['app_env'] = 'development';
     $settings['test_pwd'] = 'Browser_tests';

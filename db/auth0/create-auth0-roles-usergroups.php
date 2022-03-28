@@ -3,10 +3,10 @@
 if (!array_key_exists('HTTP_X_APPENGINE_CRON', $_SERVER) && 'dropapp_dev' != $settings['db_database']) {
     throw new Exception('Not called from AppEngine cron service');
 }
-    $permittedDatabases = ['dropapp_dev', 'dropapp_demo', 'dropapp_staging'];
-    if (!in_array($settings['db_database'], $permittedDatabases)) {
-        throw new Exception('Not permitting a reset of '.$settings['db_database']);
-    }
+$permittedDatabases = ['dropapp_dev', 'dropapp_demo', 'dropapp_staging'];
+if (!in_array($settings['db_database'], $permittedDatabases)) {
+    throw new Exception('Not permitting a reset of '.$settings['db_database']);
+}
 
 // update Auth0
 $bypassAuthentication = true;
@@ -28,8 +28,7 @@ foreach ($rolesToActions as $k => $v) {
 $methods = array_unique($methods);
 
 // add action permissions in the auth0 API end-point
-// boxtribute-dev-api --> id: 5ef3760527b0da00215e6209
-updateResources('5ef3760527b0da00215e6209', $methods);
+updateResources($settings['auth0_api_id'], $methods);
 
 // creating roles in auth0 and also create usergroups in drop app - one time only
 
