@@ -330,6 +330,8 @@ function getAuth0User($userId)
         if (404 == $e->getCode()) {
             return null;
         }
+
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
 /**
@@ -363,10 +365,7 @@ function getRolesByBaseIds(array $baseIds)
 
         return $roles;
     } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
 /**
@@ -392,10 +391,7 @@ function getRolesByName($roleName)
             return $res[0] ?? null;
         }
     } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
 /**
@@ -416,10 +412,7 @@ function createRole($roleName)
             return $res;
         }
     } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
 /**
@@ -445,10 +438,7 @@ function updateRole($roleId, $roleName, $roleDescription)
             return $res;
         }
     } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
 /**
@@ -481,10 +471,7 @@ function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
             return $res;
         }
     } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
 /**
@@ -504,10 +491,7 @@ function getRoles()
             return $res;
         }
     } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
 
@@ -540,10 +524,7 @@ function updateResources($resourseServerIdentifier, $methods)
             $res = HttpResponse::decodeContent($response);
         }
     } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
 
@@ -789,10 +770,7 @@ function assignRolesToUser($userId, array $roleIds)
             }
         }
     } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
 
@@ -814,9 +792,6 @@ function getUserAssignedRoles($userId)
             return $res;
         }
     } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
+        throw new Exception($e->getMessage(), $e->getCode());
     }
 }
