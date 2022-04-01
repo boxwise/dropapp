@@ -10,9 +10,16 @@ if ('' != $export_ids_array[0]) {
 } else {
     $export_ids_array = [$_SESSION['camp']['id']];
 }
-
+// Note for boxage: same day creation gets logged as 0 days
+// related to this trello card https://trello.com/c/x3J58GgT
 $data = db_query(
-    'SELECT boxes.*, g.label AS gender, p.name AS product, s.label AS size, l.label AS location
+    'SELECT 
+        boxes.*, 
+        g.label AS gender, 
+        p.name AS product, 
+        s.label AS size, 
+        l.label AS location,
+        IF(DATEDIFF(now(),boxes.created) = 1, "1 day", CONCAT(DATEDIFF(now(),boxes.created), " days")) AS boxage
     FROM stock as boxes
     LEFT OUTER JOIN products AS p ON p.id = boxes.product_id
     LEFT OUTER JOIN locations AS l ON l.id = boxes.location_id
@@ -22,6 +29,6 @@ $data = db_query(
     $export_ids_array
 );
 unset($_SESSION['export_ids_stock']);
-$keys = ['box_id' => 'Box number', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'location' => 'Location', 'items' => 'Items', 'comments' => 'Comments'];
+$keys = ['box_id' => 'Box number', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'location' => 'Location',  'boxage' => 'Age', 'items' => 'Items', 'comments' => 'Comments'];
 
 csvexport($data, 'Stock', $keys);
