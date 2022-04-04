@@ -19,10 +19,10 @@
         }
 
         $camps = db_value(
-            '
-			SELECT GROUP_CONCAT(c.id) 
+            'SELECT GROUP_CONCAT(c.id) 
 			FROM cms_usergroups_camps AS uc, camps AS c 
-			WHERE (NOT c.deleted OR c.deleted IS NULL) AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup',
+			WHERE (NOT c.deleted OR c.deleted IS NULL) 
+            AND uc.camp_id = c.id AND uc.cms_usergroups_id = :usergroup',
             ['usergroup' => $_SESSION['usergroup']['id']]
         );
 
@@ -43,14 +43,20 @@
 			GROUP BY u.id
 			ORDER BY UNIX_TIMESTAMP(u.valid_firstday)';
 
-        // Do not forget to specify :usergroup and :user in the db call later
-        $cms_users_same_level_query = '
+        // Do not forget to specify :userGroupLevel and :user in the db call later
+        // related to this trello card https://trello.com/c/KI47eGPI
+        $cms_users_same_or_upper_level_query = '
 			SELECT u.*, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 1 as disableifistrue
 			FROM cms_users AS u
-			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
-			WHERE u.cms_usergroups_id = :usergroup AND u.id != :user
+			INNER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
+			INNER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
+			INNER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
+			WHERE (l.level >= :userGroupLevel AND u.id != :user)
+            AND uc.camp_id IN ('.($_SESSION['camp']['id'] ? $_SESSION['camp']['id'] : 0).')
 			AND NOT (u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0)
-			AND UNIX_TIMESTAMP(u.deleted) = 0';
+			AND UNIX_TIMESTAMP(u.deleted) = 0
+            GROUP BY u.id
+            ORDER BY UNIX_TIMESTAMP(u.valid_firstday)';
     }
 
     require_once 'cms_users_page.php';
