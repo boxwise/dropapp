@@ -12,6 +12,24 @@ class PDF extends FPDF
         $this->Text($this->X + $x, $this->Y, $text);
     }
 
+    // related to this trello: https://trello.com/c/OjWZzsGA
+    public function Footer()
+    {
+        // Go to 10 cm from bottom
+        $this->SetY(-10);
+        // Set font to Open Sans
+        $this->SetFont('opensans', 'I', 6);
+        // Print centered page number with datetime  and timezone
+        $this->AliasNbPages('{totalPages}');
+        // The timezone of the user is retrieved from their Auth0 user's profile if available, otherwise the server time zone is used
+        // related to this trello card https://trello.com/c/OjWZzsGA
+        $timezone = ($_SESSION['auth0_user']['https://www.boxtribute.com/timezone']) ? $_SESSION['auth0_user']['https://www.boxtribute.com/timezone'] : date_default_timezone_get();
+
+        $dt = new DateTime('now', new DateTimeZone($timezone));
+
+        $this->Cell(0, 10, 'Page '.$this->PageNo().' of {totalPages} Printed on '.$dt->format('d-m-Y H:i:s')." {$timezone}", 0, 0, 'C');
+    }
+
     public function PrintLn($text, $x = 0)
     {
         $this->Text($this->X + $x, $this->Y, $text);

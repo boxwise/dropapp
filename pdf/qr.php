@@ -16,7 +16,13 @@ $pdf->AddFont('helvetica', 'B', 'helveticab.php');
 $pdf->AddFont('helvetica', 'I', 'helveticai.php');
 $pdf->AddFont('helvetica', 'BI', 'helveticabi.php');
 
-$pdf->SetFont('helvetica', '', 9);
+// Add Open Sans Fonts variations
+$pdf->AddFont('opensans', '', 'OpenSans-Regular.php'); //Regular
+$pdf->AddFont('opensans', 'B', 'OpenSans-Bold.php'); //Bold
+$pdf->AddFont('opensans', 'I', 'OpenSans-Italic.php'); //Italic
+$pdf->AddFont('opensans', 'BI', 'OpenSans-BoldItalic.php'); //Bold_Italic
+
+$pdf->SetFont('opensans', '', 9);
 $pdf->SetAutoPageBreak(false);
 
 if ($_GET['label']) {
@@ -72,7 +78,7 @@ for ($i = 0; $i < intval($_GET['count']); ++$i) {
 
     $pdf->Image($_SERVER['DOCUMENT_ROOT'].'/pdf/logo.png', 85, 100 + $y, 40, 36);
 
-    $pdf->SetFont('helvetica', '', 9);
+    $pdf->SetFont('opensans', '', 9);
 
     $pdf->Line(140, $y + 30, 200, $y + 30);
     $pdf->Text(140, $y + 34, 'Box Number');
@@ -90,12 +96,12 @@ for ($i = 0; $i < intval($_GET['count']); ++$i) {
     $pdf->Text(140, $y + 134, 'Size');
 
     if ($box) {
-        $pdf->SetFont('helvetica', 'B', 42);
+        $pdf->SetFont('opensans', 'B', 42);
 
         $pdf->Text(140, $y + 27, $box['box_id']);
         $pdf->Text(10, $y + 27, $box['items']);
 
-        $pdf->SetFont('helvetica', 'B', 32);
+        $pdf->SetFont('opensans', 'B', 32);
 
         $pdf->SetXY(38, $y + 72);
         $pdf->CellFit(140, 0, $box['product'], 0, 0, 'L', false, '', true, false);
