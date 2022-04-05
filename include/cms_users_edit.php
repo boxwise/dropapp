@@ -64,10 +64,9 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
         $organisation_allowed = ($_SESSION['organisation']['id'] == $posteduser['organisation_id']);
         // allow admins to create another admin account
         // related to this trello card https://trello.com/c/YAF3Az4P
-        $admin_allowed = ($_SESSION['usergroup']['userlevel'] == $posteduser['userlevel'] && '100' == $_SESSION['usergroup']['userlevel']);
-        $userlevel_allowed = ($_SESSION['usergroup']['userlevel'] > $posteduser['userlevel']);
+        $userlevel_allowed = ($_SESSION['usergroup']['userlevel'] > $posteduser['userlevel']) || ($_SESSION['usergroup']['userlevel'] == $posteduser['userlevel'] && '100' == $_SESSION['usergroup']['userlevel']);
 
-        if ($is_admin || ($organisation_allowed && $userlevel_allowed) || $admin_allowed) {
+        if ($is_admin || ($organisation_allowed && $userlevel_allowed)) {
             $keys = ['naam', 'email', 'cms_usergroups_id', 'valid_firstday', 'valid_lastday'];
             $userId = db_transaction(function () use ($table, $keys, $userId) {
                 $handler = new formHandler($table);
