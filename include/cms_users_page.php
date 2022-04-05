@@ -4,8 +4,14 @@
         $cmsmain->assign('title', $translate['cms_users']);
 
         $data = getlistdata($cms_users_lower_level_query);
+
         if (!$_SESSION['user']['is_admin']) {
-            $data2 = db_array($cms_users_same_level_query, ['user' => $_SESSION['user']['id'], 'usergroup' => $_SESSION['usergroup']['id']]);
+            // related to this trello card https://trello.com/c/KI47eGPI
+            if (!empty($cms_users_same_or_upper_level_query)) {
+                $data2 = db_array($cms_users_same_or_upper_level_query, ['user' => $_SESSION['user']['id'], 'userGroupLevel' => $_SESSION['usergroup']['userlevel']]);
+            } elseif (!empty($cms_users_same_level_query)) {
+                $data2 = db_array($cms_users_same_level_query, ['user' => $_SESSION['user']['id'], 'usergroup' => $_SESSION['usergroup']['id']]);
+            }
             if (!empty($data2)) {
                 if (isset($data)) {
                     $data = array_merge($data, $data2);
