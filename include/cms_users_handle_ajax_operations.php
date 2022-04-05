@@ -53,15 +53,15 @@ if ($ajax) {
                     INNER JOIN
                 cms_usergroups_levels l ON l.id = ug.userlevel
                 WHERE u.id in ('.$in.')');
-                $alowed = true;
+                $allowed = true;
                 while ($row = db_fetch($result)) {
                     if (intval($row['level']) > intval($_SESSION['usergroup']['userlevel'])) {
-                        $alowed = false;
+                        $allowed = false;
 
                         break;
                     }
                 }
-                if (!$alowed) {
+                if (!$allowed) {
                     return [false, 'You are not allowed to extend access of higher level users', false, null];
                 }
                 [$success, $message, $redirect, $data] = listExtend($table, $ids, $_POST['option']);
