@@ -10,7 +10,9 @@ jobs:
     working_directory: ~/project
     steps:
       - checkout
-      - run: sudo docker-php-ext-install pdo_mysql exif
+      - run: sudo apt-get install -y libpng-dev libfreetype6-dev libjpeg-dev librabbitmq-dev
+      - run: sudo docker-php-ext-configure gd --with-gd --with-jpeg-dir --with-png-dir --with-freetype-dir
+      - run: sudo docker-php-ext-install pdo_mysql exif gd
       # load composer cache
       - restore_cache:
           keys:
