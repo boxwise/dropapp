@@ -26,8 +26,9 @@ class PDF extends FPDF
         $timezone = ($_SESSION['auth0_user']['https://www.boxtribute.com/timezone']) ? $_SESSION['auth0_user']['https://www.boxtribute.com/timezone'] : date_default_timezone_get();
 
         $dt = new DateTime('now', new DateTimeZone($timezone));
-
-        $this->Cell(0, 10, 'Page '.$this->PageNo().' of {totalPages} Printed on '.$dt->format('d-m-Y H:i:s')." {$timezone}", 0, 0, 'C');
+        // This is quick fix for an issue with the alignment of footer text as the library incorrectly calculates the text length when template variables {totalPages} are used
+        $totalPages = ($_GET['count'] && 0 != $_GET['count']) ? round(intval($_GET['count']) / 2) : 1;
+        $this->Cell(0, 10, 'Page '.$this->PageNo().' of '.$totalPages.' Printed on '.$dt->format('d-m-Y H:i:s')." {$timezone}", 0, 0, 'C');
     }
 
     public function PrintLn($text, $x = 0)
