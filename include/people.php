@@ -468,10 +468,15 @@ Tracer::inSpan(
                     $tag_id = $_POST['option'];
                     $people_ids = $ids;
                     if (sizeof($people_ids) > 0) {
-                        // Query speed optimised by 96% for 500 records from 2.15 seconds to 0.6 seconds using transaction block and removing extra select
+                        // Query speed optimised using transaction block and bulk delete
+                        // related to this trello card https://trello.com/c/g24mIVb8
                         db_transaction(function () use ($tag_id, $people_ids) {
+                            $deleteClause = [];
                             foreach ($people_ids as $people_id) {
-                                db_query('DELETE FROM people_tags WHERE tag_id = :tag_id AND people_id = :people_id', ['tag_id' => $tag_id, 'people_id' => $people_id]);
+                                $deleteClause[] = sprintf('(%d, %d)', $tag_id, $people_id);
+                            }
+                            if (sizeof($deleteClause) > 0) {
+                                db_query('DELETE FROM people_tags WHERE (tag_id, people_id) IN ('.join(',', $deleteClause).')');
                             }
                         });
                         $success = true;
