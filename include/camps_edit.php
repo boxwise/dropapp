@@ -1,18 +1,28 @@
 <?php
 
+    require_once 'library/constants.php';
+
     $table = 'camps';
     $action = 'camps_edit';
 
     if ($_POST) {
-        $handler = new formHandler($table);
+        db_transaction(function () use ($table, $rolesToActions, $menusToActions) {
+            $handler = new formHandler($table);
+            $baseName = trim($_POST['name']);
+            $baseIsNew = !(!empty($_POST['id']) && preg_match('/\d+/', $_POST['id']));
 
-        $savekeys = ['name', 'market', 'familyidentifier', 'delete_inactive_users', 'food', 'bicycle', 'idcard', 'workshop', 'laundry', 'schedulestart', 'schedulestop', 'schedulebreak', 'schedulebreakstart', 'schedulebreakduration', 'scheduletimeslot', 'currencyname', 'dropsperadult', 'dropsperchild', 'dropcapadult', 'dropcapchild', 'bicyclerenttime', 'adult_age', 'daystokeepdeletedpersons', 'extraportion', 'maxfooddrops_adult', 'maxfooddrops_child', 'bicycle_closingtime', 'bicycle_closingtime_saturday', 'organisation_id', 'resettokens', 'beneficiaryisregistered', 'beneficiaryisvolunteer'];
-        $id = $handler->savePost($savekeys);
-        $handler->saveMultiple('functions', 'cms_functions_camps', 'camps_id', 'cms_functions_id');
+            $savekeys = ['name', 'market', 'familyidentifier', 'delete_inactive_users', 'food', 'bicycle', 'idcard', 'workshop', 'laundry', 'schedulestart', 'schedulestop', 'schedulebreak', 'schedulebreakstart', 'schedulebreakduration', 'scheduletimeslot', 'currencyname', 'dropsperadult', 'dropsperchild', 'dropcapadult', 'dropcapchild', 'bicyclerenttime', 'adult_age', 'daystokeepdeletedpersons', 'extraportion', 'maxfooddrops_adult', 'maxfooddrops_child', 'bicycle_closingtime', 'bicycle_closingtime_saturday', 'organisation_id', 'resettokens', 'beneficiaryisregistered', 'beneficiaryisvolunteer'];
+            $id = $handler->savePost($savekeys);
+            // $handler->saveMultiple('functions', 'cms_functions_camps', 'camps_id', 'cms_functions_id');
+            if ($baseIsNew) {
+                createRolesForBase($_SESSION['organisation']['id'], $_SESSION['organisation']['label'], $id, $baseName, $rolesToActions, $menusToActions, false);
+            } else {
+                updateRolesForBase($id, $baseName);
+            }
+            $_SESSION['camp'] = getcampdata($_SESSION['camp']['id']);
 
-        $_SESSION['camp'] = getcampdata($_SESSION['camp']['id']);
-
-        redirect('?action='.$_POST['_origin']);
+            redirect('?action='.$_POST['_origin']);
+        });
     }
 
     $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
@@ -48,15 +58,15 @@
     addfield('line', '', '', ['tab' => 'general']);
 
     addfield('title', 'Features', '', ['tab' => 'general']);
-    addfield('select', 'Functions available for this base', 'functions', ['width' => 6, 'tab' => 'general', 'multiple' => true, 'query' => '
-		SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected 
-		FROM cms_functions AS a 
-		LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).' 
-		WHERE a.parent_id IS NOT NULL AND a.visible AND NOT a.allcamps AND NOT a.adminonly AND NOT a.allusers
-		ORDER BY seq']);
+    addfield('select', 'Functions available for this base', 'functions', ['width' => 6, 'placeholder' => 'This will be automatically filled.', 'disabled' => true, 'tab' => 'general', 'multiple' => true, 'query' => '
+    	SELECT a.id AS value, a.title_en AS label, IF(x.camps_id IS NOT NULL, 1,0) AS selected
+    	FROM cms_functions AS a
+    	LEFT OUTER JOIN cms_functions_camps AS x ON a.id = x.cms_functions_id AND x.camps_id = '.intval($id).'
+    	WHERE a.parent_id IS NOT NULL AND a.visible AND NOT a.allcamps AND NOT a.adminonly AND NOT a.allusers
+    	ORDER BY seq']);
 
     addfield('checkbox', 'You have a Free Shop?', 'market', ['tab' => 'general', 'onchange' => 'toggleShop()']);
-    addfield('checkbox', 'You run a food distribution program in the Free Shop?', 'food', ['tab' => 'general', 'onchange' => 'toggleFood()']);
+    // addfield('checkbox', 'You run a food distribution program in the Free Shop?', 'food', ['tab' => 'general', 'onchange' => 'toggleFood()']);
     // addfield('checkbox', 'You run a Bicycle/tools borrowing program?', 'bicycle', array('tab'=>'general', 'onchange'=>'toggleBikes()'));
     // addfield('checkbox', 'You have a workshop for beneficiaries?', 'workshop', array('tab'=>'general'));
     // addfield('checkbox', 'You run a laundry station for beneficiaries?', 'laundry', array('tab'=>'general'));

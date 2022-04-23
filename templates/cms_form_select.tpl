@@ -1,4 +1,4 @@
-	<div class="form-group{if $element['hidden']} hidden{/if}" id="div_{$element['field']}">
+	<div class="form-group{if $element['hidden']} hidden{/if} {if $element['disabled']}select2-container-disabled{/if}" id="div_{$element['field']}">
 		<input type="hidden" name="__{$element['field']}" value="select {if $element['multiple']}multiple{/if}{if $element['readonly']}readonly{/if}">
 		<label for="field_{$element['field']}" class="control-label col-sm-2">{$element['label']}</label>
 		<div class="col-sm-{if $element['width']>0 and $element['width']<11}{$element['width']}{else}6{/if} input-element {if $element['tooltip']}has-tooltip{/if}">
@@ -9,6 +9,7 @@
 				{if $element['formatlist']} data-format-list="{$element['formatlist']}"{/if}
 				{if isset($element['onchange'])}onchange="{$element['onchange']};"{/if}
 				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
+				{if $element['disabled']}disabled{/if}
 			>
 			<option></option>
 			{foreach $element['options'] as $option}

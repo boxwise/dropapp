@@ -46,7 +46,12 @@
             }
 
             listsetting('allowsort', true);
-            listsetting('add', 'Add a User Group');
+            listsetting('allowadd', false);
+            listsetting('allowdelete', false);
+            listsetting('allowselectall', false);
+            listsetting('allowselect', false);
+            // disable usergroup in line with new Boxtribute 2.0
+            //listsetting('add', 'Add a User Group');
 
             $cmsmain->assign('data', $data);
             $cmsmain->assign('listconfig', $listconfig);
@@ -62,7 +67,10 @@
 
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_users']);
+                //list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_users']);
+                // disabling delete of usergroups according this trello card https://trello.com/c/HgKoMDov
+                $success = false;
+                $message = 'User Groups cannot be deleted';
 
                 break;
 
