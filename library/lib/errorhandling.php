@@ -39,7 +39,9 @@ function bootstrap_exception_handler(Throwable $ex)
     // report to sentry
     Sentry\configureScope('boxwise_sentry_scope');
     Sentry\captureException($ex);
-    $eventId = Sentry\State\Hub::getCurrent()->getLastEventId();
+    // upgrade sentry sdk
+    // related trello card https://trello.com/c/5EzynpR9
+    $eventId = \Sentry\SentrySdk::getCurrentHub()->getLastEventId();
     // list of standard http errors
     $http_status_codes = [
         100 => 'Continue',
