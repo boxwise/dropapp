@@ -45,7 +45,7 @@ function getAuth0($settings)
 {
     $configuration = getAuth0SdkConfiguration($settings);
     // set session sotarage
-    // $configuration->setSessionStorage(new SessionStore($configuration));
+    $configuration->setSessionStorage(new SessionStore($configuration));
 
     return new Auth0($configuration);
 }
