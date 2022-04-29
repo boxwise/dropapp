@@ -288,8 +288,10 @@ $(document).ready(function() {
     $(document).on("keydown keyup keypress",'.changeQuantity', function(e){
         if (e.which == 13) e.preventDefault();
     });
-
-    $(document).on("click",'#submitShoppingCart', function(e){
+    // quick fix for multiple submission of form
+    // related to https://trello.com/c/h3raNz5i
+    $(document).one("click",'#submitShoppingCart', function(e){
+        e.preventDefault(); 
         var cart = shoppingCart.listCart();
         var people_id = $("#field_people_id").val();
         $.ajax({

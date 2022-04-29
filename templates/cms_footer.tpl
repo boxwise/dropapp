@@ -8,7 +8,7 @@
 
     <script src="/assets/js/magic.js?v=9"></script>
     <script src="/assets/js/custom.js?v=7"></script> 
-    <script src="/assets/js/shoppingCart.js"></script>    
+    <script src="/assets/js/shoppingCart.js?v=2"></script>    
 
 	  {if $smarty.session.user}
       {include file="freshdesk.tpl"}
