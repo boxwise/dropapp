@@ -1,3 +1,6 @@
+var submitted = false;
+var submits = 0;
+
 $(function() {
     $("body").addClass("loading");
     // Noty, for more info: http://ned.im/noty/
@@ -451,19 +454,30 @@ $(function() {
             // https://jqueryvalidation.org/
             ignore: ".no-validate",
             submitHandler: function(form) {
+                submits+=1;
                 $("#form-submit").prop("disabled", true);
                 $("body").addClass("loading");
 
+                
                 // Test internet connection
                 $.ajax({
                     type: "post",
                     url: "ajax.php?file=checkconnection",
                     dataType: "json",
+                    beforeSend: function(){
+                        if(submits>2){
+                            alert('multiple submission');
+                            console.log(submitted)
+                        }
+                        submitted = true;
+                    },
                     success: function(checkresult) {
                         if (checkresult.success) {
                             AjaxFormSubmit(form);
                         }
                         $("body").removeClass("loading");
+                        submits = 0;
+                        submitted = false;
 
                     },
                     error: function(checkresult) {
@@ -1114,6 +1128,7 @@ function AjaxFormSubmit(form, addparams="") {
             url: "ajax.php?file=" + $(form).data("action") + addparams,
             data: $(form).serialize(),
             dataType: "json",
+
             success: function(result) {
                 $("#form-submit").prop("disabled", false);
                 $("body").removeClass("loading");
