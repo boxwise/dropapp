@@ -1,4 +1,3 @@
-var submitted = false;
 var submits = 0;
 
 $(function() {
@@ -328,7 +327,6 @@ $(function() {
     // ColorPicker https://seballot.github.io/
     var $colorPicker = $('#colorPicker');
     if ($colorPicker.length) {
-        debugger;
         $chosenColor = $colorPicker[0].value;
         if (!$chosenColor.length){
             $chosenColor = '#f37167';
@@ -454,42 +452,8 @@ $(function() {
             // https://jqueryvalidation.org/
             ignore: ".no-validate",
             submitHandler: function(form) {
-                submits+=1;
-                $("#form-submit").prop("disabled", true);
-                $("body").addClass("loading");
-
-                
-                // Test internet connection
-                $.ajax({
-                    type: "post",
-                    url: "ajax.php?file=checkconnection",
-                    dataType: "json",
-                    beforeSend: function(){
-                        if(submits>2){
-                            alert('multiple submission');
-                            console.log(submitted)
-                        }
-                        submitted = true;
-                    },
-                    success: function(checkresult) {
-                        if (checkresult.success) {
-                            AjaxFormSubmit(form);
-                        }
-                        $("body").removeClass("loading");
-                        submits = 0;
-                        submitted = false;
-
-                    },
-                    error: function(checkresult) {
-                        var n = noty({
-                            text:
-                                "We cannot connect to the Boxtribute server.<br> Do you have internet?",
-                            type: "error"
-                        });
-                        $("body").removeClass("loading");
-                    }
-                });
-            },
+                AjaxFormSubmit(form)
+            },           
             errorPlacement: function(error, element) {
                 if ($(error).text() != "") {
                     if (!("object" === typeof $(element).data("qtip"))) {
@@ -1120,29 +1084,62 @@ function execReload(v) {
 }
 
 // form-submit function
-function AjaxFormSubmit(form, addparams="") {
-    // Submit Form
-    if ($(form).data("ajax")) {
-        $.ajax({
-            type: "post",
-            url: "ajax.php?file=" + $(form).data("action") + addparams,
-            data: $(form).serialize(),
-            dataType: "json",
+function AjaxFormSubmit(form, addparams = "") {
+    submits += 1;
+    $("#form-submit").prop("disabled", true);
+    $("body").addClass("loading");
 
-            success: function(result) {
-                $("#form-submit").prop("disabled", false);
-                $("body").removeClass("loading");
-                AjaxCheckSuccess(result);
-            },
-            error: function(result) {
-                AjaxError(result);
-                $("body").removeClass("loading");
+    // Test internet connection
+    $.ajax({
+        type: "post",
+        url: "ajax.php?file=checkconnection",
+        dataType: "json",
+        beforeSend: function () {
+            console.log('checkConReq beforeSend!')
+            if (submits > 1) {
+                console.log(submits);
+                return false;
             }
-        });
-    } else {
-        form.submit();
-    }
+        },
+        success: function (checkresult) {
+            if (checkresult.success && submits === 1) {
+                console.log('checkConReq success!')
+                if ($(form).data("ajax")) {
+                    $.ajax({
+                        type: "post",
+                        url: "ajax.php?file=" + $(form).data("action") + addparams,
+                        data: $(form).serialize(),
+                        dataType: "json",
+                        success: AjaxCheckSuccess(result),
+                        error: AjaxError(result)
+                    }).always(function () {
+                        submits = 0;
+                        console.log(submits);
+                        console.log('checkConReq always!');
+                        $("#form-submit").prop("disabled", false);
+                        $("body").removeClass("loading");
+                    });
+                } else {
+                    console.log('Form Submit!')
+                    form.submit();
+                }
+            }
+        },
+        error: function (checkresult) {
+            submits = 0;
+            console.log(submits);
+            console.log('checkConReq always!');
+            $("#form-submit").prop("disabled", false);
+            $("body").removeClass("loading");
+            var n = noty({
+                text:
+                    "We cannot connect to the Boxtribute server.<br> Do you have internet?",
+                type: "error"
+            });
+        }
+    })
 }
+
 
 function getUrlVars() {
     var vars = {};
