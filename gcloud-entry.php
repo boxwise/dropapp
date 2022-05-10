@@ -64,6 +64,7 @@ Tracer::inSpan(
         case '/reseed-db.php':
         case '/reseed-auth0.php':
         case '/reseed-roles-auth0.php':
+        case '/db/auth0/create-auth0-roles-usergroups.php':
         case '/fake-error.php':
             require substr($parsedUrl, 1); // trim /
 
