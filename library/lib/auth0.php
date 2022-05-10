@@ -467,6 +467,7 @@ function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
 
         if (HttpResponse::wasSuccessful($response)) {
             $res = HttpResponse::decodeContent($response);
+            trigger_error('updateRolePermissions $res:'.json_encode($res));
 
             return $res;
         }
@@ -707,8 +708,10 @@ function createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRole
     if (!in_array($roleName, ['administrator'])) {
         updateRole($role['id'], $prefixedRole, $prefixedRoleDescription);
         usleep(500);
+        trigger_error('createOrUpdateRoleAndPermission $role:'.json_encode($role));
         if ($role) {
             $methods = $rolesToActions[$roleName];
+            trigger_error('createOrUpdateRoleAndPermission $methods:'.json_encode($methods));
             updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
             usleep(500);
         }
