@@ -91,6 +91,8 @@ if (null === $user || true === $auth0->configuration()->getQueryUserInfo()) {
 
     if (HttpResponse::wasSuccessful($response)) {
         $user = HttpResponse::decodeContent($response);
+    } else {
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 }
 

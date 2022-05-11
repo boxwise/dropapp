@@ -51,6 +51,8 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
             } elseif (!$existinguser && $authUser && !$authUser[0]['blocked']) {
                 throw new Exception('The user already exists in AUTH0 but its not sync', 409);
             }
+        } else {
+            throw new Exception($authUser->getReasonPhrase(), $authUser->getStatusCode());
         }
 
         // Validate if user can access this user account
