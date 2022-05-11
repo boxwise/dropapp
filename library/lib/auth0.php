@@ -462,7 +462,7 @@ function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
                 'permission_name' => $method,
             ];
         }
-
+        trigger_error('updateRolePermissions $permissions:'.json_encode($permissions));
         $response = $mgmtAPI->roles()->addPermissions($roleId, $permissions);
 
         if (HttpResponse::wasSuccessful($response)) {
@@ -712,7 +712,8 @@ function createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRole
         if ($role) {
             $methods = $rolesToActions[$roleName];
             trigger_error('createOrUpdateRoleAndPermission $methods:'.json_encode($methods));
-            updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
+            $res = updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
+            trigger_error('createOrUpdateRoleAndPermission $res:'.json_encode($res));
             usleep(500);
         }
     }
