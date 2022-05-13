@@ -151,7 +151,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
             throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
         }
     } elseif (200 !== $response->getStatusCode()) {
-        throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 
     // set user roles in auth0
@@ -317,56 +317,47 @@ function getAuth0UserByEmail($email)
  */
 function getAuth0User($userId)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        $response = $mgmtAPI->users()->get('auth0|'.intval($userId));
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $response = $mgmtAPI->users()->get('auth0|'.intval($userId));
 
-        if (HttpResponse::wasSuccessful($response)) {
-            return HttpResponse::decodeContent($response);
-        }
-    } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
-
-        throw new Exception($e->getMessage(), $e->getCode());
+    if (HttpResponse::wasSuccessful($response)) {
+        return HttpResponse::decodeContent($response);
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Getting roles by base ids.
  */
 function getRolesByBaseIds(array $baseIds)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $roles = [];
+    $roles = [];
 
-        foreach ($baseIds as $baseId) {
-            $body = [
-                'name_filter' => "base_{$baseId}_",
-            ];
+    foreach ($baseIds as $baseId) {
+        $body = [
+            'name_filter' => "base_{$baseId}_",
+        ];
 
-            $response = $mgmtAPI->roles()->getAll($body);
+        $response = $mgmtAPI->roles()->getAll($body);
 
-            if (HttpResponse::wasSuccessful($response)) {
-                $res = HttpResponse::decodeContent($response);
-                foreach ($res as $role) {
-                    if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', $role['name'])) {
-                        array_push($roles, $role);
-                    }
+        if (HttpResponse::wasSuccessful($response)) {
+            $res = HttpResponse::decodeContent($response);
+            foreach ($res as $role) {
+                if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', $role['name'])) {
+                    array_push($roles, $role);
                 }
             }
-            usleep(5000);
+            usleep(2000);
+        } else {
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
         }
-
-        return $roles;
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
     }
+
+    return $roles;
 }
 /**
  * Getting roles by name.
@@ -375,24 +366,22 @@ function getRolesByBaseIds(array $baseIds)
  */
 function getRolesByName($roleName)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $body = [
-            'name_filter' => $roleName,
-        ];
+    $body = [
+        'name_filter' => $roleName,
+    ];
 
-        $response = $mgmtAPI->roles()->getAll($body);
+    $response = $mgmtAPI->roles()->getAll($body);
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-            return $res[0] ?? null;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res[0] ?? null;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Create Role.
@@ -401,19 +390,17 @@ function getRolesByName($roleName)
  */
 function createRole($roleName)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        $response = $mgmtAPI->roles()->create($roleName);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $response = $mgmtAPI->roles()->create($roleName);
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Update role in Auth0.
@@ -424,22 +411,20 @@ function createRole($roleName)
  */
 function updateRole($roleId, $roleName, $roleDescription)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        $response = $mgmtAPI->roles()->update($roleId, [
-            'name' => $roleName,
-            'description' => $roleDescription,
-        ]);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $response = $mgmtAPI->roles()->update($roleId, [
+        'name' => $roleName,
+        'description' => $roleDescription,
+    ]);
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Update role permissions.
@@ -450,48 +435,44 @@ function updateRole($roleId, $roleName, $roleDescription)
  */
 function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $permissions = [];
+    $permissions = [];
 
-        foreach ($methods as $method) {
-            $permissions[] = [
-                'resource_server_identifier' => $resourseServerIdentifier,
-                'permission_name' => $method,
-            ];
-        }
-        $response = $mgmtAPI->roles()->addPermissions($roleId, $permissions);
-
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+    foreach ($methods as $method) {
+        $permissions[] = [
+            'resource_server_identifier' => $resourseServerIdentifier,
+            'permission_name' => $method,
+        ];
     }
+    $response = $mgmtAPI->roles()->addPermissions($roleId, $permissions);
+
+    if (HttpResponse::wasSuccessful($response, 201)) {
+        $res = HttpResponse::decodeContent($response);
+
+        return $res;
+    }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Get all roles.
  */
 function getRoles()
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $response = $mgmtAPI->roles()->getAll();
+    $response = $mgmtAPI->roles()->getAll();
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 
 /**
@@ -502,28 +483,26 @@ function getRoles()
  */
 function updateResources($resourseServerIdentifier, $methods)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $body = [
-            'scopes' => [],
+    $body = [
+        'scopes' => [],
+    ];
+
+    foreach ($methods as $method) {
+        $body['scopes'][] = [
+            'value' => $method,
+            'description' => $method,
         ];
+    }
 
-        foreach ($methods as $method) {
-            $body['scopes'][] = [
-                'value' => $method,
-                'description' => $method,
-            ];
-        }
+    $response = $mgmtAPI->resourceServers()->update($resourseServerIdentifier, $body);
 
-        $response = $mgmtAPI->resourceServers()->update($resourseServerIdentifier, $body);
-
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
+    } else {
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 }
 
@@ -741,35 +720,36 @@ function getMenusByRole($role, array &$rolesToActions, array &$menusToActions)
  */
 function assignRolesToUser($userId, array $roleIds)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        // getting current roles for thr users
-        $response = $mgmtAPI->users()->getRoles($userId);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    // getting current roles for thr users
+    $response = $mgmtAPI->users()->getRoles($userId);
 
-        $removeRolesIds = [];
+    $removeRolesIds = [];
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-            // preprering the role ids to be removed
-            foreach ($res as $role) {
-                $removeRolesIds[] = $role['id'];
-            }
-
-            if (sizeof($removeRolesIds) > 0) {
-                // removing current roles
-                $mgmtAPI->users()->removeRoles($userId, $removeRolesIds);
-            }
-            // assigning the new roles to the users
-            $response = $mgmtAPI->users()->addRoles($userId, $roleIds);
-            if (HttpResponse::wasSuccessful($response)) {
-                $res = HttpResponse::decodeContent($response);
-
-                return $res;
-            }
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
+        // preprering the role ids to be removed
+        foreach ($res as $role) {
+            $removeRolesIds[] = $role['id'];
         }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+
+        if (sizeof($removeRolesIds) > 0) {
+            // removing current roles
+            $mgmtAPI->users()->removeRoles($userId, $removeRolesIds);
+        }
+        // assigning the new roles to the users
+        $response = $mgmtAPI->users()->addRoles($userId, $roleIds);
+        // refer to docs: https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
+        if (HttpResponse::wasSuccessful($response, 204)) {
+            $res = HttpResponse::decodeContent($response);
+
+            return $res;
+        }
+
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    } else {
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 }
 
@@ -780,17 +760,15 @@ function assignRolesToUser($userId, array $roleIds)
  */
 function getUserAssignedRoles($userId)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        $response = $mgmtAPI->users()->getRoles('auth0|'.intval($userId));
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $response = $mgmtAPI->users()->getRoles('auth0|'.intval($userId));
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
