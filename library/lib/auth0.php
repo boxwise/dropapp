@@ -623,8 +623,7 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
 
 function updateRolesForBase($baseId, $baseName)
 {
-    return db_transaction(function () use ($baseId, $baseName) {
-        $result = db_query('
+    $result = db_query('
         SELECT 
             ug.id, ug.label, uc.camp_id, ug.created
         FROM
@@ -636,22 +635,21 @@ function updateRolesForBase($baseId, $baseName)
         WHERE
             uc.camp_id = :baseId and NOT ul.level = 100', ['baseId' => $baseId]);
 
-        while ($usergroup = db_fetch($result)) {
-            // check if the usergroup is based on new standard user groups
-            $regx = '/Base (.*) - (Coordinator|Label Creation|Volunteer|Volunteer) ?(\(Free Shop\)|\(Warehouse\))?/m';
-            if (preg_match($regx, $usergroup['label'])) {
-                $roleName = trim(preg_split('/-/', $usergroup['label'])[1]);
+    while ($usergroup = db_fetch($result)) {
+        // check if the usergroup is based on new standard user groups
+        $regx = '/Base (.*) - (Coordinator|Label Creation|Volunteer|Volunteer) ?(\(Free Shop\)|\(Warehouse\))?/m';
+        if (preg_match($regx, $usergroup['label'])) {
+            $roleName = trim(preg_split('/-/', $usergroup['label'])[1]);
 
-                $newUserGroupLabel = sprintf('Base %s - %s', ucwords($baseName), $roleName);
-                db_query('UPDATE cms_usergroups SET label = :newUserGroupLabel WHERE id = :userGroupId', [
+            $newUserGroupLabel = sprintf('Base %s - %s', ucwords($baseName), $roleName);
+            db_query('UPDATE cms_usergroups SET label = :newUserGroupLabel WHERE id = :userGroupId', [
                     'newUserGroupLabel' => $newUserGroupLabel,
                     'userGroupId' => $usergroup['id'],
                 ]);
-            }
         }
+    }
 
-        return true;
-    });
+    return true;
 }
 /**
  * Getting available actions with role name.
@@ -687,7 +685,7 @@ function createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRole
         usleep(500);
         if ($role) {
             $methods = $rolesToActions[$roleName];
-            $res = updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
+            updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
             usleep(500);
         }
     }
