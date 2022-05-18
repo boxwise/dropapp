@@ -534,13 +534,17 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         unset($rolesTemplate['Administrator']);
         $adminUserGroup = db_row("
                 SELECT 
-                    id 
+                    ug.id 
                 FROM 
-                    cms_usergroups
+                    cms_usergroups ug
+                INNER JOIN
+                    cms_usergroups_levels ugl ON ug.userlevel = ugl.id
                 WHERE 
-                    label = 'Administrator' AND organisation_id = :orgId", ['orgId' => $orgId]);
+                    ugl.shortlabel = 'Admin' AND ug.organisation_id = :orgId", ['orgId' => $orgId]);
         if (!empty($adminUserGroup)) {
             db_query("INSERT INTO `cms_usergroups_camps` (`camp_id`, `cms_usergroups_id`) VALUES ({$baseId}, ".$adminUserGroup['id'].')');
+        } else {
+            throw new Exception('There is no admin user group.', 409);
         }
     }
 
