@@ -774,3 +774,26 @@ function getUserAssignedRoles($userId)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
+/**
+ * Getting all the users.
+ */
+function getAllUsers($query)
+{
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+
+    $params = [
+        'q' => $query,
+    ];
+
+    $response = $mgmtAPI->users()->getAll($params);
+
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
+
+        return $res;
+    }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+}
