@@ -751,11 +751,7 @@ function assignRolesToUser($userId, array $roleIds)
     // assigning the new roles to the users
     $response = $mgmtAPI->users()->addRoles($userId, $roleIds);
     // refer to docs: https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
-    if (HttpResponse::wasSuccessful($response, 204)) {
-        $res = HttpResponse::decodeContent($response);
-
-        return $res;
-    } else {
+    if (!HttpResponse::wasSuccessful($response, 204)) {
         throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 }
