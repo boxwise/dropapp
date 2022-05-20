@@ -4,54 +4,73 @@
     $action = 'people_edit';
 
     if ($_POST) {
-        // delete a transaction of a person
-        if ('delete' == $_POST['do']) {
-            $ids = explode(',', $_POST['ids']);
-            list($success, $message, $redirect) = listDelete('transactions', $ids);
+        db_transaction(function () use ($table, $settings) {
+            // delete a transaction of a person
+            if ('delete' == $_POST['do']) {
+                $ids = explode(',', $_POST['ids']);
+                list($success, $message, $redirect) = listDelete('transactions', $ids);
 
-            $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
+                $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
-            echo json_encode($return);
+                echo json_encode($return);
 
-            exit();
-        }
-
-        // save the People edit form
-        if ($_POST['id']) {
-            $oldcontainer = db_value('SELECT container FROM people WHERE id = :id', ['id' => $_POST['id']]);
-
-            verify_campaccess_people($_POST['id']);
-            verify_deletedrecord($table, $_POST['id']);
-        }
-
-        $handler = new formHandler($table);
-        $handler->makeURL('fullname');
-        $savekeys = ['parent_id', 'firstname', 'lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield', 'date_of_signature'];
-        if ($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) {
-            $savekeys[] = 'laundryblock';
-            $savekeys[] = 'laundrycomment';
-        }
-        $id = $handler->savePost($savekeys, ['parent_id']);
-        $handler->saveMultiple('tags', 'people_tags', 'people_id', 'tag_id');
-        $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
-
-        $postid = ($_POST['id'] ? $_POST['id'] : $id);
-        if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
-            if ('image/jpeg' == $_FILES['picture']['type']) {
-                $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
-                $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
-                if (!$res) {
-                    error_log("Could not save uploaded file to {$targetFile}");
-                }
-            } else {
-                error_log('Skipped uploaded file of type '.$_FILES['picture']['type']);
+                exit();
             }
-        }
-        if ($_POST['picture_delete']) {
-            unlink($settings['upload_dir'].'/people/'.$postid.'.jpg');
-        }
 
-        $message = $_POST['firstname'].($_POST['firstname'] ? ' '.$_POST['lastname'] : '').' was added.<br>'.$_SESSION['camp']['familyidentifier'].' is '.$_POST['container'].'.';
+            // save the People edit form
+            if ($_POST['id']) {
+                $oldcontainer = db_value('SELECT container FROM people WHERE id = :id', ['id' => $_POST['id']]);
+
+                verify_campaccess_people($_POST['id']);
+                verify_deletedrecord($table, $_POST['id']);
+            }
+
+            $handler = new formHandler($table);
+            $handler->makeURL('fullname');
+            $savekeys = ['parent_id', 'firstname', 'lastname', 'gender', 'container', 'date_of_birth', 'email', 'extraportion', 'comments', 'camp_id', 'bicycletraining', 'phone', 'notregistered', 'bicycleban', 'workshoptraining', 'workshopban', 'workshopsupervisor', 'bicyclebancomment', 'workshopbancomment', 'volunteer', 'approvalsigned', 'signaturefield', 'date_of_signature'];
+            if ($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) {
+                $savekeys[] = 'laundryblock';
+                $savekeys[] = 'laundrycomment';
+            }
+            $id = $handler->savePost($savekeys, ['parent_id']);
+            // $handler->saveMultiple('tags', 'tags_relations', 'object_id', 'object_type', 'tag_id', );
+            db_query('DELETE FROM tags_relations WHERE object_id = :people_id AND object_type = "People"', [':people_id' => $id]);
+
+            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+
+            $params = [];
+            $tags = $_POST['tags'];
+            for ($i = 0; $i < sizeof($tags); ++$i) {
+                $query .= "(:tag_id{$i}, 'People', :people_id)";
+                $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
+                if ($i !== sizeof($tags) - 1) {
+                    $query .= ',';
+                }
+            }
+
+            $params = array_merge($params, ['people_id' => $id]);
+            db_query($query, $params);
+
+            $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
+
+            $postid = ($_POST['id'] ? $_POST['id'] : $id);
+            if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
+                if ('image/jpeg' == $_FILES['picture']['type']) {
+                    $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
+                    $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
+                    if (!$res) {
+                        error_log("Could not save uploaded file to {$targetFile}");
+                    }
+                } else {
+                    error_log('Skipped uploaded file of type '.$_FILES['picture']['type']);
+                }
+            }
+            if ($_POST['picture_delete']) {
+                unlink($settings['upload_dir'].'/people/'.$postid.'.jpg');
+            }
+
+            $message = $_POST['firstname'].($_POST['firstname'] ? ' '.$_POST['lastname'] : '').' was added.<br>'.$_SESSION['camp']['familyidentifier'].' is '.$_POST['container'].'.';
+        });
 
         // routing after submit
         if ('submitandedit' == $_POST['__action']) {
@@ -78,9 +97,9 @@
         FROM 
             people
         LEFT JOIN
-            people_tags ON people_tags.people_id = people.id
+            tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People"
         LEFT JOIN
-            tags ON tags.id = people_tags.tag_id 
+            tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "People" AND tags.deleted IS NULL
         WHERE 
             people.id = :id
         GROUP BY
@@ -134,12 +153,12 @@
             FROM 
                 people 
             LEFT JOIN
-                people_tags ON people_tags.people_id = people.id
+                tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People"
             LEFT JOIN
-                tags ON tags.id = people_tags.tag_id 
+                tags ON tags.id = tags_relations.tag_id
             WHERE 
                 (people.parent_id = :id OR people.id = :id) AND 
-                NOT people.deleted 
+                NOT people.deleted AND NOT tags.deleted
             GROUP BY
                 people.id
             ORDER BY 
@@ -194,7 +213,7 @@
         'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);
     addfield('date', 'Date of birth', 'date_of_birth', ['testid' => 'date_of_birth_id', 'tab' => 'people', 'date' => true, 'time' => false]);
     addfield('line', '', '', ['tab' => 'people']);
-    addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(people_tags.people_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN people_tags ON tags.id = people_tags.tag_id AND people_tags.people_id = '.intval($id).' WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL ORDER BY label']);
+    addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(tags_relations.object_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN tags_relations ON tags.id = tags_relations.tag_id AND tags_relations.object_id = '.intval($id).' AND tags_relations.object_type = "People" WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","People") ORDER BY label']);
     addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
     addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
     addfield('line', '', '', ['tab' => 'people']);
@@ -209,12 +228,12 @@
     }
 
     if ($_SESSION['camp']['bicycle'] || $_SESSION['camp']['workshop'] || $_SESSION['camp']['idcard']) {
-        $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);
-        if ($data['picture']) {
-            $exif = exif_read_data($settings['upload_dir'].'/people/'.$id.'.jpg');
-            $data['rotate'] = (3 == $exif['Orientation'] ? 180 : (6 == $exif['Orientation'] ? 90 : (8 == $exif['Orientation'] ? 270 : 0)));
-        }
-        addfield('photo', 'Picture for cards', 'picture', ['tab' => 'bicycle']);
+        // $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);
+        // if ($data['picture']) {
+        //     $exif = exif_read_data($settings['upload_dir'].'/people/'.$id.'.jpg');
+        //     $data['rotate'] = (3 == $exif['Orientation'] ? 180 : (6 == $exif['Orientation'] ? 90 : (8 == $exif['Orientation'] ? 270 : 0)));
+        // }
+        // addfield('photo', 'Picture for cards', 'picture', ['tab' => 'bicycle']);
         addfield('line', '', '', ['tab' => 'bicycle']);
         addfield('text', 'Phone number', 'phone', ['tab' => 'bicycle']);
     }
