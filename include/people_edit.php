@@ -4,7 +4,7 @@
     $action = 'people_edit';
 
     if ($_POST) {
-        db_transaction(function () use ($table, $settings) {
+        [$message, $id] = db_transaction(function () use ($table, $settings) {
             // delete a transaction of a person
             if ('delete' == $_POST['do']) {
                 $ids = explode(',', $_POST['ids']);
@@ -69,11 +69,13 @@
             }
 
             $message = $_POST['firstname'].($_POST['firstname'] ? ' '.$_POST['lastname'] : '').' was added.<br>'.$_SESSION['camp']['familyidentifier'].' is '.$_POST['container'].'.';
+
+            return [$message, $id];
         });
 
         // routing after submit
         if ('submitandedit' == $_POST['__action']) {
-            redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$handler->id);
+            redirect('?action='.$action.'&origin='.$_POST['_origin'].'&id='.$id);
         } elseif ('submitandnew' == $_POST['__action']) {
             redirect('?action='.$action.'&origin='.$_POST['_origin'].'&message='.$message);
         } elseif ('' == $_POST['__action'] && '' == $_POST['_origin']) {
