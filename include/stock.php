@@ -13,6 +13,13 @@ Tracer::inSpan(
         if (!$ajax) {
             initlist();
 
+            // Filter
+            $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND `type` IN ("All", "Stock") ORDER BY label', ['camp_id' => $_SESSION['camp']['id']]);
+            if (!empty($tags)) {
+                $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND `type` in ("All","Stock")', ['camp_id' => $_SESSION['camp']['id']])];
+                listsetting('multiplefilter', $tagfilter);
+            }
+
             $cmsmain->assign('title', 'Manage Boxes');
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
@@ -73,35 +80,46 @@ Tracer::inSpan(
             }
 
             $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock'], $outgoinglocations);
-
+            // Note for boxage: same day creation gets logged as 0 days
             $query = '
-            SELECT 
-                stock.*, 
-                cu.naam AS ordered_name, 
-                cu2.naam AS picked_name, 
-                SUBSTRING(stock.comments,1, 25) AS shortcomment, 
-                g.label AS gender, p.name AS product, 
-                s.label AS size, l.label AS location, 
-                IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage,
-                IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
-            FROM 
-                stock
-            LEFT OUTER JOIN 
-                cms_users AS cu ON cu.id = stock.ordered_by
-            LEFT OUTER JOIN 
-                cms_users AS cu2 ON cu2.id = stock.picked_by
-            LEFT OUTER JOIN 
-                products AS p ON p.id = stock.product_id
-            LEFT OUTER JOIN 
-                locations AS l ON l.id = stock.location_id
-            LEFT OUTER JOIN 
-                genders AS g ON g.id = p.gender_id
-            LEFT OUTER JOIN 
-                sizes AS s ON s.id = stock.size_id
-            WHERE 
-                (NOT stock.deleted OR stock.deleted IS NULL) AND 
-                l.deleted IS NULL AND 
-                l.camp_id = '.$_SESSION['camp']['id'].
+            SELECT
+                    stock_filtered.*,
+                    GROUP_CONCAT(tags.label) AS taglabels,
+                    GROUP_CONCAT(tags.color) AS tagcolors
+                FROM
+                    (SELECT 
+                            stock.*, 
+                            cu.naam AS ordered_name, 
+                            cu2.naam AS picked_name, 
+                            SUBSTRING(stock.comments,1, 25) AS shortcomment, 
+                            g.label AS gender, p.name AS product, 
+                            s.label AS size, l.label AS location, 
+                            IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage,
+                            IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
+                        FROM 
+                            stock '.
+                            // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
+                            ($listconfig['multiplefilter_selected'] ? '
+                                LEFT JOIN
+                                    tags_relations AS stock_tags_filter ON stock_tags_filter.object_id = stock.id AND stock_tags_filter.object_type = "Stock"
+                                LEFT JOIN
+                                    tags AS tags_filter ON tags_filter.id = stock_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').'
+                        LEFT OUTER JOIN 
+                            cms_users AS cu ON cu.id = stock.ordered_by
+                        LEFT OUTER JOIN 
+                            cms_users AS cu2 ON cu2.id = stock.picked_by
+                        LEFT OUTER JOIN 
+                            products AS p ON p.id = stock.product_id
+                        LEFT OUTER JOIN 
+                            locations AS l ON l.id = stock.location_id
+                        LEFT OUTER JOIN 
+                            genders AS g ON g.id = p.gender_id
+                        LEFT OUTER JOIN 
+                            sizes AS s ON s.id = stock.size_id
+                        WHERE 
+                            (NOT stock.deleted OR stock.deleted IS NULL) AND 
+                            l.deleted IS NULL AND 
+                            l.camp_id = '.$_SESSION['camp']['id'].
 
         ($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '').
 
@@ -110,9 +128,23 @@ Tracer::inSpan(
         ($_SESSION['filter3']['stock'] ? ' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')' : '').
 
         ($_SESSION['filter']['stock'] ? ' AND (stock.location_id = '.$_SESSION['filter']['stock'].')' : '').
-        ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : '');
-
+        ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : '').
+        // filter for boxes tags
+        ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
+        GROUP BY 
+            stock.id ) AS stock_filtered
+        LEFT JOIN tags_relations 
+                ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock"
+            LEFT JOIN
+                tags 
+                ON tags.id = tags_relations.tag_id 
+                AND tags.deleted IS NULL 
+                AND tags.camp_id = '.$_SESSION['camp']['id'].'
+            GROUP BY
+            stock_filtered.id
+            ';
             $data = getlistdata($query);
+
             $totalboxes = 0;
             $totalitems = 0;
             foreach ($data as $key => $value) {
@@ -131,6 +163,9 @@ Tracer::inSpan(
             addcolumn('text', 'Product', 'product');
             addcolumn('text', 'Gender', 'gender');
             addcolumn('text', 'Size', 'size');
+            if (!empty($tags)) {
+                addcolumn('tag', 'Tags', 'tags');
+            }
             addcolumn('text', 'Comments', 'shortcomment');
             addcolumn('text', 'Items', 'items');
             addcolumn('text', 'Location', 'location');
@@ -143,6 +178,10 @@ Tracer::inSpan(
 
             $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
             addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
+            if (!empty($tags)) {
+                addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
+                addbutton('rtag', 'Remove Tag', ['icon' => 'fa-tags', 'options' => $tags]);
+            }
             addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
             addbutton('qr', 'Make label', ['icon' => 'fa-print']);
             addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
@@ -150,7 +189,15 @@ Tracer::inSpan(
 
             $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
             $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
-
+            foreach ($data as $key => $value) {
+                if ($data[$key]['taglabels']) {
+                    $taglabels = explode(',', $data[$key]['taglabels']);
+                    $tagcolors = explode(',', $data[$key]['tagcolors']);
+                    foreach ($taglabels as $tagkey => $taglabel) {
+                        $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                    }
+                }
+            }
             $cmsmain->assign('data', $data);
             $cmsmain->assign('listconfig', $listconfig);
             $cmsmain->assign('listdata', $listdata);
@@ -243,6 +290,77 @@ Tracer::inSpan(
             case 'export':
                 $_SESSION['export_ids_stock'] = $_POST['ids'];
                 list($success, $message, $redirect) = [true, '', '?action=stock_export'];
+
+                break;
+
+            case 'tag':
+                $ids = explode(',', $_POST['ids']);
+                if ('undefined' == $_POST['option']) {
+                    $success = false;
+                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
+                    $redirect = false;
+                } else {
+                    // set tag id
+                    $tag_id = $_POST['option'];
+                    $stock_ids = $ids;
+                    if (sizeof($stock_ids) > 0) {
+                        // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
+                        $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+
+                        $params = [];
+
+                        for ($i = 0; $i < sizeof($stock_ids); ++$i) {
+                            $query .= "(:tag_id, 'Stock', :stock_id{$i})";
+                            $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
+                            if ($i !== sizeof($stock_ids) - 1) {
+                                $query .= ',';
+                            }
+                        }
+
+                        $params = array_merge($params, ['tag_id' => $tag_id]);
+                        db_query($query, $params);
+
+                        $success = true;
+                        $message = 'Tags added';
+                        $redirect = true;
+                    } else {
+                        $success = false;
+                        $message = 'To apply the tag, the beneficiary must be checked';
+                        $redirect = false;
+                    }
+                }
+
+                break;
+
+            case 'rtag':
+                $ids = explode(',', $_POST['ids']);
+                if ('undefined' == $_POST['option']) {
+                    $success = false;
+                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
+                    $redirect = false;
+                } else {
+                    // set tag id
+                    $tag_id = $_POST['option'];
+                    $stock_ids = $ids;
+                    if (sizeof($stock_ids) > 0) {
+                        db_transaction(function () use ($tag_id, $stock_ids) {
+                            $deleteClause = [];
+                            foreach ($stock_ids as $stock_id) {
+                                $deleteClause[] = sprintf('(%d, "%s", %d)', $tag_id, 'Stock', $stock_id);
+                            }
+                            if (sizeof($deleteClause) > 0) {
+                                db_query('DELETE FROM tags_relations WHERE (tag_id, object_type, `object_id`) IN ('.join(',', $deleteClause).')');
+                            }
+                        });
+                        $success = true;
+                        $message = 'Tags removed';
+                        $redirect = true;
+                    } else {
+                        $success = false;
+                        $message = 'To remove the tag, the boxes must be checked';
+                        $redirect = false;
+                    }
+                }
 
                 break;
         }
