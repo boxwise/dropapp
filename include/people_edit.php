@@ -33,7 +33,6 @@
                 $savekeys[] = 'laundrycomment';
             }
             $id = $handler->savePost($savekeys, ['parent_id']);
-            // $handler->saveMultiple('tags', 'tags_relations', 'object_id', 'object_type', 'tag_id', );
             db_query('DELETE FROM tags_relations WHERE object_id = :people_id AND object_type = "People"', [':people_id' => $id]);
 
             $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
@@ -228,12 +227,12 @@
     }
 
     if ($_SESSION['camp']['bicycle'] || $_SESSION['camp']['workshop'] || $_SESSION['camp']['idcard']) {
-        // $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);
-        // if ($data['picture']) {
-        //     $exif = exif_read_data($settings['upload_dir'].'/people/'.$id.'.jpg');
-        //     $data['rotate'] = (3 == $exif['Orientation'] ? 180 : (6 == $exif['Orientation'] ? 90 : (8 == $exif['Orientation'] ? 270 : 0)));
-        // }
-        // addfield('photo', 'Picture for cards', 'picture', ['tab' => 'bicycle']);
+        $data['picture'] = (file_exists($settings['upload_dir'].'/people/'.$id.'.jpg') ? $id : 0);
+        if ($data['picture']) {
+            $exif = exif_read_data($settings['upload_dir'].'/people/'.$id.'.jpg');
+            $data['rotate'] = (3 == $exif['Orientation'] ? 180 : (6 == $exif['Orientation'] ? 90 : (8 == $exif['Orientation'] ? 270 : 0)));
+        }
+        addfield('photo', 'Picture for cards', 'picture', ['tab' => 'bicycle']);
         addfield('line', '', '', ['tab' => 'bicycle']);
         addfield('text', 'Phone number', 'phone', ['tab' => 'bicycle']);
     }
