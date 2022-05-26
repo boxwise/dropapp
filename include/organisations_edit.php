@@ -4,7 +4,7 @@
     $action = 'organisations_edit';
 
     if ($_POST) {
-        db_transaction(function () use ($id, $table, $settings, $rolesToActions, $menusToActions) {
+        db_transaction(function () use ($id, $table , $rolesToActions, $menusToActions) {
             $organisation_is_new = !$id;
 
             $orgName = $_POST['label'];

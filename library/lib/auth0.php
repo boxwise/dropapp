@@ -299,9 +299,9 @@ function getAuth0UserByEmail($email)
 
             if (HttpResponse::wasSuccessful($response)) {
                 return HttpResponse::decodeContent($response);
-            } else {
-                throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
             }
+
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
         } catch (Auth0Exception $e) {
             // user doesn't exist in auth0
             if (404 == $e->getCode()) {
@@ -520,18 +520,18 @@ function updateResources($resourseServerIdentifier, $methods)
 function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesToActions, array &$menusToActions, $isFirstBase = true)
 {
     $rolesTemplate = [
-            'Administrator' => ['administrator'],
-            'Coordinator' => ['coordinator'],
-            'Volunteer' => ['warehouse_volunteer', 'free_shop_volunteer'],
-            'Volunteer (Warehouse)' => ['warehouse_volunteer'],
-            'Volunteer (Free Shop)' => ['free_shop_volunteer'],
-            // this feature removed for the new org
-            // 'Volunteer (Library)' => ['library_volunteer'],
-            'Label Creation' => ['label_creation'],
-        ];
+        'Head of Operations' => ['administrator'],
+        'Coordinator' => ['coordinator'],
+        'Volunteer' => ['warehouse_volunteer', 'free_shop_volunteer'],
+        'Volunteer (Warehouse)' => ['warehouse_volunteer'],
+        'Volunteer (Free Shop)' => ['free_shop_volunteer'],
+        // this feature removed for the new org
+        // 'Volunteer (Library)' => ['library_volunteer'],
+        'Label Creation' => ['label_creation'],
+    ];
 
     if (!$isFirstBase) {
-        unset($rolesTemplate['Administrator']);
+        unset($rolesTemplate['Head of Operations']);
         $adminUserGroup = db_row("
                 SELECT 
                     ug.id 
@@ -558,7 +558,7 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         $userLevel = (preg_match('/coordinator/i', $roleName)) ? 2 : $userLevel;
         $userLevel = (preg_match('/administrator/i', $roleName)) ? 1 : $userLevel;
         $userLevel = (preg_match('/(.*)?volunteer/i', $roleName)) ? 3 : $userLevel;
-        $baseRoleName = 'Administrator' !== $roleName ? 'Base '.ucwords($baseName)." - {$roleName}" : $roleName;
+        $baseRoleName = 'Head of Operations' !== $roleName ? 'Base '.ucwords($baseName)." - {$roleName}" : $roleName;
         $userGroupIdValue = " (NULL, '{$baseRoleName}', CURRENT_TIME(), ".$_SESSION['user']['id'].", '{$orgId}', '{$userLevel}', NULL) ";
         // check if usergroup already created in dropapp
         $data = db_row('SELECT * FROM cms_usergroups WHERE label = :label AND organisation_id = :organisationId', ['label' => $baseRoleName, 'organisationId' => $orgId]);
@@ -576,11 +576,11 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
 
             if (false == array_search($currentRole, array_column($userGroupsRoles, 'roleName'))) {
                 $userGroupsRoles[] = [
-                        'roleName' => $auth0Role,
-                        'currentRole' => $currentRole,
-                        'currentRoleDescription' => $currentRoleDescription,
-                        'userGroupId' => $userGroupId,
-                    ];
+                    'roleName' => $auth0Role,
+                    'currentRole' => $currentRole,
+                    'currentRoleDescription' => $currentRoleDescription,
+                    'userGroupId' => $userGroupId,
+                ];
             }
 
             // get the functions to assign to this usergroup
@@ -647,9 +647,9 @@ function updateRolesForBase($baseId, $baseName)
 
             $newUserGroupLabel = sprintf('Base %s - %s', ucwords($baseName), $roleName);
             db_query('UPDATE cms_usergroups SET label = :newUserGroupLabel WHERE id = :userGroupId', [
-                    'newUserGroupLabel' => $newUserGroupLabel,
-                    'userGroupId' => $usergroup['id'],
-                ]);
+                'newUserGroupLabel' => $newUserGroupLabel,
+                'userGroupId' => $usergroup['id'],
+            ]);
         }
     }
 
@@ -777,6 +777,8 @@ function getUserAssignedRoles($userId)
 
 /**
  * Getting all the users.
+ *
+ * @param mixed $query
  */
 function getAllUsers($query)
 {
