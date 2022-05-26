@@ -48,10 +48,79 @@
     } else {
         switch ($_POST['do']) {
             case 'delete':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_usergroups', 'cms_users', 'camps']);
+                [$success, $message, $redirect] = db_transaction(function () use ($table) {
+                    $ids = explode(',', $_POST['ids']);
+                    list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_usergroups', 'cms_users', 'camps']);
+                    // bulk delete of tags relations
+                    // related to trello card https://trello.com/c/XjNwO3sL
+                    $deleteClause = [];
+                    foreach ($ids as $tag_id) {
+                        $deleteClause[] = sprintf('%d', $tag_id);
+                    }
+                    if (sizeof($deleteClause) > 0) {
+                        db_query('DELETE FROM tags_relations WHERE tag_id IN ('.join(',', $deleteClause).')');
+                    }
+
+                    return [$success, $message, $redirect];
+                });
 
                 break;
+
+            case 'checktags':
+                // Show warning message if tag already applied to object
+                // related trello https://trello.com/c/XjNwO3sL
+                $id = $_POST['id'];
+                $selectedType = $_POST['type'];
+                $success = true;
+
+                if ($id && $selectedType) {
+                    $result = db_row("SELECT 
+                                        tags.type AS origin_type,
+                                        SUM(IF(tags_relations.object_type = 'Stock',
+                                            1,
+                                            0)) AS boxes_count,
+                                        SUM(IF(tags_relations.object_type = 'People',
+                                            1,
+                                            0)) AS beneficiaries_count
+                                    FROM
+                                        tags
+                                            LEFT JOIN
+                                        tags_relations ON tags_relations.tag_id = tags.id
+                                    WHERE
+                                        tags.deleted IS NULL
+                                            AND tags.camp_id = :campId
+                                            AND tags.id = :tagId
+                                    GROUP BY tags.id", ['campId' => $_SESSION['camp']['id'], 'tagId' => $id]);
+
+                    $originType = $result['origin_type'];
+                    $boxesCount = intval($result['boxes_count']);
+                    $beneficiariesCount = intval($result['beneficiaries_count']);
+
+                    define('BOX_WARNING', 'Changing the apply to will remove those tags once it has been saved, as there are about '.$boxesCount.' boxes that applied tags');
+                    define('PEOPLE_WARINING', 'Changing the apply to will remove those tags once it has been saved, as there are about '.$beneficiariesCount.' beneficiaries that applied tags');
+
+                    if ('All' === $originType) {
+                        if ('Stock' === $selectedType && $beneficiariesCount > 0) {
+                            $message = PEOPLE_WARINING;
+                            $success = false;
+                        } elseif ('People' === $selectedType && $boxesCount > 0) {
+                            $message = BOX_WARNING;
+                            $success = false;
+                        }
+                    } elseif ('Stock' === $originType) {
+                        if ('People' === $selectedType && $boxesCount > 0) {
+                            $message = BOX_WARNING;
+                            $success = false;
+                        }
+                    } elseif ('People' === $originType) {
+                        if ('Stock' === $selectedType && $beneficiariesCount > 0) {
+                            $message = PEOPLE_WARINING;
+                            $success = false;
+                        }
+                    }
+
+                    $redirect = false;
+                }
         }
 
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];

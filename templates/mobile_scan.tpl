@@ -1,4 +1,10 @@
-<h2 class="page-header">Box {$box['box_id']}</h2>
+<h2 class="page-header">Box {$box['box_id']}
+	{if isset($box['taglabels'])}	
+		{foreach $data['tags'] as $tag}
+			<span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
+		{/foreach}
+    {/if}
+</h2>
 	<div id ="box-info" class="container-fluid" data-testid="box-info">
 		<div id="box-info-content" class = "row">
 				<div id="box-info-product" class = "col-xs-12" data-testid="box-info-product">

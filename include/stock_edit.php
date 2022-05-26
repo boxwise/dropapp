@@ -82,8 +82,29 @@
         addfield('html', '', $htmlaside);
     }
 
-    $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
+    $data = db_row('SELECT 
+                        stock.*, 
+                        CONCAT(p.name," ",g.label) AS product, 
+                        l.label AS location,
+                        GROUP_CONCAT(tags.label) AS taglabels,
+                        GROUP_CONCAT(tags.color) AS tagcolors
+                    FROM stock 
+                        LEFT OUTER JOIN products AS p ON p.id = stock.product_id 
+                        LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
+                        LEFT OUTER JOIN locations AS l ON l.id = stock.location_id 
+                        LEFT JOIN tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock"
+                        LEFT JOIN tags ON tags.id = tags_relations.tag_id
+                    WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
+
     verify_campaccess_location($data['location_id']);
+
+    if ($data['taglabels']) {
+        $taglabels = explode(',', $data['taglabels']);
+        $tagcolors = explode(',', $data['tagcolors']);
+        foreach ($taglabels as $tagkey => $taglabel) {
+            $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+        }
+    }
 
     if (!$id) {
         $data['visible'] = 1;
@@ -93,7 +114,8 @@
     $cmsmain->assign('include', 'cms_form.tpl');
     addfield('hidden', '', 'id');
     // put a title above the form
-    $cmsmain->assign('title', 'Box');
+    $cmsmain->assign('peopletitle', 'Box ');
+    // $cmsmain->assign('title', 'Box');
 
     if ($id) {
         addfield('text', 'Box ID', 'box_id', ['readonly' => true, 'width' => 2]);
@@ -135,6 +157,7 @@
     addfield('html', 'Box History', showHistory('stock', $data['id']), ['width' => 10]);
 
     addfield('line', '', '', ['aside' => true]);
+
     addfield('created', 'Created', 'created', ['aside' => true]);
     addformbutton('submitandnew', 'Save and new item');
 
