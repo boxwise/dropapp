@@ -96,12 +96,12 @@
                     $boxesCount = intval($result['boxes_count']);
                     $beneficiariesCount = intval($result['beneficiaries_count']);
 
-                    define('BOX_WARNING', 'Changing the apply to will remove those tags once it has been saved, as there are about '.$boxesCount.' boxes that applied tags');
-                    define('PEOPLE_WARINING', 'Changing the apply to will remove those tags once it has been saved, as there are about '.$beneficiariesCount.' beneficiaries that applied tags');
+                    define('BOX_WARNING', 'WARNING: Changing the tag type will remove '.$boxesCount.' existing tags from boxes.');
+                    define('PEOPLE_WARNING', 'WARNING: Changing the tag type will remove '.$beneficiariesCount.' existing tags that have been applied to beneficiaries.');
 
                     if ('All' === $originType) {
                         if ('Stock' === $selectedType && $beneficiariesCount > 0) {
-                            $message = PEOPLE_WARINING;
+                            $message = PEOPLE_WARNING;
                             $success = false;
                         } elseif ('People' === $selectedType && $boxesCount > 0) {
                             $message = BOX_WARNING;
@@ -114,7 +114,7 @@
                         }
                     } elseif ('People' === $originType) {
                         if ('Stock' === $selectedType && $beneficiariesCount > 0) {
-                            $message = PEOPLE_WARINING;
+                            $message = PEOPLE_WARNING;
                             $success = false;
                         }
                     }
