@@ -146,16 +146,16 @@
             FROM 
                 people 
             LEFT JOIN
-                people_tags ON people_tags.people_id = people.id
+                tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People"
             LEFT JOIN
-                tags ON tags.id = people_tags.tag_id 
+                tags ON tags.id = tags_relations.tag_id 
             WHERE 
                 (people.parent_id = :id OR people.id = :id) AND 
                 NOT people.deleted 
             GROUP BY
                 people.id
             ORDER BY 
-                people.parent_id, people.seq', ['id' => $data['people_id']]);
+                people.parent_id, people.seq, tags.label', ['id' => $data['people_id']]);
         foreach ($data['people'] as $key => $person) {
             if ($data['people'][$key]['taglabels']) {
                 $taglabels = explode(',', $data['people'][$key]['taglabels']);
