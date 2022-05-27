@@ -149,8 +149,7 @@
                             ON tags.id = tags_relations.tag_id 
                                 AND tags_relations.object_id = '.intval($id).' 
                                 AND tags_relations.object_type = "Stock" 
-                    WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","Stock") 
-                    ORDER BY label',
+                    WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","Stock")',
     ]);
     addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id']);
     addfield('line');
