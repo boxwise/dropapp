@@ -5,12 +5,17 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/php:7.4-node-browsers
-      - image: circleci/node:4.8.2
+      - image: cimg/php:7.4-browsers
     working_directory: ~/project
     steps:
       - checkout
-      - run: sudo docker-php-ext-install pdo_mysql exif
+      - run: |
+          php --version
+          node --version
+      - run: sudo apt-get update
+      # dependency needed for gd exentions
+      - run: sudo apt-get -y --no-install-recommends install libfontconfig1 libxrender1 libxext6 zlib1g-dev libpng-dev libfreetype6-dev libjpeg8-dev
+      - run: sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
       # load composer cache
       - restore_cache:
           keys:
