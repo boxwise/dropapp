@@ -491,6 +491,10 @@ $rolesToActions = [
         'create_shipment',
         'send_shipment',
         'cancel_shipment',
+        'receive_shipment',
+        'view_transfer_agreements',
+        'view_shipments',
+        'fill_shipment',
     ],
 
     'warehouse_volunteer' => [
