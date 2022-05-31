@@ -559,7 +559,7 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         $userLevel = (preg_match('/administrator/i', $roleName)) ? 1 : $userLevel;
         $userLevel = (preg_match('/(.*)?volunteer/i', $roleName)) ? 3 : $userLevel;
         $baseRoleName = 'Head of Operations' !== $roleName ? 'Base '.ucwords($baseName)." - {$roleName}" : $roleName;
-        $userGroupIdValue = " (NULL, '{$baseRoleName}', CURRENT_TIME(), ".$_SESSION['user']['id'].", '{$orgId}', '{$userLevel}', NULL) ";
+        $userGroupIdValue = " (NULL, '{$baseRoleName}', CURRENT_TIME(), ".(!empty($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 'NULL').", '{$orgId}', '{$userLevel}', NULL) ";
         // check if usergroup already created in dropapp
         $data = db_row('SELECT * FROM cms_usergroups WHERE label = :label AND organisation_id = :organisationId', ['label' => $baseRoleName, 'organisationId' => $orgId]);
         if (!$data) {
