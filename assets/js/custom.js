@@ -373,11 +373,10 @@ function checkTags(id) {
     let selectedType = $("#field_type").val();
     $.ajax({
         type: "post",
-        url: "/?action=tags&id=" + id,
+        url: "/ajax.php?file=checktag",
         data: {
             type: selectedType,
             id: id,
-            do: 'checktags'
         },
         dataType: "json",
         success: function (result) {
