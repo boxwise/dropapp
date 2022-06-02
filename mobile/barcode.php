@@ -28,8 +28,8 @@
                                 p.name AS product2, g.label AS gender, 
                                 IFNULL(s2.label, "") AS size, 
                                 l.label AS location,
-                                GROUP_CONCAT(tags.label) AS taglabels,
-                                GROUP_CONCAT(tags.color) AS tagcolors 
+                                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors 
                             FROM stock AS s
                                 LEFT OUTER JOIN products AS p ON p.id = s.product_id
                                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id

@@ -21,9 +21,9 @@ Tracer::inSpan(
             initlist();
 
             // Filter
-            $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND type in ("All","People") ORDER BY label', ['camp_id' => $_SESSION['camp']['id']]);
+            $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND type in ("All","People") ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']]);
             if (!empty($tags)) {
-                $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND type in ("All","People")', ['camp_id' => $_SESSION['camp']['id']])];
+                $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND type in ("All","People") ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']])];
                 listsetting('multiplefilter', $tagfilter);
             }
 
@@ -111,8 +111,8 @@ Tracer::inSpan(
             FROM
                 (SELECT
                     people_filtered.*,
-                    GROUP_CONCAT(tags.label) AS taglabels,
-                    GROUP_CONCAT(tags.color) AS tagcolors
+                    GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                    GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
                 FROM
                     (SELECT 
                         IF(people.parent_id,1,0) AS level,

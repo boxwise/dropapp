@@ -33,23 +33,25 @@
                 $savekeys[] = 'laundrycomment';
             }
             $id = $handler->savePost($savekeys, ['parent_id']);
+
+            // edit tags
             db_query('DELETE FROM tags_relations WHERE object_id = :people_id AND object_type = "People"', [':people_id' => $id]);
-
-            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
-
             $params = [];
             $tags = $_POST['tags'];
-            for ($i = 0; $i < sizeof($tags); ++$i) {
-                $query .= "(:tag_id{$i}, 'People', :people_id)";
-                $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
-                if ($i !== sizeof($tags) - 1) {
-                    $query .= ',';
+            if (sizeof($tags) > 0) {
+                $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+
+                for ($i = 0; $i < sizeof($tags); ++$i) {
+                    $query .= "(:tag_id{$i}, 'People', :people_id)";
+                    $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
+                    if ($i !== sizeof($tags) - 1) {
+                        $query .= ',';
+                    }
                 }
+                $params = array_merge($params, ['people_id' => $id]);
+                db_query($query, $params);
             }
-
-            $params = array_merge($params, ['people_id' => $id]);
-            db_query($query, $params);
-
+            // edit other N:N relationships
             $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
             $postid = ($_POST['id'] ? $_POST['id'] : $id);
@@ -93,8 +95,8 @@
         SELECT 
             people.*,
             DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age,
-            GROUP_CONCAT(tags.label) AS taglabels,
-            GROUP_CONCAT(tags.color) AS tagcolors
+            GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+            GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
         FROM 
             people
         LEFT JOIN
@@ -149,8 +151,8 @@
             SELECT 
                 people.*, 
                 DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
-                GROUP_CONCAT(tags.label) AS taglabels,
-                GROUP_CONCAT(tags.color) AS tagcolors
+                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
             FROM 
                 people 
             LEFT JOIN
@@ -214,7 +216,7 @@
         'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);
     addfield('date', 'Date of birth', 'date_of_birth', ['testid' => 'date_of_birth_id', 'tab' => 'people', 'date' => true, 'time' => false]);
     addfield('line', '', '', ['tab' => 'people']);
-    addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(tags_relations.object_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN tags_relations ON tags.id = tags_relations.tag_id AND tags_relations.object_id = '.intval($id).' AND tags_relations.object_type = "People" WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","People") ORDER BY label']);
+    addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(tags_relations.object_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN tags_relations ON tags.id = tags_relations.tag_id AND tags_relations.object_id = '.intval($id).' AND tags_relations.object_type = "People" WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","People") ORDER BY seq']);
     addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
     addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
     addfield('line', '', '', ['tab' => 'people']);
