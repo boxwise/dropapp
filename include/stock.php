@@ -12,21 +12,19 @@ Tracer::inSpan(
 
         if (!$ajax) {
             initlist();
+            listsetting('manualquery', true);
 
-            // Filter
-            $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND `type` IN ("All", "Stock") ORDER BY label', ['camp_id' => $_SESSION['camp']['id']]);
-            if (!empty($tags)) {
-                $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND `type` in ("All","Stock")', ['camp_id' => $_SESSION['camp']['id']])];
-                listsetting('multiplefilter', $tagfilter);
-            }
-
+            //title
             $cmsmain->assign('title', 'Manage Boxes');
+
+            //search box
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
+            //Location filter
             listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
 
+            // Status Filter
             $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND NOT is_scrap AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
-
             $statusarray = [
                 'boxes_in_stock' => 'In Stock',
                 'showall' => 'Everything',
@@ -38,13 +36,6 @@ Tracer::inSpan(
             ];
             $statusarray += (is_null($outgoinglocations) ? [] : $outgoinglocations);
             listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);
-
-            $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
-            listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
-
-            $itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
-            listfilter4(['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
-            listsetting('manualquery', true);
 
             function get_filter2_query($applied_filter, $custom_outgoing_locations)
             {
@@ -78,14 +69,29 @@ Tracer::inSpan(
                     return ' AND l.visible';
             }
             }
-
             $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock'], $outgoinglocations);
+
+            // Gender Filter
+            $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
+            listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
+
+            //Category Filter
+            $itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
+            listfilter4(['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
+
+            // Tag Filter
+            $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND `type` IN ("All", "Stock") ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']]);
+            if (!empty($tags)) {
+                $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND `type` in ("All","Stock") ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']])];
+                listsetting('multiplefilter', $tagfilter);
+            }
+
             // Note for boxage: same day creation gets logged as 0 days
             $query = '
             SELECT
                     stock_filtered.*,
-                    GROUP_CONCAT(tags.label) AS taglabels,
-                    GROUP_CONCAT(tags.color) AS tagcolors
+                    GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                    GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
                 FROM
                     (SELECT 
                             stock.*, 
@@ -121,27 +127,24 @@ Tracer::inSpan(
                             l.deleted IS NULL AND 
                             l.camp_id = '.$_SESSION['camp']['id'].
 
-        ($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '').
+                            ($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '').
 
-        $applied_filter2_query.
+                            $applied_filter2_query.
 
-        ($_SESSION['filter3']['stock'] ? ' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')' : '').
+                            ($_SESSION['filter3']['stock'] ? ' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')' : '').
 
-        ($_SESSION['filter']['stock'] ? ' AND (stock.location_id = '.$_SESSION['filter']['stock'].')' : '').
-        ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : '').
-        // filter for boxes tags
-        ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
-        GROUP BY 
-            stock.id ) AS stock_filtered
-        LEFT JOIN tags_relations 
-                ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock"
-            LEFT JOIN
-                tags 
-                ON tags.id = tags_relations.tag_id 
-                AND tags.deleted IS NULL 
-                AND tags.camp_id = '.$_SESSION['camp']['id'].'
-            GROUP BY
-            stock_filtered.id
+                            ($_SESSION['filter']['stock'] ? ' AND (stock.location_id = '.$_SESSION['filter']['stock'].')' : '').
+                            ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : '').
+                            // filter for boxes tags
+                            ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
+                        GROUP BY 
+                            stock.id ) AS stock_filtered
+                    LEFT JOIN 
+                        tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock"
+                    LEFT JOIN
+                        tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
+                    GROUP BY
+                        stock_filtered.id
             ';
             $data = getlistdata($query);
 

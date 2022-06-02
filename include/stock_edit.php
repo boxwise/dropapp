@@ -31,20 +31,23 @@
             $id = $handler->savePost($savekeys);
 
             db_query('DELETE FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock"', [':stock_id' => $id]);
-            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
 
             $params = [];
             $tags = $_POST['tags'];
-            for ($i = 0; $i < sizeof($tags); ++$i) {
-                $query .= "(:tag_id{$i}, 'Stock', :stock_id)";
-                $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
-                if ($i !== sizeof($tags) - 1) {
-                    $query .= ',';
-                }
-            }
+            if (sizeof($tags) > 0) {
+                $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
 
-            $params = array_merge($params, ['stock_id' => $id]);
-            db_query($query, $params);
+                for ($i = 0; $i < sizeof($tags); ++$i) {
+                    $query .= "(:tag_id{$i}, 'Stock', :stock_id)";
+                    $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
+                    if ($i !== sizeof($tags) - 1) {
+                        $query .= ',';
+                    }
+                }
+
+                $params = array_merge($params, ['stock_id' => $id]);
+                db_query($query, $params);
+            }
 
             return [$id, $newbox];
         });
@@ -68,8 +71,8 @@
                 s.*, 
                 CONCAT(p.name," ",g.label) AS product, 
                 l.label AS location,
-                GROUP_CONCAT(tags.label) AS taglabels,
-                GROUP_CONCAT(tags.color) AS tagcolors
+                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
             FROM stock AS s 
                 LEFT OUTER JOIN products AS p ON p.id = s.product_id 
                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
@@ -86,8 +89,8 @@
                         stock.*, 
                         CONCAT(p.name," ",g.label) AS product, 
                         l.label AS location,
-                        GROUP_CONCAT(tags.label) AS taglabels,
-                        GROUP_CONCAT(tags.color) AS tagcolors
+                        GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                        GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
                     FROM stock 
                         LEFT OUTER JOIN products AS p ON p.id = stock.product_id 
                         LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
