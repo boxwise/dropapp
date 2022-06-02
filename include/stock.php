@@ -190,8 +190,8 @@ Tracer::inSpan(
             addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
             addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
 
-            $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
-            $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '']);
+            $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
+            $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
             foreach ($data as $key => $value) {
                 if ($data[$key]['taglabels']) {
                     $taglabels = explode(',', $data[$key]['taglabels']);
