@@ -148,7 +148,7 @@
             LEFT JOIN
                 tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People"
             LEFT JOIN
-                tags ON tags.id = tags_relations.tag_id 
+                tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
             WHERE 
                 (people.parent_id = :id OR people.id = :id) AND 
                 NOT people.deleted 
