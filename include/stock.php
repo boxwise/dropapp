@@ -267,20 +267,20 @@ Tracer::inSpan(
                 break;
 
             case 'delete':
-                $ids = explode(',', $_POST['ids']);
-                [$success, $message, $redirect] = db_transaction(function () use ($table, $ids) {
-                    list($success, $message, $redirect) = listDelete($table, $ids);
+                $stock_ids = explode(',', $_POST['ids']);
+                [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
+                    list($success, $message, $redirect) = listDelete($table, $stock_ids);
 
                     $params = [];
-                    $query = 'DELETE FROM tags_relations WHERE (`object_id`, `object_type`) IN ';
-                    foreach ($ids as $index => $stock_id) {
-                        $query .= sprintf(" (:object_id_%s, 'Stock') ", $index);
+                    $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (`object_id`) IN ';
+                    foreach ($stock_ids as $index => $stock_id) {
+                        $query .= sprintf(' (:stock_id_%s) ', $index);
 
-                        if (sizeof($ids) - 1 > $index) {
+                        if (sizeof($stock_ids) - 1 !== $index) {
                             $query .= ', ';
                         }
 
-                        $params[] = [sprintf('object_id_%s', $index) => $stock_id];
+                        $params = array_merge($params, ['stock_id_'.$index => $stock_id]);
                     }
                     if (sizeof($params) > 0) {
                         db_query($query, $params);
@@ -288,6 +288,7 @@ Tracer::inSpan(
 
                     return [$success, $message, $redirect];
                 });
+
                 break;
 
             case 'copy':
