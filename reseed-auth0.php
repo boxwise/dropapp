@@ -43,6 +43,7 @@
             // }
             // this will create roles for each base of an organization in auth0 and also corresponding standard usergroups in dropapp
             createRolesForBase($row['id'], $row['label'], $row['base_id'], $row['name'], $rolesToActions, $menusToActions);
+            usleep(200000);
         }
 
         $db_users = db_query('SELECT id FROM cms_users;');
