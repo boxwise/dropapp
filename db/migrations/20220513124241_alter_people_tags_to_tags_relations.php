@@ -11,7 +11,7 @@ class AlterPeopleTagsToTagsRelations extends AbstractMigration
     {
         $table = $this->table('people_tags');
         if ($table) {
-            $table->rename('tags_relations')->update();
+            $table->dropForeignKey('people_id')->rename('tags_relations')->update();
         }
     }
 
@@ -22,7 +22,11 @@ class AlterPeopleTagsToTagsRelations extends AbstractMigration
     {
         $table = $this->table('tags_relations');
         if ($table) {
-            $table->rename('people_tags')->update();
+            $table->rename('people_tags')->addForeignKey('people_id', 'people', 'id', [
+                'delete' => 'CASCADE', 'update' => 'CASCADE',
+            ])
+            ->update()
+            ;
         }
     }
 }
