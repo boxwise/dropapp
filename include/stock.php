@@ -160,6 +160,14 @@ Tracer::inSpan(
                 }
                 ++$totalboxes;
                 $totalitems += $value['items'];
+
+                if ($data[$key]['taglabels']) {
+                    $taglabels = explode(',', $data[$key]['taglabels']);
+                    $tagcolors = explode(',', $data[$key]['tagcolors']);
+                    foreach ($taglabels as $tagkey => $taglabel) {
+                        $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                    }
+                }
             }
 
             addcolumn('text', 'Box ID', 'box_id');
@@ -192,15 +200,7 @@ Tracer::inSpan(
 
             $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
             $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
-            foreach ($data as $key => $value) {
-                if ($data[$key]['taglabels']) {
-                    $taglabels = explode(',', $data[$key]['taglabels']);
-                    $tagcolors = explode(',', $data[$key]['tagcolors']);
-                    foreach ($taglabels as $tagkey => $taglabel) {
-                        $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
-                    }
-                }
-            }
+
             $cmsmain->assign('data', $data);
             $cmsmain->assign('listconfig', $listconfig);
             $cmsmain->assign('listdata', $listdata);
@@ -365,13 +365,20 @@ Tracer::inSpan(
                     $stock_ids = $ids;
                     if (sizeof($stock_ids) > 0) {
                         db_transaction(function () use ($tag_id, $stock_ids) {
-                            $deleteClause = [];
-                            foreach ($stock_ids as $stock_id) {
-                                $deleteClause[] = sprintf('(%d, "%s", %d)', $tag_id, 'Stock', $stock_id);
+                            $query = 'DELETE FROM tags_relations WHERE (tag_id, object_type, `object_id`) IN ';
+
+                            $params = [];
+
+                            for ($i = 0; $i < sizeof($stock_ids); ++$i) {
+                                $query .= "(:tag_id, 'Stock', :stock_id{$i})";
+                                $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
+                                if ($i !== sizeof($stock_ids) - 1) {
+                                    $query .= ',';
+                                }
                             }
-                            if (sizeof($deleteClause) > 0) {
-                                db_query('DELETE FROM tags_relations WHERE (tag_id, object_type, `object_id`) IN ('.join(',', $deleteClause).')');
-                            }
+
+                            $params = array_merge($params, ['tag_id' => $tag_id]);
+                            db_query($query, $params);
                         });
                         $success = true;
                         $message = 'Tags removed';
