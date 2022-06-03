@@ -115,16 +115,21 @@ use OpenCensus\Trace\Tracer;
             case 'realdelete':
                 $ids = explode(',', $_POST['ids']);
                 // Transaction block added over update queries
-                db_transaction(function () use ($ids) {
+                [$success, $message, $redirect] = db_transaction(function () use ($ids, $table) {
                     foreach ($ids as $id) {
                         // unlink transactions
                         db_query('UPDATE transactions SET people_id = NULL WHERE people_id = :id', ['id' => $id]);
                         // unlink parent from children
                         db_query('UPDATE people SET parent_id = NULL WHERE parent_id = :id AND deleted', ['id' => $id]);
+                        // remove tags already assigned to the beneficiary
+                        db_query('DELETE FROM tags_relations WHERE `object_id` = :id AND object_type = "People"', ['id' => $id]);
                     }
+
+                    // Optimized by using bulk inserts and transactions over delete queries
+                    list($success, $message, $redirect) = listBulkRealDelete($table, $ids);
+
+                    return [$success, $message, $redirect];
                 });
-                // Optimized by using bulk inserts and transactions over delete queries
-                list($success, $message, $redirect) = listBulkRealDelete($table, $ids);
                 $redirect = true;
 
                 break;
