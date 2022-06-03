@@ -25,7 +25,7 @@ class AlterPeopleTagsToTagsRelations extends AbstractMigration
             $table->rename('people_tags')->addForeignKey('people_id', 'people', 'id', [
                 'delete' => 'CASCADE', 'update' => 'CASCADE',
             ])
-            ->update()
+                ->update()
             ;
         }
     }
