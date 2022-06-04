@@ -267,20 +267,22 @@ Tracer::inSpan(
                 break;
 
             case 'delete':
-                $ids = explode(',', $_POST['ids']);
-                [$success, $message, $redirect] = db_transaction(function () use ($table, $ids) {
-                    list($success, $message, $redirect) = listDelete($table, $ids);
+                $stock_ids = explode(',', $_POST['ids']);
+                [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
+                    list($success, $message, $redirect) = listDelete($table, $stock_ids);
 
                     $params = [];
-                    $query = 'DELETE FROM tags_relations WHERE (`object_id`, `object_type`) IN ';
-                    foreach ($ids as $index => $stock_id) {
-                        $query .= sprintf(" (:object_id_%s, 'Stock') ", $index);
+                    $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (`object_id`) IN (';
+                    foreach ($stock_ids as $index => $stock_id) {
+                        $query .= sprintf(' (:stock_id_%s) ', $index);
 
-                        if (sizeof($ids) - 1 > $index) {
+                        if (sizeof($stock_ids) - 1 !== $index) {
                             $query .= ', ';
+                        } else {
+                            $query .= ') ';
                         }
 
-                        $params[] = [sprintf('object_id_%s', $index) => $stock_id];
+                        $params = array_merge($params, ['stock_id_'.$index => $stock_id]);
                     }
                     if (sizeof($params) > 0) {
                         db_query($query, $params);
@@ -288,6 +290,7 @@ Tracer::inSpan(
 
                     return [$success, $message, $redirect];
                 });
+
                 break;
 
             case 'copy':
@@ -365,15 +368,17 @@ Tracer::inSpan(
                     $stock_ids = $ids;
                     if (sizeof($stock_ids) > 0) {
                         db_transaction(function () use ($tag_id, $stock_ids) {
-                            $query = 'DELETE FROM tags_relations WHERE (tag_id, object_type, `object_id`) IN ';
+                            $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (tag_id, `object_id`) IN (';
 
                             $params = [];
 
                             for ($i = 0; $i < sizeof($stock_ids); ++$i) {
-                                $query .= "(:tag_id, 'Stock', :stock_id{$i})";
+                                $query .= "(:tag_id, :stock_id{$i})";
                                 $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
                                 if ($i !== sizeof($stock_ids) - 1) {
                                     $query .= ',';
+                                } else {
+                                    $query .= ')';
                                 }
                             }
 
