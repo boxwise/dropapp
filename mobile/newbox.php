@@ -20,6 +20,6 @@
                                     AND tags_relations.object_type = "Stock" 
                             WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","Stock") 
                             GROUP BY tags.id
-                            ORDER BY label');
+                            ORDER BY seq');
     $tpl->assign('box', $box);
     $tpl->assign('include', 'mobile_newbox.tpl');

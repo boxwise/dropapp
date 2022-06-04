@@ -46,7 +46,6 @@
 				{/foreach}
 			</select>
 		</div>
-		{if !$box['box_id']}
 		<div class="form-group">
 			<select name="tags[]" id="tags[]" class="form-control selectsearch" data-testid="tags" multiple {if $data['disabled']}disabled{/if} placeholder="Select tags">
 				{if $data['tags']}
@@ -58,7 +57,6 @@
 				{/if}
 			</select>
 		</div>
-		{/if}
 		<div class="form-group"><input type="number" name="items" pattern="\d*" placeholder="Number of items" value="{$box['items']}" class="form-control" min="0" data-testid="items_count" required></div>
 		<div class="form-group"><input type="text" name="comments" placeholder="Comments for this box" value="{$box['comments']}" data-testid="comments" class="form-control"></div>
 		<input type="submit" name="submitbutton" class="btn" value="Save" data-testid="submit_new_box">

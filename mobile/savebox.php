@@ -25,7 +25,7 @@ if (!$_POST['qr_id']) {
         redirect('?warning=1&message='.$message);
     }
 }
-// add transaction
+// Box creation/update
 [$new, $box, $message] = db_transaction(function () use ($new) {
     $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $_POST['id']]);
 
