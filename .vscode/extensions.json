@@ -4,7 +4,7 @@
 
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
-		"felixfbecker.php-debug",
+		"xdebug.php-debug",
 		"bmewburn.vscode-intelephense-client",
 		"fterrag.vscode-php-cs-fixer"
 	],

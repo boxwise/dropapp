@@ -24,6 +24,7 @@ class ClearDb extends AbstractSeed
         $this->execute('DELETE FROM `cms_usergroups_camps`');
         $this->execute('DELETE FROM `cms_usergroups_functions`');
         $this->execute('DELETE FROM `cms_usergroups_levels`');
+        $this->execute('DELETE FROM `cms_usergroups_roles`');
         $this->execute('DELETE FROM `history`');
         $this->execute('DELETE FROM `languages`');
         $this->execute('DELETE FROM `laundry_appointments`');
