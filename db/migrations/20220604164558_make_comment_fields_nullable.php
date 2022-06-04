@@ -8,13 +8,15 @@ class MakeCommentFieldsNullable extends AbstractMigration
     {
         $stock = $this->table('stock');
         $stock->changeColumn('comments', 'text', ['null' => true])
-              ->update();
+            ->update()
+        ;
     }
 
     public function down()
     {
         $stock = $this->table('stock');
         $stock->changeColumn('comments', 'text', ['null' => false])
-              ->update();
+            ->update()
+        ;
     }
 }

@@ -8,7 +8,8 @@ class RemovePortionColumnInSizes extends AbstractMigration
     {
         $sizes = $this->table('sizes');
         $sizes->removeColumn('portion')
-        ->update();
+            ->update()
+        ;
     }
 
     public function down()

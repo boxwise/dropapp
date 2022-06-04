@@ -8,13 +8,15 @@ class MakeItemsInStockNullable extends AbstractMigration
     {
         $stock = $this->table('stock');
         $stock->changeColumn('items', 'integer', ['null' => true])
-              ->update();
+            ->update()
+        ;
     }
 
     public function down()
     {
         $stock = $this->table('stock');
         $stock->changeColumn('items', 'integer', ['null' => false])
-              ->update();
+            ->update()
+        ;
     }
 }

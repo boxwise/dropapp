@@ -8,9 +8,10 @@ class RemoveUnderscoreColumns extends AbstractMigration
     {
         $stock = $this->table('stock');
         $stock->removeColumn('_type')
-        ->removeColumn('_gender')
-        ->removeColumn('_size')
-        ->update();
+            ->removeColumn('_gender')
+            ->removeColumn('_size')
+            ->update()
+        ;
     }
 
     public function down()
@@ -23,19 +24,19 @@ class RemoveUnderscoreColumns extends AbstractMigration
             'encoding' => 'utf8',
             'after' => 'comments',
         ])
-        ->addColumn('_gender', 'string', [
-            'null' => true,
-            'limit' => 255,
-            'collation' => 'utf8_general_ci',
-            'encoding' => 'utf8',
-            'after' => '_type',
-        ])
-        ->addColumn('_size', 'string', [
-            'null' => true,
-            'limit' => 255,
-            'collation' => 'utf8_general_ci',
-            'encoding' => 'utf8',
-            'after' => '_gender',
-        ])->update();
+            ->addColumn('_gender', 'string', [
+                'null' => true,
+                'limit' => 255,
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
+                'after' => '_type',
+            ])
+            ->addColumn('_size', 'string', [
+                'null' => true,
+                'limit' => 255,
+                'collation' => 'utf8_general_ci',
+                'encoding' => 'utf8',
+                'after' => '_gender',
+            ])->update();
     }
 }
