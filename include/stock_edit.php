@@ -117,7 +117,7 @@
     $cmsmain->assign('include', 'cms_form.tpl');
     addfield('hidden', '', 'id');
     // put a title above the form
-    $cmsmain->assign('peopletitle', 'Box ');
+    $cmsmain->assign('titlewithtags', 'Box ');
     // $cmsmain->assign('title', 'Box');
 
     if ($id) {
