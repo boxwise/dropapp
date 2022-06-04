@@ -679,18 +679,18 @@ function createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRole
     global $settings;
 
     $role = getRolesByName($prefixedRole);
-    usleep(1000);
+    usleep(2000);
     if (null === $role) {
         $role = createRole($prefixedRole);
-        usleep(1000);
+        usleep(2000);
     }
     if (!in_array($roleName, ['administrator'])) {
         updateRole($role['id'], $prefixedRole, $prefixedRoleDescription);
-        usleep(1000);
+        usleep(2000);
         if ($role) {
             $methods = $rolesToActions[$roleName];
             updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
-            usleep(1000);
+            usleep(2000);
         }
     }
 
