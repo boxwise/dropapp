@@ -433,8 +433,6 @@ $rolesToActions = [
         'manage_coordinators',
         'manage_admins',
         'manage_warehouses',
-        'manage_base',
-        'manage_organisation',
         'create_label',
         'view_inventory',
         'manage_inventory',
@@ -446,7 +444,6 @@ $rolesToActions = [
         'manage_tokens',
         'checkout_beneficiaries',
         'view_stockroom',
-        'generate_market_schedule',
         'list_sales',
         'view_beneficiary_graph',
         'view_start_page',
@@ -479,7 +476,6 @@ $rolesToActions = [
         'manage_tokens',
         'checkout_beneficiaries',
         'view_stockroom',
-        'generate_market_schedule',
         'list_sales',
         'view_beneficiary_graph',
         'view_start_page',
@@ -498,7 +494,6 @@ $rolesToActions = [
     ],
 
     'warehouse_volunteer' => [
-        'view_inventory',
         'create_label',
         'view_inventory',
         'manage_inventory',
