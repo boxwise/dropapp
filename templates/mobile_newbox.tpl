@@ -1,7 +1,7 @@
 	<h2 class="page-header">
 	{if $box['id']}Edit box
 	    {if isset($box['taglabels'])}	
-			{foreach $data['tags'] as $tag}
+			{foreach $data['headertags'] as $tag}
 				<span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
 			{/foreach}
     	{/if}
@@ -52,6 +52,7 @@
 					{foreach $data['tags'] as $s}
 						<option 
 							value="{$s['value']}" 
+							{if $s['selected']} selected{/if} 
 						>{$s['label']}</option>
 					{/foreach}
 				{/if}

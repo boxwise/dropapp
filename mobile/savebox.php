@@ -86,9 +86,9 @@ if (!$_POST['qr_id']) {
     $id = $handler->savePost($savekeys);
     // related trello https://trello.com/c/XjNwO3sL
     // add remove tagsand insert the new tags when creating the new box
-    if ($_POST['tags']) {
-        db_query('DELETE FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock"', [':stock_id' => $id]);
+    db_query('DELETE FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock"', [':stock_id' => $id]);
 
+    if ($_POST['tags']) {
         $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
 
         $params = [];

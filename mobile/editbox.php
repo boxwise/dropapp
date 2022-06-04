@@ -2,6 +2,7 @@
 
     // displaying tags on the top of edit box
     // related trello https://trello.com/c/XjNwO3sL
+
     $box = db_row('
         SELECT  s.*, 
                 CONCAT(p.name," ",g.label) AS product, 
@@ -14,7 +15,7 @@
         LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
         LEFT OUTER JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
         LEFT OUTER JOIN tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "Stock" AND tags.deleted IS NULL
-        WHERE s.id = :id', ['id' => $_GET['editbox']]);
+        WHERE s.id = :id ORDER BY tags.seq', ['id' => $_GET['editbox']]);
 
     if (!is_null($box['deleted']) && '0000-00-00 00:00:00' != $box['deleted']) {
         // box is a deleted box
@@ -28,7 +29,11 @@
         $taglabels = explode(',', $box['taglabels']);
         $tagcolors = explode(',', $box['tagcolors']);
         foreach ($taglabels as $tagkey => $taglabel) {
-            $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+            $data['headertags'][$tagkey] = [
+                'label' => $taglabel,
+                'color' => $tagcolors[$tagkey],
+                'textcolor' => get_text_color($tagcolors[$tagkey]),
+            ];
         }
     }
 
@@ -38,6 +43,15 @@
 ', ['product_id' => $box['product_id']]);
 
     $data['allsizes'] = db_array('SELECT s.* FROM sizes AS s, sizegroup AS sg WHERE s.sizegroup_id = sg.id ORDER BY s.seq');
-
+    $data['tags'] = db_query('SELECT 
+                                tags.id AS value, 
+                                tags.label, 
+                                IF(tags_relations.object_id IS NOT NULL, 1,0) AS selected 
+                              FROM tags 
+                                LEFT JOIN tags_relations 
+                                    ON tags.id = tags_relations.tag_id 
+                                        AND tags_relations.object_id = :id
+                                        AND tags_relations.object_type = "Stock" 
+                              WHERE tags.camp_id = :campId AND tags.deleted IS NULL AND tags.type IN ("All","Stock")', ['id' => $_GET['editbox'], 'campId' => $_SESSION['camp']['id']]);
     $tpl->assign('box', $box);
     $tpl->assign('include', 'mobile_newbox.tpl');
