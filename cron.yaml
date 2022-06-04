@@ -27,3 +27,7 @@ cron:
   url: /dailyroutine.php
   target: production
   schedule: every day 00:00
+- description: "ONE-time creation of roles in Auth0 for production "
+  url: /db/auth0/create-auth0-roles-usergroups.php 
+  target: staging
+  schedule: every 99999 hours

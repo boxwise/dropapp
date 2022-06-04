@@ -125,7 +125,8 @@
             WHERE people_id = '.$data['people_id'].' 
             AND t.product_id IS NOT NULL 
             AND CAST(transaction_date as Date)=(SELECT CAST(MAX(transaction_date) as Date) FROM transactions WHERE people_id = '.$data['people_id'].' AND product_id IS NOT NULL)
-            ORDER BY t.transaction_date DESC', 'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($camp['currencyname']), 'tdate' => 'Date'],
+            ORDER BY t.transaction_date DESC',
+            'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($camp['currencyname']), 'user' => 'Transaction made by', 'tdate' => 'Date'],
             'allowedit' => false, 'allowadd' => false, 'allowselect' => true, 'allowselectall' => false, 'action' => 'check_out', 'redirect' => false, 'allowsort' => false, 'listid' => $data['people_id'], ]);
 
         $ajaxform->assign('data', $data);

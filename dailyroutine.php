@@ -71,8 +71,20 @@ if (!isset($settings['installed'])) {
 }
 
 // Test if Auth0 and the users in the DB are in the same state
-$db_users = db_query('SELECT id FROM cms_users;');
+$db_users = db_query('SELECT id, email, deleted FROM cms_users;');
+$index = 0;
+$query = '';
 while ($db_user = db_fetch($db_users)) {
+    $email = $db_user['email'];
+    $email = preg_replace('/\.deleted\.\d+/', '', $email);
+    $query .= '-email:'.$email.' AND ';
+
     isUserInSyncWithAuth0($db_user['id']);
     usleep(500000);
+}
+$query = substr($query, 0, strlen($query) - 4);
+$users = getAllUsers($query);
+
+foreach ($users as $user) {
+    trigger_error('User with id '.$user['user_id'].' exists in Auth0, but not in DB.', E_USER_ERROR);
 }

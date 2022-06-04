@@ -76,7 +76,9 @@ if (isset($oauth_token['refresh_token'])) {
 
 if (isset($oauth_token['id_token'])) {
     $auth0->setIdToken($oauth_token['id_token']);
-    $user = $auth0->decode($oauth_token['id_token'])->toArray();
+    // this is removed to resolve "Nonce (nonce) claim must be a string present in the token"
+    // related to https://sentry.io/organizations/boxwise/issues/2956621368/events/3c27d970d0fc4b9d9672d7ef0d2c3554/
+    //$user = $auth0->decode($oauth_token['id_token'])->toArray();
 }
 
 if (isset($oauth_token['expires_in']) && is_numeric($oauth_token['expires_in'])) {
@@ -89,6 +91,8 @@ if (null === $user || true === $auth0->configuration()->getQueryUserInfo()) {
 
     if (HttpResponse::wasSuccessful($response)) {
         $user = HttpResponse::decodeContent($response);
+    } else {
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 }
 

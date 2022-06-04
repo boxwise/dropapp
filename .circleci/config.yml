@@ -5,12 +5,17 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/php:7.4-node-browsers
-      - image: circleci/node:4.8.2
+      - image: cimg/php:7.4-browsers
     working_directory: ~/project
     steps:
       - checkout
-      - run: sudo docker-php-ext-install pdo_mysql exif
+      - run: |
+          php --version
+          node --version
+      - run: sudo apt-get update
+      # dependency needed for gd exentions
+      - run: sudo apt-get -y --no-install-recommends install libfontconfig1 libxrender1 libxext6 zlib1g-dev libpng-dev libfreetype6-dev libjpeg8-dev
+      - run: sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
       # load composer cache
       - restore_cache:
           keys:
@@ -66,6 +71,9 @@ jobs:
             \$settings['sentry_key'] = '${BOXWISE_SENTRY}';
             \$settings['test_pwd'] = '${CYPRESS_TEST_PWD}';
             \$settings['auth0_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_DOMAIN}';
+            \$settings['auth0_api_id'] = '${<< parameters.envVariablePrefix >>AUTH0_API_ID}';
+            \$settings['auth0_api_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_API_DOMAIN}';
+            \$settings['auth0_api_audience'] = '${<< parameters.envVariablePrefix >>AUTH0_API_AUDIENCE}';
             \$settings['auth0_client_id'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_ID}';
             \$settings['auth0_db_connection_id'] = '${<< parameters.envVariablePrefix >>AUTH0_DB_CONNECTION_ID}';
             \$settings['auth0_client_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_SECRET}';

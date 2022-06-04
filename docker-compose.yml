@@ -18,6 +18,7 @@ services:
       - db_mysql
     volumes:
       - .:/var/www/html/
+      - ./.docker/php/dropapp.conf:/etc/apache2/sites-available/000-default.conf
       - ./.docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ./.docker/php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
     ports:

@@ -14,7 +14,6 @@
         "robmorgan/phinx": "^0.11.1",
         "google/cloud-storage": "^1.12",
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
-        "sentry/sdk": "2.0.4",
         "smarty/smarty": "^3.1",
         "sendgrid/sendgrid": "^7.3",
         "google/cloud-logging": "^1.18",
@@ -27,5 +26,7 @@
         "steampixel/simple-php-router": "^0.7.0",
         "guzzlehttp/guzzle": "^7.3",
         "endroid/qr-code": "^4.4"
+        "sentry/sentry": "^3.4",
+        "php-http/curl-client": "^2.2"
     }
 }

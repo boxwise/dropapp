@@ -19,6 +19,7 @@
             addcolumn('text', 'Function', 'title');
         }
         addcolumn('text', 'Include', 'include');
+        addcolumn('text', 'Action Permissions', 'action_permissions');
 
         listsetting('allowselect', [0 => true, 1 => true]);
         listsetting('allowmovefrom', 0);

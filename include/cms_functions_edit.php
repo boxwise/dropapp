@@ -28,6 +28,10 @@
     addfield('text', $translate['cms_function'], 'title_en', ['required' => true]);
     addfield('text', $translate['cms_function_include'], 'include');
 
+    if (db_fieldexists($table, 'action_permissions')) {
+        addfield('text', 'Action Permissions', 'action_permissions', ['readonly' => true]);
+    }
+
     addfield('checkbox', 'This item is visible in the menu', 'visible');
     addfield('checkbox', 'Only available for gods', 'adminonly');
     addfield('checkbox', 'Available for all camps', 'allcamps');
