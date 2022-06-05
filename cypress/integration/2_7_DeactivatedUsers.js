@@ -1,10 +1,10 @@
 const DELETED_COORDINATOR_NAME = "Deleted Coordinator";
 const DELETED_COORDINATOR_EMAIL = "deleted_coordinator@deleted.co";
-const DELETED_COORDINATOR_ROLE = "TestUserGroup_Coordinator";
+const DELETED_COORDINATOR_ROLE = "Base TestBase - Coordinator";
 const DELETED_COORDINATOR_VALID_FROM = "26 May 2018";
 const DELETED_COORDINATOR_VALID_TO = "26 May 2019";
-const DELETED_USER_ROLE = "TestUserGroup_User";
-const DELETED_ADMIN_ROLE = "TestUserGroup_Admin";
+const DELETED_USER_ROLE = "Base TestBase - Volunteer";
+const DELETED_ADMIN_ROLE = "Head of Operations";
 const DELETED_USER_EMAIL = "deleted@deleted.co";
 const DELETED_USER_NAME = "Deleted User";
 const ARE_YOU_SURE_POPUP = "Are you sure?";

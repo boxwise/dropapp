@@ -40,9 +40,9 @@ class Cypress extends AbstractSeed
 
         //------------------- cms_usergroups
         $this->execute("INSERT INTO `cms_usergroups` (`id`, `label`, `created`, `created_by`, `modified`, `modified_by`, `organisation_id`, `userlevel`, `allow_laundry_startcycle`, `allow_laundry_block`, `allow_borrow_adddelete`, `deleted`) VALUES
-        	(100000000,'TestUserGroup_User','2019-07-10 08:06:53',1,NULL,NULL,100000000,3,0,0,0,NULL),
-        	(100000001,'TestUserGroup_Coordinator','2019-07-10 08:07:15',1,NULL,NULL,100000000,2,0,0,0,NULL),
-        	(100000002,'TestUserGroup_Admin','2019-07-10 08:07:44',1,NULL,NULL,100000000,1,0,0,0,NULL),
+        	(100000000,'Base TestBase - Volunteer','2019-07-10 08:06:53',1,NULL,NULL,100000000,3,0,0,0,NULL),
+        	(100000001,'Base TestBase - Coordinator','2019-07-10 08:07:15',1,NULL,NULL,100000000,2,0,0,0,NULL),
+        	(100000002,'Head of Operations','2019-07-10 08:07:44',1,NULL,NULL,100000000,1,0,0,0,NULL),
 			(100000003,'TestUserGroup_NoPermissions','2019-07-10 08:06:53',1,NULL,NULL,100000000,3,0,0,0,NULL);");
 
         //------------------- cms_usergroups_functions

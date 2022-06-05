@@ -1,6 +1,6 @@
 context("User creation", () => {
     let Testname = "paul";
-    let Testgroup = "TestUserGroup_User";
+    let Testgroup = "Base TestBase - Volunteer";
     let Testaddress = "pauli@pauli.co";
     let Alt_org_name = "Coordinator Bob";
     let Alt_org_mail = "coordinator@coordinator.co";
