@@ -1,33 +1,50 @@
 cron:
-- description: "reseed db staging job"
-  url: /cron/reseed-db.php
+# staging
+- description: "db dailyroutine staging"
+  url: /cron/dailyroutine.php?action=db
   target: staging
   schedule: every day 00:00
-- description: "reseed auth0 staging job"
+- description: "auth0 dailyroutine staging"
+  url: /cron/dailyroutine.php?action=auth0
+  target: staging
+  schedule: every day 00:09
+- description: "db reseed staging"
+  url: /cron/reseed-db.php
+  target: staging
+  schedule: every day 00:18
+- description: "auth0 reseed staging"
   url: /cron/reseed-auth0.php
   target: staging
-  schedule: every day 01:00
-- description: "reseed demo job"
+  schedule: every day 00:27
+
+# demo
+- description: "db dailyroutine demo"
+  url: /cron/dailyroutine.php?action=db
+  target: demo
+  schedule: every day 00:00
+- description: "auth0 dailyroutine demo"
+  url: /cron/dailyroutine.php?action=auth0
+  target: demo
+  schedule: every day 00:09
+- description: "db reseed demo"
   url: /cron/reseed-db.php
   target: demo
   schedule: every 99999 hours
-- description: "reseed auth0 demo job"
+- description: "auth0 reseed demo"
   url: /cron/reseed-auth0.php
   target: demo
   schedule: every 99999 hours
-- description: "dailyroutine staging job"
-  url: /cron/dailyroutine.php
-  target: staging
-  schedule: every day 00:00
-- description: "dailyroutine demo job"
-  url: /cron/dailyroutine.php
-  target: demo
-  schedule: every day 00:00
-- description: "dailyroutine production job"
-  url: /cron/dailyroutine.php
+
+# production
+- description: "db dailyroutine production"
+  url: /cron/dailyroutine.php?action=db
   target: production
   schedule: every day 00:00
-- description: "ONE-time creation of roles in Auth0 for production "
+- description: "auth0 dailyroutine production"
+  url: /cron/dailyroutine.php?action=auth0
+  target: production
+  schedule: every day 00:09
+- description: "ONE-time creation of roles in Auth0 for production"
   url: /cron/create-auth0-roles-usergroups.php 
   target: staging
   schedule: every 99999 hours

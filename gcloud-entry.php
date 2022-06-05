@@ -59,12 +59,12 @@ Tracer::inSpan(
         case '/ajax.php':
         case '/mobile.php':
         case '/cypress-session.php':
-        case '/dailyroutine.php':
         case '/pdf/workshopcard.php':
         case '/pdf/bicyclecard.php':
         case '/pdf/idcard.php':
         case '/pdf/qr.php':
         case '/pdf/dryfood.php':
+        case '/cron/dailyroutine.php':
         case '/cron/reseed-db.php':
         case '/cron/reseed-auth0.php':
         case '/cron/reseed-roles-auth0.php':
