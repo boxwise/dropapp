@@ -8,14 +8,18 @@ cron:
   url: /cron/dailyroutine.php?action=auth0
   target: staging
   schedule: every day 00:09
-- description: "db reseed staging"
-  url: /cron/reseed-db.php
+- description: "db minimal reseed staging"
+  url: /cron/reseed-db.php?seeds=minimal
   target: staging
   schedule: every day 00:18
+- description: "db testing reseed staging"
+  url: /cron/reseed-db.php?seeds=testing
+  target: staging
+  schedule: every day 00:30
 - description: "auth0 reseed staging"
   url: /cron/reseed-auth0.php
   target: staging
-  schedule: every day 00:27
+  schedule: every day 00:45
 
 # demo
 - description: "db dailyroutine demo"
@@ -26,8 +30,12 @@ cron:
   url: /cron/dailyroutine.php?action=auth0
   target: demo
   schedule: every day 00:09
-- description: "db reseed demo"
-  url: /cron/reseed-db.php
+- description: "db minimal reseed demo"
+  url: /cron/reseed-db.php?seeds=minimal
+  target: demo
+  schedule: every 99999 hours
+- description: "db testing reseed demo"
+  url: /cron/reseed-db.php?seeds=testing
   target: demo
   schedule: every 99999 hours
 - description: "auth0 reseed demo"

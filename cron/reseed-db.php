@@ -34,8 +34,13 @@
     // a 500 status so Google will mark the job as failed
     $config = new Config($configArray);
     $manager = new Manager($config, new StringInput(' '), new NullOutput());
-    $manager->seed('current', 'ClearDb');
-    $manager->seed('current', 'Minimal');
-    $manager->seed('current', 'Cypress');
-    $manager->seed('current', 'Demo');
-    $manager->seed('current', 'ActionPermissions');
+
+    if ('minimal' === $_GET['seeds']) {
+        $manager->seed('current', 'ClearDb');
+        $manager->seed('current', 'Minimal');
+        $manager->seed('current', 'Cypress');
+        $manager->seed('current', 'ActionPermissions');
+    }
+    if ('testing' === $_GET['seeds']) {
+        $manager->seed('current', 'Demo');
+    }
