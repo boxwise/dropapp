@@ -13,7 +13,7 @@ $bypassAuthentication = true;
 require_once 'library/core.php';
 // This file is called about one time daily
 
-if ($_GET['action'] === 'db') {
+if ('db' === $_GET['action']) {
     // people that have not been active for a longer time will be deleted(Changed to deactivated in visible text, variables remain under the name deleted, as does the databasse)
     // the amount of days of inactivity is set in the camp table
     $result = db_query('
@@ -72,7 +72,7 @@ if ($_GET['action'] === 'db') {
     }
 }
 
-if ($_GET['action'] === 'auth0') {
+if ('auth0' === $_GET['action']) {
     // Test if Auth0 and the users in the DB are in the same state
     $db_users = db_query('SELECT id, email, deleted FROM cms_users;');
     $index = 0;
