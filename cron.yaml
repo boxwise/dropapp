@@ -1,33 +1,33 @@
 cron:
 - description: "reseed db staging job"
-  url: /reseed-db.php
+  url: /cron/reseed-db.php
   target: staging
   schedule: every day 00:00
 - description: "reseed auth0 staging job"
-  url: /reseed-auth0.php
+  url: /cron/reseed-auth0.php
   target: staging
   schedule: every day 01:00
 - description: "reseed demo job"
-  url: /reseed-db.php
+  url: /cron/reseed-db.php
   target: demo
   schedule: every 99999 hours
 - description: "reseed auth0 demo job"
-  url: /reseed-auth0.php
+  url: /cron/reseed-auth0.php
   target: demo
   schedule: every 99999 hours
 - description: "dailyroutine staging job"
-  url: /dailyroutine.php
+  url: /cron/dailyroutine.php
   target: staging
   schedule: every day 00:00
 - description: "dailyroutine demo job"
-  url: /dailyroutine.php
+  url: /cron/dailyroutine.php
   target: demo
   schedule: every day 00:00
 - description: "dailyroutine production job"
-  url: /dailyroutine.php
+  url: /cron/dailyroutine.php
   target: production
   schedule: every day 00:00
 - description: "ONE-time creation of roles in Auth0 for production "
-  url: /db/auth0/create-auth0-roles-usergroups.php 
+  url: /cron/create-auth0-roles-usergroups.php 
   target: staging
   schedule: every 99999 hours

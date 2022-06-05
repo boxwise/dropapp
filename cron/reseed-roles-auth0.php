@@ -29,10 +29,8 @@
             $currentRole = 'base_'.$row['base_id'].'_'.$roleName;
             $currentRoleDescription = ucwords($row['label']).' - Base '.$row['base_id'].' ('.$row['name'].') - '.ucwords(preg_replace('/\_/', ' ', $roleName));
             $role = getRolesByName($currentRole);
-            usleep(500);
             if (null === $role) {
                 $role = createRole($currentRole);
-                usleep(500);
             }
             updateRole($role['id'], $currentRole, $currentRoleDescription);
 
@@ -45,11 +43,9 @@
                 'auth0_role_id' => $role['id'],
             ];
 
-            usleep(500);
             if ($role) {
                 $methods = $rolesActions[$roleName];
                 $res = updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
-                usleep(500);
             }
         }
     }

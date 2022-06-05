@@ -39,6 +39,5 @@ db_transaction(function () use ($settings, $rolesToActions, $menusToActions) {
     while ($row = db_fetch($result)) {
         // create standard user groups and also roles in auth0
         createRolesForBase($row['id'], $row['label'], $row['base_id'], $row['name'], $rolesToActions, $menusToActions);
-        usleep(500);
     }
 });
