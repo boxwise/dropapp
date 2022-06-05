@@ -42,5 +42,6 @@
         $manager->seed('current', 'ActionPermissions');
     }
     if ('testing' === $_GET['seeds']) {
+        $manager->seed('current', 'DemoUsers');
         $manager->seed('current', 'Demo');
     }
