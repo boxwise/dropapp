@@ -23,11 +23,10 @@
         $cmsmain->assign('title', 'Sizes');
         listsetting('search', ['sizes.label']);
 
-        $data = getlistdata('SELECT sizes.id, sizes.label, g.label AS sizegroup, CONCAT(sizes.portion,"%") AS portion FROM sizes LEFT OUTER JOIN sizegroup AS g ON g.id = sizes.sizegroup_id');
+        $data = getlistdata('SELECT sizes.id, sizes.label, g.label AS sizegroup FROM sizes LEFT OUTER JOIN sizegroup AS g ON g.id = sizes.sizegroup_id');
 
         addcolumn('text', 'Sizes', 'label');
         addcolumn('text', 'Size group', 'sizegroup');
-        addcolumn('text', 'Portion', 'portion');
 
         listsetting('allowsort', false);
         listsetting('allowcopy', true);
