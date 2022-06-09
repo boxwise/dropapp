@@ -1,11 +1,11 @@
 cron:
 # staging
-- description: "db dailyroutine staging"
-  url: /cron/dailyroutine.php?action=db
-  target: staging
-  schedule: every day 00:00
 - description: "auth0 dailyroutine staging"
   url: /cron/dailyroutine.php?action=auth0
+  target: staging
+  schedule: every day 00:00
+- description: "db dailyroutine staging"
+  url: /cron/dailyroutine.php?action=db
   target: staging
   schedule: every day 00:09
 - description: "db minimal reseed staging"
@@ -22,12 +22,12 @@ cron:
   schedule: every day 00:45
 
 # demo
-- description: "db dailyroutine demo"
-  url: /cron/dailyroutine.php?action=db
-  target: demo
-  schedule: every day 00:00
 - description: "auth0 dailyroutine demo"
   url: /cron/dailyroutine.php?action=auth0
+  target: demo
+  schedule: every day 00:00
+- description: "db dailyroutine demo"
+  url: /cron/dailyroutine.php?action=db
   target: demo
   schedule: every day 00:09
 - description: "db minimal reseed demo"
@@ -44,12 +44,12 @@ cron:
   schedule: every 99999 hours
 
 # production
-- description: "db dailyroutine production"
-  url: /cron/dailyroutine.php?action=db
-  target: production
-  schedule: every day 00:00
 - description: "auth0 dailyroutine production"
   url: /cron/dailyroutine.php?action=auth0
+  target: production
+  schedule: every day 00:00
+- description: "db dailyroutine production"
+  url: /cron/dailyroutine.php?action=db
   target: production
   schedule: every day 00:09
 - description: "ONE-time creation of roles in Auth0 for production"
