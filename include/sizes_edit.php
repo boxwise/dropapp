@@ -6,7 +6,7 @@
     if ($_POST) {
         $handler = new formHandler($table);
 
-        $savekeys = ['label', 'sizegroup_id', 'portion'];
+        $savekeys = ['label', 'sizegroup_id'];
         $id = $handler->savePost($savekeys);
 
         redirect('?action='.$_POST['_origin']);
@@ -27,7 +27,6 @@
 
     addfield('text', 'Label', 'label');
     addfield('select', 'Size group', 'sizegroup_id', ['required' => false, 'multiple' => false, 'query' => 'SELECT id AS value, label FROM sizegroup ORDER BY seq']);
-    addfield('number', 'Portion', 'portion', ['tooltip' => 'Fill in the percentage that this size takes in this size group']);
 
     // place the form elements and data in the template
     $cmsmain->assign('data', $data);
