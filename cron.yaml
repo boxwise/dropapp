@@ -53,6 +53,6 @@ cron:
   target: production
   schedule: every day 00:09
 - description: "ONE-time creation of roles in Auth0 for production"
-  url: /cron/create-auth0-roles-usergroups.php 
+  url: /cron/reseed-roles-auth0.php 
   target: staging
   schedule: every 99999 hours
