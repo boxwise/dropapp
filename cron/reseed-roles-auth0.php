@@ -33,7 +33,7 @@ $result = db_query('SELECT
                         c.name
                     FROM camps c INNER JOIN organisations o ON o.id = c.organisation_id
                     WHERE (NOT c.deleted OR c.deleted IS NULL) AND (NOT o.deleted OR o.deleted IS NULL)
-                    ORDER BY o.id, c.id DESC LIMIT 1');
+                    ORDER BY o.id, c.id DESC');
 
 while ($row = db_fetch($result)) {
     foreach ($rolesTemplate as $roleName) {
