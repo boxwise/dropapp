@@ -20,7 +20,7 @@ class DropProductSizegroupIdForeignKey extends AbstractMigration
         if (!$table->hasForeignKey('sizegroup_id')) {
             $table->addForeignKey('sizegroup_id', 'sizegroup', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
-            ])->save();
+            ])->update();
         }
     }
 }

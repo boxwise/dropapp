@@ -20,7 +20,7 @@ class DropProductCategoryIdForeignKey extends AbstractMigration
         if (!$table->hasForeignKey('category_id')) {
             $table->addForeignKey('category_id', 'product_categories', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
-            ])->save();
+            ])->update();
         }
     }
 }
