@@ -20,6 +20,10 @@ cron:
   url: /cron/reseed-auth0.php
   target: staging
   schedule: every day 00:45
+- description: "ONE-time creation of roles in Auth0 for staging"
+  url: /cron/reseed-roles-auth0.php 
+  target: staging
+  schedule: every 99999 hours
 
 # demo
 - description: "auth0 dailyroutine demo"
@@ -42,6 +46,10 @@ cron:
   url: /cron/reseed-auth0.php
   target: demo
   schedule: every 99999 hours
+- description: "ONE-time creation of roles in Auth0 for demo"
+  url: /cron/reseed-roles-auth0.php 
+  target: demo
+  schedule: every 99999 hours
 
 # production
 - description: "auth0 dailyroutine production"
@@ -53,6 +61,6 @@ cron:
   target: production
   schedule: every day 00:09
 - description: "ONE-time creation of roles in Auth0 for production"
-  url: /cron/create-auth0-roles-usergroups.php 
-  target: staging
+  url: /cron/reseed-roles-auth0.php 
+  target: production
   schedule: every 99999 hours
