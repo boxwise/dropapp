@@ -118,15 +118,15 @@ class Cypress extends AbstractSeed
             (100000006,'TestSCRAP',100000000,0,0,0,0,0,1,6);");
 
         //------------------- products
-        $this->execute("INSERT INTO `products` (`id`, `name`, `category_id`, `gender_id`, `sizegroup_id`, `camp_id`, `value`, `amountneeded`, `created`, `created_by`, `modified`, `modified_by`, `maxperadult`, `maxperchild`, `stockincontainer`, `comments`, `deleted`) VALUES
-        	(1158,'Jeans',2,1,5,100000000,50,3,'2019-09-05 13:54:40',1,NULL,NULL,0,0,1,'',NULL),
-        	(1159,'T-Shirts',3,2,1,100000000,30,3,'2019-09-05 13:55:10',1,NULL,NULL,0,0,1,'',NULL),
-        	(1160,'Trainers',5,6,9,100000000,100,3,'2019-09-05 13:55:49',1,NULL,NULL,0,0,1,'',NULL),
-        	(1161,'Sleeping Bag',9,3,7,100000000,100,3,'2019-09-05 13:56:23',1,NULL,NULL,0,0,0,'',NULL),
-        	(1162,'Diapers',8,9,12,100000000,0,3,'2019-09-05 13:56:46',1,NULL,NULL,0,0,0,'',NULL),
-        	(1163,'Shampoo (100ml)',10,10,7,100000000,20,6,'2019-09-05 13:57:31',1,NULL,NULL,0,0,1,'',NULL),
-            (1164,'Rice (1kg)',11,10,7,100000000,25,3,'2019-09-05 13:57:59',1,NULL,NULL,0,0,1,'',NULL),
-            (1165,'DummyProduct',2,1,5,100000001,50,3,'2019-09-05 13:54:40',1,NULL,NULL,0,0,1,'',NULL);");
+        $this->execute("INSERT INTO `products` (`id`, `name`, `category_id`, `gender_id`, `sizegroup_id`, `camp_id`, `value`, `created`, `created_by`, `modified`, `modified_by`, `maxperadult`, `maxperchild`, `stockincontainer`, `comments`, `deleted`) VALUES
+        	(1158,'Jeans',2,1,5,100000000,50,'2019-09-05 13:54:40',1,NULL,NULL,0,0,1,'',NULL),
+        	(1159,'T-Shirts',3,2,1,100000000,30,'2019-09-05 13:55:10',1,NULL,NULL,0,0,1,'',NULL),
+        	(1160,'Trainers',5,6,9,100000000,100,'2019-09-05 13:55:49',1,NULL,NULL,0,0,1,'',NULL),
+        	(1161,'Sleeping Bag',9,3,7,100000000,100,'2019-09-05 13:56:23',1,NULL,NULL,0,0,0,'',NULL),
+        	(1162,'Diapers',8,9,12,100000000,0,'2019-09-05 13:56:46',1,NULL,NULL,0,0,0,'',NULL),
+        	(1163,'Shampoo (100ml)',10,10,7,100000000,20,'2019-09-05 13:57:31',1,NULL,NULL,0,0,1,'',NULL),
+            (1164,'Rice (1kg)',11,10,7,100000000,25,'2019-09-05 13:57:59',1,NULL,NULL,0,0,1,'',NULL),
+            (1165,'DummyProduct',2,1,5,100000001,50,'2019-09-05 13:54:40',1,NULL,NULL,0,0,1,'',NULL);");
 
         //------------------- people
         $this->execute("INSERT INTO `people` (`id`,`firstname`,`lastname`,`camp_id`,`container`,`date_of_birth`,`created`, `approvalsigned`, `signaturefield`, `date_of_signature`, `deleted`) VALUES
