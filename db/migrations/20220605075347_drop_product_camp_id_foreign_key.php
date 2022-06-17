@@ -20,7 +20,7 @@ class DropProductCampIdForeignKey extends AbstractMigration
         if (!$table->hasForeignKey('camp_id')) {
             $table->addForeignKey('camp_id', 'camps', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
-            ])->save();
+            ])->update();
         }
     }
 }
