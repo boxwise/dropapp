@@ -167,8 +167,6 @@ workflows:
         requires:
           - build
         filters:
-          tags:
-            only: /^v.*/
           branches:
             only: production
     - deploy:   # this can only be triggered by a tag
