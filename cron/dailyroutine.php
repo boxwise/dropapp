@@ -3,6 +3,7 @@
 if (!array_key_exists('HTTP_X_APPENGINE_CRON', $_SERVER) && 'dropapp_dev' != $settings['db_database']) {
     throw new Exception('Not called from AppEngine cron service');
 }
+
 $permittedDatabases = ['dropapp_dev', 'dropapp_demo', 'dropapp_staging', 'dropapp_production'];
 if (!in_array($settings['db_database'], $permittedDatabases)) {
     throw new Exception('Not permitting to run dailyroutine for '.$settings['db_database']);
@@ -72,19 +73,31 @@ if ('db' === $_GET['action']) {
     }
 }
 
-if ('auth0' === $_GET['action']) {
+if ('auth0_inactive_users' === $_GET['action'] || 'auth0_active_users' === $_GET['action']) {
     // Test if Auth0 and the users in the DB are in the same state
-    $db_users = db_query('SELECT id, email, deleted FROM cms_users;');
+    if ('auth0_inactive_users' === $_GET['action']) {
+        $query = 'SELECT id FROM cms_users WHERE deleted != 0;';
+    } else {
+        $query = 'SELECT id FROM cms_users WHERE NOT deleted OR deleted = 0;';
+    }
+    $db_users = db_query($query);
+    while ($db_user = db_fetch($db_users)) {
+        isUserInSyncWithAuth0($db_user['id']);
+        usleep(500000);
+    }
+}
+
+if ('auth0_check_synk' === $_GET['action']) {
+    // Test if Auth0 and the users in the DB are in the same state
+    $db_users = db_query('SELECT id, email FROM cms_users;');
     $index = 0;
     $query = '';
     while ($db_user = db_fetch($db_users)) {
         $email = $db_user['email'];
         $email = preg_replace('/\.deleted\.\d+/', '', $email);
         $query .= '-email:'.$email.' AND ';
-
-        isUserInSyncWithAuth0($db_user['id']);
-        usleep(500000);
     }
+
     $query = substr($query, 0, strlen($query) - 4);
     $users = getAllUsers($query);
 

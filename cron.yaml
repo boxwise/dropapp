@@ -1,13 +1,21 @@
 cron:
 # staging
-- description: "auth0 dailyroutine staging"
-  url: /cron/dailyroutine.php?action=auth0
+- description: "auth0 dailyroutine staging - check inactive users"
+  url: /cron/dailyroutine.php?action=auth0_inactive_users
   target: staging
   schedule: every day 00:00
+- description: "auth0 dailyroutine staging - check active users"
+  url: /cron/dailyroutine.php?action=auth0_active_users
+  target: staging
+  schedule: every day 00:10
 - description: "db dailyroutine staging"
   url: /cron/dailyroutine.php?action=db
   target: staging
-  schedule: every day 00:09
+  schedule: every day 00:25
+- description: "auth0 dailyroutine staging - check if auth0 users sync with db"
+  url: /cron/dailyroutine.php?action=auth0_check_synk
+  target: staging
+  schedule: every day 01:00
 - description: "db minimal reseed staging"
   url: /cron/reseed-db.php?seeds=minimal
   target: staging
@@ -26,10 +34,14 @@ cron:
   schedule: every 99999 hours
 
 # demo
-- description: "auth0 dailyroutine demo"
-  url: /cron/dailyroutine.php?action=auth0
+- description: "auth0 dailyroutine demo - check inactive users"
+  url: /cron/dailyroutine.php?action=auth0_inactive_users
   target: demo
   schedule: every day 00:00
+- description: "auth0 dailyroutine demo - check active users"
+  url: /cron/dailyroutine.php?action=auth0_active_users
+  target: demo
+  schedule: every day 00:11
 - description: "db dailyroutine demo"
   url: /cron/dailyroutine.php?action=db
   target: demo
@@ -52,14 +64,22 @@ cron:
   schedule: every 99999 hours
 
 # production
-- description: "auth0 dailyroutine production"
-  url: /cron/dailyroutine.php?action=auth0
+- description: "auth0 dailyroutine production - check inactive users"
+  url: /cron/dailyroutine.php?action=auth0_inactive_users
   target: production
   schedule: every day 00:00
+- description: "auth0 dailyroutine production - check active users"
+  url: /cron/dailyroutine.php?action=auth0_active_users
+  target: production
+  schedule: every day 00:11
 - description: "db dailyroutine production"
   url: /cron/dailyroutine.php?action=db
   target: production
-  schedule: every day 00:09
+  schedule: every day 00:21
+- description: "auth0 dailyroutine production - check if auth0 users sync with db"
+  url: /cron/dailyroutine.php?action=auth0_check_synk
+  target: production
+  schedule: every day 00:31
 - description: "ONE-time creation of roles in Auth0 for production"
   url: /cron/reseed-roles-auth0.php 
   target: production
