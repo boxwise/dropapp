@@ -77,8 +77,8 @@
                 LEFT OUTER JOIN products AS p ON p.id = s.product_id 
                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
                 LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
-                LEFT JOIN tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock"
-                LEFT JOIN tags ON tags.id = tags_relations.tag_id AND deleted IS NULL
+                LEFT JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
+                LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
             WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $_GET['created_id']]);
         $smarty->assign('box', $box);
         $htmlaside = $smarty->fetch('stock_confirm_new.tpl');
