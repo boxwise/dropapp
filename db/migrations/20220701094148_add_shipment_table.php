@@ -31,7 +31,7 @@ class AddShipmentTable extends AbstractMigration
                 'signed' => false,
                 'after' => 'target_base_id',
             ])
-            ->addColumn('status', 'string', [
+            ->addColumn('state', 'string', [
                 'null' => false,
                 'default' => 'Preparing',
                 'limit' => 255,
@@ -39,7 +39,7 @@ class AddShipmentTable extends AbstractMigration
             ])
             ->addColumn('started_on', 'datetime', [
                 'null' => false,
-                'after' => 'status',
+                'after' => 'state',
             ])
             ->addColumn('started_by_id', 'integer', [
                 'null' => false,

@@ -25,9 +25,9 @@ class AddTransferAgreementTable extends AbstractMigration
             ->addColumn('target_organisation_id', 'integer', [
                 'null' => false,
                 'signed' => false,
-                'after' => 'source_base_id',
+                'after' => 'source_organisation_id',
             ])
-            ->addColumn('status', 'string', [
+            ->addColumn('state', 'string', [
                 'null' => false,
                 'default' => 'UnderReview',
                 'limit' => 255,
@@ -36,7 +36,7 @@ class AddTransferAgreementTable extends AbstractMigration
             ->addColumn('type', 'string', [
                 'null' => false,
                 'limit' => 255,
-                'after' => 'status',
+                'after' => 'state',
             ])
             ->addColumn('requested_on', 'datetime', [
                 'null' => false,
