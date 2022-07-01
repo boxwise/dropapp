@@ -74,7 +74,7 @@ class AddTransferAgreementTable extends AbstractMigration
                 'after' => 'valid_from',
             ])
             ->addColumn('comment', 'text', [
-                'null' => false,
+                'null' => true,
                 'after' => 'transfer_agreement_id',
             ])
             ->addForeignKey('source_organisation_id', 'organisations', 'id', [
