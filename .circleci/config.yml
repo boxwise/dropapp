@@ -47,7 +47,7 @@ jobs:
       envVariablePrefix:
         type: string
     docker:
-      - image: circleci/php:7.4-node-browsers
+      - image: cimg/php:7.4-browsers
     steps:
       - attach_workspace:
           at: workspace
