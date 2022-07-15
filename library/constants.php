@@ -514,6 +514,7 @@ $rolesToActions = [
         'view_beneficiary_graph',
         'view_start_page',
         'be_user',
+        'list_sales',
     ],
 
     'library_volunteer' => [
