@@ -27,15 +27,11 @@ dispatch:
 - url: "api-staging.boxtribute.org/*"
   service: api-staging
 ## Demo
-- url: "v2-demo.boxwise.co"
-  service: v2-demo
 - url: "v2-demo.boxtribute.org"
   service: v2-demo
 - url: "api-demo.boxtribute.org/*"
   service: api-demo
 ## Production
-- url: "v2.boxwise.co"
-  service: v2-production
 - url: "v2.boxtribute.org"
   service: v2-production
 - url: "api.boxtribute.org/*"
