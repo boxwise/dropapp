@@ -9,10 +9,7 @@ class DirstroEventsTable extends AbstractMigration
         $distroEvents = $this->table('distro_events', [
             'id' => true,
             'primary_key' => ['id'],
-            'engine' => 'InnoDB',
             'signed' => false,
-            'encoding' => 'utf8mb4',
-            'collation' => 'utf8_general_ci',
             'comment' => '',
             'row_format' => 'DYNAMIC',
         ]);
@@ -74,9 +71,6 @@ class DirstroEventsTable extends AbstractMigration
             ->addIndex(['planned_start_date_time'], ['name' => 'distro_events_planned_start_date_time'])
             ->addIndex(['planned_end_date_time'], ['name' => 'distro_events_planned_end_date_time'])
             ->addIndex(['state'], ['name' => 'distro_events_state'])
-            ->addIndex(['location_id'], ['name' => 'distro_events_location_id'])
-            ->addIndex(['created_by'], ['name' => 'distro_events_created_by'])
-            ->addIndex(['last_modified_by'], ['name' => 'distro_events_last_modified_by'])
             ->create()
         ;
     }

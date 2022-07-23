@@ -9,10 +9,7 @@ class DirstroEventsPackingListEntries extends AbstractMigration
         $distroEventsPackingListEntries = $this->table('distro_events_packing_list_entries', [
             'id' => true,
             'primary_key' => ['id'],
-            'engine' => 'InnoDB',
             'signed' => false,
-            'encoding' => 'utf8mb4',
-            'collation' => 'utf8_general_ci',
             'comment' => '',
             'row_format' => 'DYNAMIC',
         ]);
@@ -74,11 +71,7 @@ class DirstroEventsPackingListEntries extends AbstractMigration
             ->addForeignKey('last_modified_by', 'cms_users', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
-            ->addIndex(['product_id'], ['name' => 'distro_events_packing_list_entries_product_id'])
-            ->addIndex(['size_id'], ['name' => 'distro_events_packing_list_entries_size_id'])
             ->addIndex(['state'], ['name' => 'distro_events_packing_list_entries_state'])
-            ->addIndex(['created_by'], ['name' => 'distro_events_packing_list_entries_created_by'])
-            ->addIndex(['last_modified_by'], ['name' => 'distro_events_packing_list_entries_last_modified_by'])
             ->create()
         ;
     }

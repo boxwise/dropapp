@@ -13,7 +13,6 @@ class AddDistroEventsToStock extends AbstractMigration
             'default' => null,
             'after' => 'location_id',
         ])
-            ->addIndex(['distro_event_id'], ['name' => 'stock_distro_event_id_index', 'unique' => false])
             ->addForeignKey('distro_event_id', 'distro_events', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])->save()

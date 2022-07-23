@@ -91,12 +91,6 @@ class DirstroEventsUnboxedItemCollections extends AbstractMigration
             ->addForeignKey('modified_by', 'cms_users', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
-            ->addIndex(['product_id'], ['name' => 'distro_events_unboxed_item_collections_product_id'])
-            ->addIndex(['size_id'], ['name' => 'distro_events_unboxed_item_collections_size_id'])
-            ->addIndex(['location_id'], ['name' => 'distro_events_unboxed_item_collections_location_id'])
-            ->addIndex(['box_state_id'], ['name' => 'distro_events_unboxed_item_collections_box_state_id'])
-            ->addIndex(['created_by'], ['name' => 'distro_events_unboxed_item_collections_created_by'])
-            ->addIndex(['modified_by'], ['name' => 'distro_events_unboxed_item_collections_modified_by'])
             ->create()
         ;
     }

@@ -9,10 +9,7 @@ class DirstroEventsOutflowLogs extends AbstractMigration
         $distroEventsOutflowLogs = $this->table('distro_events_outflow_logs', [
             'id' => true,
             'primary_key' => ['id'],
-            'engine' => 'InnoDB',
             'signed' => false,
-            'encoding' => 'utf8mb4',
-            'collation' => 'utf8_general_ci',
             'comment' => '',
             'row_format' => 'DYNAMIC',
         ]);
@@ -85,12 +82,7 @@ class DirstroEventsOutflowLogs extends AbstractMigration
             ->addForeignKey('modified_by', 'cms_users', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
-            ->addIndex(['product_id'], ['name' => 'distro_events_outflow_logs_product_id'])
-            ->addIndex(['size_id'], ['name' => 'distro_events_outflow_logs_size_id'])
-            ->addIndex(['location_id'], ['name' => 'distro_events_outflow_logs_location_id'])
             ->addIndex(['date'], ['name' => 'distro_events_outflow_logs_date'])
-            ->addIndex(['created_by'], ['name' => 'distro_events_outflow_logs_created_by'])
-            ->addIndex(['modified_by'], ['name' => 'distro_events_outflow_logs_modified_by'])
             ->create()
         ;
     }
