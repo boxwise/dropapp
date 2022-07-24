@@ -44,28 +44,9 @@ class DirstroEventsOutflowLogs extends AbstractMigration
                 'null' => false,
                 'after' => 'location_id',
             ])
-
             ->addColumn('details', 'text', [
                 'null' => true,
                 'after' => 'date',
-            ])
-            ->addColumn('created_on', 'datetime', [
-                'null' => false,
-                'after' => 'details',
-            ])
-            ->addColumn('created_by', 'integer', [
-                'null' => true,
-                'signed' => false,
-                'after' => 'created_on',
-            ])
-            ->addColumn('modified_on', 'datetime', [
-                'null' => true,
-                'after' => 'created_by',
-            ])
-            ->addColumn('modified_by', 'integer', [
-                'null' => true,
-                'signed' => false,
-                'after' => 'modified_on',
             ])
             ->addForeignKey('distro_event_id', 'distro_events', 'id', [
                 'update' => 'CASCADE', 'delete' => 'RESTRICT',
@@ -79,15 +60,7 @@ class DirstroEventsOutflowLogs extends AbstractMigration
             ->addForeignKey('location_id', 'locations', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
-            ->addForeignKey('created_by', 'cms_users', 'id', [
-                'delete' => 'SET_NULL', 'update' => 'CASCADE',
-            ])
-            ->addForeignKey('modified_by', 'cms_users', 'id', [
-                'delete' => 'SET_NULL', 'update' => 'CASCADE',
-            ])
             ->addIndex(['date'], ['name' => 'distro_events_outflow_logs_date'])
-            ->addIndex(['created_on'], ['name' => 'distro_events_outflow_logs_created_on'])
-            ->addIndex(['modified_on'], ['name' => 'distro_events_outflow_logs_modified_on'])
             ->create()
         ;
     }
