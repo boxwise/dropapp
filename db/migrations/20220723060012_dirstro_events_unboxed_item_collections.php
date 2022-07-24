@@ -9,10 +9,7 @@ class DirstroEventsUnboxedItemCollections extends AbstractMigration
         $distroEventsUnboxedItemCollections = $this->table('distro_events_unboxed_item_collections', [
             'id' => true,
             'primary_key' => ['id'],
-            'engine' => 'InnoDB',
             'signed' => false,
-            'encoding' => 'utf8mb4',
-            'collation' => 'utf8_general_ci',
             'comment' => '',
             'row_format' => 'DYNAMIC',
         ]);
@@ -57,7 +54,7 @@ class DirstroEventsUnboxedItemCollections extends AbstractMigration
                 'after' => 'comments',
             ])
             ->addColumn('created_by', 'integer', [
-                'null' => false,
+                'null' => true,
                 'signed' => false,
                 'after' => 'created_on',
             ])
@@ -86,11 +83,13 @@ class DirstroEventsUnboxedItemCollections extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->addForeignKey('created_by', 'cms_users', 'id', [
-                'update' => 'CASCADE',
+                'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
             ->addForeignKey('modified_by', 'cms_users', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
+            ->addIndex(['created_on'], ['name' => 'distro_events_unboxed_item_collections_created_on'])
+            ->addIndex(['modified_on'], ['name' => 'distro_events_unboxed_item_collections_modified_on'])
             ->create()
         ;
     }

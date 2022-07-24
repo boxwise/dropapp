@@ -43,18 +43,18 @@ class DirstroEventsPackingListEntries extends AbstractMigration
                 'after' => 'state',
             ])
             ->addColumn('created_by', 'integer', [
-                'null' => false,
+                'null' => true,
                 'signed' => false,
                 'after' => 'created_on',
             ])
-            ->addColumn('last_modified_on', 'datetime', [
+            ->addColumn('modified_on', 'datetime', [
                 'null' => true,
                 'after' => 'created_by',
             ])
-            ->addColumn('last_modified_by', 'integer', [
+            ->addColumn('modified_by', 'integer', [
                 'null' => true,
                 'signed' => false,
-                'after' => 'last_modified_on',
+                'after' => 'modified_on',
             ])
             ->addForeignKey('distro_event_id', 'distro_events', 'id', [
                 'update' => 'CASCADE',
@@ -66,12 +66,14 @@ class DirstroEventsPackingListEntries extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->addForeignKey('created_by', 'cms_users', 'id', [
-                'update' => 'CASCADE',
+                'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
-            ->addForeignKey('last_modified_by', 'cms_users', 'id', [
+            ->addForeignKey('modified_by', 'cms_users', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
             ->addIndex(['state'], ['name' => 'distro_events_packing_list_entries_state'])
+            ->addIndex(['created_on'], ['name' => 'distro_events_packing_list_entries_created_on'])
+            ->addIndex(['modified_on'], ['name' => 'distro_events_packing_list_entries_modified_on'])
             ->create()
         ;
     }

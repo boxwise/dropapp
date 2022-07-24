@@ -51,7 +51,7 @@ class DirstroEventsOutflowLogs extends AbstractMigration
                 'after' => 'details',
             ])
             ->addColumn('created_by', 'integer', [
-                'null' => false,
+                'null' => true,
                 'signed' => false,
                 'after' => 'created_on',
             ])
@@ -77,12 +77,14 @@ class DirstroEventsOutflowLogs extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->addForeignKey('created_by', 'cms_users', 'id', [
-                'update' => 'CASCADE',
+                'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
             ->addForeignKey('modified_by', 'cms_users', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
             ->addIndex(['date'], ['name' => 'distro_events_outflow_logs_date'])
+            ->addIndex(['created_on'], ['name' => 'distro_events_outflow_logs_created_on'])
+            ->addIndex(['modified_on'], ['name' => 'distro_events_outflow_logs_modified_on'])
             ->create()
         ;
     }

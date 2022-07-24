@@ -42,7 +42,7 @@ class DirstroEventsTable extends AbstractMigration
                 'after' => 'state',
             ])
             ->addColumn('created_by', 'integer', [
-                'null' => false,
+                'null' => true,
                 'signed' => false,
                 'after' => 'created_on',
             ])
@@ -50,27 +50,30 @@ class DirstroEventsTable extends AbstractMigration
                 'null' => true,
                 'after' => 'created_by',
             ])
-            ->addColumn('last_modified_on', 'datetime', [
+            ->addColumn('modified_on', 'datetime', [
                 'null' => true,
                 'after' => 'deleted_on',
             ])
-            ->addColumn('last_modified_by', 'integer', [
+            ->addColumn('modified_by', 'integer', [
                 'null' => true,
                 'signed' => false,
-                'after' => 'last_modified_on',
+                'after' => 'modified_on',
             ])
             ->addForeignKey('location_id', 'locations', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->addForeignKey('created_by', 'cms_users', 'id', [
-                'update' => 'CASCADE',
+                'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
-            ->addForeignKey('last_modified_by', 'cms_users', 'id', [
+            ->addForeignKey('modified_by', 'cms_users', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
             ->addIndex(['planned_start_date_time'], ['name' => 'distro_events_planned_start_date_time'])
             ->addIndex(['planned_end_date_time'], ['name' => 'distro_events_planned_end_date_time'])
             ->addIndex(['state'], ['name' => 'distro_events_state'])
+            ->addIndex(['modified_on'], ['name' => 'distro_events_modified_on'])
+            ->addIndex(['created_on'], ['name' => 'distro_events_created_on'])
+            ->addIndex(['deleted_on'], ['name' => 'distro_events_deleted_on'])
             ->create()
         ;
     }
