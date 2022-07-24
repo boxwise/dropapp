@@ -71,7 +71,7 @@ class DirstroEventsUnboxedItemCollections extends AbstractMigration
                 'after' => 'modified_on',
             ])
             ->addForeignKey('distro_event_id', 'distro_events', 'id', [
-                'update' => 'CASCADE',
+                'update' => 'CASCADE', 'delete' => 'RESTRICT',
             ])
             ->addForeignKey('product_id', 'products', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
