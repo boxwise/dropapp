@@ -9,7 +9,10 @@ class DirstroEventsTable extends AbstractMigration
         $distroEvents = $this->table('distro_events', [
             'id' => true,
             'primary_key' => ['id'],
+            'engine' => 'InnoDB',
             'signed' => false,
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
             'comment' => '',
             'row_format' => 'DYNAMIC',
         ]);

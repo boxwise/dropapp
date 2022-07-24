@@ -9,7 +9,10 @@ class DirstroEventsOutflowLogs extends AbstractMigration
         $distroEventsOutflowLogs = $this->table('distro_events_outflow_logs', [
             'id' => true,
             'primary_key' => ['id'],
+            'engine' => 'InnoDB',
             'signed' => false,
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
             'comment' => '',
             'row_format' => 'DYNAMIC',
         ]);

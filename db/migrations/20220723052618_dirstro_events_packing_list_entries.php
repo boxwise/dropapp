@@ -9,7 +9,10 @@ class DirstroEventsPackingListEntries extends AbstractMigration
         $distroEventsPackingListEntries = $this->table('distro_events_packing_list_entries', [
             'id' => true,
             'primary_key' => ['id'],
+            'engine' => 'InnoDB',
             'signed' => false,
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
             'comment' => '',
             'row_format' => 'DYNAMIC',
         ]);

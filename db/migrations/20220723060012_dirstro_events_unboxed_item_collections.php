@@ -9,7 +9,10 @@ class DirstroEventsUnboxedItemCollections extends AbstractMigration
         $distroEventsUnboxedItemCollections = $this->table('distro_events_unboxed_item_collections', [
             'id' => true,
             'primary_key' => ['id'],
+            'engine' => 'InnoDB',
             'signed' => false,
+            'encoding' => 'utf8',
+            'collation' => 'utf8_general_ci',
             'comment' => '',
             'row_format' => 'DYNAMIC',
         ]);
