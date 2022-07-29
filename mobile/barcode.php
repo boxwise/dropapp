@@ -39,7 +39,7 @@
                                 LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
                                 LEFT OUTER JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
                                 LEFT OUTER JOIN tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "Stock" AND tags.deleted IS NULL
-                            WHERE s.id = :id', ['id' => $_GET['boxid']]);
+                            WHERE l.type = "Warehouse" AND s.id = :id', ['id' => $_GET['boxid']]);
 
             if ($box['taglabels']) {
                 $taglabels = explode(',', $box['taglabels']);
@@ -58,7 +58,7 @@
                 LEFT OUTER JOIN locations AS l ON l.id = s.location_id
                 LEFT OUTER JOIN qr AS q ON q.id = s.qr_id
                 LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
-                WHERE q.id = :qrid', ['qrid' => $qr_id]);
+                WHERE l.type = "Warehouse" AND q.id = :qrid', ['qrid' => $qr_id]);
         }
 
         if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {
@@ -73,10 +73,10 @@
             // Box is not deleted and belongs to your base
             if ($box['id']) {
                 // box is not empty
-                $orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', ['camp' => $_SESSION['camp']['id']]);
+                $orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND l.type = "Warehouse" AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', ['camp' => $_SESSION['camp']['id']]);
                 $tpl->assign('orders', $orders);
 
-                $locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE deleted IS NULL AND camp_id = :camp_id ORDER BY seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
+                $locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE deleted IS NULL AND camp_id = :camp_id AND type = "Warehouse" ORDER BY seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
                 $history = showHistory('stock', $box['id']);
                 $tpl->assign('box', $box);
                 $tpl->assign('history', $history);

@@ -6,7 +6,7 @@
         LEFT OUTER JOIN products AS p ON p.id = s.product_id 
         LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
         LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
-        WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :box_id', ['box_id' => $_GET['saveamount']]);
+        WHERE l.type = "Warehouse" AND (NOT s.deleted OR s.deleted IS NULL) AND s.id = :box_id', ['box_id' => $_GET['saveamount']]);
 
     $newitems = max(0, $box['items'] - intval($_GET['items']));
 

@@ -45,7 +45,7 @@ if (!$_SESSION['camp']['id']) {
         throw new Exception('You don\'t have access to this base. Ask your coordinator to correct this!', 403);
         //$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
     }
-} elseif (!db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' LIMIT 1 ')) {
+} elseif (!db_value('SELECT id FROM locations WHERE locations.type = "Warehouse" AND locations.camp_id = '.intval($_SESSION['camp']['id']).' LIMIT 1 ')) {
     redirect('/?action=start');
 } else { // --------------- All routing happens here
     // Boxlabel is scanned

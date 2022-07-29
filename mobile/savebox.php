@@ -64,6 +64,7 @@ if (!$_POST['qr_id']) {
                         LEFT JOIN 
                             organisations o ON o.id=b.organisation_id
                         WHERE 
+                            l.type = "Warehouse" AND
                             s.id = :id',
             ['id' => $_POST['id']]
         );
@@ -109,7 +110,7 @@ if (!$_POST['qr_id']) {
     if ($new) {
         simpleSaveChangeHistory('qr', $_POST['qr_id'], 'QR code associated to box.', [], ['int' => $id]);
     }
-    $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id', ['id' => $id]);
+    $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE l.type = "Warehouse" AND s.id = :id', ['id' => $id]);
 
     return [$new, $box, $message];
 });
