@@ -15,7 +15,7 @@
             ($product ? ', '.$productname : '').
             ($gender ? ', '.db_value('SELECT label FROM genders WHERE id = :id', ['id' => $gender]) : '').
             ($size ? ', '.db_value('SELECT label FROM sizes WHERE id = :id', ['id' => $size]) : '').
-            ($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND (NOT deleted OR deleted IS NULL)', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']]) : ''));
+            ($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse" AND (NOT deleted OR deleted IS NULL)', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']]) : ''));
 
         $data = getlistdata('
         	SELECT
@@ -39,6 +39,7 @@
             WHERE
                 p.category_id = pc.id AND 
         		l.camp_id = '.$_SESSION['camp']['id'].' AND
+                l.type = "Warehouse" AND
         		stock.size_id = s.id AND
         		p.gender_id = g.id AND
                 stock.product_id = p.id AND 
@@ -78,7 +79,7 @@
         listsetting('allowselect', true);
         listsetting('allowselectinvisible', true);
 
-        $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+        $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
         addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
         addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
         addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);

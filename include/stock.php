@@ -21,10 +21,10 @@ Tracer::inSpan(
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
             //Location filter
-            listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq', 'filter' => 'l.id']);
+            listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
 
             // Status Filter
-            $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND NOT is_scrap AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+            $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND NOT is_scrap AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
             $statusarray = [
                 'boxes_in_stock' => 'In Stock',
                 'showall' => 'Everything',
@@ -124,6 +124,7 @@ Tracer::inSpan(
                             sizes AS s ON s.id = stock.size_id
                         WHERE 
                             (NOT stock.deleted OR stock.deleted IS NULL) AND 
+                            l.type = "Warehouse" AND
                             l.deleted IS NULL AND 
                             l.camp_id = '.$_SESSION['camp']['id'].
 
@@ -187,7 +188,7 @@ Tracer::inSpan(
             listsetting('allowcopy', false);
             listsetting('add', 'Add');
 
-            $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+            $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
             addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
             if (!empty($tags)) {
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);

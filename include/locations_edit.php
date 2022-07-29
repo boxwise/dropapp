@@ -19,7 +19,7 @@
         redirect('?action='.$_POST['_origin']);
     }
 
-    $data = db_row('SELECT *, NOT visible as outgoing FROM '.$table.' WHERE id = :id', ['id' => $id]);
+    $data = db_row('SELECT *, NOT visible as outgoing FROM '.$table.' WHERE type = "Warehouse" AND id = :id', ['id' => $id]);
 
     if (!$id) {
         $data = db_defaults($table);

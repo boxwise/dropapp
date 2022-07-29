@@ -8,7 +8,7 @@
         $cmsmain->assign('title', 'Products');
         listsetting('search', ['name', 'g.label', 'products.comments']);
 
-        $locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]));
+        $locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND deleted IS NULL AND camp_id = :camp_id AND type = "Warehouse"', ['camp_id' => $_SESSION['camp']['id']]));
         if (!$locations) {
             $locations = 0;
         }
@@ -26,14 +26,14 @@
         addcolumn('text', 'Product name', 'name');
         addcolumn('text', 'Gender', 'gender');
         addcolumn('text', 'Sizegroup', 'sizegroup');
-        if (db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND visible LIMIT 1 ')) {
+        if (db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND visible AND type = "Warehouse" LIMIT 1 ')) {
             addcolumn('text', 'Items', 'items');
         }
         if ($_SESSION['camp']['market']) {
             addcolumn('text', ucfirst($_SESSION['camp']['currencyname']), 'drops');
         }
         addcolumn('text', 'Description', 'comments');
-        if (db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock ') || $_SESSION['camp']['separateshopandwhproducts']) {
+        if (db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock AND type = "Warehouse"') || $_SESSION['camp']['separateshopandwhproducts']) {
             addcolumn('toggle', 'In Shop?', 'stockincontainer', ['do' => 'togglecontainer']);
         }
 

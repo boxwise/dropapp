@@ -16,9 +16,10 @@
         listsetting('search', ['locations.label']);
 
         if (!$is_admin) {
-            $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount,0 as level
+            $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,0 as level
             FROM locations
             WHERE deleted IS NULL
+            AND type = "Warehouse"
             AND container_stock != 1
             AND is_market != 1
             AND is_donated != 1
@@ -26,9 +27,9 @@
             AND is_scrap != 1
             AND camp_id = '.$_SESSION['camp']['id']);
         } else {
-            $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND NOT deleted) AS boxcount,0 as level 
+            $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,0 as level 
             FROM locations 
-            WHERE deleted IS NULL 
+            WHERE deleted IS NULL AND type = "Warehouse"
             AND camp_id = '.$_SESSION['camp']['id']);
         }
 

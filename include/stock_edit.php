@@ -79,7 +79,7 @@
                 LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
                 LEFT JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
                 LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
-            WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $_GET['created_id']]);
+            WHERE l.type = "Warehouse" AND (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $_GET['created_id']]);
         $smarty->assign('box', $box);
         $htmlaside = $smarty->fetch('stock_confirm_new.tpl');
         addfield('html', '', $htmlaside);
@@ -97,7 +97,7 @@
                         LEFT OUTER JOIN locations AS l ON l.id = stock.location_id 
                         LEFT JOIN tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock"
                         LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
-                    WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
+                    WHERE l.type = "Warehouse" AND (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
 
     verify_campaccess_location($data['location_id']);
 
@@ -131,7 +131,7 @@
 
     addfield('number', 'Items', 'items', ['testid' => 'items_id']);
 
-    addfield('select', 'Location', 'location_id', ['required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq']);
+    addfield('select', 'Location', 'location_id', ['required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse"  ORDER BY seq']);
 
     if ($data['qr_id']) {
         $qr = db_row('SELECT code, legacy FROM qr WHERE id = :id', ['id' => $data['qr_id']]);

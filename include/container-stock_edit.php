@@ -36,6 +36,7 @@
 			LEFT OUTER JOIN cms_users AS cu ON cu.id = stock.ordered_by
 			LEFT OUTER JOIN cms_users AS cu2 ON cu2.id = stock.picked_by
 			WHERE 
+                l.type = "Warehouse" AND
 				l.camp_id = c.id AND 
 				stock.size_id = s.id AND 
 				p.gender_id = g.id AND 
@@ -75,7 +76,7 @@
         listsetting('allowselect', true);
         listsetting('allowselectinvisible', false);
 
-        $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+        $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND type = "Warehouse" AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
         addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
         addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
         addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
