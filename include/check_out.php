@@ -141,14 +141,14 @@
             SELECT 
                 people.*, 
                 DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
-                GROUP_CONCAT(tags.label) AS taglabels,
-                GROUP_CONCAT(tags.color) AS tagcolors
+                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
             FROM 
                 people 
             LEFT JOIN
-                people_tags ON people_tags.people_id = people.id
+                tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People"
             LEFT JOIN
-                tags ON tags.id = people_tags.tag_id 
+                tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
             WHERE 
                 (people.parent_id = :id OR people.id = :id) AND 
                 NOT people.deleted 

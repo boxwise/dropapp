@@ -1,4 +1,4 @@
-{$peopletitle nofilter}
+{$titlewithtags nofilter}
 <span style="text-transform:none;">
     {if isset($data['age'])}
         ({$data['age']} yr{if isset($data['gender'])}, {$data['gender']}{/if})

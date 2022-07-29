@@ -14,6 +14,9 @@ require_once 'library/lib/smarty.php';
 
 require_once 'library/lib/errorhandling.php';
 
+// load global constants
+require_once 'library/constants.php';
+
 // The GAE environment requires a single entry point, so we're
 // doing basic routing from here
 use OpenCensus\Trace\Tracer;
@@ -39,6 +42,7 @@ Tracer::inSpan(
         // ideally we wouldn't be using globals at all, but that's for another day :)
         global $settings,$translate,$action,$lan,$pdf,$_txt,$formbuttons;
         global $error,$listdata,$data,$table,$listconfig,$thisfile,$formdata;
+        global $rolesToActions, $menusToActions;
 
         switch ($parsedUrl) {
         case '/':
@@ -55,15 +59,15 @@ Tracer::inSpan(
         case '/ajax.php':
         case '/mobile.php':
         case '/cypress-session.php':
-        case '/dailyroutine.php':
         case '/pdf/workshopcard.php':
         case '/pdf/bicyclecard.php':
         case '/pdf/idcard.php':
         case '/pdf/qr.php':
         case '/pdf/dryfood.php':
-        case '/reseed-db.php':
-        case '/reseed-auth0.php':
-        case '/reseed-roles-auth0.php':
+        case '/cron/dailyroutine.php':
+        case '/cron/reseed-db.php':
+        case '/cron/reseed-auth0.php':
+        case '/cron/reseed-roles-auth0.php':
         case '/fake-error.php':
             require substr($parsedUrl, 1); // trim /
 

@@ -1,31 +1,30 @@
 <?php
 
-    require_once 'library/constants.php';
-
     $table = 'organisations';
     $action = 'organisations_edit';
 
     if ($_POST) {
-        $organisation_is_new = !$id;
+        db_transaction(function () use ($id, $table, $rolesToActions, $menusToActions) {
+            $organisation_is_new = !$id;
 
-        $orgName = $_POST['label'];
-        $baseName = $_POST['base'];
+            $orgName = $_POST['label'];
+            $baseName = $_POST['base'];
 
-        $org_handler = new formHandler($table);
-        $savekeys = ['label'];
-        $id = $org_handler->savePost($savekeys);
+            $org_handler = new formHandler($table);
+            $savekeys = ['label'];
+            $id = $org_handler->savePost($savekeys);
 
-        if ($organisation_is_new) {
-            $_POST = ['organisation_id' => $id, 'name' => $_POST['base']];
-            $base_handler = new formHandler('camps');
-            $savekeys = ['name', 'organisation_id'];
-            $baseId = $base_handler->savePost($savekeys);
+            if ($organisation_is_new) {
+                $_POST = ['organisation_id' => $id, 'name' => $_POST['base']];
+                $base_handler = new formHandler('camps');
+                $savekeys = ['name', 'organisation_id'];
+                $baseId = $base_handler->savePost($savekeys);
 
-            // create required roles in dropapp and auth0
+                // create required roles in dropapp and auth0
 
-            createRolesForBase($id, $orgName, $baseId, $baseName, $rolesToActions, $menusToActions);
-        }
-
+                createRolesForBase($id, $orgName, $baseId, $baseName, $rolesToActions, $menusToActions);
+            }
+        });
         redirect('?action='.$_POST['_origin']);
     }
 

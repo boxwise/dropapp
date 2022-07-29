@@ -38,7 +38,8 @@ class ClearDb extends AbstractSeed
         $this->execute('DELETE FROM `log`');
         $this->execute('DELETE FROM `numbers`');
         $this->execute('DELETE FROM `people`');
-        $this->execute('DELETE FROM `people_tags`');
+        // $this->execute('DELETE FROM `people_tags`');
+        $this->execute('DELETE FROM `tags_relations`');
         $this->execute('DELETE FROM `products`');
         $this->execute('DELETE FROM `product_categories`');
         $this->execute('DELETE FROM `camps`');

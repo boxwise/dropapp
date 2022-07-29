@@ -1,7 +1,5 @@
 <?php
 
-    require_once 'library/constants.php';
-
     $table = 'camps';
     $action = 'camps_edit';
 
@@ -20,9 +18,9 @@
                 updateRolesForBase($id, $baseName);
             }
             $_SESSION['camp'] = getcampdata($_SESSION['camp']['id']);
-
-            redirect('?action='.$_POST['_origin']);
         });
+
+        redirect('?action='.$_POST['_origin']);
     }
 
     $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);

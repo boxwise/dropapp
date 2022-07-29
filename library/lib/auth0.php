@@ -151,7 +151,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
             throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
         }
     } elseif (200 !== $response->getStatusCode()) {
-        throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 
     // set user roles in auth0
@@ -163,7 +163,6 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
             WHERE 
                 ugr.cms_usergroups_id=:userGroupsId', ['userGroupsId' => $dbUserData['cms_usergroups_id']]);
 
-    usleep(1000);
     // assign user roles into auth0
     $roles = [];
     foreach ($dbUserRoles as $role) {
@@ -300,6 +299,8 @@ function getAuth0UserByEmail($email)
             if (HttpResponse::wasSuccessful($response)) {
                 return HttpResponse::decodeContent($response);
             }
+
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
         } catch (Auth0Exception $e) {
             // user doesn't exist in auth0
             if (404 == $e->getCode()) {
@@ -317,56 +318,47 @@ function getAuth0UserByEmail($email)
  */
 function getAuth0User($userId)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        $response = $mgmtAPI->users()->get('auth0|'.intval($userId));
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $response = $mgmtAPI->users()->get('auth0|'.intval($userId));
 
-        if (HttpResponse::wasSuccessful($response)) {
-            return HttpResponse::decodeContent($response);
-        }
-    } catch (Auth0Exception $e) {
-        // user doesn't exist in auth0
-        if (404 == $e->getCode()) {
-            return null;
-        }
-
-        throw new Exception($e->getMessage(), $e->getCode());
+    if (HttpResponse::wasSuccessful($response)) {
+        return HttpResponse::decodeContent($response);
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Getting roles by base ids.
  */
 function getRolesByBaseIds(array $baseIds)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $roles = [];
+    $roles = [];
 
-        foreach ($baseIds as $baseId) {
-            $body = [
-                'name_filter' => "base_{$baseId}_",
-            ];
+    foreach ($baseIds as $baseId) {
+        $body = [
+            'name_filter' => "base_{$baseId}_",
+        ];
 
-            $response = $mgmtAPI->roles()->getAll($body);
+        $response = $mgmtAPI->roles()->getAll($body);
 
-            if (HttpResponse::wasSuccessful($response)) {
-                $res = HttpResponse::decodeContent($response);
-                foreach ($res as $role) {
-                    if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', $role['name'])) {
-                        array_push($roles, $role);
-                    }
+        if (HttpResponse::wasSuccessful($response)) {
+            $res = HttpResponse::decodeContent($response);
+            foreach ($res as $role) {
+                if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', $role['name'])) {
+                    array_push($roles, $role);
                 }
             }
-            usleep(5000);
+            usleep(2000);
+        } else {
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
         }
-
-        return $roles;
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
     }
+
+    return $roles;
 }
 /**
  * Getting roles by name.
@@ -375,24 +367,22 @@ function getRolesByBaseIds(array $baseIds)
  */
 function getRolesByName($roleName)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $body = [
-            'name_filter' => $roleName,
-        ];
+    $body = [
+        'name_filter' => $roleName,
+    ];
 
-        $response = $mgmtAPI->roles()->getAll($body);
+    $response = $mgmtAPI->roles()->getAll($body);
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-            return $res[0] ?? null;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res[0] ?? null;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Create Role.
@@ -401,19 +391,17 @@ function getRolesByName($roleName)
  */
 function createRole($roleName)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        $response = $mgmtAPI->roles()->create($roleName);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $response = $mgmtAPI->roles()->create($roleName);
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Update role in Auth0.
@@ -424,22 +412,20 @@ function createRole($roleName)
  */
 function updateRole($roleId, $roleName, $roleDescription)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        $response = $mgmtAPI->roles()->update($roleId, [
-            'name' => $roleName,
-            'description' => $roleDescription,
-        ]);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $response = $mgmtAPI->roles()->update($roleId, [
+        'name' => $roleName,
+        'description' => $roleDescription,
+    ]);
+    // https://auth0.com/docs/api/management/v2#!/Roles/post_roles
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Update role permissions.
@@ -450,49 +436,44 @@ function updateRole($roleId, $roleName, $roleDescription)
  */
 function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $permissions = [];
+    $permissions = [];
 
-        foreach ($methods as $method) {
-            $permissions[] = [
-                'resource_server_identifier' => $resourseServerIdentifier,
-                'permission_name' => $method,
-            ];
-        }
-
-        $response = $mgmtAPI->roles()->addPermissions($roleId, $permissions);
-
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+    foreach ($methods as $method) {
+        $permissions[] = [
+            'resource_server_identifier' => $resourseServerIdentifier,
+            'permission_name' => $method,
+        ];
     }
+    $response = $mgmtAPI->roles()->addPermissions($roleId, $permissions);
+
+    if (HttpResponse::wasSuccessful($response, 201)) {
+        $res = HttpResponse::decodeContent($response);
+
+        return $res;
+    }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 /**
  * Get all roles.
  */
 function getRoles()
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $response = $mgmtAPI->roles()->getAll();
+    $response = $mgmtAPI->roles()->getAll();
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 
 /**
@@ -503,28 +484,26 @@ function getRoles()
  */
 function updateResources($resourseServerIdentifier, $methods)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
 
-        $body = [
-            'scopes' => [],
+    $body = [
+        'scopes' => [],
+    ];
+
+    foreach ($methods as $method) {
+        $body['scopes'][] = [
+            'value' => $method,
+            'description' => $method,
         ];
+    }
 
-        foreach ($methods as $method) {
-            $body['scopes'][] = [
-                'value' => $method,
-                'description' => $method,
-            ];
-        }
+    $response = $mgmtAPI->resourceServers()->update($resourseServerIdentifier, $body);
 
-        $response = $mgmtAPI->resourceServers()->update($resourseServerIdentifier, $body);
-
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
+    } else {
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 }
 
@@ -539,114 +518,115 @@ function updateResources($resourseServerIdentifier, $methods)
  */
 function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesToActions, array &$menusToActions, $isFirstBase = true)
 {
-    return db_transaction(function () use ($orgId, $orgName, $baseId, $baseName, $rolesToActions, $menusToActions, $isFirstBase) {
-        $rolesTemplate = [
-            'Administrator' => ['administrator'],
-            'Coordinator' => ['coordinator'],
-            'Volunteer' => ['warehouse_volunteer', 'free_shop_volunteer'],
-            'Volunteer (Warehouse)' => ['warehouse_volunteer'],
-            'Volunteer (Free Shop)' => ['free_shop_volunteer'],
-            // this feature removed for the new org
-            // 'Volunteer (Library)' => ['library_volunteer'],
-            'Label Creation' => ['label_creation'],
-        ];
+    $rolesTemplate = [
+        'Head of Operations' => ['administrator'],
+        'Coordinator' => ['coordinator'],
+        'Volunteer' => ['warehouse_volunteer', 'free_shop_volunteer'],
+        'Volunteer (Warehouse)' => ['warehouse_volunteer'],
+        'Volunteer (Free Shop)' => ['free_shop_volunteer'],
+        // this feature removed for the new org
+        // 'Volunteer (Library)' => ['library_volunteer'],
+        'Label Creation' => ['label_creation'],
+    ];
 
-        if (!$isFirstBase) {
-            unset($rolesTemplate['Administrator']);
-            $adminUserGroup = db_row("
+    if (!$isFirstBase) {
+        unset($rolesTemplate['Head of Operations']);
+        $adminUserGroup = db_row("
                 SELECT 
-                    id 
+                    ug.id 
                 FROM 
-                    cms_usergroups
+                    cms_usergroups ug
+                INNER JOIN
+                    cms_usergroups_levels ugl ON ug.userlevel = ugl.id
                 WHERE 
-                    label = 'Administrator' AND organisation_id = :orgId", ['orgId' => $orgId]);
-            if (!empty($adminUserGroup)) {
-                db_query("INSERT INTO `cms_usergroups_camps` (`camp_id`, `cms_usergroups_id`) VALUES ({$baseId}, ".$adminUserGroup['id'].')');
-            }
+                    ugl.shortlabel = 'Admin' AND ug.organisation_id = :orgId", ['orgId' => $orgId]);
+        if (!empty($adminUserGroup)) {
+            db_query("INSERT INTO `cms_usergroups_camps` (`camp_id`, `cms_usergroups_id`) VALUES ({$baseId}, ".$adminUserGroup['id'].')');
+        } else {
+            throw new Exception('There is no admin user group.', 409);
         }
+    }
+
+    $functionsIds = [];
+    $userGroupsRoles = [];
+    $baseFunctionIds = [];
+
+    // adding usergroups in the Dropapp
+    foreach ($rolesTemplate as $roleName => $auth0Roles) {
+        $userLevel = 3;
+        $userLevel = (preg_match('/coordinator/i', $roleName)) ? 2 : $userLevel;
+        $userLevel = (preg_match('/head\ of\ operations/i', $roleName)) ? 1 : $userLevel;
+        $userLevel = (preg_match('/(.*)?volunteer/i', $roleName)) ? 3 : $userLevel;
+        $baseRoleName = 'Head of Operations' !== $roleName ? 'Base '.ucwords($baseName)." - {$roleName}" : $roleName;
+        $userGroupIdValue = " (NULL, '{$baseRoleName}', CURRENT_TIME(), ".(!empty($_SESSION['user']['id']) ? $_SESSION['user']['id'] : 'NULL').", '{$orgId}', '{$userLevel}', NULL) ";
+        // check if usergroup already created in dropapp
+        $data = db_row('SELECT * FROM cms_usergroups WHERE label = :label AND organisation_id = :organisationId', ['label' => $baseRoleName, 'organisationId' => $orgId]);
+        if (!$data) {
+            db_query('INSERT INTO `cms_usergroups` (`id`, `label`, `created`, `created_by`, `organisation_id`, `userlevel`, `deleted`) VALUES '.$userGroupIdValue.';');
+            $userGroupId = db_insertid();
+        } else {
+            $userGroupId = $data['id'];
+        }
+
+        // preparing $userGroupsRoles for db-table cms_usergroups_roles
+        foreach ($auth0Roles as $auth0Role) {
+            $currentRole = 'administrator' !== $auth0Role ? 'base_'.$baseId.'_'.$auth0Role : $auth0Role;
+            $currentRoleDescription = 'administrator' !== $auth0Role ? ucwords($orgName).' - Base '.$baseId.' ('.ucwords($baseName).') - '.ucwords(preg_replace('/\_/', ' ', $auth0Role)) : 'Someone who manage all bases within an organization';
+
+            if (false == array_search($currentRole, array_column($userGroupsRoles, 'roleName'))) {
+                $userGroupsRoles[] = [
+                    'roleName' => $auth0Role,
+                    'currentRole' => $currentRole,
+                    'currentRoleDescription' => $currentRoleDescription,
+                    'userGroupId' => $userGroupId,
+                ];
+            }
+
+            // get the functions to assign to this usergroup
+            // TO-DO: make independant of the constant $menusToActions and use the action_permissions from cms_functions
+            $functionsIds = array_unique(array_merge($functionsIds, getMenusByRole($auth0Role, $rolesToActions, $menusToActions)));
+        }
+
+        // Prepare Insert in cms_usergroups_functions and cms_functions_camps
+        $userGroupFunctionIdValues = [];
+        foreach ($functionsIds as $val) {
+            $userGroupFunctionIdValues[] = " ('{$val}', '".$userGroupId."') ";
+            $baseFunctionIds[] = $val;
+        }
+
+        // Prepare Insert in cms_usergroups_camps
+        $baseUserGroupValue = "({$baseId}, '".$userGroupId."') ";
 
         $functionsIds = [];
-        $userGroupsRoles = [];
-        $baseFunctionIds = [];
+        // adding usergroups' functions
+        db_query('INSERT IGNORE INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES '.implode(', ', $userGroupFunctionIdValues).';');
+        // adding usergroup to base
+        db_query('INSERT IGNORE INTO `cms_usergroups_camps` (`camp_id`, `cms_usergroups_id`) VALUES '.$baseUserGroupValue.';');
+    }
 
-        // adding usergroups in the Dropapp
-        foreach ($rolesTemplate as $roleName => $auth0Roles) {
-            $userLevel = 3;
-            $userLevel = (preg_match('/coordinator/i', $roleName)) ? 2 : $userLevel;
-            $userLevel = (preg_match('/administrator/i', $roleName)) ? 1 : $userLevel;
-            $userLevel = (preg_match('/(.*)?volunteer/i', $roleName)) ? 3 : $userLevel;
-            $baseRoleName = 'Administrator' !== $roleName ? 'Base '.ucwords($baseName)." - {$roleName}" : $roleName;
-            $userGroupIdValue = " (NULL, '{$baseRoleName}', CURRENT_TIME(), ".$_SESSION['user']['id'].", '{$orgId}', '{$userLevel}', NULL) ";
-            // check if usergroup already created in dropapp
-            $data = db_row('SELECT * FROM cms_usergroups WHERE label = :label AND organisation_id = :organisationId', ['label' => $baseRoleName, 'organisationId' => $orgId]);
-            if (!$data) {
-                db_query('INSERT INTO `cms_usergroups` (`id`, `label`, `created`, `created_by`, `organisation_id`, `userlevel`, `deleted`) VALUES '.$userGroupIdValue.';');
-                $userGroupId = db_insertid();
-            } else {
-                $userGroupId = $data['id'];
-            }
+    $baseFunctionIdValues = [];
+    // remove duplicates function ids
+    $baseFunctionIds = array_unique($baseFunctionIds);
+    foreach ($baseFunctionIds as $val) {
+        $baseFunctionIdValues[] = " ('{$val}', '".$baseId."') ";
+    }
+    // adding menus for the base
+    db_query('INSERT IGNORE INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES '.implode(', ', $baseFunctionIdValues).';');
 
-            // preparing $userGroupsRoles for db-table cms_usergroups_roles
-            foreach ($auth0Roles as $auth0Role) {
-                $currentRole = 'administrator' !== $auth0Role ? 'base_'.$baseId.'_'.$auth0Role : $auth0Role;
-                $currentRoleDescription = 'administrator' !== $auth0Role ? ucwords($orgName).' - Base '.$baseId.' ('.ucwords($baseName).') - '.ucwords(preg_replace('/\_/', ' ', $auth0Role)) : 'Someone who manage all bases within an organization';
+    // adding roles in the auth0 then also add the reference to cms_usergroups_roles
+    foreach ($userGroupsRoles as $userGroupsRole) {
+        // TODO: external service - fast-fail / should be sync
+        $auth0Role = createOrUpdateRoleAndPermission($userGroupsRole['roleName'], $userGroupsRole['currentRole'], $userGroupsRole['currentRoleDescription']);
+        $userGroupRoleValue = sprintf(" (%d,'%s', '%s') ", $userGroupsRole['userGroupId'], $auth0Role['id'], $auth0Role['name']);
+        db_query('INSERT IGNORE INTO `cms_usergroups_roles` (`cms_usergroups_id`, `auth0_role_id`, `auth0_role_name`) VALUES '.$userGroupRoleValue.';');
+    }
 
-                if (false == array_search($currentRole, array_column($userGroupsRoles, 'roleName'))) {
-                    $userGroupsRoles[] = [
-                        'roleName' => $auth0Role,
-                        'currentRole' => $currentRole,
-                        'currentRoleDescription' => $currentRoleDescription,
-                        'userGroupId' => $userGroupId,
-                    ];
-                }
-
-                // get the functions to assign to this usergroup
-                // TO-DO: make independant of the constant $menusToActions and use the action_permissions from cms_functions
-                $functionsIds = array_unique(array_merge($functionsIds, getMenusByRole($auth0Role, $rolesToActions, $menusToActions)));
-            }
-
-            // Prepare Insert in cms_usergroups_functions and cms_functions_camps
-            $userGroupFunctionIdValues = [];
-            foreach ($functionsIds as $val) {
-                $userGroupFunctionIdValues[] = " ('{$val}', '".$userGroupId."') ";
-                $baseFunctionIds[] = $val;
-            }
-
-            // Prepare Insert in cms_usergroups_camps
-            $baseUserGroupValue = "({$baseId}, '".$userGroupId."') ";
-
-            $functionsIds = [];
-            // adding usergroups' functions
-            db_query('INSERT IGNORE INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES '.implode(', ', $userGroupFunctionIdValues).';');
-            // adding usergroup to base
-            db_query('INSERT IGNORE INTO `cms_usergroups_camps` (`camp_id`, `cms_usergroups_id`) VALUES '.$baseUserGroupValue.';');
-        }
-
-        $baseFunctionIdValues = [];
-        // remove duplicates function ids
-        $baseFunctionIds = array_unique($baseFunctionIds);
-        foreach ($baseFunctionIds as $val) {
-            $baseFunctionIdValues[] = " ('{$val}', '".$baseId."') ";
-        }
-        // adding menus for the base
-        db_query('INSERT IGNORE INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES '.implode(', ', $baseFunctionIdValues).';');
-
-        // adding roles in the auth0 then also add the reference to cms_usergroups_roles
-        foreach ($userGroupsRoles as $userGroupsRole) {
-            // TODO: external service - fast-fail / should be sync
-            $auth0Role = createOrUpdateRoleAndPermission($userGroupsRole['roleName'], $userGroupsRole['currentRole'], $userGroupsRole['currentRoleDescription']);
-            $userGroupRoleValue = sprintf(" (%d,'%s', '%s') ", $userGroupsRole['userGroupId'], $auth0Role['id'], $auth0Role['name']);
-            db_query('INSERT IGNORE INTO `cms_usergroups_roles` (`cms_usergroups_id`, `auth0_role_id`, `auth0_role_name`) VALUES '.$userGroupRoleValue.';');
-        }
-
-        return true;
-    });
+    return true;
 }
 
 function updateRolesForBase($baseId, $baseName)
 {
-    return db_transaction(function () use ($baseId, $baseName) {
-        $result = db_query('
+    $result = db_query('
         SELECT 
             ug.id, ug.label, uc.camp_id, ug.created
         FROM
@@ -658,22 +638,21 @@ function updateRolesForBase($baseId, $baseName)
         WHERE
             uc.camp_id = :baseId and NOT ul.level = 100', ['baseId' => $baseId]);
 
-        while ($usergroup = db_fetch($result)) {
-            // check if the usergroup is based on new standard user groups
-            $regx = '/Base (.*) - (Coordinator|Label Creation|Volunteer|Volunteer) ?(\(Free Shop\)|\(Warehouse\))?/m';
-            if (preg_match($regx, $usergroup['label'])) {
-                $roleName = trim(preg_split('/-/', $usergroup['label'])[1]);
+    while ($usergroup = db_fetch($result)) {
+        // check if the usergroup is based on new standard user groups
+        $regx = '/Base (.*) - (Coordinator|Label Creation|Volunteer|Volunteer) ?(\(Free Shop\)|\(Warehouse\))?/m';
+        if (preg_match($regx, $usergroup['label'])) {
+            $roleName = trim(preg_split('/-/', $usergroup['label'])[1]);
 
-                $newUserGroupLabel = sprintf('Base %s - %s', ucwords($baseName), $roleName);
-                db_query('UPDATE cms_usergroups SET label = :newUserGroupLabel WHERE id = :userGroupId', [
-                    'newUserGroupLabel' => $newUserGroupLabel,
-                    'userGroupId' => $usergroup['id'],
-                ]);
-            }
+            $newUserGroupLabel = sprintf('Base %s - %s', ucwords($baseName), $roleName);
+            db_query('UPDATE cms_usergroups SET label = :newUserGroupLabel WHERE id = :userGroupId', [
+                'newUserGroupLabel' => $newUserGroupLabel,
+                'userGroupId' => $usergroup['id'],
+            ]);
         }
+    }
 
-        return true;
-    });
+    return true;
 }
 /**
  * Getting available actions with role name.
@@ -699,18 +678,18 @@ function createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRole
     global $settings;
 
     $role = getRolesByName($prefixedRole);
-    usleep(500);
+    usleep(500000);
     if (null === $role) {
         $role = createRole($prefixedRole);
-        usleep(500);
+        usleep(500000);
     }
     if (!in_array($roleName, ['administrator'])) {
         updateRole($role['id'], $prefixedRole, $prefixedRoleDescription);
-        usleep(500);
+        usleep(500000);
         if ($role) {
             $methods = $rolesToActions[$roleName];
             updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
-            usleep(500);
+            usleep(500000);
         }
     }
 
@@ -742,38 +721,39 @@ function getMenusByRole($role, array &$rolesToActions, array &$menusToActions)
  */
 function assignRolesToUser($userId, array $roleIds)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        // getting current roles for thr users
-        $response = $mgmtAPI->users()->getRoles($userId);
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    // getting current roles for thr users
+    $response = $mgmtAPI->users()->getRoles($userId);
 
-        $removeRolesIds = [];
+    $removeRolesIds = [];
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-            // preprering the role ids to be removed
-            foreach ($res as $role) {
-                $removeRolesIds[] = $role['id'];
-            }
-
-            if (sizeof($removeRolesIds) > 0) {
-                // removing current roles
-                $mgmtAPI->users()->removeRoles($userId, $removeRolesIds);
-            }
-            // assigning the new roles to the users
-            $response = $mgmtAPI->users()->addRoles($userId, $roleIds);
-            if (HttpResponse::wasSuccessful($response)) {
-                $res = HttpResponse::decodeContent($response);
-
-                return $res;
-            }
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
+        // preprering the role ids to be removed
+        foreach ($res as $role) {
+            $removeRolesIds[] = $role['id'];
         }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+    } else {
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    }
+
+    if (sizeof($removeRolesIds) > 0) {
+        // removing current roles
+        // https://auth0.com/docs/api/management/v2#!/Users/delete_user_roles
+        $response = $mgmtAPI->users()->removeRoles($userId, $removeRolesIds);
+        if (!HttpResponse::wasSuccessful($response, 204)) {
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+        }
+    }
+
+    // assigning the new roles to the users
+    $response = $mgmtAPI->users()->addRoles($userId, $roleIds);
+    // refer to docs: https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
+    if (!HttpResponse::wasSuccessful($response, 204)) {
+        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 }
-
 /**
  * Getting user assigned roles.
  *
@@ -781,17 +761,40 @@ function assignRolesToUser($userId, array $roleIds)
  */
 function getUserAssignedRoles($userId)
 {
-    try {
-        global $settings;
-        $mgmtAPI = getAuth0Management($settings);
-        $response = $mgmtAPI->users()->getRoles('auth0|'.intval($userId));
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+    $response = $mgmtAPI->users()->getRoles('auth0|'.intval($userId));
 
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
 
-            return $res;
-        }
-    } catch (Auth0Exception $e) {
-        throw new Exception($e->getMessage(), $e->getCode());
+        return $res;
     }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+}
+
+/**
+ * Getting all the users.
+ *
+ * @param mixed $query
+ */
+function getAllUsers($query)
+{
+    global $settings;
+    $mgmtAPI = getAuth0Management($settings);
+
+    $params = [
+        'q' => $query,
+    ];
+
+    $response = $mgmtAPI->users()->getAll($params);
+
+    if (HttpResponse::wasSuccessful($response)) {
+        $res = HttpResponse::decodeContent($response);
+
+        return $res;
+    }
+
+    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }

@@ -6,9 +6,9 @@ const DEACTIVATE_BUTTON = "Deactivate";
 const ITEM_DELETED = "Item deleted";
 const EXPIRED_COORDINATOR_NAME = "Expired Coordinator";
 const EXPIRED_COORDINATOR_EMAIL = "expired_coordinator@expired.co";
-const EXPIRED_USER_ROLE = "TestUserGroup_User";
-const EXPIRED_COORDINATOR_ROLE = "TestUserGroup_Coordinator";
-const EXPIRED_ADMIN_ROLE = "TestUserGroup_Admin";
+const EXPIRED_USER_ROLE = "Base TestBase - Volunteer";
+const EXPIRED_COORDINATOR_ROLE = "Base TestBase - Coordinator";
+const EXPIRED_ADMIN_ROLE = "Head of Operations";
 const EXPIRED_COORDINATOR_VALID_FROM = "11 April 2017";
 const EXPIRED_COORDINATOR_VALID_TO = "28 May 2017";
 const USER_DEACTVATE_REQUEST = "do=delete"
