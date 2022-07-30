@@ -115,17 +115,14 @@ function listBulkRealDelete($table, $ids, $uri = false)
     $hasTree = db_fieldexists($table, 'parent_id');
     $count = 0;
     $deletedIds = [];
-    list($count, $result, $deletedIds) = db_transaction(function () use ($deletedIds, $count, $ids, $hasPrevent, $table) {
-        foreach ($ids as $id) {
-            $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
-            $count += $result->rowCount();
-            if ($result->rowCount()) {
-                $deletedIds[] = $id;
-            }
-        }
 
-        return [$count, $result, $deletedIds];
-    });
+    foreach ($ids as $id) {
+        $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
+        $count += $result->rowCount();
+        if ($result->rowCount()) {
+            $deletedIds[] = $id;
+        }
+    }
 
     simpleBulkSaveChangeHistory($table, $deletedIds, 'Record deleted without undelete');
 

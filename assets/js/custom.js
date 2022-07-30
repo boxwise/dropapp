@@ -369,6 +369,23 @@ function selectFamilyhead(field, targetfield) {
     }
 }
 
+function checkTags(id) {
+    let selectedType = $("#field_type").val();
+    $.ajax({
+        type: "post",
+        url: "/ajax.php?file=checktag",
+        data: {
+            type: selectedType,
+            id: id,
+        },
+        dataType: "json",
+        success: function (result) {
+            AjaxCheckSuccess(result);
+        },
+        error: AjaxError,
+    });
+}
+
 function correctDrops(first, second) {
     $("#row-" + first.id + " .list-column-drops .td-content").text(first.value);
     $("#row-" + second.id + " .list-column-drops .td-content").text(

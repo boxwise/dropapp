@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  gcp-cli: circleci/gcp-cli@1.5.0
+  gcp-cli: circleci/gcp-cli@1.8.4
   cypress: cypress-io/cypress@1.29.0
 jobs:
   build:
@@ -47,7 +47,7 @@ jobs:
       envVariablePrefix:
         type: string
     docker:
-      - image: circleci/php:7.4-node-browsers
+      - image: cimg/php:7.4-browsers
     steps:
       - attach_workspace:
           at: workspace
@@ -70,6 +70,7 @@ jobs:
             \$settings['sendgrid_key'] = '${BOXWISE_SENDGRID}';
             \$settings['sentry_key'] = '${BOXWISE_SENTRY}';
             \$settings['test_pwd'] = '${CYPRESS_TEST_PWD}';
+            \$settings['upload_dir'] = '${UPLOAD_DIR}/<< parameters.serviceName >>';
             \$settings['auth0_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_DOMAIN}';
             \$settings['auth0_api_id'] = '${<< parameters.envVariablePrefix >>AUTH0_API_ID}';
             \$settings['auth0_api_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_API_DOMAIN}';
@@ -166,8 +167,6 @@ workflows:
         requires:
           - build
         filters:
-          tags:
-            only: /^v.*/
           branches:
             only: production
     - deploy:   # this can only be triggered by a tag

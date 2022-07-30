@@ -1,5 +1,5 @@
-const USER_GROUP_COORDINATOR = "TestUserGroup_Coordinator";
-const USER_GROUP_USER = "TestUserGroup_User";
+const USER_GROUP_COORDINATOR = "Base TestBase - Coordinator";
+const USER_GROUP_USER = "Base TestBase - Volunteer";
 const BROWSER_TEST_USER_USER = "BrowserTestUser_User";
 const NEW_USER_BUTTON_LABEL = "New user";
 const SEND_LOGIN_DATA_BUTTON_LABEL = "Send login data";

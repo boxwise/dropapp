@@ -10,7 +10,7 @@ context('2.9 Auth0 synchronized on CRUD', () => {
   let config = getLoginConfiguration();
   
   let testName = 'Test New User';
-  let testGroup = "TestUserGroup_User";
+  let testGroup = "Base TestBase - Volunteer";
   let testEmail = 'testnewuser@boxtribute.org';
   let modifiedTestName = 'Test New User Edited';
   let modifiedValidFrom = '02-08-2021';
@@ -105,7 +105,7 @@ context('2.9 Auth0 synchronized on CRUD', () => {
     cy.getButtonWithText('Save and close').click();
     cy.url().should('include', '/?action=cms_profile');
     cy.get('.created').should('be.visible');
-    CheckUserSyncedAuth0(modifiedTestAdminName);
+    CheckUserSyncedAuth0(modifiedTestAdminEmail);
     cy.get('input[data-testid=\'user_name\']').clear().type(testAdminName);
     cy.get('input[data-testid=\'user_email\']').clear().type(testAdminEmail);
     cy.getButtonWithText('Save and close').click();

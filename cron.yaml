@@ -1,33 +1,86 @@
 cron:
-- description: "reseed db staging job"
-  url: /reseed-db.php
+# staging
+- description: "auth0 dailyroutine staging - check inactive users"
+  url: /cron/dailyroutine.php?action=auth0_inactive_users
   target: staging
   schedule: every day 00:00
-- description: "reseed auth0 staging job"
-  url: /reseed-auth0.php
+- description: "auth0 dailyroutine staging - check active users"
+  url: /cron/dailyroutine.php?action=auth0_active_users
+  target: staging
+  schedule: every day 00:10
+- description: "db dailyroutine staging"
+  url: /cron/dailyroutine.php?action=db
+  target: staging
+  schedule: every day 00:25
+- description: "auth0 dailyroutine staging - check if auth0 users sync with db"
+  url: /cron/dailyroutine.php?action=auth0_check_synk
   target: staging
   schedule: every day 01:00
-- description: "reseed demo job"
-  url: /reseed-db.php
-  target: demo
-  schedule: every 99999 hours
-- description: "reseed auth0 demo job"
-  url: /reseed-auth0.php
-  target: demo
-  schedule: every 99999 hours
-- description: "dailyroutine staging job"
-  url: /dailyroutine.php
+- description: "db minimal reseed staging"
+  url: /cron/reseed-db.php?seeds=minimal
   target: staging
-  schedule: every day 00:00
-- description: "dailyroutine demo job"
-  url: /dailyroutine.php
+  schedule: every day 00:18
+- description: "db testing reseed staging"
+  url: /cron/reseed-db.php?seeds=testing
+  target: staging
+  schedule: every day 00:30
+- description: "auth0 reseed staging"
+  url: /cron/reseed-auth0.php
+  target: staging
+  schedule: every day 00:45
+- description: "ONE-time creation of roles in Auth0 for staging"
+  url: /cron/reseed-roles-auth0.php 
+  target: staging
+  schedule: every 99999 hours
+
+# demo
+- description: "auth0 dailyroutine demo - check inactive users"
+  url: /cron/dailyroutine.php?action=auth0_inactive_users
   target: demo
   schedule: every day 00:00
-- description: "dailyroutine production job"
-  url: /dailyroutine.php
+- description: "auth0 dailyroutine demo - check active users"
+  url: /cron/dailyroutine.php?action=auth0_active_users
+  target: demo
+  schedule: every day 00:11
+- description: "db dailyroutine demo"
+  url: /cron/dailyroutine.php?action=db
+  target: demo
+  schedule: every day 00:09
+- description: "db minimal reseed demo"
+  url: /cron/reseed-db.php?seeds=minimal
+  target: demo
+  schedule: every 99999 hours
+- description: "db testing reseed demo"
+  url: /cron/reseed-db.php?seeds=testing
+  target: demo
+  schedule: every 99999 hours
+- description: "auth0 reseed demo"
+  url: /cron/reseed-auth0.php
+  target: demo
+  schedule: every 99999 hours
+- description: "ONE-time creation of roles in Auth0 for demo"
+  url: /cron/reseed-roles-auth0.php 
+  target: demo
+  schedule: every 99999 hours
+
+# production
+- description: "auth0 dailyroutine production - check inactive users"
+  url: /cron/dailyroutine.php?action=auth0_inactive_users
   target: production
   schedule: every day 00:00
-- description: "ONE-time creation of roles in Auth0 for production "
-  url: /db/auth0/create-auth0-roles-usergroups.php 
-  target: staging
+- description: "auth0 dailyroutine production - check active users"
+  url: /cron/dailyroutine.php?action=auth0_active_users
+  target: production
+  schedule: every day 00:11
+- description: "db dailyroutine production"
+  url: /cron/dailyroutine.php?action=db
+  target: production
+  schedule: every day 00:21
+- description: "auth0 dailyroutine production - check if auth0 users sync with db"
+  url: /cron/dailyroutine.php?action=auth0_check_synk
+  target: production
+  schedule: every day 00:31
+- description: "ONE-time creation of roles in Auth0 for production"
+  url: /cron/reseed-roles-auth0.php 
+  target: production
   schedule: every 99999 hours

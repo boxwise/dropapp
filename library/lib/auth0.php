@@ -163,7 +163,6 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
             WHERE 
                 ugr.cms_usergroups_id=:userGroupsId', ['userGroupsId' => $dbUserData['cms_usergroups_id']]);
 
-    usleep(1000);
     // assign user roles into auth0
     $roles = [];
     foreach ($dbUserRoles as $role) {
@@ -679,18 +678,18 @@ function createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRole
     global $settings;
 
     $role = getRolesByName($prefixedRole);
-    usleep(1000);
+    usleep(500000);
     if (null === $role) {
         $role = createRole($prefixedRole);
-        usleep(1000);
+        usleep(500000);
     }
     if (!in_array($roleName, ['administrator'])) {
         updateRole($role['id'], $prefixedRole, $prefixedRoleDescription);
-        usleep(1000);
+        usleep(500000);
         if ($role) {
             $methods = $rolesToActions[$roleName];
             updateRolePermissions($role['id'], $settings['auth0_api_audience'], $methods);
-            usleep(1000);
+            usleep(500000);
         }
     }
 

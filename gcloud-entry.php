@@ -59,16 +59,15 @@ Tracer::inSpan(
         case '/ajax.php':
         case '/mobile.php':
         case '/cypress-session.php':
-        case '/dailyroutine.php':
         case '/pdf/workshopcard.php':
         case '/pdf/bicyclecard.php':
         case '/pdf/idcard.php':
         case '/pdf/qr.php':
         case '/pdf/dryfood.php':
-        case '/reseed-db.php':
-        case '/reseed-auth0.php':
-        case '/reseed-roles-auth0.php':
-        case '/db/auth0/create-auth0-roles-usergroups.php':
+        case '/cron/dailyroutine.php':
+        case '/cron/reseed-db.php':
+        case '/cron/reseed-auth0.php':
+        case '/cron/reseed-roles-auth0.php':
         case '/fake-error.php':
             require substr($parsedUrl, 1); // trim /
 
