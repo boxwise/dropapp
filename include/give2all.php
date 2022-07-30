@@ -6,6 +6,8 @@
     if ($_POST) {
         $people = explode(',', $_POST['people']);
 
+        preventMultipleSubmission($people);
+
         /*
                 if($_POST['startration']) {
                     db_query('INSERT INTO ration (startration) VALUES (NOW())');

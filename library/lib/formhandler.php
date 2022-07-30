@@ -11,6 +11,8 @@ class formHandler
 
     public function savePost($keys, $nullIfEmptyKeys = [])
     {
+        preventMultipleSubmission($keys);
+
         $this->nullIfEmpty = array_fill_keys($nullIfEmptyKeys, null);
         $this->keys = $keys;
         $this->saveCreatedModified();

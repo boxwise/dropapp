@@ -6,6 +6,8 @@
     if ($_POST) {
         $people = explode(',', $_POST['people']);
 
+        preventMultipleSubmission($people);
+
         foreach ($people as $person) {
             $f = db_row('SELECT * FROM people WHERE id = :id', ['id' => $person]);
             if (0 == $f['parent_id']) {

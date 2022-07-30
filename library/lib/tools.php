@@ -360,3 +360,20 @@ function displayDate($datum, $time = false, $long = false)
 
     return strftime('%d-%m-%Y', $datum);
 }
+
+function preventMultipleSubmission($data)
+{
+    $checksum = md5(json_encode($data));
+    $timestamp = time();
+
+    if (isset($_SESSION['form_checksum'])) {
+        $diffInSeconds = $timestamp - $_SESSION['form_lastsaved'];
+
+        if ($diffInSeconds < 3 && $checksum === $_SESSION['form_checksum']) {
+            trigger_error('Multiple form submission under 3 seconds', E_USER_NOTICE);
+        }
+    }
+
+    $_SESSION['form_checksum'] = $checksum;
+    $_SESSION['form_lastsaved'] = $timestamp;
+}
