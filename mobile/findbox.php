@@ -4,7 +4,7 @@
         SELECT q.code AS code, s.id AS id 
         FROM (stock AS s, locations AS l) 
         LEFT OUTER JOIN qr AS q ON q.id = s.qr_id 
-        WHERE s.location_id = l.id AND box_id = :box_id AND l.type = "Warehouse"', ['box_id' => $_GET['findbox']]);
+        WHERE s.location_id = l.id AND box_id = :box_id', ['box_id' => $_GET['findbox']]);
 
     if ($barcode['id']) {
         redirect('?boxid='.$barcode['id']);

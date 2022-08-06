@@ -51,10 +51,10 @@
         addfield('list', 'In Stock', 'stock', ['width' => 10, 'query' => '
 	SELECT stock.id AS id, stock.box_id, stock.items, stock.comments, g.label AS gender, p.name AS product, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'
 	LEFT OUTER JOIN products AS p ON p.id = stock.product_id
-    LEFT OUTER JOIN locations AS l ON l.id = stock.location_id 
+    LEFT OUTER JOIN locations AS l ON l.id = stock.location_id AND l.type = "Warehouse"
     LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
     LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id 
-    WHERE l.deleted IS NULL AND l.type = "Warehouse" AND (not stock.deleted or stock.deleted = 0) AND l.visible AND stock.product_id = '.$id, 'columns' => ['box_id' => 'Box ID', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'items' => 'Items', 'location' => 'Location', 'comments' => 'Comments'],
+    WHERE l.deleted IS NULL AND (not stock.deleted or stock.deleted = 0) AND l.visible AND stock.product_id = '.$id, 'columns' => ['box_id' => 'Box ID', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'items' => 'Items', 'location' => 'Location', 'comments' => 'Comments'],
             'allowedit' => true, 'allowadd' => false, 'allowselect' => true, 'allowselectall' => false, 'allowshowhide' => false, 'action' => 'stock', 'redirect' => true, 'allowsort' => true, ]);
     }
 

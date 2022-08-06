@@ -39,7 +39,7 @@
                                 LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
                                 LEFT OUTER JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
                                 LEFT OUTER JOIN tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "Stock" AND tags.deleted IS NULL
-                            WHERE l.type = "Warehouse" AND s.id = :id', ['id' => $_GET['boxid']]);
+                            WHERE s.id = :id', ['id' => $_GET['boxid']]);
 
             if ($box['taglabels']) {
                 $taglabels = explode(',', $box['taglabels']);
@@ -58,7 +58,7 @@
                 LEFT OUTER JOIN locations AS l ON l.id = s.location_id
                 LEFT OUTER JOIN qr AS q ON q.id = s.qr_id
                 LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
-                WHERE l.type = "Warehouse" AND q.id = :qrid', ['qrid' => $qr_id]);
+                WHERE q.id = :qrid', ['qrid' => $qr_id]);
         }
 
         if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {

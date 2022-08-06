@@ -15,7 +15,7 @@
         LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
         LEFT OUTER JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
         LEFT OUTER JOIN tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "Stock" AND tags.deleted IS NULL
-        WHERE l.type = "Warehouse" AND s.id = :id', ['id' => $_GET['editbox']]);
+        WHERE s.id = :id', ['id' => $_GET['editbox']]);
 
     if (!is_null($box['deleted']) && '0000-00-00 00:00:00' != $box['deleted']) {
         // box is a deleted box

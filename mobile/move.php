@@ -8,7 +8,7 @@
         LEFT OUTER JOIN products AS p ON p.id = s.product_id 
         LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
         LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
-        WHERE l.type = "Warehouse" AND (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $move]);
+        WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $move]);
 
     $newlocation = db_row('SELECT * FROM locations AS l WHERE l.id = :location AND l.type = "Warehouse"', ['location' => intval($_GET['location'])]);
 
