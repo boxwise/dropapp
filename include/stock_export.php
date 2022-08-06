@@ -22,7 +22,7 @@ $data = db_query(
         IF(DATEDIFF(now(),boxes.created) = 1, "1 day", CONCAT(DATEDIFF(now(),boxes.created), " days")) AS boxage
     FROM stock as boxes
     LEFT OUTER JOIN products AS p ON p.id = boxes.product_id
-    LEFT OUTER JOIN locations AS l ON l.id = boxes.location_id
+    LEFT OUTER JOIN locations AS l ON l.id = boxes.location_id AND l.type = "Warehouse"
     LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
     LEFT OUTER JOIN sizes AS s ON s.id = boxes.size_id 
     WHERE l.camp_id = ? AND (NOT boxes.deleted OR boxes.deleted IS NULL) '.($_SESSION['export_ids_stock'] ? 'AND boxes.id in ('.$id_pars.') ' : ' AND FALSE'),

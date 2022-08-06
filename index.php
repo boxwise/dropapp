@@ -38,7 +38,7 @@ Tracer::inSpan(
         $cmsmain->assign('camps', camplist());
         $cmsmain->assign('currentcamp', $_SESSION['camp']);
         $cmsmain->assign('campaction', strpos($action, '_edit') ? substr($action, 0, -5) : $action);
-        $cmsmain->assign('haswarehouse', db_value('SELECT id FROM locations WHERE camp_id = '.intval($_SESSION['camp']['id']).' LIMIT 1 '));
+        $cmsmain->assign('haswarehouse', db_value('SELECT id FROM locations WHERE type = "Warehouse" AND camp_id = '.intval($_SESSION['camp']['id']).' LIMIT 1 '));
 
         $cmsmain->assign('menu', CMSmenu());
 

@@ -73,10 +73,10 @@
             // Box is not deleted and belongs to your base
             if ($box['id']) {
                 // box is not empty
-                $orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', ['camp' => $_SESSION['camp']['id']]);
+                $orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND l.type = "Warehouse" AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', ['camp' => $_SESSION['camp']['id']]);
                 $tpl->assign('orders', $orders);
 
-                $locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE deleted IS NULL AND camp_id = :camp_id ORDER BY seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
+                $locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE deleted IS NULL AND camp_id = :camp_id AND type = "Warehouse" ORDER BY seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
                 $history = showHistory('stock', $box['id']);
                 $tpl->assign('box', $box);
                 $tpl->assign('history', $history);

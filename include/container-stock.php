@@ -7,7 +7,7 @@ initlist();
 $cmsmain->assign('title', 'Stockroom');
 listsetting('search', ['p.name']);
 
-$container_stock_locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND container_stock AND deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]));
+$container_stock_locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND type = "Warehouse" AND container_stock AND deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]));
 
 if ($container_stock_locations) {
     $data = getlistdata('
@@ -19,7 +19,7 @@ if ($container_stock_locations) {
 		IFNULL(COUNT(s2.id),0) AS boxes,
 		IFNULL(SUM(s2.items),0) AS stock, 
 		(SELECT COUNT(s3.id) FROM stock AS s3
-			LEFT OUTER JOIN locations AS l2 ON l2.id = s3.location_id
+			LEFT OUTER JOIN locations AS l2 ON l2.id = s3.location_id AND l2.type = "Warehouse"
 			WHERE (NOT s3.deleted OR s3.deleted IS NULL) AND s3.product_id = p.id AND p.gender_id = g.id AND s3.size_id = s.id AND l2.visible AND l2.deleted IS NULL AND l2.camp_id='.$_SESSION['camp']['id'].')-IFNULL(COUNT(s2.id),0) AS totalboxes
 	FROM
 		(products AS p,
