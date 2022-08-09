@@ -89,6 +89,7 @@
                         stock.*, 
                         CONCAT(p.name," ",g.label) AS product, 
                         l.label AS location,
+                        l.type As locationType,
                         GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
                         GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
                     FROM stock 
@@ -99,6 +100,7 @@
                         LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
                     WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
 
+    mobile_distro_check($data['locationType'], false);
     verify_campaccess_location($data['location_id']);
 
     if ($data['taglabels']) {
