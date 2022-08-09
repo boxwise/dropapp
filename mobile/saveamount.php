@@ -8,11 +8,7 @@
         LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
         WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :box_id', ['box_id' => $_GET['saveamount']]);
 
-    if ('Warehouse' !== $box['locationType']) {
-        trigger_error('The user tries to save amount on a box belonging to a distribution event', E_USER_ERROR);
-
-        throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
-    }
+    mobile_distro_check($box['locationType']);
 
     $newitems = max(0, $box['items'] - intval($_GET['items']));
 

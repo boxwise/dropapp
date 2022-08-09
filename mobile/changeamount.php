@@ -8,11 +8,7 @@
         LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
         WHERE s.id = :id', ['id' => $_GET['changeamount']]);
 
-    if ('Warehouse' !== $box['locationType']) {
-        trigger_error('The user tries to change amount on a box belonging to a distribution event', E_USER_ERROR);
-
-        throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
-    }
+    mobile_distro_check($box['locationType']);
 
     $tpl->assign('box', $box);
     $tpl->assign('include', 'mobile_amount.tpl');

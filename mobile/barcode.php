@@ -42,11 +42,7 @@
                                 LEFT OUTER JOIN tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "Stock" AND tags.deleted IS NULL
                             WHERE s.id = :id', ['id' => $_GET['boxid']]);
 
-            if ('Warehouse' !== $box['locationType']) {
-                trigger_error('The user tries to scan a barcode of a box belonging to a distribution event', E_USER_ERROR);
-
-                throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
-            }
+            mobile_distro_check($box['locationType']);
 
             if ($box['taglabels']) {
                 $taglabels = explode(',', $box['taglabels']);
@@ -67,11 +63,7 @@
                 LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
                 WHERE q.id = :qrid', ['qrid' => $qr_id]);
 
-            if ('Warehouse' !== $box['locationType']) {
-                trigger_error('The user tries to scan a barcode of a box belonging to a distribution event', E_USER_ERROR);
-
-                throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
-            }
+            mobile_distro_check($box['locationType']);
         }
 
         if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {

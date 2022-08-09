@@ -100,12 +100,7 @@
                         LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
                     WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
 
-    if ('Warehouse' !== $data['locationType']) {
-        trigger_error('The user tries to edit a box belonging to a distribution event', E_USER_ERROR);
-
-        throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
-    }
-
+    mobile_distro_check($data['locationType'], false);
     verify_campaccess_location($data['location_id']);
 
     if ($data['taglabels']) {
