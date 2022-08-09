@@ -3,13 +3,18 @@
     $move = intval($_GET['move']);
 
     $box = db_row('
-        SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location, s.location_id AS location_id 
+        SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location, s.location_id AS location_id, l.type as locationType
         FROM stock AS s 
         LEFT OUTER JOIN products AS p ON p.id = s.product_id 
         LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
         LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
         WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $move]);
 
+        if ('Warehouse' !== $box['locationType']) {
+            trigger_error('The user tries to move a barcode of a box belonging to a distribution event', E_USER_ERROR);
+
+            throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
+        }
     $newlocation = db_row('SELECT * FROM locations AS l WHERE l.id = :location AND l.type = "Warehouse"', ['location' => intval($_GET['location'])]);
 
     db_query('UPDATE stock SET location_id = :location_id, modified = NOW(), modified_by = :user, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL WHERE id = :id', ['location_id' => $newlocation['id'], 'id' => $box['id'], 'user' => $_SESSION['user']['id']]);

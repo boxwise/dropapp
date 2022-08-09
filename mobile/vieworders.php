@@ -15,11 +15,11 @@
 
     $boxes = db_array('
 SELECT s.id, l.label AS location, s.box_id, p.name AS product, s.items, si.label AS size, g.label AS gender FROM stock AS s 
-LEFT OUTER JOIN locations AS l ON s.location_id = l.id AND l.type = "Warehouse"
+LEFT OUTER JOIN locations AS l ON s.location_id = l.id
 LEFT OUTER JOIN products AS p ON s.product_id = p.id
 LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
 LEFT OUTER JOIN sizes AS si ON s.size_id = si.id
-WHERE l.camp_id = :camp AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered
+WHERE l.type = "Warehouse" AND l.camp_id = :camp AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered
 ORDER BY l.id, s.box_id', ['camp' => $_SESSION['camp']['id']]);
 
     $tpl->assign('boxes', $boxes);

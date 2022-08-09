@@ -29,7 +29,8 @@
                                 IFNULL(s2.label, "") AS size, 
                                 l.label AS location,
                                 GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
-                                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors 
+                                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
+                                l.type as locationType
                             FROM stock AS s
                                 LEFT OUTER JOIN products AS p ON p.id = s.product_id
                                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
@@ -41,6 +42,12 @@
                                 LEFT OUTER JOIN tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "Stock" AND tags.deleted IS NULL
                             WHERE s.id = :id', ['id' => $_GET['boxid']]);
 
+            if ('Warehouse' !== $box['locationType']) {
+                trigger_error('The user tries to scan a barcode of a box belonging to a distribution event', E_USER_ERROR);
+
+                throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
+            }
+
             if ($box['taglabels']) {
                 $taglabels = explode(',', $box['taglabels']);
                 $tagcolors = explode(',', $box['tagcolors']);
@@ -51,7 +58,7 @@
         } else {
             // a barcode hash was passed in the url and it exits in qr-table
             $qr_id = db_value('SELECT id FROM qr WHERE code = :code AND legacy = :legacy', ['code' => $_GET['barcode'], 'legacy' => (isset($_GET['qrlegacy']) ? 1 : 0)]);
-            $box = db_row('SELECT s.*, c.id AS camp_id, c.name AS campname, CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product, p.name AS product2, g.label AS gender, IFNULL(s2.label, "") AS size, l.label AS location FROM stock AS s
+            $box = db_row('SELECT s.*, c.id AS camp_id, c.name AS campname, CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product, p.name AS product2, g.label AS gender, IFNULL(s2.label, "") AS size, l.label AS location, l.type as locationType FROM stock AS s
                 LEFT OUTER JOIN products AS p ON p.id = s.product_id
                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
                 LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
@@ -59,6 +66,12 @@
                 LEFT OUTER JOIN qr AS q ON q.id = s.qr_id
                 LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
                 WHERE q.id = :qrid', ['qrid' => $qr_id]);
+
+            if ('Warehouse' !== $box['locationType']) {
+                trigger_error('The user tries to scan a barcode of a box belonging to a distribution event', E_USER_ERROR);
+
+                throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
+            }
         }
 
         if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {

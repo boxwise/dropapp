@@ -8,7 +8,8 @@
                 CONCAT(p.name," ",g.label) AS product, 
                 l.label AS location,
                 GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
-                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
+                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
+                l.type as locationType
         FROM stock AS s 
         LEFT OUTER JOIN products AS p ON p.id = s.product_id 
         LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
@@ -16,6 +17,12 @@
         LEFT OUTER JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
         LEFT OUTER JOIN tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "Stock" AND tags.deleted IS NULL
         WHERE s.id = :id', ['id' => $_GET['editbox']]);
+
+    if ('Warehouse' !== $box['locationType']) {
+        trigger_error('The user tries to edit a box belonging to a distribution event', E_USER_ERROR);
+
+        throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
+    }
 
     if (!is_null($box['deleted']) && '0000-00-00 00:00:00' != $box['deleted']) {
         // box is a deleted box

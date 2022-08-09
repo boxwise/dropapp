@@ -89,6 +89,7 @@
                         stock.*, 
                         CONCAT(p.name," ",g.label) AS product, 
                         l.label AS location,
+                        l.type As locationType,
                         GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
                         GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
                     FROM stock 
@@ -98,6 +99,12 @@
                         LEFT JOIN tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock"
                         LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
                     WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
+
+    if ('Warehouse' !== $data['locationType']) {
+        trigger_error('The user tries to edit a box belonging to a distribution event', E_USER_ERROR);
+
+        throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
+    }
 
     verify_campaccess_location($data['location_id']);
 

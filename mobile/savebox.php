@@ -27,7 +27,16 @@ if (!$_POST['qr_id']) {
 }
 // Box creation/update
 [$new, $box, $message] = db_transaction(function () use ($new) {
-    $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $_POST['id']]);
+    $box = db_row('SELECT stock.*, locations.type as locationType 
+                   FROM stock
+                   LEFT OUTER JOIN locations ON stock.location_id = locations.id 
+                   WHERE id = :id', ['id' => $_POST['id']]);
+
+    if ('Warehouse' !== $box['locationType']) {
+        trigger_error('The user tries to edit to a box belonging to a distribution event', E_USER_ERROR);
+
+        throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
+    }
 
     // Updates and Preparation
     if ($new) {
@@ -109,7 +118,13 @@ if (!$_POST['qr_id']) {
     if ($new) {
         simpleSaveChangeHistory('qr', $_POST['qr_id'], 'QR code associated to box.', [], ['int' => $id]);
     }
-    $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id', ['id' => $id]);
+    $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location, l.type as locationType FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id', ['id' => $id]);
+
+    if ('Warehouse' !== $box['locationType']) {
+        trigger_error('The user tries to edit a box belonging to a distribution event', E_USER_ERROR);
+
+        throw new Exception('This record cannot be accessed through the dropapp. Please use boxtribute 2.0 instead', 403);
+    }
 
     return [$new, $box, $message];
 });
