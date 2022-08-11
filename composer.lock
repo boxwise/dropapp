@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d1a73237ece2f9f67c9bba3ced4ed6b8",
+    "content-hash": "f3779aca46093af3539ebbc34795a49f",
     "packages": [
         {
             "name": "auth0/auth0-php",
@@ -897,6 +897,58 @@
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
                 "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.47.1"
+            },
+            "time": "2022-08-05T00:41:21+00:00"
+        },
+        {
+            "name": "google/cloud-error-reporting",
+            "version": "v0.19.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/google-cloud-php-errorreporting.git",
+                "reference": "f8b38b453a17bd88fe31fc5c07f48f3eb67ebca0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-errorreporting/zipball/f8b38b453a17bd88fe31fc5c07f48f3eb67ebca0",
+                "reference": "f8b38b453a17bd88fe31fc5c07f48f3eb67ebca0",
+                "shasum": ""
+            },
+            "require": {
+                "google/cloud-logging": "^1.16",
+                "google/gax": "^1.1"
+            },
+            "require-dev": {
+                "google/cloud-core": "^1.39",
+                "phpunit/phpunit": "^4.8|^5.0|^8.0",
+                "yoast/phpunit-polyfills": "^1.0"
+            },
+            "suggest": {
+                "ext-grpc": "The gRPC extension allows more granular control over Error Reporting",
+                "ext-protobuf": "Provides a significant increase in throughput over the pure PHP protobuf implementation. See https://cloud.google.com/php/grpc for installation instructions."
+            },
+            "type": "library",
+            "extra": {
+                "component": {
+                    "id": "cloud-error-reporting",
+                    "target": "googleapis/google-cloud-php-errorreporting.git",
+                    "path": "ErrorReporting",
+                    "entry": null
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Google\\Cloud\\ErrorReporting\\": "src",
+                    "GPBMetadata\\Google\\Devtools\\Clouderrorreporting\\": "metadata"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Stackdriver Error Reporting Client for PHP",
+            "support": {
+                "source": "https://github.com/googleapis/google-cloud-php-errorreporting/tree/v0.19.5"
             },
             "time": "2022-08-05T00:41:21+00:00"
         },
