@@ -1,6 +1,6 @@
 <?php
 
-use Google\Cloud\ErrorReporting\Bootstrap;
+// use Google\Cloud\ErrorReporting\Bootstrap;
 
 /**
  * set the scope for sentry exception and error handler.
@@ -31,11 +31,11 @@ function bootstrap_exception_handler(Throwable $ex)
 {
     global $settings;
 
-    if (getenv('GOOGLE_CLOUD_PROJECT')) {
-        // report to google stackdriver
-        Bootstrap::init();
-        Bootstrap::exceptionHandler($ex);
-    }
+    // if (getenv('GOOGLE_CLOUD_PROJECT')) {
+    //     // report to google stackdriver
+    //     Bootstrap::init();
+    //     Bootstrap::exceptionHandler($ex);
+    // }
     // report to sentry
     Sentry\configureScope('boxwise_sentry_scope');
     Sentry\captureException($ex);
