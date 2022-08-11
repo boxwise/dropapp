@@ -17,7 +17,7 @@
         "smarty/smarty": "^3.1",
         "sendgrid/sendgrid": "^7.3",
         "google/cloud-logging": "^1.18",
-        "google/cloud-error-reporting": "^0.15.0",
+        "google/cloud-error-reporting": "^0.19.5",
         "fzaninotto/faker": "^1.8",
         "auth0/auth0-php": "^8.0.5",
         "opencensus/opencensus": "^0.6.0",

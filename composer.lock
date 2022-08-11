@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66e8b71a3f75e3197946b8991cc3a4c9",
+    "content-hash": "f3779aca46093af3539ebbc34795a49f",
     "packages": [
         {
             "name": "auth0/auth0-php",
@@ -902,16 +902,16 @@
         },
         {
             "name": "google/cloud-error-reporting",
-            "version": "v0.15.0",
+            "version": "v0.19.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-errorreporting.git",
-                "reference": "e4b81dcbb3597d2cfd91bd41974ace230d3a1449"
+                "reference": "f8b38b453a17bd88fe31fc5c07f48f3eb67ebca0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-errorreporting/zipball/e4b81dcbb3597d2cfd91bd41974ace230d3a1449",
-                "reference": "e4b81dcbb3597d2cfd91bd41974ace230d3a1449",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-errorreporting/zipball/f8b38b453a17bd88fe31fc5c07f48f3eb67ebca0",
+                "reference": "f8b38b453a17bd88fe31fc5c07f48f3eb67ebca0",
                 "shasum": ""
             },
             "require": {
@@ -919,9 +919,9 @@
                 "google/gax": "^1.1"
             },
             "require-dev": {
-                "google/cloud-core": "^1.31",
-                "phpdocumentor/reflection": "^3.0",
-                "phpunit/phpunit": "^4.8|^5.0"
+                "google/cloud-core": "^1.39",
+                "phpunit/phpunit": "^4.8|^5.0|^8.0",
+                "yoast/phpunit-polyfills": "^1.0"
             },
             "suggest": {
                 "ext-grpc": "The gRPC extension allows more granular control over Error Reporting",
@@ -948,9 +948,9 @@
             ],
             "description": "Stackdriver Error Reporting Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-errorreporting/tree/v0.15.0"
+                "source": "https://github.com/googleapis/google-cloud-php-errorreporting/tree/v0.19.5"
             },
-            "time": "2019-08-07T20:57:43+00:00"
+            "time": "2022-08-05T00:41:21+00:00"
         },
         {
             "name": "google/cloud-logging",
@@ -1218,28 +1218,28 @@
         },
         {
             "name": "google/gax",
-            "version": "v1.15.0",
+            "version": "v1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "68dfafe585650ea7b054b60864f10f7ce33ffe48"
+                "reference": "c6656a8d440dcc24ca73c4e34db4545202c72e23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/68dfafe585650ea7b054b60864f10f7ce33ffe48",
-                "reference": "68dfafe585650ea7b054b60864f10f7ce33ffe48",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/c6656a8d440dcc24ca73c4e34db4545202c72e23",
+                "reference": "c6656a8d440dcc24ca73c4e34db4545202c72e23",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "^1.18.0",
-                "google/common-protos": "^1.0||^2.0||^3.0",
+                "google/common-protos": "^1.3.1||^2.0||^3.0",
                 "google/grpc-gcp": "^0.2",
-                "google/longrunning": "^0.1",
-                "google/protobuf": "^3.12.2",
+                "google/longrunning": "^0.2",
+                "google/protobuf": "^3.21.4",
                 "grpc/grpc": "^1.13",
                 "guzzlehttp/promises": "^1.3",
                 "guzzlehttp/psr7": "^1.7.0||^2",
-                "php": ">=5.6"
+                "php": ">=7.0"
             },
             "conflict": {
                 "ext-protobuf": "<3.7.0"
@@ -1267,9 +1267,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/gax-php/issues",
-                "source": "https://github.com/googleapis/gax-php/tree/v1.15.0"
+                "source": "https://github.com/googleapis/gax-php/tree/v1.16.0"
             },
-            "time": "2022-08-02T21:15:25+00:00"
+            "time": "2022-08-10T19:33:35+00:00"
         },
         {
             "name": "google/grpc-gcp",
@@ -1318,16 +1318,16 @@
         },
         {
             "name": "google/longrunning",
-            "version": "v0.1.0",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/php-longrunning.git",
-                "reference": "d2ddbe3acf5db2692a7b515597640cf3905a534a"
+                "reference": "5b7500eede9d6b18ef038bef0b5449cbf085e1d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/php-longrunning/zipball/d2ddbe3acf5db2692a7b515597640cf3905a534a",
-                "reference": "d2ddbe3acf5db2692a7b515597640cf3905a534a",
+                "url": "https://api.github.com/repos/googleapis/php-longrunning/zipball/5b7500eede9d6b18ef038bef0b5449cbf085e1d6",
+                "reference": "5b7500eede9d6b18ef038bef0b5449cbf085e1d6",
                 "shasum": ""
             },
             "require-dev": {
@@ -1356,9 +1356,9 @@
             ],
             "description": "Google LongRunning Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/php-longrunning/tree/v0.1.0"
+                "source": "https://github.com/googleapis/php-longrunning/tree/v0.2.0"
             },
-            "time": "2022-07-29T00:07:49+00:00"
+            "time": "2022-08-05T00:41:21+00:00"
         },
         {
             "name": "google/protobuf",
@@ -6748,5 +6748,5 @@
     "platform-overrides": {
         "php": "7.4.25"
     },
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }
