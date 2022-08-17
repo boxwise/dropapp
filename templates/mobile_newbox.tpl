@@ -1,9 +1,12 @@
 	<h2 class="page-header">
 	{if $box['id']}Edit box
-	    {if isset($box['taglabels'])}	
+		{if isset($box['taglabels'])}	
 			{foreach $data['headertags'] as $tag}
 				<span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
 			{/foreach}
+    	{/if}
+		{if isset($box['statelabel'])}	
+			<br><span class="badge" style="background-color:#fff;color:#000">Status: {$box['statelabel']}</span>
     	{/if}
 	{else}Make a new box{/if}</h2>
 	<form method="post" action="?savebox=1">
