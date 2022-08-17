@@ -10,4 +10,7 @@
             <span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
         {/foreach}
     {/if}
+    {if isset($data['statelabel'])}	
+		<br><span class="badge" style="background-color:#fff;color:#000">Status: {$data['statelabel']}</span>
+    {/if}
 </span>
