@@ -11,6 +11,8 @@
         {/foreach}
     {/if}
     {if isset($data['statelabel'])}	
-		<br><span class="badge" style="background-color:#fff;color:#000">Status: {$data['statelabel']}</span>
+        <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 h1">Status: {$data['statelabel']}<span id="newstate"></span></span>
+        </nav>
     {/if}
 </span>

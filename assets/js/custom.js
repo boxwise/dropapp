@@ -386,6 +386,31 @@ function checkTags(id) {
     });
 }
 
+function getNewBoxState() {
+    let locationId = $("#field_location_id").val();
+    $.ajax({
+        type: "post",
+        url: "/ajax.php?file=checkboxstate",
+        data: {
+            id: locationId,
+        },
+        dataType: "json",
+        success: function (result) {
+            if (result.message) {
+                $("#newstate").hide();
+                $("#newstate").html(result.message);
+                $("#newstate").fadeIn(2000);
+            } else {
+                $("#newstate").hide();
+            }
+            return true;
+        },
+        error: AjaxError,
+    });
+
+    return false;
+}
+
 function correctDrops(first, second) {
     $("#row-" + first.id + " .list-column-drops .td-content").text(first.value);
     $("#row-" + second.id + " .list-column-drops .td-content").text(

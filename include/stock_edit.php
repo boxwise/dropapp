@@ -137,7 +137,7 @@
 
     addfield('number', 'Items', 'items', ['testid' => 'items_id']);
 
-    addfield('select', 'Location', 'location_id', ['required' => true, 'width' => 2, 'multiple' => false,  'onchange' => 'alert(($(this).select2("data")).text);',
+    addfield('select', 'Location', 'location_id', ['required' => true,  'multiple' => false,  'onchange' => 'return getNewBoxState();',
         'query' => 'SELECT 
                         l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
                     FROM
