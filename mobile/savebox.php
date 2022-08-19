@@ -26,9 +26,13 @@ if (!$_POST['qr_id']) {
     }
 }
 // Box creation/update
-[$new, $box, $message] = db_transaction(function () use ($new) {
-    $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $_POST['id']]);
+$box = db_row('SELECT stock.*, locations.type as locationType 
+                FROM stock
+                LEFT OUTER JOIN locations ON stock.location_id = locations.id 
+                WHERE id = :id', ['id' => $_POST['id']]);
+mobile_distro_check($box['locationType']);
 
+[$new, $message] = db_transaction(function () use ($new, $box) {
     // Updates and Preparation
     if ($new) {
         Tracer::inSpan(
@@ -109,10 +113,12 @@ if (!$_POST['qr_id']) {
     if ($new) {
         simpleSaveChangeHistory('qr', $_POST['qr_id'], 'QR code associated to box.', [], ['int' => $id]);
     }
-    $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id', ['id' => $id]);
 
-    return [$new, $box, $message];
+    return [$new, $message];
 });
+
+$box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location, l.type as locationType FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id', ['id' => $id]);
+mobile_distro_check($box['locationType']);
 
 // Validate QR-code again
 if (!$box['qr_id']) {

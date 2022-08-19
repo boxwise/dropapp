@@ -3,12 +3,14 @@
     $move = intval($_GET['move']);
 
     $box = db_row('
-        SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location, s.location_id AS location_id 
+        SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location, s.location_id AS location_id, l.type as locationType
         FROM stock AS s 
         LEFT OUTER JOIN products AS p ON p.id = s.product_id 
         LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
         LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
         WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $move]);
+
+    mobile_distro_check($box['locationType']);
 
     $newlocation = db_row('SELECT * FROM locations AS l WHERE l.id = :location AND l.type = "Warehouse"', ['location' => intval($_GET['location'])]);
 

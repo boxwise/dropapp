@@ -117,12 +117,13 @@ Tracer::inSpan(
                         LEFT OUTER JOIN 
                             products AS p ON p.id = stock.product_id
                         LEFT OUTER JOIN 
-                            locations AS l ON l.id = stock.location_id AND l.type = "Warehouse"
+                            locations AS l ON l.id = stock.location_id
                         LEFT OUTER JOIN 
                             genders AS g ON g.id = p.gender_id
                         LEFT OUTER JOIN 
                             sizes AS s ON s.id = stock.size_id
                         WHERE 
+                            l.type = "Warehouse" AND
                             (NOT stock.deleted OR stock.deleted IS NULL) AND
                             l.deleted IS NULL AND 
                             l.camp_id = '.$_SESSION['camp']['id'].
