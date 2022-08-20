@@ -2,6 +2,8 @@
 
 define('LOADED_VIA_SINGLE_ENTRY_POINT', true);
 
+require_once __DIR__.'/vendor/google/cloud-error-reporting/src/prepend.php';
+
 require_once 'vendor/autoload.php';
 // load configuration file
 require_once 'library/config.php';
