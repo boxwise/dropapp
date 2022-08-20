@@ -6,7 +6,7 @@
         LEFT OUTER JOIN qr AS q ON q.id = s.qr_id 
         WHERE s.location_id = l.id AND box_id = :box_id', ['box_id' => $_GET['findbox']]);
 
-    mobile_distro_check($box['locationType']);
+    mobile_distro_check($barcode['locationType']);
 
     if ($barcode['id']) {
         redirect('?boxid='.$barcode['id']);
