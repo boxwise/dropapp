@@ -21,7 +21,7 @@ class DistroEventsTrackingGroups extends AbstractMigration
             'limit' => '255',
             'after' => 'id',
         ])
-            ->addColumn('camp_id', 'integer', [
+            ->addColumn('base_id', 'integer', [
                 'null' => false,
                 'signed' => false,
                 'after' => 'group_name',
@@ -30,7 +30,7 @@ class DistroEventsTrackingGroups extends AbstractMigration
                 'null' => false,
                 'default' => 'In Progress',
                 'limit' => '255',
-                'after' => 'camp_id',
+                'after' => 'base_id',
             ])
 
             ->addColumn('created_on', 'datetime', [
@@ -52,7 +52,7 @@ class DistroEventsTrackingGroups extends AbstractMigration
                 'after' => 'modified_on',
             ])
 
-            ->addForeignKey('camp_id', 'camps', 'id', [
+            ->addForeignKey('base_id', 'camps', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->addForeignKey('created_by', 'cms_users', 'id', [
