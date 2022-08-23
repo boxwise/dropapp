@@ -100,9 +100,6 @@
                         LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
                     WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
 
-    mobile_distro_check($data['locationType'], false);
-    verify_campaccess_location($data['location_id']);
-
     if ($data['taglabels']) {
         $taglabels = explode(',', $data['taglabels']);
         $tagcolors = explode(',', $data['tagcolors']);
@@ -110,6 +107,11 @@
             $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
         }
     }
+
+    if (!$id) {
+        mobile_distro_check($data['locationType'], false);
+    }
+    verify_campaccess_location($data['location_id']);
 
     if (!$id) {
         $data['visible'] = 1;
