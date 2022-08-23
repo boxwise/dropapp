@@ -19,6 +19,15 @@ class AddFlowDirection extends AbstractMigration
                 'name' => 'distro_events_outflow_logs_flow_direction',
                 'unique' => false,
             ])->save();
+
+            $table->dropForeignKey('location_id')->save();
+            $table->changeColumn('location_id', 'integer', [
+                'null' => true,
+                'signed' => false,
+            ])->save();
+            $table->addForeignKey('location_id', 'locations', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])->save();
         }
     }
 
@@ -31,6 +40,14 @@ class AddFlowDirection extends AbstractMigration
         if ($table) {
             $table->removeIndex(['flow_direction'])
                 ->removeColumn('flow_direction')->save();
+            $table->dropForeignKey('location_id')->save();
+            $table->changeColumn('location_id', 'integer', [
+                'null' => false,
+                'signed' => false,
+            ])->save();
+            $table->addForeignKey('location_id', 'locations', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])->save();
         }
     }
 }
