@@ -60,7 +60,7 @@
                 }
             }
 
-            if ($return == 'true') {
+            if ('true' == $return) {
                 db_transaction(function () use ($ids, $return) {
                     [$return, $msg, $redirect] = listRealDelete($_POST['table'], $ids);
                     foreach ($ids as $id) {
