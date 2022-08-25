@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-import { getLoginConfiguration } from '../config';
+import { getLoginConfiguration } from '../../config';
 
 const USER_DEACTVATE_REQUEST = "do=delete"
 const USER_DEACTVATE_RESPONSE = "Item deleted";
