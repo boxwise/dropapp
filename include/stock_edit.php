@@ -108,7 +108,7 @@
         }
     }
 
-    if (!$id) {
+    if ($id) {
         mobile_distro_check($data['locationType'], false);
     }
     verify_campaccess_location($data['location_id']);
