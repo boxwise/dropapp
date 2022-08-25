@@ -54,13 +54,13 @@ Tracer::inSpan(
                     return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible';
 
                 case 'lost_boxes':
-                    return ' AND l.is_lost';
+                    return ' AND stock.box_state_id = 2';
 
                 case 'shop':
                     return ' AND l.is_market';
 
                 case 'scrap':
-                    return ' AND l.is_scrap';
+                    return ' AND stock.box_state_id = 6';
 
                 case 'showall':
                     return ' ';
