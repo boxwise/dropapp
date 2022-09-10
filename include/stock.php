@@ -45,6 +45,7 @@ Tracer::inSpan(
 
                 switch ($applied_filter) {
                 case 'boxes_in_stock':
+                    // @todo: replace with box_state_id
                     return ' AND l.visible';
 
                 case 'ordered':
@@ -187,8 +188,16 @@ Tracer::inSpan(
             listsetting('allowsort', true);
             listsetting('allowcopy', false);
             listsetting('add', 'Add');
-
-            $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
+            // related to https://trello.com/c/Ci74t1Wj
+            $locations = db_simplearray('SELECT 
+                                            l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
+                                        FROM
+                                            locations l
+                                            LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
+                                        WHERE
+                                            l.deleted IS NULL AND l.camp_id =  '.$_SESSION['camp']['id'].' 
+                                                AND l.type = "Warehouse"
+                                        ORDER BY l.seq');
             addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
             if (!empty($tags)) {
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
@@ -213,20 +222,34 @@ Tracer::inSpan(
                 $count = 0;
                 foreach ($ids as $id) {
                     $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $id]);
+                    // update box state related to https://trello.com/c/Ci74t1Wj
+                    $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['option']]);
 
-                    db_query('UPDATE stock SET modified = NOW(), modified_by = '.$_SESSION['user']['id'].', ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id', ['location' => $_POST['option'], 'id' => $id]);
-                    $from['int'] = $box['location_id'];
-                    $to['int'] = $_POST['option'];
-                    simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
+                    $action_label = ' moved';
 
-                    if ($box['location_id'] != $_POST['option']) {
-                        db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');
+                    if (in_array($newboxstate['box_state_name'], ['Lost', 'Scrap'])) {
+                        db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, box_state_id = :box_state_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'], 'id' => $id]);
+
+                        if ('Lost' == $newboxstate['box_state_name']) {
+                            $action_label = ' state changed to Lost';
+                        } elseif ('Scrap' == $newboxstate['box_state_name']) {
+                            $action_label = ' state changed to Scrap';
+                        }
+                    } else {
+                        db_query('UPDATE stock SET modified = NOW(), modified_by = '.$_SESSION['user']['id'].', ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location, box_state_id = :box_state_id WHERE id = :id', ['location' => $_POST['option'], 'box_state_id' => $newboxstate['box_state_id'], 'id' => $id]);
+                        $from['int'] = $box['location_id'];
+                        $to['int'] = $_POST['option'];
+                        simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
+
+                        if ($box['location_id'] != $_POST['option']) {
+                            db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');
+                        }
                     }
 
                     ++$count;
                 }
                 $success = $count;
-                $message = (1 == $count ? '1 box is' : $count.' boxes are').' moved';
+                $message = (1 == $count ? '1 box is' : $count.' boxes are').$action_label;
                 $redirect = '?action='.$_GET['action'];
 
                 break;
