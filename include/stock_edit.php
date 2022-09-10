@@ -20,33 +20,56 @@
                 }
             }
             $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $_POST['id']]);
-            if ($box && ($box['location_id'] != $_POST['location_id'][0])) {
-                db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL WHERE id = :id', ['id' => $_POST['id']]);
+
+            $is_scrap = (!empty($_POST['scrap'][0]));
+            $is_lost = (!empty($_POST['lost'][0]));
+
+            // get new box state id based on the location
+            $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id'][0]]);
+
+            if ($box && (($box['location_id'] != $_POST['location_id'][0]) || (intval($box['location_id']) === intval($_POST['location_id'][0]) && !$is_lost && !$is_scrap))) {
+                // update box state related to https://trello.com/c/Ci74t1Wj
+                db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, box_state_id = :box_state_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'], 'id' => $_POST['id']]);
                 db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');
-            }
-
-            $handler = new formHandler($table);
-
-            $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments'];
-            $id = $handler->savePost($savekeys);
-
-            db_query('DELETE FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock"', [':stock_id' => $id]);
-
-            $params = [];
-            $tags = $_POST['tags'];
-            if (sizeof($tags) > 0) {
-                $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
-
-                for ($i = 0; $i < sizeof($tags); ++$i) {
-                    $query .= "(:tag_id{$i}, 'Stock', :stock_id)";
-                    $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
-                    if ($i !== sizeof($tags) - 1) {
-                        $query .= ',';
+                // migrate from virtual location to true state -- so we should not update box location to virtual location
+                if (in_array($newboxstate['box_state_name'], ['Lost', 'Scrap'])) {
+                    $_POST['location_id'][0] = $box['location_id'];
+                    if ('Lost' == $newboxstate['box_state_name']) {
+                        $is_lost = true;
+                    } elseif ('Scrap' == $newboxstate['box_state_name']) {
+                        $is_scrap = true;
                     }
                 }
+            } elseif ($is_scrap) {
+                db_query('UPDATE stock SET box_state_id = 6 WHERE id = :id', ['id' => $_POST['id']]);
+            } elseif ($is_lost) {
+                db_query('UPDATE stock SET box_state_id = 2 WHERE id = :id', ['id' => $_POST['id']]);
+            }
 
-                $params = array_merge($params, ['stock_id' => $id]);
-                db_query($query, $params);
+            if (!$is_lost && !$is_scrap) {
+                $handler = new formHandler($table);
+
+                $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments'];
+                $id = $handler->savePost($savekeys);
+
+                db_query('DELETE FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock"', [':stock_id' => $id]);
+
+                $params = [];
+                $tags = $_POST['tags'];
+                if (sizeof($tags) > 0) {
+                    $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+
+                    for ($i = 0; $i < sizeof($tags); ++$i) {
+                        $query .= "(:tag_id{$i}, 'Stock', :stock_id)";
+                        $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
+                        if ($i !== sizeof($tags) - 1) {
+                            $query .= ',';
+                        }
+                    }
+
+                    $params = array_merge($params, ['stock_id' => $id]);
+                    db_query($query, $params);
+                }
             }
 
             return [$id, $newbox];
@@ -95,10 +118,12 @@
                         l.type As locationType,
                         GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
                         GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
-                        bs.label AS statelabel,
-                        bs.id AS stateid
+
+                        DATE_FORMAT(stock.modified,"%Y\%m\%d") AS statemodified,
+                        bs.label AS statelabel,                        
+                        bs.id as stateid
                     FROM stock 
-                        LEFT OUTER JOIN box_state AS bs ON bs.id = stock.box_state_id
+                        INNER JOIN box_state AS bs ON bs.id = stock.box_state_id
                         LEFT OUTER JOIN products AS p ON p.id = stock.product_id 
                         LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
                         LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
@@ -121,6 +146,14 @@
         $data['visible'] = 1;
     }
 
+    $disabled = false;
+    if (in_array($data['statelabel'], ['Lost', 'Scrap'])) {
+        $disabled = true;
+        $data['scrap'] = (in_array($data['statelabel'], ['Scrap']));
+        $disabled_scrap = (in_array($data['statelabel'], ['Lost']));
+        $data['lost'] = (in_array($data['statelabel'], ['Lost']));
+        $disabled_lost = (in_array($data['statelabel'], ['Scrap']));
+    }
     // open the template
     $cmsmain->assign('include', 'cms_form.tpl');
     addfield('hidden', '', 'id');
@@ -133,21 +166,22 @@
         addfield('line');
     }
 
-    addfield('select', 'Product', 'product_id', ['test_id' => 'product_id', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].($_SESSION['camp']['separateshopandwhproducts'] ? ' AND NOT p.stockincontainer' : '').' ORDER BY name', 'onchange' => 'getSizes()']);
+    addfield('select', 'Product', 'product_id', ['disabled' => $disabled, 'test_id' => 'product_id', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].($_SESSION['camp']['separateshopandwhproducts'] ? ' AND NOT p.stockincontainer' : '').' ORDER BY name', 'onchange' => 'getSizes()']);
 
-    addfield('select', 'Size', 'size_id', ['required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM sizes WHERE sizegroup_id = '.intval(db_value('SELECT sizegroup_id FROM products WHERE id = :id', ['id' => $data['product_id']])).' ORDER BY seq', 'tooltip' => 'If the right size for your box is not here, don\'t put it in comments, but first double check if you have the right product. For example: Long sleeves for babies, we call them tops.']);
+    addfield('select', 'Size', 'size_id', ['disabled' => $disabled, 'required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM sizes WHERE sizegroup_id = '.intval(db_value('SELECT sizegroup_id FROM products WHERE id = :id', ['id' => $data['product_id']])).' ORDER BY seq', 'tooltip' => 'If the right size for your box is not here, don\'t put it in comments, but first double check if you have the right product. For example: Long sleeves for babies, we call them tops.']);
 
-    addfield('number', 'Items', 'items', ['testid' => 'items_id']);
+    addfield('number', 'Items', 'items', ['testid' => 'items_id', 'readonly' => $disabled]);
 
-    addfield('select', 'Location', 'location_id', ['required' => true,  'multiple' => false,  'onchange' => 'return getNewBoxState();',
+    addfield('select', 'Location', 'location_id', ['required' => true,  'multiple' => false,  'onchange' => 'getNewBoxState();',
         'query' => 'SELECT 
                         l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
                     FROM
                         locations l
                         LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
                     WHERE
-                        l.deleted IS NULL AND l.camp_id = 1
-                            AND l.type = "Warehouse"
+
+                        l.deleted IS NULL AND l.camp_id =  '.$_SESSION['camp']['id'].' 
+                            AND l.type = "Warehouse" '.($id ? '' : ' AND NOT l.box_state_id <> 1').'
                     ORDER BY seq', ]);
 
     if ($data['qr_id']) {
@@ -160,6 +194,7 @@
     addfield('select', 'Tag(s)', 'tags', [
         'testid' => 'tag_id',
         'multiple' => true,
+        'disabled' => $disabled,
         'query' => 'SELECT 
                         tags.id AS value, 
                         tags.label, 
@@ -171,12 +206,17 @@
                                 AND tags_relations.object_type = "Stock" 
                     WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","Stock")',
     ]);
-    addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id']);
-    addfield('line');
-    addfield('html', 'Box History', showHistory('stock', $data['id']), ['width' => 10]);
+    addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id',  'readonly' => $disabled]);
+    if ($id) {
+        addfield('line');
+        addfield('checkbox', 'I can’t find this box', 'lost', ['onclick' => 'setBoxState("lost")', 'value' => 1]);
 
-    addfield('line', '', '', ['aside' => true]);
+        addfield('checkbox', 'Scrap this box?', 'scrap', ['onclick' => 'setBoxState("scrap")', 'value' => 1]);
+        addfield('line');
+        addfield('html', 'Box History', showHistory('stock', $data['id']), ['width' => 10, 'disabled' => $disabled]);
 
+        addfield('line', '', '', ['aside' => true]);
+    }
     addfield('created', 'Created', 'created', ['aside' => true]);
     addformbutton('submitandnew', 'Save and new item');
 

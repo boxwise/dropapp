@@ -1,12 +1,15 @@
 <?php
 
+// related to https://trello.com/c/Ci74t1Wj
 // Show new box state onchange of the location
 $id = $_POST['id'];
 $success = true;
 
 if ($id) {
     $result = db_row('SELECT 
-                         l.label AS location, bs.label AS box_state
+                         l.label AS location, 
+                         bs.label AS box_state,
+                         bs.id as box_state_id
                       FROM
                          locations l
                             INNER JOIN
@@ -14,8 +17,12 @@ if ($id) {
                        WHERE l.id = :location_id AND bs.id <> 1', ['location_id' => $id]);
 
     $newBoxState = $result['box_state'];
+    $newBoxStateId = $result['box_state_id'];
 
-    $message = $newBoxState ? sprintf(' -> <span style="color:blue">%s</span>', $newBoxState) : '';
+    $message = [
+        'box_state' => $newBoxState ? sprintf(' -> <span style="color:blue">%s</span>', $newBoxState) : '',
+        'box_state_id' => $newBoxStateId,
+    ];
     $success = false;
     $redirect = false;
 }

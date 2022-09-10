@@ -388,6 +388,11 @@ function checkTags(id) {
 
 function getNewBoxState() {
     let locationId = $("#field_location_id").val();
+
+    let lostEl = document.getElementById("field_lost");
+    let scrapEl = document.getElementById("field_scrap");
+    $("#field_scrap, #field_lost").attr('disabled',false);
+
     $.ajax({
         type: "post",
         url: "/ajax.php?file=checkboxstate",
@@ -396,10 +401,31 @@ function getNewBoxState() {
         },
         dataType: "json",
         success: function (result) {
-            if (result.message) {
+
+            if (typeof result.message === 'object') {
                 $("#newstate").hide();
-                $("#newstate").html(result.message);
+                $("#newstate").html(result.message.box_state);
                 $("#newstate").fadeIn(2000);
+                
+                if(parseInt(result.message.box_state_id) === 2){
+                    lostEl.checked = true;
+                    scrapEl.checked = false;
+
+                    $("#field_scrap, #field_lost").attr('disabled',true);
+
+                } else if(parseInt(result.message.box_state_id) === 6){
+                    lostEl.checked = false;
+                    scrapEl.checked = true;
+
+                    $("#field_scrap, #field_lost").attr('disabled',true);
+
+                } else {
+                    lostEl.checked = false;
+                    scrapEl.checked = false;
+                    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").prop("disabled", false);
+                    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").prop("readonly", false);
+                }
+
             } else {
                 $("#newstate").hide();
             }
@@ -410,6 +436,66 @@ function getNewBoxState() {
 
     return false;
 }
+
+
+function disableBoxEdit(){
+    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("disabled", true);
+    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("readonly", true);
+}
+
+function enableBoxEdit() {
+    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("disabled", false);
+    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("readonly", false);
+}
+
+function setBoxState(state){
+
+    let lostEl = document.getElementById("field_lost");
+    let scrapEl = document.getElementById("field_scrap");
+  
+    switch(state){
+        case "lost":
+            if (!lostEl.checked) {
+                console.log("lost: " + lostEl.checked);
+                lostEl.checked = false;
+                $("#newstate").hide();
+                $("#newstate").html('');
+                $("#newstate").fadeIn(2000);
+              } else {
+                console.log("lost: " + lostEl.checked);
+                lostEl.checked = true;
+                scrapEl.checked = false;
+                $("#newstate").hide();
+                $("#newstate").html(' -> <span style="color:blue">Lost</span>');
+                $("#newstate").fadeIn(2000);
+              }
+            break;
+        case "scrap":
+            if (!scrapEl.checked) {
+                console.log("scrap: " + scrapEl.checked);
+                scrapEl.checked = false;
+                $("#newstate").hide();
+                $("#newstate").html('');
+                $("#newstate").fadeIn(2000);
+              } else {
+                console.log("scrap: " + scrapEl.checked);
+                scrapEl.checked = true;
+                lostEl.checked = false;
+                $("#newstate").hide();
+                $("#newstate").html(' -> <span style="color:blue">Scrap</span>');
+                $("#newstate").fadeIn(2000);
+              }
+            
+            break;
+    }
+
+    if(scrapEl.checked || lostEl.checked){
+        disableBoxEdit();
+    } else {
+        enableBoxEdit();
+    }
+}
+
 
 function correctDrops(first, second) {
     $("#row-" + first.id + " .list-column-drops .td-content").text(first.value);
