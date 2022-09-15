@@ -441,11 +441,13 @@ function getNewBoxState() {
 function disableBoxEdit(){
     $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("disabled", true);
     $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("readonly", true);
+    $("input[name='__items, input[name='__comments']']").val('text  readonly');
 }
 
 function enableBoxEdit() {
     $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("disabled", false);
     $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("readonly", false);
+    $("input[name='__items'],  input[name='__comments']").val('text  ');
 }
 
 function setBoxState(state){

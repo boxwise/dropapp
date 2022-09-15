@@ -19,19 +19,32 @@
                     throw new Exception('There is an issue creating box identifier. Please try again in a few minutes', 409);
                 }
             }
-            $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $_POST['id']]);
+            $box = db_row('SELECT 
+                            stock.*, 
+                            bs.id as box_state_id, 
+                            bs.label as box_state_name 
+                           FROM stock 
+                           INNER JOIN box_state bs ON bs.id = stock.box_state_id
+                           WHERE stock.id = :id', ['id' => $_POST['id']]);
+
+            // Getting the new box state id based on the location
+            $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id'][0]]);
 
             $is_scrap = (!empty($_POST['scrap'][0]));
             $is_lost = (!empty($_POST['lost'][0]));
 
-            // get new box state id based on the location
-            $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id'][0]]);
+            //  when checked scrap or lost in the form
+            if ($is_scrap) {
+                $newboxstate['box_state_id'] = 6;
+                $newboxstate['box_state_name'] = 'Scrap';
+            } elseif ($is_lost) {
+                $newboxstate['box_state_id'] = 2;
+                $newboxstate['box_state_name'] = 'Lost';
+            }
 
-            if ($box && (($box['location_id'] != $_POST['location_id'][0]) || (intval($box['location_id']) === intval($_POST['location_id'][0]) && !$is_lost && !$is_scrap))) {
-                // update box state related to https://trello.com/c/Ci74t1Wj
-                db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, box_state_id = :box_state_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'], 'id' => $_POST['id']]);
-                db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');
-                // migrate from virtual location to true state -- so we should not update box location to virtual location
+            if ($box && ($box['location_id'] != $_POST['location_id'][0] && !$is_lost && !$is_scrap)) {
+                // Boxes should not be relocated to virtual locations
+                // related to https://trello.com/c/Ci74t1Wj
                 if (in_array($newboxstate['box_state_name'], ['Lost', 'Scrap'])) {
                     $_POST['location_id'][0] = $box['location_id'];
                     if ('Lost' == $newboxstate['box_state_name']) {
@@ -39,11 +52,16 @@
                     } elseif ('Scrap' == $newboxstate['box_state_name']) {
                         $is_scrap = true;
                     }
+                } else {
+                    db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL WHERE id = :id', ['id' => $_POST['id']]);
+                    db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');
                 }
-            } elseif ($is_scrap) {
-                db_query('UPDATE stock SET box_state_id = 6 WHERE id = :id', ['id' => $_POST['id']]);
-            } elseif ($is_lost) {
-                db_query('UPDATE stock SET box_state_id = 2 WHERE id = :id', ['id' => $_POST['id']]);
+            }
+
+            // Update the box state if the state changes
+            if ($newboxstate['box_state_id'] != $box['box_state_id']) {
+                db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW() WHERE id = :id', [':box_state_id' => $newboxstate['box_state_id'],  'id' => $_POST['id']]);
+                simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
             }
 
             if (!$is_lost && !$is_scrap) {
@@ -118,7 +136,6 @@
                         l.type As locationType,
                         GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
                         GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
-
                         DATE_FORMAT(stock.modified,"%Y\%m\%d") AS statemodified,
                         bs.label AS statelabel,                        
                         bs.id as stateid
@@ -209,9 +226,9 @@
     addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id',  'readonly' => $disabled]);
     if ($id) {
         addfield('line');
-        addfield('checkbox', 'I can’t find this box', 'lost', ['onclick' => 'setBoxState("lost")', 'value' => 1]);
+        addfield('checkbox', 'I can’t find this box', 'lost', ['onclick' => 'setBoxState("lost")', 'value' => 1, 'checked' => ($data['lost'])]);
 
-        addfield('checkbox', 'Scrap this box?', 'scrap', ['onclick' => 'setBoxState("scrap")', 'value' => 1]);
+        addfield('checkbox', 'Scrap this box?', 'scrap', ['onclick' => 'setBoxState("scrap")', 'value' => 1, 'checked' => ($data['scrap'])]);
         addfield('line');
         addfield('html', 'Box History', showHistory('stock', $data['id']), ['width' => 10, 'disabled' => $disabled]);
 
