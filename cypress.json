@@ -1,6 +1,10 @@
 {
   "projectId": "tip3z9",
   "baseUrl": "https://staging.boxtribute.org",
+  "testFiles": [
+    "1_feature_tests/*.js",
+    "2_auth_tests/*.js"  
+  ],
   "chromeWebSecurity": false,
   "retries": {
     "runMode": 2,

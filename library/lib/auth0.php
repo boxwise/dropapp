@@ -215,34 +215,35 @@ function isUserInSyncWithAuth0($userId)
         $return_value = true;
     } elseif ($dbUser && $auth0User) {
         $validationResult = [];
-        array_push($validationResult, ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false');
-        array_push($validationResult, ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false');
-        array_push($validationResult, ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false');
-        array_push($validationResult, ($auth0User['app_metadata']['is_god'] == $dbUser['is_admin']) ? 'true' : 'false');
-        array_push($validationResult, ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id']) ? 'true' : 'false');
-        array_push($validationResult, ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id']) ? 'true' : 'false');
-        array_push($validationResult, ($auth0User['app_metadata']['base_ids'] == $dbUser['base_ids']) ? 'true' : 'false');
+        $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
+        $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
+        $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
+        $validationResult['is_god'] = ($auth0User['app_metadata']['is_god'] == $dbUser['is_admin']) ? 'true' : 'false';
+        $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
+        $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id']) ? 'true' : 'false';
+        $validationResult['base_ids'] = ($auth0User['app_metadata']['base_ids'] == $dbUser['base_ids']) ? 'true' : 'false';
 
         if ($dbUser['valid_firstday'] && '0000-00-00' != $dbUser['valid_firstday']) {
-            array_push($validationResult, (!empty($auth0User['app_metadata']['valid_firstday']) && $auth0User['app_metadata']['valid_firstday'] == $dbUser['valid_firstday']) ? 'true' : 'false');
+            $validationResult['valid_firstday'] = (!empty($auth0User['app_metadata']['valid_firstday']) && $auth0User['app_metadata']['valid_firstday'] == $dbUser['valid_firstday']) ? 'true' : 'false';
         }
 
         if ($dbUser['valid_lastday'] && '0000-00-00' != $dbUser['valid_lastday']) {
-            array_push($validationResult, (!empty($auth0User['app_metadata']['valid_lastday']) && $auth0User['app_metadata']['valid_lastday'] == $dbUser['valid_lastday']) ? 'true' : 'false');
+            $validationResult['valid_lastday'] = (!empty($auth0User['app_metadata']['valid_lastday']) && $auth0User['app_metadata']['valid_lastday'] == $dbUser['valid_lastday']) ? 'true' : 'false';
         }
 
         if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
-            array_push($validationResult, (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false');
-            array_push($validationResult, (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false');
+            $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
+            $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
         }
 
-        $return_value = in_array('false', $validationResult) ? false : true;
+        $false_key = array_search('false', $validationResult);
+        $return_value = !$false_key;
     } elseif ((!$dbUser || $auth0User) && ($dbUser || !$auth0User)) {
         $return_value = false;
     }
 
     if (!$return_value) {
-        trigger_error('User with id '.$userId.' is out of sync between DB and Auth0.', E_USER_ERROR);
+        trigger_error('User with id '.$userId.' is out of sync between DB and Auth0 '.($false_key ? 'at '.$false_key : ''), E_USER_ERROR);
     }
 
     $dbUserRoles = db_array('

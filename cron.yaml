@@ -28,10 +28,6 @@ cron:
   url: /cron/reseed-auth0.php
   target: staging
   schedule: every day 00:45
-- description: "ONE-time creation of roles in Auth0 for staging"
-  url: /cron/reseed-roles-auth0.php 
-  target: staging
-  schedule: every 99999 hours
 
 # demo
 - description: "auth0 dailyroutine demo - check inactive users"
@@ -58,10 +54,6 @@ cron:
   url: /cron/reseed-auth0.php
   target: demo
   schedule: every 99999 hours
-- description: "ONE-time creation of roles in Auth0 for demo"
-  url: /cron/reseed-roles-auth0.php 
-  target: demo
-  schedule: every 99999 hours
 
 # production
 - description: "auth0 dailyroutine production - check inactive users"
@@ -80,7 +72,3 @@ cron:
   url: /cron/dailyroutine.php?action=auth0_check_synk
   target: production
   schedule: every day 00:31
-- description: "ONE-time creation of roles in Auth0 for production"
-  url: /cron/reseed-roles-auth0.php 
-  target: production
-  schedule: every 99999 hours

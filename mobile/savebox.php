@@ -26,7 +26,8 @@ if (!$_POST['qr_id']) {
     }
 }
 // Box creation/update
-$box = db_row('SELECT 
+[$new, $box, $message] = db_transaction(function () use ($new) {
+    $box = db_row('SELECT 
                 stock.*, 
                 locations.type as locationType,
                 DATE_FORMAT(stock.modified,"%Y\%m\%d") AS statemodified,
@@ -36,9 +37,6 @@ $box = db_row('SELECT
                 INNER JOIN box_state bs ON bs.id = stock.box_state_id
                 LEFT OUTER JOIN locations ON stock.location_id = locations.id 
                 WHERE stock.id = :id', ['id' => $_POST['id']]);
-mobile_distro_check($box['locationType']);
-
-[$new, $message, $id] = db_transaction(function () use ($new, $box) {
     // Updates and Preparation
     if ($new) {
         Tracer::inSpan(
@@ -154,23 +152,10 @@ mobile_distro_check($box['locationType']);
     if ($new) {
         simpleSaveChangeHistory('qr', $_POST['qr_id'], 'QR code associated to box.', [], ['int' => $id]);
     }
+    $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id', ['id' => $id]);
 
-    return [$new, $message, $id];
+    return [$new, $box, $message];
 });
-
-$box = db_row('SELECT 
-                    s.*, 
-                    CONCAT(p.name," ",g.label) AS product, 
-                    l.label AS location, 
-                    l.type as locationType
-                FROM 
-                    stock AS s
-                    LEFT OUTER JOIN products AS p ON p.id = s.product_id 
-                    LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
-                    LEFT OUTER JOIN locations AS l ON l.id = s.location_id 
-                WHERE s.id = :id', ['id' => $id]);
-
-mobile_distro_check($box['locationType']);
 
 // Validate QR-code again
 if (!$box['qr_id']) {
