@@ -3,7 +3,7 @@
 		<form method="get">
 			<input type="hidden" name="saveamount" value="{$box['id']}">
 			New amount of items in the box
-			<input type="number" name="items" pattern="\d*" value="{$box['items']}">
-			<input type="submit" value="Save new amount">
+			<input type="number" name="items" pattern="\d*" value="{$box['items']}" {if $box['disabled']}disabled{/if}>
+			<input type="submit" value="Save new amount" {if $box['disabled']}disabled{/if} />
 		</form>
 {/if}

@@ -259,7 +259,7 @@ Tracer::inSpan(
 
                         // Update the box state if the state changes
                         if ($newboxstate['box_state_id'] != $box['box_state_id']) {
-                            db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', [':box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+                            db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
                             simpleSaveChangeHistory('stock', $id, 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
                         }
 

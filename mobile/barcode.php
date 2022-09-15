@@ -105,6 +105,7 @@
                 INNER JOIN box_state AS bs ON bs.id = l.box_state_id
                 WHERE l.deleted IS NULL AND l.camp_id = :camp_id AND l.type = "Warehouse" ORDER BY l.seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
                 $history = showHistory('stock', $box['id']);
+                $box['disabled'] = (in_array($box['statelabel'], ['Lost', 'Scrap']));
                 $tpl->assign('box', $box);
                 $tpl->assign('history', $history);
                 $tpl->assign('locations', $locations);

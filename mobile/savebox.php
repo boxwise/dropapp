@@ -83,7 +83,7 @@ if (!$_POST['qr_id']) {
 
         // Update the box state if the state changes
         if ($newboxstate['box_state_id'] != $box['box_state_id']) {
-            db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW() WHERE id = :id', [':box_state_id' => $newboxstate['box_state_id'],  'id' => $id]);
+            db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW() WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id]);
             simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
         }
 
