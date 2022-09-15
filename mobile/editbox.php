@@ -9,8 +9,9 @@
                 l.label AS location,
                 GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
-                bs.label AS statelabel,
-                bs.id AS stateid,
+                DATE_FORMAT(s.modified,"%Y\%m\%d") AS statemodified,
+                bs.label AS statelabel,                        
+                bs.id as stateid,
                 l.type as locationType
         FROM stock AS s 
         LEFT OUTER JOIN box_state AS bs ON bs.id = s.box_state_id
@@ -45,14 +46,15 @@
 
     $data['products'] = db_array('SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label, sizegroup_id FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = :camp_id ORDER BY name', ['camp_id' => $_SESSION['camp']['id']]);
     $data['locations'] = db_array('SELECT 
-                                        l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
-                                    FROM
-                                        locations l
-                                        LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
-                                    WHERE
-                                        l.deleted IS NULL AND l.camp_id = 1
-                                            AND l.type = "Warehouse"
-                                    ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']]);
+
+    l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
+FROM
+    locations l
+    LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
+WHERE
+    l.deleted IS NULL AND l.camp_id = :camp_id 
+        AND l.type = "Warehouse"
+ORDER BY l.seq', ['camp_id' => $_SESSION['camp']['id']]);
     $data['sizes'] = db_array('SELECT s.* FROM sizes AS s LEFT OUTER JOIN products AS p ON p.id = :product_id WHERE s.sizegroup_id = p.sizegroup_id ORDER BY s.seq
 ', ['product_id' => $box['product_id']]);
 
@@ -67,5 +69,12 @@
                                         AND tags_relations.object_id = :id
                                         AND tags_relations.object_type = "Stock" 
                               WHERE tags.camp_id = :campId AND tags.deleted IS NULL AND tags.type IN ("All","Stock")', ['id' => $_GET['editbox'], 'campId' => $_SESSION['camp']['id']]);
+    $box['disabled'] = false;
+    if (in_array($box['statelabel'], ['Lost', 'Scrap'])) {
+        $box['disabled'] = true;
+        $box['scrap'] = (in_array($box['statelabel'], ['Scrap']));
+        $box['lost'] = (in_array($box['statelabel'], ['Lost']));
+    }
+
     $tpl->assign('box', $box);
     $tpl->assign('include', 'mobile_newbox.tpl');

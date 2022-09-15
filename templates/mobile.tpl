@@ -17,7 +17,7 @@
 		<script src="/assets/js/jquery.validate.min.js"></script>
 		<script src="/assets/js/bootstrap.min.js"></script>
 		<script src="/assets/js/select2.min.js"></script>
-		<script src="/assets/js/mobile.js?v=2"></script>
+		<script src="/assets/js/mobile.js?v=3"></script>
 
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
 		<link rel="icon" type="image/png" href="/assets/img/favicon-32x32-boxtribute.png" sizes="32x32">
