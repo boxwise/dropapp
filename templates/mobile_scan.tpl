@@ -4,7 +4,21 @@
 			<span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
 		{/foreach}
     {/if}
+	{if isset($box['statelabel'])}	
+			<nav class="navbar navbar-light bg-light">
+				<span class="navbar-brand mb-0 h1">Status: 
+				{if in_array($box['stateid'],[2,6])}	
+				<span><span id="currentstate" style="color:red">{$box['statelabel']}</span> {$box['statemodified']}</span>
+				{else}
+				<span id="currentstate" style="color:green">{$box['statelabel']}</span>
+				{/if}
+				<span id="newstate"></span></span>
+			</nav>
+	{/if}
 </h2>
+
+
+
 	<div id ="box-info" class="container-fluid" data-testid="box-info">
 		<div id="box-info-content" class = "row">
 				<div id="box-info-product" class = "col-xs-12" data-testid="box-info-product">

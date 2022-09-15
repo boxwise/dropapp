@@ -6,7 +6,15 @@
         throw new Exception('No QR-code assigned for new box!');
     }
     $data['products'] = db_array('SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label, sizegroup_id FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND camp_id = :camp_id'.($_SESSION['camp']['separateshopandwhproducts'] ? ' AND NOT p.stockincontainer' : '').' ORDER BY name', ['camp_id' => $_SESSION['camp']['id']]);
-    $data['locations'] = db_array('SELECT *, id AS value FROM locations WHERE deleted IS NULL AND camp_id = :camp_id AND type = "Warehouse" ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']]);
+    $data['locations'] = db_array('SELECT 
+    l.id AS value, l.label
+FROM
+    locations l
+    LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id and l.box_state_id <> 1
+WHERE
+    l.deleted IS NULL AND l.camp_id = :camp_id
+        AND l.type = "Warehouse"
+ORDER BY l.seq', ['camp_id' => $_SESSION['camp']['id']]);
 
     $data['allsizes'] = db_array('SELECT s.* FROM sizes AS s, sizegroup AS sg WHERE s.sizegroup_id = sg.id ORDER BY s.seq');
     // adding the tags to box creation form

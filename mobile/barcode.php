@@ -30,8 +30,12 @@
                                 l.label AS location,
                                 GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
                                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
-                                l.type as locationType
+                                l.type as locationType,
+                                DATE_FORMAT(s.modified,"%Y\%m\%d") AS statemodified,
+                                bs.id as stateid, 
+                                bs.label as statelabel
                             FROM stock AS s
+                                INNER JOIN box_state AS bs ON bs.id = s.box_state_id
                                 LEFT OUTER JOIN products AS p ON p.id = s.product_id
                                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
                                 LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
@@ -52,14 +56,28 @@
         } else {
             // a barcode hash was passed in the url and it exits in qr-table
             $qr_id = db_value('SELECT id FROM qr WHERE code = :code AND legacy = :legacy', ['code' => $_GET['barcode'], 'legacy' => (isset($_GET['qrlegacy']) ? 1 : 0)]);
-            $box = db_row('SELECT s.*, c.id AS camp_id, c.name AS campname, CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product, p.name AS product2, g.label AS gender, IFNULL(s2.label, "") AS size, l.label AS location, l.type as locationType FROM stock AS s
-                LEFT OUTER JOIN products AS p ON p.id = s.product_id
-                LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
-                LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
-                LEFT OUTER JOIN locations AS l ON l.id = s.location_id
-                LEFT OUTER JOIN qr AS q ON q.id = s.qr_id
-                LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
-                WHERE q.id = :qrid', ['qrid' => $qr_id]);
+            $box = db_row('SELECT 
+                                s.*, 
+                                c.id AS camp_id, 
+                                c.name AS campname, 
+                                CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product, 
+                                p.name AS product2, 
+                                g.label AS gender, 
+                                IFNULL(s2.label, "") AS size, 
+                                l.label AS location, 
+                                l.type as locationType,
+                                DATE_FORMAT(s.modified,"%Y\%m\%d") AS statemodified,
+                                bs.id as stateid, 
+                                bs.label as statelabel
+                            FROM stock AS s
+                                INNER JOIN box_state AS bs ON bs.id = s.box_state_id
+                                LEFT OUTER JOIN products AS p ON p.id = s.product_id
+                                LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
+                                LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
+                                LEFT OUTER JOIN locations AS l ON l.id = s.location_id
+                                LEFT OUTER JOIN qr AS q ON q.id = s.qr_id
+                                LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
+                            WHERE q.id = :qrid', ['qrid' => $qr_id]);
         }
 
         if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {
@@ -79,7 +97,13 @@
                 $orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND l.type = "Warehouse" AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', ['camp' => $_SESSION['camp']['id']]);
                 $tpl->assign('orders', $orders);
 
-                $locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE deleted IS NULL AND camp_id = :camp_id AND type = "Warehouse" ORDER BY seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
+                $locations = db_array('SELECT 
+                    l.id AS value, 
+                    if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label,
+                    IF(l.id = :location, true, false) AS selected 
+                FROM locations AS l
+                INNER JOIN box_state AS bs ON bs.id = l.box_state_id
+                WHERE l.deleted IS NULL AND l.camp_id = :camp_id AND l.type = "Warehouse" ORDER BY l.seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
                 $history = showHistory('stock', $box['id']);
                 $tpl->assign('box', $box);
                 $tpl->assign('history', $history);
