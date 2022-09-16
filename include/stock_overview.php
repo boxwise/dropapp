@@ -96,13 +96,15 @@
                         sizes ON stock.size_id = sizes.id 
                     INNER JOIN
                         locations on stock.location_id = locations.id 
+                    INNER JOIN 
+                        box_state bs on bs.id = stock.box_state_id
                     WHERE 
                         locations.camp_id = :camp_id 
                         AND locations.type = "Warehouse"
                         AND (NOT stock.deleted OR stock.deleted IS NULL)'.
                         ($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
                         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
-                        .('lost' == $_SESSION['filter']['stock_overview'] ? 'AND locations.is_lost=1' :
+                        .('lost' == $_SESSION['filter']['stock_overview'] ? 'AND stock.box_state_id = 2' :
                             ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND (stock.ordered OR stock.picked) AND locations.visible' :
                                 ('untouched' == $_SESSION['filter']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND locations.visible' :
                                     (is_numeric($_SESSION['filter']['stock_overview']) ? ' AND (locations.id = '.intval($_SESSION['filter']['stock_overview']).')' : '

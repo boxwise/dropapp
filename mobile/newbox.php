@@ -7,12 +7,13 @@
     }
     $data['products'] = db_array('SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label, sizegroup_id FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND camp_id = :camp_id'.($_SESSION['camp']['separateshopandwhproducts'] ? ' AND NOT p.stockincontainer' : '').' ORDER BY name', ['camp_id' => $_SESSION['camp']['id']]);
     $data['locations'] = db_array('SELECT 
-    l.id AS value, l.label
+
+    l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
 FROM
     locations l
-    LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id and l.box_state_id <> 1
+    INNER JOIN box_state bs ON bs.id = l.box_state_id AND NOT l.box_state_id <> 1
 WHERE
-    l.deleted IS NULL AND l.camp_id = :camp_id
+    l.deleted IS NULL AND l.camp_id = :camp_id 
         AND l.type = "Warehouse"
 ORDER BY l.seq', ['camp_id' => $_SESSION['camp']['id']]);
 

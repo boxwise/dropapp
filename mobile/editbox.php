@@ -50,7 +50,7 @@
     l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
 FROM
     locations l
-    LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
+    INNER JOIN box_state bs ON bs.id = l.box_state_id
 WHERE
     l.deleted IS NULL AND l.camp_id = :camp_id 
         AND l.type = "Warehouse"

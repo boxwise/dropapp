@@ -51,7 +51,7 @@
 			{/foreach}
 		</div>
 		<div class="form-group">
-			<select name="location_id" id="location_id" class="form-control" data-testid="location_id" onchange="getNewBoxState()" required>
+			<select name="location_id" id="location_id" class="form-control" data-testid="location_id" {if $box['id'] !='new'}onchange="getNewBoxState()"{/if} required>
 				<option value="">Select a location</option>
 				{foreach $data['locations'] as $l}<option value="{$l['value']}" {if $l['value']==$box['location_id']}selected{/if}>{$l['label']}</option>
 				{/foreach}
@@ -73,7 +73,7 @@
 		<div class="form-group"><input type="text" id="comments" name="comments" placeholder="Comments for this box" value="{$box['comments']}" data-testid="comments" class="form-control"  {if $box['disabled']}readonly{/if}></div>
 		<hr/>
 		<center>
-		
+		{if $box['id'] != 'new'}
 		<div class="form-group" id="checkbox">
 			<div class="col-sm-6">
 				<label for="lost" class="checkbox">
@@ -92,6 +92,7 @@
 				</label>
 			</div>
 		</div>
+		{/if}
 		</center>
 		<hr/>
 
