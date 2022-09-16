@@ -9,7 +9,7 @@
                 l.label AS location,
                 GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
-                DATE_FORMAT(s.modified,"%Y\%m\%d") AS statemodified,
+                DATE_FORMAT(s.modified,"%Y/%m/%d") AS statemodified,
                 bs.label AS statelabel,                        
                 bs.id as stateid,
                 l.type as locationType

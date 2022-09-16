@@ -30,7 +30,7 @@ if (!$_POST['qr_id']) {
     $box = db_row('SELECT 
                 stock.*, 
                 locations.type as locationType,
-                DATE_FORMAT(stock.modified,"%Y\%m\%d") AS statemodified,
+                DATE_FORMAT(stock.modified,"%Y/%m/%d") AS statemodified,
                 bs.id as box_state_id, 
                 bs.label as box_state_name
                 FROM stock

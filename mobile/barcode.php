@@ -31,7 +31,7 @@
                                 GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
                                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
                                 l.type as locationType,
-                                DATE_FORMAT(s.modified,"%Y\%m\%d") AS statemodified,
+                                DATE_FORMAT(s.modified,"%Y/%m/%d") AS statemodified,
                                 bs.id as stateid, 
                                 bs.label as statelabel
                             FROM stock AS s
@@ -66,7 +66,7 @@
                                 IFNULL(s2.label, "") AS size, 
                                 l.label AS location, 
                                 l.type as locationType,
-                                DATE_FORMAT(s.modified,"%Y\%m\%d") AS statemodified,
+                                DATE_FORMAT(s.modified,"%Y/%m/%d") AS statemodified,
                                 bs.id as stateid, 
                                 bs.label as statelabel
                             FROM stock AS s
