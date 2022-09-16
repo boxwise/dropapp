@@ -54,7 +54,7 @@ if (!$_POST['qr_id']) {
         $id = $_POST['id'];
 
         // Getting the new box state id based on the location
-        $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id'][0]]);
+        $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id']]);
 
         //  when checked scrap or lost in the form
         if ($is_scrap) {
