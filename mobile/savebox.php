@@ -37,6 +37,13 @@ if (!$_POST['qr_id']) {
                 INNER JOIN box_state bs ON bs.id = stock.box_state_id
                 LEFT OUTER JOIN locations ON stock.location_id = locations.id 
                 WHERE stock.id = :id', ['id' => $_POST['id']]);
+
+    $is_scrap = (!empty($_POST['scrap']));
+    $is_lost = (!empty($_POST['lost']));
+
+    // Getting the new box state id based on the location
+    $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id']]);
+
     // Updates and Preparation
     if ($new) {
         Tracer::inSpan(
@@ -48,13 +55,7 @@ if (!$_POST['qr_id']) {
             }
         );
     } else {
-        $is_scrap = (!empty($_POST['scrap']));
-        $is_lost = (!empty($_POST['lost']));
-
         $id = $_POST['id'];
-
-        // Getting the new box state id based on the location
-        $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id']]);
 
         //  when checked scrap or lost in the form
         if ($is_scrap) {
@@ -79,12 +80,6 @@ if (!$_POST['qr_id']) {
                 db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL WHERE id = :id', ['id' => $box['id']]);
                 db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'].')');
             }
-        }
-
-        // Update the box state if the state changes
-        if ($newboxstate['box_state_id'] != $box['box_state_id']) {
-            db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW() WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id]);
-            simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
         }
 
         // Undelete a box if it is scanned
@@ -115,7 +110,7 @@ if (!$_POST['qr_id']) {
             trigger_error($message);
         }
     }
-
+    // After a state is changed to scrap or lost, changes are not allowed until the state is changed again
     if (!$is_lost && !$is_scrap) {
         // keys of POST to be saved
         $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments', 'qr_id'];
@@ -148,10 +143,21 @@ if (!$_POST['qr_id']) {
             db_query($query, $params);
         }
     }
+
     // Log qr box connection in history table
     if ($new) {
         simpleSaveChangeHistory('qr', $_POST['qr_id'], 'QR code associated to box.', [], ['int' => $id]);
     }
+
+    // Update the box state if the state changes
+    if (!$new && $newboxstate['box_state_id'] != $box['box_state_id']) {
+        db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW() WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id]);
+        simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
+    } elseif ($new && 'Instock' !== $newboxstate['box_state_name']) {
+        db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+        simpleSaveChangeHistory('stock', $box['id'], 'changed box state to '.$newboxstate['box_state_name']);
+    }
+
     $box = db_row('SELECT s.*, CONCAT(p.name," ",g.label) AS product, l.label AS location FROM stock AS s LEFT OUTER JOIN products AS p ON p.id = s.product_id LEFT OUTER JOIN genders AS g ON g.id = p.gender_id LEFT OUTER JOIN locations AS l ON l.id = s.location_id WHERE s.id = :id', ['id' => $id]);
 
     return [$new, $box, $message];

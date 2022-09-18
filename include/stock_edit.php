@@ -58,12 +58,7 @@
                 }
             }
 
-            // Update the box state if the state changes
-            if ($newboxstate['box_state_id'] != $box['box_state_id']) {
-                db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $_POST['id'], 'user_id' => $_SESSION['user']['id']]);
-                simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
-            }
-
+            // After a state is changed to scrap or lost, changes are not allowed until the state is changed again
             if (!$is_lost && !$is_scrap) {
                 $handler = new formHandler($table);
 
@@ -88,6 +83,15 @@
                     $params = array_merge($params, ['stock_id' => $id]);
                     db_query($query, $params);
                 }
+            }
+
+            // Update the box state if the state changes
+            if (!$newbox && $newboxstate['box_state_id'] != $box['box_state_id']) {
+                db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $_POST['id'], 'user_id' => $_SESSION['user']['id']]);
+                simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
+            } elseif ($newbox && 'Instock' !== $newboxstate['box_state_name']) {
+                db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+                simpleSaveChangeHistory('stock', $box['id'], 'changed box state to '.$newboxstate['box_state_name']);
             }
 
             return [$id, $newbox];
@@ -198,10 +202,8 @@
                         locations l
                         LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
                     WHERE
-
                         l.deleted IS NULL AND l.camp_id =  '.$_SESSION['camp']['id'].' 
-                            AND l.type = "Warehouse" '.($id ? '' : ' AND NOT l.box_state_id <> 1').'
-                    ORDER BY seq', ]);
+                            AND l.type = "Warehouse" ORDER BY seq', ]);
 
     if ($data['qr_id']) {
         $qr = db_row('SELECT code, legacy FROM qr WHERE id = :id', ['id' => $data['qr_id']]);
