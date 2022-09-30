@@ -162,9 +162,9 @@ Tracer::inSpan(
                     $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the shop by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['picked'])).'"></i>';
                 } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
                     $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';
-                    $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban red' : 'fa-chain-broken orange';
+                    $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban' : 'fa-chain-broken';
                     $statelabel = 2 === intval($data[$key]['box_state_id']) ? 'lost' : 'scraped';
-                    $data[$key]['order'] = sprintf('<span class="hide">2</span><i class="fa %s tooltip-this" title="This box is %s %s"></i>', $icon, $statelabel, $modifiedtext);
+                    $data[$key]['order'] = sprintf('<span class="hide">2</span><i class="fa %s tooltip-this" style="color: red" title="This box is %s %s"></i>', $icon, $statelabel, $modifiedtext);
                 } else {
                     $data[$key]['order'] = '<span class="hide">0</span>';
                 }
