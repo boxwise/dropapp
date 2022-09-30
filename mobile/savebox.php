@@ -151,10 +151,10 @@ if (!$_POST['qr_id']) {
 
     // Update the box state if the state changes
     if (!$new && $newboxstate['box_state_id'] != $box['box_state_id']) {
-        db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW() WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id]);
+        db_query('UPDATE stock SET box_state_id = :box_state_id, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, modified = NOW() WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id]);
         simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
     } elseif ($new && 'Instock' !== $newboxstate['box_state_name']) {
-        db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+        db_query('UPDATE stock SET box_state_id = :box_state_id, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
         simpleSaveChangeHistory('stock', $box['id'], 'changed box state to '.$newboxstate['box_state_name']);
     }
 

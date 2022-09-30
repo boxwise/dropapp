@@ -54,7 +54,7 @@ $move = intval($_GET['move']);
     if ($newlocation['stateid'] != $box['stateid']) {
         $message .= ($is_moved) ? ', and ' : ' ';
         $message .= 'state changed from '.$box['statelabel'].' to '.$newlocation['statelabel'];
-        db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newlocation['stateid'],  'id' => $box['id'], 'user_id' => $_SESSION['user']['id']]);
+        db_query('UPDATE stock SET box_state_id = :box_state_id, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newlocation['stateid'],  'id' => $box['id'], 'user_id' => $_SESSION['user']['id']]);
         simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['statelabel'].' to '.$newlocation['statelabel']);
     }
 

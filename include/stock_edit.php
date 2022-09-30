@@ -30,8 +30,8 @@
             // Getting the new box state id based on the location
             $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id'][0]]);
 
-            $is_scrap = (!empty($_POST['scrap'][0]));
-            $is_lost = (!empty($_POST['lost'][0]));
+            $is_scrap = (!empty($_POST['scrap'][0]) && 1 == $_POST['scrap'][0]);
+            $is_lost = (!empty($_POST['lost'][0]) && 1 == $_POST['lost'][0]);
 
             //  when checked scrap or lost in the form
             if ($is_scrap) {
@@ -87,10 +87,10 @@
 
             // Update the box state if the state changes
             if (!$newbox && $newboxstate['box_state_id'] != $box['box_state_id']) {
-                db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $_POST['id'], 'user_id' => $_SESSION['user']['id']]);
+                db_query('UPDATE stock SET box_state_id = :box_state_id, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $_POST['id'], 'user_id' => $_SESSION['user']['id']]);
                 simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
             } elseif ($newbox && 'Instock' !== $newboxstate['box_state_name']) {
-                db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+                db_query('UPDATE stock SET box_state_id = :box_state_id, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
                 simpleSaveChangeHistory('stock', $box['id'], 'changed box state to '.$newboxstate['box_state_name']);
             }
 

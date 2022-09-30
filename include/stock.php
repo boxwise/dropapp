@@ -45,14 +45,15 @@ Tracer::inSpan(
 
                 switch ($applied_filter) {
                 case 'boxes_in_stock':
-                    // @todo: replace with box_state_id
-                    return ' AND l.visible';
+                    // @todo: replace l.visable with box_state_id = 1 (later on once we totally migrate to box state)
+                    // check if location is visable and also box not in Lost, Scrap or Donated state
+                    return ' AND (l.visible AND stock.box_state_id NOT IN (2,6,5)) ';
 
                 case 'ordered':
-                    return ' AND (stock.ordered OR stock.picked) AND l.visible';
+                    return ' AND (stock.ordered OR stock.picked) AND l.visible AND stock.box_state_id NOT IN (2,6,5)';
 
                 case 'dispose':
-                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible';
+                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible AND stock.box_state_id NOT IN (2,6,5)';
 
                 case 'lost_boxes':
                     return ' AND stock.box_state_id = 2';
@@ -67,7 +68,9 @@ Tracer::inSpan(
                     return ' ';
 
                 default:
-                    return ' AND l.visible';
+                    // @todo: replace l.visable with box_state_id = 1 (later on once we totally migrate to box state)
+                    // default case to show all the boxes Instock state
+                    return ' AND (l.visible AND stock.box_state_id NOT IN (2,6,5))';
             }
             }
             $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock'], $outgoinglocations);
@@ -157,6 +160,11 @@ Tracer::inSpan(
                     $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
                 } elseif ($data[$key]['picked']) {
                     $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the shop by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['picked'])).'"></i>';
+                } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
+                    $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';
+                    $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban red' : 'fa-chain-broken orange';
+                    $statelabel = 2 === intval($data[$key]['box_state_id']) ? 'lost' : 'scraped';
+                    $data[$key]['order'] = sprintf('<span class="hide">2</span><i class="fa %s tooltip-this" title="This box is %s %s"></i>', $icon, $statelabel, $modifiedtext);
                 } else {
                     $data[$key]['order'] = '<span class="hide">0</span>';
                 }
@@ -259,7 +267,7 @@ Tracer::inSpan(
 
                         // Update the box state if the state changes
                         if ($newboxstate['box_state_id'] != $box['box_state_id']) {
-                            db_query('UPDATE stock SET box_state_id = :box_state_id, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+                            db_query('UPDATE stock SET box_state_id = :box_state_id, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
                             simpleSaveChangeHistory('stock', $id, 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
                         }
 

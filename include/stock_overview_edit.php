@@ -50,7 +50,7 @@
                 ($size ? 's.id = '.intval($size).' AND ' : '').
                 ($location ? 'l.id = '.intval($location).' AND ' : '').
                 '(NOT stock.deleted OR stock.deleted IS NULL) AND 
-                l.visible');
+                l.visible AND stock.box_state_id NOT IN (2,6) ');
 
         foreach ($data as $key => $value) {
             if ($data[$key]['ordered']) {
