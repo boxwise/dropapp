@@ -71,8 +71,16 @@ Tracer::inSpan(
         case '/cron/reseed-db.php':
         case '/cron/reseed-auth0.php':
         case '/cron/reseed-roles-auth0.php':
+        case '/cron/reseed-users-roles-auth0.php':
         case '/fake-error.php':
             require substr($parsedUrl, 1); // trim /
+
+            break;
+
+        case '/ping':
+            http_response_code(200);
+
+            exit('pong');
 
             break;
 
