@@ -105,10 +105,10 @@
                         ($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
                         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
                         .('lost' == $_SESSION['filter']['stock_overview'] ? 'AND stock.box_state_id = 2' :
-                            ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND (stock.ordered OR stock.picked) AND locations.visible AND stock.box_state_id NOT IN (2,6) ' :
-                                ('untouched' == $_SESSION['filter']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND locations.visible AND stock.box_state_id NOT IN (2,6) ' :
+                            ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND (stock.ordered OR stock.picked) AND locations.visible AND stock.box_state_id NOT IN (2,6,5) ' :
+                                ('untouched' == $_SESSION['filter']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND locations.visible AND stock.box_state_id NOT IN (2,6,5) ' :
                                     (is_numeric($_SESSION['filter']['stock_overview']) ? ' AND (locations.id = '.intval($_SESSION['filter']['stock_overview']).')' : '
-                                        AND locations.visible AND stock.box_state_id NOT IN (2,6)')))).
+                                        AND locations.visible AND stock.box_state_id NOT IN (2,6,5)')))).
                     ' GROUP BY 
                         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
                     ) as agrouping
