@@ -157,14 +157,14 @@ Tracer::inSpan(
             $totalitems = 0;
             foreach ($data as $key => $value) {
                 if ($data[$key]['ordered']) {
-                    $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
+                    $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box was ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
                 } elseif ($data[$key]['picked']) {
-                    $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the shop by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['picked'])).'"></i>';
+                    $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box was picked for the shop by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['picked'])).'"></i>';
                 } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
                     $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';
                     $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban' : 'fa-chain-broken';
                     $statelabel = 2 === intval($data[$key]['box_state_id']) ? 'lost' : 'scraped';
-                    $data[$key]['order'] = sprintf('<span class="hide">2</span><i class="fa %s tooltip-this" style="color: red" title="This box is %s %s"></i>', $icon, $statelabel, $modifiedtext);
+                    $data[$key]['order'] = sprintf('<span class="hide">2</span><i class="fa %s tooltip-this" style="color: red" title="This box was %s %s"></i>', $icon, $statelabel, $modifiedtext);
                 } else {
                     $data[$key]['order'] = '<span class="hide">0</span>';
                 }
