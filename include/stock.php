@@ -24,7 +24,7 @@ Tracer::inSpan(
             listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
 
             // Status Filter
-            $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND NOT is_scrap AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
+            $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND locations.box_state_id NOT IN (2,6) AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
             $statusarray = [
                 'boxes_in_stock' => 'In Stock',
                 'showall' => 'Everything',
