@@ -20,7 +20,7 @@
         listsetting('listrownotclickable', true);
 
         $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND locations.box_state_id NOT IN (2,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
-        $statusarray = ['in_stock' => 'In stock', 'ordered' => 'Ordered', 'untouched' => 'Untouched for 3 months', 'lost' => 'Lost'];
+        $statusarray = ['in_stock' => 'In stock', 'ordered' => 'Ordered', 'untouched' => 'Untouched for 3 months', 'lost' => 'Lost', 'scrap' => 'Scrap'];
         if (isset($outgoinglocations)) {
             listfilter(['label' => 'Boxes', 'options' => ($statusarray + $outgoinglocations)]);
         } else {
@@ -109,7 +109,7 @@
                             ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND (stock.ordered OR stock.picked) AND locations.visible AND stock.box_state_id NOT IN (2,6,5) ' :
                                 ('untouched' == $_SESSION['filter']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND locations.visible AND stock.box_state_id NOT IN (2,6,5) ' :
                                     (is_numeric($_SESSION['filter']['stock_overview']) ? ' AND (locations.id = '.intval($_SESSION['filter']['stock_overview']).')' : '
-                                        AND locations.visible AND stock.box_state_id NOT IN (2,6,5)')))).
+                                        AND locations.visible AND stock.box_state_id NOT IN (2,6,5)'))))).
                     ' GROUP BY 
                         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
                     ) as agrouping
