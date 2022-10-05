@@ -19,7 +19,7 @@
         listsetting('allowcollapse', true);
         listsetting('listrownotclickable', true);
 
-        $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND locations.box_state_id NOT IN (2) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
+        $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND locations.box_state_id NOT IN (2,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
         $statusarray = ['in_stock' => 'In stock', 'ordered' => 'Ordered', 'untouched' => 'Untouched for 3 months', 'lost' => 'Lost'];
         if (isset($outgoinglocations)) {
             listfilter(['label' => 'Boxes', 'options' => ($statusarray + $outgoinglocations)]);
