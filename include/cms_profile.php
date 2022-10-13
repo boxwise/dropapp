@@ -3,6 +3,15 @@
     $table = 'cms_users';
 
     if ($_POST) {
+        // remove leading and trailing whitespace from name
+        if ($_POST['naam']) {
+            $_POST['naam'] = trim($_POST['naam']);
+        }
+        // lowercase email and remove leading and trailing whitespace
+        if ($_POST['email']) {
+            $_POST['email'] = strtolower(trim($_POST['email']));
+        }
+
         $keys = ['naam', 'email', 'language'];
 
         // check the password is equal to confirm password
