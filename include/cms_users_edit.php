@@ -6,6 +6,16 @@ $table = 'cms_users';
 
 if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_value('SELECT MIN(level) FROM cms_usergroups_levels')) {
     if ($_POST) {
+        // remove leading and trailing whitespace from name
+        if ($_POST['naam']) {
+            $_POST['naam'] = trim($_POST['naam']);
+        }
+        // lowercase email and remove leading and trailing whitespace
+        if ($_POST['email']) {
+            $_POST['email'] = strtolower(trim($_POST['email']));
+            $_POST['email2'] = strtolower(trim($_POST['email2']));
+        }
+
         // Validate if E-mail is already active
         $existinguser = db_row('
 			SELECT u.id, ug.organisation_id, ugl.level AS userlevel
