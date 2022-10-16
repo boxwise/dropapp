@@ -1,11 +1,5 @@
 <?php
 
-use Endroid\QrCode\Color\Color;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
-use Endroid\QrCode\Writer\PngWriter;
 use OpenCensus\Trace\Tracer;
 
 require __DIR__.'/../library/core.php';
@@ -79,35 +73,12 @@ Tracer::inSpan(
                 }
             }
 
-            Tracer::inSpan(
-                ['name' => 'QR png generation'],
-                function () use ($hash, &$pdf, $y) {
-                    try {
-                        // related to this trello https://trello.com/c/5H7ByALh
-                        $writer = new PngWriter();
-
-                        // Create QR code
-                        $qrCode = QrCode::create('https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash)
-                            ->setEncoding(new Encoding('UTF-8'))
-                            ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
-                            ->setSize(150)
-                            ->setMargin(10)
-                            ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-                            ->setForegroundColor(new Color(0, 0, 0))
-                            ->setBackgroundColor(new Color(255, 255, 255))
-                            ;
-
-                        $result = $writer->write($qrCode);
-
-                        $url = $result->getDataUri();
-
-                        $pdf->Image($url, 88, 12 + $y, 34, 34, 'png');
-                    } catch (Exception $e) {
-                        trigger_error('QR-code png generation error.');
-                        $pdf->Text(88, 12 + $y, 'QR-CODE ERROR!');
-                    }
-                }
-            );
+            $qrPng = generateQrPng($hash);
+            if ($qrPng === 'QR-CODE ERROR') {
+                $pdf->Text(88, 12 + $y, 'QR-CODE ERROR!');
+            } else {
+                $pdf->Image($qrPng, 88, 12 + $y, 34, 34, 'png');
+            }
 
             $pdf->Image($_SERVER['DOCUMENT_ROOT'].'/pdf/logo.png', 85, 100 + $y, 40, 36);
 

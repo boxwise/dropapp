@@ -1,5 +1,46 @@
 <?php
 
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
+use OpenCensus\Trace\Tracer;
+
+// Generate QR-png
+function generateQrPng($hash)
+{
+    Tracer::inSpan(
+        ['name' => 'QR png generation'],
+        function () use ($hash) {
+            try {
+                // related to this trello https://trello.com/c/5H7ByALh
+                $writer = new PngWriter();
+
+                // Create QR code
+                $qrCode = QrCode::create('https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash)
+                    ->setEncoding(new Encoding('UTF-8'))
+                    ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
+                    ->setSize(150)
+                    ->setMargin(10)
+                    ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                    ->setForegroundColor(new Color(0, 0, 0))
+                    ->setBackgroundColor(new Color(255, 255, 255))
+                    ;
+
+                $result = $writer->write($qrCode);
+
+                return $result->getDataUri();
+            } catch (Exception $e) {
+                trigger_error('QR-code png generation error.');
+
+                return 'QR-CODE ERROR';
+            }
+        }
+    );
+}
+
 // Generate random box id
 function generateBoxID($length = 8, $possible = '0123456789')
 {
