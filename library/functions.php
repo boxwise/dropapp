@@ -13,7 +13,7 @@ function generateQrPng($hash)
 {
     Tracer::inSpan(
         ['name' => 'QR png generation'],
-        function () use ($hash) {
+        function () use ($hash, &$return) {
             try {
                 // related to this trello https://trello.com/c/5H7ByALh
                 $writer = new PngWriter();
@@ -31,14 +31,16 @@ function generateQrPng($hash)
 
                 $result = $writer->write($qrCode);
 
-                return $result->getDataUri();
+                $return = $result->getDataUri();
             } catch (Exception $e) {
                 trigger_error('QR-code png generation error.');
 
-                return 'QR-CODE ERROR';
+                $return = 'QR-CODE ERROR';
             }
         }
     );
+
+    return $return;
 }
 
 // Generate random box id
