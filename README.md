@@ -151,6 +151,10 @@ If you want to re-seed the users in Auth0 at the same time, call in any Browser 
 
               http://localhost:8100/reseed-db.php
 
+
+
+
+
 ### Cypress and testing
 
 We use [Cypress](https://www.cypress.io) for Browser-test. To run Cypress tests on your local environment, please
@@ -159,6 +163,16 @@ We use [Cypress](https://www.cypress.io) for Browser-test. To run Cypress tests 
 3. Set the env variable `auth0Domain` to the development Auth0 tenant, 
 e.g. `boxtribute-dev.eu.auth0.com` in cypress.json.
 4. Open Cypress and this repo in Cypress
+
+#### Cypress Tests fail due to unsynchronized users with Auth0
+
+If the tests 2.4 and 2.9 fail, check
+- if the user with pauli@pauli.co exists in Auth0 and delete him
+- if admin@admin.co has no "m" as a prefix
+- if admin@admin.co has no roles assigned
+- if testnewuser@ does not exist.
+
+#### Cypress Guidelines
 
 All tests in `cypress/integrations` should be found and can be directly executed. When writing tests, try to follow these guidelines if possible:
 

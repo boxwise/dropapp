@@ -3,13 +3,16 @@
     // allowed databases
     $devdbs = ['dropapp_dev', 'dropapp_staging'];
     // confirmed testusers
-    $testusers = ['admin@admin.co', 'coordinator@coordinator.co', 'user@user.co'];
+    $testusers = ['admin@admin.co', 'madmin@admin.co', 'coordinator@coordinator.co', 'user@user.co'];
+
+    $return = 'true';
 
     // Test if user is a testusers and the database is a dev database
     if (!(in_array($settings['db_database'], $devdbs) && in_array($_SESSION['user']['email'], $testusers))) {
         $msg = 'You do not have access to delete test data!';
-        $return = ['success' => false, 'message' => $msg];
         trigger_error($msg, E_USER_ERROR);
+
+        $return = 'false';
     } else {
         $ids = [];
         // get ids of user by emails
@@ -53,16 +56,19 @@
                 if (!$permission) {
                     trigger_error('No permission to delete this data', E_USER_ERROR);
 
-                    exit();
+                    $return = 'false';
                 }
             }
-            db_transaction(function () use ($ids) {
-                listRealDelete($_POST['table'], $ids);
-                foreach ($ids as $id) {
-                    deleteAuth0User($id);
-                }
-            });
-        }
-    }
 
-    echo 'true';
+            if ('true' == $return) {
+                db_transaction(function () use ($ids, $return) {
+                    [$return, $msg, $redirect] = listRealDelete($_POST['table'], $ids);
+                    foreach ($ids as $id) {
+                        deleteAuth0User($id);
+                    }
+                });
+            }
+        }
+
+        echo $return;
+    }

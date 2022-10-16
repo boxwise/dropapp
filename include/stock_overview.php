@@ -19,7 +19,7 @@
         listsetting('allowcollapse', true);
         listsetting('listrownotclickable', true);
 
-        $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+        $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND NOT is_lost AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
         $statusarray = ['in_stock' => 'In stock', 'ordered' => 'Ordered', 'untouched' => 'Untouched for 3 months', 'lost' => 'Lost'];
         if (isset($outgoinglocations)) {
             listfilter(['label' => 'Boxes', 'options' => ($statusarray + $outgoinglocations)]);
@@ -31,7 +31,7 @@
         listfilter2(['label' => 'Gender', 'options' => $genders]);
         listsetting('filter2cssclass', 'overview-filter-gender');
 
-        listfilter3(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND visible=1 AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq']);
+        listfilter3(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND visible=1 AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq']);
         listsetting('filter3cssclass', 'overview-filter-locations');
 
         addcolumn('text', 'Category', 'label');
@@ -98,6 +98,7 @@
                         locations on stock.location_id = locations.id 
                     WHERE 
                         locations.camp_id = :camp_id 
+                        AND locations.type = "Warehouse"
                         AND (NOT stock.deleted OR stock.deleted IS NULL)'.
                         ($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
                         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')

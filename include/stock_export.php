@@ -25,7 +25,7 @@ $data = db_query(
     LEFT OUTER JOIN locations AS l ON l.id = boxes.location_id
     LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
     LEFT OUTER JOIN sizes AS s ON s.id = boxes.size_id 
-    WHERE l.camp_id = ? AND (NOT boxes.deleted OR boxes.deleted IS NULL) '.($_SESSION['export_ids_stock'] ? 'AND boxes.id in ('.$id_pars.') ' : ' AND FALSE'),
+    WHERE l.type = "Warehouse" AND l.camp_id = ? AND (NOT boxes.deleted OR boxes.deleted IS NULL) '.($_SESSION['export_ids_stock'] ? 'AND boxes.id in ('.$id_pars.') ' : ' AND FALSE'),
     $export_ids_array
 );
 unset($_SESSION['export_ids_stock']);

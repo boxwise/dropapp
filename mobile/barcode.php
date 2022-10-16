@@ -29,7 +29,8 @@
                                 IFNULL(s2.label, "") AS size, 
                                 l.label AS location,
                                 GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
-                                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors 
+                                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
+                                l.type as locationType
                             FROM stock AS s
                                 LEFT OUTER JOIN products AS p ON p.id = s.product_id
                                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
@@ -51,7 +52,7 @@
         } else {
             // a barcode hash was passed in the url and it exits in qr-table
             $qr_id = db_value('SELECT id FROM qr WHERE code = :code AND legacy = :legacy', ['code' => $_GET['barcode'], 'legacy' => (isset($_GET['qrlegacy']) ? 1 : 0)]);
-            $box = db_row('SELECT s.*, c.id AS camp_id, c.name AS campname, CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product, p.name AS product2, g.label AS gender, IFNULL(s2.label, "") AS size, l.label AS location FROM stock AS s
+            $box = db_row('SELECT s.*, c.id AS camp_id, c.name AS campname, CONCAT(p.name," ",g.label," ",IFNULL(s2.label, "")) AS product, p.name AS product2, g.label AS gender, IFNULL(s2.label, "") AS size, l.label AS location, l.type as locationType FROM stock AS s
                 LEFT OUTER JOIN products AS p ON p.id = s.product_id
                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
                 LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
@@ -73,10 +74,12 @@
             // Box is not deleted and belongs to your base
             if ($box['id']) {
                 // box is not empty
-                $orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', ['camp' => $_SESSION['camp']['id']]);
+                mobile_distro_check($box['locationType']);
+
+                $orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND l.type = "Warehouse" AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', ['camp' => $_SESSION['camp']['id']]);
                 $tpl->assign('orders', $orders);
 
-                $locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE deleted IS NULL AND camp_id = :camp_id ORDER BY seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
+                $locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE deleted IS NULL AND camp_id = :camp_id AND type = "Warehouse" ORDER BY seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
                 $history = showHistory('stock', $box['id']);
                 $tpl->assign('box', $box);
                 $tpl->assign('history', $history);

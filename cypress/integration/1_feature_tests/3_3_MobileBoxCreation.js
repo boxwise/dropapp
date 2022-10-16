@@ -1,4 +1,4 @@
-import { getLoginConfiguration } from '../config';
+import { getLoginConfiguration } from '../../config';
 
 const PRODUCT1 = "Jeans";
 

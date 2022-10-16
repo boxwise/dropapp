@@ -194,3 +194,17 @@ function get_text_color($hexColor)
     // if not, return white color.
     return '#FFFFFF';
 }
+
+function mobile_distro_check($locationType, $mobile = true)
+{
+    if ('Warehouse' !== $locationType) {
+        $userMessage = 'You cannot access this box. Please report this to your coordinator.';
+        $sentryMessage = 'The user tries to edit a box belonging to a distribution event through dropapp.';
+        if ($mobile) {
+            trigger_error($sentryMessage, E_USER_ERROR);
+            redirect('?warning=1&message='.$userMessage);
+        } else {
+            throw new Exception($userMessage, 403);
+        }
+    }
+}

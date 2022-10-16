@@ -63,7 +63,7 @@ if (!$_POST['qr_id']) {
                             camps b ON b.id =l.camp_id
                         LEFT JOIN 
                             organisations o ON o.id=b.organisation_id
-                        WHERE 
+                        WHERE
                             s.id = :id',
             ['id' => $_POST['id']]
         );

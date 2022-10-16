@@ -1,5 +1,5 @@
 
-import { getLoginConfiguration } from '../config';
+import { getLoginConfiguration } from '../../config';
 
 context('Login tests', () => {
 
