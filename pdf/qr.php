@@ -73,7 +73,7 @@ Tracer::inSpan(
                 }
             }
 
-            $qrPng = generateQrPng($hash);
+            list($qrPng, $url) = generateQrPng($hash);
             if ($qrPng === 'QR-CODE ERROR') {
                 $pdf->Text(88, 12 + $y, 'QR-CODE ERROR!');
             } else {

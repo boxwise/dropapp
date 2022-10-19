@@ -31,11 +31,13 @@ function generateQrPng($hash)
 
                 $result = $writer->write($qrCode);
 
-                $return = $result->getDataUri();
+                $testUrl = '/mobile.php?'.explode('/mobile.php?', $qrCode->getData())[1];
+
+                $return = [$result->getDataUri(), $testUrl];
             } catch (Exception $e) {
                 trigger_error('QR-code png generation error.');
 
-                $return = 'QR-CODE ERROR';
+                $return = ['QR-CODE ERROR', 'QR-CODE ERROR'];
             }
         }
     );

@@ -7,6 +7,8 @@
 
 {foreach $data['labels'] as $d}
 <div class="boxlabel-small" data-testid="boxlabel-small">
-	<img src="{$d['qrPng']}" />
+   <a href="{$d['data-testurl']}">
+	   <img src="{$d['qrPng']}" />
+   </a>
 </div>
 {/foreach}
