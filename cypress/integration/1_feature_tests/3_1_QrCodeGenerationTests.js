@@ -27,8 +27,8 @@ describe('QR labels tests - user with rights', () => {
         cy.verifyActiveSideMenuNavigation('menu_qr');
     });
 
-    it('(Desktop) Generate 10 QR codes - small', () => {
-        let numberOfQrs = 10;
+    it('(Desktop) Generate 500 QR codes - small', () => {
+        let numberOfQrs = 500;
         cy.typeNumberOfLabels(numberOfQrs);
         cy.uncheckBigLabelsCheckbox();
         cy.clickMakeLabelsButton();
@@ -47,16 +47,16 @@ describe('QR labels tests - user with rights', () => {
     //     isUsingBigLabels();
     // });
 
-    it('(iPhone 6 viewport) Generate 10 QR codes - small', () => {
-        cy.viewport('iphone-6')
-        let numberOfQrs = 10;
-        cy.typeNumberOfLabels(numberOfQrs);
-        cy.uncheckBigLabelsCheckbox();
-        cy.clickMakeLabelsButton();
-        cy.get("div[data-testid='boxlabel-small']").then($smallLabels => {
-            expect($smallLabels.length).to.equal(numberOfQrs);
-        })
-    });
+    // it('(iPhone 6 viewport) Generate 10 QR codes - small', () => {
+    //     cy.viewport('iphone-6')
+    //     let numberOfQrs = 10;
+    //     cy.typeNumberOfLabels(numberOfQrs);
+    //     cy.uncheckBigLabelsCheckbox();
+    //     cy.clickMakeLabelsButton();
+    //     cy.get("div[data-testid='boxlabel-small']").then($smallLabels => {
+    //         expect($smallLabels.length).to.equal(numberOfQrs);
+    //     })
+    // });
 
     // QRs shown in PDF cause issues when run in CircleCI
     // it('(iPhone 6 viewport) Generate 10 QR codes - big', () => {
