@@ -47,15 +47,13 @@ Tracer::inSpan(
             if (!$is_filtered) {
                 $number_of_people = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']]);
                 if ($number_of_people > 500) {
-                    listfilter(['label' => 'List size', 'options' => ['limit' => 'Show first 500', 'all' => 'Show all'], 'filter' => '"show"']);
-                    // the 500 filter is always chosen
-                    if (!isset($_SESSION['filter']['people'])) {
-                        $_SESSION['filter']['people'] = 'limit';
-                        $listconfig['filtervalue'] = 'limit';
-                    }
+                    listfilter(['label' => 'List size', 'options' => ['all' => 'Show all'], 'filter' => '"show"']);
 
-                    if (isset($listconfig['filtervalue']) && 'limit' === $listconfig['filtervalue']) {
-                        listsetting('maxlimit', 500); // limits the number of rows displayed
+                    if ('all' != $listconfig['filtervalue']) {
+                        // limits the number of rows displayed
+                        listsetting('maxlimit', 500);
+                        // Notify the user of the limit on the number of records
+                        $cmsmain->assign('notification', 'Only the first 500 beneficiaries are shown. Use the filter and search to find the rest.');
                     }
                 }
             }
@@ -281,11 +279,6 @@ Tracer::inSpan(
                 ['name' => ('people.php:addtemplatedata')],
                 function () use ($cmsmain, $data) {
                     global $listdata, $listdata, $listconfig;
-
-                    // Notify the user of the limit on the number of records
-                    if (isset($listconfig['filtervalue']) && 'limit' === $listconfig['filtervalue']) {
-                        $cmsmain->assign('notification', 'Only the first 500 beneficiaries are shown. Use the filter and search to find the rest.');
-                    }
 
                     // Pass information to template
                     $cmsmain->assign('data', $data);
