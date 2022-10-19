@@ -3,9 +3,11 @@
     $table = 'qr';
     $action = 'qr';
 
+    $maxQrCodes = 250;
+
     if ($_POST) {
-        if ($_POST['count'] > 500) {
-            throw new Exception('Please enter a value less than or equal to 500.');
+        if ($_POST['count'] > $maxQrCodes) {
+            throw new Exception('Please enter a value less than or equal to '.$maxQrCodes.'.');
         }
 
         $data['fulllabel'] = $_POST['fulllabel'];
@@ -63,7 +65,7 @@
             addfield('hidden', '', 'label');
         } else {
             $data['count'] = 2;
-            addfield('number', 'How many box labels do you need?', 'count', ['min' => 0, 'max' => 500, 'testid' => 'numberOfLabelsInput']);
+            addfield('number', 'How many box labels do you need?', 'count', ['min' => 0, 'max' => $maxQrCodes, 'testid' => 'numberOfLabelsInput']);
         }
         addfield('checkbox', 'Make big labels including fields for box number and contents', 'fulllabel', ['testid' => 'field_fulllabel']);
 
