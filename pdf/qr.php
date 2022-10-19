@@ -74,7 +74,7 @@ Tracer::inSpan(
             }
 
             list($qrPng, $url) = generateQrPng($hash);
-            if ($qrPng === 'QR-CODE ERROR') {
+            if ('QR-CODE ERROR' === $qrPng) {
                 $pdf->Text(88, 12 + $y, 'QR-CODE ERROR!');
             } else {
                 $pdf->Image($qrPng, 88, 12 + $y, 34, 34, 'png');
