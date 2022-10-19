@@ -45,8 +45,8 @@ describe('QR labels tests - user with rights', () => {
         });
     });
 
-    it('(Desktop) Generate 500 QR codes - small', () => {
-        let numberOfQrs = 500;
+    it('(Desktop) Generate 250 QR codes - small', () => {
+        let numberOfQrs = 250;
         cy.typeNumberOfLabels(numberOfQrs);
         cy.uncheckBigLabelsCheckbox();
         cy.clickMakeLabelsButton();
