@@ -9,17 +9,17 @@ use Endroid\QrCode\Writer\PngWriter;
 use OpenCensus\Trace\Tracer;
 
 // Generate QR-png
-function generateQrPng($hash)
+function generateQrPng($hash, $legacy = false)
 {
     Tracer::inSpan(
         ['name' => 'QR png generation'],
-        function () use ($hash, &$return) {
+        function () use ($hash, $legacy, &$return) {
             try {
                 // related to this trello https://trello.com/c/5H7ByALh
                 $writer = new PngWriter();
 
                 // Create QR code
-                $qrCode = QrCode::create('https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash)
+                $qrCode = QrCode::create('https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash.($legacy ? '&qrlegacy=1' : ''))
                     ->setEncoding(new Encoding('UTF-8'))
                     ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
                     ->setSize(150)

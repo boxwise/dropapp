@@ -140,7 +140,9 @@
     if ($data['qr_id']) {
         $qr = db_row('SELECT code, legacy FROM qr WHERE id = :id', ['id' => $data['qr_id']]);
 
-        addfield('html', '', '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$qr['code'].($qr['legacy'] ? '&qrlegacy=1' : '').'" /><br /><br />', ['aside' => true, 'asidetop' => true]);
+        $qrPng = generateQrPng($qr['code'], $qr['legacy'])[0];
+
+        addfield('html', '', '<img src="'.$qrPng.'" /><br /><br />', ['aside' => true, 'asidetop' => true]);
     }
 
     addfield('line');
