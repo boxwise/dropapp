@@ -4,19 +4,20 @@
     $action = 'people_edit';
 
     if ($_POST) {
+        // delete a transaction of a person
+        if ('delete' == $_POST['do']) {
+            $ids = explode(',', $_POST['ids']);
+            list($success, $message, $redirect) = listDelete('transactions', $ids);
+
+            $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
+
+            echo json_encode($return);
+
+            exit();
+        }
+
+        // all other form submission
         [$message, $id] = db_transaction(function () use ($table, $settings) {
-            // delete a transaction of a person
-            if ('delete' == $_POST['do']) {
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete('transactions', $ids);
-
-                $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
-
-                echo json_encode($return);
-
-                exit();
-            }
-
             // save the People edit form
             if ($_POST['id']) {
                 $oldcontainer = db_value('SELECT container FROM people WHERE id = :id', ['id' => $_POST['id']]);
