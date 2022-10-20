@@ -76,6 +76,13 @@ Tracer::inSpan(
 
             break;
 
+        case '/ping':
+            http_response_code(200);
+
+            exit('pong');
+
+            break;
+
         default:
             http_response_code(404);
 
