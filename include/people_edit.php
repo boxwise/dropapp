@@ -162,7 +162,7 @@
                 tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
             WHERE 
                 (people.parent_id = :id OR people.id = :id) AND 
-                NOT people.deleted AND NOT tags.deleted
+                NOT people.deleted
             GROUP BY
                 people.id
             ORDER BY 
@@ -332,7 +332,7 @@
     } elseif ($_SESSION['camp']['idcard']) {
         $tabs['bicycle'] = 'ID Card';
     }
-    if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $S_SESSION['camps']['laundry']) {
+    if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $_SESSION['camps']['laundry']) {
         $tabs['laundry'] = 'Laundry';
     }
     if (!$data['parent_id'] && $data['id']) {
