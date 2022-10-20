@@ -96,7 +96,7 @@
         SELECT 
             people.*,
             DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age,
-            GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+            GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
             GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
         FROM 
             people
@@ -110,7 +110,7 @@
             people.id', ['id' => $id]);
 
     if ($data['taglabels']) {
-        $taglabels = explode(',', $data['taglabels']);
+        $taglabels = explode(chr(0x1D), $data['taglabels']);
         $tagcolors = explode(',', $data['tagcolors']);
         foreach ($taglabels as $tagkey => $taglabel) {
             $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
@@ -152,7 +152,7 @@
             SELECT 
                 people.*, 
                 DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
-                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
             FROM 
                 people 
@@ -172,7 +172,7 @@
                 $side['people'][$key]['hide'] = true;
             }
             if ($side['people'][$key]['taglabels']) {
-                $taglabels = explode(',', $side['people'][$key]['taglabels']);
+                $taglabels = explode(chr(0x1D), $side['people'][$key]['taglabels']);
                 $tagcolors = explode(',', $side['people'][$key]['tagcolors']);
                 foreach ($taglabels as $tagkey => $taglabel) {
                     $side['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];

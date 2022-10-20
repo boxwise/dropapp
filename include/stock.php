@@ -90,7 +90,7 @@ Tracer::inSpan(
             $query = '
             SELECT
                     stock_filtered.*,
-                    GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                    GROUP_CONCAT(tags.label ORDER BY tags.seq  SEPARATOR 0x1D) AS taglabels,
                     GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
                 FROM
                     (SELECT 
@@ -163,7 +163,7 @@ Tracer::inSpan(
                 $totalitems += $value['items'];
 
                 if ($data[$key]['taglabels']) {
-                    $taglabels = explode(',', $data[$key]['taglabels']);
+                    $taglabels = explode(chr(0x1D), $data[$key]['taglabels']);
                     $tagcolors = explode(',', $data[$key]['tagcolors']);
                     foreach ($taglabels as $tagkey => $taglabel) {
                         $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];

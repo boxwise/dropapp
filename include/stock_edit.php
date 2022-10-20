@@ -70,9 +70,7 @@
             SELECT 
                 s.*, 
                 CONCAT(p.name," ",g.label) AS product, 
-                l.label AS location,
-                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
-                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
+                l.label AS location
             FROM stock AS s 
                 LEFT OUTER JOIN products AS p ON p.id = s.product_id 
                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
@@ -90,7 +88,7 @@
                         CONCAT(p.name," ",g.label) AS product, 
                         l.label AS location,
                         l.type As locationType,
-                        GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                        GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                         GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
                     FROM stock 
                         LEFT OUTER JOIN products AS p ON p.id = stock.product_id 
@@ -101,7 +99,7 @@
                     WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
 
     if ($data['taglabels']) {
-        $taglabels = explode(',', $data['taglabels']);
+        $taglabels = explode(chr(0x1D), $data['taglabels']);
         $tagcolors = explode(',', $data['tagcolors']);
         foreach ($taglabels as $tagkey => $taglabel) {
             $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
