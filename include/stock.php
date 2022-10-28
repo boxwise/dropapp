@@ -5,7 +5,7 @@ use OpenCensus\Trace\Tracer;
 Tracer::inSpan(
     ['name' => ('stock.php')],
     function () use ($action, &$cmsmain) {
-        global $table, $listconfig, $listdata;
+        global $table, $listconfig, $listdata, $settings;
 
         $table = $action;
         $ajax = checkajax();
@@ -169,6 +169,9 @@ Tracer::inSpan(
                         $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
                     }
                 }
+
+                // add link to new app
+                $data[$key]['href'] = $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/boxes/'.$data[$key]['box_id'];
             }
 
             addcolumn('text', 'Box ID', 'box_id');
@@ -187,6 +190,11 @@ Tracer::inSpan(
             listsetting('allowsort', true);
             listsetting('allowcopy', false);
             listsetting('add', 'Add');
+
+            // enable forward to new app only for beta users
+            if (in_array('beta_user', $_SESSION['auth0_user'][$settings['jwt_claim_prefix'].'/roles'])) {
+                listsetting('beta_box_view_edit', true);
+            }
 
             $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
             addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
