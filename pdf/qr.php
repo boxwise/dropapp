@@ -69,7 +69,7 @@ Tracer::inSpan(
 
                 //test if generated qr-code is already connected to a box
                 if (db_value('SELECT id FROM stock WHERE qr_id = :id', ['id' => $id])) {
-                    throw new Exception('QR-Genereation error! Please report to the Boxtribute team!');
+                    throw new Exception('QR-Generation error! Please report to the Boxtribute team!');
                 }
             }
 
