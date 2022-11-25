@@ -19,4 +19,3 @@
 .docker
 phinx.yml
 docker-compose.yml
-build.php

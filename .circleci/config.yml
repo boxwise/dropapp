@@ -118,7 +118,11 @@ jobs:
           # deploy
           gcloud app deploy app-<< parameters.serviceName >>.yaml --version ${CIRCLE_BUILD_NUM}
           gcloud app deploy cron.yaml dispatch.yaml --version ${CIRCLE_BUILD_NUM}
-  
+      - run: |
+          # deploy to google run too
+          gcloud run deploy dropapp-test --source . --project ${GOOGLE_PROJECT_ID} \
+            --add-cloudsql-instances=${<< parameters.envVariablePrefix >>DBNAME} \
+            --set-env-vars GOOGLE_CLOUD_PROJECT=${GOOGLE_PROJECT_ID}
   create-sentry-release:
     docker: 
       - image: circleci/node:4.8.2
