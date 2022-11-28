@@ -217,7 +217,6 @@ class boxwise_error_handler_class
 }
 
 // Set error handlers
-smarty::muteExpectedErrors();
 boxwise_error_handler_class::add_error_handler();
 
 function logfile($content)

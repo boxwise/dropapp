@@ -5,21 +5,21 @@
         }
     },
     "require-dev": {
-        "odan/phinx-migrations-generator": "^4.3.0",
-        "phan/phan": "^2.2",
-        "friendsofphp/php-cs-fixer": "^2.15",
-        "jakub-onderka/php-parallel-lint": "^1.0"
+        "odan/phinx-migrations-generator": "^5.6.0",
+        "phan/phan": "^5.4",
+        "friendsofphp/php-cs-fixer": "^3.13",
+        "php-parallel-lint/php-parallel-lint": "^1.0"
     },
     "require": {
-        "robmorgan/phinx": "^0.11.1",
+        "robmorgan/phinx": "^0.12",
         "google/cloud-storage": "^1.12",
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
-        "smarty/smarty": "^3.1",
-        "sendgrid/sendgrid": "^7.3",
+        "smarty/smarty": "^4.3",
+        "sendgrid/sendgrid": "^8.0",
         "google/cloud-logging": "^1.18",
         "fzaninotto/faker": "^1.8",
         "auth0/auth0-php": "^8.0.5",
-        "opencensus/opencensus": "^0.6.0",
+        "opencensus/opencensus": "^0.7.0",
         "kriswallsmith/buzz": "^1.2",
         "nyholm/psr7": "^1.4",
         "steampixel/simple-php-router": "^0.7.0",
@@ -27,6 +27,7 @@
         "endroid/qr-code": "^4.4",
         "sentry/sentry": "^3.6",
         "php-http/curl-client": "^2.2",
-        "google/cloud-error-reporting": "^0.19.5"
+        "google/cloud-error-reporting": "^0.19.5",
+        "google/cloud-datastore": "^1.16"
     }
 }
