@@ -13,9 +13,9 @@ jobs:
           php --version
           node --version
       - run: sudo apt-get update
-      # dependency needed for gd exentions
-      - run: sudo apt-get -y --no-install-recommends install libfontconfig1 libxrender1 libxext6 zlib1g-dev libpng-dev libfreetype6-dev libjpeg8-dev
-      - run: sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
+      # # dependency needed for gd exentions
+      # - run: sudo apt-get -y --no-install-recommends install libfontconfig1 libxrender1 libxext6 zlib1g-dev libpng-dev libfreetype6-dev libjpeg8-dev
+      # - run: sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
       # load composer cache
       - restore_cache:
           keys:
