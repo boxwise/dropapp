@@ -16,7 +16,7 @@
         listsetting('allowdelete', false);
         listsetting('allowselect', false);
         listsetting('allowsort', true);
-        //listsetting('sortlist','[[3,0]]');
+        // listsetting('sortlist','[[3,0]]');
 
         addcolumn('text', 'Bestand', 'filename', ['breakall' => true]);
         addcolumn('text', 'Aantal downloads', 'downloads');
@@ -63,5 +63,5 @@
 
         echo json_encode($return);
 
-        exit();
+        exit;
     }

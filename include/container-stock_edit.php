@@ -177,5 +177,5 @@
 
         echo json_encode($return);
 
-        exit();
+        exit;
     }

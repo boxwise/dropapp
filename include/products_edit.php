@@ -58,11 +58,11 @@
             'allowedit' => true, 'allowadd' => false, 'allowselect' => true, 'allowselectall' => false, 'allowshowhide' => false, 'action' => 'stock', 'redirect' => true, 'allowsort' => true, ]);
     }
 
-/*
-    addfield('line','','');
-    addfield('number','Maximum per adult per two weeks','maxperadult',array('width'=>3));
-    addfield('number','Maximum per child per two weeks','maxperchild',array('width'=>3));
-*/
+    /*
+        addfield('line','','');
+        addfield('number','Maximum per adult per two weeks','maxperadult',array('width'=>3));
+        addfield('number','Maximum per child per two weeks','maxperchild',array('width'=>3));
+    */
 
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);

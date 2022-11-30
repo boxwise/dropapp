@@ -47,45 +47,45 @@ Tracer::inSpan(
         global $rolesToActions, $menusToActions;
 
         switch ($parsedUrl) {
-        case '/':
-        case '/index.php':
-            require 'index.php';
+            case '/':
+            case '/index.php':
+                require 'index.php';
 
-            break;
-        // old path of QR-codes
-        case '/flip/scan.php':
-            require 'mobile.php';
+                break;
+                // old path of QR-codes
+            case '/flip/scan.php':
+                require 'mobile.php';
 
-            break;
+                break;
 
-        case '/ajax.php':
-        case '/mobile.php':
-        case '/cypress-session.php':
-        case '/pdf/workshopcard.php':
-        case '/pdf/bicyclecard.php':
-        case '/pdf/idcard.php':
-        case '/pdf/qr.php':
-        case '/pdf/dryfood.php':
-        case '/cron/dailyroutine.php':
-        case '/cron/reseed-db.php':
-        case '/cron/reseed-auth0.php':
-        case '/cron/reseed-roles-auth0.php':
-        case '/fake-error.php':
-            require substr($parsedUrl, 1); // trim /
+            case '/ajax.php':
+            case '/mobile.php':
+            case '/cypress-session.php':
+            case '/pdf/workshopcard.php':
+            case '/pdf/bicyclecard.php':
+            case '/pdf/idcard.php':
+            case '/pdf/qr.php':
+            case '/pdf/dryfood.php':
+            case '/cron/dailyroutine.php':
+            case '/cron/reseed-db.php':
+            case '/cron/reseed-auth0.php':
+            case '/cron/reseed-roles-auth0.php':
+            case '/fake-error.php':
+                require substr($parsedUrl, 1); // trim /
 
-            break;
+                break;
 
-        case '/ping':
-            http_response_code(200);
+            case '/ping':
+                http_response_code(200);
 
-            exit('pong');
+                exit('pong');
 
-            break;
+                break;
 
-        default:
-            http_response_code(404);
+            default:
+                http_response_code(404);
 
-            exit('Not Found');
+                exit('Not Found');
         }
     }
 );

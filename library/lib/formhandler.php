@@ -81,8 +81,8 @@ class formHandler
                                 $aResizeItem['reltarget'] = $aResizeItem['target'].basename($value);
                                 $aResizeItem['target'] = $_SERVER['DOCUMENT_ROOT'].$aResizeItem['target'].basename($value);
 
-                                //If the file already exists, append the target filename with -1
-                                //This should be in a function that adds -1 as long as the filename exist. (Now only works once)
+                                // If the file already exists, append the target filename with -1
+                                // This should be in a function that adds -1 as long as the filename exist. (Now only works once)
                                 /*
                                                                 if (file_exists($aResizeItem['target'])) {
                                                                     $aPathinfo = pathinfo($aResizeItem['target']);
@@ -213,7 +213,7 @@ class formHandler
                     } elseif ('float' == $fields[$key]['Type']) {
                         db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_float, to_float) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :old, :new)', ['table' => $this->table, 'id' => $this->id, 'change' => $key, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR'], 'old' => $old[$key], 'new' => $new]);
                     } else {
-                        $change .= $key.' changed from "'.$old[$key].'" to "'.$new.'"'.'; ';
+                        $change .= $key.' changed from "'.$old[$key].'" to "'.$new.'"; ';
                         db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', ['table' => $this->table, 'id' => $this->id, 'change' => $change, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR']]);
                     }
                 }
