@@ -2,34 +2,34 @@
 
 use OpenCensus\Trace\Tracer;
 
-    $table = 'people';
-    $action = 'people';
-    $ajax = checkajax();
+$table = 'people';
+$action = 'people';
+$ajax = checkajax();
 
-    if (!$ajax) {
-        $translate['cms_list_confirm_title'] = 'Are you sure? You can not undo this anymore';
+if (!$ajax) {
+    $translate['cms_list_confirm_title'] = 'Are you sure? You can not undo this anymore';
 
-        initlist();
+    initlist();
 
-        $cmsmain->assign('title', 'Beneficiaries');
+    $cmsmain->assign('title', 'Beneficiaries');
 
-        listsetting('allowcopy', false);
-        listsetting('allowmove', false);
-        listsetting('allowmoveto', 1);
-        listsetting('allowsort', true);
-        listsetting('allowshowhide', false);
-        listsetting('allowdelete', false);
-        listsetting('allowedit', false);
-        //listsetting('allowselect',array(1));
-        listsetting('search', ['firstname', 'lastname', 'container']);
-        listsetting('allowadd', false);
-        listsetting('haspagemenu', true);
+    listsetting('allowcopy', false);
+    listsetting('allowmove', false);
+    listsetting('allowmoveto', 1);
+    listsetting('allowsort', true);
+    listsetting('allowshowhide', false);
+    listsetting('allowdelete', false);
+    listsetting('allowedit', false);
+    // listsetting('allowselect',array(1));
+    listsetting('search', ['firstname', 'lastname', 'container']);
+    listsetting('allowadd', false);
+    listsetting('haspagemenu', true);
 
-        addpagemenu('all', 'All', ['link' => '?action=people']);
-        addpagemenu('deactivated', 'Deactivated', ['link' => '?action=people_deactivated', 'active' => true]);
+    addpagemenu('all', 'All', ['link' => '?action=people']);
+    addpagemenu('deactivated', 'Deactivated', ['link' => '?action=people_deactivated', 'active' => true]);
 
-        //listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
-        $data = getlistdata('SELECT IF(people.parent_id,NULL,GREATEST(COALESCE((SELECT transaction_date 
+    // listfilter(array('label'=>'Filter op afdeling','query'=>'SELECT id AS value, title AS label FROM people_cats WHERE visible AND NOT deleted ORDER BY seq','filter'=>'c.id'));
+    $data = getlistdata('SELECT IF(people.parent_id,NULL,GREATEST(COALESCE((SELECT transaction_date 
 					FROM transactions AS t 
 					WHERE t.people_id = people.id AND people.parent_id IS NULL AND product_id IS NOT NULL 
 					ORDER BY transaction_date DESC LIMIT 1),0), COALESCE(people.created,0))) AS lastactive, 
@@ -53,108 +53,108 @@ use OpenCensus\Trace\Tracer;
 				GROUP BY people.id
 				ORDER BY deleted DESC');
 
-        addcolumn('text', 'Surname', 'lastname');
-        addcolumn('text', 'Firstname', 'firstname');
-        addcolumn('text', 'Head of Family', 'family_head');
-        addcolumn('text', 'Gender', 'gender2');
-        addcolumn('text', 'Age', 'age');
-        addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
-        addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
-        addcolumn('datetime', 'Last active', 'lastactive');
+    addcolumn('text', 'Surname', 'lastname');
+    addcolumn('text', 'Firstname', 'firstname');
+    addcolumn('text', 'Head of Family', 'family_head');
+    addcolumn('text', 'Gender', 'gender2');
+    addcolumn('text', 'Age', 'age');
+    addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
+    addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
+    addcolumn('datetime', 'Last active', 'lastactive');
 
-        addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'oneitemonly' => false, 'testId' => 'recoverDeactivatedUser']);
-        addbutton('realdelete', 'Full delete', ['icon' => 'fa-trash', 'oneitemonly' => false, 'confirm' => true, 'testId' => 'fullDeleteUser']);
-        addcolumn('html', '&nbsp;', 'icons');
+    addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'oneitemonly' => false, 'testId' => 'recoverDeactivatedUser']);
+    addbutton('realdelete', 'Full delete', ['icon' => 'fa-trash', 'oneitemonly' => false, 'confirm' => true, 'testId' => 'fullDeleteUser']);
+    addcolumn('html', '&nbsp;', 'icons');
 
-        Tracer::inSpan(
-            ['name' => ('include/people_deactivated.php:hasActiveParent')],
-            function () use (&$data) {
-                global $settings;
+    Tracer::inSpan(
+        ['name' => 'include/people_deactivated.php:hasActiveParent'],
+        function () use (&$data) {
+            global $settings;
 
-                foreach ($data as $key => $value) {
-                    if ('1' == $data[$key]['has_not_active_parent']) {
-                        $data[$key]['icons'] .= sprintf('<i class="fa fa-exclamation-triangle warning tooltip-this" title="To reactivate %s please make sure you reactivate their family head (%s) first."></i>', $data[$key]['firstname'].' '.$data[$key]['lastname'], $data[$key]['family_head']);
-                    }
+            foreach ($data as $key => $value) {
+                if ('1' == $data[$key]['has_not_active_parent']) {
+                    $data[$key]['icons'] .= sprintf('<i class="fa fa-exclamation-triangle warning tooltip-this" title="To reactivate %s please make sure you reactivate their family head (%s) first."></i>', $data[$key]['firstname'].' '.$data[$key]['lastname'], $data[$key]['family_head']);
                 }
             }
-        );
-        $cmsmain->assign('data', $data);
-        $cmsmain->assign('listconfig', $listconfig);
-        $cmsmain->assign('listdata', $listdata);
-        $cmsmain->assign('include', 'cms_list.tpl');
-    } else {
-        switch ($_POST['do']) {
-            case 'undelete':
-                $ids = explode(',', $_POST['ids']);
-                $finalIds = [];
-                $errorMessage = '';
-                foreach ($ids as $id) {
-                    $person = db_row('SELECT concat(firstname," ",lastname) as fullname, parent_id FROM people WHERE id = :id', ['id' => $id]);
-                    $parentId = $person['parent_id'];
-                    $parent = ($parentId) ? db_row('SELECT (NOT deleted OR deleted IS NULL) as has_active_parent, concat(firstname," ",lastname) as family_head  FROM people WHERE id = :id', ['id' => $parentId]) : null;
-                    $hasActiveParent = ($parent['has_active_parent']) ?? false;
-                    if ($parentId && !in_array($parentId, $ids) && !boolval($hasActiveParent)) {
-                        $errorMessage .= sprintf('Family head %s must be active before %s can be reactivated.<br>', $parent['family_head'], $person['fullname']);
+        }
+    );
+    $cmsmain->assign('data', $data);
+    $cmsmain->assign('listconfig', $listconfig);
+    $cmsmain->assign('listdata', $listdata);
+    $cmsmain->assign('include', 'cms_list.tpl');
+} else {
+    switch ($_POST['do']) {
+        case 'undelete':
+            $ids = explode(',', $_POST['ids']);
+            $finalIds = [];
+            $errorMessage = '';
+            foreach ($ids as $id) {
+                $person = db_row('SELECT concat(firstname," ",lastname) as fullname, parent_id FROM people WHERE id = :id', ['id' => $id]);
+                $parentId = $person['parent_id'];
+                $parent = ($parentId) ? db_row('SELECT (NOT deleted OR deleted IS NULL) as has_active_parent, concat(firstname," ",lastname) as family_head  FROM people WHERE id = :id', ['id' => $parentId]) : null;
+                $hasActiveParent = $parent['has_active_parent'] ?? false;
+                if ($parentId && !in_array($parentId, $ids) && !boolval($hasActiveParent)) {
+                    $errorMessage .= sprintf('Family head %s must be active before %s can be reactivated.<br>', $parent['family_head'], $person['fullname']);
 
-                        continue;
-                    }
-                    $finalIds[] = $id;
+                    continue;
                 }
-                if (empty($errorMessage)) {
-                    // Optimised by using bulk inserts and transactions over update queries
-                    list($success, $message, $redirect) = listBulkUndelete($table, $finalIds, false, false);
-                    $redirect = true;
-                } else {
-                    $success = false;
-                    $redirect = false;
-                    $message = (!empty($errorMessage)) ? $errorMessage : '';
-                }
-
-                break;
-
-            case 'realdelete':
-                $ids = explode(',', $_POST['ids']);
-                // Transaction block added over update queries
-                [$success, $message, $redirect] = db_transaction(function () use ($ids, $table) {
-                    foreach ($ids as $id) {
-                        // unlink transactions
-                        db_query('UPDATE transactions SET people_id = NULL WHERE people_id = :id', ['id' => $id]);
-                        // unlink parent from children
-                        db_query('UPDATE people SET parent_id = NULL WHERE parent_id = :id AND deleted', ['id' => $id]);
-                        // remove tags already assigned to the beneficiary
-                        db_query('DELETE FROM tags_relations WHERE `object_id` = :id AND object_type = "People"', ['id' => $id]);
-                    }
-
-                    // Optimized by using bulk inserts and transactions over delete queries
-                    list($success, $message, $redirect) = listBulkRealDelete($table, $ids);
-
-                    return [$success, $message, $redirect];
-                });
+                $finalIds[] = $id;
+            }
+            if (empty($errorMessage)) {
+                // Optimised by using bulk inserts and transactions over update queries
+                list($success, $message, $redirect) = listBulkUndelete($table, $finalIds, false, false);
                 $redirect = true;
+            } else {
+                $success = false;
+                $redirect = false;
+                $message = (!empty($errorMessage)) ? $errorMessage : '';
+            }
 
-                break;
-        }
+            break;
 
-        $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
+        case 'realdelete':
+            $ids = explode(',', $_POST['ids']);
+            // Transaction block added over update queries
+            [$success, $message, $redirect] = db_transaction(function () use ($ids, $table) {
+                foreach ($ids as $id) {
+                    // unlink transactions
+                    db_query('UPDATE transactions SET people_id = NULL WHERE people_id = :id', ['id' => $id]);
+                    // unlink parent from children
+                    db_query('UPDATE people SET parent_id = NULL WHERE parent_id = :id AND deleted', ['id' => $id]);
+                    // remove tags already assigned to the beneficiary
+                    db_query('DELETE FROM tags_relations WHERE `object_id` = :id AND object_type = "People"', ['id' => $id]);
+                }
 
-        echo json_encode($return);
+                // Optimized by using bulk inserts and transactions over delete queries
+                list($success, $message, $redirect) = listBulkRealDelete($table, $ids);
 
-        exit();
+                return [$success, $message, $redirect];
+            });
+            $redirect = true;
+
+            break;
     }
 
-    function correctdrops($id)
-    {
-        //$action = 'correctDrops({id:847, value: 1400}, {id:14, value: 1900})';
+    $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
-        $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
-        $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
+    echo json_encode($return);
 
-        if ($drops && $person['parent_id']) {
-            db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
-            db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
-            $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
-            $aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
+    exit;
+}
 
-            return $aftermove;
-        }
+function correctdrops($id)
+{
+    // $action = 'correctDrops({id:847, value: 1400}, {id:14, value: 1900})';
+
+    $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
+    $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
+
+    if ($drops && $person['parent_id']) {
+        db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
+        db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+        $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
+        $aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
+
+        return $aftermove;
     }
+}

@@ -3,7 +3,7 @@
 use OpenCensus\Trace\Tracer;
 
 // report errors, but ignore E_STRICT and E_NOTICE
-error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_WARNING);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
 
 // this behaviour is disabled by default, but can be turned
 // on if you want to see the warnings

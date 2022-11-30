@@ -130,5 +130,5 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 
         echo json_encode($return);
 
-        exit();
+        exit;
     }

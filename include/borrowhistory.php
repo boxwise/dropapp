@@ -40,5 +40,5 @@ CONCAT(p.firstname," ",p.lastname) AS name FROM borrow_transactions AS t LEFT OU
 
         echo json_encode($return);
 
-        exit();
+        exit;
     }

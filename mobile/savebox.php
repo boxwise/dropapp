@@ -32,7 +32,7 @@ if (!$_POST['qr_id']) {
     // Updates and Preparation
     if ($new) {
         Tracer::inSpan(
-            ['name' => ('mobile/savebox.php:Box ID Generation')],
+            ['name' => 'mobile/savebox.php:Box ID Generation'],
             function () {
                 do {
                     $_POST['box_id'] = generateBoxID();

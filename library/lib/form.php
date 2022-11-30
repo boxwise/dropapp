@@ -64,7 +64,7 @@
                 }
             }
 
-            //if($key=='selectedtags') $formdata[$field]['selectedtags'] = db_simplearray($value);
+            // if($key=='selectedtags') $formdata[$field]['selectedtags'] = db_simplearray($value);
             if ('othertags' == $key) {
                 $array = db_array($value);
                 $values = '';
@@ -79,7 +79,7 @@
                 $formdata[$field]['othertags'] = array_unique(explode(',', $values));
                 natcasesort($formdata[$field]['othertags']);
             }
-            //if($key=='othertags') $formdata[$field]['othertags'] = db_simplearray($value);
+            // if($key=='othertags') $formdata[$field]['othertags'] = db_simplearray($value);
         }
 
         if ($formdata[$field]['date'] && $formdata[$field]['time']) {
@@ -111,7 +111,7 @@
             }
             $formdata[$field]['basename'] = basename($data[$field]);
 
-            //Create a JS friendly field ID
+            // Create a JS friendly field ID
             $fieldid = str_replace('[', '_', $formdata[$field]['field']);
             $fieldid = str_replace(']', '', $fieldid);
             $formdata[$field]['fieldid'] = $fieldid;
@@ -178,7 +178,7 @@
                     'parent_id' => $row['parent_id'],
                     'label' => $row[$field],
                     'disabled' => ($level < ($minlevel - 1)),
-                    'level' => ($level) + 1, ];
+                    'level' => $level + 1, ];
             }
             if ($maxlevel > $level) {
                 $sub = getParentarray($table, $minlevel, $maxlevel, $field, $level + 1, $row['id']);
@@ -191,13 +191,13 @@
         return $parentarray;
     }
 
-function formatdate($output, $date)
-{
-    global $translate;
+    function formatdate($output, $date)
+    {
+        global $translate;
 
-    $output = str_replace('%A', $translate[strftime('%A', $date)], $output);
-    $output = str_replace('%B', $translate[strftime('%B', $date)], $output);
-    $output = strftime($output, $date);
+        $output = str_replace('%A', $translate[strftime('%A', $date)], $output);
+        $output = str_replace('%B', $translate[strftime('%B', $date)], $output);
+        $output = strftime($output, $date);
 
-    return $output;
-}
+        return $output;
+    }

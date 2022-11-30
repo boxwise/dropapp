@@ -118,17 +118,15 @@ function bootstrap_exception_handler(Throwable $ex)
         598 => 'Network read timeout error',
         599 => 'Network connect timeout error',
     ];
-    // this will only work if there hasn't already been response output
-    http_response_code($ex->getCode());
+
     $error = new Zmarty();
     if (0 === $ex->getCode() && 'Invalid state' === $ex->getMessage()) {
         // This will call logout and redirect to renew the session when the authentication login page remains longer than expected
         trigger_error('The user received an invalid state error since the state code is outdated', E_USER_ERROR);
         logoutWithRedirect();
-    } elseif (500 === $ex->getCode() || !$http_status_codes[$ex->getCode()]) {
-        $error->assign('title', 'Sorry, something went wrong');
-        $error->assign('error', "Sorry, an unexpected error occured and has been reported. Please contact support and quote Sentry #{$eventId}.");
-    } else {
+    } elseif (isset($http_status_codes[$ex->getCode()]) && 500 !== $ex->getCode()) {
+        // We have more context, so display more detail
+        http_response_code($ex->getCode());
         $error->assign('title', $ex->getCode().' - '.$http_status_codes[$ex->getCode()]);
         $error->assign('error', "{$ex->getMessage()}");
         $error->assign('sentry', "For additional information, please contact support and quote Sentry #{$eventId}.");
@@ -142,6 +140,11 @@ function bootstrap_exception_handler(Throwable $ex)
             logout();
             $error->assign('logoutWithRedirect', 'https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
         }
+    } else {
+        // Generic error page
+        http_response_code(500);
+        $error->assign('title', 'Sorry, something went wrong');
+        $error->assign('error', "Sorry, an unexpected error occured and has been reported. Please contact support and quote Sentry #{$eventId}.");
     }
 
     global $settings;
@@ -151,7 +154,7 @@ function bootstrap_exception_handler(Throwable $ex)
 
     $error->display('cms_error.tpl');
 
-    exit();
+    exit;
 }
 
 // Set exception handler
@@ -186,11 +189,11 @@ class boxwise_error_handler_class
      *
      * @see http://php.net/set_error_handler
      *
-     * @param int $errno      Error level
-     * @param     $errstr
-     * @param     $errfile
-     * @param     $errline
-     * @param     $errcontext
+     * @param int   $errno      Error level
+     * @param mixed $errstr
+     * @param mixed $errfile
+     * @param mixed $errline
+     * @param mixed $errcontext
      *
      * @return bool
      */
@@ -214,7 +217,6 @@ class boxwise_error_handler_class
 }
 
 // Set error handlers
-smarty::muteExpectedErrors();
 boxwise_error_handler_class::add_error_handler();
 
 function logfile($content)

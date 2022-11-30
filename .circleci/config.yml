@@ -13,9 +13,9 @@ jobs:
           php --version
           node --version
       - run: sudo apt-get update
-      # dependency needed for gd exentions
-      - run: sudo apt-get -y --no-install-recommends install libfontconfig1 libxrender1 libxext6 zlib1g-dev libpng-dev libfreetype6-dev libjpeg8-dev
-      - run: sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
+      # # dependency needed for gd exentions
+      # - run: sudo apt-get -y --no-install-recommends install libfontconfig1 libxrender1 libxext6 zlib1g-dev libpng-dev libfreetype6-dev libjpeg8-dev
+      # - run: sudo apt-get clean && sudo rm -rf /var/lib/apt/lists/*
       # load composer cache
       - restore_cache:
           keys:
@@ -26,7 +26,7 @@ jobs:
       # these rules match the ones enabled by default by the "fterrag.vscode-php-cs-fixer" vs code extension
       - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose --rules @PhpCsFixer
       # build static assets including templates
-      - run: php build.php
+      - run: php build/build.php
       # install again, but with no dev dependencies this time (for deploy)
       - run: composer install -n --optimize-autoloader --no-dev
       # save composer cache
@@ -118,7 +118,11 @@ jobs:
           # deploy
           gcloud app deploy app-<< parameters.serviceName >>.yaml --version ${CIRCLE_BUILD_NUM}
           gcloud app deploy cron.yaml dispatch.yaml --version ${CIRCLE_BUILD_NUM}
-  
+      - run: |
+          # deploy to google run too
+          gcloud run deploy dropapp-test --source . --project ${GOOGLE_PROJECT_ID} \
+            --add-cloudsql-instances=${<< parameters.envVariablePrefix >>DBNAME} \
+            --set-env-vars GOOGLE_CLOUD_PROJECT=${GOOGLE_PROJECT_ID}
   create-sentry-release:
     docker: 
       - image: circleci/node:4.8.2

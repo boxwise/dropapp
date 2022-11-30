@@ -36,7 +36,7 @@ class ForeignKeyPeopleId extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
         $this->table('laundry_appointments')
             ->changeColumn('people_id', 'integer', [
                 'signed' => true,
@@ -45,7 +45,7 @@ class ForeignKeyPeopleId extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
         $this->table('library_transactions')
             ->changeColumn('people_id', 'integer', [
                 'signed' => true,

@@ -40,7 +40,7 @@
                         tags.deleted IS NULL AND tags.id = :id
                     GROUP BY tags.id ', ['id' => $id]);
 
-                    $onchange = sprintf('checkTags(%d);', $id);
+    $onchange = sprintf('checkTags(%d);', $id);
 
     addfield('text', 'Name', 'label', ['required' => true]);
     addfield('color', 'Color', 'color', ['required' => true]);

@@ -22,4 +22,4 @@
         db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$newlocation['id'].')');
     }
 
-    redirect('?message='.'Box '.$box['box_id'].' contains '.$box['items'].'x '.$box['product'].' is moved from '.$box['location'].' to '.$newlocation['label'].'.&messageAnchorText=Go back to this box&messageAnchorTarget=boxid&messageAnchorTargetValue='.$box['id']);
+    redirect('?message=Box '.$box['box_id'].' contains '.$box['items'].'x '.$box['product'].' is moved from '.$box['location'].' to '.$newlocation['label'].'.&messageAnchorText=Go back to this box&messageAnchorTarget=boxid&messageAnchorTargetValue='.$box['id']);

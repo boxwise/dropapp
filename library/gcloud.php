@@ -35,9 +35,17 @@ function registerGoogleCloudServices($projectId)
     $hostName = @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST);
     $version = $settings['version'] ?? '0';
     $settings['upload_dir'] = "gs://{$projectId}.appspot.com/{$hostName}/uploads";
+
+    // configure session storage
+    if (!getenv('DISABLE_GCLOUD')) {
+        ini_set('session.save_path', "sessions-{$projectId}-{$hostName}");
+        $datastore = new Google\Cloud\Datastore\DatastoreClient();
+        session_set_save_handler(new Google\Cloud\Datastore\DatastoreSessionHandler($datastore), true);
+    }
 }
 
 $googleProjectId = getenv('GOOGLE_CLOUD_PROJECT');
-if ($googleProjectId) {
-    registerGoogleCloudServices($googleProjectId);
+if (!$googleProjectId) {
+    throw new Exception('No GOOGLE_CLOUD_PROJECT set');
 }
+registerGoogleCloudServices($googleProjectId);

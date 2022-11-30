@@ -42,10 +42,6 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
        docker-compose up
 
-   Alternatively, you can run using the PHP development server
-
-       GOOGLE_CLOUD_PROJECT=xxx php -S localhost:8000 gcloud-entry.php 
-
 5. To initialize the database for the first time, you should run:
 
        vendor/bin/phinx migrate -e development

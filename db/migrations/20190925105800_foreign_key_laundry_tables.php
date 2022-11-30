@@ -46,7 +46,7 @@ class ForeignKeyLaundryTables extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
         $this->table('laundry_appointments')
             ->changeColumn('timeslot', 'integer', [
                 'signed' => false,
@@ -55,7 +55,7 @@ class ForeignKeyLaundryTables extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
         $this->table('laundry_machines')
             ->changeColumn('station', 'integer', [
                 'signed' => false,
@@ -64,6 +64,6 @@ class ForeignKeyLaundryTables extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
     }
 }

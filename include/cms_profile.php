@@ -54,8 +54,8 @@
     addfield('email', $translate['cms_users_email'], 'email', ['required' => true, 'testid' => 'user_email']);
     addfield('password', $translate['cms_users_password'], 'pass', ['repeat' => true, 'pwcheck' => true, 'testid' => 'user_pass']);
 
-    //addfield('line');
-    //addfield('select',$translate['cms_settings_language'],'language',array('query'=>'SELECT id AS value, name AS label FROM languages WHERE visible ORDER BY seq'));
+    // addfield('line');
+    // addfield('select',$translate['cms_settings_language'],'language',array('query'=>'SELECT id AS value, name AS label FROM languages WHERE visible ORDER BY seq'));
 
     addfield('delete_user', 'Deactivate', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);

@@ -8,7 +8,7 @@
             throw new Exception('The list of locations is not available when there is no camp selected');
         }
 
-        $is_admin = ($_SESSION['user']['is_admin']);
+        $is_admin = $_SESSION['user']['is_admin'];
 
         initlist();
 
@@ -83,5 +83,5 @@
 
         echo json_encode($return);
 
-        exit();
+        exit;
     }

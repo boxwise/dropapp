@@ -2,9 +2,6 @@
 
 define('LOADED_VIA_SINGLE_ENTRY_POINT', true);
 
-// config for GCloud error reporting taken from https://github.com/GoogleCloudPlatform/php-docs-samples/tree/6609166f71b1049f45360480963c2327b00b7959/appengine/standard/errorreporting
-require_once __DIR__.'/vendor/google/cloud-error-reporting/src/prepend.php';
-
 require_once 'vendor/autoload.php';
 // load configuration file
 require_once 'library/config.php';
@@ -22,6 +19,8 @@ require_once 'library/constants.php';
 
 // The GAE environment requires a single entry point, so we're
 // doing basic routing from here
+// Cloud Run does not, but keeping for consistency for now
+
 use OpenCensus\Trace\Tracer;
 
 // permanent redirect for old market.drapenihavet.no url
@@ -48,45 +47,45 @@ Tracer::inSpan(
         global $rolesToActions, $menusToActions;
 
         switch ($parsedUrl) {
-        case '/':
-        case '/index.php':
-            require 'index.php';
+            case '/':
+            case '/index.php':
+                require 'index.php';
 
-            break;
-        // old path of QR-codes
-        case '/flip/scan.php':
-            require 'mobile.php';
+                break;
+                // old path of QR-codes
+            case '/flip/scan.php':
+                require 'mobile.php';
 
-            break;
+                break;
 
-        case '/ajax.php':
-        case '/mobile.php':
-        case '/cypress-session.php':
-        case '/pdf/workshopcard.php':
-        case '/pdf/bicyclecard.php':
-        case '/pdf/idcard.php':
-        case '/pdf/qr.php':
-        case '/pdf/dryfood.php':
-        case '/cron/dailyroutine.php':
-        case '/cron/reseed-db.php':
-        case '/cron/reseed-auth0.php':
-        case '/cron/reseed-roles-auth0.php':
-        case '/fake-error.php':
-            require substr($parsedUrl, 1); // trim /
+            case '/ajax.php':
+            case '/mobile.php':
+            case '/cypress-session.php':
+            case '/pdf/workshopcard.php':
+            case '/pdf/bicyclecard.php':
+            case '/pdf/idcard.php':
+            case '/pdf/qr.php':
+            case '/pdf/dryfood.php':
+            case '/cron/dailyroutine.php':
+            case '/cron/reseed-db.php':
+            case '/cron/reseed-auth0.php':
+            case '/cron/reseed-roles-auth0.php':
+            case '/fake-error.php':
+                require substr($parsedUrl, 1); // trim /
 
-            break;
+                break;
 
-        case '/ping':
-            http_response_code(200);
+            case '/ping':
+                http_response_code(200);
 
-            exit('pong');
+                exit('pong');
 
-            break;
+                break;
 
-        default:
-            http_response_code(404);
+            default:
+                http_response_code(404);
 
-            exit('Not Found');
+                exit('Not Found');
         }
     }
 );

@@ -72,7 +72,7 @@ function Writename($person)
     if (is_null($person['age'])) {
         $person['age'] = '?';
     }
-    $pdf->SetFont('helvetica', ($person['parent_id'] ? '' : 'B'), 10);
+    $pdf->SetFont('helvetica', $person['parent_id'] ? '' : 'B', 10);
 
     $parent = ($person['parent_id'] ? 4 : 0);
 

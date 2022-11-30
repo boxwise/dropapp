@@ -3,7 +3,7 @@
 use OpenCensus\Trace\Tracer;
 
 Tracer::inSpan(
-    ['name' => ('stock.php')],
+    ['name' => 'stock.php'],
     function () use ($action, &$cmsmain) {
         global $table, $listconfig, $listdata;
 
@@ -14,13 +14,13 @@ Tracer::inSpan(
             initlist();
             listsetting('manualquery', true);
 
-            //title
+            // title
             $cmsmain->assign('title', 'Manage Boxes');
 
-            //search box
+            // search box
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
-            //Location filter
+            // Location filter
             listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
 
             // Status Filter
@@ -44,30 +44,30 @@ Tracer::inSpan(
                 }
 
                 switch ($applied_filter) {
-                case 'boxes_in_stock':
-                    return ' AND l.visible';
+                    case 'boxes_in_stock':
+                        return ' AND l.visible';
 
-                case 'ordered':
-                    return ' AND (stock.ordered OR stock.picked) AND l.visible';
+                    case 'ordered':
+                        return ' AND (stock.ordered OR stock.picked) AND l.visible';
 
-                case 'dispose':
-                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible';
+                    case 'dispose':
+                        return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible';
 
-                case 'lost_boxes':
-                    return ' AND l.is_lost';
+                    case 'lost_boxes':
+                        return ' AND l.is_lost';
 
-                case 'shop':
-                    return ' AND l.is_market';
+                    case 'shop':
+                        return ' AND l.is_market';
 
-                case 'scrap':
-                    return ' AND l.is_scrap';
+                    case 'scrap':
+                        return ' AND l.is_scrap';
 
-                case 'showall':
-                    return ' ';
+                    case 'showall':
+                        return ' ';
 
-                default:
-                    return ' AND l.visible';
-            }
+                    default:
+                        return ' AND l.visible';
+                }
             }
             $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock'], $outgoinglocations);
 
@@ -75,7 +75,7 @@ Tracer::inSpan(
             $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
             listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
 
-            //Category Filter
+            // Category Filter
             $itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
             listfilter4(['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
 
@@ -208,202 +208,202 @@ Tracer::inSpan(
             $cmsmain->assign('include', 'cms_list.tpl');
         } else {
             switch ($_POST['do']) {
-            case 'movebox':
-                $ids = explode(',', $_POST['ids']);
-                $count = 0;
-                foreach ($ids as $id) {
-                    $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $id]);
+                case 'movebox':
+                    $ids = explode(',', $_POST['ids']);
+                    $count = 0;
+                    foreach ($ids as $id) {
+                        $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $id]);
 
-                    db_query('UPDATE stock SET modified = NOW(), modified_by = '.$_SESSION['user']['id'].', ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id', ['location' => $_POST['option'], 'id' => $id]);
-                    $from['int'] = $box['location_id'];
-                    $to['int'] = $_POST['option'];
-                    simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
+                        db_query('UPDATE stock SET modified = NOW(), modified_by = '.$_SESSION['user']['id'].', ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id', ['location' => $_POST['option'], 'id' => $id]);
+                        $from['int'] = $box['location_id'];
+                        $to['int'] = $_POST['option'];
+                        simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
 
-                    if ($box['location_id'] != $_POST['option']) {
-                        db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');
-                    }
-
-                    ++$count;
-                }
-                $success = $count;
-                $message = (1 == $count ? '1 box is' : $count.' boxes are').' moved';
-                $redirect = '?action='.$_GET['action'];
-
-                break;
-
-            case 'order':
-                $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    db_query('UPDATE stock SET ordered = NOW(), ordered_by = :user, picked = NULL, picked_by = NULL WHERE id = '.intval($id), ['user' => $_SESSION['user']['id']]);
-                    simpleSaveChangeHistory('stock', intval($id), 'Box ordered to shop ');
-                    $message = 'Boxes are marked as ordered for you!';
-                    $success = true;
-                    $redirect = true;
-                }
-
-                break;
-
-            case 'undo-order':
-                $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL  WHERE id = '.$id);
-                    simpleSaveChangeHistory('stock', $id, 'Box order made undone ');
-                    $message = 'Boxes are unmarked as ordered';
-                    $success = true;
-                    $redirect = true;
-                }
-
-                break;
-
-            case 'qr':
-                $id = $_POST['ids'];
-                $redirect = '/pdf/qr.php?label='.$id;
-
-                break;
-
-            case 'move':
-                $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect) = listMove($table, $ids);
-
-                break;
-
-            case 'delete':
-                $stock_ids = explode(',', $_POST['ids']);
-                [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
-                    list($success, $message, $redirect) = listDelete($table, $stock_ids);
-
-                    $params = [];
-                    $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (`object_id`) IN (';
-                    foreach ($stock_ids as $index => $stock_id) {
-                        $query .= sprintf(' (:stock_id_%s) ', $index);
-
-                        if (sizeof($stock_ids) - 1 !== $index) {
-                            $query .= ', ';
-                        } else {
-                            $query .= ') ';
+                        if ($box['location_id'] != $_POST['option']) {
+                            db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');
                         }
 
-                        $params = array_merge($params, ['stock_id_'.$index => $stock_id]);
+                        ++$count;
                     }
-                    if (sizeof($params) > 0) {
-                        db_query($query, $params);
+                    $success = $count;
+                    $message = (1 == $count ? '1 box is' : $count.' boxes are').' moved';
+                    $redirect = '?action='.$_GET['action'];
+
+                    break;
+
+                case 'order':
+                    $ids = explode(',', $_POST['ids']);
+                    foreach ($ids as $id) {
+                        db_query('UPDATE stock SET ordered = NOW(), ordered_by = :user, picked = NULL, picked_by = NULL WHERE id = '.intval($id), ['user' => $_SESSION['user']['id']]);
+                        simpleSaveChangeHistory('stock', intval($id), 'Box ordered to shop ');
+                        $message = 'Boxes are marked as ordered for you!';
+                        $success = true;
+                        $redirect = true;
                     }
 
-                    return [$success, $message, $redirect];
-                });
+                    break;
 
-                break;
+                case 'undo-order':
+                    $ids = explode(',', $_POST['ids']);
+                    foreach ($ids as $id) {
+                        db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL  WHERE id = '.$id);
+                        simpleSaveChangeHistory('stock', $id, 'Box order made undone ');
+                        $message = 'Boxes are unmarked as ordered';
+                        $success = true;
+                        $redirect = true;
+                    }
 
-            case 'copy':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
+                    break;
 
-                break;
+                case 'qr':
+                    $id = $_POST['ids'];
+                    $redirect = '/pdf/qr.php?label='.$id;
 
-            case 'hide':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
+                    break;
 
-                break;
+                case 'move':
+                    $ids = json_decode($_POST['ids']);
+                    list($success, $message, $redirect) = listMove($table, $ids);
 
-            case 'show':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
+                    break;
 
-                break;
-
-            case 'export':
-                $_SESSION['export_ids_stock'] = $_POST['ids'];
-                list($success, $message, $redirect) = [true, '', '?action=stock_export'];
-
-                break;
-
-            case 'tag':
-                $ids = explode(',', $_POST['ids']);
-                if ('undefined' == $_POST['option']) {
-                    $success = false;
-                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
-                    $redirect = false;
-                } else {
-                    // set tag id
-                    $tag_id = $_POST['option'];
-                    $stock_ids = $ids;
-                    if (sizeof($stock_ids) > 0) {
-                        // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
-                        $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+                case 'delete':
+                    $stock_ids = explode(',', $_POST['ids']);
+                    [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
+                        list($success, $message, $redirect) = listDelete($table, $stock_ids);
 
                         $params = [];
+                        $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (`object_id`) IN (';
+                        foreach ($stock_ids as $index => $stock_id) {
+                            $query .= sprintf(' (:stock_id_%s) ', $index);
 
-                        for ($i = 0; $i < sizeof($stock_ids); ++$i) {
-                            $query .= "(:tag_id, 'Stock', :stock_id{$i})";
-                            $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
-                            if ($i !== sizeof($stock_ids) - 1) {
-                                $query .= ',';
+                            if (sizeof($stock_ids) - 1 !== $index) {
+                                $query .= ', ';
+                            } else {
+                                $query .= ') ';
                             }
+
+                            $params = array_merge($params, ['stock_id_'.$index => $stock_id]);
+                        }
+                        if (sizeof($params) > 0) {
+                            db_query($query, $params);
                         }
 
-                        $params = array_merge($params, ['tag_id' => $tag_id]);
-                        db_query($query, $params);
+                        return [$success, $message, $redirect];
+                    });
 
-                        $success = true;
-                        $message = 'Tags added';
-                        $redirect = true;
-                    } else {
+                    break;
+
+                case 'copy':
+                    $ids = explode(',', $_POST['ids']);
+                    list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
+
+                    break;
+
+                case 'hide':
+                    $ids = explode(',', $_POST['ids']);
+                    list($success, $message, $redirect) = listShowHide($table, $ids, 0);
+
+                    break;
+
+                case 'show':
+                    $ids = explode(',', $_POST['ids']);
+                    list($success, $message, $redirect) = listShowHide($table, $ids, 1);
+
+                    break;
+
+                case 'export':
+                    $_SESSION['export_ids_stock'] = $_POST['ids'];
+                    list($success, $message, $redirect) = [true, '', '?action=stock_export'];
+
+                    break;
+
+                case 'tag':
+                    $ids = explode(',', $_POST['ids']);
+                    if ('undefined' == $_POST['option']) {
                         $success = false;
-                        $message = 'To apply the tag, the beneficiary must be checked';
+                        $message = 'No tags exist. Please go to "Manage tags" to create tags.';
                         $redirect = false;
-                    }
-                }
-
-                break;
-
-            case 'rtag':
-                $ids = explode(',', $_POST['ids']);
-                if ('undefined' == $_POST['option']) {
-                    $success = false;
-                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
-                    $redirect = false;
-                } else {
-                    // set tag id
-                    $tag_id = $_POST['option'];
-                    $stock_ids = $ids;
-                    if (sizeof($stock_ids) > 0) {
-                        db_transaction(function () use ($tag_id, $stock_ids) {
-                            $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (tag_id, `object_id`) IN (';
+                    } else {
+                        // set tag id
+                        $tag_id = $_POST['option'];
+                        $stock_ids = $ids;
+                        if (sizeof($stock_ids) > 0) {
+                            // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
+                            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
 
                             $params = [];
 
                             for ($i = 0; $i < sizeof($stock_ids); ++$i) {
-                                $query .= "(:tag_id, :stock_id{$i})";
+                                $query .= "(:tag_id, 'Stock', :stock_id{$i})";
                                 $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
                                 if ($i !== sizeof($stock_ids) - 1) {
                                     $query .= ',';
-                                } else {
-                                    $query .= ')';
                                 }
                             }
 
                             $params = array_merge($params, ['tag_id' => $tag_id]);
                             db_query($query, $params);
-                        });
-                        $success = true;
-                        $message = 'Tags removed';
-                        $redirect = true;
-                    } else {
-                        $success = false;
-                        $message = 'To remove the tag, the boxes must be checked';
-                        $redirect = false;
-                    }
-                }
 
-                break;
-        }
+                            $success = true;
+                            $message = 'Tags added';
+                            $redirect = true;
+                        } else {
+                            $success = false;
+                            $message = 'To apply the tag, the beneficiary must be checked';
+                            $redirect = false;
+                        }
+                    }
+
+                    break;
+
+                case 'rtag':
+                    $ids = explode(',', $_POST['ids']);
+                    if ('undefined' == $_POST['option']) {
+                        $success = false;
+                        $message = 'No tags exist. Please go to "Manage tags" to create tags.';
+                        $redirect = false;
+                    } else {
+                        // set tag id
+                        $tag_id = $_POST['option'];
+                        $stock_ids = $ids;
+                        if (sizeof($stock_ids) > 0) {
+                            db_transaction(function () use ($tag_id, $stock_ids) {
+                                $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (tag_id, `object_id`) IN (';
+
+                                $params = [];
+
+                                for ($i = 0; $i < sizeof($stock_ids); ++$i) {
+                                    $query .= "(:tag_id, :stock_id{$i})";
+                                    $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
+                                    if ($i !== sizeof($stock_ids) - 1) {
+                                        $query .= ',';
+                                    } else {
+                                        $query .= ')';
+                                    }
+                                }
+
+                                $params = array_merge($params, ['tag_id' => $tag_id]);
+                                db_query($query, $params);
+                            });
+                            $success = true;
+                            $message = 'Tags removed';
+                            $redirect = true;
+                        } else {
+                            $success = false;
+                            $message = 'To remove the tag, the boxes must be checked';
+                            $redirect = false;
+                        }
+                    }
+
+                    break;
+            }
 
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
             echo json_encode($return);
 
-            exit();
+            exit;
         }
     }
 );
