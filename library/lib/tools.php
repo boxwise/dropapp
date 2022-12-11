@@ -65,7 +65,7 @@ function showHistory($table, $id)
         $change = str_replace(';', '', $change);
 
         //cases for properly created change-messages(location_id, product_id,items...)
-        if (in_array($change, ['location_id', 'product_id', 'items', 'size_id'])) {
+        if (in_array($change, ['location_id', 'product_id', 'items', 'size_id', 'box_state_id'])) {
             if ('items' == $change) {
                 $change = 'changed the number of items from '.$row['from_int'].' to '.$row['to_int'];
             } elseif ('location_id' == $change) {
@@ -83,6 +83,11 @@ function showHistory($table, $id)
                 $size_orig = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_orig', ['id_orig' => $size_ids[0]]);
                 $size_new = db_row('SELECT sizes.label FROM sizes WHERE sizes.id = :id_new', ['id_new' => $size_ids[1]]);
                 $change = 'changed size from '.$size_orig['label'].' to '.$size_new['label'];
+            } elseif ('box_state_id' == trim($change)) {
+                $box_state_ids = [$row['from_int'], $row['to_int']];
+                $box_state_orig = db_row('SELECT box_state.label FROM box_state WHERE box_state.id = :id_orig', ['id_orig' => $box_state_ids[0]]);
+                $box_state_new = db_row('SELECT box_state.label FROM box_state WHERE box_state.id = :id_new', ['id_new' => $box_state_ids[1]]);
+                $change = 'changed box state from '.$box_state_orig['label'].' to '.$box_state_new['label'];
             }
         }   //Cases where the grammar has to be realigned to make it readable
         elseif (in_array(explode(' ', $change)[0], ['Box', 'Record', 'comments', 'signaturefield'])) {
