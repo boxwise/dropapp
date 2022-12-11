@@ -141,7 +141,7 @@
             SELECT 
                 people.*, 
                 DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
-                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
             FROM 
                 people 
@@ -158,7 +158,7 @@
                 people.parent_id, people.seq', ['id' => $data['people_id']]);
         foreach ($data['people'] as $key => $person) {
             if ($data['people'][$key]['taglabels']) {
-                $taglabels = explode(',', $data['people'][$key]['taglabels']);
+                $taglabels = explode(chr(0x1D), $data['people'][$key]['taglabels']);
                 $tagcolors = explode(',', $data['people'][$key]['tagcolors']);
                 foreach ($taglabels as $tagkey => $taglabel) {
                     $data['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];

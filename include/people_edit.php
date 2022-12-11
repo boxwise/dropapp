@@ -4,19 +4,20 @@
     $action = 'people_edit';
 
     if ($_POST) {
+        // delete a transaction of a person
+        if ('delete' == $_POST['do']) {
+            $ids = explode(',', $_POST['ids']);
+            list($success, $message, $redirect) = listDelete('transactions', $ids);
+
+            $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
+
+            echo json_encode($return);
+
+            exit();
+        }
+
+        // all other form submission
         [$message, $id] = db_transaction(function () use ($table, $settings) {
-            // delete a transaction of a person
-            if ('delete' == $_POST['do']) {
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete('transactions', $ids);
-
-                $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
-
-                echo json_encode($return);
-
-                exit();
-            }
-
             // save the People edit form
             if ($_POST['id']) {
                 $oldcontainer = db_value('SELECT container FROM people WHERE id = :id', ['id' => $_POST['id']]);
@@ -95,7 +96,7 @@
         SELECT 
             people.*,
             DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age,
-            GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+            GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
             GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
         FROM 
             people
@@ -109,7 +110,7 @@
             people.id', ['id' => $id]);
 
     if ($data['taglabels']) {
-        $taglabels = explode(',', $data['taglabels']);
+        $taglabels = explode(chr(0x1D), $data['taglabels']);
         $tagcolors = explode(',', $data['tagcolors']);
         foreach ($taglabels as $tagkey => $taglabel) {
             $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
@@ -151,7 +152,7 @@
             SELECT 
                 people.*, 
                 DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), people.date_of_birth)), "%Y")+0 AS age, 
-                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
             FROM 
                 people 
@@ -161,7 +162,7 @@
                 tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
             WHERE 
                 (people.parent_id = :id OR people.id = :id) AND 
-                NOT people.deleted AND NOT tags.deleted
+                NOT people.deleted
             GROUP BY
                 people.id
             ORDER BY 
@@ -171,7 +172,7 @@
                 $side['people'][$key]['hide'] = true;
             }
             if ($side['people'][$key]['taglabels']) {
-                $taglabels = explode(',', $side['people'][$key]['taglabels']);
+                $taglabels = explode(chr(0x1D), $side['people'][$key]['taglabels']);
                 $tagcolors = explode(',', $side['people'][$key]['tagcolors']);
                 foreach ($taglabels as $tagkey => $taglabel) {
                     $side['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
@@ -331,7 +332,7 @@
     } elseif ($_SESSION['camp']['idcard']) {
         $tabs['bicycle'] = 'ID Card';
     }
-    if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $S_SESSION['camps']['laundry']) {
+    if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admin']) && !$data['parent_id'] && $data['id'] && $_SESSION['camps']['laundry']) {
         $tabs['laundry'] = 'Laundry';
     }
     if (!$data['parent_id'] && $data['id']) {

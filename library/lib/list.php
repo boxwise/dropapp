@@ -520,6 +520,8 @@ function initlist()
 
     if (isset($_POST['__multiplefilter'])) {
         if (isset($_POST['multiplefilter'])) {
+            //sanitize input
+            $_POST['multiplefilter'] = array_filter($_POST['multiplefilter'], 'ctype_digit');
             $listconfig['multiplefilter_selected'] = $_POST['multiplefilter'];
             $_SESSION['multiplefilter'][$action] = $listconfig['multiplefilter_selected'];
         } else {

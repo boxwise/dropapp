@@ -116,7 +116,7 @@
                 s.*, 
                 CONCAT(p.name," ",g.label) AS product, 
                 l.label AS location,
-                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
                 bs.label AS statelabel,
                 bs.id AS stateid
@@ -138,7 +138,7 @@
                         CONCAT(p.name," ",g.label) AS product, 
                         l.label AS location,
                         l.type As locationType,
-                        GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                        GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                         GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
                         DATE_FORMAT(stock.modified,"%Y/%m/%d") AS statemodified,
                         bs.label AS statelabel,                        
@@ -153,7 +153,7 @@
                     WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
 
     if ($data['taglabels']) {
-        $taglabels = explode(',', $data['taglabels']);
+        $taglabels = explode(chr(0x1D), $data['taglabels']);
         $tagcolors = explode(',', $data['tagcolors']);
         foreach ($taglabels as $tagkey => $taglabel) {
             $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
@@ -208,7 +208,9 @@
     if ($data['qr_id']) {
         $qr = db_row('SELECT code, legacy FROM qr WHERE id = :id', ['id' => $data['qr_id']]);
 
-        addfield('html', '', '<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$qr['code'].($qr['legacy'] ? '&qrlegacy=1' : '').'" /><br /><br />', ['aside' => true, 'asidetop' => true]);
+        $qrPng = generateQrPng($qr['code'], $qr['legacy'])[0];
+
+        addfield('html', '', '<img src="'.$qrPng.'" /><br /><br />', ['aside' => true, 'asidetop' => true]);
     }
 
     addfield('line');

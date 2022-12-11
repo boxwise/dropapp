@@ -7,7 +7,7 @@
         SELECT  s.*, 
                 CONCAT(p.name," ",g.label) AS product, 
                 l.label AS location,
-                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
                 DATE_FORMAT(s.modified,"%Y/%m/%d") AS statemodified,
                 bs.label AS statelabel,                        
@@ -33,7 +33,7 @@
     }
 
     if ($box['taglabels']) {
-        $taglabels = explode(',', $box['taglabels']);
+        $taglabels = explode(chr(0x1D), $box['taglabels']);
         $tagcolors = explode(',', $box['tagcolors']);
         foreach ($taglabels as $tagkey => $taglabel) {
             $data['headertags'][$tagkey] = [

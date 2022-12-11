@@ -28,7 +28,7 @@
                                 p.name AS product2, g.label AS gender, 
                                 IFNULL(s2.label, "") AS size, 
                                 l.label AS location,
-                                GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                                GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
                                 l.type as locationType,
                                 DATE_FORMAT(s.modified,"%Y/%m/%d") AS statemodified,
@@ -47,7 +47,7 @@
                             WHERE s.id = :id', ['id' => $_GET['boxid']]);
 
             if ($box['taglabels']) {
-                $taglabels = explode(',', $box['taglabels']);
+                $taglabels = explode(chr(0x1D), $box['taglabels']);
                 $tagcolors = explode(',', $box['tagcolors']);
                 foreach ($taglabels as $tagkey => $taglabel) {
                     $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
@@ -66,18 +66,29 @@
                                 IFNULL(s2.label, "") AS size, 
                                 l.label AS location, 
                                 l.type as locationType,
+                                GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
+                                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
                                 DATE_FORMAT(s.modified,"%Y/%m/%d") AS statemodified,
                                 bs.id as stateid, 
                                 bs.label as statelabel
                             FROM stock AS s
-                                INNER JOIN box_state AS bs ON bs.id = s.box_state_id
-                                LEFT OUTER JOIN products AS p ON p.id = s.product_id
-                                LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
-                                LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
-                                LEFT OUTER JOIN locations AS l ON l.id = s.location_id
-                                LEFT OUTER JOIN qr AS q ON q.id = s.qr_id
-                                LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
+                            INNER JOIN box_state AS bs ON bs.id = s.box_state_id
+                            LEFT OUTER JOIN products AS p ON p.id = s.product_id
+                            LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
+                            LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
+                            LEFT OUTER JOIN locations AS l ON l.id = s.location_id
+                            LEFT OUTER JOIN qr AS q ON q.id = s.qr_id
+                            LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
+                            LEFT OUTER JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
+                            LEFT OUTER JOIN tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "Stock" AND tags.deleted IS NULL
                             WHERE q.id = :qrid', ['qrid' => $qr_id]);
+            if ($box['taglabels']) {
+                $taglabels = explode(chr(0x1D), $box['taglabels']);
+                $tagcolors = explode(',', $box['tagcolors']);
+                foreach ($taglabels as $tagkey => $taglabel) {
+                    $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                }
+            }
         }
 
         if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {

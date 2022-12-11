@@ -27,28 +27,45 @@ Tracer::inSpan(
                 listsetting('multiplefilter', $tagfilter);
             }
 
-            $statusarray = ['week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'notregistered' => 'Not registered'];
+            $statusarray = ['day' => 'New today', 'week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'notregistered' => 'Not registered'];
             if ($_SESSION['camp']['beneficiaryisregistered']) {
                 $statusarray['notregistered'] = 'Not registered';
             }
             if ($_SESSION['camp']['beneficiaryisvolunteer']) {
                 $statusarray['volunteer'] = 'Volunteers';
             }
-            listfilter(['label' => 'Quick filters', 'options' => $statusarray, 'filter' => '"show"']);
+            listfilter3(['label' => 'Quick filters', 'options' => $statusarray, 'filter' => '"show"']);
 
             // Search
             listsetting('manualquery', true);
             listsetting('search', ['firstname', 'lastname', 'container', 'comments']);
             $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
 
-            // List Settings
-            listsetting('maxlimit', 500);   // limits the number of rows displayed
+            $is_filtered = (isset($listconfig['filtervalue3']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
+
+            // filter for up to 500 records
+            if (!$is_filtered) {
+                $number_of_people = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']]);
+                if ($number_of_people > 500) {
+                    listfilter(['label' => 'List size', 'options' => ['all' => 'Show all'], 'filter' => '"show"']);
+
+                    if ('all' != $listconfig['filtervalue']) {
+                        // limits the number of rows displayed
+                        listsetting('maxlimit', 500);
+                        // Notify the user of the limit on the number of records
+                        $cmsmain->assign('notification', 'Only the first 500 beneficiaries are shown. Use the filter and search to find the rest.');
+                    }
+                }
+            }
+
+            // make sorting optional
+            listfilter2(['label' => 'List settings', 'options' => ['sort' => 'Make sortable'], 'filter' => '"show"']);
+
             listsetting('allowcopy', false);
             listsetting('allowshowhide', false);
             listsetting('add', 'New person');
             listsetting('delete', 'Deactivate');
-            $is_filtered = (isset($listconfig['filtervalue']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
-            if ($is_filtered) {
+            if (isset($listconfig['filtervalue2']) && 'sort' === $listconfig['filtervalue2']) {
                 listsetting('allowsort', true);
                 listsetting('allowmove', false);
                 listsetting('noindent', true);
@@ -111,7 +128,7 @@ Tracer::inSpan(
             FROM
                 (SELECT
                     people_filtered.*,
-                    GROUP_CONCAT(tags.label ORDER BY tags.seq) AS taglabels,
+                    GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                     GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
                 FROM
                     (SELECT 
@@ -138,10 +155,11 @@ Tracer::inSpan(
                     WHERE
                         people.deleted IS NULL AND
                         people.camp_id = '.$_SESSION['camp']['id'].
-                        ('week' == $listconfig['filtervalue'] ? ' AND DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") ' : '').
-                        ('month' == $listconfig['filtervalue'] ? ' AND DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") ' : '').
-                        ('volunteer' == $listconfig['filtervalue'] ? ' AND people.volunteer ' : '').
-                        ('notregistered' == $listconfig['filtervalue'] ? ' AND people.notregistered ' : '').
+                        ('day' == $listconfig['filtervalue3'] ? ' AND DATE(NOW()) = DATE(people.created) ' : '').
+                        ('week' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") ' : '').
+                        ('month' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") ' : '').
+                        ('volunteer' == $listconfig['filtervalue3'] ? ' AND people.volunteer ' : '').
+                        ('notregistered' == $listconfig['filtervalue3'] ? ' AND people.notregistered ' : '').
                         ($listconfig['searchvalue'] ? ' AND
                             (people.lastname LIKE "%'.$search.'%" OR 
                             people.firstname LIKE "%'.$search.'%" OR 
@@ -169,7 +187,7 @@ Tracer::inSpan(
             LEFT JOIN
                 transactions ON transactions.people_id = people_filtered_with_tags.id '.
             (
-                'approvalsigned' == $listconfig['filtervalue'] ? '
+                'approvalsigned' == $listconfig['filtervalue3'] ? '
                 WHERE 
                     ((NOT people_filtered_with_tags.approvalsigned AND people_filtered_with_tags.parent_id IS NULL) OR NOT parent.approvalsigned)' : ''
             ).'
@@ -206,7 +224,7 @@ Tracer::inSpan(
                         if ($data[$key]['days_last_active'] > $daysinactive) {
                             $data[$key]['icons'] = '<i class="fa fa-exclamation-triangle warning tooltip-this" title="This family hasn\'t been active for at least '.floor($daysinactive).' days."></i> ';
                         } else {
-                            if ('inactive' == $listconfig['filtervalue']) {
+                            if ('inactive' == $listconfig['filtervalue3']) {
                                 unset($data[$key]);
 
                                 continue;
@@ -247,7 +265,7 @@ Tracer::inSpan(
                 function () use (&$data) {
                     foreach ($data as $key => $value) {
                         if ($data[$key]['taglabels']) {
-                            $taglabels = explode(',', $data[$key]['taglabels']);
+                            $taglabels = explode(chr(0x1D), $data[$key]['taglabels']);
                             $tagcolors = explode(',', $data[$key]['tagcolors']);
                             foreach ($taglabels as $tagkey => $taglabel) {
                                 $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
@@ -261,11 +279,6 @@ Tracer::inSpan(
                 ['name' => ('people.php:addtemplatedata')],
                 function () use ($cmsmain, $data) {
                     global $listdata, $listdata, $listconfig;
-
-                    // Notify the user of the limit on the number of records
-                    if (count($data) >= 500) {
-                        $cmsmain->assign('notification', 'Only the first 500 beneficiaries are shown. Use the filter and search to find the rest.');
-                    }
 
                     // Pass information to template
                     $cmsmain->assign('data', $data);

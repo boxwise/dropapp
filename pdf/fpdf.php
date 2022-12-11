@@ -12,7 +12,7 @@ define('FPDF_VERSION', '1.81');
 class FPDF
 {
     protected $page;               // current page number
-protected $n;                  // current object number
+    protected $n;                  // current object number
 protected $offsets;            // array of object offsets
 protected $buffer;             // buffer holding in-memory PDF
 protected $pages;              // array containing pages
