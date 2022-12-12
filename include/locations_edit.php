@@ -17,7 +17,7 @@
         $_POST['camp_id'] = $_SESSION['camp']['id'];
 
         $handler = new formHandler($table);
-        $savekeys = ['label', 'camp_id', 'visible', 'is_donated', 'is_lost', 'is_scrap', 'container_stock', 'is_market'];
+        $savekeys = ['label', 'camp_id', 'box_state_id', 'visible', 'is_donated', 'is_lost', 'is_scrap', 'container_stock', 'is_market'];
         $id = $handler->savePost($savekeys);
 
         redirect('?action='.$_POST['_origin']);
