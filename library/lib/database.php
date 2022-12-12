@@ -201,7 +201,7 @@ function db_nullable($table, $field, $dbid = false)
     }
     $r = db_query('SHOW FULL COLUMNS FROM '.$table);
     while ($row = db_fetch($r)) {
-        $result[$row['Field']] = ($row['Null'] == 'YES' ? true : false);
+        $result[$row['Field']] = ('YES' == $row['Null'] ? true : false);
     }
 
     return $result[$field];
