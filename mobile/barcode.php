@@ -110,7 +110,8 @@
 
                 $locations = db_array('SELECT 
                     l.id AS value, 
-                    if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label,
+                    l.label,
+                    if(l.box_state_id <> '.$box['stateid'].', concat("The Box State will be changed to ",bs.label),NULL) as tooltip,
                     IF(l.id = :location, true, false) AS selected 
                 FROM locations AS l
                 INNER JOIN box_state AS bs ON bs.id = l.box_state_id
