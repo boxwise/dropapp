@@ -4,20 +4,12 @@
 			<span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
 		{/foreach}
     {/if}
-	{if isset($box['statelabel'])}	
-			<nav class="navbar navbar-light bg-light">
-				<span class="navbar-brand mb-0 h1">Status: 
-				{if in_array($box['stateid'],[2,6])}	
-				<span><span id="currentstate" style="color:red">{$box['statelabel']}</span> {$box['statemodified']}</span>
-				{else}
-				<span id="currentstate" style="color:green">{$box['statelabel']}</span>
-				{/if}
-				<span id="newstate"></span></span>
-			</nav>
+		{if isset($box['statelabel'])}	
+		<div style="font-size:2rem">Status: 
+			<span id="currentstate" {if in_array($box['stateid'],[2,6])}style="color:red"{else}style="color:green"{/if}>{$box['statelabel']}
+		</div>
 	{/if}
 </h2>
-
-
 
 	<div id ="box-info" class="container-fluid" data-testid="box-info">
 		<div id="box-info-content" class = "row">
@@ -44,7 +36,7 @@
 	</div>
 	<div class="btn-list">
 		{foreach $locations as $value=>$location}
-			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>
+			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}" {if $location['tooltip']}title="{$location['tooltip']}"{/if}>{$location['label']} {if $location['tooltip']}<sup><span class="fa fa-info"></span></sup>{/if}</a>
 		{/foreach}
 	</div>
 		
