@@ -19,6 +19,7 @@
         listsetting('allowshowhide', false);
         listsetting('allowdelete', false);
         listsetting('add', 'Add a location');
+        listsetting('edit', 'locations_edit');
 
         addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'reactivate-cms-user']);
 
@@ -29,7 +30,7 @@
                 locations.*, 
                 (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,
                 bs.label AS boxstate,
-                IF(locations.box_state_id IN (2,3,4,6), true, false) AS preventedit,
+                IF(locations.is_market OR locations.container_stock, true, false) AS preventedit,
                 0 as level 
             FROM locations
             LEFT JOIN box_state bs ON bs.id = locations.box_state_id
