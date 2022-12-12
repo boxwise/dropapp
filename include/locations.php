@@ -15,25 +15,21 @@
         $cmsmain->assign('title', 'Warehouse Locations');
         listsetting('search', ['locations.label']);
 
-        if (!$is_admin) {
-            $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,0 as level
+        $data = getlistdata(
+            'SELECT 
+                locations.*, 
+                (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,
+                bs.label AS boxstate,
+                IF(locations.box_state_id IN (2,3,4,6), true, false) AS preventedit,
+                0 as level 
             FROM locations
-            WHERE deleted IS NULL
-            AND type = "Warehouse"
-            AND container_stock != 1
-            AND is_market != 1
-            AND is_donated != 1
-            AND is_lost != 1
-            AND is_scrap != 1
-            AND camp_id = '.$_SESSION['camp']['id']);
-        } else {
-            $data = getlistdata('SELECT *, (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,0 as level 
-            FROM locations 
-            WHERE deleted IS NULL AND type = "Warehouse"
-            AND camp_id = '.$_SESSION['camp']['id']);
-        }
+            LEFT JOIN box_state bs ON bs.id = locations.box_state_id
+            WHERE locations.deleted IS NULL AND locations.type = "Warehouse"
+            AND locations.camp_id = '.$_SESSION['camp']['id']
+        );
 
         addcolumn('text', 'Warehouse Locations', 'label');
+        addcolumn('text', 'Default box state', 'boxstate');
         addcolumn('text', 'Number of boxes', 'boxcount');
 
         listsetting('allowsort', false);

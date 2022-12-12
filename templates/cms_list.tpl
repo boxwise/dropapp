@@ -179,13 +179,13 @@
 												<label class="item-select-label">
 													<input class="item-select" data-testid='select-id' type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}>
 												</label>
-													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
+													{if !$row['preventedit'] and !isset($listconfig['allowedit'])}
 														<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
 													{else}
 														<p class="td-content-field">
 													{/if}
 													{include file="cms_list_{$column['type']}.tpl"}
-													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
+													{if !$row['preventedit'] and !isset($listconfig['allowedit'])}
 														</a>
 													{else}
 														</p>
