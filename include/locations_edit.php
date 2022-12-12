@@ -9,20 +9,26 @@
         verify_campaccess_location($_POST['id']);
 
         //Prepare POST
-        $_POST['visible'] = !$_POST['outgoing'];
+        $_POST['visible'] = in_array($_POST['box_state_id'], [1, 3, 4]) ? 1 : 0;
+        $_POST['is_donated'] = in_array($_POST['box_state_id'], [5]) ? 1 : 0;
+        $_POST['is_lost'] = in_array($_POST['box_state_id'], [2]) ? 1 : 0;
+        $_POST['is_scrap'] = in_array($_POST['box_state_id'], [6]) ? 1 : 0;
+
         $_POST['camp_id'] = $_SESSION['camp']['id'];
 
         $handler = new formHandler($table);
-        $savekeys = ['label', 'visible', 'camp_id', 'container_stock', 'is_market', 'is_donated', 'is_lost'];
+        $savekeys = ['label', 'camp_id', 'box_state_id', 'visible', 'is_donated', 'is_lost', 'is_scrap', 'container_stock', 'is_market'];
         $id = $handler->savePost($savekeys);
 
         redirect('?action='.$_POST['_origin']);
     }
 
-    $data = db_row('SELECT *, NOT visible as outgoing FROM '.$table.' WHERE type = "Warehouse" AND id = :id', ['id' => $id]);
+    $data = db_row('SELECT * FROM '.$table.' WHERE type = "Warehouse" AND id = :id', ['id' => $id]);
 
     if (!$id) {
         $data = db_defaults($table);
+    } elseif (($data['is_market'] || $data['container_stock']) && !$is_admin) {
+        throw new Exception("You don't have access to this record");
     }
 
     // open the template
@@ -33,13 +39,10 @@
 
     addfield('hidden', '', 'id');
     addfield('text', 'Label', 'label');
-    addfield('checkbox', 'This warehouse location is an outgoing location.', 'outgoing', ['tooltip' => 'Items in outgoing warehouse locations are not counted as part of your stock.']);
+    addfield('select', 'Default Box State', 'box_state_id', ['required' => false, 'tooltip' => 'If a Box is moved to this location it will be assigned this Box State by default.', 'query' => 'SELECT id AS value, label FROM box_state WHERE NOT id in (3,4) ORDER BY id']);
     if ($is_admin) {
-        addfield('checkbox', 'Stockroom', 'container_stock');
-        addfield('checkbox', 'Shop', 'is_market');
-        addfield('checkbox', 'Donated', 'is_donated');
-        addfield('checkbox', 'Lost', 'is_lost');
-        addfield('checkbox', 'Scrap', 'is_scrap');
+        addfield('checkbox', 'Stockroom', 'container_stock', ['tooltip' => 'God only']);
+        addfield('checkbox', 'Shop', 'is_market', ['tooltip' => 'God only']);
     }
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);

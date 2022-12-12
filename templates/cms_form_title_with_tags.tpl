@@ -10,4 +10,15 @@
             <span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
         {/foreach}
     {/if}
+    {if isset($data['statelabel'])}	
+        <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 h1">Status: 
+            {if in_array($data['stateid'],[2,6])}	
+            <span><span id="currentstate" style="color:red">{$data['statelabel']}</span> {$data['statemodified']}</span>
+            {else}
+            <span id="currentstate" style="color:green">{$data['statelabel']}</span>
+            {/if}
+            <span id="newstate"></span></span>
+        </nav>
+    {/if}
 </span>

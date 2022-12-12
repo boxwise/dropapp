@@ -1,6 +1,6 @@
 <?php
 
-$locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND deleted IS NULL AND camp_id = :camp_id AND type = "Warehouse"', ['camp_id' => $_SESSION['camp']['id']]));
+$locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND AND camp_id = :camp_id AND type = "Warehouse"', ['camp_id' => $_SESSION['camp']['id']]));
 
 //Create array with the export_ids_people in it
 $export_ids_array = explode(',', $_SESSION['export_ids_products']);

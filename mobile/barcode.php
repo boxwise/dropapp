@@ -30,8 +30,12 @@
                                 l.label AS location,
                                 GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                                 GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
-                                l.type as locationType
+                                l.type as locationType,
+                                DATE_FORMAT(s.modified,"%Y/%m/%d") AS statemodified,
+                                bs.id as stateid, 
+                                bs.label as statelabel
                             FROM stock AS s
+                                INNER JOIN box_state AS bs ON bs.id = s.box_state_id
                                 LEFT OUTER JOIN products AS p ON p.id = s.product_id
                                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
                                 LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
@@ -60,11 +64,15 @@
                                 p.name AS product2, 
                                 g.label AS gender, 
                                 IFNULL(s2.label, "") AS size, 
-                                l.label AS location,
+                                l.label AS location, 
+                                l.type as locationType,
                                 GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
-                                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors, 
-                                l.type as locationType 
+                                GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
+                                DATE_FORMAT(s.modified,"%Y/%m/%d") AS statemodified,
+                                bs.id as stateid, 
+                                bs.label as statelabel
                             FROM stock AS s
+                            INNER JOIN box_state AS bs ON bs.id = s.box_state_id
                             LEFT OUTER JOIN products AS p ON p.id = s.product_id
                             LEFT OUTER JOIN genders AS g ON g.id = p.gender_id
                             LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
@@ -100,8 +108,15 @@
                 $orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND l.type = "Warehouse" AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', ['camp' => $_SESSION['camp']['id']]);
                 $tpl->assign('orders', $orders);
 
-                $locations = db_array('SELECT id AS value, label, IF(id = :location, true, false) AS selected FROM locations WHERE deleted IS NULL AND camp_id = :camp_id AND type = "Warehouse" ORDER BY seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
+                $locations = db_array('SELECT 
+                    l.id AS value, 
+                    if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label,
+                    IF(l.id = :location, true, false) AS selected 
+                FROM locations AS l
+                INNER JOIN box_state AS bs ON bs.id = l.box_state_id
+                WHERE l.deleted IS NULL AND l.camp_id = :camp_id AND l.type = "Warehouse" ORDER BY l.seq', ['camp_id' => $_SESSION['camp']['id'], 'location' => $box['location_id']]);
                 $history = showHistory('stock', $box['id']);
+                $box['disabled'] = (in_array($box['statelabel'], ['Lost', 'Scrap']));
                 $tpl->assign('box', $box);
                 $tpl->assign('history', $history);
                 $tpl->assign('locations', $locations);
