@@ -129,7 +129,6 @@ Tracer::inSpan(
                         WHERE 
                             l.type = "Warehouse" AND
                             (NOT stock.deleted OR stock.deleted IS NULL) AND
-                            l.deleted IS NULL AND 
                             l.camp_id = '.$_SESSION['camp']['id'].
 
                             ($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '').

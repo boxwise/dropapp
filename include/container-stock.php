@@ -20,7 +20,7 @@ if ($container_stock_locations) {
 		IFNULL(SUM(s2.items),0) AS stock, 
 		(SELECT COUNT(s3.id) FROM stock AS s3
 			LEFT OUTER JOIN locations AS l2 ON l2.id = s3.location_id
-			WHERE l2.type = "Warehouse" AND (NOT s3.deleted OR s3.deleted IS NULL)  AND s3.product_id = p.id AND p.gender_id = g.id AND s3.size_id = s.id AND l2.visible AND l2.deleted IS NULL AND l2.camp_id='.$_SESSION['camp']['id'].')-IFNULL(COUNT(s2.id),0) AS totalboxes
+			WHERE l2.type = "Warehouse" AND (NOT s3.deleted OR s3.deleted IS NULL)  AND s3.product_id = p.id AND p.gender_id = g.id AND s3.size_id = s.id AND l2.visible AND l2.camp_id='.$_SESSION['camp']['id'].')-IFNULL(COUNT(s2.id),0) AS totalboxes
 	FROM
 		(products AS p,
 		sizes AS s)

@@ -15,7 +15,7 @@
             ($product ? ', '.$productname : '').
             ($gender ? ', '.db_value('SELECT label FROM genders WHERE id = :id', ['id' => $gender]) : '').
             ($size ? ', '.db_value('SELECT label FROM sizes WHERE id = :id', ['id' => $size]) : '').
-            ($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse" AND (NOT deleted OR deleted IS NULL)', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']]) : ''));
+            ($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']]) : ''));
 
         $data = getlistdata('
         	SELECT
