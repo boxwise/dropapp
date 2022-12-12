@@ -192,6 +192,21 @@ function db_defaults($table, $dbid = false)
 
     return $result;
 }
+
+function db_nullable($table, $field, $dbid = false)
+{
+    global $defaultdbid;
+    if (!$dbid) {
+        $dbid = $defaultdbid;
+    }
+    $r = db_query('SHOW FULL COLUMNS FROM '.$table);
+    while ($row = db_fetch($r)) {
+        $result[$row['Field']] = ($row['Null'] == 'YES' ? true : false);
+    }
+
+    return $result[$field];
+}
+
 function db_fieldexists($table, $field, $dbid = false)
 {
     global $defaultdbid;

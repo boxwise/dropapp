@@ -1,6 +1,6 @@
 <?php
 
-    $table = $action;
+    $table = 'locations';
     $ajax = checkajax();
 
     if (!$ajax) {
@@ -12,12 +12,15 @@
 
         initlist();
         listsetting('haspagemenu', true);
-        addpagemenu('active', 'In Use', ['link' => '?action=locations', 'active' => true, 'testid' => 'active']);
-        addpagemenu('deactivated', 'Archived', ['link' => '?action=locations_deactivated', 'testid' => 'deactivated']);
+        addpagemenu('active', 'In Use', ['link' => '?action=locations', 'testid' => 'active']);
+        addpagemenu('deactivated', 'Archived', ['link' => '?action=locations_deactivated', 'active' => true, 'testid' => 'deactivated']);
         listsetting('allowsort', false);
+        listsetting('allowmove', false);
         listsetting('allowshowhide', false);
+        listsetting('allowdelete', false);
         listsetting('add', 'Add a location');
-        listsetting('delete', 'Archive');
+
+        addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'reactivate-cms-user']);
 
         listsetting('search', ['locations.label']);
 
@@ -30,7 +33,7 @@
                 0 as level 
             FROM locations
             LEFT JOIN box_state bs ON bs.id = locations.box_state_id
-            WHERE locations.deleted IS NULL AND locations.type = "Warehouse"
+            WHERE locations.deleted AND locations.type = "Warehouse"
             AND locations.camp_id = '.$_SESSION['camp']['id']
         );
 
@@ -44,15 +47,9 @@
         $cmsmain->assign('include', 'cms_list.tpl');
     } else {
         switch ($_POST['do']) {
-            case 'move':
-                $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect) = listMove($table, $ids);
-
-                break;
-
-            case 'delete':
+            case 'undelete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids, false);
+                list($success, $message, $redirect) = listUndelete($table, $ids, false);
 
                 break;
         }
