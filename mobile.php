@@ -38,10 +38,10 @@ if ($_GET['messageAnchorTargetValue']) {
     $data['messageAnchorTargetValue'] = $_GET['messageAnchorTargetValue'];
 }
 // Forwarding to new App
-if ($_GET['preference'] == 'classic') {
+if ('classic' == $_GET['preference']) {
     // check if they are coming from the new App
     $_SESSION['v2_forward'] = false;
-} elseif ((!isset($_SESSION['v2_forward'])) || ($_GET['preference'] == 'v2')) {
+} elseif ((!isset($_SESSION['v2_forward'])) || ('v2' == $_GET['preference'])) {
     // set default
     $_SESSION['v2_forward'] = true;
 }
