@@ -13,3 +13,4 @@ phpmyadmin/*
 config.php.production
 node_modules
 cypress.env.json
+db/queries/*.csv

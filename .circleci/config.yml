@@ -79,7 +79,9 @@ jobs:
             \$settings['auth0_db_connection_id'] = '${<< parameters.envVariablePrefix >>AUTH0_DB_CONNECTION_ID}';
             \$settings['auth0_client_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_SECRET}';
             \$settings['auth0_cookie_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_COOKIE_SECRET}';
-            \$settings['auth0_redirect_uri'] = '${<< parameters.envVariablePrefix >>AUTH0_REDIRECT_URI}';" > library/config.php
+            \$settings['auth0_redirect_uri'] = '${<< parameters.envVariablePrefix >>AUTH0_REDIRECT_URI}';
+            \$settings['v2_base_url'] = '${<< parameters.envVariablePrefix >>V2_BASE_URL}';
+            \$settings['jwt_claim_prefix'] = 'https://www.boxtribute.com';" > library/config.php
           echo "paths:
             migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'
             seeds: '%%PHINX_CONFIG_DIR%%/db/seeds'

@@ -177,6 +177,9 @@ Tracer::inSpan(
                         $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
                     }
                 }
+
+                // TODO add link to new app
+                // $data[$key]['href'] = $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/boxes/'.$data[$key]['box_id'];
             }
 
             addcolumn('text', 'Box ID', 'box_id');
@@ -195,6 +198,12 @@ Tracer::inSpan(
             listsetting('allowsort', true);
             listsetting('allowcopy', false);
             listsetting('add', 'Add');
+
+            // TODO enable forward to new app only for beta users
+            // if (in_array('beta_user', $_SESSION['auth0_user'][$settings['jwt_claim_prefix'].'/roles'])) {
+            //     listsetting('beta_box_view_edit', true);
+            // }
+
             // related to https://trello.com/c/Ci74t1Wj
             $locations = db_simplearray('SELECT 
                                             l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label

@@ -37,6 +37,14 @@ if ($_GET['messageAnchorTarget']) {
 if ($_GET['messageAnchorTargetValue']) {
     $data['messageAnchorTargetValue'] = $_GET['messageAnchorTargetValue'];
 }
+// Forwarding to new App
+if ($_GET['preference'] == 'classic') {
+    // check if they are coming from the new App
+    $_SESSION['v2_forward'] = false;
+} elseif ((!isset($_SESSION['v2_forward'])) || ($_GET['preference'] == 'v2')) {
+    // set default
+    $_SESSION['v2_forward'] = true;
+}
 if (!$_SESSION['camp']['id']) {
     //No organisation selected for admin
     if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
