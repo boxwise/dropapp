@@ -253,7 +253,7 @@ function listUndelete($table, $ids, $uri = false, $overwritehastree = false)
 
     foreach ($ids as $id) {
         if ($hasDeletefield) {
-            $count += listUndeleteAction($table, $id, 0, $hasTree);
+            $count += listUndeleteAction($table, $id, 0, $hasTree, db_nullable($table, 'deleted'));
         }
     }
 
@@ -264,9 +264,9 @@ function listUndelete($table, $ids, $uri = false, $overwritehastree = false)
     return [false, $translate['cms_list_undeleteerror'], false];
 }
 
-function listUnDeleteAction($table, $id, $count = 0, $recursive = false)
+function listUnDeleteAction($table, $id, $count = 0, $recursive = false, $null = true)
 {
-    $result = db_query('UPDATE '.$table.' SET deleted = 0, modified = NOW(), modified_by = :user_id WHERE id = :id', ['id' => $id, 'user_id' => $_SESSION['user']['id']]);
+    $result = db_query('UPDATE '.$table.' SET deleted = '.($null ? 'NULL' : '0').', modified = NOW(), modified_by = :user_id WHERE id = :id', ['id' => $id, 'user_id' => $_SESSION['user']['id']]);
     $count += $result->rowCount();
     if ($result->rowCount()) {
         simpleSaveChangeHistory($table, $id, 'Record recovered');

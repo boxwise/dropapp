@@ -4,7 +4,13 @@
 			<span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
 		{/foreach}
     {/if}
+		{if isset($box['statelabel'])}	
+		<div style="font-size:2rem">Status: 
+			<span id="currentstate" {if in_array($box['stateid'],[2,6])}style="color:red"{else}style="color:green"{/if}>{$box['statelabel']}
+		</div>
+	{/if}
 </h2>
+
 	<div id ="box-info" class="container-fluid" data-testid="box-info">
 		<div id="box-info-content" class = "row">
 				<div id="box-info-product" class = "col-xs-12" data-testid="box-info-product">
@@ -30,7 +36,7 @@
 	</div>
 	<div class="btn-list">
 		{foreach $locations as $value=>$location}
-			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}">{$location['label']}</a>
+			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}" {if $location['tooltip']}title="{$location['tooltip']}"{/if}>{$location['label']} {if $location['tooltip']}<sup><span class="fa fa-info"></span></sup>{/if}</a>
 		{/foreach}
 	</div>
 		
@@ -40,9 +46,9 @@
 			<form method="get">
 				<input type="hidden" name="saveamount" value="{$box['id']}">
 				<div class="form-group">
-					<input type="number" name="items" pattern="\d*" value="0" class="form-control">			
+					<input type="number" name="items" pattern="\d*" value="0" class="form-control" {if $box['disabled']}disabled{/if}>			
 				</div>
-				<input class="btn" type="submit" value="Remove these items">
+				<input class="btn" type="submit" value="Remove these items" {if $box['disabled']}disabled{/if}>
 			</form>
 		<hr></hr>	
 		<p>Change the contents of the box:</p>

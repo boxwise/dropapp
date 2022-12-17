@@ -181,13 +181,13 @@
 												</label>
 													{if $listconfig['beta_box_view_edit']}
 														<a class="td-content-field" href="{$row['href']}">
-													{elseif !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
+													{elseif !$row['preventedit'] and !isset($listconfig['allowedit'])}
 														<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
 													{else}
 														<p class="td-content-field">
 													{/if}
 													{include file="cms_list_{$column['type']}.tpl"}
-													{if !$row['preventedit'] && $listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])}
+													{if !$row['preventedit'] and !isset($listconfig['allowedit'])}
 														</a>
 													{else}
 														</p>

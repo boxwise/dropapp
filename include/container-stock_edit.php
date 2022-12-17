@@ -47,7 +47,7 @@
 				(NOT stock.deleted OR stock.deleted IS NULL) AND 
 				stock.location_id = l.id AND 
                 l.camp_id = '.$_SESSION['camp']['id'].'
-				AND l.visible');
+				AND l.visible AND stock.box_state_id NOT IN (2,6,5) ');
 
         foreach ($data as $key => $value) {
             if ($data[$key]['ordered']) {
