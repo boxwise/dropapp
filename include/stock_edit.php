@@ -189,22 +189,22 @@
         addfield('line');
     }
 
+    addfield('select', 'Location', 'location_id', ['required' => true,  'multiple' => false,  'onchange' => 'getNewBoxState();',
+    'query' => 'SELECT 
+                    l.id AS value, 
+                    if(l.box_state_id <> '.$data['stateid'].', concat(l.label," -  Boxes are ",bs.label),l.label) as label
+                FROM
+                    locations l
+                    LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
+                WHERE
+                    l.deleted IS NULL AND l.camp_id =  '.$_SESSION['camp']['id'].' 
+                        AND l.type = "Warehouse" ORDER BY seq', ]);
+
     addfield('select', 'Product', 'product_id', ['disabled' => $disabled, 'test_id' => 'product_id', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].($_SESSION['camp']['separateshopandwhproducts'] ? ' AND NOT p.stockincontainer' : '').' ORDER BY name', 'onchange' => 'getSizes()']);
 
     addfield('select', 'Size', 'size_id', ['disabled' => $disabled, 'required' => true, 'width' => 2, 'multiple' => false, 'query' => 'SELECT *, id AS value FROM sizes WHERE sizegroup_id = '.intval(db_value('SELECT sizegroup_id FROM products WHERE id = :id', ['id' => $data['product_id']])).' ORDER BY seq', 'tooltip' => 'If the right size for your box is not here, don\'t put it in comments, but first double check if you have the right product. For example: Long sleeves for babies, we call them tops.']);
 
     addfield('number', 'Items', 'items', ['testid' => 'items_id', 'readonly' => $disabled]);
-
-    addfield('select', 'Location', 'location_id', ['required' => true,  'multiple' => false,  'onchange' => 'getNewBoxState();',
-        'query' => 'SELECT 
-                        l.id AS value, 
-                        if(l.box_state_id <> '.$data['stateid'].', concat(l.label," -  Boxes are ",bs.label),l.label) as label
-                    FROM
-                        locations l
-                        LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
-                    WHERE
-                        l.deleted IS NULL AND l.camp_id =  '.$_SESSION['camp']['id'].' 
-                            AND l.type = "Warehouse" ORDER BY seq', ]);
 
     if ($data['qr_id']) {
         $qr = db_row('SELECT code, legacy FROM qr WHERE id = :id', ['id' => $data['qr_id']]);
