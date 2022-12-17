@@ -6,15 +6,10 @@
 			{/foreach}
     	{/if}
 		{if isset($box['statelabel'])}	
-			<nav class="navbar navbar-light bg-light">
-				<span class="navbar-brand mb-0 h1">Status: 
-				{if in_array($box['stateid'],[2,6])}	
-				<span><span id="currentstate" style="color:red">{$box['statelabel']}</span> {$box['statemodified']}</span>
-				{else}
-				<span id="currentstate" style="color:green">{$box['statelabel']}</span>
-				{/if}
+			<div style="font-size:2rem">Status: 
+				<span id="currentstate" {if in_array($box['stateid'],[2,6])}style="color:red"{else}style="color:green"{/if}>{$box['statelabel']}
 				<span id="newstate"></span></span>
-			</nav>
+			</div>
 		{/if}
 	{else}Make a new box{/if}</h2>
 	<form method="post" action="?savebox=1">
@@ -80,7 +75,7 @@
 				<input type="checkbox" id="lost" name="lost" value="1" onclick="setBoxState('lost')"
 					{if $box['lost']}checked{/if}
 				/> 
-					I can’t find this box
+					I can’t find this box.
 				</label>
 			</div>
 			<div class="col-sm-6">

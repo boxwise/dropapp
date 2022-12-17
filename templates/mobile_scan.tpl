@@ -4,7 +4,7 @@
 			<span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
 		{/foreach}
     {/if}
-		{if isset($box['statelabel'])}	
+	{if isset($box['statelabel'])}
 		<div style="font-size:2rem">Status: 
 			<span id="currentstate" {if in_array($box['stateid'],[2,6])}style="color:red"{else}style="color:green"{/if}>{$box['statelabel']}
 		</div>
@@ -36,7 +36,7 @@
 	</div>
 	<div class="btn-list">
 		{foreach $locations as $value=>$location}
-			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}" {if $location['tooltip']}title="{$location['tooltip']}"{/if}>{$location['label']} {if $location['tooltip']}<sup><span class="fa fa-info"></span></sup>{/if}</a>
+			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}" {if $location['tooltip']}title="{$location['tooltip']}"{/if}>{$location['label']}</a>
 		{/foreach}
 	</div>
 		
