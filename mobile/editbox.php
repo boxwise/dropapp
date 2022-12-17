@@ -2,7 +2,6 @@
 
     // displaying tags on the top of edit box
     // related trello https://trello.com/c/XjNwO3sL
-
     $box = db_row('
         SELECT  s.*, 
                 CONCAT(p.name," ",g.label) AS product, 
@@ -44,7 +43,9 @@
         }
     }
 
-    $data['message'] = v2_forward($settings['v2_base_url'], '/boxes/'.$box['box_id'])
+    // Forward to new Boxtribute App
+    $message = v2_forward($settings['v2_base_url'], '/boxes/'.$box['box_id']);
+    $data['message'] = (!isset($data['message']) ? $message : $data['message']);
 
     $data['products'] = db_array('SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label, sizegroup_id FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = :camp_id ORDER BY name', ['camp_id' => $_SESSION['camp']['id']]);
     $data['locations'] = db_array('SELECT 

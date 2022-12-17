@@ -256,20 +256,12 @@ function mobile_distro_check($locationType, $mobile = true)
 
 function v2_forward($base_url, $route)
 {
-    if ($_GET['preference'] == 'classic') {
-        // check if they are coming from the new App
-        $_SESSION['v2_forward'] = false;
-    } elseif ((!isset($_SESSION['v2_forward'])) || ($_GET['preference'] == 'v2')) {
-        // set default
-        $_SESSION['v2_forward'] = true;
-    }
-
     if ($_SESSION['v2_forward']) {
         redirect($base_url.'/bases/'.$_SESSION['camp']['id'].$route);
     } else {
         // I add a link to the same REQUEST_URI just with a changed view preference so that the SESSION is changed, too.
         $url = str_replace(['?&', '&&'], ['?', '&'], str_replace('preference=classic', '', $_SERVER['REQUEST_URI']).'&preference=v2');
 
-        return '<a href="'.$url.'">Switch to the NEW Version</a>';
+        return '<div data-testid="v2-link">Try out the new Boxtribute.</div><a href="'.$url.'" data-testid="v2-link-url">Switch here to the NEW Version!</a>';
     }
 }
