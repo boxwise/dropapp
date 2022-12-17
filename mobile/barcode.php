@@ -118,7 +118,7 @@ if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {
 
     $locations = db_array('SELECT 
                             l.id AS value,
-                            IF(l.box_state_id <> '.$box['stateid'].', concat(l.label, "- Box becomes ",bs.label),l.label) as label,
+                            IF(l.box_state_id <> '.$box['stateid'].', concat(l.label, " - Boxes are <i>",bs.label,"</i>"),l.label) as label,
                             IF(l.box_state_id <> '.$box['stateid'].', concat("The Box State will be changed to ",bs.label),NULL) as tooltip,
                             IF(l.id = :location, true, false) AS selected 
                         FROM locations AS l

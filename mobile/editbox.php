@@ -50,7 +50,7 @@
     $data['products'] = db_array('SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label, sizegroup_id FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = :camp_id ORDER BY name', ['camp_id' => $_SESSION['camp']['id']]);
     $data['locations'] = db_array('SELECT 
 
-    l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
+    l.id AS value, if(l.box_state_id <> '.$box['stateid'].', concat(l.label," -  Boxes are ",bs.label),l.label) as label
 FROM
     locations l
     INNER JOIN box_state bs ON bs.id = l.box_state_id
