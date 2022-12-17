@@ -405,7 +405,7 @@ function getNewBoxState() {
             if (typeof result.message === 'object') {
                 $("#newstate").hide();
                 $("#newstate").html(result.message.box_state);
-                $("#newstate").fadeIn(2000);
+                $("#newstate").fadeIn(500)
                 
                 if(parseInt(result.message.box_state_id) === 2){
                     lostEl.checked = true;
@@ -462,14 +462,14 @@ function setBoxState(state){
                 lostEl.checked = false;
                 $("#newstate").hide();
                 $("#newstate").html('');
-                $("#newstate").fadeIn(2000);
+                $("#newstate").fadeIn(500);
               } else {
                 console.log("lost: " + lostEl.checked);
                 lostEl.checked = true;
                 scrapEl.checked = false;
                 $("#newstate").hide();
                 $("#newstate").html(' -> <span style="color:blue">Lost</span>');
-                $("#newstate").fadeIn(2000);
+                $("#newstate").fadeIn(500);
               }
             break;
         case "scrap":
@@ -478,14 +478,14 @@ function setBoxState(state){
                 scrapEl.checked = false;
                 $("#newstate").hide();
                 $("#newstate").html('');
-                $("#newstate").fadeIn(2000);
+                $("#newstate").fadeIn(500);
               } else {
                 console.log("scrap: " + scrapEl.checked);
                 scrapEl.checked = true;
                 lostEl.checked = false;
                 $("#newstate").hide();
                 $("#newstate").html(' -> <span style="color:blue">Scrap</span>');
-                $("#newstate").fadeIn(2000);
+                $("#newstate").fadeIn(500);
               }
             
             break;
