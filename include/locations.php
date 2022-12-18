@@ -24,7 +24,7 @@
         $data = getlistdata(
             'SELECT 
                 locations.*, 
-                (SELECT COUNT(id) FROM stock WHERE location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,
+                (SELECT COUNT(id) FROM stock WHERE box_state_id = 1 AND location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,
                 bs.label AS boxstate,
                 IF(locations.is_market OR locations.container_stock, true, false) AS preventedit,
                 0 as level 
@@ -36,7 +36,7 @@
 
         addcolumn('text', 'Warehouse Locations', 'label');
         addcolumn('text', 'Default box state', 'boxstate');
-        addcolumn('text', 'Number of boxes', 'boxcount');
+        addcolumn('text', 'Number of Instock boxes ', 'boxcount');
 
         $cmsmain->assign('data', $data);
         $cmsmain->assign('listconfig', $listconfig);
