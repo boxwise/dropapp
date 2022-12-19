@@ -46,23 +46,40 @@
             addfield('checkbox', 'in Free Shop?', 'stockincontainer');
         }
     }
-    $table = 'stock';
+
     if ($id) {
         addfield('list', 'In Stock', 'stock', ['width' => 10, 'query' => '
-	SELECT stock.id AS id, stock.box_id, stock.items, stock.comments, g.label AS gender, p.name AS product, p.name AS product, s.label AS size, l.label AS location, l.visible FROM '.$table.'
-	LEFT OUTER JOIN products AS p ON p.id = stock.product_id
-    LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
-    LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
-    LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id 
-    WHERE l.type = "Warehouse" AND (not stock.deleted or stock.deleted = 0) AND l.visible AND stock.product_id = '.$id, 'columns' => ['box_id' => 'Box ID', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'items' => 'Items', 'location' => 'Location', 'comments' => 'Comments'],
-            'allowedit' => true, 'allowadd' => false, 'allowselect' => true, 'allowselectall' => false, 'allowshowhide' => false, 'action' => 'stock', 'redirect' => true, 'allowsort' => true, ]);
+            SELECT 
+                stock.id AS id, 
+                stock.box_id, 
+                stock.items, 
+                stock.comments, 
+                g.label AS gender, 
+                p.name AS product, 
+                p.name AS product, 
+                s.label AS size, 
+                l.label AS location
+            FROM stock
+            LEFT OUTER JOIN products AS p ON p.id = stock.product_id
+            LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
+            LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
+            LEFT OUTER JOIN sizes AS s ON s.id = stock.size_id 
+            WHERE 
+                l.type = "Warehouse" AND 
+                (not stock.deleted or stock.deleted IS NULL) AND 
+                stock.box_state_id NOT IN (2,5,6) AND 
+                stock.product_id = '.$id,
+            'columns' => ['box_id' => 'Box ID', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'items' => 'Items', 'location' => 'Location', 'comments' => 'Comments'],
+            'allowedit' => true,
+            'allowdelete' => false,
+            'allowadd' => false,
+            'allowselect' => false,
+            'allowselectall' => false,
+            'allowshowhide' => false,
+            'action' => 'stock',
+            'redirect' => true,
+            'allowsort' => true, ]);
     }
-
-/*
-    addfield('line','','');
-    addfield('number','Maximum per adult per two weeks','maxperadult',array('width'=>3));
-    addfield('number','Maximum per child per two weeks','maxperchild',array('width'=>3));
-*/
 
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);
