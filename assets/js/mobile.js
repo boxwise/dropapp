@@ -55,7 +55,7 @@ function getNewBoxState() {
             if (typeof result.message === 'object') {
                 $("#newstate").hide();
                 $("#newstate").html(result.message.box_state);
-                $("#newstate").fadeIn(2000);
+                $("#newstate").fadeIn(500);
                 
                 if(parseInt(result.message.box_state_id) === 2){
                     lostEl.checked = true;
