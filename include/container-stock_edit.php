@@ -16,7 +16,8 @@
         $data = getlistdata('
 			SELECT 
 				stock.*, 
-				SUBSTRING(stock.comments,1, 25) AS shortcomment, cu.naam AS ordered_name, cu2.naam AS picked_name, 
+				SUBSTRING(stock.comments,1, 25) AS shortcomment, 
+                cu.naam AS ordered_name, cu2.naam AS picked_name, 
 				g.label AS gender, 
 				p.name AS product, 
 				s.label AS size, 
@@ -47,7 +48,7 @@
 				(NOT stock.deleted OR stock.deleted IS NULL) AND 
 				stock.location_id = l.id AND 
                 l.camp_id = '.$_SESSION['camp']['id'].'
-				AND l.visible AND stock.box_state_id NOT IN (2,6,5) ');
+				AND stock.box_state_id NOT IN (2,6,5) ');
 
         foreach ($data as $key => $value) {
             if ($data[$key]['ordered']) {
@@ -101,11 +102,21 @@
                 $ids = explode(',', $_POST['ids']);
                 foreach ($ids as $id) {
                     $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $id]);
-
-                    db_query('UPDATE stock SET modified = NOW(), modified_by = '.$_SESSION['user']['id'].', ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id', ['location' => $_POST['option'], 'id' => $id]);
-                    $from['int'] = $box['location_id'];
-                    $to['int'] = $_POST['option'];
-                    simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
+                    $newboxstateid = db_value('SELECT box_state_id FROM locations WHERE id = :id', ['id' => $_POST['option']]);
+                    db_query('UPDATE stock 
+                            SET modified = NOW(), 
+                                modified_by = '.$_SESSION['user']['id'].', 
+                                ordered = NULL, 
+                                ordered_by = NULL, 
+                                picked = NULL, 
+                                picked_by = NULL, 
+                                location_id = :location, 
+                                box_state_id = :boxstateid  
+                            WHERE id = :id', ['location' => $_POST['option'], 'boxstateid' => $newboxstateid, 'id' => $id]);
+                    simpleSaveChangeHistory('stock', $id, 'location_id', ['int' => $box['location_id']], ['int' => $_POST['option']]);
+                    if ($newboxstateid != $box['box_state_id']) {
+                        simpleSaveChangeHistory('stock', $id, 'box_state_id', ['int' => $box['box_state_id']], ['int' => $newboxstateid]);
+                    }
 
                     if ($box['location_id'] != $_POST['option']) {
                         db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');
@@ -140,45 +151,6 @@
                     $success = true;
                     $redirect = true;
                 }
-
-                break;
-
-            case 'qr':
-                $id = $_POST['ids'];
-                $boxid = db_value('SELECT box_id FROM stock WHERE id = :id', ['id' => $id]);
-                $success = true;
-                $message = '';
-                $redirect = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$boxid;
-
-                break;
-
-            case 'move':
-                $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect) = listMove($table, $ids);
-
-                break;
-
-            case 'delete':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids);
-
-                break;
-
-            case 'copy':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
-
-                break;
-
-            case 'hide':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-
-                break;
-
-            case 'show':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
                 break;
         }
