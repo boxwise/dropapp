@@ -190,7 +190,7 @@
     }
 
     addfield('select', 'Location', 'location_id', ['required' => true,  'multiple' => false,  'onchange' => 'getNewBoxState();',
-    'query' => 'SELECT 
+        'query' => 'SELECT 
                     l.id AS value, 
                     if(l.box_state_id <> '.$data['stateid'].', concat(l.label," -  Boxes are ",bs.label),l.label) as label
                 FROM
