@@ -52,7 +52,18 @@
 
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids, false);
+                $ids_array = $ids;
+                foreach ($ids as $id) {
+                    if (db_value('SELECT id FROM stock WHERE location_id = :location AND box_state_id IN (1,3,4) AND (NOT deleted or deleted IS NULL) LIMIT 1', ['location' => $id])) {
+                        $ids_array = array_diff($ids_array, [$id]);
+                    }
+                }
+                if ($ids_array != $ids) {
+                    $success = false;
+                    $message = 'The locations were not archived since min. one has Instock Boxes.';
+                } else {
+                    list($success, $message, $redirect) = listDelete($table, $ids_array, false);
+                }
 
                 break;
         }
