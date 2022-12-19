@@ -76,7 +76,17 @@
         listsetting('allowselect', true);
         listsetting('allowselectinvisible', false);
 
-        $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND type = "Warehouse" AND camp_id = '.$_SESSION['camp']['id'].' ORDER BY seq');
+        $locations = db_simplearray('
+            SELECT 
+                l.id, 
+                IF(l.box_state_id <> 1, concat(l.label," - Boxes are ",bs.label), l.label) as label
+            FROM locations l
+            INNER JOIN box_state bs ON l.box_state_id=bs.id
+            WHERE 
+                l.deleted IS NULL AND 
+                l.type = "Warehouse" AND 
+                l.camp_id = '.$_SESSION['camp']['id'].' 
+            ORDER BY seq');
         addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
         addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
         addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
