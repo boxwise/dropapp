@@ -21,7 +21,7 @@
         listsetting('add', 'Add a location');
         listsetting('edit', 'locations_edit');
 
-        addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'reactivate-cms-user']);
+        addbutton('unarchive', 'Activate', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'reactivate-cms-user']);
 
         listsetting('search', ['locations.label']);
 
@@ -48,9 +48,10 @@
         $cmsmain->assign('include', 'cms_list.tpl');
     } else {
         switch ($_POST['do']) {
-            case 'undelete':
+            case 'unarchive':
                 $ids = explode(',', $_POST['ids']);
                 list($success, $message, $redirect) = listUndelete($table, $ids, false);
+                $redirect = true;
 
                 break;
         }
