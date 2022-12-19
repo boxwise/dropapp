@@ -9,10 +9,10 @@
         verify_campaccess_location($_POST['id']);
 
         //Prepare POST
-        $_POST['visible'] = in_array($_POST['box_state_id'], [1, 3, 4]) ? 1 : 0;
-        $_POST['is_donated'] = in_array($_POST['box_state_id'], [5]) ? 1 : 0;
-        $_POST['is_lost'] = in_array($_POST['box_state_id'], [2]) ? 1 : 0;
-        $_POST['is_scrap'] = in_array($_POST['box_state_id'], [6]) ? 1 : 0;
+        $_POST['visible'] = in_array($_POST['box_state_id'][0], ['1', '3', '4']) ? 1 : 0;
+        $_POST['is_donated'] = in_array($_POST['box_state_id'][0], ['5']) ? 1 : 0;
+        $_POST['is_lost'] = in_array($_POST['box_state_id'][0], ['2']) ? 1 : 0;
+        $_POST['is_scrap'] = in_array($_POST['box_state_id'][0], ['6']) ? 1 : 0;
 
         $_POST['camp_id'] = $_SESSION['camp']['id'];
 
@@ -39,7 +39,7 @@
 
     addfield('hidden', '', 'id');
     addfield('text', 'Label', 'label', ['required' => true]);
-    addfield('select', 'Default Box State', 'box_state_id', ['required' => true, 'tooltip' => 'If a Box is moved to this location it will be assigned this Box State by default.', 'query' => 'SELECT id AS value, label FROM box_state WHERE NOT id in (3,4) ORDER BY id']);
+    addfield('select', 'Default Box State', 'box_state_id', ['required' => true, 'tooltip' => 'If a Box is moved to this location it will be assigned this Box State by default.', 'query' => 'SELECT id AS value, label FROM box_state WHERE NOT id in (2,3,4) ORDER BY id']);
     addfield('html', 'About Box States', '<p>Each Box has a Box State. It can be <strong>Instock</strong>, <strong>Donated</strong>, <strong>Lost</strong> and <strong>Scrap</strong>. <br />Only Boxes in the Box State <strong>Instock</strong> count to your inventory. <br />If Boxes are moved to a location, the Box State is changed to the Default Box State connected to the location.</p>');
     if ($is_admin) {
         addfield('checkbox', 'Stockroom', 'container_stock', ['tooltip' => 'God only']);
