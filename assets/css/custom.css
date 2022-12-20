@@ -786,7 +786,7 @@ td.list-level-0.list-column-ean_print div a:hover {
 }
 
 div.filter-applied {
-	border-color: #4cbac5;
+	border-color: #aacfe3;
 	outline: none;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
 	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);

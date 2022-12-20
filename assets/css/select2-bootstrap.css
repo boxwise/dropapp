@@ -276,7 +276,8 @@
  */
 .select2-container-active .select2-choice,
 .select2-container-multi.select2-container-active .select2-choices {
-  border-color: #4cbac5;
+  border-color: #aacfe3
+;
   outline: none;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
@@ -289,12 +290,14 @@
 }
 
 .select2-drop-active {
-  border-color: #4cbac5;
+  border-color: #aacfe3
+;
 }
 
 .select2-drop-auto-width,
 .select2-drop.select2-drop-above.select2-drop-active {
-  border-top-color: #4cbac5;
+  border-top-color: #aacfe3
+;
 }
 
 /**

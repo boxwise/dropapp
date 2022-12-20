@@ -89,7 +89,7 @@
     "@input-border-radius": "@border-radius-base",
     "@input-border-radius-large": "@border-radius-large",
     "@input-border-radius-small": "@border-radius-small",
-    "@input-border-focus": "#4cbac5",
+    "@input-border-focus": "#aacfe3",
     "@input-color-placeholder": "@gray-light",
     "@input-height-base": "(@line-height-computed + (@padding-base-vertical * 2) + 2)",
     "@input-height-large": "(ceil(@font-size-large * @line-height-large) + (@padding-large-vertical * 2) + 2)",
