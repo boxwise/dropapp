@@ -160,7 +160,7 @@
         addfield('line');
     }
 
-    addfield('select', 'Location', 'location_id', ['required' => true,  'multiple' => false,  'onchange' => 'getNewBoxState();',
+    addfield('select', 'Location', 'location_id', ['disabled' => $disabled, 'required' => true,  'multiple' => false,  'onchange' => 'getNewBoxState();',
         'query' => 'SELECT 
                     l.id AS value, 
                     if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label

@@ -422,8 +422,8 @@ function getNewBoxState() {
                 } else {
                     lostEl.checked = false;
                     scrapEl.checked = false;
-                    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").prop("disabled", false);
-                    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").prop("readonly", false);
+                    $("#field_location_id,#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").prop("disabled", false);
+                    $("#field_location_id,#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").prop("readonly", false);
                 }
 
             } else {
@@ -439,15 +439,15 @@ function getNewBoxState() {
 
 
 function disableBoxEdit(){
-    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("disabled", true);
-    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("readonly", true);
-    $("input[name='__items, input[name='__comments']']").val('text  readonly');
+    $("#field_location_id,#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("disabled", true);
+    $("#field_location_id,#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("readonly", true);
+    $("input[name='__items'], input[name='__comments']").val('text  readonly');
 }
 
 function enableBoxEdit() {
-    $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("disabled", false);
+    $("#field_location_id,#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("disabled", false);
     $("#field_product_id, #field_size_id, #field_tags, #field_items, #field_comments").attr("readonly", false);
-    $("input[name='__items'],  input[name='__comments']").val('text  ');
+    $("input[name='__items'], input[name='__comments']").val('text  ');
 }
 
 function setBoxState(state){
@@ -458,13 +458,11 @@ function setBoxState(state){
     switch(state){
         case "lost":
             if (!lostEl.checked) {
-                console.log("lost: " + lostEl.checked);
                 lostEl.checked = false;
                 $("#newstate").hide();
                 $("#newstate").html('');
                 $("#newstate").fadeIn(500);
               } else {
-                console.log("lost: " + lostEl.checked);
                 lostEl.checked = true;
                 scrapEl.checked = false;
                 $("#newstate").hide();
@@ -474,13 +472,11 @@ function setBoxState(state){
             break;
         case "scrap":
             if (!scrapEl.checked) {
-                console.log("scrap: " + scrapEl.checked);
                 scrapEl.checked = false;
                 $("#newstate").hide();
                 $("#newstate").html('');
                 $("#newstate").fadeIn(500);
               } else {
-                console.log("scrap: " + scrapEl.checked);
                 scrapEl.checked = true;
                 lostEl.checked = false;
                 $("#newstate").hide();
