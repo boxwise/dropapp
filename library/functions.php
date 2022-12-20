@@ -296,7 +296,8 @@ function move_boxes($ids, $newlocationid)
             if ('Lost' == $newboxstate['box_state_name']) {
                 $action_label = ' state changed to Lost';
             } else {
-                db_query('
+                db_query(
+                    '
                     UPDATE stock 
                     SET 
                         modified = NOW(), 
@@ -307,7 +308,8 @@ function move_boxes($ids, $newlocationid)
                         picked_by = NULL, 
                         location_id = :location 
                     WHERE id = :id',
-                    ['location' => $newlocationid, 'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+                    ['location' => $newlocationid, 'id' => $id, 'user_id' => $_SESSION['user']['id']]
+                );
 
                 if ($box['location_id'] != $newlocationid) {
                     $from['int'] = $box['location_id'];
@@ -321,7 +323,8 @@ function move_boxes($ids, $newlocationid)
             if ($newboxstate['box_state_id'] != $box['box_state_id']) {
                 $from['int'] = $box['box_state_id'];
                 $to['int'] = $newboxstate['box_state_id'];
-                db_query('
+                db_query(
+                    '
                     UPDATE stock 
                     SET 
                         box_state_id = :box_state_id, 
@@ -332,7 +335,8 @@ function move_boxes($ids, $newlocationid)
                         modified = NOW(), 
                         modified_by = :user_id 
                     WHERE id = :id',
-                    ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+                    ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]
+                );
                 simpleSaveChangeHistory('stock', $id, 'box_state_id', $from, $to);
             }
 
