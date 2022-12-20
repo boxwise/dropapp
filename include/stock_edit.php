@@ -111,7 +111,6 @@
                         l.type As locationType,
                         GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                         GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
-                        DATE_FORMAT(stock.modified,"%Y/%m/%d") AS statemodified,
                         bs.label AS statelabel,                        
                         bs.id as stateid
                     FROM stock 

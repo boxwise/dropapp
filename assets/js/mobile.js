@@ -109,7 +109,7 @@ function setBoxState(state){
                 lostEl.checked = true;
                 scrapEl.checked = false;
                 $("#newstate").hide();
-                $("#newstate").html(' -> <span style="color:blue">Lost</span>');
+                $("#newstate").html(' &rarr; <span style="color:blue">Lost</span>');
                 $("#newstate").fadeIn(500);
               }
             break;
@@ -125,7 +125,7 @@ function setBoxState(state){
                 scrapEl.checked = true;
                 lostEl.checked = false;
                 $("#newstate").hide();
-                $("#newstate").html(' -> <span style="color:blue">Scrap</span>');
+                $("#newstate").html(' &rarr; <span style="color:blue">Scrap</span>');
                 $("#newstate").fadeIn(500);
               }
             
