@@ -21,10 +21,10 @@ Tracer::inSpan(
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
             //Location filter
-            listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND visible = 1 AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
+            listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND NOT locations.box_state_id IN (2,5,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
 
             // Status Filter
-            $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT visible AND locations.box_state_id NOT IN (2,6) AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
+            $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND locations.box_state_id = 5 AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
             $statusarray = [
                 'boxes_in_stock' => 'In Stock',
                 'showall' => 'Everything',
@@ -47,13 +47,13 @@ Tracer::inSpan(
                 case 'boxes_in_stock':
                     // @todo: replace l.visable with box_state_id = 1 (later on once we totally migrate to box state)
                     // check if location is visable and also box not in Lost, Scrap or Donated state
-                    return ' AND (l.visible AND stock.box_state_id NOT IN (2,6,5)) ';
+                    return ' AND stock.box_state_id NOT IN (2,6,5) ';
 
                 case 'ordered':
-                    return ' AND (stock.ordered OR stock.picked) AND l.visible AND stock.box_state_id NOT IN (2,6,5)';
+                    return ' AND (stock.ordered OR stock.picked) AND stock.box_state_id NOT IN (2,6,5)';
 
                 case 'dispose':
-                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND l.visible AND stock.box_state_id NOT IN (2,6,5)';
+                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id NOT IN (2,6,5)';
 
                 case 'lost_boxes':
                     return ' AND stock.box_state_id = 2';
@@ -68,9 +68,7 @@ Tracer::inSpan(
                     return ' ';
 
                 default:
-                    // @todo: replace l.visable with box_state_id = 1 (later on once we totally migrate to box state)
-                    // default case to show all the boxes Instock state
-                    return ' AND (l.visible AND stock.box_state_id NOT IN (2,6,5))';
+                    return ' AND stock.box_state_id NOT IN (2,6,5)';
             }
             }
             $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock'], $outgoinglocations);
@@ -209,7 +207,7 @@ Tracer::inSpan(
                                             l.id AS value, if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
                                         FROM
                                             locations l
-                                            LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
+                                            INNER JOIN box_state bs ON bs.id = l.box_state_id
                                         WHERE
                                             l.deleted IS NULL AND l.camp_id =  '.$_SESSION['camp']['id'].' 
                                                 AND l.type = "Warehouse"
@@ -238,55 +236,9 @@ Tracer::inSpan(
 
                 $ids = explode(',', $_POST['ids']);
 
-                [$count, $action_label] = db_transaction(function () use ($ids) {
-                    $count = 0;
-                    foreach ($ids as $id) {
-                        $box = db_row('SELECT 
-                                        stock.*, 
-                                        bs.id as box_state_id, 
-                                        bs.label as box_state_name 
-                                    FROM stock 
-                                    INNER JOIN box_state bs ON bs.id = stock.box_state_id
-                                    WHERE stock.id = :id', ['id' => $id]);
-
-                        // Getting the new box state id based on the location
-                        $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['option']]);
-
-                        $action_label = ' moved';
-
-                        // Boxes should not be relocated to virtual locations
-                        // related to https://trello.com/c/Ci74t1Wj
-                        if (in_array($newboxstate['box_state_name'], ['Lost', 'Scrap'])) {
-                            if ('Lost' == $newboxstate['box_state_name']) {
-                                $action_label = ' state changed to Lost';
-                            } elseif ('Scrap' == $newboxstate['box_state_name']) {
-                                $action_label = ' state changed to Scrap';
-                            }
-                        } else {
-                            db_query('UPDATE stock SET modified = NOW(), modified_by = :user_id , ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id', ['location' => $_POST['option'], 'id' => $id, 'user_id' => $_SESSION['user']['id']]);
-                            $from['int'] = $box['location_id'];
-                            $to['int'] = $_POST['option'];
-                            simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
-
-                            if ($box['location_id'] != $_POST['option']) {
-                                db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES (:product_id, :size_id, :count, NOW(), :from_location, :to_location)', ['product_id' => $box['product_id'], 'size_id' => $box['size_id'], 'count' => $box['items'], 'from_location' => $box['location_id'], 'to_location' => $_POST['option']]);
-                            }
-                        }
-
-                        // Update the box state if the state changes
-                        if ($newboxstate['box_state_id'] != $box['box_state_id']) {
-                            db_query('UPDATE stock SET box_state_id = :box_state_id, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
-                            simpleSaveChangeHistory('stock', $id, 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
-                        }
-
-                        ++$count;
-                    }
-
-                    return [$count, $action_label];
-                });
+                [$count, $message] = move_boxes($ids, $_POST['option']);
 
                 $success = $count;
-                $message = (1 == $count ? '1 box is' : $count.' boxes are').$action_label;
                 $redirect = '?action='.$_GET['action'];
 
                 break;

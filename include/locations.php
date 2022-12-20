@@ -28,7 +28,7 @@
              FROM
                 (SELECT 
                     locations.*, 
-                    (SELECT COUNT(id) FROM stock WHERE box_state_id IN (1,3,4) AND location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,
+                    (SELECT COUNT(id) FROM stock WHERE box_state_id NOT IN (2,5,6) AND location_id = locations.id AND locations.type = "Warehouse" AND NOT deleted) AS boxcount,
                     bs.label AS boxstate,
                     IF(locations.is_market OR locations.container_stock, true, false) AS preventedit,
                     0 as level 
@@ -61,6 +61,8 @@
                 foreach ($ids as $id) {
                     if (db_value('SELECT id FROM stock WHERE location_id = :location AND box_state_id IN (1,3,4) AND (NOT deleted or deleted IS NULL) LIMIT 1', ['location' => $id])) {
                         $ids_array = array_diff($ids_array, [$id]);
+
+                        break;
                     }
                 }
                 if ($ids_array != $ids) {

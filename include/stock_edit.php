@@ -19,50 +19,25 @@
                     throw new Exception('There is an issue creating box identifier. Please try again in a few minutes', 409);
                 }
             }
-            $box = db_row('SELECT 
-                            stock.*, 
-                            bs.id as box_state_id, 
-                            bs.label as box_state_name 
-                           FROM stock 
-                           INNER JOIN box_state bs ON bs.id = stock.box_state_id
-                           WHERE stock.id = :id', ['id' => $_POST['id']]);
-
-            // Getting the new box state id based on the location
-            $newboxstate = db_row('SELECT bs.id as box_state_id, bs.label as box_state_name FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id'][0]]);
 
             $is_scrap = (!empty($_POST['scrap'][0]) && 1 == $_POST['scrap'][0]);
             $is_lost = (!empty($_POST['lost'][0]) && 1 == $_POST['lost'][0]);
 
-            //  when checked scrap or lost in the form
+            // Figure out new Box State
             if ($is_scrap) {
-                $newboxstate['box_state_id'] = 6;
-                $newboxstate['box_state_name'] = 'Scrap';
+                $_POST['box_state_id'] = 6;
             } elseif ($is_lost) {
-                $newboxstate['box_state_id'] = 2;
-                $newboxstate['box_state_name'] = 'Lost';
+                $_POST['box_state_id'] = 2;
+            } else {
+                // Getting the new box state id based on the location
+                $_POST['box_state_id'] = db_value('SELECT bs.id FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id'][0]]);
             }
 
-            if ($box && ($box['location_id'] != $_POST['location_id'][0] && !$is_lost && !$is_scrap)) {
-                // Boxes should not be relocated to virtual locations
-                // related to https://trello.com/c/Ci74t1Wj
-                if (in_array($newboxstate['box_state_name'], ['Lost', 'Scrap'])) {
-                    $_POST['location_id'][0] = $box['location_id'];
-                    if ('Lost' == $newboxstate['box_state_name']) {
-                        $is_lost = true;
-                    } elseif ('Scrap' == $newboxstate['box_state_name']) {
-                        $is_scrap = true;
-                    }
-                } else {
-                    db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL WHERE id = :id', ['id' => $_POST['id']]);
-                    db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['location_id'][0].')');
-                }
-            }
-
-            // After a state is changed to scrap or lost, changes are not allowed until the state is changed again
-            if (!$is_lost && !$is_scrap) {
+            // If a box is lost or scrapped changes are not allowed until the state is changed again
+            if (!in_array($_POST['box_state_id'], [2, 6])) {
                 $handler = new formHandler($table);
 
-                $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments'];
+                $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments', 'box_state_id'];
                 $id = $handler->savePost($savekeys);
 
                 db_query('DELETE FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock"', [':stock_id' => $id]);
@@ -83,15 +58,11 @@
                     $params = array_merge($params, ['stock_id' => $id]);
                     db_query($query, $params);
                 }
-            }
+            } else {
+                $handler = new formHandler($table);
 
-            // Update the box state if the state changes
-            if (!$newbox && $newboxstate['box_state_id'] != $box['box_state_id']) {
-                db_query('UPDATE stock SET box_state_id = :box_state_id, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $_POST['id'], 'user_id' => $_SESSION['user']['id']]);
-                simpleSaveChangeHistory('stock', $box['id'], 'changed box state from '.$box['box_state_name'].' to '.$newboxstate['box_state_name']);
-            } elseif ($newbox && 'Instock' !== $newboxstate['box_state_name']) {
-                db_query('UPDATE stock SET box_state_id = :box_state_id, ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, modified = NOW(), modified_by = :user_id WHERE id = :id', ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
-                simpleSaveChangeHistory('stock', $box['id'], 'changed box state to '.$newboxstate['box_state_name']);
+                $savekeys = ['box_state_id'];
+                $id = $handler->savePost($savekeys);
             }
 
             return [$id, $newbox];
@@ -140,7 +111,6 @@
                         l.type As locationType,
                         GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                         GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
-                        DATE_FORMAT(stock.modified,"%Y/%m/%d") AS statemodified,
                         bs.label AS statelabel,                        
                         bs.id as stateid
                     FROM stock 
@@ -189,16 +159,17 @@
         addfield('line');
     }
 
-    addfield('select', 'Location', 'location_id', ['required' => true,  'multiple' => false,  'onchange' => 'getNewBoxState();',
+    addfield('select', 'Location', 'location_id', ['disabled' => $disabled, 'required' => true,  'multiple' => false,  'onchange' => ($id ? 'getNewBoxState();' : ''),
         'query' => 'SELECT 
                     l.id AS value, 
-                    if(l.box_state_id <> '.$data['stateid'].', concat(l.label," -  Boxes are ",bs.label),l.label) as label
+                    if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
                 FROM
                     locations l
                     LEFT OUTER JOIN box_state bs ON bs.id = l.box_state_id
                 WHERE
                     l.deleted IS NULL AND l.camp_id =  '.$_SESSION['camp']['id'].' 
-                        AND l.type = "Warehouse" ORDER BY seq', ]);
+                        AND l.type = "Warehouse"
+                ORDER BY seq', ]);
 
     addfield('select', 'Product', 'product_id', ['disabled' => $disabled, 'test_id' => 'product_id', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].($_SESSION['camp']['separateshopandwhproducts'] ? ' AND NOT p.stockincontainer' : '').' ORDER BY name', 'onchange' => 'getSizes()']);
 

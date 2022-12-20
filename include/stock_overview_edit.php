@@ -25,7 +25,7 @@
         		p.name AS product,
         		s.label AS size,
         		l.label AS location,
-        		IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue,
+        		IF(NOT stock.box_state_id IN (2,6,5) OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue,
         		IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage
         	FROM
         		(product_categories AS pc,
@@ -50,7 +50,7 @@
                 ($size ? 's.id = '.intval($size).' AND ' : '').
                 ($location ? 'l.id = '.intval($location).' AND ' : '').
                 '(NOT stock.deleted OR stock.deleted IS NULL) AND 
-                l.visible AND stock.box_state_id NOT IN (2,6,5) ');
+                stock.box_state_id NOT IN (2,6,5) ');
 
         foreach ($data as $key => $value) {
             if ($data[$key]['ordered']) {
@@ -79,7 +79,17 @@
         listsetting('allowselect', true);
         listsetting('allowselectinvisible', true);
 
-        $locations = db_simplearray('SELECT id, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
+        $locations = db_simplearray('
+            SELECT 
+                l.id, 
+                IF(l.box_state_id <> 1, concat(l.label, " - Boxes are ", bs.label), l.label) AS label 
+            FROM locations l
+            INNER JOIN box_state bs ON l.box_state_id=bs.id
+            WHERE 
+                l.deleted IS NULL AND 
+                l.camp_id = '.$_SESSION['camp']['id'].' AND 
+                type = "Warehouse" 
+            ORDER BY seq');
         addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
         addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
         addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
@@ -92,22 +102,10 @@
         switch ($_POST['do']) {
             case 'movebox':
                 $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $id]);
 
-                    db_query('UPDATE stock SET modified = NOW(), modified_by = '.$_SESSION['user']['id'].', ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id', ['location' => $_POST['option'], 'id' => $id]);
-                    $from['int'] = $box['location_id'];
-                    $to['int'] = $_POST['option'];
-                    simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
+                [$count, $message] = move_boxes($ids, $_POST['option']);
 
-                    if ($box['location_id'] != $_POST['option']) {
-                        db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');
-                    }
-
-                    ++$count;
-                }
                 $success = $count;
-                $message = (1 == $count ? '1 box is' : $count.' boxes are').' moved';
                 $redirect = true;
 
                 break;

@@ -14,13 +14,13 @@ if ($id) {
                          locations l
                             INNER JOIN
                          box_state bs ON bs.id = l.box_state_id
-                       WHERE l.id = :location_id AND bs.id <> 1', ['location_id' => $id]);
+                       WHERE l.id = :location_id', ['location_id' => $id]);
 
     $newBoxState = $result['box_state'];
     $newBoxStateId = $result['box_state_id'];
 
     $message = [
-        'box_state' => $newBoxState ? sprintf(' -> <span style="color:blue">%s</span>', $newBoxState) : '',
+        'box_state' => $newBoxState ? sprintf(' &rarr; <span style="color:blue">%s</span>', $newBoxState) : '',
         'box_state_id' => $newBoxStateId,
     ];
     $success = false;

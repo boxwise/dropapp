@@ -8,25 +8,37 @@
         $cmsmain->assign('title', 'Products');
         listsetting('search', ['name', 'g.label', 'products.comments']);
 
-        $locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE visible AND camp_id = :camp_id AND type = "Warehouse"', ['camp_id' => $_SESSION['camp']['id']]));
-        if (!$locations) {
-            $locations = 0;
-        }
-
         listfilter(['label' => 'By category', 'query' => 'SELECT id, label FROM product_categories ORDER BY seq', 'filter' => 'products.category_id']);
 
-        $data = getlistdata('SELECT products.*, sg.label AS sizegroup, g.label AS gender, CONCAT(products.value," '.$_SESSION['camp']['currencyname'].'") AS drops, COALESCE(SUM(s.items),0) AS items, IF(SUM(s.items),1,0) AS preventdelete FROM '.$table.'
+        $data = getlistdata('
+            SELECT 
+                products.*, 
+                sg.label AS sizegroup, 
+                g.label AS gender, 
+                CONCAT(products.value," '.$_SESSION['camp']['currencyname'].'") AS drops, 
+                COALESCE(SUM(s.items),0) AS items, 
+                IF(SUM(s.items),1,0) AS preventdelete 
+            FROM products
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
-			LEFT OUTER JOIN stock AS s ON s.product_id = products.id AND NOT s.deleted AND s.location_id IN ('.$locations.') 
-			WHERE (NOT products.deleted OR products.deleted IS NULL) AND camp_id = '.intval($_SESSION['camp']['id']).'
+			LEFT OUTER JOIN stock AS s 
+                ON s.product_id = products.id AND 
+                NOT s.deleted AND 
+                s.box_state_id NOT IN (2,5,6)
+			WHERE 
+                (NOT products.deleted OR products.deleted IS NULL) AND 
+                products.camp_id = '.intval($_SESSION['camp']['id']).'
 			GROUP BY products.id
 		');
+
+        foreach ($data as $d) {
+            $count += $d['items'];
+        }
 
         addcolumn('text', 'Product name', 'name');
         addcolumn('text', 'Gender', 'gender');
         addcolumn('text', 'Sizegroup', 'sizegroup');
-        if (db_value('SELECT id FROM locations WHERE camp_id = '.intval($_SESSION['camp']['id']).' AND visible AND type = "Warehouse" LIMIT 1 ')) {
+        if ($count) {
             addcolumn('text', 'Items', 'items');
         }
         if ($_SESSION['camp']['market']) {
@@ -39,9 +51,6 @@
 
         addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
 
-        foreach ($data as $d) {
-            $count += $d['items'];
-        }
         if ($_SESSION['camp']['market']) {
             $cmsmain->assign('listfooter', ['', '', '', $count, '', '']);
         } else {
