@@ -102,22 +102,10 @@
         switch ($_POST['do']) {
             case 'movebox':
                 $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $id]);
 
-                    db_query('UPDATE stock SET modified = NOW(), modified_by = '.$_SESSION['user']['id'].', ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL, location_id = :location WHERE id = :id', ['location' => $_POST['option'], 'id' => $id]);
-                    $from['int'] = $box['location_id'];
-                    $to['int'] = $_POST['option'];
-                    simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
+                [$count, $message] = move_boxes($ids, $_POST['option']);
 
-                    if ($box['location_id'] != $_POST['option']) {
-                        db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');
-                    }
-
-                    ++$count;
-                }
                 $success = $count;
-                $message = (1 == $count ? '1 box is' : $count.' boxes are').' moved';
                 $redirect = true;
 
                 break;

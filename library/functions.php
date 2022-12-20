@@ -265,3 +265,84 @@ function v2_forward($base_url, $route)
         return '<div data-testid="v2-link">Try out the new Boxtribute.</div><a href="'.$url.'" data-testid="v2-link-url">Switch here to the NEW Version!</a>';
     }
 }
+
+function move_boxes($ids, $newlocationid)
+{
+    [$count, $action_label] = db_transaction(function () use ($ids, $newlocationid) {
+        $count = 0;
+        foreach ($ids as $id) {
+            $box = db_row('
+                SELECT 
+                    stock.*, 
+                    bs.id as box_state_id, 
+                    bs.label as box_state_name 
+                FROM stock 
+                INNER JOIN box_state bs ON bs.id = stock.box_state_id
+                WHERE stock.id = :id', ['id' => $id]);
+
+            // Getting the new box state id based on the location
+            $newboxstate = db_row('
+                SELECT 
+                    bs.id as box_state_id, 
+                    bs.label as box_state_name 
+                FROM locations l 
+                INNER JOIN box_state bs ON bs.id = l.box_state_id 
+                WHERE l.id = :id', ['id' => $_POST['option']]);
+
+            $action_label = ' moved';
+
+            // Boxes should not be relocated to virtual locations
+            // related to https://trello.com/c/Ci74t1Wj
+            if ('Lost' == $newboxstate['box_state_name']) {
+                $action_label = ' state changed to Lost';
+            } else {
+                db_query('
+                    UPDATE stock 
+                    SET 
+                        modified = NOW(), 
+                        modified_by = :user_id , 
+                        ordered = NULL, 
+                        ordered_by = NULL, 
+                        picked = NULL, 
+                        picked_by = NULL, 
+                        location_id = :location 
+                    WHERE id = :id',
+                    ['location' => $newlocationid, 'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+
+                if ($box['location_id'] != $newlocationid) {
+                    $from['int'] = $box['location_id'];
+                    $to['int'] = $newlocationid;
+                    simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
+                    db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES (:product_id, :size_id, :count, NOW(), :from_location, :to_location)', ['product_id' => $box['product_id'], 'size_id' => $box['size_id'], 'count' => $box['items'], 'from_location' => $box['location_id'], 'to_location' => $_POST['option']]);
+                }
+            }
+
+            // Update the box state if the state changes
+            if ($newboxstate['box_state_id'] != $box['box_state_id']) {
+                $from['int'] = $box['box_state_id'];
+                $to['int'] = $newboxstate['box_state_id'];
+                db_query('
+                    UPDATE stock 
+                    SET 
+                        box_state_id = :box_state_id, 
+                        ordered = NULL, 
+                        ordered_by = NULL, 
+                        picked = NULL, 
+                        picked_by = NULL, 
+                        modified = NOW(), 
+                        modified_by = :user_id 
+                    WHERE id = :id',
+                    ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]);
+                simpleSaveChangeHistory('stock', $id, 'box_state_id', $from, $to);
+            }
+
+            ++$count;
+        }
+
+        return [$count, $action_label];
+    });
+
+    $message = (1 == $count ? '1 box is' : $count.' boxes are').$action_label;
+
+    return [$count, $message];
+}

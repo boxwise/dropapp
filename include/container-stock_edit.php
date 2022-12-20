@@ -100,32 +100,10 @@
         switch ($_POST['do']) {
             case 'movebox':
                 $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    $box = db_row('SELECT * FROM stock WHERE id = :id', ['id' => $id]);
-                    $newboxstateid = db_value('SELECT box_state_id FROM locations WHERE id = :id', ['id' => $_POST['option']]);
-                    db_query('UPDATE stock 
-                            SET modified = NOW(), 
-                                modified_by = '.$_SESSION['user']['id'].', 
-                                ordered = NULL, 
-                                ordered_by = NULL, 
-                                picked = NULL, 
-                                picked_by = NULL, 
-                                location_id = :location, 
-                                box_state_id = :boxstateid  
-                            WHERE id = :id', ['location' => $_POST['option'], 'boxstateid' => $newboxstateid, 'id' => $id]);
-                    simpleSaveChangeHistory('stock', $id, 'location_id', ['int' => $box['location_id']], ['int' => $_POST['option']]);
-                    if ($newboxstateid != $box['box_state_id']) {
-                        simpleSaveChangeHistory('stock', $id, 'box_state_id', ['int' => $box['box_state_id']], ['int' => $newboxstateid]);
-                    }
 
-                    if ($box['location_id'] != $_POST['option']) {
-                        db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES ('.$box['product_id'].','.$box['size_id'].','.$box['items'].',NOW(),'.$box['location_id'].','.$_POST['option'].')');
-                    }
+                [$count, $message] = move_boxes($ids, $_POST['option']);
 
-                    ++$count;
-                }
                 $success = $count;
-                $message = (1 == $count ? '1 box is' : $count.' boxes are').' moved';
                 $redirect = true;
 
                 break;
