@@ -266,36 +266,45 @@ function v2_forward($base_url, $route)
     }
 }
 
-function move_boxes($ids, $newlocationid)
+function move_boxes($ids, $newlocationid, $mobile = false)
 {
-    [$count, $action_label] = db_transaction(function () use ($ids, $newlocationid) {
+    [$count, $action_label, $mobile_message] = db_transaction(function () use ($ids, $newlocationid) {
         $count = 0;
         foreach ($ids as $id) {
             $box = db_row('
                 SELECT 
                     stock.*, 
                     bs.id as box_state_id, 
-                    bs.label as box_state_name 
+                    bs.label as box_state_name,
+                    l.type as location_type
                 FROM stock 
                 INNER JOIN box_state bs ON bs.id = stock.box_state_id
+                LEFT JOIN locations l ON stock.location_id=l.id
                 WHERE stock.id = :id', ['id' => $id]);
 
+            mobile_distro_check($box['location_type']);
+
+            $mobile_message = 'Box '.$box['box_id'].' contains '.$box['items'].'x '.$box['product'];
+
             // Getting the new box state id based on the location
-            $newboxstate = db_row('
+            $newlocation = db_row('
                 SELECT 
+                    l.label,
                     bs.id as box_state_id, 
                     bs.label as box_state_name 
                 FROM locations l 
                 INNER JOIN box_state bs ON bs.id = l.box_state_id 
-                WHERE l.id = :id', ['id' => $_POST['option']]);
+                WHERE l.id = :id', ['id' => $newlocationid]);
 
             $action_label = ' moved';
 
             // Boxes should not be relocated to virtual locations
             // related to https://trello.com/c/Ci74t1Wj
-            if ('Lost' == $newboxstate['box_state_name']) {
+            if ('Lost' == $newlocation['box_state_name']) {
                 $action_label = ' state changed to Lost';
-            } else {
+            } elseif ('Scrap' == $newlocation['box_state_name']) {
+                $action_label = ' state changed to Scrap';
+            } elseif ($box['location_id'] != $newlocationid) {
                 db_query(
                     '
                     UPDATE stock 
@@ -311,18 +320,26 @@ function move_boxes($ids, $newlocationid)
                     ['location' => $newlocationid, 'id' => $id, 'user_id' => $_SESSION['user']['id']]
                 );
 
-                if ($box['location_id'] != $newlocationid) {
-                    $from['int'] = $box['location_id'];
-                    $to['int'] = $newlocationid;
-                    simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
-                    db_query('INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) VALUES (:product_id, :size_id, :count, NOW(), :from_location, :to_location)', ['product_id' => $box['product_id'], 'size_id' => $box['size_id'], 'count' => $box['items'], 'from_location' => $box['location_id'], 'to_location' => $_POST['option']]);
-                }
+                $from['int'] = $box['location_id'];
+                $to['int'] = $newlocationid;
+                simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
+                db_query(
+                    '
+                    INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) 
+                        VALUES (:product_id, :size_id, :count, NOW(), :from_location, :to_location)',
+                    ['product_id' => $box['product_id'],
+                        'size_id' => $box['size_id'],
+                        'count' => $box['items'],
+                        'from_location' => $box['location_id'],
+                        'to_location' => $newlocationid, ]
+                );
+                $mobile_message .= ' is moved to '.$newlocation['label'];
             }
 
             // Update the box state if the state changes
-            if ($newboxstate['box_state_id'] != $box['box_state_id']) {
+            if ($newlocation['box_state_id'] != $box['box_state_id']) {
                 $from['int'] = $box['box_state_id'];
-                $to['int'] = $newboxstate['box_state_id'];
+                $to['int'] = $newlocation['box_state_id'];
                 db_query(
                     '
                     UPDATE stock 
@@ -335,18 +352,19 @@ function move_boxes($ids, $newlocationid)
                         modified = NOW(), 
                         modified_by = :user_id 
                     WHERE id = :id',
-                    ['box_state_id' => $newboxstate['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]
+                    ['box_state_id' => $newlocation['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]
                 );
                 simpleSaveChangeHistory('stock', $id, 'box_state_id', $from, $to);
+                $mobile_message .= ' and its state changed to '.$newlocation['box_state_name'];
             }
 
             ++$count;
         }
 
-        return [$count, $action_label];
+        return [$count, $action_label, $mobile_message];
     });
 
     $message = (1 == $count ? '1 box is' : $count.' boxes are').$action_label;
 
-    return [$count, $message];
+    return [$count, $message, $mobile_message];
 }

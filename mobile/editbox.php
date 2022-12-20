@@ -48,18 +48,18 @@
     $data['message'] = (!isset($data['message']) ? $message : $data['message']);
 
     $data['products'] = db_array('SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS label, sizegroup_id FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = :camp_id ORDER BY name', ['camp_id' => $_SESSION['camp']['id']]);
-    $data['locations'] = db_array('SELECT 
-
-    l.id AS value, if(l.box_state_id <> '.$box['stateid'].', concat(l.label," -  Boxes are ",bs.label),l.label) as label
-FROM
-    locations l
-    INNER JOIN box_state bs ON bs.id = l.box_state_id
-WHERE
-    l.deleted IS NULL AND l.camp_id = :camp_id 
-        AND l.type = "Warehouse"
-ORDER BY l.seq', ['camp_id' => $_SESSION['camp']['id']]);
-    $data['sizes'] = db_array('SELECT s.* FROM sizes AS s LEFT OUTER JOIN products AS p ON p.id = :product_id WHERE s.sizegroup_id = p.sizegroup_id ORDER BY s.seq
-', ['product_id' => $box['product_id']]);
+    $data['locations'] = db_array('
+        SELECT
+            l.id AS value, 
+            if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
+        FROM locations l
+        INNER JOIN box_state bs ON bs.id = l.box_state_id
+        WHERE
+            l.deleted IS NULL AND 
+            l.camp_id = :camp_id AND 
+            l.type = "Warehouse"
+        ORDER BY l.seq', ['camp_id' => $_SESSION['camp']['id']]);
+    $data['sizes'] = db_array('SELECT s.* FROM sizes AS s LEFT OUTER JOIN products AS p ON p.id = :product_id WHERE s.sizegroup_id = p.sizegroup_id ORDER BY s.seq', ['product_id' => $box['product_id']]);
 
     $data['allsizes'] = db_array('SELECT s.* FROM sizes AS s, sizegroup AS sg WHERE s.sizegroup_id = sg.id ORDER BY s.seq');
     $data['tags'] = db_query('SELECT 

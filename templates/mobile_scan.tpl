@@ -36,7 +36,7 @@
 	</div>
 	<div class="btn-list">
 		{foreach $locations as $value=>$location}
-			<a class="btn {if $location['selected']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}" {if $location['tooltip']}title="{$location['tooltip']}"{/if}>{$location['label'] nofilter}</a>
+			<a class="btn {if $location['selected'] || $box['disabled']}disabled{/if}" href="?move={$box['id']}&location={$location['value']}" {if $location['tooltip']}title="{$location['tooltip']}"{/if}>{$location['label'] nofilter}</a>
 		{/foreach}
 	</div>
 		
