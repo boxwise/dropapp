@@ -92,7 +92,7 @@
                 bs.label AS statelabel,
                 bs.id AS stateid
             FROM stock AS s 
-                LEFT OUTER JOIN box_state AS bs ON bs.id = stock.box_state_id
+                LEFT OUTER JOIN box_state AS bs ON bs.id = s.box_state_id
                 LEFT OUTER JOIN products AS p ON p.id = s.product_id 
                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
                 LEFT OUTER JOIN locations AS l ON l.id = s.location_id
