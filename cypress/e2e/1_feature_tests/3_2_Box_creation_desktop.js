@@ -10,10 +10,10 @@ context("Box_creation_tests", () => {
         cy.visit('/?action=stock_edit&origin=stock');
     })
 
-    afterEach(function(){
-        cy.visit('/?action=stock');
-        cy.deleteAllBoxesExceptSeed();
-    })
+    // afterEach(function(){
+    //     cy.visit('/?action=stock');
+    //     cy.deleteAllBoxesExceptSeed();
+    // })
 
     function getBoxesMenu() {
         cy.visit('/?action=stock');
@@ -50,7 +50,7 @@ context("Box_creation_tests", () => {
     }
 
     function CreateQR() {
-        cy.get("input[data-testid='select-id']").click();
+        cy.get("input[data-testid='select-id']").first().click();
         cy.get("i[class='fa fa-print']").click();
     }
     function CheckUrl(Text){
@@ -86,8 +86,8 @@ context("Box_creation_tests", () => {
             const Test_id = IdFromMessage($message);
             ContinueToMenu();
             CheckBoxCreated(Test_id, Product_name,Test_size, Test_location,Test_number);
-            // clearSearchbox();
-            // cy.deleteAllBoxesExceptSeed();
+            clearSearchbox();
+            cy.deleteAllBoxesExceptSeed();
         });  
     });
 
@@ -100,8 +100,8 @@ context("Box_creation_tests", () => {
             CheckEmptyBoxForm();
             getBoxesMenu();
             CheckBoxCreated(Test_id, Product_name,Test_size, Test_location,Test_number);
-            // clearSearchbox();
-            // cy.deleteAllBoxesExceptSeed();
+            clearSearchbox();
+            cy.deleteAllBoxesExceptSeed();
         });
     });
 
@@ -113,10 +113,10 @@ context("Box_creation_tests", () => {
             const Test_id = IdFromMessage($message) ;
             ContinueToMenu();
             SearchBoxById(Test_id);
-            // clearSearchbox();
-            // cy.deleteAllBoxesExceptSeed();
+            clearSearchbox();
+            cy.deleteAllBoxesExceptSeed();
             // Pdf cannot be opened in circle ci
-            // CreateQR();
+            CreateQR();
             // CheckUrl('pdf');
             // CheckUrl('label');
         });

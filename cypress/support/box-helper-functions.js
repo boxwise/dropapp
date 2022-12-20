@@ -8,7 +8,7 @@ Cypress.Commands.add("deleteAllBoxesExceptSeed", () => {
     cy.get("body").then($body => {
         // make sure the seed box will not get deleted!
         if ($body.text().includes(SEED_BOX_COMMENT)) {
-            cy.getRowWithText("Martin test comment").parent().parent().within(()=>{
+            cy.getRowWithText(SEED_BOX_COMMENT).parent().parent().within(()=>{
                 cy.get("input[type='checkbox']").uncheck();
             });
         }

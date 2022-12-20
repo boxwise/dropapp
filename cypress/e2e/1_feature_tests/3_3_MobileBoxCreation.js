@@ -3,6 +3,7 @@ import { getLoginConfiguration } from '../../config';
 const PRODUCT1 = "Jeans";
 
 const LOCATION3 = "TestDonated";
+const LOCATION3_APP = " - Box becomes Donated";
 
 const SAME_ORG_BOX_QR_URL = "093f65e080a295f8076b1c5722a46aa2";
 const SAME_ORG_BOX_CONTENT = "Shampoo";
@@ -27,6 +28,7 @@ function checkBoxContent(product, size, location, count){
 }
 
 function createBoxFormIsVisible(){
+    cy.get("div[data-testid='v2-link']").should('be.visible');
     cy.selectForFieldExists("product_id");
     cy.get("select[data-testid='size_id']").should('be.visible');
     cy.get("select[data-testid='location_id']").should('be.visible');
@@ -49,6 +51,12 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
 
     function getQrCode(){
         return cy.get("div[data-testid='boxlabel-small'] img");
+    }
+
+    function visitDropappBoxOnMobile(){
+        cy.get("a[data-testid='qr-link']").then(($lnk) =>{
+            cy.visit($lnk[0].href + "&preference=classic")
+        });
     }
 
     function selectProduct(product){
@@ -86,36 +94,63 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
         })
     }
 
-    it('Create box with data', () => {
-        getQrCode().then($qr => {
-            cy.viewport('iphone-6');
-            $qr.click();
-            createBoxFormIsVisible();
-            // filling out new box form
-            let itemsCount = 100;
-            let size = "M"
-            selectProduct(PRODUCT1);
-            selectSize(size);
-            selectLocation(LOCATION3);
-            defineItemsCount(itemsCount);
-            writeComment(SAME_ORG_BOX_COMMENT);
-            clickNewBoxButton();
-            // assertions
-            cy.mobileNotificationWithTextIsVisible('contains ' + itemsCount + ' ' + PRODUCT1);
-            cy.mobileNotificationWithTextIsVisible('located in ' + LOCATION3);
-            checkBoxContent(PRODUCT1, size, LOCATION3, itemsCount);
-            // cleanup
-            cy.deleteAllBoxesExceptSeed();
-        });
-    });
+    // it('Create box in dropapp with data', () => {
+    //     getQrCode().then($qr => {
+    //         cy.viewport('iphone-6');
+    //         visitDropappBoxOnMobile();
+    //         createBoxFormIsVisible();
+    //         // filling out new box form
+    //         let itemsCount = 100;
+    //         let size = "M"
+    //         selectProduct(PRODUCT1);
+    //         selectSize(size);
+    //         selectLocation(LOCATION3 + LOCATION3_APP);
+    //         defineItemsCount(itemsCount);
+    //         writeComment(SAME_ORG_BOX_COMMENT);
+    //         clickNewBoxButton();
+    //         // assertions
+    //         cy.mobileNotificationWithTextIsVisible('contains ' + itemsCount + ' ' + PRODUCT1);
+    //         cy.mobileNotificationWithTextIsVisible('located in ' + LOCATION3);
+    //         checkBoxContent(PRODUCT1, size, LOCATION3, itemsCount);
+    //         // cleanup
+    //         cy.deleteAllBoxesExceptSeed();
+    //     });
+    // });
 
-    it('Prevent box creation without data', () => {
+    // it('Prevent box creation without data', () => {
+    //     getQrCode().then($qr => {
+    //         cy.viewport('iphone-6');
+    //         visitDropappBoxOnMobile();
+    //         clickNewBoxButton();
+    //         checkRequiredFieldsErrors()
+    //     })
+    // });
+
+    // it('Forward link to new app in dropapp is correct', () => {
+    //     getQrCode().then($qr => {
+    //         cy.viewport('iphone-6');
+    //         visitDropappBoxOnMobile();
+    //         createBoxFormIsVisible();
+    //         cy.get("a[data-testid='v2-link-url']").then(($lnk) =>{
+    //             expect($lnk[0].href).to.contain("preference=v2");
+    //         });
+    //     });
+    // });
+
+    it('Forward to new Boxtribute by default', () => {
+
         getQrCode().then($qr => {
             cy.viewport('iphone-6');
+            cy.intercept('http://localhost:3000/bases/*', (req) => {
+                cy.log("interception", req);
+            }).as('testitest');
+            
             $qr.click();
-            clickNewBoxButton();
-            checkRequiredFieldsErrors()
-        })
+            cy.wait('@testitest').then((interception) => {
+                cy.log("interception", interception);
+            });
+            // cy.url().should('include', 'create')
+        });
     });
 });
 
