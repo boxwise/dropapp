@@ -16,7 +16,7 @@ if (!$boxid) {
 
 [$count, $tmp, $message] = move_boxes([$valboxid], $valnewlocationid);
 
-if ($count != 1) {
+if (1 != $count) {
     redirect('?warning=true&message=Something went wrong! The Box was not moved.');
     trigger_error('The Box was not moved.', E_USER_NOTICE);
 } else {

@@ -323,14 +323,16 @@ function move_boxes($ids, $newlocationid, $mobile = false)
                 $from['int'] = $box['location_id'];
                 $to['int'] = $newlocationid;
                 simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
-                db_query('
+                db_query(
+                    '
                     INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) 
                         VALUES (:product_id, :size_id, :count, NOW(), :from_location, :to_location)',
-                        ['product_id' => $box['product_id'],
+                    ['product_id' => $box['product_id'],
                         'size_id' => $box['size_id'],
                         'count' => $box['items'],
                         'from_location' => $box['location_id'],
-                        'to_location' => $newlocationid, ]);
+                        'to_location' => $newlocationid, ]
+                );
                 $mobile_message .= ' is moved to '.$newlocation['label'];
             }
 
