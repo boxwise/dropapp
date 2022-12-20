@@ -26,6 +26,10 @@
         } else {
             listfilter(['label' => 'Boxes', 'options' => $statusarray]);
         }
+        // Set filter to InStock by default
+        if (!isset($listconfig['filtervalue'])) {
+            $listconfig['filtervalue'] = 'in_stock';
+        }
 
         $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
         listfilter2(['label' => 'Gender', 'options' => $genders]);

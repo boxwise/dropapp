@@ -36,6 +36,10 @@ Tracer::inSpan(
             ];
             $statusarray += (is_null($outgoinglocations) ? [] : $outgoinglocations);
             listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);
+            // Set filter to InStock by default
+            if (!isset($listconfig['filtervalue2'])) {
+                $listconfig['filtervalue2'] = 'boxes_in_stock';
+            }
 
             function get_filter2_query($applied_filter, $custom_outgoing_locations)
             {
