@@ -27,13 +27,13 @@ function updateSizes(size){
 }
 
 function disableBoxEdit(){
-	$("#field_product_id, #field_size_id, #tags, #items, #comments").prop("disabled", true);
-	$("#field_product_id, #field_size_id, #tags, #items, #comments").prop("readonly", true);
+	$("#field_location_id, #field_product_id, #field_size_id, #tags, #items, #comments").prop("disabled", true);
+	$("#field_location_id, #field_product_id, #field_size_id, #tags, #items, #comments").prop("readonly", true);
 }
 
 function enableBoxEdit(){
-	$("#field_product_id, #field_size_id, #tags, #items, #comments").prop("disabled", false);
-	$("#field_product_id, #field_size_id, #tags, #items, #comments").prop("readonly", false);
+	$("#field_location_id, #field_product_id, #field_size_id, #tags, #items, #comments").prop("disabled", false);
+	$("#field_location_id, #field_product_id, #field_size_id, #tags, #items, #comments").prop("readonly", false);
 }
 
 function getNewBoxState() {
@@ -99,13 +99,11 @@ function setBoxState(state){
     switch(state){
         case "lost":
             if (!lostEl.checked) {
-                console.log("lost: " + lostEl.checked);
                 lostEl.checked = false;
                 $("#newstate").hide();
                 $("#newstate").html('');
                 $("#newstate").fadeIn(500);
               } else {
-                console.log("lost: " + lostEl.checked);
                 lostEl.checked = true;
                 scrapEl.checked = false;
                 $("#newstate").hide();
@@ -115,13 +113,11 @@ function setBoxState(state){
             break;
         case "scrap":
             if (!scrapEl.checked) {
-                console.log("scrap: " + scrapEl.checked);
                 scrapEl.checked = false;
                 $("#newstate").hide();
                 $("#newstate").html('');
                 $("#newstate").fadeIn(500);
               } else {
-                console.log("scrap: " + scrapEl.checked);
                 scrapEl.checked = true;
                 lostEl.checked = false;
                 $("#newstate").hide();
