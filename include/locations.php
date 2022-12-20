@@ -19,7 +19,7 @@
         listsetting('allowdelete', false);
         listsetting('add', 'Add a location');
 
-        addbutton('archive', 'Archive', ['icon' => 'fa-archive', 'confirm' => true, 'testid' => 'reactivate-cms-user', 'disableif' => true]);
+        addbutton('archive', 'Archive', ['icon' => 'fa-archive', 'confirm' => true, 'testid' => 'reactivate-cms-user']);
 
         listsetting('search', ['locations.label']);
 
@@ -67,7 +67,7 @@
                 }
                 if ($ids_array != $ids) {
                     $success = false;
-                    $message = 'The locations were not archived since min. one has Instock Boxes.';
+                    $message = 'Please move all Instock Boxes out of this location first!';
                     $redirect = false;
                 } else {
                     list($success, $message, $redirect) = listDelete($table, $ids, false);
