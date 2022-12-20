@@ -3,7 +3,7 @@
 if (isset($_SESSION['camp']['id'])) {
     $data['items'] = intval(db_value('SELECT SUM(s.items) FROM (stock AS s, products AS p) WHERE s.product_id = p.id AND (NOT p.deleted OR p.deleted IS NULL) AND (NOT s.deleted OR s.deleted IS NULL) AND s.box_state_id NOT IN (2,5,6) AND p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]));
     $data['boxes'] = db_value('SELECT COUNT(s.id) FROM (stock AS s, products AS p) WHERE s.product_id = p.id AND (NOT p.deleted OR p.deleted IS NULL) AND (NOT s.deleted OR s.deleted IS NULL) AND s.box_state_id NOT IN (2,5,6) AND p.camp_id = :camp_id ', ['camp_id' => $_SESSION['camp']['id']]);
-    $data['warehouse'] = db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' AND locations.type = "Warehouse" AND NOT locations.deleted IS NULL LIMIT 1 ');
+    $data['warehouse'] = db_value('SELECT id FROM locations WHERE locations.camp_id = '.intval($_SESSION['camp']['id']).' AND locations.type = "Warehouse" AND locations.deleted IS NULL LIMIT 1 ');
     $data['tip'] = db_row('SELECT * FROM tipofday ORDER BY RAND()');
     $data['families'] = db_value('SELECT COUNT(id) FROM people AS p WHERE visible AND parent_id IS NULL AND NOT deleted AND p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
     $data['residents'] = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
