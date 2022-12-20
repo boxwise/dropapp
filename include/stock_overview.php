@@ -31,7 +31,7 @@
         listfilter2(['label' => 'Gender', 'options' => $genders]);
         listsetting('filter2cssclass', 'overview-filter-gender');
 
-        listfilter3(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq']);
+        listfilter3(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT locations.box_state_id IN (2,5,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq']);
         listsetting('filter3cssclass', 'overview-filter-locations');
 
         addcolumn('text', 'Category', 'label');
