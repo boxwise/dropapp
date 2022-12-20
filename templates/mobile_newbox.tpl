@@ -7,8 +7,8 @@
     	{/if}
 		{if isset($box['statelabel'])}	
 			<div style="font-size:2rem">Status: 
-				<span id="currentstate" {if in_array($box['stateid'],[2,6])}style="color:red"{else}style="color:green"{/if}>{$box['statelabel']}
-				<span id="newstate"></span></span>
+				<span id="currentstate" {if in_array($box['stateid'],[2,6])}style="color:red"{else}style="color:green"{/if}>{$box['statelabel']}</span>
+				<span id="newstate"></span>
 			</div>
 		{/if}
 	{else}Make a new box{/if}</h2>
@@ -46,7 +46,7 @@
 			{/foreach}
 		</div>
 		<div class="form-group">
-			<select name="location_id" id="location_id" class="form-control" data-testid="location_id" {if $box['id'] !='new'}onchange="getNewBoxState()"{/if} required>
+			<select name="location_id" id="field_location_id" class="form-control" data-testid="location_id" {if $box['id'] !='new'}onchange="getNewBoxState()"{/if} {if $box['disabled']}disabled{/if} required>
 				<option value="">Select a location</option>
 				{foreach $data['locations'] as $l}<option value="{$l['value']}" {if $l['value']==$box['location_id']}selected{/if}>{$l['label']}</option>
 				{/foreach}
