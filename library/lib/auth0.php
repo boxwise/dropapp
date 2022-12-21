@@ -256,10 +256,10 @@ function isUserInSyncWithAuth0($userId)
 
     $auth0UserRoles = getUserAssignedRoles($userId);
 
+    $messageAppendix = '';
     if (!$dbUserRoles && !$auth0UserRoles) {
         $return_value = true;
     } elseif ($dbUserRoles && $auth0UserRoles) {
-        $validationResult = [];
         $dbRoles = [];
         $auth0Roles = [];
 
@@ -271,15 +271,34 @@ function isUserInSyncWithAuth0($userId)
             $auth0Roles[] = $auth0UserRole['id'];
         }
 
-        array_push($validationResult, ($auth0Roles == $dbRoles) ? 'true' : 'false');
+        $dbRolesNotInAuth0 = array_diff($dbRoles, $auth0Roles);
+        $auth0RolesNotInDB = array_diff($auth0Roles, $dbRoles);
 
-        $return_value = in_array('false', $validationResult) ? false : true;
-    } elseif ((!$dbUserRoles && $auth0UserRoles) || ($dbUserRoles && !$auth0UserRoles)) {
+        if ((bool) $dbRolesNotInAuth0) {
+            foreach ($dbRolesNotInAuth0 as $item) {
+                $messageAppendix .= ' Role ID '.$item.',';
+            }
+            $messageAppendix .= ' is associated in DB, but not in Auth0.';
+            $return_value = false;
+        } elseif ((bool) $auth0RolesNotInDB) {
+            foreach ($auth0RolesNotInDB as $item) {
+                $messageAppendix .= ' Role ID '.$item.',';
+            }
+            $messageAppendix .= ' is associated in Auth0, but not in DB.';
+            $return_value = false;
+        } else {
+            $return_value = true;
+        }
+    } elseif (!$dbUserRoles && $auth0UserRoles) {
+        $messageAppendix = ' No Roles were associated in DB!';
+        $return_value = false;
+    } elseif ($dbUserRoles && !$auth0UserRoles) {
+        $messageAppendix = ' No Roles were associated in Auth0!';
         $return_value = false;
     }
 
     if (!$return_value) {
-        trigger_error('Roles of user with id '.$userId.' is out of sync between DB and Auth0.', E_USER_ERROR);
+        trigger_error('Roles of user with id '.$userId.' is out of sync between DB and Auth0.'.$messageAppendix, E_USER_ERROR);
     }
 
     return $return_value;
