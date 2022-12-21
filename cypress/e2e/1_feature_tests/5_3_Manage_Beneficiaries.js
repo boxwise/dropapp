@@ -123,6 +123,7 @@ describe('Manage beneficiaries', () => {
         cy.inputFill("lastname_id", lastname);
         cy.inputFill("container_id", testCaseId);
         cy.get("button").contains("Save and close").click();
+        cy.waitForAjaxActionWithoutAssert();
         cy.url().should('not.include', 'edit');
     }
 
@@ -199,35 +200,35 @@ describe('Manage beneficiaries', () => {
         deleteFromDeactivated(TEST_LASTNAME2);
     }
 
-    it('Navigation, page elements and list visibility', () => {
-        cy.visit('/');
-        cy.viewport(1280, 720);
-        cy.get("a[class='menu_people']").last().contains("Manage beneficiaries").click();
-        // page elements visibility checks
-        getBeneficiariesTable().should('be.visible');
-        getNewPersonButton().should('be.visible');
-        getExportButton().should('not.be.visible');
-        getDeactivatedBeneficiariesTab().should('be.visible');
-        cy.get("h1").contains("Beneficiaries").should('be.visible');
-    });
+    // it('Navigation, page elements and list visibility', () => {
+    //     cy.visit('/');
+    //     cy.viewport(1280, 720);
+    //     cy.get("a[class='menu_people']").last().contains("Manage beneficiaries").click();
+    //     // page elements visibility checks
+    //     getBeneficiariesTable().should('be.visible');
+    //     getNewPersonButton().should('be.visible');
+    //     getExportButton().should('not.be.visible');
+    //     getDeactivatedBeneficiariesTab().should('be.visible');
+    //     cy.get("h1").contains("Beneficiaries").should('be.visible');
+    // });
 
-    it('Missing signed approval sign shown in list', () => {
-        tableRowIsShowingMissingApprovalIcon(FAMILY_WITHOUT_APPROVAL);
-    })
+    // it('Missing signed approval sign shown in list', () => {
+    //     tableRowIsShowingMissingApprovalIcon(FAMILY_WITHOUT_APPROVAL);
+    // })
 
-    it('Select beneficiary with privacy declaration', () => {
-        selectBeneficiaryFromTableByName(FAMILY1);
-        beneficiaryNameIsVisible(FAMILY1);
-        beneficiaryDataFormIsVisible(FAMILY1);
-        beneficiaryInfoAsideIsVisible(FAMILY1);
-        getPrivacyDeclarationButton().should('not.exist');
-    });
+    // it('Select beneficiary with privacy declaration', () => {
+    //     selectBeneficiaryFromTableByName(FAMILY1);
+    //     beneficiaryNameIsVisible(FAMILY1);
+    //     beneficiaryDataFormIsVisible(FAMILY1);
+    //     beneficiaryInfoAsideIsVisible(FAMILY1);
+    //     getPrivacyDeclarationButton().should('not.exist');
+    // });
 
-    it('Select beneficiary without privacy declaration', () => {
-        selectBeneficiaryFromTableByName(FAMILY_WITHOUT_APPROVAL);
-        beneficiaryDataFormIsVisible(FAMILY_WITHOUT_APPROVAL);
-        getPrivacyDeclarationButton().should('be.visible');
-    });
+    // it('Select beneficiary without privacy declaration', () => {
+    //     selectBeneficiaryFromTableByName(FAMILY_WITHOUT_APPROVAL);
+    //     beneficiaryDataFormIsVisible(FAMILY_WITHOUT_APPROVAL);
+    //     getPrivacyDeclarationButton().should('be.visible');
+    // });
 
     //no cleanup ahead is needed because the delete action doesn't depend on other users and if they're present
     it('Delete beneficiary', () => {
