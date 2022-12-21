@@ -325,7 +325,6 @@ $(function() {
     // ColorPicker https://seballot.github.io/
     var $colorPicker = $('#colorPicker');
     if ($colorPicker.length) {
-        debugger;
         $chosenColor = $colorPicker[0].value;
         if (!$chosenColor.length){
             $chosenColor = '#f37167';

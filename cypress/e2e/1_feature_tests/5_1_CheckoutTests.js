@@ -213,7 +213,6 @@ describe('Checkout tests', () => {
   //   })
   //   .then(familyTokens => {
   //     while(parseInt(familyTokens)>currentCartValue){
-  //       // debugger;
   //          clickProductsDropdown();
   //       // getDropdownOptions().first().click();
   //       // typeProductQuantity(10);
@@ -259,7 +258,6 @@ describe('Checkout tests', () => {
   //   getFamilyDropdown().click();
   //   getDropdownOptions().first().find("div").invoke('text').then((text) => {
   //     let familyName = text.trim();
-  //     debugger;
   //     getDropdownOptions().first().click();
   //     // cy.get("span[data-testid='giveTokensButton']").click().then(() => {
   //     //   cy.get("input[type='text']").contains(familyName);
