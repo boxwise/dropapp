@@ -3,7 +3,7 @@ import { getLoginConfiguration } from '../../config';
 const PRODUCT1 = "Jeans";
 
 const LOCATION3 = "TestDonated";
-const LOCATION3_APP = " - Box becomes Donated";
+const LOCATION3_APP = " - Boxes are Donated";
 
 const SAME_ORG_BOX_QR_URL = "093f65e080a295f8076b1c5722a46aa2";
 const SAME_ORG_BOX_CONTENT = "Shampoo";
@@ -38,6 +38,7 @@ function createBoxFormIsVisible(){
 
 describe('Mobile box creation using QR scanning (logged-in user)', () => {
     beforeEach(() => {
+        cy.interceptCallsToV2();
         cy.loginAsVolunteer();
         cy.visit('/?action=qr');
         createQrCode();
@@ -87,95 +88,96 @@ describe('Mobile box creation using QR scanning (logged-in user)', () => {
     function checkRequiredFieldsErrors(){
         cy.get("label[id='field_product_id-error']").should('be.visible');
         cy.get("label[id='field_size_id-error']").should('be.visible');
-        cy.get("label[id='location_id-error']").should('be.visible');
+        cy.get("label[id='field_location_id-error']").should('be.visible');
         cy.get("label[id='items-error']").should('be.visible');
         cy.get("label[class='error']").then($errors => {
             expect($errors.length).to.equal(4);
         })
     }
 
-    // it('Create box in dropapp with data', () => {
-    //     getQrCode().then($qr => {
-    //         cy.viewport('iphone-6');
-    //         visitDropappBoxOnMobile();
-    //         createBoxFormIsVisible();
-    //         // filling out new box form
-    //         let itemsCount = 100;
-    //         let size = "M"
-    //         selectProduct(PRODUCT1);
-    //         selectSize(size);
-    //         selectLocation(LOCATION3 + LOCATION3_APP);
-    //         defineItemsCount(itemsCount);
-    //         writeComment(SAME_ORG_BOX_COMMENT);
-    //         clickNewBoxButton();
-    //         // assertions
-    //         cy.mobileNotificationWithTextIsVisible('contains ' + itemsCount + ' ' + PRODUCT1);
-    //         cy.mobileNotificationWithTextIsVisible('located in ' + LOCATION3);
-    //         checkBoxContent(PRODUCT1, size, LOCATION3, itemsCount);
-    //         // cleanup
-    //         cy.deleteAllBoxesExceptSeed();
-    //     });
-    // });
-
-    // it('Prevent box creation without data', () => {
-    //     getQrCode().then($qr => {
-    //         cy.viewport('iphone-6');
-    //         visitDropappBoxOnMobile();
-    //         clickNewBoxButton();
-    //         checkRequiredFieldsErrors()
-    //     })
-    // });
-
-    // it('Forward link to new app in dropapp is correct', () => {
-    //     getQrCode().then($qr => {
-    //         cy.viewport('iphone-6');
-    //         visitDropappBoxOnMobile();
-    //         createBoxFormIsVisible();
-    //         cy.get("a[data-testid='v2-link-url']").then(($lnk) =>{
-    //             expect($lnk[0].href).to.contain("preference=v2");
-    //         });
-    //     });
-    // });
-
-    it('Forward to new Boxtribute by default', () => {
-
+    it('Forward link to new app in dropapp is correct', () => {
         getQrCode().then($qr => {
             cy.viewport('iphone-6');
-            cy.intercept('http://localhost:3000/bases/*', (req) => {
-                cy.log("interception", req);
-            }).as('testitest');
-            
-            $qr.click();
-            cy.wait('@testitest').then((interception) => {
-                cy.log("interception", interception);
+            visitDropappBoxOnMobile();
+            createBoxFormIsVisible();
+            cy.get("a[data-testid='v2-link-url']").then(($lnk) =>{
+                expect($lnk[0].href).to.contain("preference=v2");
+                $lnk[0].click();
+                cy.waitforCallToV2('100000000/boxes/create/');
             });
-            // cy.url().should('include', 'create')
         });
+    });
+
+    it('Forward to new Boxtribute by default', () => {
+        getQrCode().then($qr => {
+            cy.viewport('iphone-6');
+            cy.log('qr',$qr);
+            $qr.click();
+            cy.waitforCallToV2('100000000/boxes/create/');
+        });
+    });
+
+    it('Create box in dropapp with data', () => {
+        getQrCode().then($qr => {
+            cy.viewport('iphone-6');
+            visitDropappBoxOnMobile();
+            createBoxFormIsVisible();
+            // filling out new box form
+            let itemsCount = 100;
+            let size = "M"
+            selectProduct(PRODUCT1);
+            selectSize(size);
+            selectLocation(LOCATION3 + LOCATION3_APP);
+            defineItemsCount(itemsCount);
+            writeComment(SAME_ORG_BOX_COMMENT);
+            clickNewBoxButton();
+            // assertions
+            cy.mobileNotificationWithTextIsVisible('contains ' + itemsCount + ' ' + PRODUCT1);
+            cy.mobileNotificationWithTextIsVisible('located in ' + LOCATION3);
+            checkBoxContent(PRODUCT1, size, LOCATION3, itemsCount);
+            // cleanup
+            cy.deleteAllBoxesExceptSeed();
+        });
+    });
+
+    it('Prevent box creation without data', () => {
+        getQrCode().then($qr => {
+            cy.viewport('iphone-6');
+            visitDropappBoxOnMobile();
+            clickNewBoxButton();
+            checkRequiredFieldsErrors()
+        })
     });
 });
 
 describe('Mobile box creation using QR scanning (logged-out user)', () => {
     let config = getLoginConfiguration();
     beforeEach(() => {
+        cy.interceptCallsToV2();
         cy.loginAsVolunteer();
+        cy.intercept("**/mobile.php**").as('dropappintercept');
     });
 
-    it('Scan QR code with associated box (same organisation)', () => {
+    it('Scan QR code with associated box (same organisation) default forward to new Boxtribute', () => {
         cy.visit('/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
+        cy.viewport('iphone-6');
+        cy.waitforCallToV2('100000000/boxes/328765');
+    });
+
+    it('Scan QR code with associated box (same organisation) stay on dropapp', () => {
+        cy.visit('/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL + '&preference=classic');
         cy.viewport('iphone-6');
         checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
     });
 
-    // it('Scan QR code with associated box (same organisation) from staging.boxwise.co', () => {
-    //     cy.visit('https://staging.boxwise.co/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
-    //     cy.viewport('iphone-6');
-    //     cy.fillLoginForm(); 
-    //     cy.url().should('include', 'https://staging.boxtribute.org/mobile.php?barcode=' + SAME_ORG_BOX_QR_URL);
-    //     checkBoxContent(SAME_ORG_BOX_CONTENT, SAME_ORG_BOX_SIZE, SAME_ORG_BOX_LOCATION, SAME_ORG_BOX_COUNT) ;
-    // });
-
-    it('Scan QR code without associated box (same organisation)', () => {
+    it('Scan QR code without associated box (same organisation) default forward to new Boxtribute', () => {
         cy.visit('/mobile.php?barcode=' + SAME_ORG_QR_URL_WITHOUT_BOX);
+        cy.viewport('iphone-6');
+        cy.waitforCallToV2('100000000/boxes/create/' + SAME_ORG_QR_URL_WITHOUT_BOX);
+    });
+
+    it('Scan QR code without associated box (same organisation) stay on dropapp', () => {
+        cy.visit('/mobile.php?barcode=' + SAME_ORG_QR_URL_WITHOUT_BOX + '&preference=classic');
         cy.viewport('iphone-6');
         createBoxFormIsVisible();
     });

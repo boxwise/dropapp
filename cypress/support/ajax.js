@@ -1,4 +1,3 @@
-
 Cypress.Commands.add("setupAjaxActionHook", () => {
     // TODO - could this be a wildcard ajax action to wait for?
     cy.intercept("POST", "/?action=**").as('ajaxPostAction');
@@ -23,4 +22,17 @@ Cypress.Commands.add("waitForAjaxAction", (expectedRequest,expectedResponse) => 
             cy.reload();
         }
     })
+});
+
+Cypress.Commands.add("interceptCallsToV2", () => {
+    cy.intercept("**/bases/**").as('v2intercept');
+});
+
+Cypress.Commands.add("waitforCallToV2", (expectedRequest) => {
+    cy.wait('@v2intercept').then(({id,request,response}) => {
+        cy.log("Request Body", request);
+        cy.log("Response Body", response);
+        expect(request.url).to.contain(expectedRequest);
+        expect(response.statusCode).to.equal(200);
+    });
 });
