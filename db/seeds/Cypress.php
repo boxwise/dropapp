@@ -108,14 +108,14 @@ class Cypress extends AbstractSeed
         	(100000012,'bf13b44feae208fc808b1d6b2266edb7','Expired Admin', 'expired_admin@expired.co',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','2019-07-10 08:14:58',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00',100000002,'2017-04-11','2017-05-28');");
 
         //------------------- locations
-        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`,`box_state_id`) VALUES
-        	(100000000,'TestShop',100000000,0,0,1,0,0,0,5),
-        	(100000001,'TestLOST',100000000,0,0,0,0,1,0,2),
-        	(100000002,'TestDonated',100000000,0,0,0,1,0,0,5),
-        	(100000003,'TestWarehouse',100000000,1,0,0,0,0,0,1),
-			(100000004,'TestStockroom',100000000,1,1,0,0,0,0,1),
-            (100000005,'TestDummyLocation',100000001,0,0,1,0,0,0,5),
-            (100000006,'TestSCRAP',100000000,0,0,0,0,0,1,6);");
+        $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`,`box_state_id`,`deleted`) VALUES
+        	(100000000,'TestShop',100000000,0,0,1,0,0,0,5,NULL),
+        	(100000001,'TestLOST',100000000,0,0,0,0,1,0,2,'2022-12-21 12:00:00'),
+        	(100000002,'TestDonated',100000000,0,0,0,1,0,0,5,NULL),
+        	(100000003,'TestWarehouse',100000000,1,0,0,0,0,0,1,NULL),
+			(100000004,'TestStockroom',100000000,1,1,0,0,0,0,1,NULL),
+            (100000005,'TestDummyLocation',100000001,0,0,1,0,0,0,5,NULL),
+            (100000006,'TestSCRAP',100000000,0,0,0,0,0,1,6,'2022-12-21 12:00:00');");
 
         //------------------- products
         $this->execute("INSERT INTO `products` (`id`, `name`, `category_id`, `gender_id`, `sizegroup_id`, `camp_id`, `value`, `created`, `created_by`, `modified`, `modified_by`, `maxperadult`, `maxperchild`, `stockincontainer`, `comments`, `deleted`) VALUES
