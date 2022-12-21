@@ -3,11 +3,19 @@ Cypress.Commands.add("setupAjaxActionHook", () => {
     cy.intercept("POST", "/?action=**").as('ajaxPostAction');
 });
 
+Cypress.Commands.add("waitForAjaxActionWithoutAssert", () => {
+    // wait for the expected response
+    cy.wait('@ajaxPostAction').then(({id,request,response}) => {
+        cy.log("Request", request);
+        cy.log("Response", response);
+    })
+});
+
 Cypress.Commands.add("waitForAjaxAction", (expectedRequest,expectedResponse) => {
     // wait for the expected response
     cy.wait('@ajaxPostAction').then(({id,request,response}) => {
-        cy.log("Request Body", request.body);
-        cy.log("Response Body", response.body);
+        cy.log("Request", request);
+        cy.log("Response", response);
         expect(request.body).to.contain(expectedRequest);
         expect(response.statusCode).to.equal(200);
         expect(response.body).to.contain('"success":true');
