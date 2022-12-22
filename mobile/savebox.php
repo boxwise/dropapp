@@ -149,9 +149,9 @@ if (!$box['qr_id']) {
 }
 
 if (!$new) {
-    $message = 'Box '.$box['box_id'].' modified with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'].'. <a href="?boxid='.$box['id'].'">Go back to this box.</a>';
+    $message = 'Box '.$box['box_id'].' modified with '.$box['product'].' ('.$box['items'].'x) in '.$box['location'].'. <a href="?boxid='.$box['box_id'].'">Go back to this box.</a>';
 } else {
-    $message = 'New box with box ID <strong class="bigger">'.$box['box_id'].'</strong> (write this number on the box label). This box contains '.$box['items'].' '.$box['product'].' and is located in '.$box['location'].'. <a href="?boxid='.$box['id'].'">Edit this box.</a>';
+    $message = 'New box with box ID <strong class="bigger">'.$box['box_id'].'</strong> (write this number on the box label). This box contains '.$box['items'].' '.$box['product'].' and is located in '.$box['location'].'. <a href="?boxid='.$box['box_id'].'">Edit this box.</a>';
 }
 
-redirect('?boxid='.$box['id'].'&message='.$message);
+redirect('?boxid='.$box['box_id'].'&message='.$message);

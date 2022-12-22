@@ -42,7 +42,7 @@ if ($_GET['barcode'] && !db_value('SELECT id FROM qr WHERE code = :code AND lega
                         LEFT OUTER JOIN camps AS c ON c.id = l.camp_id
                         LEFT OUTER JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
                         LEFT OUTER JOIN tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "Stock" AND tags.deleted IS NULL
-                    WHERE s.id = :id', ['id' => $_GET['boxid']]);
+                    WHERE s.box_id = :box_id', ['box_id' => $_GET['boxid']]);
 
     if ($box['taglabels']) {
         $taglabels = explode(chr(0x1D), $box['taglabels']);
