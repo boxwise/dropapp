@@ -40,7 +40,7 @@
         );
 
         addcolumn('text', 'Warehouse Locations', 'label');
-        addcolumn('text', 'Default box state', 'boxstate');
+        addcolumn('text', 'Default Status of Boxes', 'boxstate');
         addcolumn('text', 'Number of Instock boxes ', 'boxcount');
 
         $cmsmain->assign('data', $data);
