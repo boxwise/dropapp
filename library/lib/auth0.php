@@ -220,8 +220,10 @@ function isUserInSyncWithAuth0($userId)
         $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
         $validationResult['is_god'] = ($auth0User['app_metadata']['is_god'] == $dbUser['is_admin']) ? 'true' : 'false';
         $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
-        $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id']) ? 'true' : 'false';
-        $validationResult['base_ids'] = ($auth0User['app_metadata']['base_ids'] == $dbUser['base_ids']) ? 'true' : 'false';
+        $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
+        if ($dbUser['base_ids']) {
+            $validationResult['base_ids'] = ($auth0User['app_metadata']['base_ids'] == array_intersect($auth0User['app_metadata']['base_ids'], $dbUser['base_ids'])) ? 'true' : 'false';
+        }
 
         if ($dbUser['valid_firstday'] && '0000-00-00' != $dbUser['valid_firstday']) {
             $validationResult['valid_firstday'] = (!empty($auth0User['app_metadata']['valid_firstday']) && $auth0User['app_metadata']['valid_firstday'] == $dbUser['valid_firstday']) ? 'true' : 'false';
