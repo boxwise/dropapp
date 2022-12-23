@@ -219,7 +219,7 @@ function isUserInSyncWithAuth0($userId)
         $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
         $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
         $validationResult['is_god'] = ($auth0User['app_metadata']['is_god'] == $dbUser['is_admin']) ? 'true' : 'false';
-        $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
+        $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || $dbUser['cms_usergroups_id'] == null) ? 'true' : 'false';
         $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id']) ? 'true' : 'false';
         $validationResult['base_ids'] = ($auth0User['app_metadata']['base_ids'] == $dbUser['base_ids']) ? 'true' : 'false';
 

@@ -93,9 +93,9 @@ if ('auth0_check_synk' === $_GET['action']) {
     $index = 0;
     $query = '';
     while ($db_user = db_fetch($db_users)) {
-        $email = $db_user['email'];
-        $email = preg_replace('/\.deleted\.\d+/', '', $email);
-        $query .= '-email:'.$email.' AND ';
+        // $email = $db_user['email'];
+        // $email = preg_replace('/\.deleted\.\d+/', '', $email);
+        $query .= '-user_id:"auth0|'.$db_user['id'].'" AND ';
     }
 
     $query = substr($query, 0, strlen($query) - 4);
