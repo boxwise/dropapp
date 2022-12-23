@@ -260,8 +260,10 @@ function isUserInSyncWithAuth0($userId)
     if (!$dbUserRoles && !$auth0UserRoles) {
         $return_value = true;
     } elseif ($dbUserRoles && $auth0UserRoles) {
+        $return_value = true;
         $dbRoles = [];
         $auth0Roles = [];
+        $auth0BasesInRoles = [];
 
         foreach ($dbUserRoles as $dbUserRole) {
             $dbRoles[] = $dbUserRole['auth0_role_id'];
@@ -269,10 +271,15 @@ function isUserInSyncWithAuth0($userId)
 
         foreach ($auth0UserRoles as $auth0UserRole) {
             $auth0Roles[] = $auth0UserRole['id'];
+            $tmp = explode('_', $auth0UserRole['name'], 3);
+            if ((bool) $tmp[1]) {
+                $auth0BasesInRoles[] = $tmp[1];
+            }
         }
 
         $dbRolesNotInAuth0 = array_diff($dbRoles, $auth0Roles);
         $auth0RolesNotInDB = array_diff($auth0Roles, $dbRoles);
+        $auth0BasesInRolesNotInDB = array_diff($auth0BasesInRoles, $dbUser['base_ids']);
 
         if ((bool) $dbRolesNotInAuth0) {
             foreach ($dbRolesNotInAuth0 as $item) {
@@ -280,14 +287,22 @@ function isUserInSyncWithAuth0($userId)
             }
             $messageAppendix .= ' is associated in DB, but not in Auth0.';
             $return_value = false;
-        } elseif ((bool) $auth0RolesNotInDB) {
+        }
+
+        if ((bool) $auth0RolesNotInDB) {
             foreach ($auth0RolesNotInDB as $item) {
                 $messageAppendix .= ' Role ID '.$item.',';
             }
             $messageAppendix .= ' is associated in Auth0, but not in DB.';
             $return_value = false;
-        } else {
-            $return_value = true;
+        }
+
+        if ((bool) $auth0BasesInRolesNotInDB) {
+            foreach ($auth0BasesInRolesNotInDB as $item) {
+                $messageAppendix .= ' Base ID '.$item.',';
+            }
+            $messageAppendix .= ' is associated in Auth0 by the Roles, but not in DB.';
+            $return_value = false;
         }
     } elseif (!$dbUserRoles && $auth0UserRoles) {
         $messageAppendix = ' No Roles were associated in DB!';
