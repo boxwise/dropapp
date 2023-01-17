@@ -4,9 +4,9 @@
 
 # Readme #
 
-You just found the Drop App (first version of [Boxtribute](https://www.boxtribute.org) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
+You just found the Drop App (first version of [Boxtribute](https://www.boxtribute.org) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way). This is currently in the process of being replaced by [Boxtribute 2.0](https://github.com/boxwise/boxtribute).
 
-We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users include [Refugees4Refugees](https://www.refugees4refugees.gr), [Intereuropean Human Aid Association (IHA)](https://www.iha.help/), [https://movementontheground.com](https://movementontheground.com), [The Free Shop Lebanon](https://www.instagram.com/thefreeshoplebanon/) and [Hermine](https://mfh.global/hermine/).
+Dropapp was initially developed for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users include [Refugees4Refugees](https://www.refugees4refugees.gr), [Intereuropean Human Aid Association (IHA)](https://www.iha.help/), [https://movementontheground.com](https://movementontheground.com), [The Free Shop Lebanon](https://www.instagram.com/thefreeshoplebanon/) and [Hermine](https://mfh.global/hermine/).
 
 We have evolved the app to now be centrally hosted so we can offer the product to many more organisations, and are working constantly to improve the system and connect donor and distributor organisations with each other. 
 
