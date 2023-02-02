@@ -44,7 +44,7 @@
                                         <ul>
                                         <li>Create an <strong>Instock</strong> location for warehouse areas that hold your available boxes. <strong>Instock</strong> boxes will show up in your <strong>Stock Overview</strong>.</li>
                                         <li>Create a <strong>Donated</strong> location to keep track of boxes you have sent to others.</li>
-                                        <li>Create a <strong>Scrap</strong> location for inventory that can&#39;t be donated and must be disposed of.</li> 
+                                        <li>Boxes that can&#39;t be donated should be marked directly as <strong>Scrap</strong>. For those who like to organise a central place to collect items for disposal, a <strong>Scrap</strong> location can be created.</li> 
                                         </ul>
                                         Move a box from an <strong>Instock</strong> location to a <strong>Donated</strong> or <strong>Scrap</strong> location and watch your inventory counts update automatically!</p>');
     if ($is_admin) {
