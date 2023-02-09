@@ -353,6 +353,35 @@ class DemoUsers extends AbstractSeed
         	(40,'bf13b44feae208fc808b1d6b2266edb7','Athens Free Shop Volunteer','freeshop.volunteer@athens.org',0,NULL,2,'0000-00-00 00:00:00',20,'0000-00-00','0000-00-00'),
         	(41,'bf13b44feae208fc808b1d6b2266edb7','Athens Label','label@athens.org',0,NULL,2,'0000-00-00 00:00:00',21,'0000-00-00','0000-00-00');");
 
+        // insert cms_usergroups_roles
+        $this->execute("INSERT INTO `cms_usergroups_roles` (`cms_usergroups_id`, `auth0_role_id`, `auth0_role_name`) VALUES	
+			(1,1,'administrator'),
+        	(2,2,'base_1_coordinator'),
+        	(3,3,'base_1_warehouse_volunteer'),
+        	(4,4,'base_1_free_shop_volunteer'),
+        	(5,5,'base_1_library_volunteer'),
+			(6,3,'base_1_warehouse_volunteer'),
+        	(6,4,'base_1_free_shop_volunteer'),
+        	(10,1,'administrator'),
+        	(11,11,'base_2_coordinator'),
+        	(12,12,'base_3_coordinator'),
+        	(13,6,'base_2_warehouse_volunteer'),
+			(13,7,'base_2_free_shop_volunteer'),
+			(14,8,'base_3_warehouse_volunteer'),
+			(14,9,'base_3_free_shop_volunteer'),
+			(15,11,'base_2_coordinator'),
+			(15,12,'base_3_coordinator'),
+			(16,6,'base_2_warehouse_volunteer'),
+			(16,7,'base_2_free_shop_volunteer'),
+			(16,8,'base_3_warehouse_volunteer'),
+			(16,9,'base_3_free_shop_volunteer'),
+        	(17,17,'base_4_coordinator'),
+			(18,19,'base_4_warehouse_volunteer'),
+        	(18,20,'base_4_free_shop_volunteer'),
+        	(19,19,'base_4_warehouse_volunteer'),
+        	(20,20,'base_4_free_shop_volunteer'),
+        	(21,21,'base_4_label_creation');");
+
         // user generation fixed for Auth0
         // Uncomment if you want to generate new users.
         // $users = [];
