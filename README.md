@@ -53,6 +53,8 @@ If you are interested in being part of this project, write us at [jointheteam@bo
  
    The first command creates the schema, the second command seeds the database with some dummy data
 
+6. If you want to additionally want to connect the users from the seed to auth0 and populate the db table cms_usergroups_roles then open a browser and request `http://localhost:8100/cron/reseed-auth0.php`
+
 ### Accessing the app
 
 Once the docker containers are running the app is accessible at http://localhost:8100/
