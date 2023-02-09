@@ -1520,5 +1520,12 @@ class Demo extends AbstractSeed
             (5,3,1,3),
             (6,4,4,1),
             (7,5,1,3);');
+
+        $this->execute("INSERT INTO `shipment` VALUES
+            (1,1,2,1,'Preparing','2023-02-09 18:05:57',8,NULL,NULL,NULL,NULL,NULL,NULL),
+            (2,1,3,1,'Canceled','2023-02-09 18:06:02',8,'2023-02-09 18:07:10',8,NULL,NULL,NULL,NULL),
+            (3,1,3,1,'Preparing','2023-02-09 18:06:25',8,NULL,NULL,NULL,NULL,NULL,NULL),
+            (4,4,1,1,'Preparing','2023-02-09 18:08:15',37,NULL,NULL,NULL,NULL,NULL,NULL),
+            (5,4,1,1,'Preparing','2023-02-09 18:08:20',37,NULL,NULL,NULL,NULL,NULL,NULL);");
     }
 }
