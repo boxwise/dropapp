@@ -60,13 +60,30 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 Once the docker containers are running the app is accessible at http://localhost:8100/
 
 After this you should be able to login to the app using the password Browser_tests and one of the following emails:
+
 - some.admin@boxtribute.org (God User)
-- dev_volunteer@boxaid.org
-- dev_coordinator@boxaid.org
+
+BoxAid (all have access to one base called Lesvos):
 - dev_headofops@boxaid.org
-- dev_volunteer@boxcare.org
-- dev_coordinator@boxcare.org
+- dev_coordinator@boxaid.org
+- dev_volunteer@boxaid.org
+- warehouse.volunteer@lesvos.org
+- freeshop.volunteer@lesvos.org
+- library.volunteer@lesvos.org
+
+BoxCare (there are 3 bases associated - Thessaloniki, Samos, Athens):
 - dev_headofops@boxcare.org
+- dev_coordinator@boxcare.org (Coordinator at bases Thessaloniki and Samos)
+- dev_volunteer@boxcare.org (Volunteer at bases Thessaloniki and Samos)
+- coordinator@thessaloniki.org
+- coordinator@samos.org
+- coordinator@athens.org
+- volunteer@thessaloniki.
+- volunteer@samos.org
+- volunteer@athens.org
+- warehouse.volunteer@athens.org
+- freeshop.volunteer@athens.org
+- label@athens.org (only for label creation)
 
 
 ### Our dev environment recommendation
