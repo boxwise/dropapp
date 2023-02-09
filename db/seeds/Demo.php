@@ -1505,17 +1505,20 @@ class Demo extends AbstractSeed
         $this->table('transactions')->insert($transactions)->save();
 
         //------------------- transfer agreements
-        // $this->execute("INSERT INTO `transfer_agreement` (`id`, `source_organisation_id`, `target_organisation_id`, `state`, `type`, `requested_on`, `requested_by`, `accepted_on`, `accepted_by`, `terminated_on`, `terminated_by`, `valid_from`, `valid_until`, `comment`) VALUES
-        //     (1,1,2,'UnderReview','Bidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL),
-        //     (2,2,1,'UnderReview','Bidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL),
-        //     (3,1,2,'UnderReview','Unidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL),
-        //     (4,2,1,'UnderReview','Unidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL);");
+        $this->execute("INSERT INTO `transfer_agreement` (`id`, `source_organisation_id`, `target_organisation_id`, `state`, `type`, `requested_on`, `requested_by`, `accepted_on`, `accepted_by`, `terminated_on`, `terminated_by`, `valid_from`, `valid_until`, `comment`) VALUES
+            (1,1,2,'Accepted','Bidirectional','2023-02-09 17:24:29',8,'2023-02-09 17:30:51',37,NULL,NULL,'2023-02-09 17:24:29',NULL,NULL),
+            (2,1,2,'UnderReview','SendingTo','2023-02-09 17:25:46',8,NULL,NULL,NULL,NULL,'2023-02-09 17:25:46',NULL,NULL),
+            (3,1,2,'Canceled','ReceivingFrom','2023-02-09 17:26:02',8,NULL,NULL,'2023-02-09 17:36:09',8,'2023-02-09 17:26:02',NULL,NULL),
+            (4,2,1,'Rejected','Bidirectional','2023-02-09 17:29:09',37,NULL,NULL,'2023-02-09 17:37:45',8,'2023-02-09 17:29:09',NULL,NULL),
+            (5,1,2,'UnderReview','ReceivingFrom','2023-02-09 17:34:50',8,NULL,NULL,NULL,NULL,'2023-02-09 17:34:50',NULL,NULL);");
 
-        // $this->execute('INSERT INTO `transfer_agreement_detail` (`id`, `transfer_agreement_id`, `source_base_id`, `target_base_id`) VALUES
-        //     (1,1,1,2),
-        //     (2,1,1,3),
-        //     (3,2,NULL,NULL),
-        //     (4,3,1,2),
-        //     (5,4,NULL,NULL);');
+        $this->execute('INSERT INTO `transfer_agreement_detail` (`id`, `transfer_agreement_id`, `source_base_id`, `target_base_id`) VALUES
+            (1,1,1,2),
+            (2,1,1,3),
+            (3,1,1,4),
+            (4,2,1,2),
+            (5,3,1,3),
+            (6,4,4,1),
+            (7,5,1,3);');
     }
 }
