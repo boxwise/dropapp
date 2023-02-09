@@ -24,7 +24,7 @@ class Demo extends AbstractSeed
         // https://github.com/fzaninotto/Faker
         $faker = Faker\Factory::create();
         // to make the seed reproducible
-        $faker->seed(2);
+        $faker->seed(3);
 
         //------------------- library_type
         $this->execute("INSERT INTO `library_type` (`id`, `label`, `camp_id`) VALUES
@@ -1440,6 +1440,8 @@ class Demo extends AbstractSeed
                 'qr_id' => $i,
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
+
+            $stock[] = $tempdata;
         }
 
         // add random boxes
@@ -1503,17 +1505,17 @@ class Demo extends AbstractSeed
         $this->table('transactions')->insert($transactions)->save();
 
         //------------------- transfer agreements
-        $this->execute("INSERT INTO `transfer_agreement` (`id`, `source_organisation_id`, `target_organisation_id`, `state`, `type`, `requested_on`, `requested_by`, `accepted_on`, `accepted_by`, `terminated_on`, `terminated_by`, `valid_from`, `valid_until`, `comment`) VALUES 
-            (1,1,2,'UnderReview','Bidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL),
-            (2,2,1,'UnderReview','Bidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL),
-            (3,1,2,'UnderReview','Unidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL),
-            (4,2,1,'UnderReview','Unidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL);");
+        // $this->execute("INSERT INTO `transfer_agreement` (`id`, `source_organisation_id`, `target_organisation_id`, `state`, `type`, `requested_on`, `requested_by`, `accepted_on`, `accepted_by`, `terminated_on`, `terminated_by`, `valid_from`, `valid_until`, `comment`) VALUES
+        //     (1,1,2,'UnderReview','Bidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL),
+        //     (2,2,1,'UnderReview','Bidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL),
+        //     (3,1,2,'UnderReview','Unidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL),
+        //     (4,2,1,'UnderReview','Unidirectional',NOW(),8,NULL,NULL,NULL,NULL,NOW(),NULL,NULL);");
 
-        $this->execute('INSERT INTO `transfer_agreement_detail` (`id`, `transfer_agreement_id`, `source_base_id`, `target_base_id`) VALUES 
-            (1,1,1,2),
-            (2,1,1,3),
-            (3,2,NULL,NULL),
-            (4,3,1,2),
-            (5,4,NULL,NULL);');
+        // $this->execute('INSERT INTO `transfer_agreement_detail` (`id`, `transfer_agreement_id`, `source_base_id`, `target_base_id`) VALUES
+        //     (1,1,1,2),
+        //     (2,1,1,3),
+        //     (3,2,NULL,NULL),
+        //     (4,3,1,2),
+        //     (5,4,NULL,NULL);');
     }
 }
