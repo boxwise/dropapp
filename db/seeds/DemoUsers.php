@@ -95,16 +95,16 @@ class DemoUsers extends AbstractSeed
         //------------------- cms_usergroups
         $this->execute("INSERT INTO `cms_usergroups` (`id`, `label`, `organisation_id`, `userlevel`) VALUES
         	(1,'Head of Operations',1,1),
-        	(2,'Coordinator',1,2),
-        	(3,'WH Volunteer',1,3),
-        	(4,'Free Shop Volunteer',1,3),
-        	(5,'Library Volunteer',1,3),
-        	(6,'Volunteer',1,3),
+        	(2,'Base Lesvos - Coordinator',1,2),
+        	(3,'Base Lesvos - Volunteer (Warehouse)',1,3),
+        	(4,'Base Lesvos - Volunteer (Free Shop)',1,3),
+        	(5,'Base Lesvos - Volunteer (Library)',1,3),
+        	(6,'Base Lesvos - Volunteer',1,3),
         	(10,'Head of Operations',2,1),
-        	(11,'Thessa Coordinator',2,2),
-        	(12,'Samos Coordinator',2,2),
-        	(13,'Thessa Volunteer',2,3),
-        	(14,'Samos Volunteer',2,3),
+        	(11,'Base Thessaloniki - Coordinator',2,2),
+        	(12,'Base Samos - Coordinator',2,2),
+        	(13,'Base Thessaloniki - Volunteer',2,3),
+        	(14,'Base Samos - Volunteer',2,3),
         	(15,'Coordinator',2,2),
         	(16,'Volunteer',2,3),
         	(17,'Base Athens - Coordinator',2,2),
@@ -339,7 +339,19 @@ class DemoUsers extends AbstractSeed
         	(17,'bf13b44feae208fc808b1d6b2266edb7','Dev Coordinator','dev_coordinator@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',15,'0000-00-00','0000-00-00'),
         	(18,'bf13b44feae208fc808b1d6b2266edb7','Dev Head of Operations','dev_headofops@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',10,'0000-00-00','0000-00-00'),
         	(19,'bf13b44feae208fc808b1d6b2266edb7','Another Dev Volunteer','another_dev_volunteer@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',18, '0000-00-00','0000-00-00'),
-        	(20,'bf13b44feae208fc808b1d6b2266edb7','Another Dev Coordinator','another_dev_coordinatorr@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',17, '0000-00-00','0000-00-00');");
+        	(20,'bf13b44feae208fc808b1d6b2266edb7','Another Dev Coordinator','another_dev_coordinatorr@boxcare.org',0,NULL,2,'0000-00-00 00:00:00',17, '0000-00-00','0000-00-00'),
+            (23,'bf13b44feae208fc808b1d6b2266edb7','Lesvos Warehouse Volunteer','warehouse.volunteer@lesvos.org',0,NULL,2,'0000-00-00 00:00:00',3,'0000-00-00','0000-00-00'),
+        	(24,'bf13b44feae208fc808b1d6b2266edb7','Lesvos Free Shop Volunteer','freeshop.volunteer@lesvos.org',0,NULL,2,'0000-00-00 00:00:00',4,'0000-00-00','0000-00-00'),
+        	(25,'bf13b44feae208fc808b1d6b2266edb7','Lesvos Library Volunteer','library.volunteer@lesvos.org',0,NULL,2,'0000-00-00 00:00:00',5,'0000-00-00','0000-00-00'),
+        	(31,'bf13b44feae208fc808b1d6b2266edb7','Thessaloniki Coordinator','coordinator@thessaloniki.org',0,NULL,2,'0000-00-00 00:00:00',11,'0000-00-00','0000-00-00'),
+        	(32,'bf13b44feae208fc808b1d6b2266edb7','Samos Coordinator','coordinator@samos.org',0,NULL,2,'0000-00-00 00:00:00',12,'0000-00-00','0000-00-00'),
+			(33,'bf13b44feae208fc808b1d6b2266edb7','Thessaloniki Volunteer','volunteer@thessaloniki.org',0,NULL,2,'0000-00-00 00:00:00',13,'0000-00-00','0000-00-00'),
+        	(34,'bf13b44feae208fc808b1d6b2266edb7','Samos Volunteer','volunteer@samos.org',0,NULL,2,'0000-00-00 00:00:00',14,'0000-00-00','0000-00-00'),
+        	(37,'bf13b44feae208fc808b1d6b2266edb7','Athens Coordinator','coordinator@athens.org',0,NULL,2,'0000-00-00 00:00:00',17,'0000-00-00','0000-00-00'),
+        	(38,'bf13b44feae208fc808b1d6b2266edb7','Athens Volunteer','volunteer@athens.org',0,NULL,2,'0000-00-00 00:00:00',18,'0000-00-00','0000-00-00'),
+			(39,'bf13b44feae208fc808b1d6b2266edb7','Athens Warehouse Volunteer','warehouse.volunteer@athens.org',0,NULL,2,'0000-00-00 00:00:00',19,'0000-00-00','0000-00-00'),
+        	(40,'bf13b44feae208fc808b1d6b2266edb7','Athens Free Shop Volunteer','freeshop.volunteer@athens.org',0,NULL,2,'0000-00-00 00:00:00',20,'0000-00-00','0000-00-00'),
+        	(41,'bf13b44feae208fc808b1d6b2266edb7','Athens Label','label@athens.org',0,NULL,2,'0000-00-00 00:00:00',21,'0000-00-00','0000-00-00');");
 
         // user generation fixed for Auth0
         // Uncomment if you want to generate new users.
