@@ -27,7 +27,7 @@ function generateQrPng($hash, $legacy = false)
                     ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
                     ->setForegroundColor(new Color(0, 0, 0))
                     ->setBackgroundColor(new Color(255, 255, 255))
-                    ;
+                ;
 
                 $result = $writer->write($qrCode);
 
@@ -74,7 +74,7 @@ function generateQRIDForDB()
     $hash = md5($id);
     db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$hash.'",NOW())');
 
-    //test if generated qr-code is already connected to a box
+    // test if generated qr-code is already connected to a box
     if (db_value('SELECT id FROM stock WHERE qr_id = :id', ['id' => $id])) {
         throw new Exception('QR-Generation error! Please report to the Boxtribute team!');
     }
@@ -165,7 +165,7 @@ function getcampdata($id)
 		ORDER BY c.seq', ['camp' => $id, 'organisation_id' => $_SESSION['organisation']['id']]);
 }
 
-//this function verifies if a people id belongs to a camp that the current user has access to.
+// this function verifies if a people id belongs to a camp that the current user has access to.
 function verify_campaccess_people($id)
 {
     if (!$id) {
@@ -178,7 +178,7 @@ function verify_campaccess_people($id)
     }
 }
 
-//this function verifies if a location id belongs to a camp that the current user has access to.
+// this function verifies if a location id belongs to a camp that the current user has access to.
 function verify_campaccess_location($id)
 {
     if (!$id) {
@@ -352,7 +352,7 @@ function move_boxes($ids, $newlocationid, $mobile = false)
                         modified = NOW(), 
                         modified_by = :user_id 
                     WHERE id = :id',
-                    ['box_state_id' => $newlocation['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]
+                    ['box_state_id' => $newlocation['box_state_id'], 'id' => $id, 'user_id' => $_SESSION['user']['id']]
                 );
                 simpleSaveChangeHistory('stock', $id, 'box_state_id', $from, $to);
                 $mobile_message .= ' and its state changed to '.$newlocation['box_state_name'];

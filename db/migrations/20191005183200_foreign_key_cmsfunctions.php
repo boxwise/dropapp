@@ -19,6 +19,6 @@ class ForeignKeyCmsFunctions extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-;
+        ;
     }
 }

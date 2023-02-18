@@ -114,7 +114,7 @@ if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {
     $data['message'] = (!isset($data['message']) ? $message : $data['message']);
 
     // disable Box if in Lost or Scrap state
-    $box['disabled'] = (in_array($box['statelabel'], ['Lost', 'Scrap']));
+    $box['disabled'] = in_array($box['statelabel'], ['Lost', 'Scrap']);
 
     $locations = db_array('SELECT 
                             l.id AS value,

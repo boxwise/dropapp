@@ -2,13 +2,13 @@
 
     $table = 'locations';
     $action = 'locations_edit';
-    $is_admin = ($_SESSION['user']['is_admin']);
+    $is_admin = $_SESSION['user']['is_admin'];
 
     if ($_POST) {
         // check if you have access to the location you want to update
         verify_campaccess_location($_POST['id']);
 
-        //Prepare POST
+        // Prepare POST
         $_POST['visible'] = in_array($_POST['box_state_id'][0], ['1', '3', '4']) ? 1 : 0;
         $_POST['is_donated'] = in_array($_POST['box_state_id'][0], ['5']) ? 1 : 0;
         $_POST['is_lost'] = in_array($_POST['box_state_id'][0], ['2']) ? 1 : 0;

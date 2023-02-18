@@ -5,7 +5,7 @@
 
     if ($_POST) {
         $handler = new formHandler($table);
-        //$handler->debug = true;
+        // $handler->debug = true;
 
         $savekeys = ['code', 'hidden', 'category_id', 'type'];
         if ($hasdescription) {
@@ -46,7 +46,7 @@
                 ['value' => 'textarea', 'label' => $translate['cms_field_textarea']],
             ]]
         );
-        //addfield('select',$translate['cms_settings_category'],'category_id',array('required'=>true, 'width'=>5,'query'=>'SELECT id AS value, name AS label FROM translate_categories ORDER BY id'));
+        // addfield('select',$translate['cms_settings_category'],'category_id',array('required'=>true, 'width'=>5,'query'=>'SELECT id AS value, name AS label FROM translate_categories ORDER BY id'));
         addfield('checkbox', $translate['cms_settings_hidden'], 'hidden');
     } else {
         addfield('hidden', '', 'description');

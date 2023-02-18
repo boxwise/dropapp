@@ -18,7 +18,7 @@
     $data[0]['containers'] = db_value('SELECT COUNT(DISTINCT(container)) FROM people WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted');
     $data[0]['extraportion'] = db_value('SELECT SUM(extraportion) FROM people WHERE visible AND camp_id = '.$_SESSION['camp']['id'].' AND NOT deleted');
 
-    //DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), t.date_of_birth)), "%Y")+0 AS age
+    // DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), t.date_of_birth)), "%Y")+0 AS age
     listsetting('allowcopy', false);
     listsetting('allowedit', false);
     listsetting('allowadd', false);

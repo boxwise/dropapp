@@ -45,6 +45,6 @@ class ForeignKeyLocations extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-;
+        ;
     }
 }

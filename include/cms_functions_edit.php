@@ -4,7 +4,7 @@
 
     if ($_POST) {
         $handler = new formHandler($table);
-        //$handler->debug = true;
+        // $handler->debug = true;
         $keys = ['title_en', 'include', 'parent_id', 'adminonly', 'visible', 'allusers', 'allcamps'];
         $handler->savePost($keys, ['parent_id']);
 

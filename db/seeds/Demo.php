@@ -26,12 +26,12 @@ class Demo extends AbstractSeed
         // to make the seed reproducible
         $faker->seed(3);
 
-        //------------------- library_type
+        // ------------------- library_type
         $this->execute("INSERT INTO `library_type` (`id`, `label`, `camp_id`) VALUES
 			(1,'Books',1),
 			(2,'Magazines',1);");
 
-        //------------------- library
+        // ------------------- library
         $library = [];
         for ($i = 1; $i <= 100; ++$i) {
             $tempdata = [
@@ -47,7 +47,7 @@ class Demo extends AbstractSeed
         }
         $this->table('library')->insert($library)->save();
 
-        //------------------- locations
+        // ------------------- locations
         $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`,`box_state_id`,`deleted`) VALUES
 			(1,'Shop',1,1,0,0,1,0,0,0,5,NULL),
 			(2,'LOST',1,2,0,0,0,0,1,0,2,'2022-12-21 12:00:00'),
@@ -72,7 +72,7 @@ class Demo extends AbstractSeed
 			(21,'SCRAP',3,21,0,0,0,0,0,1,6,'2022-12-21 12:00:00'),
 			(22,'Stockroom',3,21,1,1,0,0,0,0,1,NULL);");
 
-        //------------------- people
+        // ------------------- people
         $people = [];
         $lastparentid = null;
         $lastlastname = null;
@@ -137,7 +137,7 @@ class Demo extends AbstractSeed
         }
         $this->table('people')->insert($people)->save();
 
-        //------------------- products
+        // ------------------- products
         $this->execute("INSERT INTO `products` (`id`,`name`,`category_id`,`gender_id`,`sizegroup_id`,`camp_id`,`value`,`maxperadult`,`maxperchild`,`stockincontainer`,`comments`,`deleted`) VALUES 
 			(1,'Winter Jackets',6,2,1,1,0,0,0,1,'','0000-00-00 00:00:00'),
 			(2,'Winter Jackets',6,1,1,1,0,0,0,1,'','0000-00-00 00:00:00'),
@@ -749,7 +749,7 @@ class Demo extends AbstractSeed
 			(608,'WD SOCKS',12,10,6,3,5,0,0,0,'',NULL),
 			(609,'WD BABY CLOTHES',12,10,6,3,20,0,0,0,'',NULL);");
 
-        //------------------- qr
+        // ------------------- qr
 
         // A few fixed QR-Codes
         $this->execute("INSERT INTO `qr` (`id`,`code`) VALUES 
@@ -784,7 +784,7 @@ class Demo extends AbstractSeed
         }
         $this->table('qr')->insert($qr)->save();
 
-        //------------------- stock
+        // ------------------- stock
         // restrict selection of random ids
         // key is campid
         $products = ['1' => range(1, 219), '2' => range(220, 414), '3' => range(415, 609)];
@@ -1459,9 +1459,9 @@ class Demo extends AbstractSeed
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
 
-            //order a few boxes
+            // order a few boxes
             $rand_num = $faker->numberBetween($min = 0, $max = 1000);
-            if (($rand_num < 20)) {
+            if ($rand_num < 20) {
                 $tempdata['ordered'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d');
                 $tempdata['box_state_id'] = 3;
             }
@@ -1470,7 +1470,7 @@ class Demo extends AbstractSeed
         }
         $this->table('stock')->insert($stock)->save();
 
-        //------------------- transactions
+        // ------------------- transactions
         $transactions = [];
         $i = 1;
         foreach ($people as $person) {
@@ -1504,7 +1504,7 @@ class Demo extends AbstractSeed
         }
         $this->table('transactions')->insert($transactions)->save();
 
-        //------------------- transfer agreements
+        // ------------------- transfer agreements
         $this->execute("INSERT INTO `transfer_agreement` (`id`, `source_organisation_id`, `target_organisation_id`, `state`, `type`, `requested_on`, `requested_by`, `accepted_on`, `accepted_by`, `terminated_on`, `terminated_by`, `valid_from`, `valid_until`, `comment`) VALUES
             (1,1,2,'Accepted','Bidirectional','2023-02-09 17:24:29',8,'2023-02-09 17:30:51',37,NULL,NULL,'2023-02-09 17:24:29',NULL,NULL),
             (2,1,2,'UnderReview','SendingTo','2023-02-09 17:25:46',8,NULL,NULL,NULL,NULL,'2023-02-09 17:25:46',NULL,NULL),

@@ -52,7 +52,7 @@
 
     addfield('text', 'Comments', 'description');
 
-    //addfield('checkbox','Zichtbaar','visible',array('aside'=>true));
+    // addfield('checkbox','Zichtbaar','visible',array('aside'=>true));
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);
 

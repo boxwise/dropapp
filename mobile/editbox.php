@@ -75,8 +75,8 @@
     $box['disabled'] = false;
     if (in_array($box['statelabel'], ['Lost', 'Scrap'])) {
         $box['disabled'] = true;
-        $box['scrap'] = (in_array($box['statelabel'], ['Scrap']));
-        $box['lost'] = (in_array($box['statelabel'], ['Lost']));
+        $box['scrap'] = in_array($box['statelabel'], ['Scrap']);
+        $box['lost'] = in_array($box['statelabel'], ['Lost']);
     }
 
     $tpl->assign('box', $box);

@@ -151,7 +151,7 @@ function bootstrap_exception_handler(Throwable $ex)
 
     $error->display('cms_error.tpl');
 
-    exit();
+    exit;
 }
 
 // Set exception handler
@@ -186,11 +186,7 @@ class boxwise_error_handler_class
      *
      * @see http://php.net/set_error_handler
      *
-     * @param int $errno      Error level
-     * @param     $errstr
-     * @param     $errfile
-     * @param     $errline
-     * @param     $errcontext
+     * @param int $errno Error level
      *
      * @return bool
      */

@@ -94,14 +94,14 @@
 
     addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per adult', 'dropsadult', ['required' => true]);
     addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per child', 'dropschild', ['required' => true]);
-// 	$data['startration'] = 1;
-// 	addfield('checkbox','Reset ration period','startration');
+    // 	$data['startration'] = 1;
+    // 	addfield('checkbox','Reset ration period','startration');
     addfield('line', '', '');
     addfield('text', 'Description', 'description');
 
-    //addfield('checkbox','Zichtbaar','visible',array('aside'=>true));
-    //addfield('line','','',array('aside'=>true));
-    //addfield('created','Created','created',array('aside'=>true));
+    // addfield('checkbox','Zichtbaar','visible',array('aside'=>true));
+    // addfield('line','','',array('aside'=>true));
+    // addfield('created','Created','created',array('aside'=>true));
 
     // place the form elements and data in the template
     $cmsmain->assign('data', $data);

@@ -20,7 +20,7 @@
             $emails = $_POST['emails'];
             foreach ($emails as $email) {
                 $found_id = db_value('SELECT id FROM cms_users WHERE email = :email OR (email LIKE :deletedEmail AND deleted IS NOT NULL)', ['email' => $email, 'deletedEmail' => $email.'.deleted%']);
-                //test necessary, because otherwise null is added to ids
+                // test necessary, because otherwise null is added to ids
                 if ($found_id) {
                     array_push($ids, $found_id);
                 }
@@ -28,9 +28,9 @@
         } else {
             $ids = explode(',', $_POST['ids']);
         }
-        //if ids that are submitted are in database, delete them, otherwise just return true
+        // if ids that are submitted are in database, delete them, otherwise just return true
         if ([] != $ids) {
-            //Define all ids which are allowed to be deleted
+            // Define all ids which are allowed to be deleted
             $allowed['people'] = array_column(db_array(
                 'SELECT p.id
             FROM people p

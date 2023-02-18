@@ -46,12 +46,12 @@ if ('classic' == $_GET['preference']) {
     $_SESSION['v2_forward'] = true;
 }
 if (!$_SESSION['camp']['id']) {
-    //No organisation selected for admin
+    // No organisation selected for admin
     if (!isset($_SESSION['organisation']['id']) && $_SESSION['user']['is_admin']) {
         require_once 'mobile/selectorganisation.php';
     } else {
         throw new Exception('You don\'t have access to this base. Ask your coordinator to correct this!', 403);
-        //$data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
+        // $data['message'] = 'You don\'t have access to this base. Ask your coordinator to correct this!';
     }
 } elseif (!db_value('SELECT id FROM locations WHERE locations.type = "Warehouse" AND locations.camp_id = '.intval($_SESSION['camp']['id']).' LIMIT 1 ')) {
     redirect('/?action=start');

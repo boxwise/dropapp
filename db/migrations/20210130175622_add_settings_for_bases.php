@@ -11,6 +11,6 @@ class AddSettingsForBases extends AbstractMigration
             ->addColumn('beneficiaryisvolunteer', 'boolean', ['default' => 1, 'null' => false])
             ->addColumn('separateshopandwhproducts', 'boolean', ['default' => 0, 'null' => false])
             ->save()
-    ;
+        ;
     }
 }

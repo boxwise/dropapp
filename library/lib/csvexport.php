@@ -14,10 +14,10 @@ function csvexport($data, $filename, $keys)
 
     while ($f = db_fetch($data)) {
         foreach ($keys as $key => $value) {
-            echo '"'.$f[$key].'"'.',';
+            echo '"'.$f[$key].'",';
         }
         echo "\n";
     }
 
-    exit();
+    exit;
 }
