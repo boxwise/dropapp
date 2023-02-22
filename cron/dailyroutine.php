@@ -89,19 +89,12 @@ if ('auth0_inactive_users' === $_GET['action'] || 'auth0_active_users' === $_GET
 
 if ('auth0_check_synk' === $_GET['action']) {
     // Test if Auth0 holds more active users than the app
-    $db_users = db_query('SELECT id, email FROM cms_users WHERE NOT deleted OR deleted = 0;');
-    $index = 0;
+    $db_users = db_simplearray('SELECT email FROM cms_users WHERE NOT deleted OR deleted = 0;', [], false, false);
     $query = 'blocked:false ';
-    while ($db_user = db_fetch($db_users)) {
-        // $email = $db_user['email'];
-        // $email = preg_replace('/\.deleted\.\d+/', '', $email);
-        $query .= '-user_id:"auth0|'.$db_user['id'].'" ';
-    }
-
-    // $query = substr($query, 0, strlen($query) - 4);
     $users = getAllUsers($query);
-
     foreach ($users as $user) {
-        trigger_error('Not-Blocked User with id '.$user['user_id'].' exists in Auth0, but not in DB.', E_USER_ERROR);
+        if (!in_array($user['email'], $db_users)) {
+            trigger_error('Not-Blocked User with id '.$user['user_id'].' exists in Auth0, but not in DB.', E_USER_ERROR);
+        }
     }
 }
