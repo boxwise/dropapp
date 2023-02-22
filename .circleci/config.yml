@@ -67,7 +67,6 @@ jobs:
             \$settings['db_database'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_user'] = '${<< parameters.envVariablePrefix >>DBNAME}';
             \$settings['db_pass'] = '${<< parameters.envVariablePrefix >>DBPASS}';
-            \$settings['sendgrid_key'] = '${BOXWISE_SENDGRID}';
             \$settings['sentry_key'] = '${BOXWISE_SENTRY}';
             \$settings['test_pwd'] = '${CYPRESS_TEST_PWD}';
             \$settings['upload_dir'] = '${UPLOAD_DIR}/<< parameters.serviceName >>';
