@@ -73,16 +73,16 @@
                         break;
                 }
 
-                //$slots[$date][floor($time).":".$minutes]['displaytime'] = ($time>12.5?floor($time)-12:floor($time)).":".$minutes.($time>12.5?' pm':' am');
+                // $slots[$date][floor($time).":".$minutes]['displaytime'] = ($time>12.5?floor($time)-12:floor($time)).":".$minutes.($time>12.5?' pm':' am');
 
                 if (!$_POST['lunchbreak'] || ($time < $_POST['lunchtime'] || $time >= ($_POST['lunchtime'] + $_POST['lunchduration'][0]))) {
                     $slots[$date][floor($time).':'.$minutes]['displaytime'] = ($time > 12.5 ? floor($time) - 12 : floor($time)).':'.$minutes.($time > 12.5 ? ' pm' : ' am');
                     $slots[$date][floor($time).':'.$minutes]['count'] = 0;
                     $slots[$date][floor($time).':'.$minutes]['containers'] = [];
-                /*
-                                $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['count'] = 0;
-                                $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['containers'] = '';
-                */
+                    /*
+                                    $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['count'] = 0;
+                                    $slots[$date][floor($time).":".($time-floor($time)?'30':'00')]['containers'] = '';
+                    */
                 } else {
                     if (!$lunch) {
                         $slots[$date][floor($time).':'.$minutes]['lunch'] = true;

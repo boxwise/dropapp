@@ -5,10 +5,10 @@
     if ($_POST) {
         $hasBilanguage = db_fieldexists($table, 'description_nl');
 
-        //echo $_POST['value'];
+        // echo $_POST['value'];
 
         $handler = new formHandler($table);
-        //$handler->debug = true;
+        // $handler->debug = true;
 
         if ($hasBilanguage) {
             $keys = ['description_nl', 'description_en', 'code', 'value', 'type', 'options'];
@@ -55,7 +55,7 @@
                 ['value' => 'checkbox', 'label' => $translate['cms_field_checkbox']],
                 ['value' => 'select', 'label' => $translate['cms_field_select']],
             ], 'onchange' => 'if(this.options[this.selectedIndex].value=="select") $("#div_options").removeClass("hidden"); else $("#div_options").addClass("hidden");']
-//console.log($("#field_type").html);
+            // console.log($("#field_type").html);
         );
         // alleen voor type = select
         addfield('text', $translate['cms_settings_options'], 'options', ['tooltip' => 'Vul de mogelijke keuzes in als volgt: waarde=Label,waarde2=Label2,waarde3=Label3', 'hidden' => 'select' != $data['type']]);
@@ -73,8 +73,8 @@
         } else {
             addfield('text', $translate['cms_settings_description'], 'description', ['readonly' => true]);
         }
-        //addfield('info','','descriptionlabel');
-        //addfield('hidden','','description');
+        // addfield('info','','descriptionlabel');
+        // addfield('hidden','','description');
         addfield('hidden', '', 'type');
         addfield('hidden', '', 'code');
         addfield('hidden', '', 'hidden');

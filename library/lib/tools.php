@@ -64,7 +64,7 @@ function showHistory($table, $id)
         $change = $row['changes'];
         $change = str_replace(';', '', $change);
 
-        //cases for properly created change-messages(location_id, product_id,items...)
+        // cases for properly created change-messages(location_id, product_id,items...)
         if (in_array($change, ['location_id', 'product_id', 'items', 'size_id', 'box_state_id'])) {
             if ('items' == $change) {
                 $change = 'changed the number of items from '.$row['from_int'].' to '.$row['to_int'];
@@ -89,9 +89,9 @@ function showHistory($table, $id)
                 $box_state_new = db_row('SELECT box_state.label FROM box_state WHERE box_state.id = :id_new', ['id_new' => $box_state_ids[1]]);
                 $change = 'changed box state from '.$box_state_orig['label'].' to '.$box_state_new['label'];
             }
-        }   //Cases where the grammar has to be realigned to make it readable
+        }   // Cases where the grammar has to be realigned to make it readable
         elseif (in_array(explode(' ', $change)[0], ['Box', 'Record', 'comments', 'signaturefield'])) {
-            //special cases first
+            // special cases first
             $change = trim(grammarRealign($change));
             if ('order box made undone' == $change) {
                 $change = 'canceled the order';
@@ -170,7 +170,7 @@ function redirect($url, $status = 301)
 {
     header('Location: '.$url, true, $status);
 
-    exit();
+    exit;
 }
 
 function CMSmenu()
@@ -210,14 +210,14 @@ function CMSmenu()
             if ($row2['include'] == $action || $row2['include'].'_edit' == $action) {
                 $row2['active'] = true;
             }
-            if ($row2['title'.'_'.$lan]) {
-                $row2['title'] = $row2['title'.'_'.$lan];
+            if ($row2['title_'.$lan]) {
+                $row2['title'] = $row2['title_'.$lan];
             }
             $submenu[] = $row2;
         }
 
-        if ($row1['title'.'_'.$lan]) {
-            $row1['title'] = $row1['title'.'_'.$lan];
+        if ($row1['title_'.$lan]) {
+            $row1['title'] = $row1['title_'.$lan];
         }
         $row1['sub'] = $submenu;
         if ($submenu) {
@@ -292,7 +292,7 @@ function utf8_decode_array($array)
 
 function simpleSaveChangeHistory($table, $record, $changes, $from = [], $to = [])
 {
-    //from and to variable must be arrays with entry 'int' or 'float'
+    // from and to variable must be arrays with entry 'int' or 'float'
     if (!db_tableexists('history')) {
         return;
     }
@@ -301,7 +301,7 @@ function simpleSaveChangeHistory($table, $record, $changes, $from = [], $to = []
 
 function simpleBulkSaveChangeHistory($table, $records, $changes, $from = [], $to = [])
 {
-    //from and to variable must be arrays with entry 'int' or 'float'
+    // from and to variable must be arrays with entry 'int' or 'float'
     if (!db_tableexists('history')) {
         return;
     }

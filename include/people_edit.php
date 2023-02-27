@@ -13,7 +13,7 @@
 
             echo json_encode($return);
 
-            exit();
+            exit;
         }
 
         // all other form submission
@@ -302,7 +302,7 @@
                 'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
                 'allowedit' => false, 'allowadd' => $data['allowdrops'], 'add' => 'Give '.ucwords($_SESSION['camp']['currencyname']), 'addaction' => 'give&ids='.intval($id), 'allowsort' => false, 'allowselect' => true, 'allowselectall' => false, 'action' => 'people_edit', 'redirect' => true, 'modal' => false, ]);
 
-            //show borrow history
+            // show borrow history
             addfield('line', '', '', ['tab' => 'bicycle']);
             if (db_value('SELECT id FROM borrow_transactions WHERE people_id ='.$id)) {
                 addfield('list', 'Last 10 transactions', 'bicycles', ['tab' => 'bicycle', 'width' => 10, 'query' => '

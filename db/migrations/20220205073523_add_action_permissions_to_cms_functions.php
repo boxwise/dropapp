@@ -22,7 +22,7 @@ class AddActionPermissionsToCmsFunctions extends AbstractMigration
      */
     public function down()
     {
-        //$this->execute("SHOW COLUMNS FROM cms_functions like 'action_permissions'");
+        // $this->execute("SHOW COLUMNS FROM cms_functions like 'action_permissions'");
         $this->table('cms_functions')
             ->removeColumn('action_permissions')->update();
     }

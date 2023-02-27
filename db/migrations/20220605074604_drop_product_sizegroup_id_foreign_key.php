@@ -10,7 +10,7 @@ class DropProductSizegroupIdForeignKey extends AbstractMigration
         if ($table->hasForeignKey('sizegroup_id')) {
             $table->dropForeignKey('sizegroup_id')
                 ->update()
-                ;
+            ;
         }
     }
 

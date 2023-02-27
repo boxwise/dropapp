@@ -15,6 +15,6 @@
         WHERE s.id = :id', ['id' => $_GET['changeamount']]);
 
     mobile_distro_check($box['locationType']);
-    $box['disabled'] = (in_array($box['statelabel'], ['Lost', 'Scrap']));
+    $box['disabled'] = in_array($box['statelabel'], ['Lost', 'Scrap']);
     $tpl->assign('box', $box);
     $tpl->assign('include', 'mobile_amount.tpl');

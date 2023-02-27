@@ -22,7 +22,7 @@ $pdf->H = 55;
 $pdf->SetAutoPageBreak(false);
 $pdf->SetLineWidth(0.1);
 
-//$id = "1050,1067,1068,1084,1093";
+// $id = "1050,1067,1068,1084,1093";
 $ids = explode(',', $_GET['id']);
 foreach ($ids as $key => $id) {
     $ids[$key] = intval($id);
@@ -105,7 +105,7 @@ while ($p = db_fetch($result)) {
     $photox = 4;
     $photoy = 10;
 
-    //dump($imgw);
+    // dump($imgw);
     $pdf->ClippingRect($pdf->X + $photox, $pdf->Y + $photoy, $photow, $photoh, 1);
     if ($rotate) {
         $pdf->Rotate($rotate, $pdf->X + $photox + ($photow / 2), $pdf->Y + $photoy + ($photoh / 2));

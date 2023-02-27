@@ -21,7 +21,7 @@
     }
 
     $result = db_query('SELECT ls.*, lt.label, lm.label AS machine, la.noshow FROM laundry_appointments AS la, laundry_slots AS ls, laundry_times AS lt, laundry_machines AS lm WHERE lm.id = ls.machine AND lt.id = ls.time AND la.timeslot = ls.id AND la.people_id = :people_id AND la.cyclestart = :cyclestart ORDER BY timeslot', ['people_id' => $data['people_id'], 'cyclestart' => $cyclestart]);
-//	if(db_numrows($result)) $element['field'] .= '<h2>Current appointments in this cycle';
+    //	if(db_numrows($result)) $element['field'] .= '<h2>Current appointments in this cycle';
     while ($row = db_fetch($result)) {
         $app[] = ($row['id'] == $_POST['timeslot'] ? '<span class="number">' : '').strftime('%A %d %B %Y', strtotime('+'.$row['day'].' days', strtotime($cyclestart))).', '.$row['label'].' <span class="machine">'.$row['machine'].'</span>'.($row['id'] == $_POST['timeslot'] ? ' (this one)</span>' : '').($row['noshow'] ? ' NO-SHOW' : '');
     }

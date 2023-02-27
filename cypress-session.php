@@ -13,7 +13,7 @@ include 'library/lib/session.php';
 header('Content-type:application/json;charset=utf-8');
 
 $hostName = @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST);
-if (('localhost' !== $hostName && 'staging.boxtribute.org' !== $hostName)) {
+if ('localhost' !== $hostName && 'staging.boxtribute.org' !== $hostName) {
     echo json_encode(['success' => false]);
 
     return;
@@ -78,7 +78,7 @@ if (isset($oauth_token['id_token'])) {
     $auth0->setIdToken($oauth_token['id_token']);
     // this is removed to resolve "Nonce (nonce) claim must be a string present in the token"
     // related to https://sentry.io/organizations/boxwise/issues/2956621368/events/3c27d970d0fc4b9d9672d7ef0d2c3554/
-    //$user = $auth0->decode($oauth_token['id_token'])->toArray();
+    // $user = $auth0->decode($oauth_token['id_token'])->toArray();
 }
 
 if (isset($oauth_token['expires_in']) && is_numeric($oauth_token['expires_in'])) {

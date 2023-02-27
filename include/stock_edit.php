@@ -142,10 +142,10 @@
     $disabled = false;
     if (in_array($data['statelabel'], ['Lost', 'Scrap'])) {
         $disabled = true;
-        $data['scrap'] = (in_array($data['statelabel'], ['Scrap']));
-        $disabled_scrap = (in_array($data['statelabel'], ['Lost']));
-        $data['lost'] = (in_array($data['statelabel'], ['Lost']));
-        $disabled_lost = (in_array($data['statelabel'], ['Scrap']));
+        $data['scrap'] = in_array($data['statelabel'], ['Scrap']);
+        $disabled_scrap = in_array($data['statelabel'], ['Lost']);
+        $data['lost'] = in_array($data['statelabel'], ['Lost']);
+        $disabled_lost = in_array($data['statelabel'], ['Scrap']);
     }
     // open the template
     $cmsmain->assign('include', 'cms_form.tpl');
@@ -159,7 +159,7 @@
         addfield('line');
     }
 
-    addfield('select', 'Location', 'location_id', ['disabled' => $disabled, 'required' => true,  'multiple' => false,  'onchange' => ($id ? 'getNewBoxState();' : ''),
+    addfield('select', 'Location', 'location_id', ['disabled' => $disabled, 'required' => true, 'multiple' => false, 'onchange' => ($id ? 'getNewBoxState();' : ''),
         'query' => 'SELECT 
                     l.id AS value, 
                     if(l.box_state_id <> 1, concat(l.label," -  Boxes are ",bs.label),l.label) as label
@@ -201,12 +201,12 @@
                                 AND tags_relations.object_type = "Stock" 
                     WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","Stock")',
     ]);
-    addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id',  'readonly' => $disabled]);
+    addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'readonly' => $disabled]);
     if ($id) {
         addfield('line');
-        addfield('checkbox', 'I can’t find this box', 'lost', ['onclick' => 'setBoxState("lost")', 'value' => 1, 'checked' => ($data['lost'])]);
+        addfield('checkbox', 'I can’t find this box', 'lost', ['onclick' => 'setBoxState("lost")', 'value' => 1, 'checked' => $data['lost']]);
 
-        addfield('checkbox', 'Scrap this box?', 'scrap', ['onclick' => 'setBoxState("scrap")', 'value' => 1, 'checked' => ($data['scrap'])]);
+        addfield('checkbox', 'Scrap this box?', 'scrap', ['onclick' => 'setBoxState("scrap")', 'value' => 1, 'checked' => $data['scrap']]);
         addfield('line');
         addfield('html', 'Box History', showHistory('stock', $data['id']), ['width' => 10, 'disabled' => $disabled]);
 

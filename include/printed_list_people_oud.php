@@ -58,12 +58,12 @@
             }
         }
 
-        exit();
+        exit;
     }
-        $cmsmain->assign('include', 'printed_list_people.tpl');
-        $cmsmain->assign('list', $list);
+    $cmsmain->assign('include', 'printed_list_people.tpl');
+    $cmsmain->assign('list', $list);
 
-        // place the form elements and data in the template
-        $cmsmain->assign('data', $data);
-        $cmsmain->assign('formelements', $formdata);
-        $cmsmain->assign('formbuttons', $formbuttons);
+    // place the form elements and data in the template
+    $cmsmain->assign('data', $data);
+    $cmsmain->assign('formelements', $formdata);
+    $cmsmain->assign('formbuttons', $formbuttons);

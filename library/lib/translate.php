@@ -3,7 +3,7 @@
 if (defined('CORE')) {
     $lan = $settings['cms_language'];
 
-    //load global language array
+    // load global language array
 
     if (isset($_SESSION['user']['language'])) {
         $lan = db_value('SELECT code FROM languages WHERE id = :id', ['id' => $_SESSION['user']['language']]);

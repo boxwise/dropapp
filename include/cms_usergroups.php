@@ -51,7 +51,7 @@
             listsetting('allowselectall', false);
             listsetting('allowselect', false);
             // disable usergroup in line with new Boxtribute 2.0
-            //listsetting('add', 'Add a User Group');
+            // listsetting('add', 'Add a User Group');
 
             $cmsmain->assign('data', $data);
             $cmsmain->assign('listconfig', $listconfig);
@@ -59,45 +59,45 @@
             $cmsmain->assign('include', 'cms_list.tpl');
         } else {
             switch ($_POST['do']) {
-            case 'move':
-                // $ids = json_decode($_POST['ids']);
-                // list($success, $message, $redirect) = listMove($table, $ids);
+                case 'move':
+                    // $ids = json_decode($_POST['ids']);
+                    // list($success, $message, $redirect) = listMove($table, $ids);
 
-                break;
+                    break;
 
-            case 'delete':
-                $ids = explode(',', $_POST['ids']);
-                //list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_users']);
-                // disabling delete of usergroups according this trello card https://trello.com/c/HgKoMDov
-                $success = false;
-                $message = 'User Groups cannot be deleted';
+                case 'delete':
+                    $ids = explode(',', $_POST['ids']);
+                    // list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_users']);
+                    // disabling delete of usergroups according this trello card https://trello.com/c/HgKoMDov
+                    $success = false;
+                    $message = 'User Groups cannot be deleted';
 
-                break;
+                    break;
 
-            case 'copy':
-                // $ids = explode(',', $_POST['ids']);
-                // list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
+                case 'copy':
+                    // $ids = explode(',', $_POST['ids']);
+                    // list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
 
-                break;
+                    break;
 
-            case 'hide':
-                // $ids = explode(',', $_POST['ids']);
-                // list($success, $message, $redirect) = listShowHide($table, $ids, 0);
+                case 'hide':
+                    // $ids = explode(',', $_POST['ids']);
+                    // list($success, $message, $redirect) = listShowHide($table, $ids, 0);
 
-                break;
+                    break;
 
-            case 'show':
-                // $ids = explode(',', $_POST['ids']);
-                // list($success, $message, $redirect) = listShowHide($table, $ids, 1);
+                case 'show':
+                    // $ids = explode(',', $_POST['ids']);
+                    // list($success, $message, $redirect) = listShowHide($table, $ids, 1);
 
-                break;
-        }
+                    break;
+            }
 
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
             echo json_encode($return);
 
-            exit();
+            exit;
         }
     } else {
         throw new Exception('You do not have access to this menu. Please ask your admin to change this!');

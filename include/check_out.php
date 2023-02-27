@@ -34,7 +34,7 @@
         addfield('select', 'Product', 'product_id', ['placeholder' => 'Type to search', 'required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.name, " " ,IFNULL(g.label,""), " (",p.value," '.$_SESSION['camp']['currencyname'].')") AS label, p.value as price FROM products AS p LEFT OUTER JOIN genders AS g ON p.gender_id = g.id WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.camp_id = '.$_SESSION['camp']['id'].($_SESSION['camp']['separateshopandwhproducts'] ? ' AND p.stockincontainer' : '').' ORDER BY name']);
         addfield('number', 'Number', 'count', ['required' => true, 'width' => 2, 'min' => 1, 'testid' => 'productQuantityInput']);
         addfield('custom', '', '<button id="add-to-cart-button" type="button" class="btn" data-testid="add-to-cart-button" disabled>Add to cart</button>');
-        //addfield('text','Note','description');
+        // addfield('text','Note','description');
         addfield('line');
 
         addfield('custom', '', '<button type="button" id="submitShoppingCart" data-testid="submitShoppingCart" value="" class="btn btn-submit" disabled>Save & next purchase</button>', ['aside' => true, 'asidetop' => true]);
@@ -62,7 +62,7 @@
 
             echo json_encode($return);
 
-            exit();
+            exit;
         }
 
         // verify acces if data of a person is requested
@@ -99,7 +99,7 @@
 
             echo json_encode($return);
 
-            exit();
+            exit;
         }
 
         $ajaxform = new Zmarty();

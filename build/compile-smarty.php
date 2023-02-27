@@ -32,7 +32,7 @@ function rewriteAllTemplateHashes($smarty, $deploymentRootFolder)
     $deployedTemplateDir = $deploymentRootFolder.str_replace($rootDir, '', $originalTemplateDir);
     echo "Re-mapping templates from '{$originalTemplateDir}' to '{$deployedTemplateDir}'\n";
 
-    $it = new FilesystemIterator($smarty->getCompileDir(), );
+    $it = new FilesystemIterator($smarty->getCompileDir());
     foreach (glob($smarty->getCompileDir().'*.tpl.php') as $fileName) {
         rewriteTemplateHash($smarty, $fileName, $originalTemplateDir, $deployedTemplateDir);
     }

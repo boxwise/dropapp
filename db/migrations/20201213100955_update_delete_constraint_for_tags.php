@@ -16,6 +16,6 @@ class UpdateDeleteConstraintForTags extends AbstractMigration
                 'delete' => 'CASCADE', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
     }
 }

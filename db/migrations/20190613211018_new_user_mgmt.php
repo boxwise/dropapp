@@ -135,7 +135,7 @@ class NewUserMgmt extends AbstractMigration
         $this->table('settings')
             ->rename('cms_settings')
             ->save()
-            ;
+        ;
         $this->table('cms_usergroups', [
             'id' => false,
             'primary_key' => ['id'],

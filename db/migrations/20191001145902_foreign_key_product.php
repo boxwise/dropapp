@@ -36,7 +36,7 @@ class ForeignKeyProduct extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-;
+        ;
         $this->table('transactions')
             ->changeColumn('product_id', 'integer', [
                 'null' => true,
@@ -50,6 +50,6 @@ class ForeignKeyProduct extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-;
+        ;
     }
 }

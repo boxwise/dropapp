@@ -1,11 +1,11 @@
 <?php
 
-    //a Box gets picked
+    // a Box gets picked
     if ($_GET['picked']) {
         db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NOW(), picked_by = :user WHERE id = :id', ['id' => intval($_GET['picked']), 'user' => $_SESSION['user']['id']]);
         simpleSaveChangeHistory('stock', $_GET['picked'], 'Box picked from warehouse ');
     }
-    //a box is lost
+    // a box is lost
     if ($_GET['lost']) {
         $from['int'] = db_value('SELECT box_state_id FROM stock WHERE id = :id', ['id' => intval($_GET['lost'])]);
         $to['int'] = 2;

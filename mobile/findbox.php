@@ -15,4 +15,4 @@
         redirect('?barcode=&warning=1&message='.$message);
     }
 
-    exit();
+    exit;

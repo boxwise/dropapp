@@ -40,7 +40,7 @@ class ForeignKeysLanguage extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
         $this->table('x_people_languages')
             ->changeColumn('language_id', 'integer', [
                 'signed' => false,
@@ -50,6 +50,6 @@ class ForeignKeysLanguage extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
     }
 }
