@@ -27,6 +27,7 @@
         "endroid/qr-code": "^4.4",
         "sentry/sentry": "^3.6",
         "php-http/curl-client": "^2.2",
-        "google/cloud-error-reporting": "^0.19.5"
+        "google/cloud-error-reporting": "^0.19.5",
+        "google/cloud-datastore": "^1.18"
     }
 }
