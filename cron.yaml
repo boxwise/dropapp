@@ -19,15 +19,15 @@ cron:
 - description: "db minimal reseed staging"
   url: /cron/reseed-db.php?seeds=minimal
   target: staging
-  schedule: every day 00:18
+  schedule: every 99999 hours
 - description: "db testing reseed staging"
   url: /cron/reseed-db.php?seeds=testing
   target: staging
-  schedule: every day 00:30
+  schedule: every 99999 hours
 - description: "auth0 reseed staging"
   url: /cron/reseed-auth0.php
   target: staging
-  schedule: every day 00:45
+  schedule: every 99999 hours
 
 # demo
 - description: "auth0 dailyroutine demo - check inactive users"
