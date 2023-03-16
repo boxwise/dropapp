@@ -21,8 +21,6 @@
 
         addbutton('archive', 'Archive', ['icon' => 'fa-archive', 'confirm' => true, 'testid' => 'reactivate-cms-user']);
 
-        listsetting('search', ['locations.label']);
-
         $data = getlistdata(
             'SELECT tmp.*, IF(tmp.boxcount, true, false) AS disableifistrue
              FROM

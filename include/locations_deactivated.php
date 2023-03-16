@@ -23,8 +23,6 @@
 
         addbutton('unarchive', 'Activate', ['icon' => 'fa-history', 'confirm' => true, 'testid' => 'reactivate-cms-user']);
 
-        listsetting('search', ['locations.label']);
-
         $data = getlistdata(
             'SELECT 
                 locations.*, 
