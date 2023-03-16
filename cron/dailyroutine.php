@@ -98,3 +98,11 @@ if ('auth0_check_synk' === $_GET['action']) {
         }
     }
 }
+
+if ('check_expired_transfer_agreements' === $_GET['action']) {
+    db_query('
+    UPDATE transfer_agreement
+    SET state = "Expired", terminated_on = UTC_TIMESTAMP()
+    WHERE valid_until < UTC_TIMESTAMP();
+');
+}
