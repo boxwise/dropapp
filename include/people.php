@@ -325,12 +325,10 @@ Tracer::inSpan(
                         foreach ($ids as $id) {
                             if ($id != $oldest) {
                                 db_query('UPDATE people SET parent_id = :oldest WHERE id = :id', ['oldest' => $oldest, 'id' => $id]);
-                                $drops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $id]);
-                                db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$id.', -'.intval($drops).', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+                                db_query('UPDATE transactions SET people_id = :oldest WHERE people_id = :id', ['oldest' => $oldest, 'id' => $id]);
                             }
                         }
                     });
-                    db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$oldest.', '.intval($extradrops).', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
                     $success = true;
                     $message = 'The merge has be successfully applied';
                     $redirect = true;
@@ -358,7 +356,7 @@ Tracer::inSpan(
                     });
                     $redirect = true;
                     $success = true;
-                    $message = ($success) ? 'Selected people have been detached' : 'Something went wronge';
+                    $message = ($success) ? 'Selected people have been detached' : 'Something went wrong';
                 }
 
                 break;
