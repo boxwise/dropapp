@@ -52,7 +52,7 @@ Cypress.Commands.add("loginAsCoordinator", () => {
 
 Cypress.Commands.add("fillLoginForm", () => {
     let config = getLoginConfiguration();
-    cy.get("input[name='email']").type(config.testVolunteer);
+    cy.get("input[name='username']").type(config.testVolunteer);
     cy.get("input[name='password']").type(config.testPwd);
     cy.get("button[type='submit']").click();
     cy.url().then((url) => {
