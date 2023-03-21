@@ -24,10 +24,9 @@ services:
     ports:
       - "8100:80"
     environment:
-      # WARNING: you do *not* want these environment variables set
-      # in a production environment, as they enable remote
-      # debugging
-      GOOGLE_CLOUD_PROJECT: DUMMY_ID
+      # set to empty, so we don't initialize GCP specific config
+      # as we have no auth set locally
+      GOOGLE_CLOUD_PROJECT: 
     stdin_open: true
     tty: true
 
