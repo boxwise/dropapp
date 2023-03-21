@@ -74,7 +74,7 @@ if ('db' === $_GET['action']) {
 
     // clean up session data
     $datastore = new Google\Cloud\Datastore\DatastoreClient();
-    $handler = new Google\Cloud\Datastore\DatastoreSessionHandler($datastore,$gcLimit=1000);
+    $handler = new Google\Cloud\Datastore\DatastoreSessionHandler($datastore, $gcLimit = 1000);
     $oneDayInSeconds = 60 * 60 * 24;
     $handler->gc($oneDayInSeconds);
 }
