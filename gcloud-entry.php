@@ -3,18 +3,11 @@
 define('LOADED_VIA_SINGLE_ENTRY_POINT', true);
 
 require_once 'vendor/autoload.php';
-// load configuration file
 require_once 'library/config.php';
-
 require_once 'library/gcloud.php';
-// load error handling as soon as possible
 require_once 'library/error-reporting.php';
-
 require_once 'library/lib/smarty.php';
-
 require_once 'library/lib/errorhandling.php';
-
-// load global constants
 require_once 'library/constants.php';
 
 // The GAE environment requires a single entry point, so we're
