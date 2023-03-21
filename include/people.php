@@ -374,7 +374,7 @@ Tracer::inSpan(
                 $ids = json_decode($_POST['ids']);
                 // list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
                 // Refactored list move method to use a transaction block and bulk insert for the correctdrops method
-                list($success, $message, $redirect, $aftermove) = listBulkMove($table, $ids, true, 'bulkcorrectdrops');
+                list($success, $message, $redirect, $aftermove) = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
 
                 break;
 
