@@ -66,7 +66,7 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetra
                 $old_parent_id = db_value('SELECT parent_id FROM '.$table.' WHERE id = :id', ['id' => $id]);
                 if ($new_parent_id != $old_parent_id) {
                     db_query('UPDATE '.$table.' SET parent_id = :parent_id WHERE id = :id', ['parent_id' => $new_parent_id, 'id' => $id]);
-                    if ($updatetransactions && $new_parent_id != null) {
+                    if ($updatetransactions && null != $new_parent_id) {
                         db_query('UPDATE transactions SET people_id = :parent_id WHERE people_id = :id', ['parent_id' => $new_parent_id, 'id' => $id]);
                     }
                 }
