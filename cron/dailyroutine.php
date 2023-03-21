@@ -71,6 +71,12 @@ if ('db' === $_GET['action']) {
         $result = sendmail('admin@boxtribute.org', 'admin@boxtribute.org', 'New installation of Boxtribute', $mail);
         db_query('INSERT INTO settings (category_id, type, code, description_en, value) VALUES (1,"text","installed","Date and time of installation and first run",NOW())');
     }
+
+    // clean up session data
+    $datastore = new Google\Cloud\Datastore\DatastoreClient();
+    $handler = new Google\Cloud\Datastore\DatastoreSessionHandler($datastore,$gcLimit=1000);
+    $oneDayInSeconds = 60 * 60 * 24;
+    $handler->gc($oneDayInSeconds);
 }
 
 if ('auth0_inactive_users' === $_GET['action'] || 'auth0_active_users' === $_GET['action']) {
