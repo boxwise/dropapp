@@ -54,7 +54,7 @@ Tracer::inSpan(
                     return ' AND stock.box_state_id NOT IN (2,6,5) ';
 
                 case 'ordered':
-                    return ' AND (stock.ordered OR stock.picked) AND stock.box_state_id NOT IN (2,6,5)';
+                    return ' AND stock.box_state_id IN (3,4) ';
 
                 case 'dispose':
                     return ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id NOT IN (2,6,5)';
@@ -101,13 +101,11 @@ Tracer::inSpan(
                 FROM
                     (SELECT 
                             stock.*, 
-                            cu.naam AS ordered_name, 
-                            cu2.naam AS picked_name, 
                             SUBSTRING(stock.comments,1, 25) AS shortcomment, 
                             g.label AS gender, p.name AS product, 
                             s.label AS size, l.label AS location, 
                             IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage,
-                            IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue
+                            stock.box_state_id IN (3,4) AS disableifistrue
                         FROM 
                             stock '.
                             // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
@@ -115,11 +113,7 @@ Tracer::inSpan(
                                 LEFT JOIN
                                     tags_relations AS stock_tags_filter ON stock_tags_filter.object_id = stock.id AND stock_tags_filter.object_type = "Stock"
                                 LEFT JOIN
-                                    tags AS tags_filter ON tags_filter.id = stock_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').'
-                        LEFT OUTER JOIN 
-                            cms_users AS cu ON cu.id = stock.ordered_by
-                        LEFT OUTER JOIN 
-                            cms_users AS cu2 ON cu2.id = stock.picked_by
+                                    tags AS tags_filter ON tags_filter.id = stock_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').' 
                         LEFT OUTER JOIN 
                             products AS p ON p.id = stock.product_id
                         LEFT OUTER JOIN 
@@ -157,10 +151,12 @@ Tracer::inSpan(
             $totalboxes = 0;
             $totalitems = 0;
             foreach ($data as $key => $value) {
-                if ($data[$key]['ordered']) {
-                    $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box was ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
-                } elseif ($data[$key]['picked']) {
-                    $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box was picked for the shop by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['picked'])).'"></i>';
+                if ($data[$key]['box_state_id'] == 3) {
+                    // ordered
+                    $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-truck tooltip-this" title="This box is marked for a shipment."></i>';
+                } elseif ($data[$key]['box_state_id'] == 4) {
+                    // picked
+                    $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
                 } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
                     $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';
                     $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban' : 'fa-chain-broken';
@@ -221,10 +217,8 @@ Tracer::inSpan(
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
                 addbutton('rtag', 'Remove Tag', ['icon' => 'fa-tags', 'options' => $tags]);
             }
-            addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
+            addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations, 'disableif' => true]);
             addbutton('qr', 'Make label', ['icon' => 'fa-print']);
-            addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
-            addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
 
             $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
             $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
