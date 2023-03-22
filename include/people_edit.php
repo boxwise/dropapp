@@ -24,7 +24,11 @@
             verify_campaccess_people($_POST['people_id']);
             $table = 'transactions';
             $ajaxlastpurchases = new Zmarty();
-            addfield('list', 'Purchases', 'purch', [
+            addfield(
+                'list',
+                'Purchases',
+                'purch',
+                [
                     'width' => 10,
                     'query' => '
                         SELECT 
@@ -70,7 +74,11 @@
             verify_campaccess_people($_POST['people_id']);
             $table = 'transactions';
             $ajaxlasttransactions = new Zmarty();
-            addfield('list', 'Transactions', 'trans', [
+            addfield(
+                'list',
+                'Transactions',
+                'trans',
+                [
                     'width' => 10,
                     'query' => '
                         SELECT 
@@ -386,7 +394,11 @@
                 WHERE t.people_id = '.$id.' AND t.product_id IS NOT NULL 
                 ORDER BY t.transaction_date DESC
                 LIMIT '.$limitlastpurchases);
-            addfield('list', 'Purchases', 'purch', [
+            addfield(
+                'list',
+                'Purchases',
+                'purch',
+                [
                     'tab' => 'transaction',
                     'width' => 10,
                     'data' => $datalastpurchases,
@@ -424,7 +436,11 @@
                 WHERE t.people_id = '.$id.' AND t.product_id IS NULL 
                 ORDER BY t.transaction_date DESC
                 LIMIT '.$limitlasttransactions);
-            addfield('list', 'Transactions', 'trans', [
+            addfield(
+                'list',
+                'Transactions',
+                'trans',
+                [
                     'tab' => 'transaction',
                     'width' => 10,
                     'data' => $datalasttransactions,
