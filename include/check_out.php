@@ -117,29 +117,48 @@
 
         // Last Purchases
         $ajaxlastpurchases = new Zmarty();
+        $table = 'transactions';
         if ('showall' == $_POST['do']) {
             $datalastpurchases = getlistdata('
-            SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
+            SELECT 
+                t.*, 
+                u.naam AS user, 
+                CONCAT(IF(t.drops>0,"+",""),t.drops) AS drops2, 
+                t.count, 
+                DATE_FORMAT(t.transaction_date,"%d-%m-%Y %H:%i") AS tdate, 
+                CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
             FROM transactions AS t 
             LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
             LEFT OUTER JOIN products AS p ON p.id = t.product_id 
             LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
-            WHERE people_id = '.$data['people_id'].' 
+            WHERE t.people_id = '.$data['people_id'].' 
             AND t.product_id IS NOT NULL 
             ORDER BY t.transaction_date DESC');
+            $buttonlastpurchases = [];
+            $allowdeletelastpurchases = false;
         } else {
             $datalastpurchases = getlistdata('
-            SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
+            SELECT 
+                t.*, 
+                u.naam AS user, 
+                CONCAT(IF(t.drops>0,"+",""),t.drops) AS drops2, 
+                t.count, 
+                DATE_FORMAT(t.transaction_date,"%d-%m-%Y %H:%i") AS tdate, 
+                CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
             FROM transactions AS t 
             LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
             LEFT OUTER JOIN products AS p ON p.id = t.product_id 
             LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
-            WHERE people_id = '.$data['people_id'].' 
+            WHERE t.people_id = '.$data['people_id'].' 
             AND t.product_id IS NOT NULL 
-            AND CAST(transaction_date as Date)=(SELECT CAST(MAX(transaction_date) as Date) FROM transactions WHERE people_id = '.$data['people_id'].' AND product_id IS NOT NULL)
+            AND CAST(t.transaction_date as Date)=(
+                SELECT CAST(MAX(transaction_date) as Date) 
+                FROM transactions 
+                WHERE people_id = '.$data['people_id'].' AND product_id IS NOT NULL)
             ORDER BY t.transaction_date DESC');
+            $buttonlastpurchases = ['showall&people_id='.$data['people_id'] => ['label' => 'Show all', 'showalways' => true]];
+            $allowdeletelastpurchases = true;
         }
-        $table = 'transactions';
         addfield('title', 'Latest Purchases', '', ['labelindent' => true, 'id' => 'LastPurchaseTitle']);
         addfield('list', '', 'purch', [
             'width' => 10,
@@ -147,19 +166,33 @@
             'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($camp['currencyname']), 'user' => 'Transaction made by', 'tdate' => 'Date'],
             'allowedit' => false,
             'allowadd' => false,
-            'allowselect' => true,
+            'allowselect' => $allowdeletelastpurchases,
             'allowselectall' => false,
             'action' => 'check_out',
             'redirect' => false,
             'allowsort' => false,
             'listid' => $data['people_id'],
-            'button' => ['showall' => ['label' => 'Show all', 'showalways' => true]],
+            'button' => $buttonlastpurchases,
         ]);
 
         $ajaxlastpurchases->assign('formelements', $formdata);
         $htmllastpurchases = $ajaxlastpurchases->fetch('cms_form_ajax.tpl');
         // flush form data
         $formdata = [];
+        // return html differently if ajax request to show all was triggered
+        if ('showall' == $_POST['do']) {
+            $return = [
+                'success' => true,
+                'message' => false,
+                'redirect' => false,
+                'action' => "$('#ajax-last-purchases').html(result.htmllastpurchases);",
+                'htmllastpurchases' => $htmllastpurchases,
+            ];
+
+            echo json_encode($return);
+
+            exit();
+        }
 
         // the aside
         $ajaxaside = new Zmarty();
