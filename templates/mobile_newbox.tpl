@@ -73,7 +73,7 @@
 			<div class="col-sm-6">
 				<label for="lost" class="checkbox">
 				<input type="checkbox" id="lost" name="lost" value="1" onclick="setBoxState('lost')"
-					{if $box['lost']}checked{/if}
+					{if $box['lost']}checked{/if} {if $box['lostdisabled']}disabled{/if}
 				/> 
 					I can’t find this box.
 				</label>
@@ -81,7 +81,7 @@
 			<div class="col-sm-6">
 				<label for="scrap" class="checkbox">
 				<input type="checkbox" id="scrap" name="scrap" value="1" onclick="setBoxState('scrap')" 
-					{if $box['scrap']}checked{/if}
+					{if $box['scrap']}checked{/if} {if $box['scrapdisabled']}disabled{/if}
 				/> 
 					Scrap this box?
 				</label>
@@ -92,6 +92,6 @@
 		<hr/>
 
 
-		<input type="submit" name="submitbutton" class="btn" value="Save" data-testid="submit_new_box">
+		<input type="submit" name="submitbutton" class="btn" value="Save" data-testid="submit_new_box" {if $box['submitdisabled']}disabled{/if}>
 	</form>
 {* 	<script>{if $box['product_id']}getSizes({$box['size_id']});{/if}</script> *}
