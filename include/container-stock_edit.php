@@ -17,15 +17,14 @@
 			SELECT 
 				stock.*, 
 				SUBSTRING(stock.comments,1, 25) AS shortcomment, 
-                cu.naam AS ordered_name, cu2.naam AS picked_name, 
-				g.label AS gender, 
+                g.label AS gender, 
 				p.name AS product, 
 				s.label AS size, 
 				l.label AS location, 
 				l.camp_id = '.$_SESSION['camp']['id'].' AS visible,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventdelete,
 				l.camp_id != '.$_SESSION['camp']['id'].' AS preventedit,
-				IF(NOT l.visible OR stock.ordered OR stock.ordered IS NOT NULL OR l.container_stock,True,False) AS disableifistrue,
+				stock.box_state_id IN (3,4) AS disableifistrue,
 				IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage
 			FROM 
 				(products AS p, 
@@ -34,8 +33,6 @@
 				sizes AS s, 
 				stock,
 				camps AS c)
-			LEFT OUTER JOIN cms_users AS cu ON cu.id = stock.ordered_by
-			LEFT OUTER JOIN cms_users AS cu2 ON cu2.id = stock.picked_by
 			WHERE 
                 l.type = "Warehouse" AND
 				l.camp_id = c.id AND 
@@ -51,10 +48,12 @@
 				AND stock.box_state_id NOT IN (2,6,5) ');
 
         foreach ($data as $key => $value) {
-            if ($data[$key]['ordered']) {
-                $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-shopping-cart tooltip-this" title="This box is ordered for the shop by '.$data[$key]['ordered_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['ordered'])).'"></i>';
-            } elseif ($data[$key]['picked']) {
-                $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is picked for the shop by '.$data[$key]['picked_name'].' on '.strftime('%d-%m-%Y', strtotime($data[$key]['picked'])).'"></i>';
+            if ($data[$key]['box_state_id'] == 3) {
+                // ordered
+                $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-truck tooltip-this" title="This box is marked for a shipment."></i>';
+            } elseif ($data[$key]['box_state_id'] == 4) {
+                // picked
+                $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
             } else {
                 $data[$key]['order'] = '<span class="hide">0</span>';
             }
@@ -72,6 +71,7 @@
 
         listsetting('allowsort', true);
         listsetting('allowadd', false);
+        listsetting('allowedit', false);
         listsetting('allowdelete', false);
         listsetting('allowselectall', true);
         listsetting('allowselect', true);
@@ -88,9 +88,7 @@
                 l.type = "Warehouse" AND 
                 l.camp_id = '.$_SESSION['camp']['id'].' 
             ORDER BY seq');
-        addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations]);
-        addbutton('order', 'Order from warehouse', ['icon' => 'fa-shopping-cart', 'disableif' => true]);
-        addbutton('undo-order', 'Undo order', ['icon' => 'fa-undo']);
+        addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations, 'disableif' => true]);
 
         $cmsmain->assign('data', $data);
         $cmsmain->assign('listconfig', $listconfig);
@@ -105,30 +103,6 @@
 
                 $success = $count;
                 $redirect = true;
-
-                break;
-
-            case 'order':
-                $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    db_query('UPDATE stock SET ordered = NOW(), ordered_by = :user, picked = NULL, picked_by = NULL WHERE id = '.intval($id), ['user' => $_SESSION['user']['id']]);
-                    simpleSaveChangeHistory('stock', intval($id), 'Box ordered to shop ');
-                    $message = 'Boxes are marked as ordered for you!';
-                    $success = true;
-                    $redirect = true;
-                }
-
-                break;
-
-            case 'undo-order':
-                $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL WHERE id = '.$id);
-                    simpleSaveChangeHistory('stock', $id, 'Box order made undone ');
-                    $message = 'Boxes are unmarked as ordered';
-                    $success = true;
-                    $redirect = true;
-                }
 
                 break;
         }

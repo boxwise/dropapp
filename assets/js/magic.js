@@ -255,13 +255,13 @@ $(function() {
     });
 
     // make the close 'x' on de dropdowns work
-    $(".dropdown-toggle").click(function(e) {
+    $("body").on("click", ".dropdown-toggle", function(e) {
         if ($(e.target).is(".form-control-feedback")) {
             e.stopPropagation();
         }
     });
 
-    $(".dropdown-toggle").on("click", function(event) {
+    $("body").on("click", ".dropdown-toggle", function(event) {
         if ($(this).data("toggle") != "dropdown") {
             $(this)
                 .parent()
@@ -697,8 +697,16 @@ function initiateList() {
             // toggle the action panel
             if (selected.is(".disable-if-is-true")) {
                 parent.find(".disable-if").prop("disabled", true);
+                parent.find(".disable-if").addClass("disabled");
+                parent.find(".disable-if.dropdown-toggle")
+                    .addClass("dropdown-disabled")
+                    .removeClass("dropdown-toggle")
             } else {
                 parent.find(".disable-if").prop("disabled", false);
+                parent.find(".disable-if").removeClass("disabled");
+                parent.find(".disable-if.dropdown-disabled")
+                    .addClass("dropdown-toggle")
+                    .removeClass("dropdown-disabled")
             }
 
             if (
