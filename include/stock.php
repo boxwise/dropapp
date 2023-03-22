@@ -151,10 +151,10 @@ Tracer::inSpan(
             $totalboxes = 0;
             $totalitems = 0;
             foreach ($data as $key => $value) {
-                if ($data[$key]['box_state_id'] == 3) {
+                if (3 == $data[$key]['box_state_id']) {
                     // ordered
                     $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-truck tooltip-this" title="This box is marked for a shipment."></i>';
-                } elseif ($data[$key]['box_state_id'] == 4) {
+                } elseif (4 == $data[$key]['box_state_id']) {
                     // picked
                     $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
                 } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
