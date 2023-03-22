@@ -57,12 +57,16 @@ class DemoUsers extends AbstractSeed
 			(158,1),
 			(160,1),
 			(162,1),
+			(164,1),
+			(165,1),
 			(67,2),
 			(90,2),
 			(110,2),
 			(112,2),
 			(115,2),
 			(160,2),
+			(164,2),
+			(165,2),
 			(67,3),
 			(87,3),
 			(92,3),
@@ -75,6 +79,8 @@ class DemoUsers extends AbstractSeed
 			(130,3),
 			(158,3),
 			(162,3),
+			(164,3),
+			(165,3),
 			(43,4),
 			(67,4),
 			(87,4),
@@ -90,7 +96,9 @@ class DemoUsers extends AbstractSeed
 			(125,4),
 			(158,4),
 			(160,4),
-			(162,4);');
+			(162,4),
+			(164,4),
+			(165,4);');
 
         //------------------- cms_usergroups
         $this->execute("INSERT INTO `cms_usergroups` (`id`, `label`, `organisation_id`, `userlevel`) VALUES
