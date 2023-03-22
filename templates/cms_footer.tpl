@@ -7,7 +7,7 @@
     <script src="/assets/jsignature/jquery.signature.js"></script>
 
     <script src="/assets/js/magic.js?v=10"></script>
-    <script src="/assets/js/custom.js?v=11"></script> 
+    <script src="/assets/js/custom.js?v=12"></script> 
     <script src="/assets/js/shoppingCart.js"></script>    
 
 	  {if $smarty.session.user}
