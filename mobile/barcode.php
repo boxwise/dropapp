@@ -113,8 +113,10 @@ if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {
     $message = v2_forward($settings['v2_base_url'], '/boxes/'.$box['box_id']);
     $data['message'] = (!isset($data['message']) ? $message : $data['message']);
 
-    // disable Box if in Lost or Scrap state
-    $box['disabled'] = (in_array($box['statelabel'], ['Lost', 'Scrap']));
+    // disable Box if in Lost or Scrap or ordered states
+    $box['disabled'] = (in_array($box['stateid'], [2, 3, 4, 6]));
+    // also disable the edit buttons for ordered states
+    $box['editbuttondisabled'] = (in_array($box['stateid'], [3, 4]));
 
     $locations = db_array('SELECT 
                             l.id AS value,

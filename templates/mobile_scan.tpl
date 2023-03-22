@@ -52,7 +52,7 @@
 			</form>
 		<hr></hr>	
 		<p>Change the contents of the box:</p>
-		<a class="btn" href="?editbox={$box['id']}">Edit the box</a>
+		<a class="btn {if $box['editbuttondisabled']}disabled{/if}" href="?editbox={$box['id']}">Edit the box</a>
 		<p>  <center>Box history</center></p>
 		<div id="history">
 			<center>{$history nofilter}</center>
