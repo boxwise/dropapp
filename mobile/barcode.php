@@ -130,10 +130,6 @@ if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {
     $tpl->assign('history', $history);
     $tpl->assign('locations', $locations);
     $tpl->assign('include', 'mobile_scan.tpl');
-
-    // include orders on the bottom
-    $orders = db_value('SELECT COUNT(s.id) FROM stock AS s LEFT OUTER JOIN locations AS l ON s.location_id = l.id WHERE l.camp_id = :camp AND l.type = "Warehouse" AND (NOT s.deleted OR s.deleted IS NULL) AND s.ordered', ['camp' => $_SESSION['camp']['id']]);
-    $tpl->assign('orders', $orders);
 } else {
     // Test to figure out QR bug
     if ($_GET['barcode'] && db_row('SELECT s.* FROM stock s LEFT JOIN qr ON qr.id=s.qr_id WHERE qr.code= :code', ['code' => $_GET['barcode']])) {
