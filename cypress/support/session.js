@@ -65,7 +65,7 @@ Cypress.Commands.add("fillLoginForm", () => {
 
 Cypress.Commands.add("fillLoginFormFor", (email, password) => {
     let config = getLoginConfiguration();
-    cy.get("input[name='email']").type(email);
+    cy.get("input[name='username']").type(email);
     cy.get("input[name='password']").type(password);
     cy.get("button[type='submit']").click();
     cy.url().then((url) => {
