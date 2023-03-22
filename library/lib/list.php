@@ -41,7 +41,7 @@ function listMove($table, $ids, $regardparent = true, $hook = '')
     return [true, $return, false, $aftermove];
 }
 
-function listBulkMove($table, $ids, $regardparent = true, $hook = '')
+function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetransactions = false)
 {
     $hasSeq = db_fieldexists($table, 'seq');
     if (!$hasSeq) {
@@ -52,7 +52,7 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '')
     }
 
     $i = 1;
-    $hookIds = db_transaction(function () use ($ids, $hasParent, $table, $hook, $i) {
+    $hookIds = db_transaction(function () use ($ids, $hasParent, $table, $hook, $i, $updatetransactions) {
         $hookIds = [];
         $seq = [];
         foreach ($ids as $line) {
@@ -62,16 +62,19 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '')
             ++$seq[$level];
 
             if ($hasParent) {
-                $parent_id = ($level ? $parent[$level - 1] : null);
-                db_query('UPDATE '.$table.' SET parent_id = :parent_id, seq = :seq WHERE id = :id', ['parent_id' => $parent_id, 'seq' => $seq[$level], 'id' => $id]);
-                if ($hook) {
-                    $hookIds[] = $id;
+                $new_parent_id = ($level ? $parent[$level - 1] : null);
+                $old_parent_id = db_value('SELECT parent_id FROM '.$table.' WHERE id = :id', ['id' => $id]);
+                if ($new_parent_id != $old_parent_id) {
+                    db_query('UPDATE '.$table.' SET parent_id = :parent_id WHERE id = :id', ['parent_id' => $new_parent_id, 'id' => $id]);
+                    if ($updatetransactions && null != $new_parent_id) {
+                        db_query('UPDATE transactions SET people_id = :parent_id WHERE people_id = :id', ['parent_id' => $new_parent_id, 'id' => $id]);
+                    }
                 }
-            } else {
-                db_query('UPDATE '.$table.' SET seq = :seq WHERE id = :id', ['seq' => $seq[$level], 'id' => $id]);
-                if ($hook) {
-                    $hookIds[] = $id;
-                }
+            }
+
+            db_query('UPDATE '.$table.' SET seq = :seq WHERE id = :id', ['seq' => $seq[$level], 'id' => $id]);
+            if ($hook) {
+                $hookIds[] = $id;
             }
         }
 
