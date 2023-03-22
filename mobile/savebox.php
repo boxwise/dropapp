@@ -51,6 +51,11 @@ if (!$_POST['qr_id']) {
             LEFT OUTER JOIN locations ON stock.location_id = locations.id 
             WHERE stock.id = :id', ['id' => $_POST['id']]);
 
+        // ordered boxes are not editable
+        if (in_array($_POST['box_state_id'], [3, 4])) {
+            trigger_error('There is a request to edit an ordered box.', E_USER_ERROR);
+            redirect('?warning=1&message=Something went wrong! Please try again!');
+        }
         // Undelete a box if it is scanned
         if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {
             db_query('UPDATE stock SET deleted = "0000-00-00 00:00" WHERE id = :id', ['id' => $_POST['id']]);
