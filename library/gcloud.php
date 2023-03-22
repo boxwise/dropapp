@@ -14,7 +14,7 @@ function registerGoogleCloudServices($projectId)
 
     // this will throw an error if GOOGLE_CLOUD_PROJECT
     // has not been defined
-    require_once __DIR__.'/vendor/google/cloud-error-reporting/src/prepend.php';
+    require_once __DIR__.'/../vendor/google/cloud-error-reporting/src/prepend.php';
 
     $exporter = new StackdriverExporter([
         'clientConfig' => [
