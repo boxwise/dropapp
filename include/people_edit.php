@@ -19,37 +19,38 @@
 
             exit();
         }
-        // show all transactions of a beneficiary
-        if ('showall' == $_POST['do']) {
+        // show all purchases of a beneficiary
+        if ('showallpurchases' == $_POST['do']) {
             verify_campaccess_people($_POST['people_id']);
             $table = 'transactions';
             $ajaxlastpurchases = new Zmarty();
             addfield('list', 'Purchases', 'purch', [
-                'width' => 10,
-                'query' => '
-                    SELECT 
-                        t.*,
-                        u.naam AS user, 
-                        CONCAT(IF(t.drops>0,"+",""),t.drops) AS drops2, 
-                        DATE_FORMAT(t.transaction_date,"%d-%m-%Y %H:%i") AS tdate, 
-                        CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
-                    FROM transactions AS t 
-                    LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
-                    LEFT OUTER JOIN products AS p ON p.id = t.product_id 
-                    LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
-                    WHERE t.people_id = '.$_POST['people_id'].' AND t.product_id IS NOT NULL 
-                    ORDER BY t.transaction_date DESC',
-                'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Purchase made by', 'tdate' => 'Date'],
-                'allowedit' => false,
-                'allowadd' => true,
-                'add' => 'New Purchase',
-                'addaction' => 'check_out&people_id='.intval($id),
-                'allowselect' => false,
-                'allowselectall' => false,
-                'action' => 'people_edit',
-                'redirect' => false,
-                'allowsort' => false,
-            ]);
+                    'width' => 10,
+                    'query' => '
+                        SELECT 
+                            t.*,
+                            u.naam AS user, 
+                            CONCAT(IF(t.drops>0,"+",""),t.drops) AS drops2, 
+                            DATE_FORMAT(t.transaction_date,"%d-%m-%Y %H:%i") AS tdate, 
+                            CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
+                        FROM transactions AS t 
+                        LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
+                        LEFT OUTER JOIN products AS p ON p.id = t.product_id 
+                        LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
+                        WHERE t.people_id = '.$_POST['people_id'].' AND t.product_id IS NOT NULL 
+                        ORDER BY t.transaction_date DESC',
+                    'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Purchase made by', 'tdate' => 'Date'],
+                    'allowedit' => false,
+                    'allowadd' => true,
+                    'add' => 'New Purchase',
+                    'addaction' => 'check_out&people_id='.intval($id),
+                    'allowselect' => false,
+                    'allowselectall' => false,
+                    'action' => 'people_edit',
+                    'redirect' => false,
+                    'allowsort' => false,
+                ]
+            );
             $ajaxlastpurchases->assign('formelements', $formdata);
             $htmllastpurchases = $ajaxlastpurchases->fetch('cms_form_ajax.tpl');
             $return = [
@@ -58,6 +59,47 @@
                 'redirect' => false,
                 'action' => "$('#ajax-last-purchases').html(result.htmllastpurchases);",
                 'htmllastpurchases' => $htmllastpurchases,
+            ];
+
+            echo json_encode($return);
+
+            exit();
+        }
+        // show all transactions of a beneficiary
+        if ('showalltransactions' == $_POST['do']) {
+            verify_campaccess_people($_POST['people_id']);
+            $table = 'transactions';
+            $ajaxlasttransactions = new Zmarty();
+            addfield('list', 'Transactions', 'trans', [
+                    'width' => 10,
+                    'query' => '
+                        SELECT 
+                            t.*,
+                            u.naam AS user, 
+                            CONCAT(IF(t.drops>0,"+",""),t.drops) AS drops2, 
+                            DATE_FORMAT(t.transaction_date,"%d-%m-%Y %H:%i") AS tdate
+                        FROM transactions AS t 
+                        LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
+                        WHERE t.people_id = '.$_POST['people_id'].' AND t.product_id IS NULL 
+                        ORDER BY t.transaction_date DESC',
+                    'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
+                    'allowedit' => false,
+                    'allowadd' => false,
+                    'allowselect' => false,
+                    'allowselectall' => false,
+                    'action' => 'people_edit',
+                    'redirect' => false,
+                    'allowsort' => false,
+                ]
+            );
+            $ajaxlasttransactions->assign('formelements', $formdata);
+            $htmllasttransactions = $ajaxlasttransactions->fetch('cms_form_ajax.tpl');
+            $return = [
+                'success' => true,
+                'message' => false,
+                'redirect' => false,
+                'action' => "$('#ajax-last-transactions').html(result.htmllasttransactions);",
+                'htmllasttransactions' => $htmllasttransactions,
             ];
 
             echo json_encode($return);
@@ -344,8 +386,7 @@
                 WHERE t.people_id = '.$id.' AND t.product_id IS NOT NULL 
                 ORDER BY t.transaction_date DESC
                 LIMIT '.$limitlastpurchases);
-            addfield('list', 'Purchases', 'purch',
-                [
+            addfield('list', 'Purchases', 'purch', [
                     'tab' => 'transaction',
                     'width' => 10,
                     'data' => $datalastpurchases,
@@ -361,22 +402,49 @@
                     'allowsort' => false,
                     'modal' => false,
                     'button' => (count($datalastpurchases) == $limitlastpurchases ?
-                        ['showall&people_id='.$id => ['label' => 'Show all', 'showalways' => true]] :
+                        ['showallpurchases&people_id='.$id => ['label' => 'Show all', 'showalways' => true]] :
                         []),
-                ]);
+                ]
+            );
             addfield('ajaxend', '', '', ['tab' => 'transaction']);
 
             addfield('line', '', '', ['tab' => 'transaction']);
 
             $table = 'transactions';
-            addfield('list', 'Transactions', 'trans', ['tab' => 'transaction', 'width' => 10, 'query' => 'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate 
-				FROM transactions AS t 
-				LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
-				WHERE people_id = '.$id.' AND t.product_id IS NULL 
-				ORDER BY transaction_date DESC
-				LIMIT 5',
-                'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
-                'allowedit' => false, 'allowadd' => $data['allowdrops'], 'add' => 'Give '.ucwords($_SESSION['camp']['currencyname']), 'addaction' => 'give&ids='.intval($id), 'allowsort' => false, 'allowselect' => true, 'allowselectall' => false, 'action' => 'people_edit', 'redirect' => true, 'modal' => false, ]);
+            addfield('ajaxstart', '', '', ['id' => 'ajax-last-transactions', 'tab' => 'transaction']);
+            $limitlasttransactions = 5;
+            $datalasttransactions = getlistdata('
+                SELECT 
+                    t.*,
+                    u.naam AS user, 
+                    CONCAT(IF(t.drops>0,"+",""),t.drops) AS drops2, 
+                    DATE_FORMAT(t.transaction_date,"%d-%m-%Y %H:%i") AS tdate
+                FROM transactions AS t 
+                LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
+                WHERE t.people_id = '.$id.' AND t.product_id IS NULL 
+                ORDER BY t.transaction_date DESC
+                LIMIT '.$limitlasttransactions);
+            addfield('list', 'Transactions', 'trans', [
+                    'tab' => 'transaction',
+                    'width' => 10,
+                    'data' => $datalasttransactions,
+                    'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
+                    'allowedit' => false,
+                    'allowadd' => $data['allowdrops'],
+                    'add' => 'Give '.ucwords($_SESSION['camp']['currencyname']),
+                    'addaction' => 'give&ids='.intval($id),
+                    'allowsort' => false,
+                    'allowselect' => true,
+                    'allowselectall' => false,
+                    'action' => 'people_edit',
+                    'redirect' => true,
+                    'modal' => false,
+                    'button' => (count($datalasttransactions) == $limitlasttransactions ?
+                        ['showalltransactions&people_id='.$id => ['label' => 'Show all', 'showalways' => true]] :
+                        []),
+                ]
+            );
+            addfield('ajaxend', '', '', ['tab' => 'transaction']);
 
             //show borrow history
             addfield('line', '', '', ['tab' => 'bicycle']);
