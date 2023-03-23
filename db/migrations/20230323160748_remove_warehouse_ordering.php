@@ -11,14 +11,16 @@ class RemoveWarehouseOrdering extends AbstractMigration
         $table
             ->dropForeignKey('ordered_by')
             ->dropForeignKey('picked_by')
-            ->save();
+            ->save()
+        ;
 
         $table
             ->removeColumn('ordered')
             ->removeColumn('ordered_by')
             ->removeColumn('picked')
             ->removeColumn('picked_by')
-            ->save();
+            ->save()
+        ;
     }
 
     public function down()
@@ -46,7 +48,8 @@ class RemoveWarehouseOrdering extends AbstractMigration
                 'limit' => MysqlAdapter::INT_REGULAR,
                 'after' => 'picked',
             ])
-            ->save();
+            ->save()
+        ;
         $table
             ->addForeignKey('ordered_by', 'cms_users', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
@@ -54,6 +57,7 @@ class RemoveWarehouseOrdering extends AbstractMigration
             ->addForeignKey('picked_by', 'cms_users', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
-            ->save();
+            ->save()
+        ;
     }
 }
