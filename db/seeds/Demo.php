@@ -1459,13 +1459,6 @@ class Demo extends AbstractSeed
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
 
-            //order a few boxes
-            $rand_num = $faker->numberBetween($min = 0, $max = 1000);
-            if (($rand_num < 20)) {
-                $tempdata['ordered'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d');
-                $tempdata['box_state_id'] = 3;
-            }
-
             $stock[] = $tempdata;
         }
         $this->table('stock')->insert($stock)->save();
