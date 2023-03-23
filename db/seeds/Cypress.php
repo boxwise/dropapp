@@ -36,7 +36,9 @@ class Cypress extends AbstractSeed
         	(96,100000000),
         	(102,100000000),
         	(67,100000000),
-			(115,100000000);');
+			(115,100000000),
+			(164,100000000),
+			(165,100000000);');
 
         //------------------- cms_usergroups
         $this->execute("INSERT INTO `cms_usergroups` (`id`, `label`, `created`, `created_by`, `modified`, `modified_by`, `organisation_id`, `userlevel`, `allow_laundry_startcycle`, `allow_laundry_block`, `allow_borrow_adddelete`, `deleted`) VALUES
