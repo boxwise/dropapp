@@ -52,15 +52,10 @@
 			</form>
 		<hr></hr>	
 		<p>Change the contents of the box:</p>
-		<a class="btn" href="?editbox={$box['id']}">Edit the box</a>
+		<a class="btn {if $box['editbuttondisabled']}disabled{/if}" href="?editbox={$box['id']}">Edit the box</a>
 		<p>  <center>Box history</center></p>
 		<div id="history">
 			<center>{$history nofilter}</center>
 		</div>
 		
-{/if}
-{if $orders}
-	<hr />
-	<h2 class="page-header">View ordered boxes</h2>
-	<a class="btn" href="?vieworders">{$orders} {if $orders==1} box is {else} boxes are {/if} ordered</a>
 {/if}
