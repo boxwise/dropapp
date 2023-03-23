@@ -136,6 +136,7 @@
             ORDER BY t.transaction_date DESC');
             $buttonlastpurchases = [];
             $allowdeletelastpurchases = false;
+            $allowsort = true;
         } else {
             $datalastpurchases = getlistdata('
             SELECT 
@@ -158,6 +159,7 @@
             ORDER BY t.transaction_date DESC');
             $buttonlastpurchases = ['showall&people_id='.$data['people_id'] => ['label' => 'Show all', 'showalways' => true]];
             $allowdeletelastpurchases = true;
+            $allowsort = false;
         }
         addfield('title', 'Latest Purchases', '', ['labelindent' => true, 'id' => 'LastPurchaseTitle']);
         addfield('list', '', 'purch', [
@@ -170,7 +172,7 @@
             'allowselectall' => false,
             'action' => 'check_out',
             'redirect' => false,
-            'allowsort' => false,
+            'allowsort' => $allowsort,
             'listid' => $data['people_id'],
             'button' => $buttonlastpurchases,
         ]);
@@ -185,7 +187,7 @@
                 'success' => true,
                 'message' => false,
                 'redirect' => false,
-                'action' => "$('#ajax-last-purchases').html(result.htmllastpurchases);",
+                'action' => "$('#ajax-last-purchases').html(result.htmllastpurchases);initiateList();",
                 'htmllastpurchases' => $htmllastpurchases,
             ];
 
