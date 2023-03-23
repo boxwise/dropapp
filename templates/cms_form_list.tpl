@@ -9,6 +9,28 @@
 
 			<div class="table-nav">
 				<ul class="actions">
+					<li class="item-selected-independend">
+						<div class="btn-group">
+							{foreach $element['button'] as $code=>$button}
+								{if $button['showalways']}
+									<button 
+										data-operation="{$code}" 
+										data-placement="top" 
+										data-title="{$translate['cms_list_confirm_title']}" 
+										data-btn-ok-label="{$translate['cms_list_confirm_ok']}" 
+										data-btn-cancel-label="{$translate['cms_list_confirm_cancel']}" 
+										class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default" 
+										{if isset($button['testid'])}data-testid="{$button['testid']}"{/if}
+									>
+										{if $button['icon']}
+											<i class="fa {$button['icon']}"></i> 
+										{/if}
+										{$button['label']}
+									</button>
+								{/if}
+							{/foreach}
+						</div>
+					</li>
 					{if $element['allowselectall']}<li>
 						<label class="btn btn-default btn-sm tooltip-this" data-toggle="tooltip" data-placement="top" title="{$translate['cms_list_selectall']}" for="group-select-1"><input id="group-select-1" type="checkbox" class="group-select"></label>
 					</li>{/if}
@@ -23,7 +45,9 @@
 							{if $element['allowcopy']}<button data-operation="copy" data-placement="top" class="start-operation btn btn-sm btn-default" href="#"><i class="fa fa-copy"></i> {$element['copy']}</button>{/if}
 							
 							{foreach $element['button'] as $code=>$button}
-								<button data-operation="{$code}" data-placement="top" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if}" href="#">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']}</button>
+								{if !$button['showalways']}
+									<button data-operation="{$code}" data-placement="top" class="start-operation btn btn-sm {if $button['confirm']}confirm{/if} btn-default {if $button['oneitemonly']}one-item-only{/if}" href="#">{if $button['icon']}<i class="fa {$button['icon']}"></i> {/if}{$button['label']}</button>
+								{/if}
 							{/foreach}
 						</div>
 					</li>

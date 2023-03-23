@@ -338,7 +338,8 @@ function selectFamily(field, reload, target) {
                         value
                 );
                 if (result.success) {
-                    $("#ajax-content").html(result.htmlcontent);
+                    $("#ajax-shopping-cart").html(result.htmlshoppingcart);
+                    $("#ajax-last-purchases").html(result.htmllastpurchases);
                     initiateList();
                     $("#ajax-aside").html(result.htmlaside);
                     $(".not_enough_coins").removeClass("not_enough_coins");

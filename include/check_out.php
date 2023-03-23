@@ -38,7 +38,9 @@
         addfield('line');
 
         addfield('custom', '', '<button type="button" id="submitShoppingCart" data-testid="submitShoppingCart" value="" class="btn btn-submit" disabled>Save & next purchase</button>', ['aside' => true, 'asidetop' => true]);
-        addfield('ajaxstart', '', '', ['id' => 'ajax-content']);
+        addfield('ajaxstart', '', '', ['id' => 'ajax-shopping-cart']);
+        addfield('ajaxend');
+        addfield('ajaxstart', '', '', ['id' => 'ajax-last-purchases']);
         addfield('ajaxend');
 
         addfield('ajaxstart', '', '', ['aside' => true, 'asidetop' => true, 'id' => 'ajax-aside']);
@@ -102,37 +104,97 @@
             exit();
         }
 
-        $ajaxform = new Zmarty();
-
-        // vanaf hier
-
         $data['people_id'] = intval($_POST['people_id']);
         $data['allowdrops'] = allowGiveDrops();
 
-        // This can be a warning that is given based on certain shopping actions in the past.
-        // 		$data['shoeswarning'] = db_value('SELECT COUNT(id) FROM transactions WHERE people_id = :id AND product_id IN (63,709) AND transaction_date >= "2017-11-13 00:00"', array('id'=>$data['people_id']));
-
         // Shopping cart
+        $ajaxshoppingcart = new Zmarty();
         addfield('shopping_cart', '', '', ['columns' => ['product' => ['name' => 'Product'], 'count' => ['name' => 'Amount', 'width' => '25%'], 'drops2' => ['name' => 'Price', 'width' => '15%'], 'drops3' => ['name' => 'Total Price', 'width' => '15%'], 'delete' => ['name' => '']]]);
+        $ajaxshoppingcart->assign('formelements', $formdata);
+        $htmlshoppingcart = $ajaxshoppingcart->fetch('cms_form_ajax.tpl');
+        // flush form data
+        $formdata = [];
 
+        // Last Purchases
+        $ajaxlastpurchases = new Zmarty();
         $table = 'transactions';
-        addfield('title', 'Latest Purchases', '', ['labelindent' => true, 'id' => 'LastPurchaseTitle']);
-        addfield('list', '', 'purch', ['width' => 10, 'query' => 'SELECT t.*, u.naam AS user, CONCAT(IF(drops>0,"+",""),drops) AS drops2, count /*AS countupdown*/, DATE_FORMAT(transaction_date,"%d-%m-%Y %H:%i") AS tdate, CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
+        if ('showall' == $_POST['do']) {
+            $datalastpurchases = getlistdata('
+            SELECT 
+                t.*, 
+                u.naam AS user, 
+                CONCAT(IF(t.drops>0,"+",""),t.drops) AS drops2, 
+                t.count, 
+                DATE_FORMAT(t.transaction_date,"%d-%m-%Y %H:%i") AS tdate, 
+                CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
             FROM transactions AS t 
             LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
             LEFT OUTER JOIN products AS p ON p.id = t.product_id 
             LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
-            WHERE people_id = '.$data['people_id'].' 
+            WHERE t.people_id = '.$data['people_id'].' 
             AND t.product_id IS NOT NULL 
-            AND CAST(transaction_date as Date)=(SELECT CAST(MAX(transaction_date) as Date) FROM transactions WHERE people_id = '.$data['people_id'].' AND product_id IS NOT NULL)
-            ORDER BY t.transaction_date DESC',
+            ORDER BY t.transaction_date DESC');
+            $buttonlastpurchases = [];
+            $allowdeletelastpurchases = false;
+            $allowsort = true;
+        } else {
+            $datalastpurchases = getlistdata('
+            SELECT 
+                t.*, 
+                u.naam AS user, 
+                CONCAT(IF(t.drops>0,"+",""),t.drops) AS drops2, 
+                t.count, 
+                DATE_FORMAT(t.transaction_date,"%d-%m-%Y %H:%i") AS tdate, 
+                CONCAT(p.name, " " ,IFNULL(g.label,"")) AS product 
+            FROM transactions AS t 
+            LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
+            LEFT OUTER JOIN products AS p ON p.id = t.product_id 
+            LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
+            WHERE t.people_id = '.$data['people_id'].' 
+            AND t.product_id IS NOT NULL 
+            AND CAST(t.transaction_date as Date)=(
+                SELECT CAST(MAX(transaction_date) as Date) 
+                FROM transactions 
+                WHERE people_id = '.$data['people_id'].' AND product_id IS NOT NULL)
+            ORDER BY t.transaction_date DESC');
+            $buttonlastpurchases = ['showall&people_id='.$data['people_id'] => ['label' => 'Show all', 'showalways' => true]];
+            $allowdeletelastpurchases = true;
+            $allowsort = false;
+        }
+        addfield('title', 'Latest Purchases', '', ['labelindent' => true, 'id' => 'LastPurchaseTitle']);
+        addfield('list', '', 'purch', [
+            'width' => 10,
+            'data' => $datalastpurchases,
             'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($camp['currencyname']), 'user' => 'Transaction made by', 'tdate' => 'Date'],
-            'allowedit' => false, 'allowadd' => false, 'allowselect' => true, 'allowselectall' => false, 'action' => 'check_out', 'redirect' => false, 'allowsort' => false, 'listid' => $data['people_id'], ]);
+            'allowedit' => false,
+            'allowadd' => false,
+            'allowselect' => $allowdeletelastpurchases,
+            'allowselectall' => false,
+            'action' => 'check_out',
+            'redirect' => false,
+            'allowsort' => $allowsort,
+            'listid' => $data['people_id'],
+            'button' => $buttonlastpurchases,
+        ]);
 
-        $ajaxform->assign('data', $data);
-        $ajaxform->assign('formelements', $formdata);
-        $ajaxform->assign('formbuttons', $formbuttons);
-        $htmlcontent = $ajaxform->fetch('cms_form_ajax.tpl');
+        $ajaxlastpurchases->assign('formelements', $formdata);
+        $htmllastpurchases = $ajaxlastpurchases->fetch('cms_form_ajax.tpl');
+        // flush form data
+        $formdata = [];
+        // return html differently if ajax request to show all was triggered
+        if ('showall' == $_POST['do']) {
+            $return = [
+                'success' => true,
+                'message' => false,
+                'redirect' => false,
+                'action' => "$('#ajax-last-purchases').html(result.htmllastpurchases);initiateList();",
+                'htmllastpurchases' => $htmllastpurchases,
+            ];
+
+            echo json_encode($return);
+
+            exit();
+        }
 
         // the aside
         $ajaxaside = new Zmarty();
@@ -184,6 +246,6 @@
         $htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');
 
         $success = true;
-        $return = ['success' => $success, 'htmlcontent' => $htmlcontent, 'htmlaside' => $htmlaside, 'message' => $message];
+        $return = ['success' => $success, 'htmlshoppingcart' => $htmlshoppingcart, 'htmllastpurchases' => $htmllastpurchases, 'htmlaside' => $htmlaside, 'message' => $message];
         echo json_encode($return);
     }
