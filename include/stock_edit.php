@@ -18,51 +18,60 @@
 
                     throw new Exception('There is an issue creating box identifier. Please try again in a few minutes', 409);
                 }
-            }
-
-            $is_scrap = (!empty($_POST['scrap'][0]) && 1 == $_POST['scrap'][0]);
-            $is_lost = (!empty($_POST['lost'][0]) && 1 == $_POST['lost'][0]);
-
-            // Figure out new Box State
-            if ($is_scrap) {
-                $_POST['box_state_id'] = 6;
-            } elseif ($is_lost) {
-                $_POST['box_state_id'] = 2;
+                $isorderedbox = false;
             } else {
-                // Getting the new box state id based on the location
-                $_POST['box_state_id'] = db_value('SELECT bs.id FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id'][0]]);
+                $newbox = false;
+                $box = db_row('SELECT id, box_state_id FROM stock WHERE box_id = :boxid', ['boxid' => $_POST['box_id']]);
+                $id = $box['id'];
+                $isorderedbox = in_array($box['box_state_id'], [3, 4]);
             }
 
-            // If a box is lost or scrapped changes are not allowed until the state is changed again
-            if (!in_array($_POST['box_state_id'], [2, 6])) {
-                $handler = new formHandler($table);
+            // only allow editing(/creating) a box if it is not in the ordered box_states
+            if (!$isorderedbox) {
+                $is_scrap = (!empty($_POST['scrap'][0]) && 1 == $_POST['scrap'][0]);
+                $is_lost = (!empty($_POST['lost'][0]) && 1 == $_POST['lost'][0]);
 
-                $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments', 'box_state_id'];
-                $id = $handler->savePost($savekeys);
-
-                db_query('DELETE FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock"', [':stock_id' => $id]);
-
-                $params = [];
-                $tags = $_POST['tags'];
-                if (sizeof($tags) > 0) {
-                    $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
-
-                    for ($i = 0; $i < sizeof($tags); ++$i) {
-                        $query .= "(:tag_id{$i}, 'Stock', :stock_id)";
-                        $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
-                        if ($i !== sizeof($tags) - 1) {
-                            $query .= ',';
-                        }
-                    }
-
-                    $params = array_merge($params, ['stock_id' => $id]);
-                    db_query($query, $params);
+                // Figure out new Box State
+                if ($is_scrap) {
+                    $_POST['box_state_id'] = 6;
+                } elseif ($is_lost) {
+                    $_POST['box_state_id'] = 2;
+                } else {
+                    // Getting the new box state id based on the location
+                    $_POST['box_state_id'] = db_value('SELECT bs.id FROM locations l INNER JOIN box_state bs ON bs.id = l.box_state_id WHERE l.id = :id', ['id' => $_POST['location_id'][0]]);
                 }
-            } else {
-                $handler = new formHandler($table);
 
-                $savekeys = ['box_state_id'];
-                $id = $handler->savePost($savekeys);
+                // If a box is lost or scrapped changes are not allowed until the state is changed again
+                if (!in_array($_POST['box_state_id'], [2, 6])) {
+                    $handler = new formHandler($table);
+
+                    $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments', 'box_state_id'];
+                    $id = $handler->savePost($savekeys);
+
+                    db_query('DELETE FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock"', [':stock_id' => $id]);
+
+                    $params = [];
+                    $tags = $_POST['tags'];
+                    if (sizeof($tags) > 0) {
+                        $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+
+                        for ($i = 0; $i < sizeof($tags); ++$i) {
+                            $query .= "(:tag_id{$i}, 'Stock', :stock_id)";
+                            $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
+                            if ($i !== sizeof($tags) - 1) {
+                                $query .= ',';
+                            }
+                        }
+
+                        $params = array_merge($params, ['stock_id' => $id]);
+                        db_query($query, $params);
+                    }
+                } else {
+                    $handler = new formHandler($table);
+
+                    $savekeys = ['box_state_id'];
+                    $id = $handler->savePost($savekeys);
+                }
             }
 
             return [$id, $newbox];
@@ -147,6 +156,12 @@
         $data['lost'] = (in_array($data['statelabel'], ['Lost']));
         $disabled_lost = (in_array($data['statelabel'], ['Scrap']));
     }
+    // Disable if a Box is in the ordered box states
+    if (in_array($data['stateid'], [3, 4])) {
+        $disabled = true;
+        $disabled_scrap = true;
+        $disabled_lost = true;
+    }
     // open the template
     $cmsmain->assign('include', 'cms_form.tpl');
     addfield('hidden', '', 'id');
@@ -204,9 +219,9 @@
     addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id',  'readonly' => $disabled]);
     if ($id) {
         addfield('line');
-        addfield('checkbox', 'I can’t find this box', 'lost', ['onclick' => 'setBoxState("lost")', 'value' => 1, 'checked' => ($data['lost'])]);
+        addfield('checkbox', 'I can’t find this box', 'lost', ['onclick' => 'setBoxState("lost")', 'value' => 1, 'checked' => ($data['lost']), 'readonly' => $disabled_lost]);
 
-        addfield('checkbox', 'Scrap this box?', 'scrap', ['onclick' => 'setBoxState("scrap")', 'value' => 1, 'checked' => ($data['scrap'])]);
+        addfield('checkbox', 'Scrap this box?', 'scrap', ['onclick' => 'setBoxState("scrap")', 'value' => 1, 'checked' => ($data['scrap']), 'readonly' => $disabled_scrap]);
         addfield('line');
         addfield('html', 'Box History', showHistory('stock', $data['id']), ['width' => 10, 'disabled' => $disabled]);
 

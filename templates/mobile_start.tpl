@@ -5,8 +5,3 @@
 		</div>
 		<input type="submit" class="btn" value="Search">
 	</form>
-{if $orders}
-	<hr />
-	<h2 class="page-header">View ordered boxes</h2>
-	<a class="btn" href="?vieworders">{$orders} {if $orders==1} box is {else} boxes are {/if} ordered</a>
-{/if}

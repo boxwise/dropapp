@@ -2,22 +2,18 @@
 
 define('LOADED_VIA_SINGLE_ENTRY_POINT', true);
 
-// config for GCloud error reporting taken from https://github.com/GoogleCloudPlatform/php-docs-samples/tree/6609166f71b1049f45360480963c2327b00b7959/appengine/standard/errorreporting
-require_once __DIR__.'/vendor/google/cloud-error-reporting/src/prepend.php';
-
 require_once 'vendor/autoload.php';
-// load configuration file
+
 require_once 'library/config.php';
 
 require_once 'library/gcloud.php';
-// load error handling as soon as possible
+
 require_once 'library/error-reporting.php';
 
 require_once 'library/lib/smarty.php';
 
 require_once 'library/lib/errorhandling.php';
 
-// load global constants
 require_once 'library/constants.php';
 
 // The GAE environment requires a single entry point, so we're

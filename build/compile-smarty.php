@@ -6,7 +6,8 @@ require_once __DIR__.'/../library/lib/smarty.php';
 // You can’t precompile Smarty on one system and then upload to another server,
 // as the compiled filenames have the absolute path of the source files encoded.
 
-// /srv is the root path on google app engine
+// /workspace is the root path on google app engine
+// not /srv as the GCP docs suggest
 $deploymentRootFolder = '/workspace';
 
 // So, this is a cheeky work-around that rewrites the hashes

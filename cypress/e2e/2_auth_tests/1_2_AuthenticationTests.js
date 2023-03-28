@@ -10,7 +10,7 @@ context('Authentication tests', () => {
     cy.url().should('include', Cypress.env('auth0Domain'))
     cy.fillLoginFormFor(config.testUnknownUser,config.testWrongPwd)
     cy.url().should('include', Cypress.env('auth0Domain'))
-    cy.get(".auth0-global-message").contains('Wrong email or password')
+    cy.get("#error-element-password").contains('Wrong email or password')
   })
 
   it('1.2.2 - Should not get to authenticated page with deactivated user', () => {
@@ -39,7 +39,7 @@ context('Authentication tests', () => {
     cy.url().should('include', Cypress.env('auth0Domain'))
     cy.fillLoginFormFor(config.testVolunteer,config.testWrongPwd)
     cy.url().should('include', Cypress.env('auth0Domain'))
-    cy.get(".auth0-global-message").contains('Wrong email or password')
+    cy.get("#error-element-password").contains('Wrong email or password')
   })
 
 

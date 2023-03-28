@@ -73,7 +73,7 @@
 								{if !$button['showalways']}
 									{if $button['options']}
 										<div class="btn-group">
-											<div type="button" class="btn btn-sm btn-default dropdown-toggle" {if isset($button['testid'])}data-testid="{$button['testid']}"{/if}>
+											<div type="button" class="btn btn-sm btn-default dropdown-toggle {if $button['disableif']}disable-if{/if}" {if isset($button['testid'])}data-testid="{$button['testid']}"{/if}>
 												{if $button['icon']}
 													<i class="fa {$button['icon']}"></i>
 												{/if}

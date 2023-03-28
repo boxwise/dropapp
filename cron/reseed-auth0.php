@@ -11,6 +11,8 @@
     // update Auth0
     $bypassAuthentication = true;
 
+    set_time_limit(300);
+
     require_once 'library/core.php';
 
     db_transaction(function () use ($settings, $rolesToActions, $menusToActions) {
@@ -26,6 +28,13 @@
         while ($row = db_fetch($result)) {
             createRolesForBase($row['id'], $row['label'], $row['base_id'], $row['name'], $rolesToActions, $menusToActions);
             usleep(500000);
+        }
+
+        // connect cms_usergroups to roles in auth0
+        $result = db_query('SELECT DISTINCT auth0_role_name FROM cms_usergroups_roles');
+        while ($row = db_fetch($result)) {
+            $role = getRolesByName($row['auth0_role_name']);
+            db_query('UPDATE cms_usergroups_roles SET auth0_role_id = :id WHERE auth0_role_name = :rolename', ['id' => $role['id'], 'rolename' => $row['auth0_role_name']]);
         }
 
         $db_users = db_query('SELECT id FROM cms_users;');

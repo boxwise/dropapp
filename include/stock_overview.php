@@ -110,7 +110,7 @@
                         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
                         .('scrap' == $_SESSION['filter']['stock_overview'] ? 'AND stock.box_state_id = 6' :
                             ('lost' == $_SESSION['filter']['stock_overview'] ? 'AND stock.box_state_id = 2' :
-                            ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND (stock.ordered OR stock.picked) AND stock.box_state_id NOT IN (2,6,5) ' :
+                            ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND stock.box_state_id IN (3,4) ' :
                                 ('untouched' == $_SESSION['filter']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id NOT IN (2,6,5) ' :
                                     (is_numeric($_SESSION['filter']['stock_overview']) ? ' AND (locations.id = '.intval($_SESSION['filter']['stock_overview']).')' : '
                                         AND stock.box_state_id NOT IN (2,6,5)'))))).

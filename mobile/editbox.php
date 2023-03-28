@@ -73,10 +73,17 @@
                                         AND tags_relations.object_type = "Stock" 
                               WHERE tags.camp_id = :campId AND tags.deleted IS NULL AND tags.type IN ("All","Stock")', ['id' => $_GET['editbox'], 'campId' => $_SESSION['camp']['id']]);
     $box['disabled'] = false;
-    if (in_array($box['statelabel'], ['Lost', 'Scrap'])) {
+    // Disable form for lost, scrap and ordered states
+    if (in_array($box['stateid'], [2, 3, 4, 6])) {
         $box['disabled'] = true;
         $box['scrap'] = (in_array($box['statelabel'], ['Scrap']));
         $box['lost'] = (in_array($box['statelabel'], ['Lost']));
+        // disable lost checkbox if Box is ordered
+        $box['lostdisabled'] = (in_array($box['stateid'], [3, 4]));
+        // disable scrap checkbox if Box is ordered
+        $box['scrapdisabled'] = (in_array($box['stateid'], [3, 4]));
+        // disable submit button if Box is ordered
+        $box['submitdisabled'] = (in_array($box['stateid'], [3, 4]));
     }
 
     $tpl->assign('box', $box);

@@ -24,7 +24,7 @@ class Demo extends AbstractSeed
         // https://github.com/fzaninotto/Faker
         $faker = Faker\Factory::create();
         // to make the seed reproducible
-        $faker->seed(2);
+        $faker->seed(3);
 
         //------------------- library_type
         $this->execute("INSERT INTO `library_type` (`id`, `label`, `camp_id`) VALUES
@@ -750,8 +750,31 @@ class Demo extends AbstractSeed
 			(609,'WD BABY CLOTHES',12,10,6,3,20,0,0,0,'',NULL);");
 
         //------------------- qr
+
+        // A few fixed QR-Codes
+        $this->execute("INSERT INTO `qr` (`id`,`code`) VALUES 
+            (1, '9627242265f5a7f3a1db910eb18410f'),
+            (2, '1efb9f5633ebf01645934bd509d93e2'),
+            (3, '46985d9e6d5a244cf683bacdb7d0f33'),
+            (4, '0af9ec1a97906cf1cac5f50617a687b'),
+            (5, '12ca607ce60c484bdbb703def950c5b'),
+            (6, '13f12820c8010f2f7349962930e6bf4'),
+            (7, '91c1def0b674d4e7cb92b61dbe00846'),
+            (8, '98b51c8cd1a02e54ab47edcc5733139'),
+            (9, '149ff66629377f6404b5c8d32936855'),
+            (10, '387b0f0f5e62cebcafd48383035a92a'),
+            (11, '22324b7a180bdd31e125d5d50791d17'),
+            (12, '69107b2e2b4157b5efe10415bc0bba0'),
+            (13, '168842e6389b520d4b1836562aa1f05'),
+            (14, 'a61e0efe25b75032b91106372674c26'),
+            (15, 'b8f0730d36571e4149ba3862379bb88'),
+            (16, 'cba56d486db6d39209dbbf9e45353c4'),
+            (17, 'd0e144a0a4dc0d8af55e2b686a2e97e'),
+            (18, 'e1fdfdd942db0e764c9bea06c03ba2b'),
+            (19, 'f6f20e805192618def2cb400776a2aa');");
+
         $qr = [];
-        for ($i = 1; $i <= 1000; ++$i) {
+        for ($i = 20; $i <= 1000; ++$i) {
             // qr code not unique because faker in Cypress.php intervene
             $tempdata = [
                 'code' => substr($faker->unique()->md5, 0, -1),
@@ -1402,7 +1425,27 @@ class Demo extends AbstractSeed
             '609' => [52], ];
 
         $stock = [];
-        for ($i = 1; $i <= 800; ++$i) {
+
+        // A few fixed elements connected to qr codes
+        for ($i = 1; $i <= 3; ++$i) {
+            $campid = $i;
+            $locationid = $faker->randomElement($locations[$campid]);
+            $tempdata = [
+                'id' => $i,
+                'box_id' => $faker->unique()->randomNumber($nbDigits = 7, $strict = true),
+                'product_id' => $faker->randomElement($products[$campid]),
+                'items' => $faker->numberBetween($min = 1, $max = 100),
+                'location_id' => $locationid,
+                'box_state_id' => $box_state[$locationid],
+                'qr_id' => $i,
+            ];
+            $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
+
+            $stock[] = $tempdata;
+        }
+
+        // add random boxes
+        for ($i = 20; $i <= 800; ++$i) {
             $campid = $faker->randomElement(['1', '2', '3']);
             $locationid = $faker->randomElement($locations[$campid]);
             $tempdata = [
@@ -1415,13 +1458,6 @@ class Demo extends AbstractSeed
                 'qr_id' => $i,
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
-
-            //order a few boxes
-            $rand_num = $faker->numberBetween($min = 0, $max = 1000);
-            if (($rand_num < 20)) {
-                $tempdata['ordered'] = $faker->dateTimeThisYear($max = 'now', $timezone = 'Europe/Athens')->format('Y-m-d');
-                $tempdata['box_state_id'] = 3;
-            }
 
             $stock[] = $tempdata;
         }
@@ -1460,5 +1496,29 @@ class Demo extends AbstractSeed
             }
         }
         $this->table('transactions')->insert($transactions)->save();
+
+        //------------------- transfer agreements
+        $this->execute("INSERT INTO `transfer_agreement` (`id`, `source_organisation_id`, `target_organisation_id`, `state`, `type`, `requested_on`, `requested_by`, `accepted_on`, `accepted_by`, `terminated_on`, `terminated_by`, `valid_from`, `valid_until`, `comment`) VALUES
+            (1,1,2,'Accepted','Bidirectional','2023-02-09 17:24:29',8,'2023-02-09 17:30:51',37,NULL,NULL,'2023-02-09 17:24:29',NULL,NULL),
+            (2,1,2,'UnderReview','SendingTo','2023-02-09 17:25:46',8,NULL,NULL,NULL,NULL,'2023-02-09 17:25:46',NULL,NULL),
+            (3,1,2,'Canceled','ReceivingFrom','2023-02-09 17:26:02',8,NULL,NULL,'2023-02-09 17:36:09',8,'2023-02-09 17:26:02',NULL,NULL),
+            (4,2,1,'Rejected','Bidirectional','2023-02-09 17:29:09',37,NULL,NULL,'2023-02-09 17:37:45',8,'2023-02-09 17:29:09',NULL,NULL),
+            (5,1,2,'UnderReview','ReceivingFrom','2023-02-09 17:34:50',8,NULL,NULL,NULL,NULL,'2023-02-09 17:34:50',NULL,NULL);");
+
+        $this->execute('INSERT INTO `transfer_agreement_detail` (`id`, `transfer_agreement_id`, `source_base_id`, `target_base_id`) VALUES
+            (1,1,1,2),
+            (2,1,1,3),
+            (3,1,1,4),
+            (4,2,1,2),
+            (5,3,1,3),
+            (6,4,4,1),
+            (7,5,1,3);');
+
+        $this->execute("INSERT INTO `shipment` VALUES
+            (1,1,2,1,'Preparing','2023-02-09 18:05:57',8,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+            (2,1,3,1,'Canceled','2023-02-09 18:06:02',8,'2023-02-09 18:07:10',8,NULL,NULL,NULL,NULL,NULL,NULL),
+            (3,1,3,1,'Preparing','2023-02-09 18:06:25',8,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+            (4,4,1,1,'Preparing','2023-02-09 18:08:15',37,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+            (5,4,1,1,'Preparing','2023-02-09 18:08:20',37,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);");
     }
 }

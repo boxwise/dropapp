@@ -1,6 +1,8 @@
 # Add any directories, files, or patterns you don't want to be tracked by version control
 /.docker/data
 config.php
+config.php.*
+!config.php.default
 .DS_Store
 error_log
 templates/templates_c/*
@@ -10,7 +12,6 @@ uploads/*
 !uploads/.gitkeep 
 phpmyadmin/*
 *.sql
-config.php.production
 node_modules
 cypress.env.json
 db/queries/*.csv

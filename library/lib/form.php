@@ -18,7 +18,9 @@
         }
 
         if ('list' == $type) {
-            $formdata[$field]['data'] = getlistdata($array['query'], $array['parent_id']);
+            if ($array['query']) {
+                $formdata[$field]['data'] = getlistdata($array['query'], $array['parent_id']);
+            }
 
             // set default list behaviour, can be overridden by $array values
             $keys = array_keys($formdata[$field]['data'][0]);

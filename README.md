@@ -4,9 +4,9 @@
 
 # Readme #
 
-You just found the Drop App (first version of [Boxtribute](https://www.boxtribute.org) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way.
+You just found the Drop App (first version of [Boxtribute](https://www.boxtribute.org) - an web-app, which makes it easy for organisations to source, store and distribute donated goods to people in need in a fair and dignified way). This is currently in the process of being replaced by [Boxtribute 2.0](https://github.com/boxwise/boxtribute).
 
-We initially developed it for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users include [Refugees4Refugees](https://www.refugees4refugees.gr), [Intereuropean Human Aid Association (IHA)](https://www.iha.help/), [https://movementontheground.com](https://movementontheground.com), [The Free Shop Lebanon](https://www.instagram.com/thefreeshoplebanon/) and [Hermine](https://mfh.global/hermine/).
+Dropapp was initially developed for [Drop In The Ocean](http://www.drapenihavet.no/en/) - a Norwegian NGO who is working in three refugee camps throughout Greece. Other users include [Samos Volunteers](https://www.samosvolunteers.org/), [Europe Cares](https://www.europecares.org/), [Hermine](https://mfh.global/hermine/), [The Free Shop Lebanon](https://www.instagram.com/thefreeshoplebanon/), [Intereuropean Human Aid Association (IHA)](https://www.iha.help/) and [Movement on the Ground](https://movementontheground.com).
 
 We have evolved the app to now be centrally hosted so we can offer the product to many more organisations, and are working constantly to improve the system and connect donor and distributor organisations with each other. 
 
@@ -44,7 +44,7 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
    Alternatively, you can run using the PHP development server
 
-       GOOGLE_CLOUD_PROJECT=xxx php -S localhost:8000 gcloud-entry.php 
+       php -S localhost:8000 gcloud-entry.php 
 
 5. To initialize the database for the first time, you should run:
 
@@ -53,18 +53,37 @@ If you are interested in being part of this project, write us at [jointheteam@bo
  
    The first command creates the schema, the second command seeds the database with some dummy data
 
+6. If you want to additionally want to connect the users from the seed to auth0 and populate the db table cms_usergroups_roles then open a browser and request `http://localhost:8100/cron/reseed-auth0.php`
+
 ### Accessing the app
 
 Once the docker containers are running the app is accessible at http://localhost:8100/
 
 After this you should be able to login to the app using the password Browser_tests and one of the following emails:
+
 - some.admin@boxtribute.org (God User)
-- dev_volunteer@boxaid.org
-- dev_coordinator@boxaid.org
+
+BoxAid (all have access to one base called Lesvos):
 - dev_headofops@boxaid.org
-- dev_volunteer@boxcare.org
-- dev_coordinator@boxcare.org
+- dev_coordinator@boxaid.org
+- dev_volunteer@boxaid.org
+- warehouse.volunteer@lesvos.org
+- freeshop.volunteer@lesvos.org
+- library.volunteer@lesvos.org
+
+BoxCare (there are 3 bases associated - Thessaloniki, Samos, Athens):
 - dev_headofops@boxcare.org
+- dev_coordinator@boxcare.org (Coordinator at bases Thessaloniki and Samos)
+- dev_volunteer@boxcare.org (Volunteer at bases Thessaloniki and Samos)
+- coordinator@thessaloniki.org
+- coordinator@samos.org
+- coordinator@athens.org
+- volunteer@thessaloniki.
+- volunteer@samos.org
+- volunteer@athens.org
+- warehouse.volunteer@athens.org
+- freeshop.volunteer@athens.org
+- label@athens.org (only for label creation)
 
 
 ### Our dev environment recommendation

@@ -28,6 +28,10 @@ cron:
   url: /cron/reseed-auth0.php
   target: staging
   schedule: every day 00:45
+- description: "check expired transfer agreements"
+  url: /cron/dailyroutine.php?action=check_expired_transfer_agreements
+  target: staging
+  schedule: every day 00:05
 
 # demo
 - description: "auth0 dailyroutine demo - check inactive users"
@@ -54,6 +58,10 @@ cron:
   url: /cron/reseed-auth0.php
   target: demo
   schedule: every 99999 hours
+- description: "check expired transfer agreements"
+  url: /cron/dailyroutine.php?action=check_expired_transfer_agreements
+  target: demo
+  schedule: every day 00:05
 
 # production
 - description: "auth0 dailyroutine production - check inactive users"
@@ -72,3 +80,7 @@ cron:
   url: /cron/dailyroutine.php?action=auth0_check_synk
   target: production
   schedule: every day 00:31
+- description: "check expired transfer agreements"
+  url: /cron/dailyroutine.php?action=check_expired_transfer_agreements
+  target: production
+  schedule: every day 00:05
