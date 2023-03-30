@@ -241,30 +241,6 @@ Tracer::inSpan(
 
                 break;
 
-            case 'order':
-                $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    db_query('UPDATE stock SET ordered = NOW(), ordered_by = :user, picked = NULL, picked_by = NULL WHERE id = '.intval($id), ['user' => $_SESSION['user']['id']]);
-                    simpleSaveChangeHistory('stock', intval($id), 'Box ordered to shop ');
-                    $message = 'Boxes are marked as ordered for you!';
-                    $success = true;
-                    $redirect = true;
-                }
-
-                break;
-
-            case 'undo-order':
-                $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $id) {
-                    db_query('UPDATE stock SET ordered = NULL, ordered_by = NULL, picked = NULL, picked_by = NULL  WHERE id = '.$id);
-                    simpleSaveChangeHistory('stock', $id, 'Box order made undone ');
-                    $message = 'Boxes are unmarked as ordered';
-                    $success = true;
-                    $redirect = true;
-                }
-
-                break;
-
             case 'qr':
                 $id = $_POST['ids'];
                 $redirect = '/pdf/qr.php?label='.$id;
