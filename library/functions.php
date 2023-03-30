@@ -311,10 +311,6 @@ function move_boxes($ids, $newlocationid, $mobile = false)
                     SET 
                         modified = NOW(), 
                         modified_by = :user_id , 
-                        ordered = NULL, 
-                        ordered_by = NULL, 
-                        picked = NULL, 
-                        picked_by = NULL, 
                         location_id = :location 
                     WHERE id = :id',
                     ['location' => $newlocationid, 'id' => $id, 'user_id' => $_SESSION['user']['id']]
@@ -345,10 +341,6 @@ function move_boxes($ids, $newlocationid, $mobile = false)
                     UPDATE stock 
                     SET 
                         box_state_id = :box_state_id, 
-                        ordered = NULL, 
-                        ordered_by = NULL, 
-                        picked = NULL, 
-                        picked_by = NULL, 
                         modified = NOW(), 
                         modified_by = :user_id 
                     WHERE id = :id',
