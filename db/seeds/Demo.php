@@ -1579,7 +1579,7 @@ class Demo extends AbstractSeed
                     'box_id' => $i,
                     'source_location_id' => $locationid,
                     'source_product_id' => $productid,
-                    // 'source_size_id' => $tempdata['size_id'],
+                    'source_size_id' => $tempdata['size_id'],
                     'created_on' => $faker->dateTimeBetween($startDate = '-3 days', $endDate = '-2 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s'),
                     'created_by_id' => 1,
                 ];
@@ -1605,7 +1605,7 @@ class Demo extends AbstractSeed
                         $tempshipmentdetail['received_by_id'] = 1;
                         $tempshipmentdetail['target_location_id'] = $tempdata['location_id'];
                         $tempshipmentdetail['target_product_id'] = $tempdata['product_id'];
-                        // $tempshipmentdetail['target_size_id'] = $tempdata['size_id'];
+                        $tempshipmentdetail['target_size_id'] = $tempdata['size_id'];
                         $notags = true;
                     } else {
                         $tempdata['box_state_id'] = 4;
