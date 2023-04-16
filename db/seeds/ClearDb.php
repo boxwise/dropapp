@@ -58,6 +58,7 @@ class ClearDb extends AbstractSeed
         $this->execute('DELETE FROM `x_people_languages`');
         $this->execute('DELETE FROM `transfer_agreement_detail`');
         $this->execute('DELETE FROM `transfer_agreement`');
+        $this->execute('DELETE FROM `shipment_detail`');
         $this->execute('DELETE FROM `shipment`');
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
     }
