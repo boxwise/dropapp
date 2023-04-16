@@ -217,10 +217,10 @@ class Demo extends AbstractSeed
             (1,1,1,2,'Preparing','2023-02-09 18:05:57',8,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
             (2,1,1,3,'Canceled','2023-02-09 18:06:02',8,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),8),
             (3,1,1,3,'Preparing','2023-02-09 18:06:25',8,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
-            (4,1,1,4,'Sent','2023-02-09 18:06:25',8,NOW(),8,NULL,NULL,NULL,NULL,NULL,NULL),
-            (5,1,2,1,'Receiving','2023-02-09 18:06:25',18,NOW(),18,NOW(),8,NULL,NULL,NULL,NULL),
-            (6,1,3,1,'Lost','2023-02-09 18:06:25',18,NOW(),18,NULL,NULL,NOW(),8,NULL,NULL),
-            (7,1,3,1,'Completed','2023-02-09 18:06:25',18,NOW(),18,NULL,NULL,NOW(),8,NULL,NULL);");
+            (4,1,1,4,'Sent','2023-02-09 18:06:25',8,DATE_SUB(NOW(), INTERVAL 2 DAY),8,NULL,NULL,NULL,NULL,NULL,NULL),
+            (5,1,2,1,'Receiving','2023-02-09 18:06:25',18,DATE_SUB(NOW(), INTERVAL 2 DAY),18,DATE_SUB(NOW(), INTERVAL 1 DAY),8,NULL,NULL,NULL,NULL),
+            (6,1,3,1,'Lost','2023-02-09 18:06:25',18,DATE_SUB(NOW(), INTERVAL 2 DAY),18,NULL,NULL,NOW(),8,NULL,NULL),
+            (7,1,3,1,'Completed','2023-02-09 18:06:25',18,DATE_SUB(NOW(), INTERVAL 2 DAY),18,DATE_SUB(NOW(), INTERVAL 1 DAY),8,NOW(),8,NULL,NULL);");
 
         //------------------- products
         $this->execute("INSERT INTO `products` (`id`,`name`,`category_id`,`gender_id`,`sizegroup_id`,`camp_id`,`value`,`maxperadult`,`maxperchild`,`stockincontainer`,`comments`,`deleted`) VALUES 
@@ -872,6 +872,10 @@ class Demo extends AbstractSeed
         //------------------- stock
         // restrict selection of random ids
         // key is campid
+        $shipments = ['1' => range(1, 4), '2' => [5], '3' => [6, 7]];
+        // key is shipmentid
+        $boxstatebyshipment = ['1' => 3, '2' => 1, '3' => 3, '4' => 3, '5' => 4, '6' => 2, '7' => 1];
+        // key is campid
         $tags = ['1' => range(4, 6), '2' => range(10, 12), '3' => range(16, 18)];
         // key is campid
         $products = ['1' => range(1, 219), '2' => range(220, 414), '3' => range(415, 609)];
@@ -1513,6 +1517,7 @@ class Demo extends AbstractSeed
 
         $stock = [];
         $tagrelations = [];
+        $shipmentdetails = [];
 
         // A few fixed elements connected to qr codes
         for ($i = 1; $i <= 3; ++$i) {
@@ -1552,10 +1557,11 @@ class Demo extends AbstractSeed
         for ($i = 20; $i <= 800; ++$i) {
             $campid = $faker->randomElement(['1', '2', '3']);
             $locationid = $faker->randomElement($locations[$campid]);
+            $productid = $faker->randomElement($products[$campid]);
             $tempdata = [
                 'id' => $i,
-                'box_id' => $faker->unique()->randomNumber($nbDigits = 6, $strict = true),
-                'product_id' => $faker->randomElement($products[$campid]),
+                'box_id' => $faker->unique()->randomNumber($nbDigits = 7, $strict = true),
+                'product_id' => $productid,
                 'items' => $faker->numberBetween($min = 1, $max = 100),
                 'location_id' => $locationid,
                 'box_state_id' => $box_state[$locationid],
@@ -1563,8 +1569,56 @@ class Demo extends AbstractSeed
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
 
+            // box is part of a shipment
+            $notags = false;
+            if ($faker->boolean($chanceOfGettingTrue = 20) && $tempdata['box_state_id'] == 1) {
+                $shipmentid = $faker->randomElement($shipments[$campid]);
+                $tempshipmentdetail = [
+                    'id' => $i,
+                    'shipment_id' => $shipmentid,
+                    'box_id' => $i,
+                    'source_location_id' => $locationid,
+                    'source_product_id' => $productid,
+                    // 'source_size_id' => $tempdata['size_id'],
+                    'created_on' => $faker->dateTimeBetween($startDate = '-3 days', $endDate = '-2 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s'),
+                    'created_by_id' => 1,
+                ];
+                // some boxes are removed during preparing state or the shipment was canceled
+                if ($faker->boolean($chanceOfGettingTrue = 10) || $shipmentid == 2) {
+                    $tempdata['box_state_id'] = 1;
+                    $tempshipmentdetail['removed_on'] = $faker->dateTimeBetween($startDate = '-2 days', $endDate = '-1 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+                    $tempshipmentdetail['removed_by_id'] = 1;
+                } elseif ($shipmentid >= 5) {
+                    // for a shipment (id = 5) where receiving started some boxes are already lost or reconciliated
+                    // for a shipment (id = 6) where the shipment is lost, all boxes are lost
+                    // for a shipment (id = 7) which is completed all boxes are lost or completed
+                    if ($shipmentid == 6 || (($shipmentid == 5 || $shipmentid == 7) && $faker->boolean($chanceOfGettingTrue = 10))) {
+                        $tempdata['box_state_id'] = 2;
+                        $tempshipmentdetail['lost_on'] = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+                        $tempshipmentdetail['lost_by_id'] = 1;
+                    } elseif (($shipmentid == 5 && $faker->boolean($chanceOfGettingTrue = 10)) || $shipmentid == 7) {
+                        $tempdata['box_state_id'] = 1;
+                        $tempdata['location_id'] = $faker->randomElement($locations['1']);
+                        $tempdata['product_id'] = $faker->randomElement($products['1']);
+                        $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
+                        $tempshipmentdetail['received_on'] = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+                        $tempshipmentdetail['received_by_id'] = 1;
+                        $tempshipmentdetail['target_location_id'] = $tempdata['location_id'];
+                        $tempshipmentdetail['target_product_id'] = $tempdata['product_id'];
+                        // $tempshipmentdetail['target_size_id'] = $tempdata['size_id'];
+                        $notags = true;
+                    } else {
+                        $tempdata['box_state_id'] = 4;
+                    }
+                } else {
+                    $tempdata['box_state_id'] = $boxstatebyshipment[$shipmentid];
+                }
+
+                $shipmentdetails[] = $tempshipmentdetail;
+            }
             $stock[] = $tempdata;
-            if ($faker->boolean($chanceOfGettingTrue = 40)) {
+            // assign tags
+            if ($faker->boolean($chanceOfGettingTrue = 40) && !$notags) {
                 $tagids = array_unique($faker->randomElements($array = $tags[$campid], $count = $faker->numberBetween($min = 1, $max = 3)));
                 foreach ($tagids as $tagid) {
                     $tagrelations[] = [
@@ -1576,6 +1630,7 @@ class Demo extends AbstractSeed
             }
         }
         $this->table('stock')->insert($stock)->save();
+        $this->table('shipment_detail')->insert($shipmentdetails)->save();
         $this->table('tags_relations')->insert($tagrelations)->save();
 
         //------------------- transactions
