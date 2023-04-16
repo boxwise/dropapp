@@ -1571,7 +1571,7 @@ class Demo extends AbstractSeed
 
             // box is part of a shipment
             $notags = false;
-            if ($faker->boolean($chanceOfGettingTrue = 20) && $tempdata['box_state_id'] == 1) {
+            if ($faker->boolean($chanceOfGettingTrue = 20) && 1 == $tempdata['box_state_id']) {
                 $shipmentid = $faker->randomElement($shipments[$campid]);
                 $tempshipmentdetail = [
                     'id' => $i,
@@ -1584,7 +1584,7 @@ class Demo extends AbstractSeed
                     'created_by_id' => 1,
                 ];
                 // some boxes are removed during preparing state or the shipment was canceled
-                if ($faker->boolean($chanceOfGettingTrue = 10) || $shipmentid == 2) {
+                if ($faker->boolean($chanceOfGettingTrue = 10) || 2 == $shipmentid) {
                     $tempdata['box_state_id'] = 1;
                     $tempshipmentdetail['removed_on'] = $faker->dateTimeBetween($startDate = '-2 days', $endDate = '-1 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
                     $tempshipmentdetail['removed_by_id'] = 1;
@@ -1592,11 +1592,11 @@ class Demo extends AbstractSeed
                     // for a shipment (id = 5) where receiving started some boxes are already lost or reconciliated
                     // for a shipment (id = 6) where the shipment is lost, all boxes are lost
                     // for a shipment (id = 7) which is completed all boxes are lost or completed
-                    if ($shipmentid == 6 || (($shipmentid == 5 || $shipmentid == 7) && $faker->boolean($chanceOfGettingTrue = 10))) {
+                    if (6 == $shipmentid || ((5 == $shipmentid || 7 == $shipmentid) && $faker->boolean($chanceOfGettingTrue = 10))) {
                         $tempdata['box_state_id'] = 2;
                         $tempshipmentdetail['lost_on'] = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
                         $tempshipmentdetail['lost_by_id'] = 1;
-                    } elseif (($shipmentid == 5 && $faker->boolean($chanceOfGettingTrue = 10)) || $shipmentid == 7) {
+                    } elseif ((5 == $shipmentid && $faker->boolean($chanceOfGettingTrue = 10)) || 7 == $shipmentid) {
                         $tempdata['box_state_id'] = 1;
                         $tempdata['location_id'] = $faker->randomElement($locations['1']);
                         $tempdata['product_id'] = $faker->randomElement($products['1']);
