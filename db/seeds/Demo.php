@@ -47,6 +47,33 @@ class Demo extends AbstractSeed
         }
         $this->table('library')->insert($library)->save();
 
+        //------------------- tags
+        $this->execute("INSERT INTO `tags` (`id`, `label`, `color`, `camp_id`, `description`, `type`, `seq`) VALUES 
+        (1,'registered','#f37167',1,'Registered in the camp','People', 1),
+        (2,'exit','#aacfe3',1,'These are recognised refugees that are leaving the camp. ','People', 2),
+        (3,'verified referal','#f8aa9e',1,'Means this person has a direct referal from an actor in the camp that they need extra support','People',3),
+        (4,'company X','#315c88',1,'Donation from company x','Stock',4),
+        (5,'new','#f4e6a0',1,'','All',5),
+        (6,'emergency','#d89016',1,'Hold back for emergencies','Stock',6),
+        (7,'registered','#33f403',2,'Registered in the camp','People', 7),
+        (8,'exit','#f39267',2,'These are recognised refugees that are leaving the camp. ','People', 8),
+        (9,'verified referal','#e9ff00',2,'Means this person has a direct referal from an actor in the camp that they need extra support','People',9),
+        (10,'company X','#f37167',2,'Donation from company x','Stock',10),
+        (11,'new','#d89016',2,'','All',11),
+        (12,'emergency','#0097ff',2,'Hold back for emergencies','Stock',12),
+        (13,'registered','#33f403',3,'Registered in the camp','People', 13),
+        (14,'exit','#f39267',3,'These are recognised refugees that are leaving the camp. ','People', 14),
+        (15,'verified referal','#e9ff00',3,'Means this person has a direct referal from an actor in the camp that they need extra support','People',15),
+        (16,'company X','#f37167',3,'Donation from company x','Stock',16),
+        (17,'new','#d89016',3,'','All',17),
+        (18,'emergency','#0097ff',3,'Hold back for emergencies','Stock',18),
+        (19,'registered','#33f403',4,'Registered in the camp','People', 19),
+        (20,'exit','#f39267',4,'These are recognised refugees that are leaving the camp. ','People', 20),
+        (21,'verified referal','#e9ff00',4,'Means this person has a direct referal from an actor in the camp that they need extra support','People',21),
+        (22,'company X','#f37167',4,'Donation from company x','Stock',22),
+        (23,'new','#d89016',4,'','All',23),
+        (24,'emergency','#0097ff',4,'Hold back for emergencies','Stock',24);");
+
         //------------------- locations
         $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`,`box_state_id`,`deleted`) VALUES
 			(1,'Shop',1,1,0,0,1,0,0,0,5,NULL),
@@ -74,6 +101,7 @@ class Demo extends AbstractSeed
 
         //------------------- people
         $people = [];
+        $tagrelations = [];
         $lastparentid = null;
         $lastlastname = null;
         $lastcontainer = null;
@@ -134,8 +162,39 @@ class Demo extends AbstractSeed
             $tempdata['created'] = $tempdata['created']->sub(new DateInterval('P6M'))->format('Y-m-d H:i:s');
 
             $people[] = $tempdata;
+
+            // assign tags to people
+            if ($faker->boolean($chanceOfGettingTrue = 10)) {
+                $tagrelations[] = [
+                    'object_id' => $i,
+                    'object_type' => 'People',
+                    'tag_id' => 1,
+                ];
+            }
+            if ($faker->boolean($chanceOfGettingTrue = 10)) {
+                $tagrelations[] = [
+                    'object_id' => $i,
+                    'object_type' => 'People',
+                    'tag_id' => 2,
+                ];
+            }
+            if ($faker->boolean($chanceOfGettingTrue = 10)) {
+                $tagrelations[] = [
+                    'object_id' => $i,
+                    'object_type' => 'People',
+                    'tag_id' => 3,
+                ];
+            }
+            if ($faker->boolean($chanceOfGettingTrue = 10)) {
+                $tagrelations[] = [
+                    'object_id' => $i,
+                    'object_type' => 'People',
+                    'tag_id' => 5,
+                ];
+            }
         }
         $this->table('people')->insert($people)->save();
+        $this->table('tags_relations')->insert($tagrelations)->save();
 
         //------------------- products
         $this->execute("INSERT INTO `products` (`id`,`name`,`category_id`,`gender_id`,`sizegroup_id`,`camp_id`,`value`,`maxperadult`,`maxperchild`,`stockincontainer`,`comments`,`deleted`) VALUES 
