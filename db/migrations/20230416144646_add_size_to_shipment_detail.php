@@ -11,6 +11,7 @@ class AddSizeToShipmentDetail extends AbstractMigration
             ->addColumn('source_size_id', 'integer', [
                 'null' => false,
                 'signed' => false,
+                'default' => 52,
                 'after' => 'target_product_id',
             ])
             ->addColumn('target_size_id', 'integer', [

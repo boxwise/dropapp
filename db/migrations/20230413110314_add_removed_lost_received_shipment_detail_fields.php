@@ -7,13 +7,10 @@ class AddRemovedLostReceivedShipmentDetailFields extends AbstractMigration
     public function change()
     {
         $table = $this->table('shipment_detail');
-        $table
-            ->renameColumn('deleted_on', 'removed_on')
-            ->renameColumn('deleted_by_id', 'removed_by_id')
-            ->addColumn('lost_on', 'datetime', [
-                'null' => true,
-                'after' => 'removed_by_id',
-            ])
+        $table->addColumn('lost_on', 'datetime', [
+            'null' => true,
+            'after' => 'created_by_id',
+        ])
             ->addColumn('lost_by_id', 'integer', [
                 'null' => true,
                 'signed' => false,
