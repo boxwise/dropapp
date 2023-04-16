@@ -846,6 +846,8 @@ class Demo extends AbstractSeed
         //------------------- stock
         // restrict selection of random ids
         // key is campid
+        $tags = ['1' => range(4, 6), '2' => range(10, 12), '3' => range(16, 18)];
+        // key is campid
         $products = ['1' => range(1, 219), '2' => range(220, 414), '3' => range(415, 609)];
         // key is campid
         $locations = ['1' => range(1, 13), '2' => range(14, 18), '3' => range(19, 22)];
@@ -1484,6 +1486,7 @@ class Demo extends AbstractSeed
             '609' => [52], ];
 
         $stock = [];
+        $tagrelations = [];
 
         // A few fixed elements connected to qr codes
         for ($i = 1; $i <= 3; ++$i) {
@@ -1502,6 +1505,22 @@ class Demo extends AbstractSeed
 
             $stock[] = $tempdata;
         }
+        // add tags to the first 3 boxes
+        $tagrelations[] = [
+            'object_id' => 1,
+            'object_type' => 'Stock',
+            'tag_id' => 4,
+        ];
+        $tagrelations[] = [
+            'object_id' => 1,
+            'object_type' => 'Stock',
+            'tag_id' => 5,
+        ];
+        $tagrelations[] = [
+            'object_id' => 3,
+            'object_type' => 'Stock',
+            'tag_id' => 6,
+        ];
 
         // add random boxes
         for ($i = 20; $i <= 800; ++$i) {
@@ -1519,8 +1538,19 @@ class Demo extends AbstractSeed
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
 
             $stock[] = $tempdata;
+            if ($faker->boolean($chanceOfGettingTrue = 40)) {
+                $tagids = array_unique($faker->randomElements($array = $tags[$campid], $count = $faker->numberBetween($min = 1, $max = 3)));
+                foreach ($tagids as $tagid) {
+                    $tagrelations[] = [
+                        'object_id' => $i,
+                        'object_type' => 'Stock',
+                        'tag_id' => $tagid,
+                    ];
+                }
+            }
         }
         $this->table('stock')->insert($stock)->save();
+        $this->table('tags_relations')->insert($tagrelations)->save();
 
         //------------------- transactions
         $transactions = [];
