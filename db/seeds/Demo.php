@@ -47,6 +47,33 @@ class Demo extends AbstractSeed
         }
         $this->table('library')->insert($library)->save();
 
+        //------------------- tags
+        $this->execute("INSERT INTO `tags` (`id`, `label`, `color`, `camp_id`, `description`, `type`, `seq`) VALUES 
+        (1,'registered','#f37167',1,'Registered in the camp','People', 1),
+        (2,'exit','#aacfe3',1,'These are recognised refugees that are leaving the camp. ','People', 2),
+        (3,'verified referal','#f8aa9e',1,'Means this person has a direct referal from an actor in the camp that they need extra support','People',3),
+        (4,'company X','#315c88',1,'Donation from company x','Stock',4),
+        (5,'new','#f4e6a0',1,'','All',5),
+        (6,'emergency','#d89016',1,'Hold back for emergencies','Stock',6),
+        (7,'registered','#33f403',2,'Registered in the camp','People', 7),
+        (8,'exit','#f39267',2,'These are recognised refugees that are leaving the camp. ','People', 8),
+        (9,'verified referal','#e9ff00',2,'Means this person has a direct referal from an actor in the camp that they need extra support','People',9),
+        (10,'company X','#f37167',2,'Donation from company x','Stock',10),
+        (11,'new','#d89016',2,'','All',11),
+        (12,'emergency','#0097ff',2,'Hold back for emergencies','Stock',12),
+        (13,'registered','#33f403',3,'Registered in the camp','People', 13),
+        (14,'exit','#f39267',3,'These are recognised refugees that are leaving the camp. ','People', 14),
+        (15,'verified referal','#e9ff00',3,'Means this person has a direct referal from an actor in the camp that they need extra support','People',15),
+        (16,'company X','#f37167',3,'Donation from company x','Stock',16),
+        (17,'new','#d89016',3,'','All',17),
+        (18,'emergency','#0097ff',3,'Hold back for emergencies','Stock',18),
+        (19,'registered','#33f403',4,'Registered in the camp','People', 19),
+        (20,'exit','#f39267',4,'These are recognised refugees that are leaving the camp. ','People', 20),
+        (21,'verified referal','#e9ff00',4,'Means this person has a direct referal from an actor in the camp that they need extra support','People',21),
+        (22,'company X','#f37167',4,'Donation from company x','Stock',22),
+        (23,'new','#d89016',4,'','All',23),
+        (24,'emergency','#0097ff',4,'Hold back for emergencies','Stock',24);");
+
         //------------------- locations
         $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`,`box_state_id`,`deleted`) VALUES
 			(1,'Shop',1,1,0,0,1,0,0,0,5,NULL),
@@ -74,6 +101,7 @@ class Demo extends AbstractSeed
 
         //------------------- people
         $people = [];
+        $tagrelations = [];
         $lastparentid = null;
         $lastlastname = null;
         $lastcontainer = null;
@@ -134,8 +162,65 @@ class Demo extends AbstractSeed
             $tempdata['created'] = $tempdata['created']->sub(new DateInterval('P6M'))->format('Y-m-d H:i:s');
 
             $people[] = $tempdata;
+
+            // assign tags to people
+            if ($faker->boolean($chanceOfGettingTrue = 10)) {
+                $tagrelations[] = [
+                    'object_id' => $i,
+                    'object_type' => 'People',
+                    'tag_id' => 1,
+                ];
+            }
+            if ($faker->boolean($chanceOfGettingTrue = 10)) {
+                $tagrelations[] = [
+                    'object_id' => $i,
+                    'object_type' => 'People',
+                    'tag_id' => 2,
+                ];
+            }
+            if ($faker->boolean($chanceOfGettingTrue = 10)) {
+                $tagrelations[] = [
+                    'object_id' => $i,
+                    'object_type' => 'People',
+                    'tag_id' => 3,
+                ];
+            }
+            if ($faker->boolean($chanceOfGettingTrue = 10)) {
+                $tagrelations[] = [
+                    'object_id' => $i,
+                    'object_type' => 'People',
+                    'tag_id' => 5,
+                ];
+            }
         }
         $this->table('people')->insert($people)->save();
+        $this->table('tags_relations')->insert($tagrelations)->save();
+
+        //------------------- transfer agreements
+        $this->execute("INSERT INTO `transfer_agreement` (`id`, `source_organisation_id`, `target_organisation_id`, `state`, `type`, `requested_on`, `requested_by`, `accepted_on`, `accepted_by`, `terminated_on`, `terminated_by`, `valid_from`, `valid_until`, `comment`) VALUES
+            (1,1,2,'Accepted','Bidirectional','2023-02-09 17:24:29',8,'2023-02-09 17:30:51',37,NULL,NULL,'2023-02-09 17:24:29',NULL,NULL),
+            (2,1,2,'UnderReview','SendingTo','2023-02-09 17:25:46',8,NULL,NULL,NULL,NULL,'2023-02-09 17:25:46',NULL,NULL),
+            (3,1,2,'Canceled','ReceivingFrom','2023-02-09 17:26:02',8,NULL,NULL,'2023-02-09 17:36:09',8,'2023-02-09 17:26:02',NULL,NULL),
+            (4,2,1,'Rejected','Bidirectional','2023-02-09 17:29:09',37,NULL,NULL,'2023-02-09 17:37:45',8,'2023-02-09 17:29:09',NULL,NULL),
+            (5,1,2,'UnderReview','ReceivingFrom','2023-02-09 17:34:50',8,NULL,NULL,NULL,NULL,'2023-02-09 17:34:50',NULL,NULL);");
+
+        $this->execute('INSERT INTO `transfer_agreement_detail` (`id`, `transfer_agreement_id`, `source_base_id`, `target_base_id`) VALUES
+            (1,1,1,2),
+            (2,1,1,3),
+            (3,1,1,4),
+            (4,2,1,2),
+            (5,3,1,3),
+            (6,4,4,1),
+            (7,5,1,3);');
+
+        $this->execute("INSERT INTO `shipment` (`id`, `transfer_agreement_id`, `source_base_id`, `target_base_id`, `state`, `started_on`, `started_by_id`, `sent_on`, `sent_by_id`, `receiving_started_on`, `receiving_started_by_id`, `completed_on`, `completed_by_id`, `canceled_on`, `canceled_by_id`) VALUES
+            (1,1,1,2,'Preparing','2023-02-09 18:05:57',8,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+            (2,1,1,3,'Canceled','2023-02-09 18:06:02',8,NULL,NULL,NULL,NULL,NULL,NULL,NOW(),8),
+            (3,1,1,3,'Preparing','2023-02-09 18:06:25',8,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+            (4,1,1,4,'Sent','2023-02-09 18:06:25',8,DATE_SUB(NOW(), INTERVAL 2 DAY),8,NULL,NULL,NULL,NULL,NULL,NULL),
+            (5,1,2,1,'Receiving','2023-02-09 18:06:25',18,DATE_SUB(NOW(), INTERVAL 2 DAY),18,DATE_SUB(NOW(), INTERVAL 1 DAY),8,NULL,NULL,NULL,NULL),
+            (6,1,3,1,'Lost','2023-02-09 18:06:25',18,DATE_SUB(NOW(), INTERVAL 2 DAY),18,NULL,NULL,NOW(),8,NULL,NULL),
+            (7,1,3,1,'Completed','2023-02-09 18:06:25',18,DATE_SUB(NOW(), INTERVAL 2 DAY),18,DATE_SUB(NOW(), INTERVAL 1 DAY),8,NOW(),8,NULL,NULL);");
 
         //------------------- products
         $this->execute("INSERT INTO `products` (`id`,`name`,`category_id`,`gender_id`,`sizegroup_id`,`camp_id`,`value`,`maxperadult`,`maxperchild`,`stockincontainer`,`comments`,`deleted`) VALUES 
@@ -787,6 +872,12 @@ class Demo extends AbstractSeed
         //------------------- stock
         // restrict selection of random ids
         // key is campid
+        $shipments = ['1' => range(1, 4), '2' => [5], '3' => [6, 7]];
+        // key is shipmentid
+        $boxstatebyshipment = ['1' => 3, '2' => 1, '3' => 3, '4' => 3, '5' => 4, '6' => 2, '7' => 1];
+        // key is campid
+        $tags = ['1' => range(4, 6), '2' => range(10, 12), '3' => range(16, 18)];
+        // key is campid
         $products = ['1' => range(1, 219), '2' => range(220, 414), '3' => range(415, 609)];
         // key is campid
         $locations = ['1' => range(1, 13), '2' => range(14, 18), '3' => range(19, 22)];
@@ -1425,6 +1516,8 @@ class Demo extends AbstractSeed
             '609' => [52], ];
 
         $stock = [];
+        $tagrelations = [];
+        $shipmentdetails = [];
 
         // A few fixed elements connected to qr codes
         for ($i = 1; $i <= 3; ++$i) {
@@ -1443,15 +1536,32 @@ class Demo extends AbstractSeed
 
             $stock[] = $tempdata;
         }
+        // add tags to the first 3 boxes
+        $tagrelations[] = [
+            'object_id' => 1,
+            'object_type' => 'Stock',
+            'tag_id' => 4,
+        ];
+        $tagrelations[] = [
+            'object_id' => 1,
+            'object_type' => 'Stock',
+            'tag_id' => 5,
+        ];
+        $tagrelations[] = [
+            'object_id' => 3,
+            'object_type' => 'Stock',
+            'tag_id' => 6,
+        ];
 
         // add random boxes
         for ($i = 20; $i <= 800; ++$i) {
             $campid = $faker->randomElement(['1', '2', '3']);
             $locationid = $faker->randomElement($locations[$campid]);
+            $productid = $faker->randomElement($products[$campid]);
             $tempdata = [
                 'id' => $i,
-                'box_id' => $faker->unique()->randomNumber($nbDigits = 6, $strict = true),
-                'product_id' => $faker->randomElement($products[$campid]),
+                'box_id' => $faker->unique()->randomNumber($nbDigits = 7, $strict = true),
+                'product_id' => $productid,
                 'items' => $faker->numberBetween($min = 1, $max = 100),
                 'location_id' => $locationid,
                 'box_state_id' => $box_state[$locationid],
@@ -1459,9 +1569,69 @@ class Demo extends AbstractSeed
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
 
+            // box is part of a shipment
+            $notags = false;
+            if ($faker->boolean($chanceOfGettingTrue = 20) && 1 == $tempdata['box_state_id']) {
+                $shipmentid = $faker->randomElement($shipments[$campid]);
+                $tempshipmentdetail = [
+                    'id' => $i,
+                    'shipment_id' => $shipmentid,
+                    'box_id' => $i,
+                    'source_location_id' => $locationid,
+                    'source_product_id' => $productid,
+                    'source_size_id' => $tempdata['size_id'],
+                    'created_on' => $faker->dateTimeBetween($startDate = '-3 days', $endDate = '-2 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s'),
+                    'created_by_id' => 1,
+                ];
+                // some boxes are removed during preparing state or the shipment was canceled
+                if ($faker->boolean($chanceOfGettingTrue = 10) || 2 == $shipmentid) {
+                    $tempdata['box_state_id'] = 1;
+                    $tempshipmentdetail['removed_on'] = $faker->dateTimeBetween($startDate = '-2 days', $endDate = '-1 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+                    $tempshipmentdetail['removed_by_id'] = 1;
+                } elseif ($shipmentid >= 5) {
+                    // for a shipment (id = 5) where receiving started some boxes are already lost or reconciliated
+                    // for a shipment (id = 6) where the shipment is lost, all boxes are lost
+                    // for a shipment (id = 7) which is completed all boxes are lost or completed
+                    if (6 == $shipmentid || ((5 == $shipmentid || 7 == $shipmentid) && $faker->boolean($chanceOfGettingTrue = 10))) {
+                        $tempdata['box_state_id'] = 2;
+                        $tempshipmentdetail['lost_on'] = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+                        $tempshipmentdetail['lost_by_id'] = 1;
+                    } elseif ((5 == $shipmentid && $faker->boolean($chanceOfGettingTrue = 10)) || 7 == $shipmentid) {
+                        $tempdata['box_state_id'] = 1;
+                        $tempdata['location_id'] = $faker->randomElement($locations['1']);
+                        $tempdata['product_id'] = $faker->randomElement($products['1']);
+                        $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
+                        $tempshipmentdetail['received_on'] = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
+                        $tempshipmentdetail['received_by_id'] = 1;
+                        $tempshipmentdetail['target_location_id'] = $tempdata['location_id'];
+                        $tempshipmentdetail['target_product_id'] = $tempdata['product_id'];
+                        $tempshipmentdetail['target_size_id'] = $tempdata['size_id'];
+                        $notags = true;
+                    } else {
+                        $tempdata['box_state_id'] = 4;
+                    }
+                } else {
+                    $tempdata['box_state_id'] = $boxstatebyshipment[$shipmentid];
+                }
+
+                $shipmentdetails[] = $tempshipmentdetail;
+            }
             $stock[] = $tempdata;
+            // assign tags
+            if ($faker->boolean($chanceOfGettingTrue = 40) && !$notags) {
+                $tagids = array_unique($faker->randomElements($array = $tags[$campid], $count = $faker->numberBetween($min = 1, $max = 3)));
+                foreach ($tagids as $tagid) {
+                    $tagrelations[] = [
+                        'object_id' => $i,
+                        'object_type' => 'Stock',
+                        'tag_id' => $tagid,
+                    ];
+                }
+            }
         }
         $this->table('stock')->insert($stock)->save();
+        $this->table('shipment_detail')->insert($shipmentdetails)->save();
+        $this->table('tags_relations')->insert($tagrelations)->save();
 
         //------------------- transactions
         $transactions = [];
@@ -1496,29 +1666,5 @@ class Demo extends AbstractSeed
             }
         }
         $this->table('transactions')->insert($transactions)->save();
-
-        //------------------- transfer agreements
-        $this->execute("INSERT INTO `transfer_agreement` (`id`, `source_organisation_id`, `target_organisation_id`, `state`, `type`, `requested_on`, `requested_by`, `accepted_on`, `accepted_by`, `terminated_on`, `terminated_by`, `valid_from`, `valid_until`, `comment`) VALUES
-            (1,1,2,'Accepted','Bidirectional','2023-02-09 17:24:29',8,'2023-02-09 17:30:51',37,NULL,NULL,'2023-02-09 17:24:29',NULL,NULL),
-            (2,1,2,'UnderReview','SendingTo','2023-02-09 17:25:46',8,NULL,NULL,NULL,NULL,'2023-02-09 17:25:46',NULL,NULL),
-            (3,1,2,'Canceled','ReceivingFrom','2023-02-09 17:26:02',8,NULL,NULL,'2023-02-09 17:36:09',8,'2023-02-09 17:26:02',NULL,NULL),
-            (4,2,1,'Rejected','Bidirectional','2023-02-09 17:29:09',37,NULL,NULL,'2023-02-09 17:37:45',8,'2023-02-09 17:29:09',NULL,NULL),
-            (5,1,2,'UnderReview','ReceivingFrom','2023-02-09 17:34:50',8,NULL,NULL,NULL,NULL,'2023-02-09 17:34:50',NULL,NULL);");
-
-        $this->execute('INSERT INTO `transfer_agreement_detail` (`id`, `transfer_agreement_id`, `source_base_id`, `target_base_id`) VALUES
-            (1,1,1,2),
-            (2,1,1,3),
-            (3,1,1,4),
-            (4,2,1,2),
-            (5,3,1,3),
-            (6,4,4,1),
-            (7,5,1,3);');
-
-        $this->execute("INSERT INTO `shipment` VALUES
-            (1,1,2,1,'Preparing','2023-02-09 18:05:57',8,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
-            (2,1,3,1,'Canceled','2023-02-09 18:06:02',8,'2023-02-09 18:07:10',8,NULL,NULL,NULL,NULL,NULL,NULL),
-            (3,1,3,1,'Preparing','2023-02-09 18:06:25',8,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
-            (4,4,1,1,'Preparing','2023-02-09 18:08:15',37,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
-            (5,4,1,1,'Preparing','2023-02-09 18:08:20',37,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);");
     }
 }

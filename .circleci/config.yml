@@ -118,7 +118,10 @@ jobs:
           vendor/bin/phinx migrate -e << parameters.serviceName >>
           # deploy
           gcloud app deploy app-<< parameters.serviceName >>.yaml --version ${CIRCLE_BUILD_NUM}
-          gcloud app deploy cron.yaml dispatch.yaml --version ${CIRCLE_BUILD_NUM}
+          gcloud app deploy cron.yaml --version ${CIRCLE_BUILD_NUM}
+          # There is a problem with the dispatch.yaml and we get a 500 error when we try to deplay
+          # something similar to this: https://www.googlecloudcommunity.com/gc/Serverless/gcloud-app-deploy-dispatch-yaml-ERROR-gcloud-app-deploy-Server/m-p/549190#M1544
+          # gcloud app deploy dispatch.yaml --version ${CIRCLE_BUILD_NUM}
   
   create-sentry-release:
     docker: 
