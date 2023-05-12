@@ -117,7 +117,7 @@ function logout($returnTo = null)
     session_unset();
     session_destroy();
     $auth0 = getAuth0($settings);
-    $url = $auth0->logout();
+    $auth0->logout();
 
     if ($returnTo) {
         redirect($returnTo);
