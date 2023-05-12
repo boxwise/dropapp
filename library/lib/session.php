@@ -110,15 +110,18 @@ function isUserInSyncWithAuth0ByEmail($email)
     return isUserInSyncWithAuth0(db_value('SELECT id FROM cms_users WHERE email = :email OR (deleted IS NOT NULL AND email LIKE :deletedEmail)', ['email' => $email, 'deletedEmail' => $email.'.deleted%']));
 }
 
-function logout()
+function logout($returnTo = null)
 {
     global $settings;
 
     session_unset();
     session_destroy();
     $auth0 = getAuth0($settings);
-    $auth0->clear();
     $auth0->logout();
+
+    if ($returnTo) {
+        redirect($returnTo);
+    }
 }
 
 function logoutWithRedirect()
