@@ -27,6 +27,10 @@ Tracer::inSpan(
             loginWithRedirect();
         }
 
+        if ('logoutfromv2' == $action) {
+            logout("https://{$settings['auth0_domain']}/v2/logout?client_id={$settings['auth0_client_id']}&returnTo={$settings['v2_base_url']}");
+        }
+
         $cmsmain = new Zmarty();
 
         // Fill the organisation menu
