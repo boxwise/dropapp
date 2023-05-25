@@ -9,4 +9,4 @@ RUN apt-get update \
 # PHP extensions
 RUN docker-php-ext-install pdo_mysql exif gd
 # Enable xdebug for debugging & profiling
-RUN pecl install xdebug && docker-php-ext-enable xdebug gd
+RUN pecl install xdebug-3.1.5 && docker-php-ext-enable xdebug gd
