@@ -18,7 +18,12 @@
             ($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']]) : ''));
 
         $data = getlistdata('
-        	SELECT
+        SELECT 	
+            stock_filtered.*,
+            GROUP_CONCAT(tags.label ORDER BY tags.seq  SEPARATOR 0x1D) AS taglabels,
+            GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors
+        FROM
+            (SELECT
         		stock.*,
         		SUBSTRING(stock.comments,1, 25) AS shortcomment, 
                 g.label AS gender,
@@ -48,17 +53,34 @@
                 ($size ? 's.id = '.intval($size).' AND ' : '').
                 ($location ? 'l.id = '.intval($location).' AND ' : '').
                 '(NOT stock.deleted OR stock.deleted IS NULL) AND 
-                stock.box_state_id NOT IN (2,6,5) ');
+                stock.box_state_id NOT IN (2,6,5)) AS stock_filtered
+            LEFT JOIN 
+                tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock"
+            LEFT JOIN
+                tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
+            GROUP BY
+                stock_filtered.id');
 
         foreach ($data as $key => $value) {
             if (3 == $data[$key]['box_state_id']) {
-                // ordered
                 $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-truck tooltip-this" title="This box is marked for a shipment."></i>';
             } elseif (4 == $data[$key]['box_state_id']) {
-                // picked
                 $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
+            } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
+                $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';
+                $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban' : 'fa-chain-broken';
+                $statelabel = 2 === intval($data[$key]['box_state_id']) ? 'lost' : 'scrapped';
+                $data[$key]['order'] = sprintf('<span class="hide">3</span><i class="fa %s tooltip-this" style="color: red" title="This box was %s %s"></i>', $icon, $statelabel, $modifiedtext);
             } else {
                 $data[$key]['order'] = '<span class="hide">0</span>';
+            }
+
+            if ($data[$key]['taglabels']) {
+                $taglabels = explode(chr(0x1D), $data[$key]['taglabels']);
+                $tagcolors = explode(',', $data[$key]['tagcolors']);
+                foreach ($taglabels as $tagkey => $taglabel) {
+                    $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                }
             }
         }
 
@@ -66,6 +88,7 @@
         addcolumn('text', 'Product', 'product');
         addcolumn('text', 'Gender', 'gender');
         addcolumn('text', 'Size', 'size');
+        addcolumn('tag', 'Tags', 'tags');
         addcolumn('text', 'Comments', 'shortcomment');
         addcolumn('text', 'Items', 'items');
         addcolumn('text', 'Location', 'location');
