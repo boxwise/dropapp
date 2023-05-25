@@ -65,7 +65,7 @@
             addfield('hidden', '', 'label');
         } else {
             $data['count'] = 2;
-            addfield('number', 'How many box labels do you need?', 'count', ['min' => 0, 'max' => $maxQrCodes, 'testid' => 'numberOfLabelsInput']);
+            addfield('number', 'How many box labels do you need?', 'count', ['min' => 1, 'max' => $maxQrCodes, 'testid' => 'numberOfLabelsInput']);
         }
         addfield('checkbox', 'Make big labels including fields for box number and contents', 'fulllabel', ['testid' => 'field_fulllabel']);
 
