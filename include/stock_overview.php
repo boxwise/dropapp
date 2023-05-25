@@ -19,13 +19,9 @@
         listsetting('allowcollapse', true);
         listsetting('listrownotclickable', true);
 
-        $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND locations.box_state_id = 5 AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
-        $statusarray = ['in_stock' => 'In stock', 'ordered' => 'Ordered', 'untouched' => 'Untouched for 3 months', 'lost' => 'Lost', 'scrap' => 'Scrap'];
-        if (isset($outgoinglocations)) {
-            listfilter(['label' => 'Boxes', 'options' => ($statusarray + $outgoinglocations)]);
-        } else {
-            listfilter(['label' => 'Boxes', 'options' => $statusarray]);
-        }
+        $statusarray = ['in_stock' => 'In Stock', 'all' => 'All Box States', 'donated' => 'Donated', 'lost' => 'Lost', 'scrap' => 'Scrap', 'marked_for_shipment' => 'Marked For Shipment', 'untouched' => 'Untouched for 3 months'];
+        listfilter(['label' => 'Boxes', 'options' => $statusarray]);
+
         // Set filter to InStock by default
         if (!isset($listconfig['filtervalue'])) {
             $listconfig['filtervalue'] = 'in_stock';
@@ -35,7 +31,7 @@
         listfilter2(['label' => 'Gender', 'options' => $genders]);
         listsetting('filter2cssclass', 'overview-filter-gender');
 
-        listfilter3(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT locations.box_state_id IN (2,5,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq']);
+        listfilter3(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT locations.box_state_id IN (2,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq']);
         listsetting('filter3cssclass', 'overview-filter-locations');
 
         addcolumn('text', 'Category', 'label');
@@ -108,12 +104,13 @@
                         AND (NOT stock.deleted OR stock.deleted IS NULL)'.
                         ($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
                         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
-                        .('scrap' == $_SESSION['filter']['stock_overview'] ? 'AND stock.box_state_id = 6' :
-                            ('lost' == $_SESSION['filter']['stock_overview'] ? 'AND stock.box_state_id = 2' :
-                            ('ordered' == $_SESSION['filter']['stock_overview'] ? 'AND stock.box_state_id IN (3,4) ' :
-                                ('untouched' == $_SESSION['filter']['stock_overview'] ? 'AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id NOT IN (2,6,5) ' :
-                                    (is_numeric($_SESSION['filter']['stock_overview']) ? ' AND (locations.id = '.intval($_SESSION['filter']['stock_overview']).')' : '
-                                        AND stock.box_state_id NOT IN (2,6,5)'))))).
+                        .('scrap' == $_SESSION['filter']['stock_overview'] ? ' AND stock.box_state_id = 6' :
+                            ('lost' == $_SESSION['filter']['stock_overview'] ? ' AND stock.box_state_id = 2' :
+                                ('marked_for_shipment' == $_SESSION['filter']['stock_overview'] ? ' AND stock.box_state_id = 3 ' :
+                                    ('donated' == $_SESSION['filter']['stock_overview'] ? ' AND stock.box_state_id = 5 ' :
+                                        ('untouched' == $_SESSION['filter']['stock_overview'] ? ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1' :
+                                            ('all' == $_SESSION['filter']['stock_overview'] ? ' ' :
+                                                ' AND stock.box_state_id = 1')))))).
                     ' GROUP BY 
                         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
                     ) as agrouping
