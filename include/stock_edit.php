@@ -166,12 +166,10 @@
     $cmsmain->assign('include', 'cms_form.tpl');
     addfield('hidden', '', 'id');
     // put a title above the form
-    $cmsmain->assign('titlewithtags', 'Box ');
-    // $cmsmain->assign('title', 'Box');
-
     if ($id) {
-        addfield('text', 'Box ID', 'box_id', ['readonly' => true, 'width' => 2]);
-        addfield('line');
+        $cmsmain->assign('titlewithtags', 'Box '.$data['box_id'].' ');
+    } else {
+        $cmsmain->assign('titlewithtags', 'Box ');
     }
 
     addfield('select', 'Location', 'location_id', ['disabled' => $disabled, 'required' => true,  'multiple' => false,  'onchange' => ($id ? 'getNewBoxState();' : ''),
