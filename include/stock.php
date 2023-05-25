@@ -212,8 +212,8 @@ Tracer::inSpan(
             addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations, 'disableif' => true]);
             addbutton('qr', 'Make label', ['icon' => 'fa-print']);
 
-            $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
-            $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
+            $cmsmain->assign('firstline', ['Total', $totalboxes.' boxes', $totalitems.' items', '', '', '', '', '', '', '']);
+            $cmsmain->assign('listfooter', ['Total', $totalboxes.' boxes', $totalitems.' items', '', '', '', '', '', '', '']);
 
             $cmsmain->assign('data', $data);
             $cmsmain->assign('listconfig', $listconfig);
