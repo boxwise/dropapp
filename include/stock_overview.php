@@ -34,6 +34,11 @@
         listfilter3(['label' => 'By location', 'query' => 'SELECT id AS value, label FROM locations WHERE deleted IS NULL AND NOT locations.box_state_id IN (2,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq']);
         listsetting('filter3cssclass', 'overview-filter-locations');
 
+        // Tag Filter
+        $tags = db_simplearray('SELECT id, label FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND `type` IN ("All", "Stock") ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']]);
+        $tagfilter = ['id' => 'tagfilter', 'placeholder' => 'Tag filter', 'options' => db_array('SELECT id, id AS value, label, color FROM tags WHERE camp_id = :camp_id AND deleted IS NULL AND `type` in ("All","Stock") ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']])];
+        listsetting('multiplefilter', $tagfilter);
+
         addcolumn('text', 'Category', 'label');
         addcolumn('text', 'Subtypes', 'subtypes');
         addcolumn('text', 'Items', 'N_items');
@@ -97,12 +102,18 @@
                     INNER JOIN
                         locations on stock.location_id = locations.id 
                     INNER JOIN 
-                        box_state bs on bs.id = stock.box_state_id
+                        box_state bs on bs.id = stock.box_state_id'.
+                    // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
+                    ($listconfig['multiplefilter_selected'] ? '
+                        INNER JOIN
+                            tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock"
+                        INNER JOIN
+                            tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'] : '').' 
                     WHERE 
                         locations.camp_id = :camp_id 
                         AND locations.type = "Warehouse"
-                        AND (NOT stock.deleted OR stock.deleted IS NULL)'.
-                        ($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
+                        AND (NOT stock.deleted OR stock.deleted IS NULL)'
+                        .($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
                         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
                         .('scrap' == $_SESSION['filter']['stock_overview'] ? ' AND stock.box_state_id = 6' :
                             ('lost' == $_SESSION['filter']['stock_overview'] ? ' AND stock.box_state_id = 2' :
@@ -110,8 +121,9 @@
                                     ('donated' == $_SESSION['filter']['stock_overview'] ? ' AND stock.box_state_id = 5 ' :
                                         ('untouched' == $_SESSION['filter']['stock_overview'] ? ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1' :
                                             ('all' == $_SESSION['filter']['stock_overview'] ? ' ' :
-                                                ' AND stock.box_state_id = 1')))))).
-                    ' GROUP BY 
+                                                ' AND stock.box_state_id = 1'))))))
+                        .($listconfig['multiplefilter_selected'] ? ' AND tags.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '')
+                    .' GROUP BY 
                         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
                     ) as agrouping
                 WHERE
