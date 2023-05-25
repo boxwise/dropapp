@@ -30,7 +30,7 @@ Tracer::inSpan(
                 'donated' => 'Donated',
                 'lost' => 'Lost',
                 'scrap' => 'Scrap',
-                'marked_for_shipment' => 'Marked for Shipment',
+                // 'marked_for_shipment' => 'Marked for Shipment',
                 'dispose' => 'Untouched for 3 months',
             ];
             listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);

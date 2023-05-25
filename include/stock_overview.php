@@ -19,7 +19,7 @@
         listsetting('allowcollapse', true);
         listsetting('listrownotclickable', true);
 
-        $statusarray = ['in_stock' => 'In Stock', 'all' => 'All Box States', 'donated' => 'Donated', 'lost' => 'Lost', 'scrap' => 'Scrap', 'marked_for_shipment' => 'Marked For Shipment', 'untouched' => 'Untouched for 3 months'];
+        $statusarray = ['in_stock' => 'In Stock', 'all' => 'All Box States', 'donated' => 'Donated', 'lost' => 'Lost', 'scrap' => 'Scrap', 'untouched' => 'Untouched for 3 months'];
         listfilter(['label' => 'Boxes', 'options' => $statusarray]);
 
         // Set filter to InStock by default
