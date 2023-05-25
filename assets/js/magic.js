@@ -246,7 +246,8 @@ $(function() {
             $.fancybox.close();
         } else {
             $.fancybox.close();
-            data = $.parseJSON(event.data);
+            debugger;
+            data = event.data;
             var el = $(".opened-fancybox");
             if (el.length) {
             }
