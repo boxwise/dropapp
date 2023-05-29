@@ -7,15 +7,16 @@
     if (!$ajax) {
         initlist();
 
-        list($category, $product, $gender, $size, $location) = explode('-', $_GET['id']);
+        list($boxstate, $locationfromfilter, $category, $product, $gender, $size, $location) = explode('-', $_GET['id']);
 
         $productname = ($product ? db_value('SELECT name FROM products WHERE id = :id AND camp_id = :camp_id AND (NOT deleted OR deleted IS NULL)', ['id' => $product, 'camp_id' => $_SESSION['camp']['id']]) : '');
-        $cmsmain->assign('title', 'Boxes for: '.
+        $cmsmain->assign('title', db_value('SELECT label FROM box_state WHERE id = :id', ['id' => $boxstate]).' Boxes for: '.
             db_value('SELECT label FROM product_categories WHERE id = :id', ['id' => $category]).
             ($product ? ', '.$productname : '').
             ($gender ? ', '.db_value('SELECT label FROM genders WHERE id = :id', ['id' => $gender]) : '').
             ($size ? ', '.db_value('SELECT label FROM sizes WHERE id = :id', ['id' => $size]) : '').
-            ($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']]) : ''));
+            ($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']]) :
+                ($locationfromfilter != 0 ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $locationfromfilter, 'camp_id' => $_SESSION['camp']['id']]) : ' ')));
 
         $data = getlistdata('
         SELECT 	
@@ -51,9 +52,10 @@
                 ($product ? 'UPPER(p.name) = UPPER("'.$productname.'") AND ' : '').
                 ($gender ? 'g.id = '.intval($gender).' AND ' : '').
                 ($size ? 's.id = '.intval($size).' AND ' : '').
-                ($location ? 'l.id = '.intval($location).' AND ' : '').
+                ($location ? 'l.id = '.intval($location).' AND ' :
+                    ($locationfromfilter != 0 ? 'l.id = '.intval($locationfromfilter).' AND ' : '')).
                 '(NOT stock.deleted OR stock.deleted IS NULL) AND 
-                stock.box_state_id NOT IN (2,6,5)) AS stock_filtered
+                stock.box_state_id = '.db_value('SELECT id FROM box_state WHERE id = :id', ['id' => $boxstate]).') AS stock_filtered
             LEFT JOIN 
                 tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock"
             LEFT JOIN
