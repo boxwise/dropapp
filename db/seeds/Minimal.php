@@ -68,7 +68,7 @@ class Minimal extends AbstractSeed
 			(156,42,'User groups','cms_usergroups',21,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
 			(158,161,'Add beneficiary','people_add',4,0,0,1,0,0),
-			(160,99,'Stock Overview (<span>beta</span>)','stock_overview',3,0,0,1,0,0),
+			(160,99,'Stock Overview','stock_overview',3,0,0,1,0,0),
 			(161,NULL,'Beneficiaries','',2,0,0,1,0,0),
 			(162,42,'Manage tags','tags',6,0,0,1,0,0),
 			(163,NULL,'Transfers','',4,0,0,1,0,0),

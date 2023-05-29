@@ -21,61 +21,53 @@ Tracer::inSpan(
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
             //Location filter
-            listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND NOT locations.box_state_id IN (2,5,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
+            listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND NOT locations.box_state_id IN (2,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
 
             // Status Filter
-            $outgoinglocations = db_simplearray('SELECT id AS value, label FROM locations WHERE deleted IS NULL AND locations.box_state_id = 5 AND NOT is_market AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq');
             $statusarray = [
-                'boxes_in_stock' => 'In Stock',
-                'showall' => 'Everything',
-                'ordered' => 'Ordered',
-                'dispose' => 'Untouched for 3 months',
-                'shop' => 'Moved to Free Shop',
-                'lost_boxes' => 'Lost',
+                'in_stock' => 'In Stock',
+                'all' => 'All Box States',
+                'donated' => 'Donated',
+                'lost' => 'Lost',
                 'scrap' => 'Scrap',
+                // 'marked_for_shipment' => 'Marked for Shipment',
+                'dispose' => 'Untouched for 3 months',
             ];
-            $statusarray += (is_null($outgoinglocations) ? [] : $outgoinglocations);
             listfilter2(['label' => 'Boxes', 'options' => $statusarray, 'filter' => '"show"']);
             // Set filter to InStock by default
             if (!isset($listconfig['filtervalue2'])) {
-                $listconfig['filtervalue2'] = 'boxes_in_stock';
+                $listconfig['filtervalue2'] = 'in_stock';
             }
 
-            function get_filter2_query($applied_filter, $custom_outgoing_locations)
+            function get_filter2_query($applied_filter)
             {
-                if (!is_null($custom_outgoing_locations) && array_key_exists($applied_filter, $custom_outgoing_locations)) {
-                    return ' AND l.id = '.$applied_filter;
-                }
-
                 switch ($applied_filter) {
-                case 'boxes_in_stock':
-                    // @todo: replace l.visable with box_state_id = 1 (later on once we totally migrate to box state)
-                    // check if location is visable and also box not in Lost, Scrap or Donated state
-                    return ' AND stock.box_state_id NOT IN (2,6,5) ';
+                case 'in_stock':
+                    return ' AND stock.box_state_id = 1 ';
 
-                case 'ordered':
-                    return ' AND stock.box_state_id IN (3,4) ';
+                case 'all':
+                    return ' ';
 
-                case 'dispose':
-                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id NOT IN (2,6,5)';
+                case 'donated':
+                    return ' AND stock.box_state_id = 5';
 
-                case 'lost_boxes':
+                case 'lost':
                     return ' AND stock.box_state_id = 2';
-
-                case 'shop':
-                    return ' AND l.is_market';
 
                 case 'scrap':
                     return ' AND stock.box_state_id = 6';
 
-                case 'showall':
-                    return ' ';
+                case 'marked_for_shipment':
+                    return ' AND stock.box_state_id = 3';
+
+                case 'dispose':
+                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1';
 
                 default:
-                    return ' AND stock.box_state_id NOT IN (2,6,5)';
+                    return ' AND stock.box_state_id = 1';
             }
             }
-            $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock'], $outgoinglocations);
+            $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock']);
 
             // Gender Filter
             $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
@@ -220,8 +212,8 @@ Tracer::inSpan(
             addbutton('movebox', 'Move', ['icon' => 'fa-truck', 'options' => $locations, 'disableif' => true]);
             addbutton('qr', 'Make label', ['icon' => 'fa-print']);
 
-            $cmsmain->assign('firstline', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
-            $cmsmain->assign('listfooter', ['Total', '', '', '', $totalboxes.' boxes', $totalitems.' items', '', '', '', '']);
+            $cmsmain->assign('firstline', ['Total', $totalboxes.' boxes', $totalitems.' items', '', '', '', '', '', '', '']);
+            $cmsmain->assign('listfooter', ['Total', $totalboxes.' boxes', $totalitems.' items', '', '', '', '', '', '', '']);
 
             $cmsmain->assign('data', $data);
             $cmsmain->assign('listconfig', $listconfig);
