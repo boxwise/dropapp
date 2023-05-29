@@ -16,7 +16,7 @@
             ($gender ? ', '.db_value('SELECT label FROM genders WHERE id = :id', ['id' => $gender]) : '').
             ($size ? ', '.db_value('SELECT label FROM sizes WHERE id = :id', ['id' => $size]) : '').
             ($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']]) :
-                ($locationfromfilter != 0 ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $locationfromfilter, 'camp_id' => $_SESSION['camp']['id']]) : ' ')));
+                (0 != $locationfromfilter ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $locationfromfilter, 'camp_id' => $_SESSION['camp']['id']]) : ' ')));
 
         $data = getlistdata('
         SELECT 	
@@ -53,7 +53,7 @@
                 ($gender ? 'g.id = '.intval($gender).' AND ' : '').
                 ($size ? 's.id = '.intval($size).' AND ' : '').
                 ($location ? 'l.id = '.intval($location).' AND ' :
-                    ($locationfromfilter != 0 ? 'l.id = '.intval($locationfromfilter).' AND ' : '')).
+                    (0 != $locationfromfilter ? 'l.id = '.intval($locationfromfilter).' AND ' : '')).
                 '(NOT stock.deleted OR stock.deleted IS NULL) AND 
                 stock.box_state_id = '.db_value('SELECT id FROM box_state WHERE id = :id', ['id' => $boxstate]).') AS stock_filtered
             LEFT JOIN 
