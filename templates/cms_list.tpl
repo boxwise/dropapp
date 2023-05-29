@@ -163,8 +163,8 @@
 								{* reference classes for collapse button *}
 								{if $listconfig['allowcollapse'] && $row['level']} 
 									{foreach $parent_array as $level=>$parent}
-										{assign var="parent_array_slice" value=$parent_array|array_slice:0:($level+1)}
-										data-hidecollapseparent{$level}={'-'|implode:$parent_array_slice}
+										{assign var="parent_array_slice" value=$parent_array|array_slice:0:($level+3)}
+										data-hidecollapseparent{$level-$counter}={'-'|implode:$parent_array_slice}
 									{/foreach}
 									data-collapseparent={$row['parent_id']}
 								{/if}>

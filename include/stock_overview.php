@@ -28,9 +28,6 @@
                 case 'in_stock':
                     return 1;
 
-                case 'all':
-                    return null;
-
                 case 'donated':
                     return 5;
 
@@ -75,7 +72,9 @@
                 IF(isnull(a.location),IF(isnull(a.Gender),IF(isnull(a.prod_id),"Category","Product"),"Gender"),"Size") as labelname,
                 IF(isnull(a.location),IF(isnull(a.Gender),IF(isnull(a.prod_id),a.Category,a.Product),a.Gender),a.size) as label,
                 TRIM(trailing "-" from concat('
-                    .($_SESSION['filter']['stock_overview'] && ('untouched' != $_SESSION['filter']['stock_overview']) ? box_state_id_from_filter($_SESSION['filter']['stock_overview']) : '1')
+                    .('untouched' == $_SESSION['filter']['stock_overview'] ? 1 :
+                        ('all' == $_SESSION['filter']['stock_overview'] ? 0 :
+                            box_state_id_from_filter($_SESSION['filter']['stock_overview'])))
                     .',"-",'
                     .($_SESSION['filter3']['stock_overview'] ? intval($_SESSION['filter3']['stock_overview']) : 0)
                     .',"-",
@@ -153,8 +152,9 @@
                         .($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
                         .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
                         .('untouched' == $_SESSION['filter']['stock_overview'] ? ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1' :
-                            ($_SESSION['filter']['stock_overview'] ? ' AND (stock.box_state_id = '.box_state_id_from_filter($_SESSION['filter']['stock_overview']).') ' :
-                                ' AND (stock.box_state_id = 1) '))
+                            ('all' == $_SESSION['filter']['stock_overview'] ? '' :
+                                ($_SESSION['filter']['stock_overview'] ? ' AND (stock.box_state_id = '.box_state_id_from_filter($_SESSION['filter']['stock_overview']).') ' :
+                                    ' AND (stock.box_state_id = 1) ')))
                         .($listconfig['multiplefilter_selected'] ? ' AND tags.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '')
                     .' GROUP BY 
                         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
