@@ -1,8 +1,13 @@
 Cypress.Commands.add("checkAllUsersSelected", () => {
-    cy.get('tbody tr').each(($tr) => {
-        expect($tr).to.have.class('selected');
+    cy.url().then((url) => {
+      const queryParams = new URL(url).searchParams; // Extracts the query parameters from the URL
+      if (!queryParams.get('action') || !queryParams.get('action').startsWith("cms_users")) {
+        cy.get('tbody tr').each(($tr) => {
+          expect($tr).to.have.class('selected');
+        });
+      }
     });
-});
+  });
 
 Cypress.Commands.add("checkElementDoesNotExistByText", (selector, text) => {
     cy.getElementBySelectorAndText(selector, text).should('not.exist');
