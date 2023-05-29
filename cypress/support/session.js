@@ -67,7 +67,7 @@ Cypress.Commands.add("fillLoginFormFor", (email, password) => {
     let config = getLoginConfiguration();
     cy.get("input[name='username']").type(email);
     cy.get("input[name='password']").type(password);
-    cy.get("button[name='continue']").click();
+    cy.contains('button', 'continue').click();
     cy.url().then((url) => {
         // first time login with the user prompt for consent
         if (url.includes('consent?')) {
