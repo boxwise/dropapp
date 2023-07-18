@@ -874,7 +874,7 @@ class Demo extends AbstractSeed
         // key is campid
         $shipments = ['1' => range(1, 4), '2' => [5], '3' => [6, 7]];
         // key is shipmentid
-        $boxstatebyshipment = ['1' => 3, '2' => 1, '3' => 3, '4' => 3, '5' => 4, '6' => 2, '7' => 1];
+        $boxstatebyshipment = ['1' => 3, '2' => 1, '3' => 3, '4' => 7, '5' => 4, '6' => 2, '7' => 1];
         // key is campid
         $tags = ['1' => range(4, 6), '2' => range(10, 12), '3' => range(16, 18)];
         // key is campid
