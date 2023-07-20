@@ -68,5 +68,5 @@ The bicycle station is not made (yet) to suppport multiple bases
 ### Books library ###
 
 - library (List of all books, no record necessary)
-- library_transactions (List of all transactions
+- library_transactions (List of all transactions)
 - library_type (Types of books, one record necessary)
