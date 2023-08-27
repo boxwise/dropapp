@@ -1530,6 +1530,7 @@ class Demo extends AbstractSeed
                 'items' => $faker->numberBetween($min = 1, $max = 100),
                 'location_id' => $locationid,
                 'box_state_id' => $box_state[$locationid],
+                'created' => '2021-01-20',
                 'qr_id' => $i,
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
@@ -1558,6 +1559,7 @@ class Demo extends AbstractSeed
             $campid = $faker->randomElement(['1', '2', '3']);
             $locationid = $faker->randomElement($locations[$campid]);
             $productid = $faker->randomElement($products[$campid]);
+            $created = $faker->randomElement(['2021-01-20', '2021-08-15', '2022-12-24', '2023-01-01', '2023-03-14']);
             $tempdata = [
                 'id' => $i,
                 'box_id' => $faker->unique()->randomNumber($nbDigits = 7, $strict = true),
@@ -1565,6 +1567,7 @@ class Demo extends AbstractSeed
                 'items' => $faker->numberBetween($min = 1, $max = 100),
                 'location_id' => $locationid,
                 'box_state_id' => $box_state[$locationid],
+                'created' => $created,
                 'qr_id' => $i,
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
