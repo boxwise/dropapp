@@ -874,7 +874,7 @@ class Demo extends AbstractSeed
         // key is campid
         $shipments = ['1' => range(1, 4), '2' => [5], '3' => [6, 7]];
         // key is shipmentid
-        $boxstatebyshipment = ['1' => 3, '2' => 1, '3' => 3, '4' => 3, '5' => 4, '6' => 2, '7' => 1];
+        $boxstatebyshipment = ['1' => 3, '2' => 1, '3' => 3, '4' => 7, '5' => 4, '6' => 2, '7' => 1];
         // key is campid
         $tags = ['1' => range(4, 6), '2' => range(10, 12), '3' => range(16, 18)];
         // key is campid
@@ -1530,6 +1530,7 @@ class Demo extends AbstractSeed
                 'items' => $faker->numberBetween($min = 1, $max = 100),
                 'location_id' => $locationid,
                 'box_state_id' => $box_state[$locationid],
+                'created' => '2021-01-20',
                 'qr_id' => $i,
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
@@ -1558,6 +1559,7 @@ class Demo extends AbstractSeed
             $campid = $faker->randomElement(['1', '2', '3']);
             $locationid = $faker->randomElement($locations[$campid]);
             $productid = $faker->randomElement($products[$campid]);
+            $created = $faker->randomElement(['2021-01-20', '2021-08-15', '2022-12-24', '2023-01-01', '2023-03-14']);
             $tempdata = [
                 'id' => $i,
                 'box_id' => $faker->unique()->randomNumber($nbDigits = 7, $strict = true),
@@ -1565,6 +1567,7 @@ class Demo extends AbstractSeed
                 'items' => $faker->numberBetween($min = 1, $max = 100),
                 'location_id' => $locationid,
                 'box_state_id' => $box_state[$locationid],
+                'created' => $created,
                 'qr_id' => $i,
             ];
             $tempdata['size_id'] = $faker->randomElement($sizes[$tempdata['product_id']]);
@@ -1580,6 +1583,7 @@ class Demo extends AbstractSeed
                     'source_location_id' => $locationid,
                     'source_product_id' => $productid,
                     'source_size_id' => $tempdata['size_id'],
+                    'source_quantity' => $tempdata['items'],
                     'created_on' => $faker->dateTimeBetween($startDate = '-3 days', $endDate = '-2 days', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s'),
                     'created_by_id' => 1,
                 ];
@@ -1606,6 +1610,7 @@ class Demo extends AbstractSeed
                         $tempshipmentdetail['target_location_id'] = $tempdata['location_id'];
                         $tempshipmentdetail['target_product_id'] = $tempdata['product_id'];
                         $tempshipmentdetail['target_size_id'] = $tempdata['size_id'];
+                        $tempshipmentdetail['target_quantity'] = $tempdata['items'];
                         $notags = true;
                     } else {
                         $tempdata['box_state_id'] = 4;
