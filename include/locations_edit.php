@@ -39,7 +39,7 @@
 
     addfield('hidden', '', 'id');
     addfield('text', 'Label', 'label', ['required' => true]);
-    addfield('select', 'Default Status of Boxes', 'box_state_id', ['required' => true, 'tooltip' => 'If a box is moved to this location it will be assigned this status by default.', 'query' => 'SELECT id AS value, label FROM box_state WHERE NOT id in (2,3,4,7,8) ORDER BY id']);
+    addfield('select', 'Default Status of Boxes', 'box_state_id', ['required' => true, 'tooltip' => 'If a box is moved to this location it will be assigned this status by default.', 'query' => 'SELECT id AS value, label FROM box_state WHERE id in (1,5,6) ORDER BY id']);
     addfield('html', 'About Locations', '<p>Locations are physical areas that hold stock. Giving locations a default status for Boxes will help you track of where your stock is going.
                                         <ul>
                                         <li>Create an <strong>Instock</strong> location for warehouse areas that hold your available boxes. <strong>Instock</strong> boxes will show up in your <strong>Stock Overview</strong>.</li>
