@@ -23,7 +23,7 @@
                 $newbox = false;
                 $box = db_row('SELECT id, box_state_id FROM stock WHERE box_id = :boxid', ['boxid' => $_POST['box_id']]);
                 $id = $box['id'];
-                $isorderedbox = in_array($box['box_state_id'], [3, 4]);
+                $isorderedbox = in_array($box['box_state_id'], [3, 4, 7, 8]);
             }
 
             // only allow editing(/creating) a box if it is not in the ordered box_states
@@ -121,7 +121,8 @@
                         GROUP_CONCAT(tags.label ORDER BY tags.seq SEPARATOR 0x1D) AS taglabels,
                         GROUP_CONCAT(tags.color ORDER BY tags.seq) AS tagcolors,
                         bs.label AS statelabel,                        
-                        bs.id as stateid
+                        bs.id as stateid,
+                        If(bs.id IN (3,4,7,8), 1, 0) AS hidesubmit
                     FROM stock 
                         INNER JOIN box_state AS bs ON bs.id = stock.box_state_id
                         LEFT OUTER JOIN products AS p ON p.id = stock.product_id 
@@ -157,7 +158,7 @@
         $disabled_lost = (in_array($data['statelabel'], ['Scrap']));
     }
     // Disable if a Box is in the ordered box states
-    if (in_array($data['stateid'], [3, 4])) {
+    if (in_array($data['stateid'], [3, 4, 7, 8])) {
         $disabled = true;
         $disabled_scrap = true;
         $disabled_lost = true;
