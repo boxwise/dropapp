@@ -21,7 +21,7 @@ Tracer::inSpan(
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
             //Location filter
-            listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND NOT locations.box_state_id IN (2,6) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
+            listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND locations.box_state_id IN (1,5) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
 
             // Status Filter
             $statusarray = [
@@ -97,7 +97,7 @@ Tracer::inSpan(
                             g.label AS gender, p.name AS product, 
                             s.label AS size, l.label AS location, 
                             IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage,
-                            stock.box_state_id IN (3,4) AS disableifistrue
+                            stock.box_state_id IN (3,4,7,8) AS disableifistrue
                         FROM 
                             stock '.
                             // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
@@ -144,10 +144,8 @@ Tracer::inSpan(
             $totalitems = 0;
             foreach ($data as $key => $value) {
                 if (3 == $data[$key]['box_state_id']) {
-                    // ordered
                     $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-truck tooltip-this" title="This box is marked for a shipment."></i>';
-                } elseif (4 == $data[$key]['box_state_id']) {
-                    // picked
+                } elseif (in_array(intval($data[$key]['box_state_id']), [4, 7])) {
                     $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
                 } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
                     $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';

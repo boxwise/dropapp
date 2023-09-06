@@ -52,7 +52,7 @@ if (!$_POST['qr_id']) {
             WHERE stock.id = :id', ['id' => $_POST['id']]);
 
         // ordered boxes are not editable
-        if (in_array($_POST['box_state_id'], [3, 4])) {
+        if (in_array($_POST['box_state_id'], [3, 4, 7, 8])) {
             trigger_error('There is a request to edit an ordered box.', E_USER_ERROR);
             redirect('?warning=1&message=Something went wrong! Please try again!');
         }

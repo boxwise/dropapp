@@ -114,9 +114,9 @@ if ('0000-00-00 00:00:00' != $box['deleted'] && !is_null($box['deleted'])) {
     $data['message'] = (!isset($data['message']) ? $message : $data['message']);
 
     // disable Box if in Lost or Scrap or ordered states
-    $box['disabled'] = (in_array($box['stateid'], [2, 3, 4, 6]));
+    $box['disabled'] = (in_array($box['stateid'], [2, 3, 4, 6, 7, 8]));
     // also disable the edit buttons for ordered states
-    $box['editbuttondisabled'] = (in_array($box['stateid'], [3, 4]));
+    $box['editbuttondisabled'] = (in_array($box['stateid'], [3, 4, 7, 8]));
 
     $locations = db_array('SELECT 
                             l.id AS value,
