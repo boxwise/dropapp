@@ -31,7 +31,7 @@
         		p.name AS product,
         		s.label AS size,
         		l.label AS location,
-        		stock.box_state_id IN (3,4) AS disableifistrue,
+        		stock.box_state_id IN (3,4,7,8) AS disableifistrue,
         		IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage
         	FROM
         		(product_categories AS pc,
@@ -66,7 +66,7 @@
         foreach ($data as $key => $value) {
             if (3 == $data[$key]['box_state_id']) {
                 $data[$key]['order'] = '<span class="hide">1</span><i class="fa fa-truck tooltip-this" title="This box is marked for a shipment."></i>';
-            } elseif (4 == $data[$key]['box_state_id']) {
+            } elseif (in_array(intval($data[$key]['box_state_id']), [4, 7])) {
                 $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
             } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
                 $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';

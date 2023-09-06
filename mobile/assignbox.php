@@ -13,7 +13,7 @@
         WHERE 
             l.type = "Warehouse" AND 
             (NOT s.deleted OR s.deleted IS NULL) AND 
-            s.box_state_id NOT IN (2,5,6) AND
+            s.box_state_id = 1 AND
             s.product_id = p.id AND 
             l.id = s.location_id AND 
             l.camp_id = '.$_SESSION['camp']['id'].' AND 

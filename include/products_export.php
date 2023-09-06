@@ -27,7 +27,7 @@ $result = db_query(
 	LEFT OUTER JOIN sizegroup AS sg ON sg.id = p.sizegroup_id
 	LEFT OUTER JOIN stock AS s 
 		ON s.product_id = p.id AND 
-		s.box_state_id NOT IN (2,5,6) AND
+		s.box_state_id = 1 AND
 		NOT s.deleted '.($locations ? ' AND s.location_id IN ('.$locations.')' : '').'
 	LEFT OUTER JOIN product_categories AS pc ON p.category_id = pc.id
 	WHERE 
