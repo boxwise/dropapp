@@ -24,7 +24,7 @@
 			LEFT OUTER JOIN stock AS s 
                 ON s.product_id = products.id AND 
                 NOT s.deleted AND 
-                s.box_state_id NOT IN (2,5,6)
+                s.box_state_id = 1
 			WHERE 
                 (NOT products.deleted OR products.deleted IS NULL) AND 
                 products.camp_id = '.intval($_SESSION['camp']['id']).'

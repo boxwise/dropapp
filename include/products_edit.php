@@ -67,7 +67,7 @@
             WHERE 
                 l.type = "Warehouse" AND 
                 (not stock.deleted or stock.deleted IS NULL) AND 
-                stock.box_state_id NOT IN (2,5,6) AND 
+                stock.box_state_id = 1 AND 
                 stock.product_id = '.$id,
             'columns' => ['box_id' => 'Box ID', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'items' => 'Items', 'location' => 'Location', 'comments' => 'Comments'],
             'allowedit' => true,
