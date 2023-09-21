@@ -168,6 +168,7 @@
     addfield('hidden', '', 'id');
     // put a title above the form
     if ($id) {
+        addfield('hidden', 'Box ID', 'box_id', ['readonly' => true, 'width' => 2]);
         $cmsmain->assign('titlewithtags', 'Box '.$data['box_id'].' ');
     } else {
         $cmsmain->assign('titlewithtags', 'Box ');
