@@ -106,6 +106,8 @@
 
         $data['people_id'] = intval($_POST['people_id']);
         $data['allowdrops'] = allowGiveDrops();
+        // for external checkouts - HAC use case
+        $data['hideprivatedata'] = db_value('SELECT allow_borrow_adddelete FROM cms_usergroups WHERE id = :usergroup', ['usergroup' => $_SESSION['usergroup']['id']]);
 
         // Shopping cart
         $ajaxshoppingcart = new Zmarty();
@@ -158,7 +160,7 @@
                 WHERE people_id = '.$data['people_id'].' AND product_id IS NOT NULL)
             ORDER BY t.transaction_date DESC');
             $buttonlastpurchases = ['showall&people_id='.$data['people_id'] => ['label' => 'Show all', 'showalways' => true]];
-            $allowdeletelastpurchases = true;
+            $allowdeletelastpurchases = true && !$data['hideprivatedata'];
             $allowsort = false;
         }
         addfield('title', 'Latest Purchases', '', ['labelindent' => true, 'id' => 'LastPurchaseTitle']);

@@ -7,16 +7,16 @@
 			{if !$person['hide']}
 				<li>
 					<div class="people-info">
-					<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{if is_null($person['parent_id'])}FH: {/if}{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
+					<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{if is_null($person['parent_id'])}FH: {/if}{$person['firstname']} {if !$data['hideprivatedata']}{$person['lastname']}{/if} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
 					{if $person['taglabels'] || $person['comments']}
-						{if $person['taglabels']}
+						{if $person['taglabels'] && !$data['hideprivatedata']}
 							<div class="people-tags">	
 								{foreach $person['tags'] as $tag}
 									<span class="badge" {if $tag['color']}style="background-color:{$tag['color']};color:{$tag['textcolor']};"{/if}>{$tag['label']}</span>
 								{/foreach}
 							</div>
 						{/if}
-						{if $person['comments']}
+						{if $person['comments'] && !$data['hideprivatedata']}
 							<span class="people-comment">{$person['comments']}</span>
 						{/if}
 					{/if}
@@ -28,12 +28,13 @@
 
 	{if $data['shoeswarning']}<p class="warningbox">This beneficiary has already bought<br />winter shoes or light shoes for men in this or the previous cycle.</p>{/if}
 
-	{if isset($data['approvalsigned']) && !$data['approvalsigned'] && $data['parent_id']==0} 
+	{if isset($data['approvalsigned']) && !$data['approvalsigned'] && $data['parent_id']==0 && !$data['hideprivatedata']} 
 		<span class="privacyNoteSpan">Needs Data Privacy Agreement!</span>
 		<a class="btn privacySignButton" data-toggle="tooltip" href="?action=people_edit&id={$data['people_id']}&active=signature" data-testid="privacyDeclarationMissingButton" >
 			<span class="fa fa-edit"></span> 
 				Sign
-		</a>{/if}
+		</a>
+	{/if}
 
 	<hr />
 
