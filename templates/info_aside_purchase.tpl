@@ -7,7 +7,11 @@
 			{if !$person['hide']}
 				<li>
 					<div class="people-info">
-					<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{if is_null($person['parent_id'])}FH: {/if}{$person['firstname']} {if !$data['hideprivatedata']}{$person['lastname']}{/if} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
+					{if !$data['hideprivatedata']}
+						<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{if is_null($person['parent_id'])}FH: {/if}{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
+					{else}
+						<div data-testid="familyMember">{if is_null($person['parent_id'])}FH: {/if}{$person['firstname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</div>
+					{/if}
 					{if $person['taglabels'] || $person['comments']}
 						{if $person['taglabels'] && !$data['hideprivatedata']}
 							<div class="people-tags">	
