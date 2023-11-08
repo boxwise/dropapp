@@ -40,7 +40,7 @@
 	 		{/if}
 
 			{if $haswarehouse}
-			<li class="simpleAppLink"><a href="/mobile.php?camp={$currentcamp['id']}"><i class="fa fa-mobile"></i><span class="hidden-xs">Simple App</span></a></li>
+			<li class="simpleAppLink"><a href="{$v2mobile}"><i class="fa fa-mobile"></i><span class="hidden-xs">Mobile</span></a></li>
 			{/if}
 
 			<li class="dropdown">
