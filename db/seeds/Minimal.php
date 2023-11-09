@@ -73,7 +73,8 @@ class Minimal extends AbstractSeed
 			(162,42,'Manage tags','tags',6,0,0,1,0,0),
 			(163,NULL,'Transfers','',4,0,0,1,0,0),
 			(164,163,'Manage Shipments','shipments',0,0,0,1,0,0),
-			(165,163,'Manage Agreements','transfer_agreements',1,0,0,1,0,0);");
+			(165,163,'Manage Agreements','transfer_agreements',1,0,0,1,0,0),
+			(166,99,'NEW Manage Boxes (<span>beta</span>)','new_manage_boxes',2,0,0,1,0,0);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings
