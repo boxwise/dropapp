@@ -1,6 +1,6 @@
 import { getLoginConfiguration } from '../../config';
 
-describe('Redirect domain', () => {
+describe('Redirects', () => {
     let config = getLoginConfiguration();
 
     it('Navigate to staging.boxwise.co and end up at staging.boxtribute.org', () => {
@@ -13,7 +13,7 @@ describe('Redirect domain', () => {
           })
     });
 
-    it('Navigate to staging.boxwise.co and end up at staging.boxtribute.org', () => {
+    it('Navigate to staging.boxwise.co/mobile.php and end up at staging.boxtribute.org', () => {
         cy.request({
             url: 'https://staging.boxwise.co/mobile.php?barcode=test',
             followRedirect: false, // turn off following redirects
@@ -31,5 +31,45 @@ describe('Redirect domain', () => {
             expect(resp.status).to.eq(301)
             expect(resp.redirectedToUrl).to.include('app.boxtribute.org');
           })
+    });
+
+    it('Navigate to mobile.php and end up at v2', () => {
+      cy.request({
+          url: 'https://staging.boxtribute.org/mobile.php',
+          followRedirect: false, // turn off following redirects
+        }).then((resp) => {
+          expect(resp.status).to.eq(301)
+          expect(resp.redirectedToUrl).to.include('v2-staging.boxtribute.org/qrreader');
+        })
+    });
+
+    it('Navigate to mobile.php?barcode=test and end up at v2', () => {
+      cy.request({
+          url: 'https://staging.boxtribute.org/mobile.php?barcode=test',
+          followRedirect: false, // turn off following redirects
+        }).then((resp) => {
+          expect(resp.status).to.eq(301)
+          expect(resp.redirectedToUrl).to.include('v2-staging.boxtribute.org/qrreader/test');
+        })
+    });
+
+    it('Navigate to mobile.php?boxid=test and end up at v2', () => {
+      cy.request({
+          url: 'https://staging.boxtribute.org/mobile.php?boxid=test',
+          followRedirect: false, // turn off following redirects
+        }).then((resp) => {
+          expect(resp.status).to.eq(301)
+          expect(resp.redirectedToUrl).to.include('v2-staging.boxtribute.org/boxes/test');
+        })
+    });
+
+    it('Navigate to mobile.php?newbox=test and end up at v2', () => {
+      cy.request({
+          url: 'https://staging.boxtribute.org/mobile.php?newbox=test',
+          followRedirect: false, // turn off following redirects
+        }).then((resp) => {
+          expect(resp.status).to.eq(301)
+          expect(resp.redirectedToUrl).to.include('v2-staging.boxtribute.org/boxes/create/test');
+        })
     });
 });
