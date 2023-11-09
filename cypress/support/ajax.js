@@ -33,7 +33,7 @@ Cypress.Commands.add("waitForAjaxAction", (expectedRequest,expectedResponse) => 
 });
 
 Cypress.Commands.add("interceptCallsToV2", () => {
-    cy.intercept("**/bases/**").as('v2intercept');
+    cy.intercept("**/qrreader/**").as('v2intercept');
 });
 
 Cypress.Commands.add("waitforCallToV2", (expectedRequest) => {
