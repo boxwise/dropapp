@@ -1597,7 +1597,7 @@ class Demo extends AbstractSeed
                     // for a shipment (id = 6) where the shipment is lost, all boxes are lost
                     // for a shipment (id = 7) which is completed all boxes are lost or completed
                     if (6 == $shipmentid || ((5 == $shipmentid || 7 == $shipmentid) && $faker->boolean($chanceOfGettingTrue = 10))) {
-                        $tempdata['box_state_id'] = 2;
+                        $tempdata['box_state_id'] = 8;
                         $tempshipmentdetail['lost_on'] = $faker->dateTimeBetween($startDate = '-1 days', $endDate = 'now', $timezone = 'Europe/Athens')->format('Y-m-d H:i:s');
                         $tempshipmentdetail['lost_by_id'] = 1;
                     } elseif ((5 == $shipmentid && $faker->boolean($chanceOfGettingTrue = 10)) || 7 == $shipmentid) {

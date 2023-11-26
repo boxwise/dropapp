@@ -31,7 +31,7 @@ class Minimal extends AbstractSeed
 			(50,155,'Manage menu functions','cms_functions',24,0,1,1,0,1),
 			(67,42,'Manage products','products',18,0,0,1,0,0),
 			(87,35,'Checkout','check_out',7,0,0,1,0,0),
-			(90,99,'Manage boxes','stock',2,0,0,1,0,0),
+			(90,99,'Classic manage boxes','stock',3,0,0,1,0,0),
 			(92,35,'Give tokens <span>to</span> all','give2all',10,0,0,1,0,0),
 			(96,128,'Sales reports','sales_list',16,0,0,1,0,0),
 			(99,NULL,'Inventory','',1,0,0,1,0,0),
@@ -68,13 +68,13 @@ class Minimal extends AbstractSeed
 			(156,42,'User groups','cms_usergroups',21,0,0,1,0,1),
 			(157,155,'Bases','camps',22,0,1,1,0,1),
 			(158,161,'Add beneficiary','people_add',4,0,0,1,0,0),
-			(160,99,'Stock Overview','stock_overview',3,0,0,1,0,0),
+			(160,99,'Stock Overview','stock_overview',4,0,0,1,0,0),
 			(161,NULL,'Beneficiaries','',2,0,0,1,0,0),
 			(162,42,'Manage tags','tags',6,0,0,1,0,0),
 			(163,NULL,'Transfers','',4,0,0,1,0,0),
 			(164,163,'Manage Shipments','shipments',0,0,0,1,0,0),
 			(165,163,'Manage Agreements','transfer_agreements',1,0,0,1,0,0),
-			(166,99,'NEW Manage Boxes (<span>beta</span>)','new_manage_boxes',2,0,0,1,0,0);");
+			(166,99,'Manage Boxes v2 (<span>beta</span>)','new_manage_boxes',2,0,0,1,0,0);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
         //------------------- cms_settings
