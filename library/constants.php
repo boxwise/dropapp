@@ -55,17 +55,6 @@ $menusToActions = [
             'manage_tokens',
         ],
     ],
-    // [
-    //     'id' => 130,
-    //     'menu' => 'Lists',
-    //     'module' => 'Report',
-    //     'action' => 'food_lists',
-    //     'adminonly' => '0',
-    //     'visible' => '1',
-    //     'allusers' => '0',
-    //     'allcamps' => '0',
-    //     'action_permission' => [],
-    // ],
     [
         'id' => 67,
         'module' => 'Admin',
@@ -107,34 +96,6 @@ $menusToActions = [
             'manage_admins',
         ],
     ],
-    // [
-    //     'id' => 156,
-    //     'menu' => 'User groups',
-    //     'action' => 'cms_usergroups',
-    //     'adminonly' => '0',
-    //     'visible' => '1',
-    //     'allusers' => '0',
-    //     'allcamps' => '1',
-    //     'action_permission' => [],
-    // ],
-    // [
-    //     'id' => 124,
-    //     'menu' => 'Give tokens <span>to</span> selected families',
-    //     'action' => 'give',
-    //     'adminonly' => '0',
-    //     'visible' => '1',
-    //     'allusers' => '1',
-    //     'allcamps' => '0'
-    // ],
-    // [
-    //     'id' => 127,
-    //     'menu' => 'Sales List Download',
-    //     'action' => 'sales_list_download',
-    //     'adminonly' => '0',
-    //     'visible' => '1',
-    //     'allusers' => '1',
-    //     'allcamps' => '0'
-    // ],
     [
         'id' => 112,
         'module' => 'Inventory',
@@ -151,8 +112,21 @@ $menusToActions = [
     [
         'id' => 90,
         'module' => 'Inventory',
-        'menu' => 'Manage boxes',
+        'menu' => 'Manage Boxes',
         'action' => 'stock',
+        'adminonly' => '0',
+        'visible' => '1',
+        'allusers' => '0',
+        'allcamps' => '0',
+        'action_permission' => [
+            'manage_inventory',
+        ],
+    ],
+    [
+        'id' => 166,
+        'module' => 'Inventory',
+        'menu' => 'NEW Manage Boxes (<span>beta</span>)',
+        'action' => 'new_manage_boxes',
         'adminonly' => '0',
         'visible' => '1',
         'allusers' => '0',
@@ -164,7 +138,7 @@ $menusToActions = [
     [
         'id' => 160,
         'module' => 'Inventory',
-        'menu' => 'Stock Overview (<span>beta</span>)',
+        'menu' => 'Stock Overview',
         'action' => 'stock_overview',
         'adminonly' => '0',
         'visible' => '1',
@@ -174,24 +148,6 @@ $menusToActions = [
             'view_inventory',
         ],
     ],
-    // [
-    //     'id' => '116',
-    //     'menu' => 'Containers List',
-    //     'action' => 'printed_list_containers',
-    //     'adminonly' => '0',
-    //     'visible' => '1',
-    //     'allusers' => '1',
-    //     'allcamps' => '0'
-    // ],
-    // [
-    //     'id' => '150',
-    //     'menu' => 'All Residents export',
-    //     'action' => 'people_export',
-    //     'adminonly' => '0',
-    //     'visible' => '1',
-    //     'allusers' => '1',
-    //     'allcamps' => '0'
-    // ],
     [
         'id' => 123,
         'module' => 'Report',
@@ -218,15 +174,6 @@ $menusToActions = [
             'be_user',
         ],
     ],
-    // [
-    //     'id' => 126,
-    //     'menu' => 'Exit login as',
-    //     'action' => 'exitloginas',
-    //     'adminonly' => '0',
-    //      'visible' => '0',
-    //      'allusers' => '1',
-    //      'allcamps' => '0'
-    // ],
     [
         'id' => 96,
         'module' => 'Report',
@@ -253,39 +200,6 @@ $menusToActions = [
             'view_beneficiary_graph',
         ],
     ],
-    // ['id' => '149', 'menu' => 'Laundry', 'action' => 'laundry', 'adminonly' => '0', 'visible' => '1', 'allusers' => '0', 'allcamps' => '0'],
-    // ['id' => '132', 'menu' => 'Bicycles / Sport', 'action' => 'borrow', 'adminonly' => '0', 'visible' => '1', 'allusers' => '0', 'allcamps' => '0'],
-    // [
-    //     'id' => 140,
-    //     'menu' => 'Borrow edit',
-    //     'action' => 'borrowedititem',
-    //     'adminonly' => '0',
-    //     'visible' => '1',
-    //     'allusers' => '1',
-    //     'allcamps' => '0'
-    // ],
-    // [
-    //     'id' => 144,
-    //     'menu' => 'Borrow history ',
-    //     'action' => 'borrowhistory',
-    //     'adminonly' => '0',
-    //     'visible' => '1',
-    //     'allusers' => '1',
-    //     'allcamps' => '0'
-    // ],
-    // [
-    //     'id' => 147,
-    //     'module' => 'Library',
-    //     'menu' => 'Library history',
-    //     'action' => 'libraryhistory',
-    //     'adminonly' => '0',
-    //     'visible' => '1',
-    //     'allusers' => '1',
-    //     'allcamps' => '0',
-    //     'action_permission' => [
-    //         'view_beneficiary_graph',
-    //     ],
-    // ],
     [
         'id' => 145,
         'module' => 'Library',
@@ -312,8 +226,6 @@ $menusToActions = [
             'lend_books',
         ],
     ],
-    // ['id' => '151', 'menu' => 'Laundry No show', 'action' => 'laundry_noshow', 'adminonly' => '0', 'visible' => '1', 'allusers' => '1', 'allcamps' => '0'],
-    // ['id' => '152', 'menu' => 'Laundry start new cycle', 'action' => 'laundry_startcycle', 'adminonly' => '0', 'visible' => '1', 'allusers' => '1', 'allcamps' => '0'],
     [
         'id' => 157,
         'module' => 'Admin',
@@ -418,6 +330,38 @@ $menusToActions = [
         'allcamps' => '0',
         'action_permission' => [
             'manage_tags',
+        ],
+    ],
+    [
+        'id' => 164,
+        'module' => 'Transfers',
+        'menu' => 'Manage Shipments',
+        'action' => 'shipments',
+        'adminonly' => '0',
+        'visible' => '1',
+        'allusers' => '0',
+        'allcamps' => '0',
+        'action_permission' => [
+            'create_shipment',
+            'send_shipment',
+            'cancel_shipment',
+            'receive_shipment',
+        ],
+    ],
+    [
+        'id' => 165,
+        'module' => 'Transfers',
+        'menu' => 'Manage Agreements',
+        'action' => 'transfer_agreements',
+        'adminonly' => '0',
+        'visible' => '1',
+        'allusers' => '0',
+        'allcamps' => '0',
+        'action_permission' => [
+            'create_transfer_agreement',
+            'cancel_transfer_agreement',
+            'reject_transfer_agreement',
+            'accept_transfer_agreement',
         ],
     ],
 ];

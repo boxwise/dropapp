@@ -33,6 +33,9 @@ Tracer::inSpan(
 
         $cmsmain = new Zmarty();
 
+        // Link to v2
+        $cmsmain->assign('v2mobile', $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/qrreader');
+
         // Fill the organisation menu
         $cmsmain->assign('currentOrg', $_SESSION['organisation']);
         if ($_SESSION['user']['is_admin']) {
