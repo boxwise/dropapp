@@ -342,10 +342,7 @@ $menusToActions = [
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
-            'create_shipment',
-            'send_shipment',
-            'cancel_shipment',
-            'receive_shipment',
+            'view_shipments',
         ],
     ],
     [
@@ -358,10 +355,7 @@ $menusToActions = [
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
-            'create_transfer_agreement',
-            'cancel_transfer_agreement',
-            'reject_transfer_agreement',
-            'accept_transfer_agreement',
+            'view_transfer_agreements',
         ],
     ],
 ];
