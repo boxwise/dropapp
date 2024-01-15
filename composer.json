@@ -1,9 +1,4 @@
 {
-    "config": {
-        "platform": {
-            "php": "7.4.25"
-        }
-    },
     "require-dev": {
         "odan/phinx-migrations-generator": "^4.3.0",
         "phan/phan": "^2.2",
