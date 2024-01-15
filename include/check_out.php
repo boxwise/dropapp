@@ -83,10 +83,24 @@
 
         // Ajax POST request of shopping cart
         if ($_POST['cart']) {
+            $cart = json_decode($_POST['cart'], true);
+            // validate if beneficiary has enough drops
+            $availableDrops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :people_id', ['people_id' => $_POST['people_id']]);
+            $totalDrops = 0;
+            foreach ($cart as $item) {
+                $totalDrops += $item['price'] * intval($item['count']);
+            }
+            if (intval($availableDrops) < $totalDrops) {
+                $return = ['success' => false, 'message' => 'Not enough drops available. Please check the shopping cart.', 'redirect' => false];
+
+                echo json_encode($return);
+
+                exit();
+            }
+
             $_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
             $_POST['user_id'] = $_SESSION['user']['id'];
 
-            $cart = json_decode($_POST['cart'], true);
             $savekeys = ['people_id', 'product_id', 'count', 'drops', 'transaction_date', 'user_id'];
             $notificationText = '<b>Shopping cart successfully submitted!</b> </br><p>Items bought:</p> <ul>';
             foreach ($cart as $item) {

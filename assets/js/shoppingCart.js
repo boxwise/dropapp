@@ -290,6 +290,8 @@ $(document).ready(function() {
     });
 
     $(document).on("click",'#submitShoppingCart', function(e){
+        e.preventDefault();
+        $("#submitShoppingCart").prop("disabled", true);
         var cart = shoppingCart.listCart();
         var people_id = $("#field_people_id").val();
         $.ajax({
@@ -301,9 +303,9 @@ $(document).ready(function() {
             },
             dataType: "json",
             success: function(result) {
-                shoppingCart.clearCart();
-                renderCart();
                 if (result.success) {
+                  shoppingCart.clearCart();
+                  renderCart();
                     if (result.message) {
                         noty({
                             text: result.message,
@@ -317,9 +319,12 @@ $(document).ready(function() {
                             }
                         });
                     }          
+                } else {
+                  $("#submitShoppingCart").prop("disabled", false);
                 }
             },
             error: function(result) {
+                $("#submitShoppingCart").prop("disabled", false);
                 var n = noty({
                     text: "We cannot connect to the Boxtribute server.<br> Do you have internet?",
                     type: "error"
