@@ -28,6 +28,10 @@ Tracer::inSpan(
         }
         db_connect($db_dsn, $settings['db_user'], $settings['db_pass']);
 
+        // set timezone
+        date_default_timezone_set('UTC');
+        db_query('SET time_zone = "+00:00"');
+
         // get settings from settings table
         $result = db_query('SELECT code, value FROM cms_settings');
         while ($row = db_fetch($result)) {
