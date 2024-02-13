@@ -100,7 +100,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
     $auth0UserId = 'auth0|'.intval($userId);
     $dbUserData = db_row('
         SELECT 
-            u.email, u.naam, u.deleted, u.is_admin, u.cms_usergroups_id, u.valid_firstday, u.valid_lastday,
+            u.email, u.naam, u.deleted, u.cms_usergroups_id, u.valid_firstday, u.valid_lastday,
             ug.organisation_id
         FROM 
             cms_users u
@@ -115,7 +115,6 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
         'name' => $dbUserData['naam'],
         'blocked' => '0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted']),
         'app_metadata' => [
-            'is_god' => $dbUserData['is_admin'],
             'usergroup_id' => $dbUserData['cms_usergroups_id'],
             'organisation_id' => $dbUserData['organisation_id'],
             'base_ids' => $dbUserData['base_ids'],
@@ -218,7 +217,6 @@ function isUserInSyncWithAuth0($userId)
         $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
         $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
         $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
-        $validationResult['is_god'] = ($auth0User['app_metadata']['is_god'] == $dbUser['is_admin']) ? 'true' : 'false';
         $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
         $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
         if ($dbUser['base_ids']) {
@@ -307,6 +305,14 @@ function isUserInSyncWithAuth0($userId)
             $return_value = false;
         }
     } elseif (!$dbUserRoles && $auth0UserRoles) {
+        if ($auth0UserRoles[0]['name'] == 'boxtribute_god') {
+            if ($dbUser['is_admin']) {
+                $return_value = true;
+            } else {
+                $messageAppendix = ' User is not an admin in DB, but in Auth0!';
+                $return_value = false;
+            }
+        }
         $messageAppendix = ' No Roles were associated in DB!';
         $return_value = false;
     } elseif ($dbUserRoles && !$auth0UserRoles) {
