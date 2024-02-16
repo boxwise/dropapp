@@ -305,7 +305,7 @@ function isUserInSyncWithAuth0($userId)
             $return_value = false;
         }
     } elseif (!$dbUserRoles && $auth0UserRoles) {
-        if ($auth0UserRoles[0]['name'] == 'boxtribute_god') {
+        if ('boxtribute_god' == $auth0UserRoles[0]['name']) {
             if ($dbUser['is_admin']) {
                 $return_value = true;
             } else {
