@@ -4,9 +4,9 @@ use Phinx\Migration\AbstractMigration;
 
 class ResetChangedBoxLabelIdentifiers extends AbstractMigration
 {
-    public function change()
+    public function up()
     {
-        $this->execute('
+        $updated_box_id_rows = $this->execute('
 -- MAIN QUERY to reset box label identifiers to original.
 -- Should update 167 rows
 UPDATE
@@ -63,8 +63,9 @@ WHERE
         and record_id <> 51103
 );
         ');
+        $this->output->writeln('Updated box_id rows: '.$updated_box_id_rows);
 
-        $this->execute('
+        $deleted_history_entries = $this->execute('
 -- Delete all annoying change records
 -- Should update 299 rows
 DELETE
@@ -75,5 +76,10 @@ WHERE
     and changes like "box_id changed from %"
     and record_id <> 51103;
         ');
+        $this->output->writeln('Deleted history entries: '.$deleted_history_entries);
+    }
+
+    public function down()
+    {
     }
 }
