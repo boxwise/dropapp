@@ -2,6 +2,13 @@
 
 class formHandler
 {
+    public $id;
+    public $table;
+    public $post;
+    public $keys = [];
+    public $nullIfEmpty = [];
+    public $debug = false;
+
     public function __construct($table)
     {
         $this->post = $_POST;
