@@ -1,6 +1,6 @@
 <?php
 
-function db_connect($dsn, $username, $password)
+function db_connect($dsn, $username, $password) : \PDO
 {
     global $defaultdbid;
 
