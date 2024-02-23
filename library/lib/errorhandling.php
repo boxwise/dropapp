@@ -119,7 +119,7 @@ function bootstrap_exception_handler(Throwable $ex)
         599 => 'Network connect timeout error',
     ];
     // this will only work if there hasn't already been response output
-    http_response_code($ex->getCode());
+    http_response_code((int) $ex->getCode());
     $error = new Zmarty();
     if (0 === $ex->getCode() && 'Invalid state' === $ex->getMessage()) {
         // This will call logout and redirect to renew the session when the authentication login page remains longer than expected
