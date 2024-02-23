@@ -177,7 +177,7 @@ function CMSmenu()
 {
     global $action, $lan;
 
-    $result1 = db_query('SELECT f.* FROM cms_functions AS f WHERE f.visible AND f.parent_id IS NULL ORDER BY f.seq', ['camp' => $_SESSION['camp']['id']]);
+    $result1 = db_query('SELECT f.* FROM cms_functions AS f WHERE f.visible AND f.parent_id IS NULL ORDER BY f.seq');
     while ($row1 = db_fetch($result1)) {
         $submenu = [];
 
