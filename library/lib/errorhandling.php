@@ -171,7 +171,7 @@ class boxwise_error_handler_class
     /**
      * add boxwise_error_handler to existing error handlers.
      */
-    public static function add_error_handler()
+    public static function add_error_handler(): void
     {
         $error_handler = ['boxwise_error_handler_class', 'boxwise_error_handler'];
         $previous = set_error_handler($error_handler, error_reporting());
@@ -194,7 +194,7 @@ class boxwise_error_handler_class
      *
      * @return bool
      */
-    public static function boxwise_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
+    public static function boxwise_error_handler($errno, $errstr, $errfile, $errline, $errcontext = [])
     {
         Sentry\configureScope('boxwise_sentry_scope');
 
@@ -214,7 +214,6 @@ class boxwise_error_handler_class
 }
 
 // Set error handlers
-smarty::muteExpectedErrors();
 boxwise_error_handler_class::add_error_handler();
 
 function logfile($content)
