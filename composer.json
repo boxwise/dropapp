@@ -22,6 +22,12 @@
         "sentry/sentry": "^4.3",
         "php-http/curl-client": "^2.2",
         "google/cloud-error-reporting": "^0.19.5",
-        "google/cloud-datastore": "^1.18"
+        "google/cloud-datastore": "^1.18",
+        "open-telemetry/exporter-otlp": "^1.0",
+        "open-telemetry/sdk": "^1.0"    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
