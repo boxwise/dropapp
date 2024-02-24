@@ -46,7 +46,5 @@ class MakeLocationIdUnsigned extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

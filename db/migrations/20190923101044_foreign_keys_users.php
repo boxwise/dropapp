@@ -39,13 +39,13 @@ class ForeignKeysUsers extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
 
         $this->table('transactions')
             ->addForeignKey('user_id', 'cms_users', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
     }
 }

@@ -13,64 +13,64 @@ class FPDF
 {
     protected $page;               // current page number
     protected $n;                  // current object number
-protected $offsets;            // array of object offsets
-protected $buffer;             // buffer holding in-memory PDF
-protected $pages;              // array containing pages
-protected $state;              // current document state
-protected $compress;           // compression flag
-protected $k;                  // scale factor (number of points in user unit)
-protected $DefOrientation;     // default orientation
-protected $CurOrientation;     // current orientation
-protected $StdPageSizes;       // standard page sizes
-protected $DefPageSize;        // default page size
-protected $CurPageSize;        // current page size
-protected $CurRotation;        // current page rotation
-protected $PageInfo;           // page-related data
-protected $wPt;
+    protected $offsets;            // array of object offsets
+    protected $buffer;             // buffer holding in-memory PDF
+    protected $pages;              // array containing pages
+    protected $state;              // current document state
+    protected $compress;           // compression flag
+    protected $k;                  // scale factor (number of points in user unit)
+    protected $DefOrientation;     // default orientation
+    protected $CurOrientation;     // current orientation
+    protected $StdPageSizes;       // standard page sizes
+    protected $DefPageSize;        // default page size
+    protected $CurPageSize;        // current page size
+    protected $CurRotation;        // current page rotation
+    protected $PageInfo;           // page-related data
+    protected $wPt;
     protected $hPt;          // dimensions of current page in points
     protected $w;
     protected $h;              // dimensions of current page in user unit
-protected $lMargin;            // left margin
-protected $tMargin;            // top margin
-protected $rMargin;            // right margin
-protected $bMargin;            // page break margin
-protected $cMargin;            // cell margin
-protected $x;
+    protected $lMargin;            // left margin
+    protected $tMargin;            // top margin
+    protected $rMargin;            // right margin
+    protected $bMargin;            // page break margin
+    protected $cMargin;            // cell margin
+    protected $x;
     protected $y;              // current position in user unit
-protected $lasth;              // height of last printed cell
-protected $LineWidth;          // line width in user unit
-protected $fontpath;           // path containing fonts
-protected $CoreFonts;          // array of core font names
-protected $fonts;              // array of used fonts
-protected $FontFiles;          // array of font files
-protected $encodings;          // array of encodings
-protected $cmaps;              // array of ToUnicode CMaps
-protected $FontFamily;         // current font family
-protected $FontStyle;          // current font style
-protected $underline;          // underlining flag
-protected $CurrentFont;        // current font info
-protected $FontSizePt;         // current font size in points
-protected $FontSize;           // current font size in user unit
-protected $DrawColor;          // commands for drawing color
-protected $FillColor;          // commands for filling color
-protected $TextColor;          // commands for text color
-protected $ColorFlag;          // indicates whether fill and text colors are different
-protected $WithAlpha;          // indicates whether alpha channel is used
-protected $ws;                 // word spacing
-protected $images;             // array of used images
-protected $PageLinks;          // array of links in pages
-protected $links;              // array of internal links
-protected $AutoPageBreak;      // automatic page breaking
-protected $PageBreakTrigger;   // threshold used to trigger page breaks
-protected $InHeader;           // flag set when processing header
-protected $InFooter;           // flag set when processing footer
-protected $AliasNbPages;       // alias for total number of pages
-protected $ZoomMode;           // zoom display mode
-protected $LayoutMode;         // layout display mode
-protected $metadata;           // document properties
-protected $PDFVersion;         // PDF version number
+    protected $lasth;              // height of last printed cell
+    protected $LineWidth;          // line width in user unit
+    protected $fontpath;           // path containing fonts
+    protected $CoreFonts;          // array of core font names
+    protected $fonts;              // array of used fonts
+    protected $FontFiles;          // array of font files
+    protected $encodings;          // array of encodings
+    protected $cmaps;              // array of ToUnicode CMaps
+    protected $FontFamily;         // current font family
+    protected $FontStyle;          // current font style
+    protected $underline;          // underlining flag
+    protected $CurrentFont;        // current font info
+    protected $FontSizePt;         // current font size in points
+    protected $FontSize;           // current font size in user unit
+    protected $DrawColor;          // commands for drawing color
+    protected $FillColor;          // commands for filling color
+    protected $TextColor;          // commands for text color
+    protected $ColorFlag;          // indicates whether fill and text colors are different
+    protected $WithAlpha;          // indicates whether alpha channel is used
+    protected $ws;                 // word spacing
+    protected $images;             // array of used images
+    protected $PageLinks;          // array of links in pages
+    protected $links;              // array of internal links
+    protected $AutoPageBreak;      // automatic page breaking
+    protected $PageBreakTrigger;   // threshold used to trigger page breaks
+    protected $InHeader;           // flag set when processing header
+    protected $InFooter;           // flag set when processing footer
+    protected $AliasNbPages;       // alias for total number of pages
+    protected $ZoomMode;           // zoom display mode
+    protected $LayoutMode;         // layout display mode
+    protected $metadata;           // document properties
+    protected $PDFVersion;         // PDF version number
 
-// Public methods
+    // Public methods
 
     public function __construct($orientation = 'P', $unit = 'mm', $size = 'A4')
     {
@@ -1035,46 +1035,46 @@ protected $PDFVersion;         // PDF version number
         }
 
         switch (strtoupper($dest)) {
-        case 'I':
-            // Send to standard output
-            $this->_checkoutput();
-            if (PHP_SAPI != 'cli') {
-                // We send to a browser
-                header('Content-Type: application/pdf');
-                header('Content-Disposition: inline; '.$this->_httpencode('filename', $name, $isUTF8));
+            case 'I':
+                // Send to standard output
+                $this->_checkoutput();
+                if (PHP_SAPI != 'cli') {
+                    // We send to a browser
+                    header('Content-Type: application/pdf');
+                    header('Content-Disposition: inline; '.$this->_httpencode('filename', $name, $isUTF8));
+                    header('Cache-Control: private, max-age=0, must-revalidate');
+                    header('Pragma: public');
+                }
+                echo $this->buffer;
+
+                break;
+
+            case 'D':
+                // Download file
+                $this->_checkoutput();
+                header('Content-Type: application/x-download');
+                header('Content-Disposition: attachment; '.$this->_httpencode('filename', $name, $isUTF8));
                 header('Cache-Control: private, max-age=0, must-revalidate');
                 header('Pragma: public');
-            }
-            echo $this->buffer;
+                echo $this->buffer;
 
-            break;
+                break;
 
-        case 'D':
-            // Download file
-            $this->_checkoutput();
-            header('Content-Type: application/x-download');
-            header('Content-Disposition: attachment; '.$this->_httpencode('filename', $name, $isUTF8));
-            header('Cache-Control: private, max-age=0, must-revalidate');
-            header('Pragma: public');
-            echo $this->buffer;
+            case 'F':
+                // Save to local file
+                if (!file_put_contents($name, $this->buffer)) {
+                    $this->Error('Unable to create output file: '.$name);
+                }
 
-            break;
+                break;
 
-        case 'F':
-            // Save to local file
-            if (!file_put_contents($name, $this->buffer)) {
-                $this->Error('Unable to create output file: '.$name);
-            }
+            case 'S':
+                // Return as a string
+                return $this->buffer;
 
-            break;
-
-        case 'S':
-            // Return as a string
-            return $this->buffer;
-
-        default:
-            $this->Error('Incorrect output destination: '.$dest);
-    }
+            default:
+                $this->Error('Incorrect output destination: '.$dest);
+        }
 
         return '';
     }
@@ -1642,7 +1642,7 @@ protected $PDFVersion;         // PDF version number
             if (!$font) {
                 $this->Error('Font file not found: '.$file);
             }
-            $compressed = (str_ends_with($file, '.z'));
+            $compressed = str_ends_with($file, '.z');
             if (!$compressed && isset($info['length2'])) {
                 $font = substr($font, 6, $info['length1']).substr($font, 6 + $info['length1'] + 6, $info['length2']);
             }

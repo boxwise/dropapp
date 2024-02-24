@@ -9,6 +9,7 @@ class MakeUserIdNullableInHistoryTable extends AbstractMigration
         $this->table('history')
             ->changeColumn('user_id', 'integer', [
                 'null' => true,
-            ])->save();
+            ])->save()
+        ;
     }
 }

@@ -39,7 +39,8 @@ class AddFlowDirection extends AbstractMigration
         $table = $this->table('distro_events_outflow_logs');
         if ($table) {
             $table->removeIndex(['flow_direction'])
-                ->removeColumn('flow_direction')->save();
+                ->removeColumn('flow_direction')->save()
+            ;
             $table->dropForeignKey('location_id')->save();
             $table->changeColumn('location_id', 'integer', [
                 'null' => false,

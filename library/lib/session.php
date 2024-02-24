@@ -16,7 +16,7 @@ function authenticate($settings, $ajax)
     if ($isAuth0Callback && null === $session && $_REQUEST['error']) {
         throw new Exception($_REQUEST['error_description'], 401);
 
-        exit();
+        exit;
     }
 
     if (isset($session)) {
@@ -208,7 +208,7 @@ function loadSessionDataForUser($user)
         $_SESSION['camp'] = $camplist[$_SESSION['camp']['id']];
     }
 
-    if ($user['is_admin'] && isset($_SESSION['camp']['id']) && !isset($_SESSION['organisation']['id'])) { //Boxtribute God who selected a camp before an organisation was specified.
+    if ($user['is_admin'] && isset($_SESSION['camp']['id']) && !isset($_SESSION['organisation']['id'])) { // Boxtribute God who selected a camp before an organisation was specified.
         // based on the selected camp the organisation is selected.
         $_SESSION['organisation'] = organisationlist()[$_SESSION['camp']['organisation_id']];
     }

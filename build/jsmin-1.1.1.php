@@ -35,64 +35,64 @@ class JSMin
     protected function action($d)
     {
         switch ($d) {
-      case 1:
-        $this->output .= $this->a;
-
-        // no break
-      case 2:
-        $this->a = $this->b;
-
-        if ("'" === $this->a || '"' === $this->a) {
-            while (true) {
+            case 1:
                 $this->output .= $this->a;
-                $this->a = $this->get();
 
-                if ($this->a === $this->b) {
-                    break;
+                // no break
+            case 2:
+                $this->a = $this->b;
+
+                if ("'" === $this->a || '"' === $this->a) {
+                    while (true) {
+                        $this->output .= $this->a;
+                        $this->a = $this->get();
+
+                        if ($this->a === $this->b) {
+                            break;
+                        }
+
+                        if (ord($this->a) <= self::ORD_LF) {
+                            throw new JSMinException('Unterminated string literal.');
+                        }
+
+                        if ('\\' === $this->a) {
+                            $this->output .= $this->a;
+                            $this->a = $this->get();
+                        }
+                    }
                 }
 
-                if (ord($this->a) <= self::ORD_LF) {
-                    throw new JSMinException('Unterminated string literal.');
-                }
+                // no break
+            case 3:
+                $this->b = $this->next();
 
-                if ('\\' === $this->a) {
-                    $this->output .= $this->a;
-                    $this->a = $this->get();
-                }
-            }
-        }
+                if ('/' === $this->b && (
+                    '(' === $this->a || ',' === $this->a || '=' === $this->a
+                    || ':' === $this->a || '[' === $this->a || '!' === $this->a
+                    || '&' === $this->a || '|' === $this->a || '?' === $this->a
+                )) {
+                    $this->output .= $this->a.$this->b;
 
-        // no break
-      case 3:
-        $this->b = $this->next();
+                    while (true) {
+                        $this->a = $this->get();
 
-        if ('/' === $this->b && (
-            '(' === $this->a || ',' === $this->a || '=' === $this->a
-            || ':' === $this->a || '[' === $this->a || '!' === $this->a
-            || '&' === $this->a || '|' === $this->a || '?' === $this->a
-        )) {
-            $this->output .= $this->a.$this->b;
-
-            while (true) {
-                $this->a = $this->get();
-
-                if ('/' === $this->a) {
-                    break;
-                }
-                if ('\\' === $this->a) {
-                    $this->output .= $this->a;
-                    $this->a = $this->get();
-                } elseif (ord($this->a) <= self::ORD_LF) {
-                    throw new JSMinException('Unterminated regular expression '.
+                        if ('/' === $this->a) {
+                            break;
+                        }
+                        if ('\\' === $this->a) {
+                            $this->output .= $this->a;
+                            $this->a = $this->get();
+                        } elseif (ord($this->a) <= self::ORD_LF) {
+                            throw new JSMinException('Unterminated regular expression '.
                   'literal.');
+                        }
+
+                        $this->output .= $this->a;
+                    }
+
+                    $this->b = $this->next();
                 }
-
-                $this->output .= $this->a;
-            }
-
-            $this->b = $this->next();
         }
-    }
     }
 
     protected function get()
@@ -132,83 +132,83 @@ class JSMin
 
         while (null !== $this->a) {
             switch ($this->a) {
-        case ' ':
-          if ($this->isAlphaNum($this->b)) {
-              $this->action(1);
-          } else {
-              $this->action(2);
-          }
+                case ' ':
+                    if ($this->isAlphaNum($this->b)) {
+                        $this->action(1);
+                    } else {
+                        $this->action(2);
+                    }
 
-          break;
+                    break;
 
-        case "\n":
-          switch ($this->b) {
-            case '{':
-            case '[':
-            case '(':
-            case '+':
-            case '-':
-              $this->action(1);
+                case "\n":
+                    switch ($this->b) {
+                        case '{':
+                        case '[':
+                        case '(':
+                        case '+':
+                        case '-':
+                            $this->action(1);
 
-              break;
+                            break;
 
-            case ' ':
-              $this->action(3);
+                        case ' ':
+                            $this->action(3);
 
-              break;
+                            break;
 
-            default:
-              if ($this->isAlphaNum($this->b)) {
-                  $this->action(1);
-              } else {
-                  $this->action(2);
-              }
-          }
+                        default:
+                            if ($this->isAlphaNum($this->b)) {
+                                $this->action(1);
+                            } else {
+                                $this->action(2);
+                            }
+                    }
 
-          break;
-
-        default:
-          switch ($this->b) {
-            case ' ':
-              if ($this->isAlphaNum($this->a)) {
-                  $this->action(1);
-
-                  break;
-              }
-
-              $this->action(3);
-
-              break;
-
-            case "\n":
-              switch ($this->a) {
-                case '}':
-                case ']':
-                case ')':
-                case '+':
-                case '-':
-                case '"':
-                case "'":
-                  $this->action(1);
-
-                  break;
+                    break;
 
                 default:
-                  if ($this->isAlphaNum($this->a)) {
-                      $this->action(1);
-                  } else {
-                      $this->action(3);
-                  }
-              }
+                    switch ($this->b) {
+                        case ' ':
+                            if ($this->isAlphaNum($this->a)) {
+                                $this->action(1);
 
-              break;
+                                break;
+                            }
 
-            default:
-              $this->action(1);
+                            $this->action(3);
 
-              break;
-          }
-      }
+                            break;
+
+                        case "\n":
+                            switch ($this->a) {
+                                case '}':
+                                case ']':
+                                case ')':
+                                case '+':
+                                case '-':
+                                case '"':
+                                case "'":
+                                    $this->action(1);
+
+                                    break;
+
+                                default:
+                                    if ($this->isAlphaNum($this->a)) {
+                                        $this->action(1);
+                                    } else {
+                                        $this->action(3);
+                                    }
+                            }
+
+                            break;
+
+                        default:
+                            $this->action(1);
+
+                            break;
+                    }
+            }
         }
 
         return $this->output;
@@ -220,39 +220,39 @@ class JSMin
 
         if ('/' === $c) {
             switch ($this->peek()) {
-        case '/':
-            while (true) {
-                $c = $this->get();
+                case '/':
+                    while (true) {
+                        $c = $this->get();
 
-                if (ord($c) <= self::ORD_LF) {
-                    return $c;
-                }
-            }
+                        if (ord($c) <= self::ORD_LF) {
+                            return $c;
+                        }
+                    }
 
-          // no break
-        case '*':
-          $this->get();
-
-            while (true) {
-                switch ($this->get()) {
-              case '*':
-                if ('/' === $this->peek()) {
+                    // no break
+                case '*':
                     $this->get();
 
-                    return ' ';
-                }
+                    while (true) {
+                        switch ($this->get()) {
+                            case '*':
+                                if ('/' === $this->peek()) {
+                                    $this->get();
 
-                break;
+                                    return ' ';
+                                }
 
-              case null:
-                throw new JSMinException('Unterminated comment.');
+                                break;
+
+                            case null:
+                                throw new JSMinException('Unterminated comment.');
+                        }
+                    }
+
+                    // no break
+                default:
+                    return $c;
             }
-            }
-
-          // no break
-        default:
-          return $c;
-      }
         }
 
         return $c;
@@ -267,6 +267,4 @@ class JSMin
 }
 
 // -- Exceptions ---------------------------------------------------------------
-class JSMinException extends Exception
-{
-}
+class JSMinException extends Exception {}

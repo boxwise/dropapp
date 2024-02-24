@@ -518,7 +518,7 @@ function initlist()
 
     if (isset($_POST['__multiplefilter'])) {
         if (isset($_POST['multiplefilter'])) {
-            //sanitize input
+            // sanitize input
             $_POST['multiplefilter'] = array_filter($_POST['multiplefilter'], 'ctype_digit');
             $listconfig['multiplefilter_selected'] = $_POST['multiplefilter'];
             $_SESSION['multiplefilter'][$action] = $listconfig['multiplefilter_selected'];
@@ -777,19 +777,19 @@ function insertwhere($query, $where)
     $pos_order = strripos($query, 'ORDER BY');
     $pos_group = strripos($query, 'GROUP BY');
     $pos_where = strripos($query, 'WHERE');
-    if ($pos_group) { //voor het groupstatement
+    if ($pos_group) { // voor het groupstatement
         if ($pos_where) {
             $query = query_insert($query, $pos_group, 'AND '.$where);
         } else {
             $query = query_insert($query, $pos_group, 'WHERE '.$where);
         }
-    } elseif ($pos_order) { //gewoon erachter
+    } elseif ($pos_order) { // gewoon erachter
         if ($pos_where) {
             $query = query_insert($query, $pos_order, 'AND '.$where);
         } else {
             $query = query_insert($query, $pos_order, 'WHERE '.$where);
         }
-    } else { //gewoon erachter
+    } else { // gewoon erachter
         if ($pos_where) {
             $query .= ' AND '.$where;
         } else {
@@ -817,7 +817,7 @@ function addcolumn($type, $label = false, $field = false, $array = [])
 
     if ($array['query']) {
         foreach ($data as $key => $value) {
-            //$data[$key][$field] = db_value($array['query'],array('id'=>$data[$key][$field]));
+            // $data[$key][$field] = db_value($array['query'],array('id'=>$data[$key][$field]));
             $data[$key][$field] = db_value($array['query'], ['id' => $data[$key]['id']]);
         }
     }

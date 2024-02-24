@@ -31,7 +31,7 @@ class MakeCmsFunctionsIdUnsigned extends AbstractMigration
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
             ->save()
-            ;
+        ;
 
         $this->table('cms_functions_camps')
             ->changeColumn('cms_functions_id', 'integer', ['signed' => false, 'null' => false])
@@ -53,7 +53,5 @@ class MakeCmsFunctionsIdUnsigned extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

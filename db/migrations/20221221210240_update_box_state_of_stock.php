@@ -22,7 +22,5 @@ class UpdateBoxStateOfStock extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

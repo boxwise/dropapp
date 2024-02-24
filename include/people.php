@@ -3,7 +3,7 @@
 use OpenCensus\Trace\Tracer;
 
 Tracer::inSpan(
-    ['name' => ('include/people.php')],
+    ['name' => 'include/people.php'],
     function () use ($action, &$cmsmain) {
         global $settings, $table, $listconfig, $listdata;
 
@@ -209,7 +209,7 @@ Tracer::inSpan(
             $daysinactive = db_value('SELECT delete_inactive_users/2 FROM camps WHERE id = '.$_SESSION['camp']['id']);
 
             Tracer::inSpan(
-                ['name' => ('include/people.php:inactive')],
+                ['name' => 'include/people.php:inactive'],
                 function () use (&$data, $daysinactive) {
                     global $listconfig;
 
@@ -236,7 +236,7 @@ Tracer::inSpan(
             );
 
             Tracer::inSpan(
-                ['name' => ('include/people.php:approvalsigned_volunteer_unregistered')],
+                ['name' => 'include/people.php:approvalsigned_volunteer_unregistered'],
                 function () use (&$data) {
                     foreach ($data as $key => $value) {
                         if (0 == $data[$key]['level'] && !$data[$key]['approvalsigned']) {
@@ -247,7 +247,7 @@ Tracer::inSpan(
             );
 
             Tracer::inSpan(
-                ['name' => ('include/people.php:idcard')],
+                ['name' => 'include/people.php:idcard'],
                 function () use (&$data) {
                     global $settings;
 
@@ -261,7 +261,7 @@ Tracer::inSpan(
             );
 
             Tracer::inSpan(
-                ['name' => ('include/people.php:idcard')],
+                ['name' => 'include/people.php:idcard'],
                 function () use (&$data) {
                     foreach ($data as $key => $value) {
                         if ($data[$key]['taglabels']) {
@@ -276,7 +276,7 @@ Tracer::inSpan(
             );
 
             Tracer::inSpan(
-                ['name' => ('people.php:addtemplatedata')],
+                ['name' => 'people.php:addtemplatedata'],
                 function () use ($cmsmain, $data) {
                     global $listdata, $listdata, $listconfig;
 
@@ -304,275 +304,275 @@ Tracer::inSpan(
                 $success = false;
             } else {
                 switch ($_POST['do']) {
-            case 'merge':
-                $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $key => $value) {
-                    if (db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $value])) {
-                        $containsmembers = true;
-                    }
-                }
-                if ($containsmembers) {
-                    $message = 'Please select only individuals or family heads to merge';
-                    $success = false;
-                } elseif (1 == count($ids)) {
-                    $message = 'Please select more than one person to merge them into a family';
-                    $success = false;
-                } else {
-                    $oldest = db_value('SELECT id FROM people WHERE id IN ('.$_POST['ids'].') ORDER BY date_of_birth ASC LIMIT 1');
-                    $extradrops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id IN ('.$_POST['ids'].') AND people_id != :oldest', ['oldest' => $oldest]);
-                    // Transaction block added over update queriesTransaction block added over update and insert queries
-                    db_transaction(function () use ($ids, $oldest) {
-                        foreach ($ids as $id) {
-                            if ($id != $oldest) {
-                                db_query('UPDATE people SET parent_id = :oldest WHERE id = :id', ['oldest' => $oldest, 'id' => $id]);
-                                db_query('UPDATE transactions SET people_id = :oldest WHERE people_id = :id', ['oldest' => $oldest, 'id' => $id]);
+                    case 'merge':
+                        $ids = explode(',', $_POST['ids']);
+                        foreach ($ids as $key => $value) {
+                            if (db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $value])) {
+                                $containsmembers = true;
                             }
                         }
-                    });
-                    $success = true;
-                    $message = 'The merge has be successfully applied';
-                    $redirect = true;
-                    correctchildren();
-                }
-
-                break;
-
-            case 'detach':
-                $ids = explode(',', $_POST['ids']);
-                foreach ($ids as $key => $value) {
-                    if (!db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $value])) {
-                        $containsmembers = true;
-                    }
-                }
-                if ($containsmembers) {
-                    $message = 'Please select only members of a family, not family heads';
-                    $success = false;
-                } else {
-                    // Transaction block added over update queries
-                    db_transaction(function () use ($ids) {
-                        foreach ($ids as $id) {
-                            db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
+                        if ($containsmembers) {
+                            $message = 'Please select only individuals or family heads to merge';
+                            $success = false;
+                        } elseif (1 == count($ids)) {
+                            $message = 'Please select more than one person to merge them into a family';
+                            $success = false;
+                        } else {
+                            $oldest = db_value('SELECT id FROM people WHERE id IN ('.$_POST['ids'].') ORDER BY date_of_birth ASC LIMIT 1');
+                            $extradrops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id IN ('.$_POST['ids'].') AND people_id != :oldest', ['oldest' => $oldest]);
+                            // Transaction block added over update queriesTransaction block added over update and insert queries
+                            db_transaction(function () use ($ids, $oldest) {
+                                foreach ($ids as $id) {
+                                    if ($id != $oldest) {
+                                        db_query('UPDATE people SET parent_id = :oldest WHERE id = :id', ['oldest' => $oldest, 'id' => $id]);
+                                        db_query('UPDATE transactions SET people_id = :oldest WHERE people_id = :id', ['oldest' => $oldest, 'id' => $id]);
+                                    }
+                                }
+                            });
+                            $success = true;
+                            $message = 'The merge has be successfully applied';
+                            $redirect = true;
+                            correctchildren();
                         }
-                    });
-                    $redirect = true;
-                    $success = true;
-                    $message = ($success) ? 'Selected people have been detached' : 'Something went wrong';
-                }
 
-                break;
+                        break;
 
-            case 'give':
-                $ids = ($_POST['ids']);
-                $success = true;
-                $redirect = '?action=give&ids='.$ids;
-
-                break;
-
-            case 'move':
-                $ids = json_decode($_POST['ids']);
-                // list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
-                // Refactored list move method to use a transaction block and bulk insert for the correctdrops method
-                [$success, $message, $redirect, $aftermove] = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
-
-                break;
-
-            case 'delete':
-                $ids = explode(',', $_POST['ids']);
-                [$success, $message, $redirect] = listDelete($table, $ids);
-
-                break;
-
-            case 'copy':
-                $ids = explode(',', $_POST['ids']);
-                [$success, $message, $redirect] = listCopy($table, $ids, 'name');
-
-                break;
-
-            case 'hide':
-                $ids = explode(',', $_POST['ids']);
-                [$success, $message, $redirect] = listShowHide($table, $ids, 0);
-
-                break;
-
-            case 'show':
-                $ids = explode(',', $_POST['ids']);
-                [$success, $message, $redirect] = listShowHide($table, $ids, 1);
-
-                break;
-
-            case 'touch':
-                $ids = explode(',', $_POST['ids']);
-                $userId = $_SESSION['user']['id'];
-                // Query speed optimised for 500 records from 6.2 seconds to 0.54 seconds using  transaction blocks over UPDATE and bulk inserts
-                db_transaction(function () use ($ids, $userId) {
-                    foreach ($ids as $id) {
-                        db_query('UPDATE people SET modified = NOW(), modified_by = :user WHERE id = :id', ['id' => $id, 'user' => $userId]);
-                    }
-                });
-                // Bulk insert used to insert into history table
-                simpleBulkSaveChangeHistory('people', $ids, 'Touched');
-
-                $success = true;
-                $message = 'Selected people have been touched';
-                $redirect = false;
-
-                break;
-
-            case 'print':
-                $success = true;
-                $redirect = '/pdf/'.$_POST['option'].'card.php?id='.$_POST['ids'];
-
-                break;
-
-            case 'export':
-                $success = true;
-                $_SESSION['export_ids_people'] = $_POST['ids'];
-                $redirect = '?action=people_export';
-
-                break;
-
-            case 'tag':
-                if ('undefined' == $_POST['option']) {
-                    $success = false;
-                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
-                    $redirect = false;
-                } else {
-                    // set tag id
-                    $tag_id = $_POST['option'];
-                    $people_ids = $ids;
-                    if (sizeof($people_ids) > 0) {
-                        // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
-                        $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
-
-                        $params = [];
-
-                        for ($i = 0; $i < sizeof($people_ids); ++$i) {
-                            $query .= "(:tag_id, 'People', :people_id{$i})";
-                            $params = array_merge($params, ['people_id'.$i => $people_ids[$i]]);
-                            if ($i !== sizeof($people_ids) - 1) {
-                                $query .= ',';
+                    case 'detach':
+                        $ids = explode(',', $_POST['ids']);
+                        foreach ($ids as $key => $value) {
+                            if (!db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $value])) {
+                                $containsmembers = true;
                             }
                         }
+                        if ($containsmembers) {
+                            $message = 'Please select only members of a family, not family heads';
+                            $success = false;
+                        } else {
+                            // Transaction block added over update queries
+                            db_transaction(function () use ($ids) {
+                                foreach ($ids as $id) {
+                                    db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
+                                }
+                            });
+                            $redirect = true;
+                            $success = true;
+                            $message = ($success) ? 'Selected people have been detached' : 'Something went wrong';
+                        }
 
-                        $params = array_merge($params, ['tag_id' => $tag_id]);
-                        db_query($query, $params);
+                        break;
 
+                    case 'give':
+                        $ids = $_POST['ids'];
                         $success = true;
-                        $message = 'Tags added';
-                        $redirect = true;
-                    } else {
-                        $success = false;
-                        $message = 'To apply the tag, the beneficiary must be checked';
-                        $redirect = false;
-                    }
-                }
+                        $redirect = '?action=give&ids='.$ids;
 
-                break;
+                        break;
 
-            case 'rtag':
-                if ('undefined' == $_POST['option']) {
-                    $success = false;
-                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
-                    $redirect = false;
-                } else {
-                    // set tag id
-                    $tag_id = $_POST['option'];
-                    $people_ids = $ids;
-                    if (sizeof($people_ids) > 0) {
-                        // Query speed optimised using transaction block and bulk delete
-                        // related to this trello card https://trello.com/c/g24mIVb8
-                        db_transaction(function () use ($tag_id, $people_ids) {
-                            $deleteClause = [];
-                            foreach ($people_ids as $people_id) {
-                                $deleteClause[] = sprintf('(%d, "%s", %d)', $tag_id, 'People', $people_id);
-                            }
-                            if (sizeof($deleteClause) > 0) {
-                                db_query('DELETE FROM tags_relations WHERE (tag_id, object_type, `object_id`) IN ('.join(',', $deleteClause).')');
+                    case 'move':
+                        $ids = json_decode($_POST['ids']);
+                        // list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
+                        // Refactored list move method to use a transaction block and bulk insert for the correctdrops method
+                        [$success, $message, $redirect, $aftermove] = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
+
+                        break;
+
+                    case 'delete':
+                        $ids = explode(',', $_POST['ids']);
+                        [$success, $message, $redirect] = listDelete($table, $ids);
+
+                        break;
+
+                    case 'copy':
+                        $ids = explode(',', $_POST['ids']);
+                        [$success, $message, $redirect] = listCopy($table, $ids, 'name');
+
+                        break;
+
+                    case 'hide':
+                        $ids = explode(',', $_POST['ids']);
+                        [$success, $message, $redirect] = listShowHide($table, $ids, 0);
+
+                        break;
+
+                    case 'show':
+                        $ids = explode(',', $_POST['ids']);
+                        [$success, $message, $redirect] = listShowHide($table, $ids, 1);
+
+                        break;
+
+                    case 'touch':
+                        $ids = explode(',', $_POST['ids']);
+                        $userId = $_SESSION['user']['id'];
+                        // Query speed optimised for 500 records from 6.2 seconds to 0.54 seconds using  transaction blocks over UPDATE and bulk inserts
+                        db_transaction(function () use ($ids, $userId) {
+                            foreach ($ids as $id) {
+                                db_query('UPDATE people SET modified = NOW(), modified_by = :user WHERE id = :id', ['id' => $id, 'user' => $userId]);
                             }
                         });
-                        $success = true;
-                        $message = 'Tags removed';
-                        $redirect = true;
-                    } else {
-                        $success = false;
-                        $message = 'To remove the tag, the beneficiary must be checked';
-                        $redirect = false;
-                    }
-                }
+                        // Bulk insert used to insert into history table
+                        simpleBulkSaveChangeHistory('people', $ids, 'Touched');
 
-                break;
-            }
+                        $success = true;
+                        $message = 'Selected people have been touched';
+                        $redirect = false;
+
+                        break;
+
+                    case 'print':
+                        $success = true;
+                        $redirect = '/pdf/'.$_POST['option'].'card.php?id='.$_POST['ids'];
+
+                        break;
+
+                    case 'export':
+                        $success = true;
+                        $_SESSION['export_ids_people'] = $_POST['ids'];
+                        $redirect = '?action=people_export';
+
+                        break;
+
+                    case 'tag':
+                        if ('undefined' == $_POST['option']) {
+                            $success = false;
+                            $message = 'No tags exist. Please go to "Manage tags" to create tags.';
+                            $redirect = false;
+                        } else {
+                            // set tag id
+                            $tag_id = $_POST['option'];
+                            $people_ids = $ids;
+                            if (sizeof($people_ids) > 0) {
+                                // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
+                                $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+
+                                $params = [];
+
+                                for ($i = 0; $i < sizeof($people_ids); ++$i) {
+                                    $query .= "(:tag_id, 'People', :people_id{$i})";
+                                    $params = array_merge($params, ['people_id'.$i => $people_ids[$i]]);
+                                    if ($i !== sizeof($people_ids) - 1) {
+                                        $query .= ',';
+                                    }
+                                }
+
+                                $params = array_merge($params, ['tag_id' => $tag_id]);
+                                db_query($query, $params);
+
+                                $success = true;
+                                $message = 'Tags added';
+                                $redirect = true;
+                            } else {
+                                $success = false;
+                                $message = 'To apply the tag, the beneficiary must be checked';
+                                $redirect = false;
+                            }
+                        }
+
+                        break;
+
+                    case 'rtag':
+                        if ('undefined' == $_POST['option']) {
+                            $success = false;
+                            $message = 'No tags exist. Please go to "Manage tags" to create tags.';
+                            $redirect = false;
+                        } else {
+                            // set tag id
+                            $tag_id = $_POST['option'];
+                            $people_ids = $ids;
+                            if (sizeof($people_ids) > 0) {
+                                // Query speed optimised using transaction block and bulk delete
+                                // related to this trello card https://trello.com/c/g24mIVb8
+                                db_transaction(function () use ($tag_id, $people_ids) {
+                                    $deleteClause = [];
+                                    foreach ($people_ids as $people_id) {
+                                        $deleteClause[] = sprintf('(%d, "%s", %d)', $tag_id, 'People', $people_id);
+                                    }
+                                    if (sizeof($deleteClause) > 0) {
+                                        db_query('DELETE FROM tags_relations WHERE (tag_id, object_type, `object_id`) IN ('.join(',', $deleteClause).')');
+                                    }
+                                });
+                                $success = true;
+                                $message = 'Tags removed';
+                                $redirect = true;
+                            } else {
+                                $success = false;
+                                $message = 'To remove the tag, the beneficiary must be checked';
+                                $redirect = false;
+                            }
+                        }
+
+                        break;
+                }
             }
 
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
             echo json_encode($return);
 
-            exit();
+            exit;
         }
     }
 );
 
-        function correctchildren()
-        {
-            $result = db_query('SELECT (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AS newparent, p1.id FROM people AS p1 WHERE p1.parent_id > 0 AND (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AND NOT deleted');
-            // Optimized update queries by adding transaction blocks around update statements
-            db_transaction(function () use ($result) {
-                while ($row = db_fetch($result)) {
-                    db_query('UPDATE people SET parent_id = :newparent WHERE id = :id', ['newparent' => $row['newparent'], 'id' => $row['id']]);
-                }
-            });
+function correctchildren()
+{
+    $result = db_query('SELECT (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AS newparent, p1.id FROM people AS p1 WHERE p1.parent_id > 0 AND (SELECT p2.parent_id FROM people AS p2 WHERE p2.id = p1.parent_id) AND NOT deleted');
+    // Optimized update queries by adding transaction blocks around update statements
+    db_transaction(function () use ($result) {
+        while ($row = db_fetch($result)) {
+            db_query('UPDATE people SET parent_id = :newparent WHERE id = :id', ['newparent' => $row['newparent'], 'id' => $row['id']]);
         }
+    });
+}
 
-        function correctdrops($id)
-        {
-            $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
-            $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
+function correctdrops($id)
+{
+    $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
+    $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
 
-            if ($drops && $person['parent_id']) {
-                // Combining insert values to create bulk inserts instead of two insert statements
-                db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES 
+    if ($drops && $person['parent_id']) {
+        // Combining insert values to create bulk inserts instead of two insert statements
+        db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES 
                 ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), 
                 ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
 
-                $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
-                $aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
+        $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
+        $aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
 
-                return $aftermove;
-            }
+        return $aftermove;
+    }
+}
+
+function bulkcorrectdrops($ids)
+{
+    $query = '';
+    $aftermove = '';
+    $finalIds = [];
+    for ($i = 0; $i < sizeof($ids); ++$i) {
+        $id = $ids[$i];
+        $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
+        $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
+
+        if ($drops && $person['parent_id']) {
+            $finalIds[] = $id;
+            $query .= '('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), ';
+            $query .= '('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].'), ';
         }
+    }
+    if ('' !== $query) {
+        // Removing an extra comma from the end of query
+        $query = substr($query, 0, strlen($query) - 2);
+        db_query("INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES {$query}");
+    }
 
-        function bulkcorrectdrops($ids)
-        {
-            $query = '';
-            $aftermove = '';
-            $finalIds = [];
-            for ($i = 0; $i < sizeof($ids); ++$i) {
-                $id = $ids[$i];
-                $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
-                $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
+    // Correction of the dropped values - new values must be retrieved through a query
+    for ($i = 0; $i < sizeof($finalIds); ++$i) {
+        $id = $finalIds[$i];
+        $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
+        $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
 
-                if ($drops && $person['parent_id']) {
-                    $finalIds[] = $id;
-                    $query .= '('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), ';
-                    $query .= '('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].'), ';
-                }
-            }
-            if ('' !== $query) {
-                // Removing an extra comma from the end of query
-                $query = substr($query, 0, strlen($query) - 2);
-                db_query("INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES {$query}");
-            }
+        $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
+        $aftermove .= 'correctDrops({"id":'.$person['id'].', "value": ""}, {"id":'.$person['parent_id'].', "value": '.$newamount.'}); ';
+    }
 
-            // Correction of the dropped values - new values must be retrieved through a query
-            for ($i = 0; $i < sizeof($finalIds); ++$i) {
-                $id = $finalIds[$i];
-                $drops = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => intval($id)]);
-                $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
-
-                $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
-                $aftermove .= 'correctDrops({"id":'.$person['id'].', "value": ""}, {"id":'.$person['parent_id'].', "value": '.$newamount.'}); ';
-            }
-
-            return $aftermove;
-        }
+    return $aftermove;
+}

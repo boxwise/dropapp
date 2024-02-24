@@ -9,6 +9,7 @@ class MakePeopleIdInTransactionTableNullable extends AbstractMigration
         $this->table('transactions')
             ->changeColumn('people_id', 'integer', [
                 'null' => true,
-            ])->save();
+            ])->save()
+        ;
     }
 }

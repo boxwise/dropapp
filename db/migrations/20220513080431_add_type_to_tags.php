@@ -25,6 +25,7 @@ class AddTypeToTags extends AbstractMigration
     public function down(): void
     {
         $this->table('tags')
-            ->removeColumn('type')->update();
+            ->removeColumn('type')->update()
+        ;
     }
 }

@@ -3,7 +3,7 @@
 use OpenCensus\Trace\Tracer;
 
 Tracer::inSpan(
-    ['name' => ('index.php')],
+    ['name' => 'index.php'],
     function () {
         global $settings,$translate,$action,$lan,$pdf,$_txt,$formbuttons, $rolesToActions, $menusToActions;
         global $error,$listdata,$data,$table,$listconfig,$thisfile,$formdata;

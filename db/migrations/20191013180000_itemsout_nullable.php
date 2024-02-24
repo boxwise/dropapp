@@ -9,6 +9,7 @@ class ItemsOutNullable extends AbstractMigration
         $this->table('itemsout')
             ->changeColumn('from_location', 'integer', [
                 'null' => true,
-            ])->save();
+            ])->save()
+        ;
     }
 }

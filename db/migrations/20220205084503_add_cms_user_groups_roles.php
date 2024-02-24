@@ -19,7 +19,8 @@ class AddCmsUserGroupsRoles extends AbstractMigration
             ->addIndex(['cms_usergroups_id', 'auth0_role_id'], ['unique' => true])
             ->addForeignKey('cms_usergroups_id', 'cms_usergroups', 'id', [
                 'delete' => 'CASCADE', 'update' => 'CASCADE',
-            ])->save();
+            ])->save()
+        ;
     }
 
     public function down(): void

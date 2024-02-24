@@ -13,7 +13,5 @@ class FixPrimaryKeyOfTagsRelations extends AbstractMigration
         ;
     }
 
-    public function down()
-    {
-    }
+    public function down() {}
 }

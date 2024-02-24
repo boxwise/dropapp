@@ -79,7 +79,5 @@ WHERE
         $this->output->writeln('Deleted history entries: '.$deleted_history_entries);
     }
 
-    public function down()
-    {
-    }
+    public function down() {}
 }

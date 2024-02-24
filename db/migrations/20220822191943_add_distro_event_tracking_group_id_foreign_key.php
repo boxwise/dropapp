@@ -15,6 +15,7 @@ class AddDistroEventTrackingGroupIdForeignKey extends AbstractMigration
         ])
             ->addForeignKey('distro_event_tracking_group_id', 'distro_events_tracking_groups', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
-            ])->save();
+            ])->save()
+        ;
     }
 }

@@ -1,3 +1,3 @@
 <?php
 
-    require $_SERVER['DOCUMENT_ROOT'].'/include/check_out.php';
+require $_SERVER['DOCUMENT_ROOT'].'/include/check_out.php';

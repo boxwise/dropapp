@@ -102,7 +102,5 @@ class MakePeopleIdUnsigned extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

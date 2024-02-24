@@ -24,7 +24,5 @@ class RemoveNeededItems extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

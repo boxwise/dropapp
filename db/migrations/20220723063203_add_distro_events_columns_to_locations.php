@@ -1,5 +1,6 @@
 <?php
 
+use Phinx\Db\Adapter\MysqlAdapter;
 use Phinx\Migration\AbstractMigration;
 
 class AddDistroEventsColumnsToLocations extends AbstractMigration
@@ -13,10 +14,10 @@ class AddDistroEventsColumnsToLocations extends AbstractMigration
             'limit' => '20',
             'after' => 'is_lost',
         ])
-            ->addColumn('latitude', \Phinx\Db\Adapter\MysqlAdapter::PHINX_TYPE_DOUBLE, [
+            ->addColumn('latitude', MysqlAdapter::PHINX_TYPE_DOUBLE, [
                 'null' => true,
                 'after' => 'type',
-            ])->addColumn('longitude', \Phinx\Db\Adapter\MysqlAdapter::PHINX_TYPE_DOUBLE, [
+            ])->addColumn('longitude', MysqlAdapter::PHINX_TYPE_DOUBLE, [
                 'null' => true,
                 'after' => 'latitude',
             ])->addColumn('description', 'string', [

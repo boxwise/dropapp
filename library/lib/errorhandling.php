@@ -1,11 +1,14 @@
 <?php
 
+use Sentry\SentrySdk;
+use Sentry\State\Scope;
+
 // use Google\Cloud\ErrorReporting\Bootstrap;
 
 /**
  * set the scope for sentry exception and error handler.
  */
-function boxwise_sentry_scope(Sentry\State\Scope $scope): void
+function boxwise_sentry_scope(Scope $scope): void
 {
     $session = $_SESSION ?? [];
     if (isset($_SESSION['user'])) {
@@ -41,7 +44,7 @@ function bootstrap_exception_handler(Throwable $ex)
     Sentry\captureException($ex);
     // upgrade sentry sdk
     // related trello card https://trello.com/c/5EzynpR9
-    $eventId = \Sentry\SentrySdk::getCurrentHub()->getLastEventId();
+    $eventId = SentrySdk::getCurrentHub()->getLastEventId();
     // list of standard http errors
     $http_status_codes = [
         100 => 'Continue',
@@ -151,7 +154,7 @@ function bootstrap_exception_handler(Throwable $ex)
 
     $error->display('cms_error.tpl');
 
-    exit();
+    exit;
 }
 
 // Set exception handler
@@ -186,11 +189,7 @@ class boxwise_error_handler_class
      *
      * @see http://php.net/set_error_handler
      *
-     * @param int $errno      Error level
-     * @param     $errstr
-     * @param     $errfile
-     * @param     $errline
-     * @param     $errcontext
+     * @param int $errno Error level
      *
      * @return bool
      */

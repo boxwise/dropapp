@@ -37,6 +37,7 @@ class RemoveUnderscoreColumns extends AbstractMigration
                 'collation' => 'utf8_general_ci',
                 'encoding' => 'utf8',
                 'after' => '_gender',
-            ])->update();
+            ])->update()
+        ;
     }
 }

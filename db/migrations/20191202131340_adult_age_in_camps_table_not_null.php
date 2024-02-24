@@ -10,6 +10,7 @@ class AdultAgeInCampsTableNotNull extends AbstractMigration
             ->changeColumn('adult_age', 'integer', [
                 'null' => false,
                 'default' => 15,
-            ])->save();
+            ])->save()
+        ;
     }
 }
