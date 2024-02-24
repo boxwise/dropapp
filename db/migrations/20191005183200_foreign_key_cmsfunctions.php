@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ForeignKeyCmsFunctions extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('cms_functions')
             ->changeColumn('parent_id', 'integer', [

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class CreateComposteIndexOnHistoryTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('history')
             ->addIndex(['record_id', 'changedate'], [

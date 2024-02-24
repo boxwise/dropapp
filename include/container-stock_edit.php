@@ -7,7 +7,7 @@
     if (!$ajax) {
         initlist();
 
-        list($product, $gender, $size, $color, $overunder) = explode('-', $_GET['id']);
+        [$product, $gender, $size, $color, $overunder] = explode('-', $_GET['id']);
 
         $listconfig['origin'] = $action.'&id='.$_GET['id'];
 

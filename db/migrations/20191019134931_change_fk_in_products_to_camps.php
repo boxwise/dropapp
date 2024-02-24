@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ChangeFkInProductsToCamps extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('products')
             ->dropForeignKey('camp_id')

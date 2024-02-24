@@ -36,7 +36,7 @@ function authenticate($settings, $ajax)
             $auth0->exchange();
             unset($_SESSION['auth0_callback_redirect_uri']);
             redirect($redirectUrl);
-        } catch (StateException $e) {
+        } catch (StateException) {
             // clear the session if state code failed
             $auth0->clear();
 
@@ -55,7 +55,7 @@ function authenticate($settings, $ajax)
         try {
             // Token has expired, attempt to renew it.
             $auth0->renew();
-        } catch (StateException $e) {
+        } catch (StateException) {
             // There was an error trying to renew the token. Clear the session.
             $auth0->clear();
         }

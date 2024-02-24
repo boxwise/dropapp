@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ResetChangedBoxLabelIdentifiers extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $updated_box_id_rows = $this->execute('
 -- MAIN QUERY to reset box label identifiers to original.

@@ -24,25 +24,14 @@
 
         function box_state_id_from_filter($applied_filter)
         {
-            switch ($applied_filter) {
-                case 'in_stock':
-                    return 1;
-
-                case 'donated':
-                    return 5;
-
-                case 'lost':
-                    return 2;
-
-                case 'scrap':
-                    return 6;
-
-                case 'marked_for_shipment':
-                    return 3;
-
-                default:
-                    return 1;
-            }
+            return match ($applied_filter) {
+                'in_stock' => 1,
+                'donated' => 5,
+                'lost' => 2,
+                'scrap' => 6,
+                'marked_for_shipment' => 3,
+                default => 1,
+            };
         }
 
         // Set filter to InStock by default
@@ -226,10 +215,13 @@
 
         // Add what rows are expanded and collapsed
         foreach ($data as &$row) {
-            if (in_array($row['id'], $_SESSION['stock_overview'])) {
-                $row['notCollapsed'] = true;
+            if (isset($_SESSION['stock_overview']) && is_array($_SESSION['stock_overview'])) {
+                if (in_array($row['id'], $_SESSION['stock_overview'])) {
+                    $row['notCollapsed'] = true;
+                }
             }
         }
+
         $cmsmain->assign('data', $data);
         $cmsmain->assign('listconfig', $listconfig);
         $cmsmain->assign('listdata', $listdata);

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class FixPrimaryKeyOfTagsRelations extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $tags_relations = $this->table('tags_relations');
         $tags_relations

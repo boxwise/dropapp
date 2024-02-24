@@ -7,7 +7,7 @@ class RemoveNeededItems extends AbstractMigration
     /**
      * Migrate Up.
      */
-    public function up()
+    public function up(): void
     {
         // delete need_periods table
         $this->execute('DROP TABLE need_periods');

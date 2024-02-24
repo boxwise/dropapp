@@ -35,7 +35,7 @@
 			LEFT OUTER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 			WHERE 
 				'.(!$_SESSION['user']['is_admin'] ? 'l.level <'.intval($_SESSION['usergroup']['userlevel']).' AND ' : '').'
-				'.($_SESSION['user']['is_admin'] ? '' : '(uc.camp_id IN ('.($camps ? $camps : 0).')) AND ').' 
+				'.($_SESSION['user']['is_admin'] ? '' : '(uc.camp_id IN ('.($camps ?: 0).')) AND ').' 
 				(g.organisation_id = '.intval($_SESSION['organisation']['id']).($_SESSION['user']['is_admin'] ? ' OR u.is_admin' : '').')
 				AND (NOT g.deleted OR g.deleted IS NULL) AND (NOT u.deleted OR u.deleted IS NULL)
 				AND NOT (u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0) 
@@ -52,7 +52,7 @@
 			INNER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
 			INNER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
 			WHERE (l.level >= :userGroupLevel AND u.id != :user)
-            AND uc.camp_id IN ('.($_SESSION['camp']['id'] ? $_SESSION['camp']['id'] : 0).')
+            AND uc.camp_id IN ('.($_SESSION['camp']['id'] ?: 0).')
 			AND NOT (u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0)
 			AND UNIX_TIMESTAMP(u.deleted) = 0
             GROUP BY u.id

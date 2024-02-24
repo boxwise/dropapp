@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeCmsFunctionsIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('cms_functions')
             ->dropForeignKey('parent_id')

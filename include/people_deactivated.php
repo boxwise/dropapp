@@ -102,7 +102,7 @@ use OpenCensus\Trace\Tracer;
                 }
                 if (empty($errorMessage)) {
                     // Optimised by using bulk inserts and transactions over update queries
-                    list($success, $message, $redirect) = listBulkUndelete($table, $finalIds, false, false);
+                    [$success, $message, $redirect] = listBulkUndelete($table, $finalIds, false, false);
                     $redirect = true;
                 } else {
                     $success = false;
@@ -126,7 +126,7 @@ use OpenCensus\Trace\Tracer;
                     }
 
                     // Optimized by using bulk inserts and transactions over delete queries
-                    list($success, $message, $redirect) = listBulkRealDelete($table, $ids);
+                    [$success, $message, $redirect] = listBulkRealDelete($table, $ids);
 
                     return [$success, $message, $redirect];
                 });

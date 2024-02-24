@@ -3,7 +3,8 @@
         "odan/phinx-migrations-generator": "^5.4.0",
         "phan/phan": "^4.0.2",
         "friendsofphp/php-cs-fixer": "^2.15",
-        "php-parallel-lint/php-parallel-lint": "^1.3"
+        "php-parallel-lint/php-parallel-lint": "^1.3",
+        "rector/rector": "^1.0"
     },
     "require": {
         "robmorgan/phinx": "^0.12",

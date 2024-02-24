@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddQuantityToShipmentDetail extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $table = $this->table('shipment_detail');
         $table

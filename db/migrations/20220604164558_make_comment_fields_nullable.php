@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeCommentFieldsNullable extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $stock = $this->table('stock');
         $stock->changeColumn('comments', 'text', ['null' => true])
@@ -12,7 +12,7 @@ class MakeCommentFieldsNullable extends AbstractMigration
         ;
     }
 
-    public function down()
+    public function down(): void
     {
         $stock = $this->table('stock');
         $stock->changeColumn('comments', 'text', ['null' => false])

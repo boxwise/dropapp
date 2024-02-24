@@ -62,7 +62,7 @@
             foreach ($ids as $id) {
                 verify_campaccess_people(db_value('SELECT people_id FROM transactions WHERE id=:id', ['id' => $id]));
             }
-            list($success, $message, $redirect) = listDelete($table, $ids);
+            [$success, $message, $redirect] = listDelete($table, $ids);
             $return = ['success' => $success, 'message' => $message, 'redirect' => false, 'action' => "$('#field_people_id').trigger('change')"];
 
             echo json_encode($return);

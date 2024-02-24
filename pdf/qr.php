@@ -52,7 +52,7 @@ Tracer::inSpan(
             if ($box['code'] && !$box['legacy']) {
                 $hash = $box['code'];
             } else {
-                list($id, $hash) = generateQRIDForDB();
+                [$id, $hash] = generateQRIDForDB();
 
                 if ($labels[$i]) {
                     db_query('UPDATE stock SET qr_id = :qr_id WHERE id = :id', ['id' => $labels[$i], 'qr_id' => $id]);
@@ -73,7 +73,7 @@ Tracer::inSpan(
                 }
             }
 
-            list($qrPng, $url) = generateQrPng($hash);
+            [$qrPng, $url] = generateQrPng($hash);
             if ('QR-CODE ERROR' === $qrPng) {
                 $pdf->Text(88, 12 + $y, 'QR-CODE ERROR!');
             } else {

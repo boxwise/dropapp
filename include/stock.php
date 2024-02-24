@@ -41,31 +41,16 @@ Tracer::inSpan(
 
             function get_filter2_query($applied_filter)
             {
-                switch ($applied_filter) {
-                case 'in_stock':
-                    return ' AND stock.box_state_id = 1 ';
-
-                case 'all':
-                    return ' ';
-
-                case 'donated':
-                    return ' AND stock.box_state_id = 5';
-
-                case 'lost':
-                    return ' AND stock.box_state_id = 2';
-
-                case 'scrap':
-                    return ' AND stock.box_state_id = 6';
-
-                case 'marked_for_shipment':
-                    return ' AND stock.box_state_id = 3';
-
-                case 'dispose':
-                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1';
-
-                default:
-                    return ' AND stock.box_state_id = 1';
-            }
+                return match ($applied_filter) {
+                    'in_stock' => ' AND stock.box_state_id = 1 ',
+                    'all' => ' ',
+                    'donated' => ' AND stock.box_state_id = 5',
+                    'lost' => ' AND stock.box_state_id = 2',
+                    'scrap' => ' AND stock.box_state_id = 6',
+                    'marked_for_shipment' => ' AND stock.box_state_id = 3',
+                    'dispose' => ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1',
+                    default => ' AND stock.box_state_id = 1',
+                };
             }
             $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock']);
 
@@ -239,14 +224,14 @@ Tracer::inSpan(
 
             case 'move':
                 $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect) = listMove($table, $ids);
+                [$success, $message, $redirect] = listMove($table, $ids);
 
                 break;
 
             case 'delete':
                 $stock_ids = explode(',', $_POST['ids']);
                 [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
-                    list($success, $message, $redirect) = listDelete($table, $stock_ids);
+                    [$success, $message, $redirect] = listDelete($table, $stock_ids);
 
                     $params = [];
                     $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (`object_id`) IN (';
@@ -272,25 +257,25 @@ Tracer::inSpan(
 
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
+                [$success, $message, $redirect] = listCopy($table, $ids, 'menutitle');
 
                 break;
 
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
+                [$success, $message, $redirect] = listShowHide($table, $ids, 0);
 
                 break;
 
             case 'show':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
+                [$success, $message, $redirect] = listShowHide($table, $ids, 1);
 
                 break;
 
             case 'export':
                 $_SESSION['export_ids_stock'] = $_POST['ids'];
-                list($success, $message, $redirect) = [true, '', '?action=stock_export'];
+                [$success, $message, $redirect] = [true, '', '?action=stock_export'];
 
                 break;
 

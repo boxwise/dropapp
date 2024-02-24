@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class DropProductSizegroupIdForeignKey extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $table = $this->table('products');
         if ($table->hasForeignKey('sizegroup_id')) {
@@ -14,7 +14,7 @@ class DropProductSizegroupIdForeignKey extends AbstractMigration
         }
     }
 
-    public function down()
+    public function down(): void
     {
         $table = $this->table('products');
         if (!$table->hasForeignKey('sizegroup_id')) {

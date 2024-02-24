@@ -7,7 +7,7 @@
     if (!$ajax) {
         initlist();
 
-        list($boxstate, $locationfromfilter, $category, $product, $gender, $size, $location) = explode('-', $_GET['id']);
+        [$boxstate, $locationfromfilter, $category, $product, $gender, $size, $location] = explode('-', $_GET['id']);
 
         $productname = ($product ? db_value('SELECT name FROM products WHERE id = :id AND camp_id = :camp_id AND (NOT deleted OR deleted IS NULL)', ['id' => $product, 'camp_id' => $_SESSION['camp']['id']]) : '');
         $cmsmain->assign('title', ($boxstate ? db_value('SELECT label FROM box_state WHERE id = :id', ['id' => $boxstate]).' ' : '').'Boxes for: '.

@@ -12,10 +12,9 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 /**
  * Getting Auth0 configurations.
  *
- * @param bool  $apiCall  Optional. This will be used to distingush some configuration when custom domain is being used, as API management call does not work with custom domain.
- * @param mixed $settings
+ * @param bool $apiCall Optional. This will be used to distingush some configuration when custom domain is being used, as API management call does not work with custom domain.
  */
-function getAuth0SdkConfiguration($settings, $apiCall = false)
+function getAuth0SdkConfiguration(mixed $settings, $apiCall = false)
 {
     $Psr17Library = new Psr17Factory();
     $Psr18Library = new MultiCurl($Psr17Library);
@@ -38,10 +37,8 @@ function getAuth0SdkConfiguration($settings, $apiCall = false)
 }
 /**
  * Getting Auth0 instance.
- *
- * @param mixed $settings
  */
-function getAuth0($settings)
+function getAuth0(mixed $settings)
 {
     $configuration = getAuth0SdkConfiguration($settings);
     // set session sotarage
@@ -51,10 +48,8 @@ function getAuth0($settings)
 }
 /**
  * Getting Auth0 API Management instance.
- *
- * @param mixed $settings
  */
-function getAuth0Management($settings)
+function getAuth0Management(mixed $settings)
 {
     $configuration = getAuth0SdkConfiguration($settings, true);
 
@@ -64,10 +59,8 @@ function getAuth0Management($settings)
 }
 /**
  * Getting Auth0 Authentication instance.
- *
- * @param mixed $settings
  */
-function getAuth0Authentication($settings)
+function getAuth0Authentication(mixed $settings)
 {
     $auth0 = getAuth0($settings);
 
@@ -799,10 +792,8 @@ function assignRolesToUser($userId, array $roleIds)
 }
 /**
  * Getting user assigned roles.
- *
- * @param mixed $userId
  */
-function getUserAssignedRoles($userId)
+function getUserAssignedRoles(mixed $userId)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
@@ -819,10 +810,8 @@ function getUserAssignedRoles($userId)
 
 /**
  * Getting all the users.
- *
- * @param mixed $query
  */
-function getAllUsers($query)
+function getAllUsers(mixed $query)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);

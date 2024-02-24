@@ -372,31 +372,31 @@ Tracer::inSpan(
                 $ids = json_decode($_POST['ids']);
                 // list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
                 // Refactored list move method to use a transaction block and bulk insert for the correctdrops method
-                list($success, $message, $redirect, $aftermove) = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
+                [$success, $message, $redirect, $aftermove] = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
 
                 break;
 
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids);
+                [$success, $message, $redirect] = listDelete($table, $ids);
 
                 break;
 
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listCopy($table, $ids, 'name');
+                [$success, $message, $redirect] = listCopy($table, $ids, 'name');
 
                 break;
 
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
+                [$success, $message, $redirect] = listShowHide($table, $ids, 0);
 
                 break;
 
             case 'show':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
+                [$success, $message, $redirect] = listShowHide($table, $ids, 1);
 
                 break;
 

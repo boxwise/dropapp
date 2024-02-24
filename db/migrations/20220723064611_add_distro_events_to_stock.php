@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddDistroEventsToStock extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $table = $this->table('stock');
         $table->addColumn('distro_event_id', 'integer', [

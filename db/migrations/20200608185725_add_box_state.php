@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddBoxState extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         // create Box State table
         $boxstate = $this->table('box_state');

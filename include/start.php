@@ -31,7 +31,7 @@ if (isset($_SESSION['camp']['id'])) {
 
     $popular = db_row('SELECT SUM(count) AS count, CONCAT(p.name," ", g.label) AS product FROM transactions AS t, products AS p, genders AS g WHERE g.id = p.gender_id AND p.id = t.product_id AND p.camp_id = :camp_id GROUP BY product_id ORDER BY SUM(count) DESC LIMIT 1', ['camp_id' => $_SESSION['camp']['id']]);
     $data['popularcount'] = intval($popular['count']);
-    $data['popularname'] = $popular['product'] ? $popular['product'] : 'none';
+    $data['popularname'] = $popular['product'] ?: 'none';
 
     $date = strftime('%Y-%m-%d', strtotime('-21 days'));
     $end = strftime('%Y-%m-%d');

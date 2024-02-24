@@ -11,7 +11,7 @@
             foreach ($ids as $id) {
                 verify_campaccess_people(db_value('SELECT people_id FROM transactions WHERE id=:id', ['id' => $id]));
             }
-            list($success, $message, $redirect) = listDelete('transactions', $ids);
+            [$success, $message, $redirect] = listDelete('transactions', $ids);
 
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
@@ -154,7 +154,7 @@
             // edit other N:N relationships
             $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
-            $postid = ($_POST['id'] ? $_POST['id'] : $id);
+            $postid = ($_POST['id'] ?: $id);
             if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
                 if ('image/jpeg' == $_FILES['picture']['type']) {
                     $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
@@ -231,7 +231,7 @@
     $data['allowdrops'] = allowGiveDrops();
 
     if ($id) {
-        $sideid = ($data['parent_id'] ? $data['parent_id'] : $id);
+        $sideid = ($data['parent_id'] ?: $id);
         $side['people_id'] = $id;
         $side['parent_id'] = $data['parent_id'];
         $ajaxaside = new Zmarty();

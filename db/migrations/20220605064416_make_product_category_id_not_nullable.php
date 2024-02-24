@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeProductCategoryIdNotNullable extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $table = $this->table('products');
 
@@ -13,7 +13,7 @@ class MakeProductCategoryIdNotNullable extends AbstractMigration
         ;
     }
 
-    public function down()
+    public function down(): void
     {
         $table = $this->table('products');
 

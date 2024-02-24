@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeGenderIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('products')
             ->dropForeignKey('gender_id')

@@ -1,6 +1,6 @@
 <?php
 
-    if ('_edit' == substr($_GET['table'], -5)) {
+    if (str_ends_with($_GET['table'], '_edit')) {
         $_GET['table'] = substr($_GET['table'], 0, -5);
     }
 

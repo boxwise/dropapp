@@ -133,12 +133,12 @@
         $translate['cms_form_submit'] = 'Make schedule';
         $cmsmain->assign('translate', $translate);
 
-        $data['starttime'] = ($_SESSION['camp']['schedulestart'] ? $_SESSION['camp']['schedulestart'] : '10:00');
-        $data['endtime'] = ($_SESSION['camp']['schedulestop'] ? $_SESSION['camp']['schedulestop'] : '16:00');
+        $data['starttime'] = ($_SESSION['camp']['schedulestart'] ?: '10:00');
+        $data['endtime'] = ($_SESSION['camp']['schedulestop'] ?: '16:00');
         $data['lunchbreak'] = intval($_SESSION['camp']['schedulebreak']);
-        $data['lunchtime'] = ($_SESSION['camp']['schedulebreakstart'] ? $_SESSION['camp']['schedulebreakstart'] : '13:00');
-        $data['lunchduration'] = ($_SESSION['camp']['schedulebreakduration'] ? $_SESSION['camp']['schedulebreakduration'] : '1');
-        $data['timeslot'] = ($_SESSION['camp']['scheduletimeslot'] ? $_SESSION['camp']['scheduletimeslot'] : '0.5');
+        $data['lunchtime'] = ($_SESSION['camp']['schedulebreakstart'] ?: '13:00');
+        $data['lunchduration'] = ($_SESSION['camp']['schedulebreakduration'] ?: '1');
+        $data['timeslot'] = ($_SESSION['camp']['scheduletimeslot'] ?: '0.5');
 
         for ($i = 1; $i < 60; ++$i) {
             $datelist[] = ['value' => $i, 'label' => strftime('%A %e %B %Y', strtotime('+'.$i.' Days'))];

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeBoxStateIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('stock')
             ->dropForeignKey('box_state_id')

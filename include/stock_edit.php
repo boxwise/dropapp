@@ -52,7 +52,7 @@
 
                     $params = [];
                     $tags = $_POST['tags'];
-                    if (sizeof($tags) > 0) {
+                    if (isset($_POST['tags']) && is_array($_POST['tags']) && sizeof($_POST['tags']) > 0) {
                         $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
 
                         for ($i = 0; $i < sizeof($tags); ++$i) {

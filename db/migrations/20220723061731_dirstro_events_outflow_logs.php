@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class DirstroEventsOutflowLogs extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $distroEventsOutflowLogs = $this->table('distro_events_outflow_logs', [
             'id' => true,

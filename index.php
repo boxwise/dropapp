@@ -14,7 +14,7 @@ Tracer::inSpan(
         require_once 'library/core.php';
 
         // action set by POST will override GET
-        $action = (isset($_POST['action']) ? $_POST['action'] : (isset($_GET['action']) ? $_GET['action'] : 'start'));
+        $action = ($_POST['action'] ?? $_GET['action'] ?? 'start');
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
         if ('logout' == $action) {

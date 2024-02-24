@@ -11,7 +11,7 @@ class Cypress extends AbstractSeed
         ];
     }
 
-    public function run()
+    public function run(): void
     {
         //------------------- organisations
         $this->execute("INSERT INTO `organisations` (`id`, `label`, `created`, `created_by`, `deleted`, `modified`, `modified_by`) VALUES

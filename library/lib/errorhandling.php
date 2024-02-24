@@ -7,7 +7,7 @@
  */
 function boxwise_sentry_scope(Sentry\State\Scope $scope): void
 {
-    $session = isset($_SESSION) ? $_SESSION : [];
+    $session = $_SESSION ?? [];
     if (isset($_SESSION['user'])) {
         // Do not pass private data
         unset($session['user']['email'], $session['user']['naam'], $session['user']['pass']);

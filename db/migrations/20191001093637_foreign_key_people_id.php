@@ -29,7 +29,7 @@ class ForeignKeyPeopleId extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
         $this->table('borrow_transactions')
             ->addForeignKey('people_id', 'people', 'id', [

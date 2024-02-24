@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddTransferAgreementTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $transferAgreement = $this->table('transfer_agreement', [
             'id' => true,

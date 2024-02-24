@@ -5,7 +5,7 @@ use Phinx\Migration\AbstractMigration;
 
 class InitialSchema extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('borrow_categories', [
             'id' => false,

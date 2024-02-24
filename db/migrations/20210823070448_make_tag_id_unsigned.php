@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeTagIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('people_tags')
             ->dropForeignKey('tag_id')

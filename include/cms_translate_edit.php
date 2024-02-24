@@ -58,17 +58,10 @@
     addfield('line');
 
     foreach ($settings['languages'] as $language) {
-        switch ($data['type']) {
-            case 'text':
-                addfield('text', $language['name'], $language['code']);
-
-                break;
-
-            default:
-                addfield('textarea', $language['name'], $language['code']);
-
-                break;
-        }
+        match ($data['type']) {
+            'text' => addfield('text', $language['name'], $language['code']),
+            default => addfield('textarea', $language['name'], $language['code']),
+        };
     }
 
     addfield('line');

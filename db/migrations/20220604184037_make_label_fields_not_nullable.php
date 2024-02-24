@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeLabelFieldsNotNullable extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $table = $this->table('cms_usergroups');
         $table->changeColumn('label', 'string', ['null' => false])
@@ -32,7 +32,7 @@ class MakeLabelFieldsNotNullable extends AbstractMigration
         ;
     }
 
-    public function down()
+    public function down(): void
     {
         $table = $this->table('cms_usergroups');
         $table->changeColumn('label', 'string', ['null' => true])

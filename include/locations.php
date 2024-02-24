@@ -49,7 +49,7 @@
         switch ($_POST['do']) {
             case 'move':
                 $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect) = listMove($table, $ids);
+                [$success, $message, $redirect] = listMove($table, $ids);
 
                 break;
 
@@ -68,7 +68,7 @@
                     $message = 'Please move all Instock Boxes out of this location first!';
                     $redirect = false;
                 } else {
-                    list($success, $message, $redirect) = listDelete($table, $ids, false);
+                    [$success, $message, $redirect] = listDelete($table, $ids, false);
                     $redirect = true;
                 }
 

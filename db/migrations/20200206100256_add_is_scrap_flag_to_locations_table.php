@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddIsScrapFlagToLocationsTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('locations')
             ->addColumn('is_scrap', 'boolean', ['default' => 0, 'null' => false])

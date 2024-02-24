@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class RenameDeletedOnInShipmentDetails extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $table = $this->table('shipment_detail');
         $hasdeletedon = $table->hasColumn('deleted_on');
@@ -24,7 +24,7 @@ class RenameDeletedOnInShipmentDetails extends AbstractMigration
         }
     }
 
-    public function down()
+    public function down(): void
     {
         $table = $this->table('shipment_detail');
         $table

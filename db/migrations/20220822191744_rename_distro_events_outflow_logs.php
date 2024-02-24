@@ -7,7 +7,7 @@ class RenameDistroEventsOutflowLogs extends AbstractMigration
     /**
      * Migrate Up.
      */
-    public function up()
+    public function up(): void
     {
         $table = $this->table('distro_events_outflow_logs');
         $table
@@ -19,7 +19,7 @@ class RenameDistroEventsOutflowLogs extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
+    public function down(): void
     {
         $table = $this->table('distro_events_tracking_logs');
         $table

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class UpdateBoxStateOfLocations extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         // set box states of locations
         $this->execute('

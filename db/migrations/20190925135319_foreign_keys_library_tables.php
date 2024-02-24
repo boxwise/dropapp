@@ -29,7 +29,7 @@ class ForeignKeysLibraryTables extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
         $this->table('library')
             ->changeColumn('type_id', 'integer', [

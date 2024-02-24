@@ -46,7 +46,7 @@
         switch ($_POST['do']) {
             case 'unarchive':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listUndelete($table, $ids, false);
+                [$success, $message, $redirect] = listUndelete($table, $ids, false);
                 $redirect = true;
 
                 break;

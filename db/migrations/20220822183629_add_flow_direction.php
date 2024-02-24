@@ -7,7 +7,7 @@ class AddFlowDirection extends AbstractMigration
     /**
      * Migrate Up.
      */
-    public function up()
+    public function up(): void
     {
         $table = $this->table('distro_events_outflow_logs');
         if ($table) {
@@ -34,7 +34,7 @@ class AddFlowDirection extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
+    public function down(): void
     {
         $table = $this->table('distro_events_outflow_logs');
         if ($table) {

@@ -44,14 +44,14 @@ while ($p = db_fetch($result)) {
     }
     $exif = exif_read_data($picture);
     $rotate = (3 == $exif['Orientation'] ? 180 : (6 == $exif['Orientation'] ? -90 : (8 == $exif['Orientation'] ? 90 : 0)));
-    list($imgw, $imgh) = getimagesize($picture);
+    [$imgw, $imgh] = getimagesize($picture);
 
     $pdf->newCard();
     $pdf->Rect($pdf->X, $pdf->Y, $pdf->W, $pdf->H);
     $pdf->Rect($pdf->X, $pdf->Y + $pdf->H, $pdf->W, $pdf->H);
 
     if ('occ' == $card) {
-        $pdf->SetTextColor(72, 12, 17, 0);
+        $pdf->SetTextColor(72, 12, 17);
         $pdf->SetFont('helvetica', 'B', 12);
         $pdf->PDFPrint(4, 7, 'OCCycle');
         $pdf->SetTextColor(0);
@@ -69,7 +69,7 @@ while ($p = db_fetch($result)) {
         $pdf->PDFPrint(43, 101, '112');
         $pdf->Rotate(0);
     } elseif ('id' == $card) {
-        $pdf->SetTextColor(100, 0, 0, 0);
+        $pdf->SetTextColor(100, 0, 0);
         $pdf->SetFont('helvetica', 'B', 12.5);
         $pdf->PDFPrint(4, 7, $_SESSION['organisation']['label']);
         $pdf->SetTextColor(0);
@@ -84,7 +84,7 @@ while ($p = db_fetch($result)) {
         $pdf->PDFPrint(43, 106, '112');
         $pdf->Rotate(0);
     } else {
-        $pdf->SetTextColor(100, 0, 0, 0);
+        $pdf->SetTextColor(100, 0, 0);
         $pdf->SetFont('helvetica', 'B', 12.5);
         $pdf->PDFPrint(4, 7, $_SESSION['organisation']['label']);
         $pdf->SetTextColor(0);

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class RemoveUnderscoreColumns extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $stock = $this->table('stock');
         $stock->removeColumn('_type')
@@ -14,7 +14,7 @@ class RemoveUnderscoreColumns extends AbstractMigration
         ;
     }
 
-    public function down()
+    public function down(): void
     {
         $stock = $this->table('stock');
         $stock->addColumn('_type', 'string', [

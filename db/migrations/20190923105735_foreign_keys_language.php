@@ -29,7 +29,7 @@ class ForeignKeysLanguage extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
         $this->table('cms_users')
             ->changeColumn('language', 'integer', [

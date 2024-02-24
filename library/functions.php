@@ -34,7 +34,7 @@ function generateQrPng($hash, $legacy = false)
                 $testUrl = '/mobile.php?'.explode('/mobile.php?', $qrCode->getData())[1];
 
                 $return = [$result->getDataUri(), $testUrl];
-            } catch (Exception $e) {
+            } catch (Exception) {
                 trigger_error('QR-code png generation error.');
 
                 $return = ['QR-CODE ERROR', 'QR-CODE ERROR'];
@@ -217,13 +217,13 @@ function get_text_color($hexColor)
     $B2BlackColor = hexdec(substr($blackColor, 5, 2));
 
     // Calc contrast ratio
-    $L1 = 0.2126 * pow($R1 / 255, 2.2) +
-               0.7152 * pow($G1 / 255, 2.2) +
-               0.0722 * pow($B1 / 255, 2.2);
+    $L1 = 0.2126 * ($R1 / 255) ** 2.2 +
+               0.7152 * ($G1 / 255) ** 2.2 +
+               0.0722 * ($B1 / 255) ** 2.2;
 
-    $L2 = 0.2126 * pow($R2BlackColor / 255, 2.2) +
-              0.7152 * pow($G2BlackColor / 255, 2.2) +
-              0.0722 * pow($B2BlackColor / 255, 2.2);
+    $L2 = 0.2126 * ($R2BlackColor / 255) ** 2.2 +
+              0.7152 * ($G2BlackColor / 255) ** 2.2 +
+              0.0722 * ($B2BlackColor / 255) ** 2.2;
 
     $contrastRatio = 0;
     if ($L1 > $L2) {

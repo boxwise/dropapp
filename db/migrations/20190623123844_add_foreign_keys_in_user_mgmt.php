@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddForeignKeysInUserMgmt extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('cms_users')
             ->changeColumn('cms_usergroups_id', 'integer', [

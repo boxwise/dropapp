@@ -96,32 +96,32 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
 
             case 'move':
                 $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect) = listMove($table, $ids);
+                [$success, $message, $redirect] = listMove($table, $ids);
 
                 break;
 
             case 'delete':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids);
+                [$success, $message, $redirect] = listDelete($table, $ids);
 
                 break;
 
             case 'copy':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
+                [$success, $message, $redirect] = listCopy($table, $ids, 'menutitle');
 
                 break;
 
             case 'hide':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
+                [$success, $message, $redirect] = listShowHide($table, $ids, 0);
                 $message = $_POST['ids'];
 
                 break;
 
             case 'show':
                 $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
+                [$success, $message, $redirect] = listShowHide($table, $ids, 1);
 
                 break;
         }

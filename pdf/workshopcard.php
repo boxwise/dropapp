@@ -46,12 +46,12 @@ while ($p = db_fetch($result)) {
 
         $exif = exif_read_data($settings['upload_dir'].'/people/'.intval($p['id']).'.jpg');
         $rotate = (3 == $exif['Orientation'] ? 180 : (6 == $exif['Orientation'] ? -90 : (8 == $exif['Orientation'] ? 90 : 0)));
-        list($imgw, $imgh) = getimagesize($picture);
+        [$imgw, $imgh] = getimagesize($picture);
 
         $pdf->newCard();
         $pdf->SetDrawColor(0);
         if ($super) {
-            $pdf->SetFillColor(100, 0, 0, 0);
+            $pdf->SetFillColor(100, 0, 0);
         } else {
             $pdf->SetFillColor(0);
         }
@@ -62,7 +62,7 @@ while ($p = db_fetch($result)) {
         if ($super) {
             $pdf->SetTextColor(0);
         } else {
-            $pdf->SetTextColor(100, 0, 0, 0);
+            $pdf->SetTextColor(100, 0, 0);
         }
         $pdf->PDFPrint(4, 7, $_SESSION['organisation']['label']);
         $pdf->SetTextColor(100);

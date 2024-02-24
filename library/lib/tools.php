@@ -26,7 +26,7 @@ function checkURL($url)
 
 function checkEmail($email)
 {
-    list($user, $domain) = preg_split('/@/', $email);
+    [$user, $domain] = preg_split('/@/', $email);
 
     return (bool) (filter_var($email, FILTER_VALIDATE_EMAIL) && checkdnsrr($domain, 'MX'));
 }
@@ -271,7 +271,7 @@ function safestring($input)
     }
 
     $x = strtolower($x);
-    if ('-' == substr($x, -1)) {
+    if (str_ends_with($x, '-')) {
         $x = substr($x, 0, strlen($x) - 1);
     }
 
@@ -307,12 +307,13 @@ function simpleBulkSaveChangeHistory($table, $records, $changes, $from = [], $to
     }
     $query = '';
     $params = [];
-
-    for ($i = 0; $i < sizeof($records); ++$i) {
-        $query .= "(:table{$i},:id{$i},:change{$i},:user_id{$i},:ip{$i},NOW(), :from_int{$i}, :from_float{$i}, :to_int{$i}, :to_float{$i})";
-        $params = array_merge($params, ['table'.$i => $table, 'id'.$i => $records[$i], 'change'.$i => $changes, 'user_id'.$i => $_SESSION['user']['id'], 'ip'.$i => $_SERVER['REMOTE_ADDR'], 'from_int'.$i => $from['int'], 'from_float'.$i => $from['float'], 'to_int'.$i => $to['int'], 'to_float'.$i => $to['float']]);
-        if ($i !== sizeof($records) - 1) {
-            $query .= ',';
+    if (is_iterable($records)) {
+        for ($i = 0; $i < sizeof($records); ++$i) {
+            $query .= "(:table{$i},:id{$i},:change{$i},:user_id{$i},:ip{$i},NOW(), :from_int{$i}, :from_float{$i}, :to_int{$i}, :to_float{$i})";
+            $params = array_merge($params, ['table'.$i => $table, 'id'.$i => $records[$i], 'change'.$i => $changes, 'user_id'.$i => $_SESSION['user']['id'], 'ip'.$i => $_SERVER['REMOTE_ADDR'], 'from_int'.$i => $from['int'], 'from_float'.$i => $from['float'], 'to_int'.$i => $to['int'], 'to_float'.$i => $to['float']]);
+            if ($i !== sizeof($records) - 1) {
+                $query .= ',';
+            }
         }
     }
     if (strlen($query) > 0) {

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class CreatePeopleTagCrossReference extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $people_tags = $this->table('people_tags', ['id' => false, 'primary_key' => ['people_id', 'tag_id']]);
         $people_tags->addColumn('people_id', 'integer', [

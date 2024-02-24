@@ -28,17 +28,17 @@
 				LEFT OUTER JOIN qr ON s.qr_id = qr.id
 				WHERE s.id = :id', ['id' => $l]);
                 if ($data['labels'][$i]['legacy']) {
-                    list($id, $data['labels'][$i]['hash']) = generateQRIDForDB();
+                    [$id, $data['labels'][$i]['hash']] = generateQRIDForDB();
                     db_query('UPDATE stock AS s SET qr_id = :qr_id, modified = NOW() WHERE id = :id', ['id' => $l, 'qr_id' => $id]);
                     simpleBulkSaveChangeHistory('qr', $id, 'New QR-code generated for existing box without QR-code');
                 }
-                list($data['labels'][$i]['qrPng'], $data['labels'][$i]['data-testurl']) = generateQrPng($data['labels'][$i]['hash']);
+                [$data['labels'][$i]['qrPng'], $data['labels'][$i]['data-testurl']] = generateQrPng($data['labels'][$i]['hash']);
                 ++$i;
             }
         } else {
             for ($i = 0; $i < $_POST['count']; ++$i) {
-                list($id, $data['labels'][$i]['hash']) = generateQRIDForDB();
-                list($data['labels'][$i]['qrPng'], $data['labels'][$i]['data-testurl']) = generateQrPng($data['labels'][$i]['hash']);
+                [$id, $data['labels'][$i]['hash']] = generateQRIDForDB();
+                [$data['labels'][$i]['qrPng'], $data['labels'][$i]['data-testurl']] = generateQrPng($data['labels'][$i]['hash']);
                 simpleBulkSaveChangeHistory('qr', $id, 'New QR-code generated');
             }
         }

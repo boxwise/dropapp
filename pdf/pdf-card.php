@@ -9,7 +9,7 @@ class PDF extends FPDF
 {
     public $angle = 0;
 
-    public function ClippingText($x, $y, $txt, $outline = false)
+    public function ClippingText($x, $y, $txt, $outline = false): void
     {
         $op = $outline ? 5 : 7;
         $this->_out(sprintf(
@@ -21,7 +21,7 @@ class PDF extends FPDF
         ));
     }
 
-    public function ClippingRect($x, $y, $w, $h, $outline = false)
+    public function ClippingRect($x, $y, $w, $h, $outline = false): void
     {
         $op = $outline ? 'S' : 'n';
         $this->_out(sprintf(
@@ -34,7 +34,7 @@ class PDF extends FPDF
         ));
     }
 
-    public function _Arc($x1, $y1, $x2, $y2, $x3, $y3)
+    public function _Arc($x1, $y1, $x2, $y2, $x3, $y3): void
     {
         $h = $this->h;
         $this->_out(sprintf(
@@ -48,7 +48,7 @@ class PDF extends FPDF
         ));
     }
 
-    public function ClippingRoundedRect($x, $y, $w, $h, $r, $outline = false)
+    public function ClippingRoundedRect($x, $y, $w, $h, $r, $outline = false): void
     {
         $k = $this->k;
         $hp = $this->h;
@@ -76,7 +76,7 @@ class PDF extends FPDF
         $this->_out(' W '.$op);
     }
 
-    public function ClippingEllipse($x, $y, $rx, $ry, $outline = false)
+    public function ClippingEllipse($x, $y, $rx, $ry, $outline = false): void
     {
         $op = $outline ? 'S' : 'n';
         $lx = 4 / 3 * (M_SQRT2 - 1) * $rx;
@@ -124,12 +124,12 @@ class PDF extends FPDF
         ));
     }
 
-    public function ClippingCircle($x, $y, $r, $outline = false)
+    public function ClippingCircle($x, $y, $r, $outline = false): void
     {
         $this->ClippingEllipse($x, $y, $r, $r, $outline);
     }
 
-    public function ClippingPolygon($points, $outline = false)
+    public function ClippingPolygon($points, $outline = false): void
     {
         $op = $outline ? 'S' : 'n';
         $h = $this->h;
@@ -146,12 +146,12 @@ class PDF extends FPDF
         $this->_out('q '.$points_string.'h W '.$op);
     }
 
-    public function UnsetClipping()
+    public function UnsetClipping(): void
     {
         $this->_out('Q');
     }
 
-    public function ClippedCell($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    public function ClippedCell($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
         if ($border || $fill || $this->y + $h > $this->PageBreakTrigger) {
             $this->Cell($w, $h, '', $border, 0, '', $fill);
@@ -162,7 +162,7 @@ class PDF extends FPDF
         $this->UnsetClipping();
     }
 
-    public function Rotate($angle, $x = -1, $y = -1)
+    public function Rotate($angle, $x = -1, $y = -1): void
     {
         if (-1 == $x) {
             $x = $this->x;
@@ -184,7 +184,7 @@ class PDF extends FPDF
         }
     }
 
-    public function _endpage()
+    public function _endpage(): void
     {
         if (0 != $this->angle) {
             $this->angle = 0;
@@ -193,7 +193,7 @@ class PDF extends FPDF
         parent::_endpage();
     }
 
-    public function SetDrawColor()
+    public function SetDrawColor(): void
     {
         //Set color for all stroking operations
         switch (func_num_args()) {
@@ -228,7 +228,7 @@ class PDF extends FPDF
         }
     }
 
-    public function SetFillColor()
+    public function SetFillColor(): void
     {
         //Set color for all filling operations
         switch (func_num_args()) {
@@ -264,7 +264,7 @@ class PDF extends FPDF
         }
     }
 
-    public function SetTextColor()
+    public function SetTextColor(): void
     {
         //Set color for text
         switch (func_num_args()) {
@@ -297,18 +297,18 @@ class PDF extends FPDF
         $this->ColorFlag = ($this->FillColor != $this->TextColor);
     }
 
-    public function PDFPrint($x, $y, $text)
+    public function PDFPrint($x, $y, $text): void
     {
         $this->Text($this->X + $x, $this->Y + $y, $text);
     }
 
-    public function PrintLn($text, $x = 0)
+    public function PrintLn($text, $x = 0): void
     {
         $this->Text($this->X + $x, $this->Y, $text);
         $this->NewLine();
     }
 
-    public function NewLine()
+    public function NewLine(): void
     {
         $this->Y += $this->Lineheight;
         if ($this->Y > 285) {
@@ -316,7 +316,7 @@ class PDF extends FPDF
         }
     }
 
-    public function NewCard()
+    public function NewCard(): void
     {
         if (!$this->X) {
             $this->NewPage();
@@ -332,7 +332,7 @@ class PDF extends FPDF
         }
     }
 
-    public function NewPage()
+    public function NewPage(): void
     {
         global $translate;
 
@@ -342,7 +342,7 @@ class PDF extends FPDF
     }
 
     //Cell with horizontal scaling if text is too wide
-    public function CellFit($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '', $scale = false, $force = true)
+    public function CellFit($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '', $scale = false, $force = true): void
     {
         //Get string width
         $str_width = $this->GetStringWidth($txt);
@@ -380,25 +380,25 @@ class PDF extends FPDF
     }
 
     //Cell with horizontal scaling only if necessary
-    public function CellFitScale($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    public function CellFitScale($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
         $this->CellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, true, false);
     }
 
     //Cell with horizontal scaling always
-    public function CellFitScaleForce($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    public function CellFitScaleForce($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
         $this->CellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, true, true);
     }
 
     //Cell with character spacing only if necessary
-    public function CellFitSpace($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    public function CellFitSpace($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
         $this->CellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, false, false);
     }
 
     //Cell with character spacing always
-    public function CellFitSpaceForce($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    public function CellFitSpaceForce($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
         //Same as calling CellFit directly
         $this->CellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, false, true);
@@ -456,7 +456,7 @@ function shorten($text, $length, $span = true, $isHTML = false)
         if (strlen($text) > $length) {
             $one .= $suffix;
         }
-        $output = $one.implode($tags[0]);
+        $output = $one.implode('', $tags[0]);
     }
 
     if (strlen($text) > $length && $span) {

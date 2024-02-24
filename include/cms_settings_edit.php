@@ -89,7 +89,7 @@
 
         case 'select':
             foreach (explode(',', $data['options']) as $option) {
-                list($value, $label) = explode('=', $option);
+                [$value, $label] = explode('=', $option);
                 $options[] = ['value' => $value, 'label' => $label];
             }
             addfield('select', $translate['cms_settings_value'], 'value', ['options' => $options]);

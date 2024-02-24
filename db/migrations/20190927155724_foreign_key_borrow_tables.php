@@ -29,7 +29,7 @@ class ForeignKeyBorrowTables extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
         $this->table('borrow_items')
             ->changeColumn('category_id', 'integer', [

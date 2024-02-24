@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeCmsUsersIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('borrow_items')
             ->dropForeignKey('modified_by')
