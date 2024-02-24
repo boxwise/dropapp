@@ -189,7 +189,11 @@ class boxwise_error_handler_class
      *
      * @see http://php.net/set_error_handler
      *
-     * @param int $errno Error level
+     * @param int   $errno      Error level
+     * @param mixed $errstr
+     * @param mixed $errfile
+     * @param mixed $errline
+     * @param mixed $errcontext
      *
      * @return bool
      */
