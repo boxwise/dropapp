@@ -1,18 +1,17 @@
 {
     "require-dev": {
-        "odan/phinx-migrations-generator": "^4.3.0",
-        "phan/phan": "^2.2",
+        "odan/phinx-migrations-generator": "^5.4.0",
+        "phan/phan": "^4.0.2",
         "friendsofphp/php-cs-fixer": "^2.15",
         "jakub-onderka/php-parallel-lint": "^1.0"
     },
     "require": {
-        "robmorgan/phinx": "^0.11.1",
+        "robmorgan/phinx": "^0.12",
         "google/cloud-storage": "^1.12",
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
-        "smarty/smarty": "^3.1",
+        "smarty/smarty": "^4.2.1",
         "sendgrid/sendgrid": "^7.3",
         "google/cloud-logging": "^1.18",
-        "fzaninotto/faker": "^1.8",
         "auth0/auth0-php": "^8.0.5",
         "opencensus/opencensus": "^0.6.0",
         "kriswallsmith/buzz": "^1.2",
