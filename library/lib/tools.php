@@ -234,10 +234,6 @@ function getCMSuser($id)
     // 	return '<a href="mailto:'.$user['email'].'">'.$user['naam'].'</a>';
 }
 
-if (function_exists('date_default_timezone_set')) {
-    date_default_timezone_set('Europe/Amsterdam');
-}
-
 function safestring($input)
 {
     $safestringchar = '-';
