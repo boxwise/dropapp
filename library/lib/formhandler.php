@@ -2,12 +2,12 @@
 
 class formHandler
 {
-    public $id;
-    public $table;
-    public $post;
-    public $keys = [];
-    public $nullIfEmpty = [];
-    public $debug = false;
+    private $id;
+    private $table;
+    private $post;
+    private $keys = [];
+    private $nullIfEmpty = [];
+    private $debug = false;
 
     public function __construct($table)
     {
