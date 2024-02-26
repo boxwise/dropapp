@@ -15,10 +15,10 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 ### Preparation for Installation
 
 * Install [Docker](https://www.docker.com/products/docker-desktop)
-* Install [PHP 7.4 or later](https://www.php.net/downloads.php).
-* Ensure you have the `mbstring` and `curl` PHP extensions installed. On Ubuntu:
+* Install [PHP 8.0 or later](https://www.php.net/downloads.php).
+* Ensure you have the `mbstring`, `curl`, `mysql` and `xdebug` PHP extensions installed. On Ubuntu:
 
-       apt install php-curl php-mbstring php-mysql
+       apt install php-curl php-mbstring php-mysql php-xdebug
 
 ### How do I get set up?
 
