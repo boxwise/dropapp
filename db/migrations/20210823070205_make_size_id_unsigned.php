@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeSizeIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('itemsout')
             ->dropForeignKey('size_id')
@@ -47,7 +47,5 @@ class MakeSizeIdUnsigned extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

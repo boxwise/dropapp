@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddReceivedOnAsShipmentState extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $table = $this->table('shipment');
         $table->addColumn('receiving_started_on', 'datetime', [

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class DirstroEventsTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $distroEvents = $this->table('distro_events', [
             'id' => true,

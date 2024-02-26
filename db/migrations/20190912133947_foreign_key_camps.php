@@ -29,7 +29,7 @@ class ForeignKeyCamps extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
         $this->table('people')
             ->changeColumn('camp_id', 'integer', [
@@ -61,7 +61,7 @@ class ForeignKeyCamps extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
         $this->table('library_type')
             ->changeColumn('camp_id', 'integer', [
                 'default' => null,

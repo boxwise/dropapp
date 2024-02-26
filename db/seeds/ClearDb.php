@@ -4,7 +4,7 @@ use Phinx\Seed\AbstractSeed;
 
 class ClearDb extends AbstractSeed
 {
-    public function run()
+    public function run(): void
     {
         // Generated from a mysql data dump
         // using https://regexr.com and the 'list view'

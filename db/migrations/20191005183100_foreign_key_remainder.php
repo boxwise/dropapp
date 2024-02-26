@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ForeignKeyRemainder extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('stock')
             ->changeColumn('size_id', 'integer', [
@@ -26,7 +26,7 @@ class ForeignKeyRemainder extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-;
+        ;
 
         $this->table('people')
             ->changeColumn('parent_id', 'integer', [
@@ -41,6 +41,6 @@ class ForeignKeyRemainder extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-;
+        ;
     }
 }

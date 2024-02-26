@@ -1,77 +1,77 @@
 <?php
 
-    $table = $action;
-    $ajax = checkajax();
+$table = $action;
+$ajax = checkajax();
 
-    if (!$ajax) {
-        $result = db_query('SELECT s.* FROM sizes AS s, sizegroup AS sg WHERE s.sizegroup_id = sg.id ORDER BY sg.seq, s.seq');
-        $i = 0;
-        while ($row = db_fetch($result)) {
-            if ($row['sizegroup_id'] != $oldgroup) {
-                $i += 10;
-            } else {
-                ++$i;
-            }
-
-            db_query('UPDATE sizes SET seq = :seq WHERE id = :id', ['seq' => $i, 'id' => $row['id']]);
-
-            $oldgroup = $row['sizegroup_id'];
+if (!$ajax) {
+    $result = db_query('SELECT s.* FROM sizes AS s, sizegroup AS sg WHERE s.sizegroup_id = sg.id ORDER BY sg.seq, s.seq');
+    $i = 0;
+    while ($row = db_fetch($result)) {
+        if ($row['sizegroup_id'] != $oldgroup) {
+            $i += 10;
+        } else {
+            ++$i;
         }
 
-        initlist();
+        db_query('UPDATE sizes SET seq = :seq WHERE id = :id', ['seq' => $i, 'id' => $row['id']]);
 
-        $cmsmain->assign('title', 'Sizes');
-        listsetting('search', ['sizes.label']);
-
-        $data = getlistdata('SELECT sizes.id, sizes.label, g.label AS sizegroup FROM sizes LEFT OUTER JOIN sizegroup AS g ON g.id = sizes.sizegroup_id');
-
-        addcolumn('text', 'Sizes', 'label');
-        addcolumn('text', 'Size group', 'sizegroup');
-
-        listsetting('allowsort', false);
-        listsetting('allowcopy', true);
-        listsetting('add', 'Add a size');
-
-        $cmsmain->assign('data', $data);
-        $cmsmain->assign('listconfig', $listconfig);
-        $cmsmain->assign('listdata', $listdata);
-        $cmsmain->assign('include', 'cms_list.tpl');
-    } else {
-        switch ($_POST['do']) {
-            case 'move':
-                $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect) = listMove($table, $ids);
-
-                break;
-
-            case 'delete':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listDelete($table, $ids);
-
-                break;
-
-            case 'copy':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
-
-                break;
-
-            case 'hide':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-
-                break;
-
-            case 'show':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-
-                break;
-        }
-
-        $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
-
-        echo json_encode($return);
-
-        exit();
+        $oldgroup = $row['sizegroup_id'];
     }
+
+    initlist();
+
+    $cmsmain->assign('title', 'Sizes');
+    listsetting('search', ['sizes.label']);
+
+    $data = getlistdata('SELECT sizes.id, sizes.label, g.label AS sizegroup FROM sizes LEFT OUTER JOIN sizegroup AS g ON g.id = sizes.sizegroup_id');
+
+    addcolumn('text', 'Sizes', 'label');
+    addcolumn('text', 'Size group', 'sizegroup');
+
+    listsetting('allowsort', false);
+    listsetting('allowcopy', true);
+    listsetting('add', 'Add a size');
+
+    $cmsmain->assign('data', $data);
+    $cmsmain->assign('listconfig', $listconfig);
+    $cmsmain->assign('listdata', $listdata);
+    $cmsmain->assign('include', 'cms_list.tpl');
+} else {
+    switch ($_POST['do']) {
+        case 'move':
+            $ids = json_decode($_POST['ids']);
+            [$success, $message, $redirect] = listMove($table, $ids);
+
+            break;
+
+        case 'delete':
+            $ids = explode(',', $_POST['ids']);
+            [$success, $message, $redirect] = listDelete($table, $ids);
+
+            break;
+
+        case 'copy':
+            $ids = explode(',', $_POST['ids']);
+            [$success, $message, $redirect] = listCopy($table, $ids, 'menutitle');
+
+            break;
+
+        case 'hide':
+            $ids = explode(',', $_POST['ids']);
+            [$success, $message, $redirect] = listShowHide($table, $ids, 0);
+
+            break;
+
+        case 'show':
+            $ids = explode(',', $_POST['ids']);
+            [$success, $message, $redirect] = listShowHide($table, $ids, 1);
+
+            break;
+    }
+
+    $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
+
+    echo json_encode($return);
+
+    exit;
+}

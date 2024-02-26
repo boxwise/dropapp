@@ -5,7 +5,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AfterRotterdamSprint extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('camps', [
             'id' => false,

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddRemovedLostReceivedShipmentDetailFields extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $table = $this->table('shipment_detail');
         $table->addColumn('lost_on', 'datetime', [

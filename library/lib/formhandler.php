@@ -2,6 +2,13 @@
 
 class formHandler
 {
+    private $id;
+    private $table;
+    private $post;
+    private $keys = [];
+    private $nullIfEmpty = [];
+    private $debug = false;
+
     public function __construct($table)
     {
         $this->post = $_POST;
@@ -21,7 +28,7 @@ class formHandler
         return $this->id;
     }
 
-    public function modifyData(&$keys, $lan = false)
+    public function modifyData(&$keys, $lan = false): void
     {
         foreach ($keys as $key) {
             if ($lan) {
@@ -81,8 +88,8 @@ class formHandler
                                 $aResizeItem['reltarget'] = $aResizeItem['target'].basename($value);
                                 $aResizeItem['target'] = $_SERVER['DOCUMENT_ROOT'].$aResizeItem['target'].basename($value);
 
-                                //If the file already exists, append the target filename with -1
-                                //This should be in a function that adds -1 as long as the filename exist. (Now only works once)
+                                // If the file already exists, append the target filename with -1
+                                // This should be in a function that adds -1 as long as the filename exist. (Now only works once)
                                 /*
                                                                 if (file_exists($aResizeItem['target'])) {
                                                                     $aPathinfo = pathinfo($aResizeItem['target']);
@@ -119,7 +126,7 @@ class formHandler
         }
     }
 
-    public function buildQuery()
+    public function buildQuery(): void
     {
         $updatequery = 'UPDATE '.$this->table.' SET ';
         $insertquery = 'INSERT INTO '.$this->table;
@@ -164,7 +171,7 @@ class formHandler
         }
     }
 
-    public function saveNewrecordInHistory()
+    public function saveNewrecordInHistory(): void
     {
         if (!db_tableexists('history')) {
             return;
@@ -173,7 +180,7 @@ class formHandler
         db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', ['table' => $this->table, 'id' => $this->id, 'change' => 'Record created', 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR']]);
     }
 
-    public function saveChangeHistory()
+    public function saveChangeHistory(): void
     {
         // if no history table is present, ignore this function
         if (!db_tableexists('history')) {
@@ -199,17 +206,17 @@ class formHandler
                 if ('float' == $fields[$key]['Type'] && 'NO' == $fields[$key]['Null']) {
                     $new = floatval($new);
                 }
-                if ('int' == substr($fields[$key]['Type'], 0, 3) && 'NO' == $fields[$key]['Null']) {
+                if (str_starts_with($fields[$key]['Type'], 'int') && 'NO' == $fields[$key]['Null']) {
                     $new = intval($new);
                 }
 
                 if ($old[$key] != $new) {
-                    if ('int' == substr($fields[$key]['Type'], 0, 3) || 'tinyint' == substr($fields[$key]['Type'], 0, 7)) {
+                    if (str_starts_with($fields[$key]['Type'], 'int') || str_starts_with($fields[$key]['Type'], 'tinyint')) {
                         db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, to_int) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :old, :new)', ['table' => $this->table, 'id' => $this->id, 'change' => $key, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR'], 'old' => $old[$key], 'new' => $new]);
                     } elseif ('float' == $fields[$key]['Type']) {
                         db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_float, to_float) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :old, :new)', ['table' => $this->table, 'id' => $this->id, 'change' => $key, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR'], 'old' => $old[$key], 'new' => $new]);
                     } else {
-                        $change .= $key.' changed from "'.$old[$key].'" to "'.$new.'"'.'; ';
+                        $change .= $key.' changed from "'.$old[$key].'" to "'.$new.'"; ';
                         db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES (:table,:id,:change,:user_id,:ip,NOW())', ['table' => $this->table, 'id' => $this->id, 'change' => $change, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR']]);
                     }
                 }
@@ -217,7 +224,7 @@ class formHandler
         }
     }
 
-    public function saveMultiple($field, $table, $here, $there)
+    public function saveMultiple($field, $table, $here, $there): void
     {
         db_query('DELETE FROM '.$table.' WHERE '.$here.' = :'.$here, [$here => $this->id]);
 
@@ -226,7 +233,7 @@ class formHandler
         }
     }
 
-    public function saveCreatedModified()
+    public function saveCreatedModified(): void
     {
         if (!$this->id) {
             array_push($this->keys, 'created', 'created_by');
@@ -239,7 +246,7 @@ class formHandler
         }
     }
 
-    public function makeURL($field)
+    public function makeURL($field): void
     {
         global $settings;
 
@@ -248,7 +255,7 @@ class formHandler
         while (strpos($url, '--')) {
             $url = str_replace('--', '-', $url);
         }
-        if ('-' == substr($url, -1)) {
+        if (str_ends_with($url, '-')) {
             $url = substr($url, 0, strlen($url) - 1);
         }
 
@@ -261,13 +268,13 @@ class formHandler
             while (strpos($this->post['url'], '--')) {
                 $this->post['url'] = str_replace('--', '-', $this->post['url']);
             }
-            if ('-' == substr($url, -1)) {
+            if (str_ends_with($url, '-')) {
                 $url = substr($url, 0, strlen($url) - 1);
             }
         }
     }
 
-    public function makeURLvalue($value)
+    public function makeURLvalue($value): void
     {
         global $settings;
 

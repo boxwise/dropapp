@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class DirstroEventsPackingListEntries extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $distroEventsPackingListEntries = $this->table('distro_events_packing_list_entries', [
             'id' => true,

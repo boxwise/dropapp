@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class UniqueConstraintQrIdInStockTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         // add unique constraint to qr_id column
         $this->table('stock')

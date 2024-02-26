@@ -6,6 +6,7 @@
 
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Auth0;
+use Auth0\SDK\Exception\StateException;
 use Auth0\SDK\Utility\HttpResponse;
 
 include 'library/lib/session.php';
@@ -13,7 +14,7 @@ include 'library/lib/session.php';
 header('Content-type:application/json;charset=utf-8');
 
 $hostName = @parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST);
-if (('localhost' !== $hostName && 'staging.boxtribute.org' !== $hostName)) {
+if ('localhost' !== $hostName && 'staging.boxtribute.org' !== $hostName) {
     echo json_encode(['success' => false]);
 
     return;
@@ -61,7 +62,7 @@ $oauth_token = HttpResponse::decodeContent($response);
 if (!isset($oauth_token['access_token']) || !$oauth_token['access_token']) {
     $auth0->clear();
 
-    throw \Auth0\SDK\Exception\StateException::badAccessToken();
+    throw StateException::badAccessToken();
 }
 
 $auth0->setAccessToken($oauth_token['access_token']);
@@ -78,7 +79,7 @@ if (isset($oauth_token['id_token'])) {
     $auth0->setIdToken($oauth_token['id_token']);
     // this is removed to resolve "Nonce (nonce) claim must be a string present in the token"
     // related to https://sentry.io/organizations/boxwise/issues/2956621368/events/3c27d970d0fc4b9d9672d7ef0d2c3554/
-    //$user = $auth0->decode($oauth_token['id_token'])->toArray();
+    // $user = $auth0->decode($oauth_token['id_token'])->toArray();
 }
 
 if (isset($oauth_token['expires_in']) && is_numeric($oauth_token['expires_in'])) {

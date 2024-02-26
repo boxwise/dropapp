@@ -7,13 +7,21 @@ setlocale(LC_TIME, 'en_GB');
 
 class PDF extends FPDF
 {
-    public function Print($text, $x = 0)
+    public $X;
+    public $Y;
+    public $haspage = false;
+    public $Column = 0;
+    public $Lineheight = 4;
+    public $TopMargin = 10;
+    public $LeftMargin = 10;
+
+    public function Print($text, $x = 0): void
     {
         $this->Text($this->X + $x, $this->Y, $text);
     }
 
     // related to this trello: https://trello.com/c/OjWZzsGA
-    public function Footer()
+    public function Footer(): void
     {
         // Go to 10 cm from bottom
         $this->SetY(-10);
@@ -23,7 +31,7 @@ class PDF extends FPDF
         $this->AliasNbPages('{totalPages}');
         // The timezone of the user is retrieved from their Auth0 user's profile if available, otherwise the server time zone is used
         // related to this trello card https://trello.com/c/OjWZzsGA
-        $timezone = ($_SESSION['auth0_user']['https://www.boxtribute.com/timezone']) ? $_SESSION['auth0_user']['https://www.boxtribute.com/timezone'] : date_default_timezone_get();
+        $timezone = $_SESSION['auth0_user']['https://www.boxtribute.com/timezone'] ?: date_default_timezone_get();
 
         $dt = new DateTime('now', new DateTimeZone($timezone));
         // This is quick fix for an issue with the alignment of footer text as the library incorrectly calculates the text length when template variables {totalPages} are used
@@ -31,13 +39,13 @@ class PDF extends FPDF
         $this->Cell(0, 10, 'Page '.$this->PageNo().' of '.$totalPages.' Printed on '.$dt->format('d-m-Y H:i:s')." {$timezone}", 0, 0, 'C');
     }
 
-    public function PrintLn($text, $x = 0)
+    public function PrintLn($text, $x = 0): void
     {
         $this->Text($this->X + $x, $this->Y, $text);
         $this->NewLine();
     }
 
-    public function NewLine()
+    public function NewLine(): void
     {
         $this->Y += $this->Lineheight;
         if ($this->Y > 285) {
@@ -45,7 +53,7 @@ class PDF extends FPDF
         }
     }
 
-    public function NewColumn($lastcontainer = '')
+    public function NewColumn($lastcontainer = ''): void
     {
         $this->haspage = true;
         $this->X += $this->Column;
@@ -55,7 +63,7 @@ class PDF extends FPDF
         }
     }
 
-    public function NewPage($lastcontainer = '')
+    public function NewPage($lastcontainer = ''): void
     {
         global $translate;
 
@@ -72,13 +80,13 @@ class PDF extends FPDF
         $this->Cell(5, 4, $lastcontainer);
     }
 
-    //Cell with horizontal scaling if text is too wide
-    public function CellFit($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '', $scale = false, $force = true)
+    // Cell with horizontal scaling if text is too wide
+    public function CellFit($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '', $scale = false, $force = true): void
     {
-        //Get string width
+        // Get string width
         $str_width = $this->GetStringWidth($txt);
 
-        //Calculate ratio to fit cell
+        // Calculate ratio to fit cell
         if (0 == $w) {
             $w = $this->w - $this->rMargin - $this->x;
         }
@@ -87,55 +95,55 @@ class PDF extends FPDF
         $fit = ($ratio < 1 || ($ratio > 1 && $force));
         if ($fit) {
             if ($scale) {
-                //Calculate horizontal scaling
+                // Calculate horizontal scaling
                 $horiz_scale = $ratio * 100.0;
-                //Set horizontal scaling
+                // Set horizontal scaling
                 $this->_out(sprintf('BT %.2F Tz ET', $horiz_scale));
             } else {
-                //Calculate character spacing in points
+                // Calculate character spacing in points
                 $char_space = ($w - $this->cMargin * 2 - $str_width) / max($this->MBGetStringLength($txt) - 1, 1) * $this->k;
-                //Set character spacing
+                // Set character spacing
                 $this->_out(sprintf('BT %.2F Tc ET', $char_space));
             }
-            //Override user alignment (since text will fill up cell)
+            // Override user alignment (since text will fill up cell)
             $align = '';
         }
 
-        //Pass on to Cell method
+        // Pass on to Cell method
         $this->Cell($w, $h, $txt, $border, $ln, $align, $fill, $link);
 
-        //Reset character spacing/horizontal scaling
+        // Reset character spacing/horizontal scaling
         if ($fit) {
             $this->_out('BT '.($scale ? '100 Tz' : '0 Tc').' ET');
         }
     }
 
-    //Cell with horizontal scaling only if necessary
-    public function CellFitScale($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    // Cell with horizontal scaling only if necessary
+    public function CellFitScale($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
         $this->CellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, true, false);
     }
 
-    //Cell with horizontal scaling always
-    public function CellFitScaleForce($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    // Cell with horizontal scaling always
+    public function CellFitScaleForce($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
         $this->CellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, true, true);
     }
 
-    //Cell with character spacing only if necessary
-    public function CellFitSpace($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    // Cell with character spacing only if necessary
+    public function CellFitSpace($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
         $this->CellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, false, false);
     }
 
-    //Cell with character spacing always
-    public function CellFitSpaceForce($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    // Cell with character spacing always
+    public function CellFitSpaceForce($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
-        //Same as calling CellFit directly
+        // Same as calling CellFit directly
         $this->CellFit($w, $h, $txt, $border, $ln, $align, $fill, $link, false, true);
     }
 
-    //Patch to also work with CJK double-byte text
+    // Patch to also work with CJK double-byte text
     public function MBGetStringLength($s)
     {
         if ('Type0' == $this->CurrentFont['type']) {
@@ -182,12 +190,14 @@ function shorten($text, $length, $span = true, $isHTML = false)
 
     if (strlen(strip_tags($output)) < strlen(strip_tags($text))) {
         $one = utf8_substr($output, 0, strrpos($output, ' '));
-        $two = utf8_substr($output, strrpos($output, ' '), (strlen($output) - strrpos($output, ' ')));
+        $two = utf8_substr($output, strrpos($output, ' '), strlen($output) - strrpos($output, ' '));
         preg_match_all('/<(.*?)>/s', $two, $tags);
         if (strlen($text) > $length) {
             $one .= $suffix;
         }
-        $output = $one.implode($tags[0]);
+
+        $tags = is_array($tags[0]) ? $tags[0] : [];
+        $output = $one.implode('', $tags);
     }
 
     if (strlen($text) > $length && $span) {

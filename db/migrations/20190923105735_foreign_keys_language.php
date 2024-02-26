@@ -29,7 +29,7 @@ class ForeignKeysLanguage extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
         $this->table('cms_users')
             ->changeColumn('language', 'integer', [
@@ -40,7 +40,7 @@ class ForeignKeysLanguage extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
         $this->table('x_people_languages')
             ->changeColumn('language_id', 'integer', [
                 'signed' => false,
@@ -50,6 +50,6 @@ class ForeignKeysLanguage extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
     }
 }

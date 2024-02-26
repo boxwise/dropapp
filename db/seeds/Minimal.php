@@ -11,7 +11,7 @@ class Minimal extends AbstractSeed
         ];
     }
 
-    public function run()
+    public function run(): void
     {
         // Generated from a mysql data dump
         // using https://regexr.com and the 'list view'
@@ -20,7 +20,7 @@ class Minimal extends AbstractSeed
         // and replacement pattern:
         // $this->execute("$1");\n
 
-        //------------------- cms_functions
+        // ------------------- cms_functions
         $this->execute('SET FOREIGN_KEY_CHECKS=0;');
         $this->execute("INSERT INTO `cms_functions` (`id`,`parent_id`,`title_en`,`include`,`seq`,`alert`,`adminonly`,`visible`,`allusers`,`allcamps`) VALUES 
             (35,NULL,'Free Shop','',3,0,0,1,0,0),
@@ -77,7 +77,7 @@ class Minimal extends AbstractSeed
 			(166,99,'Manage Boxes v2 (<span>beta</span>)','new_manage_boxes',2,0,0,1,0,0);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
-        //------------------- cms_settings
+        // ------------------- cms_settings
         $this->execute("INSERT INTO `cms_settings` (`id`, `category_id`, `type`, `code`, `description`, `options`, `value`, `hidden`, `created`, `created_by`, `modified`, `modified_by`) VALUES
 			(83,1,'select','cms_language','Language used for CMS interface','en=English','en',1,NULL,NULL,NULL,NULL),
 			(86,1,'text','mail_sender','Sender address for e-mails sent by Boxtribute','','hello@boxtribute.org',1,NULL,NULL,NULL,NULL),
@@ -86,13 +86,13 @@ class Minimal extends AbstractSeed
 			(137,1,'text','dailyroutine','Last date the daily routine did run','','2019-06-26',1,NULL,NULL,NULL,NULL),
             (138,1,'text','installed','Date and time of installation and first run','','2016-23-11 9:00:00',1,NULL,NULL,NULL,NULL);");
 
-        //------------------- cms_usergroups_levels
+        // ------------------- cms_usergroups_levels
         $this->execute("INSERT INTO `cms_usergroups_levels` (`id`, `level`, `label`, `shortlabel`) VALUES
 			(1,100,'Admin user - in charge of an organisation','Admin'),
 			(2,10,'Coordinator - in charge of a base','Coordinator'),
             (3,5,'User - regular volunteer/employee','User');");
 
-        //------------------- languages
+        // ------------------- languages
         $this->execute("INSERT INTO `languages` (`id`, `visible`, `code`, `locale`, `name`, `strftime_dateformat`, `smarty_dateformat`, `seq`, `rtl`) VALUES
 			(1,0,'nl','nl_NL','Dutch','%A %e %B %Y','%A %e %B %Y',1,0),
 			(2,1,'en','en_GB','English','%A %B %e %Y','%A %B %e %Y',2,0),
@@ -110,11 +110,11 @@ class Minimal extends AbstractSeed
 			(15,1,NULL,NULL,'Somali',NULL,NULL,15,0),
             (16,1,NULL,NULL,'Dari',NULL,NULL,16,0);");
 
-        //------------------- cms_users
+        // ------------------- cms_users
         $this->execute("INSERT INTO `cms_users` (`id`, `pass`, `naam`, `email`, `is_admin`, `resetpassword`, `language`, `deleted`, `cms_usergroups_id`, `valid_firstday`, `valid_lastday`) VALUES
 			(1,'bf13b44feae208fc808b1d6b2266edb7','some admin','some.admin@boxtribute.org',1,'',2,'0000-00-00 00:00:00',NULL,NULL,NULL);");
 
-        //------------------- genders
+        // ------------------- genders
         $this->execute("INSERT INTO `genders` (`id`,`label`,`shortlabel`,`seq`,`male`,`female`,`adult`,`child`,`baby`,`color`) VALUES 
             (1,'Female','Female',1,0,1,1,0,0,'0'),
             (2,'Male','Male',2,1,0,1,0,0,'0'),
@@ -127,7 +127,7 @@ class Minimal extends AbstractSeed
 			(12,'Teen Girl','Girl',4,0,1,1,0,0,'0'),
             (13,'Teen Boy','Boy',5,1,0,1,0,0,'0');");
 
-        //------------------- numbers
+        // ------------------- numbers
         $this->execute("INSERT INTO `numbers` (`value`, `label`) VALUES
 			(0,'none'),
 			(1,'one'),
@@ -141,7 +141,7 @@ class Minimal extends AbstractSeed
 			(9,'nine'),
             (10,'ten');");
 
-        //------------------- product_categories
+        // ------------------- product_categories
         $this->execute('SET FOREIGN_KEY_CHECKS=0;');
         $this->execute("INSERT INTO `product_categories` (`id`, `label`, `seq`, `parent_id`) VALUES 
             (1,'Underwear / Nightwear',11,12),
@@ -164,7 +164,7 @@ class Minimal extends AbstractSeed
 			(20,'Shelter',44,NULL);");
         $this->execute('SET FOREIGN_KEY_CHECKS=1;');
 
-        //------------------- sizegroup
+        // ------------------- sizegroup
         $this->execute("INSERT INTO `sizegroup` (`id`, `label`, `seq`) VALUES
             (1,'XS, S, M, L, XL',1),
 			(2,'Baby by month (0-6, 7-12, 13-18, 19-24)',20),
@@ -187,7 +187,7 @@ class Minimal extends AbstractSeed
 			(23,'Children by year (2-3, 4-5, 6-7, 8-9, 10-11, 12-13, 14-15)',11),
 			(24,'Children by year (individual years)', 12);");
 
-        //------------------- sizes
+        // ------------------- sizes
         $this->execute("INSERT INTO `sizes` (`id`,`label`,`sizegroup_id`,`seq`) VALUES 
             (1,'S',1,1),
             (2,'M',1,2),
@@ -309,7 +309,7 @@ class Minimal extends AbstractSeed
             (162,'15 years',24,223),
 			(163,'All ages',24,234);");
 
-        //------------------- tipofday
+        // ------------------- tipofday
         $this->execute("INSERT INTO `tipofday` (`id`, `title`, `content`) VALUES
 			(1,'Sorting lists','Most lists can be sorted anyway you like. Just click on the column title to sort the table on that column. Clicking another time on the same column will reverse the sort order.'),
 			(2,'Undo a purchase','If a customer decides not to buy something after you made the purchase: check the item in the list of purchases and hit the red \\'Delete\\' button.'),
@@ -318,12 +318,12 @@ class Minimal extends AbstractSeed
 			(5,'Quick purchase','If you want to quickly submit a form you can simply use the \\'cmd + enter\\' or \\'ctrl + enter\\' shortcut!'),
 			(6,'Sorting','Did you know you that in a list you can sort multiple columns simultaneously by holding down the Shift key and clicking a second, third or even fourth column header!');");
 
-        //------------------- translate_categories
+        // ------------------- translate_categories
         $this->execute("INSERT INTO `translate_categories` (`id`, `name`) VALUES
 			(13,'text'),
             (0,'something else')");
 
-        //------------------- translate
+        // ------------------- translate
         $this->execute("INSERT INTO `translate` (`id`, `category_id`, `type`, `code`, `description`, `nl`, `en`, `fr`, `hidden`, `created`, `created_by`, `modified`, `modified_by`, `deleted`) VALUES
 			(485,13,'text','cms_login_email',NULL,'e-mailadres','E-mail address','',1,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(486,13,'text','cms_login_password','','Wachtwoord','Password','',1,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
@@ -506,7 +506,7 @@ class Minimal extends AbstractSeed
 			(912,0,'textarea','workshop-rules','Rules for workshop access','','Workshop access is only available for beneficiaries of Nea Kavala. / You can access the workshop when you have succesfully finished the training and have signed the contract with us / To get access to the workshop and use tools you show us this card, you will get it back after returning the tools and leaving the workshop  / You are responsible for your own safety and to return all tools in a clean and good state / You have to be 16 years old minimum. / Always return all the tools before closing time of the workshop (17:00) / If you not follow these rules, we can ban you for two weeks and if you repeatedly not follow the rules we can ban you permanently.','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00'),
 			(913,0,'text','site_name','','','Boxtribute','',0,NULL,NULL,NULL,NULL,'0000-00-00 00:00:00');");
 
-        //------------------- units
+        // ------------------- units
         $this->execute("INSERT INTO `units` (`id`, `label`, `longlabel`, `seq`, `created`, `created_by`, `modified`, `modified_by`) VALUES
 			(1,'liter','liter',3,NULL,NULL,NULL,NULL),
 			(2,'kg','kilogram',2,NULL,NULL,NULL,NULL),

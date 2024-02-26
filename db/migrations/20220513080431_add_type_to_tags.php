@@ -7,7 +7,7 @@ class AddTypeToTags extends AbstractMigration
     /**
      * Migrate Up.
      */
-    public function up()
+    public function up(): void
     {
         $this->table('tags')
             ->addColumn('type', 'string', [
@@ -22,9 +22,10 @@ class AddTypeToTags extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
+    public function down(): void
     {
         $this->table('tags')
-            ->removeColumn('type')->update();
+            ->removeColumn('type')->update()
+        ;
     }
 }

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class FixUsergroupsForeignKey extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $hasforeignkey = $this->table('cms_usergroups')
             ->hasForeignKey('userlevel')

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeProductIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('itemsout')
             ->dropForeignKey('product_id')
@@ -54,7 +54,5 @@ class MakeProductIdUnsigned extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

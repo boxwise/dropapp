@@ -1,13 +1,16 @@
 <?php
 
+use Sentry\SentrySdk;
+use Sentry\State\Scope;
+
 // use Google\Cloud\ErrorReporting\Bootstrap;
 
 /**
  * set the scope for sentry exception and error handler.
  */
-function boxwise_sentry_scope(Sentry\State\Scope $scope): void
+function boxwise_sentry_scope(Scope $scope): void
 {
-    $session = isset($_SESSION) ? $_SESSION : [];
+    $session = $_SESSION ?? [];
     if (isset($_SESSION['user'])) {
         // Do not pass private data
         unset($session['user']['email'], $session['user']['naam'], $session['user']['pass']);
@@ -41,7 +44,7 @@ function bootstrap_exception_handler(Throwable $ex)
     Sentry\captureException($ex);
     // upgrade sentry sdk
     // related trello card https://trello.com/c/5EzynpR9
-    $eventId = \Sentry\SentrySdk::getCurrentHub()->getLastEventId();
+    $eventId = SentrySdk::getCurrentHub()->getLastEventId();
     // list of standard http errors
     $http_status_codes = [
         100 => 'Continue',
@@ -119,7 +122,7 @@ function bootstrap_exception_handler(Throwable $ex)
         599 => 'Network connect timeout error',
     ];
     // this will only work if there hasn't already been response output
-    http_response_code($ex->getCode());
+    http_response_code((int) $ex->getCode());
     $error = new Zmarty();
     if (0 === $ex->getCode() && 'Invalid state' === $ex->getMessage()) {
         // This will call logout and redirect to renew the session when the authentication login page remains longer than expected
@@ -151,7 +154,7 @@ function bootstrap_exception_handler(Throwable $ex)
 
     $error->display('cms_error.tpl');
 
-    exit();
+    exit;
 }
 
 // Set exception handler
@@ -171,7 +174,7 @@ class boxwise_error_handler_class
     /**
      * add boxwise_error_handler to existing error handlers.
      */
-    public static function add_error_handler()
+    public static function add_error_handler(): void
     {
         $error_handler = ['boxwise_error_handler_class', 'boxwise_error_handler'];
         $previous = set_error_handler($error_handler, error_reporting());
@@ -186,15 +189,15 @@ class boxwise_error_handler_class
      *
      * @see http://php.net/set_error_handler
      *
-     * @param int $errno      Error level
-     * @param     $errstr
-     * @param     $errfile
-     * @param     $errline
-     * @param     $errcontext
+     * @param int   $errno      Error level
+     * @param mixed $errstr
+     * @param mixed $errfile
+     * @param mixed $errline
+     * @param mixed $errcontext
      *
      * @return bool
      */
-    public static function boxwise_error_handler($errno, $errstr, $errfile, $errline, $errcontext)
+    public static function boxwise_error_handler($errno, $errstr, $errfile, $errline, $errcontext = [])
     {
         Sentry\configureScope('boxwise_sentry_scope');
 
@@ -214,7 +217,6 @@ class boxwise_error_handler_class
 }
 
 // Set error handlers
-smarty::muteExpectedErrors();
 boxwise_error_handler_class::add_error_handler();
 
 function logfile($content)

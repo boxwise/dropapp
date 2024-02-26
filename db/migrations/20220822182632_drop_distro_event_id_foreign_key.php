@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class DropDistroEventIdForeignKey extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $table = $this->table('distro_events_outflow_logs');
         $table->dropForeignKey('distro_event_id')
@@ -13,7 +13,7 @@ class DropDistroEventIdForeignKey extends AbstractMigration
         ;
     }
 
-    public function down()
+    public function down(): void
     {
         $table = $this->table('distro_events_outflow_logs');
         $table->addColumn('distro_event_id', 'integer', [

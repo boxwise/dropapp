@@ -29,14 +29,14 @@ class ForeignKeyProduct extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
         $this->table('itemsout')
             ->addForeignKey('product_id', 'products', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-;
+        ;
         $this->table('transactions')
             ->changeColumn('product_id', 'integer', [
                 'null' => true,
@@ -50,6 +50,6 @@ class ForeignKeyProduct extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-;
+        ;
     }
 }

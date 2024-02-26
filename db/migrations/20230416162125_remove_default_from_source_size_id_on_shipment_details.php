@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class RemoveDefaultFromSourceSizeIdOnShipmentDetails extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $table = $this->table('shipment_detail');
         $table
@@ -16,7 +16,7 @@ class RemoveDefaultFromSourceSizeIdOnShipmentDetails extends AbstractMigration
         ;
     }
 
-    public function down()
+    public function down(): void
     {
         $table = $this->table('shipment_detail');
         $table

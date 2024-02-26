@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ChangeCrossReferenceDeleteRuleToCascade extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('x_people_languages')
             ->dropForeignKey('people_id')

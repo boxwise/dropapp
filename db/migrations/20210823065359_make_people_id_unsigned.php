@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakePeopleIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('borrow_transactions')
             ->dropForeignKey('people_id')
@@ -102,7 +102,5 @@ class MakePeopleIdUnsigned extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

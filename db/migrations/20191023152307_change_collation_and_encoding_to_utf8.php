@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ChangeCollationAndEncodingToUtf8 extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->execute('alter table camps convert to character set utf8 collate utf8_general_ci');
         $this->execute('alter table cms_functions convert to character set utf8 collate utf8_general_ci');

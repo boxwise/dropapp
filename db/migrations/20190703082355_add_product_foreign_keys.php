@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddProductForeignKeys extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('products')
             ->changeColumn('category_id', 'integer', [

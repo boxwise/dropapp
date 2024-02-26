@@ -1,4 +1,4 @@
-FROM php:7.4.25-apache
+FROM php:8.0-apache
 # enable mod_rewrite
 RUN a2enmod rewrite
 # install needed libraries

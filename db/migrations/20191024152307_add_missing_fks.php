@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddMissingFKs extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         // this was a duplicate FK on people_id column
         $this->table('borrow_transactions')

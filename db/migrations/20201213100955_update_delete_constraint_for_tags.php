@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class UpdateDeleteConstraintForTags extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('people_tags')
             ->dropForeignKey('people_id')
@@ -16,6 +16,6 @@ class UpdateDeleteConstraintForTags extends AbstractMigration
                 'delete' => 'CASCADE', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
     }
 }

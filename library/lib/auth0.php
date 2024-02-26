@@ -12,13 +12,13 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 /**
  * Getting Auth0 configurations.
  *
- * @param bool  $apiCall  Optional. This will be used to distingush some configuration when custom domain is being used, as API management call does not work with custom domain.
- * @param mixed $settings
+ * @param bool $apiCall Optional. This will be used to distingush some configuration when custom domain is being used, as API management call does not work with custom domain.
  */
-function getAuth0SdkConfiguration($settings, $apiCall = false)
+function getAuth0SdkConfiguration(mixed $settings, $apiCall = false)
 {
     $Psr17Library = new Psr17Factory();
     $Psr18Library = new MultiCurl($Psr17Library);
+
     // in the auth0 php sdk 8 configration pass as class
     return new SdkConfiguration([
         'httpClient' => $Psr18Library,
@@ -36,12 +36,11 @@ function getAuth0SdkConfiguration($settings, $apiCall = false)
         'scope' => ['openid', 'profile', 'email'],
     ]);
 }
+
 /**
  * Getting Auth0 instance.
- *
- * @param mixed $settings
  */
-function getAuth0($settings)
+function getAuth0(mixed $settings)
 {
     $configuration = getAuth0SdkConfiguration($settings);
     // set session sotarage
@@ -49,30 +48,29 @@ function getAuth0($settings)
 
     return new Auth0($configuration);
 }
+
 /**
  * Getting Auth0 API Management instance.
- *
- * @param mixed $settings
  */
-function getAuth0Management($settings)
+function getAuth0Management(mixed $settings)
 {
     $configuration = getAuth0SdkConfiguration($settings, true);
 
     $auth0 = new Auth0($configuration);
 
-    return $auth0->management(); //new Management($configuration);
+    return $auth0->management(); // new Management($configuration);
 }
+
 /**
  * Getting Auth0 Authentication instance.
- *
- * @param mixed $settings
  */
-function getAuth0Authentication($settings)
+function getAuth0Authentication(mixed $settings)
 {
     $auth0 = getAuth0($settings);
 
     return $auth0->authentication();
 }
+
 /**
  * Deleting user from Auth0.
  *
@@ -176,6 +174,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
         $mgmtAPI->users()->update($auth0UserId, ['password' => $setPwd]);
     }
 }
+
 /**
  * Update user password in Auth0.
  *
@@ -188,6 +187,7 @@ function updateAuth0Password($userId, $password)
     $mgmtAPI = getAuth0Management($settings);
     $mgmtAPI->users()->update('auth0|'.intval($userId), ['password' => $password, 'connection' => 'Username-Password-Authentication']);
 }
+
 /**
  * Checking if user in DB is in sync with Auth0.
  *
@@ -326,6 +326,7 @@ function isUserInSyncWithAuth0($userId)
 
     return $return_value;
 }
+
 /**
  * Gett user by email.
  *
@@ -354,6 +355,7 @@ function getAuth0UserByEmail($email)
         return null;
     }
 }
+
 /**
  * Getting user information from Auth0.
  *
@@ -371,6 +373,7 @@ function getAuth0User($userId)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Getting roles by base ids.
  */
@@ -403,6 +406,7 @@ function getRolesByBaseIds(array $baseIds)
 
     return $roles;
 }
+
 /**
  * Getting roles by name.
  *
@@ -427,6 +431,7 @@ function getRolesByName($roleName)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Create Role.
  *
@@ -446,6 +451,7 @@ function createRole($roleName)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Update role in Auth0.
  *
@@ -470,6 +476,7 @@ function updateRole($roleId, $roleName, $roleDescription)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Update role permissions.
  *
@@ -500,6 +507,7 @@ function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Get all roles.
  */
@@ -697,6 +705,7 @@ function updateRolesForBase($baseId, $baseName)
 
     return true;
 }
+
 /**
  * Getting available actions with role name.
  *
@@ -708,6 +717,7 @@ function getMethodByRole($roleName)
 
     return $rolesToActions[$roleName];
 }
+
 /**
  * Create or update role and permissions in auth0.
  *
@@ -738,6 +748,7 @@ function createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRole
 
     return $role;
 }
+
 /**
  * Getting available menues by role.
  *
@@ -757,6 +768,7 @@ function getMenusByRole($role, array &$rolesToActions, array &$menusToActions)
 
     return array_unique($menuIds);
 }
+
 /**
  * Assign roles to auth0 user. (it will remove all roles alreadys assigned then add new roles).
  *
@@ -797,12 +809,11 @@ function assignRolesToUser($userId, array $roleIds)
         throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 }
+
 /**
  * Getting user assigned roles.
- *
- * @param mixed $userId
  */
-function getUserAssignedRoles($userId)
+function getUserAssignedRoles(mixed $userId)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
@@ -819,10 +830,8 @@ function getUserAssignedRoles($userId)
 
 /**
  * Getting all the users.
- *
- * @param mixed $query
  */
-function getAllUsers($query)
+function getAllUsers(mixed $query)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);

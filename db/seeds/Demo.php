@@ -1,5 +1,6 @@
 <?php
 
+use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
 
 class Demo extends AbstractSeed
@@ -11,7 +12,7 @@ class Demo extends AbstractSeed
         ];
     }
 
-    public function run()
+    public function run(): void
     {
         // Generated from a mysql data dump
         // using https://regexr.com and the 'list view'
@@ -22,16 +23,16 @@ class Demo extends AbstractSeed
 
         // Faker library
         // https://github.com/fzaninotto/Faker
-        $faker = Faker\Factory::create();
+        $faker = Factory::create();
         // to make the seed reproducible
         $faker->seed(3);
 
-        //------------------- library_type
+        // ------------------- library_type
         $this->execute("INSERT INTO `library_type` (`id`, `label`, `camp_id`) VALUES
 			(1,'Books',1),
 			(2,'Magazines',1);");
 
-        //------------------- library
+        // ------------------- library
         $library = [];
         for ($i = 1; $i <= 100; ++$i) {
             $tempdata = [
@@ -47,7 +48,7 @@ class Demo extends AbstractSeed
         }
         $this->table('library')->insert($library)->save();
 
-        //------------------- tags
+        // ------------------- tags
         $this->execute("INSERT INTO `tags` (`id`, `label`, `color`, `camp_id`, `description`, `type`, `seq`) VALUES 
         (1,'registered','#f37167',1,'Registered in the camp','People', 1),
         (2,'exit','#aacfe3',1,'These are recognised refugees that are leaving the camp. ','People', 2),
@@ -74,7 +75,7 @@ class Demo extends AbstractSeed
         (23,'new','#d89016',4,'','All',23),
         (24,'emergency','#0097ff',4,'Hold back for emergencies','Stock',24);");
 
-        //------------------- locations
+        // ------------------- locations
         $this->execute("INSERT INTO `locations` (`id`, `label`, `camp_id`, `seq`, `visible`, `container_stock`, `is_market`, `is_donated`, `is_lost`, `is_scrap`,`box_state_id`,`deleted`) VALUES
 			(1,'Shop',1,1,0,0,1,0,0,0,5,NULL),
 			(2,'LOST',1,2,0,0,0,0,1,0,2,'2022-12-21 12:00:00'),
@@ -99,7 +100,7 @@ class Demo extends AbstractSeed
 			(21,'SCRAP',3,21,0,0,0,0,0,1,6,'2022-12-21 12:00:00'),
 			(22,'Stockroom',3,21,1,1,0,0,0,0,1,NULL);");
 
-        //------------------- people
+        // ------------------- people
         $people = [];
         $tagrelations = [];
         $lastparentid = null;
@@ -196,7 +197,7 @@ class Demo extends AbstractSeed
         $this->table('people')->insert($people)->save();
         $this->table('tags_relations')->insert($tagrelations)->save();
 
-        //------------------- transfer agreements
+        // ------------------- transfer agreements
         $this->execute("INSERT INTO `transfer_agreement` (`id`, `source_organisation_id`, `target_organisation_id`, `state`, `type`, `requested_on`, `requested_by`, `accepted_on`, `accepted_by`, `terminated_on`, `terminated_by`, `valid_from`, `valid_until`, `comment`) VALUES
             (1,1,2,'Accepted','Bidirectional','2023-02-09 17:24:29',8,'2023-02-09 17:30:51',37,NULL,NULL,'2023-02-09 17:24:29',NULL,NULL),
             (2,1,2,'UnderReview','SendingTo','2023-02-09 17:25:46',8,NULL,NULL,NULL,NULL,'2023-02-09 17:25:46',NULL,NULL),
@@ -222,7 +223,7 @@ class Demo extends AbstractSeed
             (6,1,3,1,'Lost','2023-02-09 18:06:25',18,DATE_SUB(NOW(), INTERVAL 2 DAY),18,NULL,NULL,NOW(),8,NULL,NULL),
             (7,1,3,1,'Completed','2023-02-09 18:06:25',18,DATE_SUB(NOW(), INTERVAL 2 DAY),18,DATE_SUB(NOW(), INTERVAL 1 DAY),8,NOW(),8,NULL,NULL);");
 
-        //------------------- products
+        // ------------------- products
         $this->execute("INSERT INTO `products` (`id`,`name`,`category_id`,`gender_id`,`sizegroup_id`,`camp_id`,`value`,`maxperadult`,`maxperchild`,`stockincontainer`,`comments`,`deleted`) VALUES 
 			(1,'Winter Jackets',6,2,1,1,0,0,0,1,'','0000-00-00 00:00:00'),
 			(2,'Winter Jackets',6,1,1,1,0,0,0,1,'','0000-00-00 00:00:00'),
@@ -834,7 +835,7 @@ class Demo extends AbstractSeed
 			(608,'WD SOCKS',12,10,6,3,5,0,0,0,'',NULL),
 			(609,'WD BABY CLOTHES',12,10,6,3,20,0,0,0,'',NULL);");
 
-        //------------------- qr
+        // ------------------- qr
 
         // A few fixed QR-Codes
         $this->execute("INSERT INTO `qr` (`id`,`code`) VALUES 
@@ -869,7 +870,7 @@ class Demo extends AbstractSeed
         }
         $this->table('qr')->insert($qr)->save();
 
-        //------------------- stock
+        // ------------------- stock
         // restrict selection of random ids
         // key is campid
         $shipments = ['1' => range(1, 4), '2' => [5], '3' => [6, 7]];
@@ -1638,7 +1639,7 @@ class Demo extends AbstractSeed
         $this->table('shipment_detail')->insert($shipmentdetails)->save();
         $this->table('tags_relations')->insert($tagrelations)->save();
 
-        //------------------- transactions
+        // ------------------- transactions
         $transactions = [];
         $i = 1;
         foreach ($people as $person) {

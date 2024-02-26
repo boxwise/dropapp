@@ -11,7 +11,7 @@ class ActionPermissions extends AbstractSeed
         ];
     }
 
-    public function run()
+    public function run(): void
     {
         $this->execute('UPDATE cms_functions SET action_permissions = "checkout_beneficiaries" WHERE id=87');
         $this->execute('UPDATE cms_functions SET action_permissions = "view_stockroom" WHERE id=110');

@@ -1,10 +1,10 @@
 <?php
 
-//Create array with the export_ids_people in it
+// Create array with the export_ids_people in it
 $export_ids_array = explode(',', $_SESSION['export_ids_stock']);
-//Create a list of placeholders ? the same length as export ids given
+// Create a list of placeholders ? the same length as export ids given
 $id_pars = str_repeat('?,', count($export_ids_array) - 1).'?';
-//Put camp id as first element in the list
+// Put camp id as first element in the list
 if ('' != $export_ids_array[0]) {
     array_unshift($export_ids_array, $_SESSION['camp']['id']);
 } else {
@@ -31,6 +31,6 @@ $data = db_query(
     $export_ids_array
 );
 unset($_SESSION['export_ids_stock']);
-$keys = ['box_id' => 'Box number', 'box_state' => 'Box state', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'location' => 'Location',  'boxage' => 'Age', 'items' => 'Items', 'comments' => 'Comments', 'created' => 'Created on'];
+$keys = ['box_id' => 'Box number', 'box_state' => 'Box state', 'product' => 'Product', 'gender' => 'Gender', 'size' => 'Size', 'location' => 'Location', 'boxage' => 'Age', 'items' => 'Items', 'comments' => 'Comments', 'created' => 'Created on'];
 
 csvexport($data, 'Stock', $keys);

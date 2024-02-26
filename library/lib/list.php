@@ -11,10 +11,12 @@ function listMove($table, $ids, $regardparent = true, $hook = '')
     }
 
     $i = 1;
+    $seq = [];
+    $return = '';
 
     foreach ($ids as $line) {
         ++$i;
-        list($id, $level) = $line;
+        [$id, $level] = $line;
         $parent[$level] = $id;
         ++$seq[$level];
 
@@ -52,12 +54,13 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetra
     }
 
     $i = 1;
+    $return = '';
     $hookIds = db_transaction(function () use ($ids, $hasParent, $table, $hook, $i, $updatetransactions) {
         $hookIds = [];
         $seq = [];
         foreach ($ids as $line) {
             ++$i;
-            list($id, $level) = $line;
+            [$id, $level] = $line;
             $parent[$level] = $id;
             ++$seq[$level];
 
@@ -94,7 +97,7 @@ function listRealDelete($table, $ids, $uri = false)
 
     $hasPrevent = db_fieldexists($table, 'preventdelete');
     $hasTree = db_fieldexists($table, 'parent_id');
-
+    $count = 0;
     foreach ($ids as $id) {
         $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
         $count += $result->rowCount();
@@ -143,6 +146,7 @@ function listDelete($table, $ids, $uri = false, $fktables = null)
     $hasDeletefield = db_fieldexists($table, 'deleted');
     $hasPrevent = db_fieldexists($table, 'preventdelete');
     $hasTree = db_fieldexists($table, 'parent_id');
+    $count = 0;
 
     try {
         foreach ($ids as $id) {
@@ -246,6 +250,8 @@ function listUndelete($table, $ids, $uri = false, $overwritehastree = false)
 {
     global $translate, $action;
 
+    $count = 0;
+
     $hasDeletefield = db_fieldexists($table, 'deleted');
     $hasPrevent = db_fieldexists($table, 'preventdelete');
     if ($overwritehastree) {
@@ -308,7 +314,7 @@ function listBulkUndelete($table, $ids, $uri = false, $overwritehastree = false)
 
 function listBulkUnDeleteAction($table, $ids, $count = 0, $hasTree = false)
 {
-    list($finalIds, $count) = db_transaction(function () use ($table, $ids, $count, $hasTree) {
+    [$finalIds, $count] = db_transaction(function () use ($table, $ids, $count, $hasTree) {
         $finalIds = [];
         foreach ($ids as $id) {
             $result = db_query('UPDATE '.$table.' SET deleted = 0, modified = NOW(), modified_by = :user_id WHERE id = :id', ['id' => $id, 'user_id' => $_SESSION['user']['id']]);
@@ -341,6 +347,8 @@ function listExtend($table, $ids, $period)
 {
     global $translate;
 
+    $count = 0;
+
     $hasExpireDate = db_fieldexists($table, 'valid_lastday');
     $updatedValue = [];
     foreach ($ids as $id) {
@@ -362,26 +370,13 @@ function listExtend($table, $ids, $period)
 
 function listExtendAction($table, $id, $period)
 {
-    switch ($period) {
-        case 0:
-            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()),  INTERVAL 1 WEEK) WHERE id = :id;';
-
-            break;
-
-        case 1:
-            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()), INTERVAL 1 MONTH) WHERE id = :id;';
-
-            break;
-
-        case 2:
-            $extendQuery = 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()), INTERVAL 2 MONTH) WHERE id = :id;';
-
-            break;
-
-        case 3:
-        default:
-            $extendQuery = 'UPDATE '.$table." SET valid_lastday = '0000-00-00 00:00:00' WHERE id = :id;";
-    }
+    $count = 0;
+    $extendQuery = match ($period) {
+        0 => 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()),  INTERVAL 1 WEEK) WHERE id = :id;',
+        1 => 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()), INTERVAL 1 MONTH) WHERE id = :id;',
+        2 => 'UPDATE '.$table.' SET valid_lastday = DATE_ADD(IF(valid_lastday AND NOT valid_lastday IS NULL AND valid_lastday > CURDATE(), valid_lastday, CURDATE()), INTERVAL 2 MONTH) WHERE id = :id;',
+        default => 'UPDATE '.$table." SET valid_lastday = '0000-00-00 00:00:00' WHERE id = :id;",
+    };
     $result = db_query($extendQuery, ['id' => $id]);
 
     $count += $result->rowCount();
@@ -439,7 +434,7 @@ function listCopy_single($ids, $table, $field = false)
 
 function listShowHide($table, $ids, $show)
 {
-    global $settings;
+    global $settings, $translate;
 
     $hasVisible = db_fieldexists($table, 'visible');
     if (!$hasVisible) {
@@ -523,7 +518,7 @@ function initlist()
 
     if (isset($_POST['__multiplefilter'])) {
         if (isset($_POST['multiplefilter'])) {
-            //sanitize input
+            // sanitize input
             $_POST['multiplefilter'] = array_filter($_POST['multiplefilter'], 'ctype_digit');
             $listconfig['multiplefilter_selected'] = $_POST['multiplefilter'];
             $_SESSION['multiplefilter'][$action] = $listconfig['multiplefilter_selected'];
@@ -684,10 +679,11 @@ function buildlistdataquery($query)
     }
 
     if ($listconfig['searchvalue'] && !$listconfig['manualquery']) {
-        foreach ($listconfig['search'] as $field) {
-            $searchquery[] = '('.$field.' LIKE "%'.trim($listconfig['searchvalue']).'%")';
+        if (is_iterable($listconfig['search'])) {
+            foreach ($listconfig['search'] as $field) {
+                $searchquery[] = '('.$field.' LIKE "%'.trim($listconfig['searchvalue']).'%")';
+            }
         }
-
         if ($searchquery) {
             $query = insertwhere($query, '('.join(' OR ', $searchquery).')');
         }
@@ -758,7 +754,7 @@ function convertListDataToTreeData($dataById)
             && array_key_exists($id, $dataById)
             && $level < 10);
 
-        return [level => $level, path => $path, original_index_path => $original_index_path];
+        return ['level' => $level, 'path' => $path, 'original_index_path' => $original_index_path];
     }
 
     $dataById = addOriginalIndexToData($dataById);
@@ -770,9 +766,7 @@ function convertListDataToTreeData($dataById)
         $row = array_merge($row, $metadata);
     }
     // sort the data
-    usort($dataById, function ($item1, $item2) {
-        return $item1['original_index_path'] <=> $item2['original_index_path'];
-    });
+    usort($dataById, fn ($item1, $item2) => $item1['original_index_path'] <=> $item2['original_index_path']);
 
     return $dataById;
 }
@@ -783,19 +777,19 @@ function insertwhere($query, $where)
     $pos_order = strripos($query, 'ORDER BY');
     $pos_group = strripos($query, 'GROUP BY');
     $pos_where = strripos($query, 'WHERE');
-    if ($pos_group) { //voor het groupstatement
+    if ($pos_group) { // voor het groupstatement
         if ($pos_where) {
             $query = query_insert($query, $pos_group, 'AND '.$where);
         } else {
             $query = query_insert($query, $pos_group, 'WHERE '.$where);
         }
-    } elseif ($pos_order) { //gewoon erachter
+    } elseif ($pos_order) { // gewoon erachter
         if ($pos_where) {
             $query = query_insert($query, $pos_order, 'AND '.$where);
         } else {
             $query = query_insert($query, $pos_order, 'WHERE '.$where);
         }
-    } else { //gewoon erachter
+    } else { // gewoon erachter
         if ($pos_where) {
             $query .= ' AND '.$where;
         } else {
@@ -823,7 +817,7 @@ function addcolumn($type, $label = false, $field = false, $array = [])
 
     if ($array['query']) {
         foreach ($data as $key => $value) {
-            //$data[$key][$field] = db_value($array['query'],array('id'=>$data[$key][$field]));
+            // $data[$key][$field] = db_value($array['query'],array('id'=>$data[$key][$field]));
             $data[$key][$field] = db_value($array['query'], ['id' => $data[$key]['id']]);
         }
     }

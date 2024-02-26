@@ -16,7 +16,7 @@ function authenticate($settings, $ajax)
     if ($isAuth0Callback && null === $session && $_REQUEST['error']) {
         throw new Exception($_REQUEST['error_description'], 401);
 
-        exit();
+        exit;
     }
 
     if (isset($session)) {
@@ -36,7 +36,7 @@ function authenticate($settings, $ajax)
             $auth0->exchange();
             unset($_SESSION['auth0_callback_redirect_uri']);
             redirect($redirectUrl);
-        } catch (StateException $e) {
+        } catch (StateException) {
             // clear the session if state code failed
             $auth0->clear();
 
@@ -55,7 +55,7 @@ function authenticate($settings, $ajax)
         try {
             // Token has expired, attempt to renew it.
             $auth0->renew();
-        } catch (StateException $e) {
+        } catch (StateException) {
             // There was an error trying to renew the token. Clear the session.
             $auth0->clear();
         }
@@ -208,7 +208,7 @@ function loadSessionDataForUser($user)
         $_SESSION['camp'] = $camplist[$_SESSION['camp']['id']];
     }
 
-    if ($user['is_admin'] && isset($_SESSION['camp']['id']) && !isset($_SESSION['organisation']['id'])) { //Boxtribute God who selected a camp before an organisation was specified.
+    if ($user['is_admin'] && isset($_SESSION['camp']['id']) && !isset($_SESSION['organisation']['id'])) { // Boxtribute God who selected a camp before an organisation was specified.
         // based on the selected camp the organisation is selected.
         $_SESSION['organisation'] = organisationlist()[$_SESSION['camp']['organisation_id']];
     }

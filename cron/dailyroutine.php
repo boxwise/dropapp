@@ -1,5 +1,8 @@
 <?php
 
+use Google\Cloud\Datastore\DatastoreClient;
+use Google\Cloud\Datastore\DatastoreSessionHandler;
+
 if (!array_key_exists('HTTP_X_APPENGINE_CRON', $_SERVER) && 'dropapp_dev' != $settings['db_database']) {
     throw new Exception('Not called from AppEngine cron service');
 }
@@ -73,8 +76,8 @@ if ('db' === $_GET['action']) {
     }
 
     // clean up session data
-    $datastore = new Google\Cloud\Datastore\DatastoreClient();
-    $handler = new Google\Cloud\Datastore\DatastoreSessionHandler($datastore, $gcLimit = 1000);
+    $datastore = new DatastoreClient();
+    $handler = new DatastoreSessionHandler($datastore, $gcLimit = 1000);
     $oneDayInSeconds = 60 * 60 * 24;
     $handler->gc($oneDayInSeconds);
 }

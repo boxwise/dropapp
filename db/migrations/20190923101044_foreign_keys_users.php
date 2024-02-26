@@ -29,7 +29,7 @@ class ForeignKeysUsers extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
         $this->table('history')
             ->changeColumn('user_id', 'integer', [
@@ -39,13 +39,13 @@ class ForeignKeysUsers extends AbstractMigration
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
 
         $this->table('transactions')
             ->addForeignKey('user_id', 'cms_users', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
     }
 }
