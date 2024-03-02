@@ -2,13 +2,16 @@
 
 $table = 'cms_users';
 
-if (6 == strftime('%w')) {
+$currentDayOfWeek = (new DateTime())->format('w');
+
+if (6 == $currentDayOfWeek) {
     $endtime = $_SESSION['camp']['bicycle_closingtime_saturday'];
 } else {
     $endtime = $_SESSION['camp']['bicycle_closingtime'];
 }
+
 if ($endtime) {
-    $endtime = substr($endtime, 0, strpos($endtime, ':')) + (substr($endtime, strpos($endtime, ':') + 1) / 60);
+    $endtime = substr((string) $endtime, 0, strpos((string) $endtime, ':')) + (substr((string) $endtime, strpos((string) $endtime, ':') + 1) / 60);
 } else {
     $endtime = 24;
 }
@@ -58,7 +61,7 @@ if ('out' == $data['status']) {
     $data['bicycle_id'] = $id;
     $data['status'] = 'out';
     $data['category_id'] = db_value('SELECT category_id FROM borrow_items WHERE id = :id', ['id' => $id]);
-    $data['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
+    $data['transaction_date'] = (new DateTime())->format('Y-m-d H:i:s');
     $data['location_id'] = $_SESSION['filter2']['borrow'];
 
     if ($visible) {
@@ -67,7 +70,18 @@ if ('out' == $data['status']) {
         $translate['cms_form_submit'] = 'Start borrowing';
         $cmsmain->assign('translate', $translate);
 
-        $time = strftime('%H') + (strftime('%M') / 60);
+        // Create a new DateTime object
+        $now = new DateTime();
+
+        // Get the hour and minute separately
+        $hour = $now->format('H');
+        $minute = $now->format('i');
+
+        // Calculate the time in decimal hours
+        $time = $hour + ($minute / 60);
+
+        echo $time;
+
         addfield('hidden', '', 'location_id');
 
         if (1 == $data['category_id'] || 3 == $data['category_id']) {
