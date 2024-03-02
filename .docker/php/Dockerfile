@@ -1,4 +1,4 @@
-FROM php:8.0-apache
+FROM php:8.2-apache
 # enable mod_rewrite
 RUN a2enmod rewrite
 # install needed libraries
@@ -9,4 +9,4 @@ RUN apt-get update \
 # PHP extensions
 RUN docker-php-ext-install pdo_mysql exif gd
 # Enable xdebug for debugging & profiling
-RUN pecl install xdebug-3.1.5 && docker-php-ext-enable xdebug gd
+RUN pecl install xdebug-3.3.1 && docker-php-ext-enable xdebug gd
