@@ -8,8 +8,8 @@ if ($_POST) {
     $_SESSION['salesstart'] = $_POST['startdate'];
     $_SESSION['salesend'] = $_POST['enddate'];
 
-    $start = strftime('%Y-%m-%d', strtotime($_POST['startdate']));
-    $end = strftime('%Y-%m-%d', strtotime($_POST['enddate']));
+    $start = strftime('%Y-%m-%d', strtotime((string) $_POST['startdate']));
+    $end = strftime('%Y-%m-%d', strtotime((string) $_POST['enddate']));
     $type = $_POST['type'][0];
 
     if ('graph' == $type) {
@@ -86,7 +86,7 @@ if ($_POST) {
 					ORDER BY t.transaction_date');
 
             foreach ($data as $key => $d) {
-                $date = strftime('%Y-%m-%d', strtotime($d['salesdate']));
+                $date = strftime('%Y-%m-%d', strtotime((string) $d['salesdate']));
                 $data[$key]['people'] = db_value('SELECT COUNT(DISTINCT(p.id)) FROM people AS p, transactions AS t WHERE (p.id = t.people_id OR p.parent_id = t.people_id) AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59" AND t.product_id > 0 AND t.people_id > 0 AND camp_id = :campid', ['campid' => $_SESSION['camp']['id']]);
                 $totalvisitors += $data[$key]['people'];
             }

@@ -9,12 +9,12 @@ $months_french = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Jullie
 $action = 'market_schedule';
 
 if ($_POST) {
-    $starttime = intval(substr($_POST['starttime'], 0, strpos($_POST['starttime'], ':')));
-    $starttime += floatval(substr($_POST['starttime'], strpos($_POST['starttime'], ':') + 1) / 60);
-    $endtime = intval(substr($_POST['endtime'], 0, strpos($_POST['endtime'], ':')));
-    $endtime += floatval(substr($_POST['endtime'], strpos($_POST['endtime'], ':') + 1) / 60);
-    $lunchtime = intval(substr($_POST['lunchtime'], 0, strpos($_POST['lunchtime'], ':')));
-    $lunchtime += floatval(substr($_POST['lunchtime'], strpos($_POST['lunchtime'], ':') + 1) / 60);
+    $starttime = intval(substr((string) $_POST['starttime'], 0, strpos((string) $_POST['starttime'], ':')));
+    $starttime += floatval(substr((string) $_POST['starttime'], strpos((string) $_POST['starttime'], ':') + 1) / 60);
+    $endtime = intval(substr((string) $_POST['endtime'], 0, strpos((string) $_POST['endtime'], ':')));
+    $endtime += floatval(substr((string) $_POST['endtime'], strpos((string) $_POST['endtime'], ':') + 1) / 60);
+    $lunchtime = intval(substr((string) $_POST['lunchtime'], 0, strpos((string) $_POST['lunchtime'], ':')));
+    $lunchtime += floatval(substr((string) $_POST['lunchtime'], strpos((string) $_POST['lunchtime'], ':') + 1) / 60);
 
     $data['startdate'] = strftime('%A %e %B %Y', strtotime('+'.min($_POST['dates']).' Days'));
     $data['enddate'] = strftime('%A %e %B %Y', strtotime('+'.max($_POST['dates']).' Days'));

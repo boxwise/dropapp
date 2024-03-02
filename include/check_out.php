@@ -57,7 +57,7 @@ if (!$ajax) {
     $cmsmain->assign('formbuttons', $formbuttons);
 } else {
     if ('delete' == $_POST['do']) {
-        $ids = explode(',', $_POST['ids']);
+        $ids = explode(',', (string) $_POST['ids']);
         // check if person is allowed to delete transaction
         foreach ($ids as $id) {
             verify_campaccess_people(db_value('SELECT people_id FROM transactions WHERE id=:id', ['id' => $id]));
@@ -83,7 +83,7 @@ if (!$ajax) {
 
     // Ajax POST request of shopping cart
     if ($_POST['cart']) {
-        $cart = json_decode($_POST['cart'], true);
+        $cart = json_decode((string) $_POST['cart'], true);
         // validate if beneficiary has enough drops
         $availableDrops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :people_id', ['people_id' => $_POST['people_id']]);
         $totalDrops = 0;
@@ -184,7 +184,7 @@ if (!$ajax) {
     addfield('list', '', 'purch', [
         'width' => 10,
         'data' => $datalastpurchases,
-        'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($camp['currencyname']), 'user' => 'Transaction made by', 'tdate' => 'Date'],
+        'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords((string) $camp['currencyname']), 'user' => 'Transaction made by', 'tdate' => 'Date'],
         'allowedit' => false,
         'allowadd' => false,
         'allowselect' => $allowdeletelastpurchases,
@@ -239,8 +239,8 @@ if (!$ajax) {
                 people.parent_id, people.seq', ['id' => $data['people_id']]);
     foreach ($data['people'] as $key => $person) {
         if ($data['people'][$key]['taglabels']) {
-            $taglabels = explode(chr(0x1D), $data['people'][$key]['taglabels']);
-            $tagcolors = explode(',', $data['people'][$key]['tagcolors']);
+            $taglabels = explode(chr(0x1D), (string) $data['people'][$key]['taglabels']);
+            $tagcolors = explode(',', (string) $data['people'][$key]['tagcolors']);
             foreach ($taglabels as $tagkey => $taglabel) {
                 $data['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
             }

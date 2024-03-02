@@ -133,7 +133,7 @@ Tracer::inSpan(
                 } elseif (in_array(intval($data[$key]['box_state_id']), [4, 7])) {
                     $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
                 } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
-                    $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';
+                    $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime((string) $data[$key]['modified'])) : '';
                     $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban' : 'fa-chain-broken';
                     $statelabel = 2 === intval($data[$key]['box_state_id']) ? 'lost' : 'scrapped';
                     $data[$key]['order'] = sprintf('<span class="hide">3</span><i class="fa %s tooltip-this" style="color: red" title="This box was %s %s"></i>', $icon, $statelabel, $modifiedtext);
@@ -144,8 +144,8 @@ Tracer::inSpan(
                 $totalitems += $value['items'];
 
                 if ($data[$key]['taglabels']) {
-                    $taglabels = explode(chr(0x1D), $data[$key]['taglabels']);
-                    $tagcolors = explode(',', $data[$key]['tagcolors']);
+                    $taglabels = explode(chr(0x1D), (string) $data[$key]['taglabels']);
+                    $tagcolors = explode(',', (string) $data[$key]['tagcolors']);
                     foreach ($taglabels as $tagkey => $taglabel) {
                         $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
                     }
@@ -207,7 +207,7 @@ Tracer::inSpan(
                 case 'movebox':
                     // @todo: replace signle update/insert to bulk update/insert
 
-                    $ids = explode(',', $_POST['ids']);
+                    $ids = explode(',', (string) $_POST['ids']);
 
                     [$count, $message] = move_boxes($ids, $_POST['option']);
 
@@ -223,13 +223,13 @@ Tracer::inSpan(
                     break;
 
                 case 'move':
-                    $ids = json_decode($_POST['ids']);
+                    $ids = json_decode((string) $_POST['ids']);
                     [$success, $message, $redirect] = listMove($table, $ids);
 
                     break;
 
                 case 'delete':
-                    $stock_ids = explode(',', $_POST['ids']);
+                    $stock_ids = explode(',', (string) $_POST['ids']);
                     [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
                         [$success, $message, $redirect] = listDelete($table, $stock_ids);
 
@@ -256,19 +256,19 @@ Tracer::inSpan(
                     break;
 
                 case 'copy':
-                    $ids = explode(',', $_POST['ids']);
+                    $ids = explode(',', (string) $_POST['ids']);
                     [$success, $message, $redirect] = listCopy($table, $ids, 'menutitle');
 
                     break;
 
                 case 'hide':
-                    $ids = explode(',', $_POST['ids']);
+                    $ids = explode(',', (string) $_POST['ids']);
                     [$success, $message, $redirect] = listShowHide($table, $ids, 0);
 
                     break;
 
                 case 'show':
-                    $ids = explode(',', $_POST['ids']);
+                    $ids = explode(',', (string) $_POST['ids']);
                     [$success, $message, $redirect] = listShowHide($table, $ids, 1);
 
                     break;
@@ -280,7 +280,7 @@ Tracer::inSpan(
                     break;
 
                 case 'tag':
-                    $ids = explode(',', $_POST['ids']);
+                    $ids = explode(',', (string) $_POST['ids']);
                     if ('undefined' == $_POST['option']) {
                         $success = false;
                         $message = 'No tags exist. Please go to "Manage tags" to create tags.';
@@ -319,7 +319,7 @@ Tracer::inSpan(
                     break;
 
                 case 'rtag':
-                    $ids = explode(',', $_POST['ids']);
+                    $ids = explode(',', (string) $_POST['ids']);
                     if ('undefined' == $_POST['option']) {
                         $success = false;
                         $message = 'No tags exist. Please go to "Manage tags" to create tags.';

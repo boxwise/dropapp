@@ -84,7 +84,7 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetra
         return $hookIds;
     });
     // If the method has a bulk prefix, then execute the hook
-    if (sizeof($hookIds) > 0 && preg_match('/bulk.+/', $hook)) {
+    if (sizeof($hookIds) > 0 && preg_match('/bulk.+/', (string) $hook)) {
         $aftermove = $hook($hookIds);
     }
 
@@ -661,7 +661,7 @@ function buildlistdataquery($query)
     $hasFilter3 = $listconfig['filtervalue3'];
     $hasFilter4 = $listconfig['filtervalue4'];
 
-    if ($hasDeleted && !stripos($query, 'DELETED')) {
+    if ($hasDeleted && !stripos((string) $query, 'DELETED')) {
         $query = insertwhere($query, '(NOT '.$table.'.deleted OR '.$table.'.deleted IS NULL)');
     }
 
@@ -681,7 +681,7 @@ function buildlistdataquery($query)
     if ($listconfig['searchvalue'] && !$listconfig['manualquery']) {
         if (is_iterable($listconfig['search'])) {
             foreach ($listconfig['search'] as $field) {
-                $searchquery[] = '('.$field.' LIKE "%'.trim($listconfig['searchvalue']).'%")';
+                $searchquery[] = '('.$field.' LIKE "%'.trim((string) $listconfig['searchvalue']).'%")';
             }
         }
         if ($searchquery) {
@@ -689,13 +689,13 @@ function buildlistdataquery($query)
         }
     }
 
-    if ($hasSeq && !stripos($query, 'ORDER BY') && !$listconfig['orderby']) {
+    if ($hasSeq && !stripos((string) $query, 'ORDER BY') && !$listconfig['orderby']) {
         $query .= ' ORDER BY '.$table.'.seq';
     } elseif ($listconfig['orderby']) {
         $query .= ' ORDER BY '.$listconfig['orderby'];
     }
 
-    if (!stripos($query, 'LIMIT') && $listconfig['maxlimit']) {
+    if (!stripos((string) $query, 'LIMIT') && $listconfig['maxlimit']) {
         $query .= sprintf(' LIMIT %d', intval($listconfig['maxlimit']));
     }
 
@@ -774,9 +774,9 @@ function convertListDataToTreeData($dataById)
 // inserts a where element into a new query or adds a new  element to an existing where-chain
 function insertwhere($query, $where)
 {
-    $pos_order = strripos($query, 'ORDER BY');
-    $pos_group = strripos($query, 'GROUP BY');
-    $pos_where = strripos($query, 'WHERE');
+    $pos_order = strripos((string) $query, 'ORDER BY');
+    $pos_group = strripos((string) $query, 'GROUP BY');
+    $pos_where = strripos((string) $query, 'WHERE');
     if ($pos_group) { // voor het groupstatement
         if ($pos_where) {
             $query = query_insert($query, $pos_group, 'AND '.$where);
@@ -802,7 +802,7 @@ function insertwhere($query, $where)
 
 function query_insert($str, $pos, $insert)
 {
-    return substr($str, 0, $pos).$insert.' '.substr($str, $pos);
+    return substr((string) $str, 0, $pos).$insert.' '.substr((string) $str, $pos);
 }
 
 function addcolumn($type, $label = false, $field = false, $array = [])
@@ -824,8 +824,14 @@ function addcolumn($type, $label = false, $field = false, $array = [])
 
     if ('date' == $listdata[$field]['type']) {
         foreach ($data as $key => $row) {
-            if ($row[$field] && strtotime($row[$field]) > 0) {
-                $data[$key][$field] = strftime('%e %B %Y', strtotime($row[$field]));
+            if ($row[$field] && strtotime((string) $row[$field]) > 0) {
+                $date = new DateTime((string) $row[$field]);
+                $formatter = new IntlDateFormatter(
+                    'en_US',
+                    IntlDateFormatter::LONG,
+                    IntlDateFormatter::NONE
+                );
+                $data[$key][$field] = $formatter->format($date);
             } else {
                 $data[$key][$field] = '';
             }
@@ -833,8 +839,9 @@ function addcolumn($type, $label = false, $field = false, $array = [])
         $listdata[$field]['type'] = 'text';
     } elseif ('datetime' == $listdata[$field]['type']) {
         foreach ($data as $key => $row) {
-            if ($row[$field] && strtotime($row[$field]) > 0) {
-                $data[$key][$field] = strftime('%e %B %Y, %H:%M', strtotime($row[$field]));
+            if ($row[$field] && strtotime((string) $row[$field]) > 0) {
+                $date = new DateTime($row[$field]);
+                $data[$key][$field] = $date->format('j F Y, H:i');
             } else {
                 $data[$key][$field] = '';
             }
@@ -842,23 +849,26 @@ function addcolumn($type, $label = false, $field = false, $array = [])
         $listdata[$field]['type'] = 'text';
     } elseif ('datetime-short' == $listdata[$field]['type']) {
         foreach ($data as $key => $row) {
-            if ($row[$field] && strtotime($row[$field]) > 0) {
-                $data[$key][$field] = strftime('%e-%m-%y %H:%M', strtotime($row[$field]));
+            if ($row[$field] && strtotime((string) $row[$field]) > 0) {
+                $dateTime = new DateTime((string) $row[$field]);
+                $data[$key][$field] = $dateTime->format('H:i');
             } else {
                 $data[$key][$field] = '';
             }
         }
+
         $listdata[$field]['type'] = 'text';
     } elseif ('time' == $listdata[$field]['type']) {
         foreach ($data as $key => $row) {
-            if ($row[$field] && strtotime($row[$field]) > 0) {
-                $data[$key][$field] = strftime('%H:%M', strtotime($row[$field]));
+            if ($row[$field] && strtotime((string) $row[$field]) > 0) {
+                $time = new DateTime((string) $row[$field]);
+                $data[$key][$field] = $time->format('H:i');
             } else {
                 $data[$key][$field] = '';
             }
         }
         $listdata[$field]['type'] = 'text';
-    } elseif (function_exists($listdata[$field]['format'])) {
+    } elseif ($listdata[$field]['format'] && function_exists($listdata[$field]['format'])) {
         foreach ($data as $key => $row) {
             eval("\$data[{$key}][{$field}] = ".$listdata[$field]['format']."(\$row[{$field}]);");
         }
@@ -868,7 +878,7 @@ function addcolumn($type, $label = false, $field = false, $array = [])
 function checkajax()
 {
     global $action;
-    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 'xmlhttprequest' === strtolower($_SERVER['HTTP_X_REQUESTED_WITH'])) {
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && 'xmlhttprequest' === strtolower((string) $_SERVER['HTTP_X_REQUESTED_WITH'])) {
         $ajax = true;
 
         $action = substr(__FILE__, strrpos(__FILE__, '/') + 1);

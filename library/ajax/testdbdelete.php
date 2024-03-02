@@ -26,7 +26,7 @@ if (!(in_array($settings['db_database'], $devdbs) && in_array($_SESSION['user'][
             }
         }
     } else {
-        $ids = explode(',', $_POST['ids']);
+        $ids = explode(',', (string) $_POST['ids']);
     }
     // if ids that are submitted are in database, delete them, otherwise just return true
     if ([] != $ids) {

@@ -3,17 +3,15 @@
 class formHandler
 {
     private $id;
-    private $table;
     private $post;
     private $keys = [];
     private $nullIfEmpty = [];
     private $debug = false;
 
-    public function __construct($table)
+    public function __construct(private $table)
     {
         $this->post = $_POST;
         $this->id = intval($_POST['id']);
-        $this->table = $table;
     }
 
     public function savePost($keys, $nullIfEmptyKeys = [])
@@ -33,10 +31,10 @@ class formHandler
         foreach ($keys as $key) {
             if ($lan) {
                 $value = $this->post[$lan][$key];
-                $properties = explode(' ', $this->post['__'.$lan][$key]);
+                $properties = explode(' ', (string) $this->post['__'.$lan][$key]);
             } else {
                 $value = $this->post[$key];
-                $properties = explode(' ', $this->post['__'.$key]);
+                $properties = explode(' ', (string) $this->post['__'.$key]);
             }
             foreach ($properties as $p) {
                 switch ($p) {
@@ -46,14 +44,14 @@ class formHandler
                         break;
 
                     case 'valuta':
-                        $value = str_replace('€', '', $value);
+                        $value = str_replace('€', '', (string) $value);
                         $value = str_replace('.', '', $value); // remove thousands indicator
                         $value = str_replace(',', '.', $value); // change decimal into point
 
                         break;
 
                     case 'float':
-                        $value = str_replace('.', '', $value); // remove thousands indicator
+                        $value = str_replace('.', '', (string) $value); // remove thousands indicator
                         $value = str_replace(',', '.', $value); // change decimal into point
 
                         break;
@@ -67,7 +65,7 @@ class formHandler
 
                     case 'date':
                         if ($value) {
-                            $value = strftime('%Y-%m-%d %H:%M:%S', strtotime($value));
+                            $value = strftime('%Y-%m-%d %H:%M:%S', strtotime((string) $value));
                         }
 
                         break;
@@ -80,13 +78,13 @@ class formHandler
                     case 'fileselect':
                         if (in_array('image', $properties) && $value) {
                             $resizeproperties = ($lan ? $this->post['__'.$lan][$key.'resize'] : $this->post['__'.$key.'resize']);
-                            $aResize = unserialize(str_replace("'", '"', stripslashes($resizeproperties)));
+                            $aResize = unserialize(str_replace("'", '"', stripslashes((string) $resizeproperties)));
                             $imageResize = new imageResize();
 
                             foreach ($aResize as $aResizeItem) {
                                 $aResizeItem['source'] = $_SERVER['DOCUMENT_ROOT'].$value;
-                                $aResizeItem['reltarget'] = $aResizeItem['target'].basename($value);
-                                $aResizeItem['target'] = $_SERVER['DOCUMENT_ROOT'].$aResizeItem['target'].basename($value);
+                                $aResizeItem['reltarget'] = $aResizeItem['target'].basename((string) $value);
+                                $aResizeItem['target'] = $_SERVER['DOCUMENT_ROOT'].$aResizeItem['target'].basename((string) $value);
 
                                 // If the file already exists, append the target filename with -1
                                 // This should be in a function that adds -1 as long as the filename exist. (Now only works once)
@@ -98,7 +96,7 @@ class formHandler
                                                                 }
                                 */
 
-                                if (basename($aResizeItem['source']) != basename($this->post['file_prev'])) {
+                                if (basename((string) $aResizeItem['source']) != basename((string) $this->post['file_prev'])) {
                                     $imageResize->setValue('source', $aResizeItem['source']);
                                     $imageResize->setValue('target', $aResizeItem['target']);
                                     $imageResize->setValue('resize', $aResizeItem['resize']);
@@ -113,7 +111,7 @@ class formHandler
                 }
             }
 
-            $value = stripslashes($value);
+            $value = stripslashes((string) $value);
             if (array_key_exists($key, $this->nullIfEmpty) && '' == $value) {
                 $value = null;
             }
@@ -198,7 +196,7 @@ class formHandler
                 $change = '';
 
                 if ('date' == $fields[$key]['Type']) {
-                    $new = strftime('%Y-%m-%d', strtotime($new));
+                    $new = strftime('%Y-%m-%d', strtotime((string) $new));
                     if ($new = '1970-01-01') {
                         $new = $old[$key];
                     }
@@ -206,12 +204,12 @@ class formHandler
                 if ('float' == $fields[$key]['Type'] && 'NO' == $fields[$key]['Null']) {
                     $new = floatval($new);
                 }
-                if (str_starts_with($fields[$key]['Type'], 'int') && 'NO' == $fields[$key]['Null']) {
+                if (str_starts_with((string) $fields[$key]['Type'], 'int') && 'NO' == $fields[$key]['Null']) {
                     $new = intval($new);
                 }
 
                 if ($old[$key] != $new) {
-                    if (str_starts_with($fields[$key]['Type'], 'int') || str_starts_with($fields[$key]['Type'], 'tinyint')) {
+                    if (str_starts_with((string) $fields[$key]['Type'], 'int') || str_starts_with((string) $fields[$key]['Type'], 'tinyint')) {
                         db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, to_int) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :old, :new)', ['table' => $this->table, 'id' => $this->id, 'change' => $key, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR'], 'old' => $old[$key], 'new' => $new]);
                     } elseif ('float' == $fields[$key]['Type']) {
                         db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_float, to_float) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :old, :new)', ['table' => $this->table, 'id' => $this->id, 'change' => $key, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR'], 'old' => $old[$key], 'new' => $new]);
@@ -251,12 +249,12 @@ class formHandler
         global $settings;
 
         $value = $this->post[$field];
-        $url = safestring(trim($value));
-        while (strpos($url, '--')) {
-            $url = str_replace('--', '-', $url);
+        $url = safestring(trim((string) $value));
+        while (strpos((string) $url, '--')) {
+            $url = str_replace('--', '-', (string) $url);
         }
-        if (str_ends_with($url, '-')) {
-            $url = substr($url, 0, strlen($url) - 1);
+        if (str_ends_with((string) $url, '-')) {
+            $url = substr((string) $url, 0, strlen((string) $url) - 1);
         }
 
         $url = $this->makeURL_suffix($url);
@@ -265,11 +263,11 @@ class formHandler
             $this->post['url'] = $url;
         } else {
             $this->post['url'] = safestring($this->post['url']);
-            while (strpos($this->post['url'], '--')) {
-                $this->post['url'] = str_replace('--', '-', $this->post['url']);
+            while (strpos((string) $this->post['url'], '--')) {
+                $this->post['url'] = str_replace('--', '-', (string) $this->post['url']);
             }
-            if (str_ends_with($url, '-')) {
-                $url = substr($url, 0, strlen($url) - 1);
+            if (str_ends_with((string) $url, '-')) {
+                $url = substr((string) $url, 0, strlen((string) $url) - 1);
             }
         }
     }
@@ -278,7 +276,7 @@ class formHandler
     {
         global $settings;
 
-        $url = safestring(trim($value));
+        $url = safestring(trim((string) $value));
         $url = $this->makeURL_suffix($url);
 
         if (!$this->post['url']) {
@@ -295,7 +293,7 @@ class formHandler
             $deleted = true;
         }
 
-        preg_match_all('^([a-zA-Z0-9_-]+)\-([0-9]+)^', $url, $match);
+        preg_match_all('^([a-zA-Z0-9_-]+)\-([0-9]+)^', (string) $url, $match);
         if ($match[0]) {
             $nr = $match[2][0];
             $base = $match[1][0];

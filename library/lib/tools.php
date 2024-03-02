@@ -26,7 +26,7 @@ function checkURL($url)
 
 function checkEmail($email)
 {
-    [$user, $domain] = preg_split('/@/', $email);
+    [$user, $domain] = preg_split('/@/', (string) $email);
 
     return (bool) (filter_var($email, FILTER_VALIDATE_EMAIL) && checkdnsrr($domain, 'MX'));
 }
@@ -34,15 +34,15 @@ function checkEmail($email)
 function checkPasswordStrength($pass)
 {
     return (bool) (
-        strlen($pass) >= 12
+        strlen((string) $pass) >= 12
         // a regular expression to check at least 12 characters including at least 3 of the following 4 types of characters: a lower-case letter, an upper-case letter, a number, a special character (such as !@#$%^&*).
-        && preg_match('/((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])).{12,}$/m', $pass)
+        && preg_match('/((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])).{12,}$/m', (string) $pass)
     );
 }
 
 function grammarRealign($row)
 {
-    $parts = explode(' ', $row);
+    $parts = explode(' ', (string) $row);
     $new_order = $parts;
     $new_order[0] = strtolower($parts[1]);
     $new_order[1] = strtolower($parts[0]);
@@ -59,8 +59,8 @@ function showHistory($table, $id)
 
     $result = db_query('SELECT h.*, u.naam FROM history AS h LEFT OUTER JOIN cms_users AS u ON h.user_id = u.id WHERE tablename = :table AND record_id = :id ORDER BY changedate DESC', ['table' => $table, 'id' => $id]);
     while ($row = db_fetch($result)) {
-        $row['changedate'] = strftime('%A %d %B %Y, %H:%M', strtotime($row['changedate']));
-        $row['changes'] = strip_tags($row['changes']);
+        $row['changedate'] = strftime('%A %d %B %Y, %H:%M', strtotime((string) $row['changedate']));
+        $row['changes'] = strip_tags((string) $row['changes']);
         $change = $row['changes'];
         $change = str_replace(';', '', $change);
 
@@ -92,7 +92,7 @@ function showHistory($table, $id)
         }   // Cases where the grammar has to be realigned to make it readable
         elseif (in_array(explode(' ', $change)[0], ['Box', 'Record', 'comments', 'signaturefield'])) {
             // special cases first
-            $change = trim(grammarRealign($change));
+            $change = trim((string) grammarRealign($change));
             if ('order box made undone' == $change) {
                 $change = 'canceled the order';
             }
@@ -144,10 +144,10 @@ function ConvertURL()
 {
     global $lan, $settings;
     $qs = $_SERVER['REQUEST_URI'];
-    if (strpos($qs, '?')) {
-        $qs = substr($qs, 0, strpos($qs, '?'));
+    if (strpos((string) $qs, '?')) {
+        $qs = substr((string) $qs, 0, strpos((string) $qs, '?'));
     }
-    $items = explode('/', $qs);
+    $items = explode('/', (string) $qs);
     if ($settings['site_multilanguage']) {
         $lan = $items[1];
         array_shift($items);
@@ -166,7 +166,7 @@ function ConvertURL()
     }
 }
 
-function redirect($url, $status = 301)
+function redirect($url, $status = 301): never
 {
     header('Location: '.$url, true, $status);
 
@@ -237,8 +237,8 @@ function getCMSuser($id)
 function safestring($input)
 {
     $safestringchar = '-';
-    $input = str_replace(['!', '?', '&'], '', $input);
-    $input = utf8_decode($input);
+    $input = str_replace(['!', '?', '&'], '', (string) $input);
+    $input = mb_convert_encoding($input, 'ISO-8859-1');
 
     $x = '';
     for ($i = 0; $i < strlen($input); ++$i) {
@@ -271,7 +271,7 @@ function safestring($input)
         $x = substr($x, 0, strlen($x) - 1);
     }
 
-    return utf8_encode($x);
+    return mb_convert_encoding($x, 'UTF-8', 'ISO-8859-1');
 }
 
 function utf8_decode_array($array)
@@ -280,7 +280,7 @@ function utf8_decode_array($array)
         return false;
     }
     foreach ($array as $key => $value) {
-        $array[$key] = utf8_decode($value);
+        $array[$key] = mb_convert_encoding((string) $value, 'ISO-8859-1');
     }
 
     return $array;
@@ -322,7 +322,7 @@ function displayDate($datum, $time = false, $long = false)
     global $_txt;
 
     if (!is_int($datum)) {
-        $datum = strtotime($datum);
+        $datum = strtotime((string) $datum);
     }
     $d = strftime('%Y-%m-%d', $datum);
 

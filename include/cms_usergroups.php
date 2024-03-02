@@ -66,7 +66,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
                 break;
 
             case 'delete':
-                $ids = explode(',', $_POST['ids']);
+                $ids = explode(',', (string) $_POST['ids']);
                 // list($success, $message, $redirect) = listDelete($table, $ids, false, ['cms_users']);
                 // disabling delete of usergroups according this trello card https://trello.com/c/HgKoMDov
                 $success = false;

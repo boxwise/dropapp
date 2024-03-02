@@ -39,7 +39,7 @@ Tracer::inSpan(
             // Search
             listsetting('manualquery', true);
             listsetting('search', ['firstname', 'lastname', 'container', 'comments']);
-            $search = substr(db_escape(trim($listconfig['searchvalue'])), 1, strlen(db_escape(trim($listconfig['searchvalue']))) - 2);
+            $search = substr((string) db_escape(trim((string) $listconfig['searchvalue'])), 1, strlen((string) db_escape(trim((string) $listconfig['searchvalue']))) - 2);
 
             $is_filtered = (isset($listconfig['filtervalue3']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
 
@@ -86,7 +86,7 @@ Tracer::inSpan(
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
                 addbutton('rtag', 'Remove Tag', ['icon' => 'fa-tags', 'options' => $tags]);
             }
-            addbutton('give', 'Give '.ucwords($_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
+            addbutton('give', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
             addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
             addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false, 'testid' => 'detachFromFamily']);
             if ($_SESSION['camp']['bicycle']) {
@@ -109,7 +109,7 @@ Tracer::inSpan(
             addcolumn('text', 'Gender', 'gender');
             addcolumn('text', 'Age', 'age');
             addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
-            addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'tokens');
+            addcolumn('text', ucwords((string) $_SESSION['camp']['currencyname']), 'tokens');
             if (!empty($tags)) {
                 addcolumn('tag', 'Tags', 'tags');
             }
@@ -265,8 +265,8 @@ Tracer::inSpan(
                 function () use (&$data) {
                     foreach ($data as $key => $value) {
                         if ($data[$key]['taglabels']) {
-                            $taglabels = explode(chr(0x1D), $data[$key]['taglabels']);
-                            $tagcolors = explode(',', $data[$key]['tagcolors']);
+                            $taglabels = explode(chr(0x1D), (string) $data[$key]['taglabels']);
+                            $tagcolors = explode(',', (string) $data[$key]['tagcolors']);
                             foreach ($taglabels as $tagkey => $taglabel) {
                                 $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
                             }
@@ -291,11 +291,11 @@ Tracer::inSpan(
             $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
             $ids = [];
             if ('move' == $_POST['do']) { // move passes the ids in pairs with the level the id is moved to. Therefore, it needs to be handled differently.
-                foreach (json_decode($_POST['ids']) as $pair) {
+                foreach (json_decode((string) $_POST['ids']) as $pair) {
                     $ids[] = $pair[0];
                 }
             } else {
-                $ids = explode(',', $_POST['ids']);
+                $ids = explode(',', (string) $_POST['ids']);
             }
             $delta = array_diff($ids, $valid_ids);
             if (0 != count($delta)) {
@@ -305,7 +305,7 @@ Tracer::inSpan(
             } else {
                 switch ($_POST['do']) {
                     case 'merge':
-                        $ids = explode(',', $_POST['ids']);
+                        $ids = explode(',', (string) $_POST['ids']);
                         foreach ($ids as $key => $value) {
                             if (db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $value])) {
                                 $containsmembers = true;
@@ -338,7 +338,7 @@ Tracer::inSpan(
                         break;
 
                     case 'detach':
-                        $ids = explode(',', $_POST['ids']);
+                        $ids = explode(',', (string) $_POST['ids']);
                         foreach ($ids as $key => $value) {
                             if (!db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $value])) {
                                 $containsmembers = true;
@@ -369,7 +369,7 @@ Tracer::inSpan(
                         break;
 
                     case 'move':
-                        $ids = json_decode($_POST['ids']);
+                        $ids = json_decode((string) $_POST['ids']);
                         // list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
                         // Refactored list move method to use a transaction block and bulk insert for the correctdrops method
                         [$success, $message, $redirect, $aftermove] = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
@@ -377,31 +377,31 @@ Tracer::inSpan(
                         break;
 
                     case 'delete':
-                        $ids = explode(',', $_POST['ids']);
+                        $ids = explode(',', (string) $_POST['ids']);
                         [$success, $message, $redirect] = listDelete($table, $ids);
 
                         break;
 
                     case 'copy':
-                        $ids = explode(',', $_POST['ids']);
+                        $ids = explode(',', (string) $_POST['ids']);
                         [$success, $message, $redirect] = listCopy($table, $ids, 'name');
 
                         break;
 
                     case 'hide':
-                        $ids = explode(',', $_POST['ids']);
+                        $ids = explode(',', (string) $_POST['ids']);
                         [$success, $message, $redirect] = listShowHide($table, $ids, 0);
 
                         break;
 
                     case 'show':
-                        $ids = explode(',', $_POST['ids']);
+                        $ids = explode(',', (string) $_POST['ids']);
                         [$success, $message, $redirect] = listShowHide($table, $ids, 1);
 
                         break;
 
                     case 'touch':
-                        $ids = explode(',', $_POST['ids']);
+                        $ids = explode(',', (string) $_POST['ids']);
                         $userId = $_SESSION['user']['id'];
                         // Query speed optimised for 500 records from 6.2 seconds to 0.54 seconds using  transaction blocks over UPDATE and bulk inserts
                         db_transaction(function () use ($ids, $userId) {
@@ -532,8 +532,8 @@ function correctdrops($id)
     if ($drops && $person['parent_id']) {
         // Combining insert values to create bulk inserts instead of two insert statements
         db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES 
-                ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), 
-                ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+                ('.$person['parent_id'].', '.$drops.', "'.ucwords((string) $_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), 
+                ('.$person['id'].', -'.$drops.', "'.ucwords((string) $_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
 
         $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
         $aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
@@ -554,8 +554,8 @@ function bulkcorrectdrops($ids)
 
         if ($drops && $person['parent_id']) {
             $finalIds[] = $id;
-            $query .= '('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), ';
-            $query .= '('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].'), ';
+            $query .= '('.$person['parent_id'].', '.$drops.', "'.ucwords((string) $_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].'), ';
+            $query .= '('.$person['id'].', -'.$drops.', "'.ucwords((string) $_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].'), ';
         }
     }
     if ('' !== $query) {

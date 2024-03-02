@@ -31,7 +31,7 @@ $data['descriptionlabel'] = $data['description'];
 $cmsmain->assign('include', 'cms_form.tpl');
 
 // put a title above the form
-$cmsmain->assign('title', ucfirst($translate['cms_setting']));
+$cmsmain->assign('title', ucfirst((string) $translate['cms_setting']));
 
 // define tabs
 
@@ -88,7 +88,7 @@ switch ($data['type']) {
         break;
 
     case 'select':
-        foreach (explode(',', $data['options']) as $option) {
+        foreach (explode(',', (string) $data['options']) as $option) {
             [$value, $label] = explode('=', $option);
             $options[] = ['value' => $value, 'label' => $label];
         }
@@ -103,7 +103,7 @@ switch ($data['type']) {
 
     case 'textarea':
     default:
-        $data['value'] = str_replace("\n", '&#10;', $data['value']);
+        $data['value'] = str_replace("\n", '&#10;', (string) $data['value']);
         $data['value'] = str_replace("\r", '&#13;', $data['value']);
         addfield('textarea', $translate['cms_settings_value'], 'value', ['rows' => 10]);
 

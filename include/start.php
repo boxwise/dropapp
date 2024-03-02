@@ -90,7 +90,7 @@ FROM borrow_transactions AS b1 LEFT OUTER JOIN borrow_items AS i ON i.id = b1.bi
         $data['laundry_beneficiaries'] += $row['c'];
     }
 
-    $previous = strftime('%Y-%m-%d', strtotime('-14 days', strtotime($_SESSION['camp']['laundry_cyclestart'])));
+    $previous = strftime('%Y-%m-%d', strtotime('-14 days', strtotime((string) $_SESSION['camp']['laundry_cyclestart'])));
 
     $data['laundry_prev_appointments'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE people_id > 0 AND cyclestart = :cyclestart', ['cyclestart' => $previous]);
     $data['laundry_prev_noshow'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE cyclestart = :cyclestart AND noshow', ['cyclestart' => $previous]);

@@ -241,7 +241,7 @@ function db_tableexists($table, $dbid = false)
         $dbid = $defaultdbid;
     }
 
-    $tables = db_listtables($table, $dbid);
+    $tables = db_listtables($table);
 
     return in_array($table, $tables);
 }

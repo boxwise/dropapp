@@ -4,7 +4,7 @@ $ajaxform = new Zmarty();
 
 $data['people_id'] = intval($_POST['people_id']);
 $offset = intval($_POST['offset']);
-$cyclestart = strftime('%Y-%m-%d', strtotime('+'.$offset.' days', strtotime($_SESSION['camp']['laundry_cyclestart'])));
+$cyclestart = strftime('%Y-%m-%d', strtotime('+'.$offset.' days', strtotime((string) $_SESSION['camp']['laundry_cyclestart'])));
 
 if (-1 == $data['people_id']) {
     $element['field'] .= '<h2 class="light"><span class="number">Laundry for the Drop Shop</span></h2>';

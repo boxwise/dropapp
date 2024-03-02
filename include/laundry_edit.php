@@ -4,7 +4,7 @@ $table = 'laundry_appointments';
 $action = 'laundry';
 $offset = intval($_GET['offset']);
 
-$cyclestart = strftime('%Y-%m-%d', strtotime('+'.$offset.' days', strtotime($_SESSION['camp']['laundry_cyclestart'])));
+$cyclestart = strftime('%Y-%m-%d', strtotime('+'.$offset.' days', strtotime((string) $_SESSION['camp']['laundry_cyclestart'])));
 
 if ($_POST) {
     $_POST['cyclestart'] = $cyclestart;

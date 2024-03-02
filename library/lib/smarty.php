@@ -30,9 +30,7 @@ class Zmarty extends Smarty
     {
         return Tracer::inSpan(
             ['name' => 'smarty:display:'.$template],
-            function () use ($template, $cache_id, $compile_id, $parent) {
-                return parent::display($template, $cache_id, $compile_id, $parent);
-            }
+            fn () => parent::display($template, $cache_id, $compile_id, $parent)
         );
     }
 

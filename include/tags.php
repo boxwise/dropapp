@@ -52,7 +52,7 @@ if (!$ajax) {
     switch ($_POST['do']) {
         case 'delete':
             [$success, $message, $redirect] = db_transaction(function () use ($table) {
-                $ids = explode(',', $_POST['ids']);
+                $ids = explode(',', (string) $_POST['ids']);
                 [$success, $message, $redirect] = listDelete($table, $ids, false, ['cms_usergroups', 'cms_users', 'camps']);
 
                 return [$success, $message, $redirect];
@@ -61,7 +61,7 @@ if (!$ajax) {
             break;
 
         case 'move':
-            $ids = json_decode($_POST['ids']);
+            $ids = json_decode((string) $_POST['ids']);
             [$success, $message, $redirect] = listMove($table, $ids);
 
             break;

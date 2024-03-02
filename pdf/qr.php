@@ -31,7 +31,7 @@ Tracer::inSpan(
         $pdf->SetAutoPageBreak(false);
 
         if ($_GET['label']) {
-            $labels = explode(',', $_GET['label']);
+            $labels = explode(',', (string) $_GET['label']);
             $_GET['count'] = count($labels);
         }
 
