@@ -65,7 +65,7 @@ class formHandler
 
                     case 'date':
                         if ($value) {
-                            $value = strftime('%Y-%m-%d %H:%M:%S', strtotime((string) $value));
+                            $value = (new DateTimeImmutable('@'.(string) $value))->format('Y-m-d H:i:s');
                         }
 
                         break;
@@ -196,7 +196,8 @@ class formHandler
                 $change = '';
 
                 if ('date' == $fields[$key]['Type']) {
-                    $new = strftime('%Y-%m-%d', strtotime((string) $new));
+                    $new = (new DateTime((string) $new))->format('Y-m-d');
+
                     if ($new = '1970-01-01') {
                         $new = $old[$key];
                     }
@@ -235,11 +236,11 @@ class formHandler
     {
         if (!$this->id) {
             array_push($this->keys, 'created', 'created_by');
-            $this->post['created'] = strftime('%Y-%m-%d %H:%M:%S');
+            $this->post['created'] = (new DateTime())->format('Y-m-d H:i:s');
             $this->post['created_by'] = $_SESSION['user']['id'];
         } else {
             array_push($this->keys, 'modified', 'modified_by');
-            $this->post['modified'] = strftime('%Y-%m-%d %H:%M:%S');
+            $this->post['modified'] = (new DateTime())->format('Y-m-d H:i:s');
             $this->post['modified_by'] = $_SESSION['user']['id'];
         }
     }

@@ -8,8 +8,9 @@ if ($_POST) {
     $_SESSION['salesstart'] = $_POST['startdate'];
     $_SESSION['salesend'] = $_POST['enddate'];
 
-    $start = strftime('%Y-%m-%d', strtotime((string) $_POST['startdate']));
-    $end = strftime('%Y-%m-%d', strtotime((string) $_POST['enddate']));
+    $start = date('Y-m-d', strtotime((string) $_POST['startdate']));
+    $end = date('Y-m-d', strtotime((string) $_POST['enddate']));
+
     $type = $_POST['type'][0];
 
     if ('graph' == $type) {
@@ -31,7 +32,10 @@ if ($_POST) {
 						WHERE t.people_id = pp.id AND pp.camp_id = :camp_id AND t.product_id > 0 AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59"
 						GROUP BY p.category_id ORDER BY SUM(t.count)', ['camp_id' => $_SESSION['camp']['id']]);
                 foreach ($test as $key => $value) {
-                    $data[strftime('%a %e %b', strtotime($date))][$key] = $value;
+                    $dateObj = DateTime::createFromFormat('Y-m-d', $date);
+                    $formattedDate = $dateObj->format('D j M');
+
+                    $data[$formattedDate][$key] = $value;
                 }
             }
             $date = date('Y-m-d', strtotime('+1 day', strtotime($date)));
@@ -86,7 +90,8 @@ if ($_POST) {
 					ORDER BY t.transaction_date');
 
             foreach ($data as $key => $d) {
-                $date = strftime('%Y-%m-%d', strtotime((string) $d['salesdate']));
+                $date = (new DateTime((string) $d['salesdate']))->format('Y-m-d');
+
                 $data[$key]['people'] = db_value('SELECT COUNT(DISTINCT(p.id)) FROM people AS p, transactions AS t WHERE (p.id = t.people_id OR p.parent_id = t.people_id) AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59" AND t.product_id > 0 AND t.people_id > 0 AND camp_id = :campid', ['campid' => $_SESSION['camp']['id']]);
                 $totalvisitors += $data[$key]['people'];
             }
@@ -142,12 +147,12 @@ if ($_POST) {
     if ($_SESSION['salesstart']) {
         $data['startdate'] = $_SESSION['salesstart'];
     } else {
-        $data['startdate'] = strftime('%Y-%m-%d', strtotime('-7 days'));
+        $data['startdate'] = (new DateTime('-7 days'))->format('Y-m-d');
     }
     if ($_SESSION['salesend']) {
         $data['enddate'] = $_SESSION['salesend'];
     } else {
-        $data['enddate'] = strftime('%Y-%m-%d');
+        $data['enddate'] = (new DateTime())->format('Y-m-d');
     }
     $data['type'] = 'product';
 

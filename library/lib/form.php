@@ -86,17 +86,17 @@ function addfield($type, $label = false, $field = false, $array = [])
 
     if ($formdata[$field]['date'] && $formdata[$field]['time']) {
         if ($data[$field] && '0000-00-00 00:00:00' != $data[$field]) {
-            $data[$field] = strftime('%d-%m-%Y %H:%M', strtotime((string) $data[$field]));
+            $data[$field] = (new DateTime((string) $data[$field]))->format('d-m-Y H:i');
         }
         $formdata[$field]['dateformat'] = 'DD-MM-YYYY H:mm';
     } elseif ($formdata[$field]['date']) {
         if ($data[$field] && '0000-00-00' != $data[$field]) {
-            $data[$field] = strftime('%d-%m-%Y', strtotime((string) $data[$field]));
+            $data[$field] = (new DateTime((string) $data[$field]))->format('d-m-Y');
         }
         $formdata[$field]['dateformat'] = 'DD-MM-YYYY';
     } elseif ($formdata[$field]['time']) {
         if ($data[$field]) {
-            $data[$field] = strftime('%H:%M', strtotime((string) $data[$field]));
+            $data[$field] = (new DateTime((string) $data[$field]))->format('d-m-Y');
         }
         $formdata[$field]['dateformat'] = 'H:mm';
     }
@@ -197,9 +197,9 @@ function formatdate($output, $date)
 {
     global $translate;
 
-    $output = str_replace('%A', $translate[strftime('%A', $date)], (string) $output);
-    $output = str_replace('%B', $translate[strftime('%B', $date)], $output);
-    $output = strftime($output, $date);
+    $output = str_replace('%A', $translate[(new DateTime('@'.$date))->format('l')], (string) $output);
+    $output = str_replace('%B', $translate[(new DateTime('@'.$date))->format('F')], $output);
+    $output = (new DateTimeImmutable())->setTimestamp($date)->format('Y-m-d H:i:s');
 
     return $output;
 }

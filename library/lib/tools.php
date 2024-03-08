@@ -59,7 +59,7 @@ function showHistory($table, $id)
 
     $result = db_query('SELECT h.*, u.naam FROM history AS h LEFT OUTER JOIN cms_users AS u ON h.user_id = u.id WHERE tablename = :table AND record_id = :id ORDER BY changedate DESC', ['table' => $table, 'id' => $id]);
     while ($row = db_fetch($result)) {
-        $row['changedate'] = strftime('%A %d %B %Y, %H:%M', strtotime((string) $row['changedate']));
+        $row['changedate'] = (new DateTime($row['changedate']))->format('l d F Y, H:i');
         $row['changes'] = strip_tags((string) $row['changes']);
         $change = $row['changes'];
         $change = str_replace(';', '', $change);
@@ -324,21 +324,21 @@ function displayDate($datum, $time = false, $long = false)
     if (!is_int($datum)) {
         $datum = strtotime((string) $datum);
     }
-    $d = strftime('%Y-%m-%d', $datum);
+    $d = (new DateTime('@'.$datum))->format('Y-m-d');
 
-    if ($d == strftime('%Y-%m-%d', strtotime('+2 day'))) {
-        $dmy = 'Tomorrow'.strftime('%A', $datum);
+    if ($d == (new DateTime('+2 days'))->format('Y-m-d')) {
+        $dmy = 'Tomorrow'.(new DateTime('@'.$datum))->format('l');
     }
-    if ($d == strftime('%Y-%m-%d', strtotime('+1 day'))) {
+    if ($d == (new DateTime('+1 day'))->format('Y-m-d')) {
         $dmy = 'Tomorrow';
     }
-    if ($d == strftime('%Y-%m-%d')) {
+    if ($d == (new DateTime())->format('Y-m-d')) {
         $dmy = $_txt['today'];
     }
-    if ($d == strftime('%Y-%m-%d', strtotime('-1 day'))) {
+    if ($d == (new DateTime('-1 day'))->format('Y-m-d')) {
         $dmy = 'Yesterday';
     }
-    if ($d == strftime('%Y-%m-%d', strtotime('-2 day'))) {
+    if ($d == (new DateTime('-2 day'))->format('Y-m-d')) {
         $dmy = 'Two days ago';
     }
 
@@ -347,18 +347,18 @@ function displayDate($datum, $time = false, $long = false)
     }
     if ($time) {
         if (!$dmy) {
-            return strftime('%e %B %Y, %H:%M', $datum);
+            return (new DateTime('@'.$datum))->format('j F Y, H:i');
         }
     }
 
-    return $dmy.strftime(', %H:%M', $datum);
+    return $dmy.(new DateTime('@'.$datum))->format(', H:i');
     if ($long) {
         if (!$dmy) {
-            return strftime('%e %B %Y', $datum);
+            return (new DateTime('@'.$datum))->format('j F Y');
         }
 
         return $dmy;
     }
 
-    return strftime('%d-%m-%Y', $datum);
+    return (new DateTime('@'.$datum))->format('d-m-Y');
 }

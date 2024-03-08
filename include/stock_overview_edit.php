@@ -69,7 +69,7 @@ if (!$ajax) {
         } elseif (in_array(intval($data[$key]['box_state_id']), [4, 7])) {
             $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
         } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
-            $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime((string) $data[$key]['modified'])) : '';
+            $modifiedtext = $data[$key]['modified'] ? 'on '.(new DateTime((string) $data[$key]['modified']))->format('d-m-Y') : '';
             $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban' : 'fa-chain-broken';
             $statelabel = 2 === intval($data[$key]['box_state_id']) ? 'lost' : 'scrapped';
             $data[$key]['order'] = sprintf('<span class="hide">3</span><i class="fa %s tooltip-this" style="color: red" title="This box was %s %s"></i>', $icon, $statelabel, $modifiedtext);

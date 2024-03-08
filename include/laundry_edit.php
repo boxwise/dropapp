@@ -4,7 +4,7 @@ $table = 'laundry_appointments';
 $action = 'laundry';
 $offset = intval($_GET['offset']);
 
-$cyclestart = strftime('%Y-%m-%d', strtotime('+'.$offset.' days', strtotime((string) $_SESSION['camp']['laundry_cyclestart'])));
+$cyclestart = (new DateTime($_SESSION['camp']['laundry_cyclestart']))->modify('+'.$offset.' days')->format('Y-m-d');
 
 if ($_POST) {
     $_POST['cyclestart'] = $cyclestart;
@@ -34,7 +34,7 @@ $data['access'] = db_value('SELECT access FROM laundry_stations WHERE id = :id',
 $cmsmain->assign('include', 'cms_form.tpl');
 
 // put a title above the form
-$cmsmain->assign('title', strftime('%A %d %B %Y', strtotime('+'.$data['day'].' days', strtotime($cyclestart))).'<br />'.db_value('SELECT label FROM laundry_times WHERE id = :time', ['time' => $data['time']]).' <span class="machine">'.db_value('SELECT label FROM laundry_machines WHERE id = :machine', ['machine' => $data['machine']]).'</span>');
+$cmsmain->assign('title', date('l d F Y', strtotime('+'.$data['day'].' days', strtotime($cyclestart))).'<br />'.db_value('SELECT label FROM laundry_times WHERE id = :time', ['time' => $data['time']]).' <span class="machine">'.db_value('SELECT label FROM laundry_machines WHERE id = :machine', ['machine' => $data['machine']]).'</span>');
 
 $data['timeslot'] = $timeslot;
 $data['day'] = $data['day'];

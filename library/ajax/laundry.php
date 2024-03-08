@@ -4,7 +4,7 @@ $ajaxform = new Zmarty();
 
 $data['people_id'] = intval($_POST['people_id']);
 $offset = intval($_POST['offset']);
-$cyclestart = strftime('%Y-%m-%d', strtotime('+'.$offset.' days', strtotime((string) $_SESSION['camp']['laundry_cyclestart'])));
+$cyclestart = (new DateTime($_SESSION['camp']['laundry_cyclestart']))->modify("+{$offset} days")->format('Y-m-d');
 
 if (-1 == $data['people_id']) {
     $element['field'] .= '<h2 class="light"><span class="number">Laundry for the Drop Shop</span></h2>';
@@ -23,7 +23,11 @@ if (!$data['approvalsigned']) {
 $result = db_query('SELECT ls.*, lt.label, lm.label AS machine, la.noshow FROM laundry_appointments AS la, laundry_slots AS ls, laundry_times AS lt, laundry_machines AS lm WHERE lm.id = ls.machine AND lt.id = ls.time AND la.timeslot = ls.id AND la.people_id = :people_id AND la.cyclestart = :cyclestart ORDER BY timeslot', ['people_id' => $data['people_id'], 'cyclestart' => $cyclestart]);
 //	if(db_numrows($result)) $element['field'] .= '<h2>Current appointments in this cycle';
 while ($row = db_fetch($result)) {
-    $app[] = ($row['id'] == $_POST['timeslot'] ? '<span class="number">' : '').strftime('%A %d %B %Y', strtotime('+'.$row['day'].' days', strtotime($cyclestart))).', '.$row['label'].' <span class="machine">'.$row['machine'].'</span>'.($row['id'] == $_POST['timeslot'] ? ' (this one)</span>' : '').($row['noshow'] ? ' NO-SHOW' : '');
+    $dateTime = new DateTime($cyclestart);
+    $dateTime->modify('+'.$row['day'].' days');
+    $formattedDate = $dateTime->format('l d F Y');
+
+    $app[] = ($row['id'] == $_POST['timeslot'] ? '<span class="number">' : '').$formattedDate.', '.$row['label'].' <span class="machine">'.$row['machine'].'</span>'.($row['id'] == $_POST['timeslot'] ? ' (this one)</span>' : '').($row['noshow'] ? ' NO-SHOW' : '');
 }
 
 if (is_array($app)) {

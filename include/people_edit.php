@@ -365,7 +365,7 @@ if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admi
     $result = db_query("SELECT changedate, to_int, u.naam, (SELECT SUBSTR(changes,POSITION('\" to \"' IN changes)+5) FROM history WHERE tablename = 'people' AND record_id = :id AND changedate = h.changedate AND changes LIKE \"%laundrycomment%\") AS comment FROM history AS h, cms_users AS u WHERE tablename = 'people' AND record_id = :id AND changes = 'laundryblock' AND user_id = u.id ORDER BY changedate DESC", ['id' => $data['id']]);
     while ($row = db_fetch($result)) {
         $row['comment'] = substr((string) $row['comment'], 1, strlen((string) $row['comment']) - 4);
-        $log[] = strftime('%d-%m-%Y %H:%M:%S', strtotime((string) $row['changedate'])).' - '.$row['naam'].' '.($row['to_int'] ? 'enabled' : 'disabled').' the laundry block - '.($row['comment'] ? 'comment: '.$row['comment'] : '');
+        $log[] = (new DateTime($row['changedate']))->format('d-m-Y H:i:s').' - '.$row['naam'].' '.($row['to_int'] ? 'enabled' : 'disabled').' the laundry block - '.($row['comment'] ? 'comment: '.$row['comment'] : '');
     }
     $data['log'] = join("\n", $log);
     addfield('textarea', 'Log', 'log', ['tab' => 'laundry', 'readonly' => true]);

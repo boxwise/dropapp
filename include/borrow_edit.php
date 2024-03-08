@@ -89,7 +89,7 @@ if ('out' == $data['status']) {
                 addfield('custom', '&nbsp', '<h2><span class="warning">After '.sprintf('%02d:%02d', (int) $endtime, fmod($endtime, 1) * 60).' we do not start new rentals!</span></h2>');
                 $data['hidesubmit'] = true;
             } else {
-                addfield('custom', '&nbsp', '<h3>Check the user\'s Bicycle Certificate, and make sure the user has a reflective vest, front light, helmet and key. <br />Asure the user to be back before '.strftime('%H:%M', strtotime('+2 Hours')).'</h3>');
+                addfield('custom', '&nbsp', '<h3>Check the user\'s Bicycle Certificate, and make sure the user has a reflective vest, front light, helmet and key. <br />Asure the user to be back before '.(new DateTime('+2 Hours'))->format('H:i').'</h3>');
                 addfield('select', 'Find person', 'people_id', ['required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.firstname, " ", p.lastname, " (", p.container, ")"," ",IF(bicycleban >= DATE_FORMAT(NOW(),"%Y-%m-%d"),CONCAT("(BAN UNTIL ",DATE_FORMAT(bicycleban,"%d-%m-%Y"),")"),"")) AS label, 
 					IF(bicycleban >= DATE_FORMAT(NOW(),"%Y-%m-%d"),1,0) AS disabled FROM people AS p WHERE p.bicycletraining AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1']);
                 addfield('checkbox', 'Rented out with helmet', 'helmet');

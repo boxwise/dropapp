@@ -98,7 +98,7 @@ if (!$ajax) {
             exit;
         }
 
-        $_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
+        $_POST['transaction_date'] = (new DateTime())->format('Y-m-d H:i:s');
         $_POST['user_id'] = $_SESSION['user']['id'];
 
         $savekeys = ['people_id', 'product_id', 'count', 'drops', 'transaction_date', 'user_id'];

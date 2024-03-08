@@ -72,7 +72,7 @@ while ($row = db_fetch($result)) {
 $data['people'] = join(',', $ids);
 
 $data['names'] = 'All families';
-$data['description'] = 'New cycle started '.strftime('%A %e %B %Y');
+$data['description'] = 'New cycle started '.(new DateTime())->format('l j F Y');
 $translate['cms_form_submit'] = 'Give '.ucwords((string) $_SESSION['camp']['currencyname']);
 $cmsmain->assign('translate', $translate);
 

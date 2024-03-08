@@ -16,8 +16,13 @@ if ($_POST) {
     $lunchtime = intval(substr((string) $_POST['lunchtime'], 0, strpos((string) $_POST['lunchtime'], ':')));
     $lunchtime += floatval(substr((string) $_POST['lunchtime'], strpos((string) $_POST['lunchtime'], ':') + 1) / 60);
 
-    $data['startdate'] = strftime('%A %e %B %Y', strtotime('+'.min($_POST['dates']).' Days'));
-    $data['enddate'] = strftime('%A %e %B %Y', strtotime('+'.max($_POST['dates']).' Days'));
+    $startDate = new DateTime();
+    $startDate->modify('+'.min($_POST['dates']).' days');
+    $data['startdate'] = $startDate->format('l j F Y');
+
+    $endDate = new DateTime();
+    $endDate->modify('+'.max($_POST['dates']).' days');
+    $data['enddate'] = $endDate->format('l j F Y');
 
     db_query('UPDATE camps SET 
 			schedulestart = :start, 
@@ -47,7 +52,7 @@ if ($_POST) {
 
     $slots = [];
     foreach ($_POST['dates'] as $day) {
-        $date = strftime('%A %e %B %Y', strtotime('+'.$day.' Days'));
+        $date = (new DateTime('+'.$day.' days'))->format('l j F Y');
 
         $lunch = false;
         for ($time = $starttime; $time < $endtime; $time += $_POST['timeslot'][0]) {
@@ -140,8 +145,13 @@ if ($_POST) {
     $data['lunchduration'] = ($_SESSION['camp']['schedulebreakduration'] ?: '1');
     $data['timeslot'] = ($_SESSION['camp']['scheduletimeslot'] ?: '0.5');
 
+    $datelist = [];
     for ($i = 1; $i < 60; ++$i) {
-        $datelist[] = ['value' => $i, 'label' => strftime('%A %e %B %Y', strtotime('+'.$i.' Days'))];
+        $date = new DateTime("+{$i} days");
+        $datelist[] = [
+            'value' => $i,
+            'label' => $date->format('l j F Y'),
+        ];
     }
     $data['hidecancel'] = true;
 
