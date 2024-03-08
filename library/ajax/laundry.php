@@ -1,6 +1,7 @@
 <?php
 
 $ajaxform = new Zmarty();
+$app = [];
 
 $data['people_id'] = intval($_POST['people_id']);
 $offset = intval($_POST['offset']);
@@ -31,7 +32,7 @@ while ($row = db_fetch($result)) {
 }
 
 if (is_array($app)) {
-    $element['field'] .= '<br /><h2 class="light">Current appointments in this cycle:<br />'.join($app, '<br />');
+    $element['field'] .= '<br /><h2 class="light">Current appointments in this cycle:<br />'.join('<br />', $app);
 }
 
 $ajaxform->assign('element', $element);
