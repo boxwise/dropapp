@@ -825,13 +825,7 @@ function addcolumn($type, $label = false, $field = false, $array = [])
     if ('date' == $listdata[$field]['type']) {
         foreach ($data as $key => $row) {
             if ($row[$field] && strtotime((string) $row[$field]) > 0) {
-                $date = new DateTime((string) $row[$field]);
-                $formatter = new IntlDateFormatter(
-                    'en_US',
-                    IntlDateFormatter::LONG,
-                    IntlDateFormatter::NONE
-                );
-                $data[$key][$field] = $formatter->format($date);
+                $data[$key][$field] = date('F j, Y', strtotime($row[$field]));
             } else {
                 $data[$key][$field] = '';
             }

@@ -32,9 +32,7 @@ if ($_POST) {
 						WHERE t.people_id = pp.id AND pp.camp_id = :camp_id AND t.product_id > 0 AND t.transaction_date >= "'.$date.' 00:00" AND t.transaction_date <= "'.$date.' 23:59"
 						GROUP BY p.category_id ORDER BY SUM(t.count)', ['camp_id' => $_SESSION['camp']['id']]);
                 foreach ($test as $key => $value) {
-                    $dateObj = DateTime::createFromFormat('Y-m-d', $date);
-                    $formattedDate = $dateObj->format('D j M');
-
+                    $formattedDate = (new DateTime($date))->format('D j M');
                     $data[$formattedDate][$key] = $value;
                 }
             }
