@@ -137,7 +137,7 @@ if ($_POST) {
         // edit tags
         db_query('DELETE FROM tags_relations WHERE object_id = :people_id AND object_type = "People"', [':people_id' => $id]);
         $params = [];
-        $tags = $_POST['tags'];
+        $tags = $_POST['tags'] ?? [];
         if (sizeof($tags) > 0) {
             $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
 

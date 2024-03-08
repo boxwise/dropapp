@@ -439,7 +439,7 @@ Tracer::inSpan(
                         } else {
                             // set tag id
                             $tag_id = $_POST['option'];
-                            $people_ids = $ids;
+                            $people_ids = $ids ?? [];
                             if (sizeof($people_ids) > 0) {
                                 // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
                                 $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
@@ -478,7 +478,7 @@ Tracer::inSpan(
                             // set tag id
                             $tag_id = $_POST['option'];
                             $people_ids = $ids;
-                            if (sizeof($people_ids) > 0) {
+                            if (is_array($people_ids) && sizeof($people_ids) > 0) {
                                 // Query speed optimised using transaction block and bulk delete
                                 // related to this trello card https://trello.com/c/g24mIVb8
                                 db_transaction(function () use ($tag_id, $people_ids) {
@@ -542,7 +542,7 @@ function correctdrops($id)
     }
 }
 
-function bulkcorrectdrops($ids)
+function bulkcorrectdrops($ids = [])
 {
     $query = '';
     $aftermove = '';

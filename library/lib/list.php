@@ -84,7 +84,7 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetra
         return $hookIds;
     });
     // If the method has a bulk prefix, then execute the hook
-    if (sizeof($hookIds) > 0 && preg_match('/bulk.+/', (string) $hook)) {
+    if (is_array($hookIds) && sizeof($hookIds) > 0 && preg_match('/bulk.+/', (string) $hook)) {
         $aftermove = $hook($hookIds);
     }
 

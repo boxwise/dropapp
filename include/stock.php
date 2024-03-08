@@ -229,7 +229,7 @@ Tracer::inSpan(
                     break;
 
                 case 'delete':
-                    $stock_ids = explode(',', (string) $_POST['ids']);
+                    $stock_ids = explode(',', (string) $_POST['ids']) ?? [];
                     [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
                         [$success, $message, $redirect] = listDelete($table, $stock_ids);
 
@@ -289,7 +289,7 @@ Tracer::inSpan(
                         // set tag id
                         $tag_id = $_POST['option'];
                         $stock_ids = $ids;
-                        if (sizeof($stock_ids) > 0) {
+                        if (is_array($stock_ids) && sizeof($stock_ids) > 0) {
                             // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
                             $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
 
@@ -328,7 +328,7 @@ Tracer::inSpan(
                         // set tag id
                         $tag_id = $_POST['option'];
                         $stock_ids = $ids;
-                        if (sizeof($stock_ids) > 0) {
+                        if (is_array($stock_ids) && sizeof($stock_ids) > 0) {
                             db_transaction(function () use ($tag_id, $stock_ids) {
                                 $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (tag_id, `object_id`) IN (';
 
