@@ -32,18 +32,19 @@ WHERE YEAR(peo.created) >= 2020
 GROUP BY YEAR(peo.created), MONTH(peo.created), o.id, o.label, c.id, c.name;
 
 -- items distributed in shop by year, month, organisation and camp
-SELECT YEAR(t.transaction_date), MONTH(t.transaction_date), o.label, c.name, cat.label, SUM(t.count)
+SELECT YEAR(t.transaction_date) as year, MONTH(t.transaction_date) as month, o.label as org, c.name as base, cat.label as category, SUM(t.count) as items
 FROM transactions t
-LEFT JOIN people peo ON peo.id = t.people_id
-LEFT JOIN camps c ON peo.camp_id=c.id
-LEFT JOIN organisations o ON o.id=c.organisation_id
 LEFT JOIN products p ON p.id=t.product_id
+-- when ASSORT products are introduced we cannot figure out the camp through products anymore.
+-- It might make sens to extend transactions by a base_id column
+LEFT JOIN camps c ON p.camp_id=c.id
+LEFT JOIN organisations o ON o.id=c.organisation_id
 LEFT JOIN product_categories cat ON p.category_id = cat.id
-WHERE YEAR(t.transaction_date) >= 2020
+WHERE YEAR(t.transaction_date) >= 2020 AND t.count >0
 GROUP BY YEAR(t.transaction_date), MONTH(t.transaction_date), o.id, o.label, c.id, c.name, cat.id;
 
 -- boxes and items created by year, month, org, base, category
-SELECT YEAR(s.created), MONTH(s.created), o.label, c.name, cat.label, COUNT(s.id) AS boxes, SUM(s.items) AS items
+SELECT YEAR(s.created) as year, MONTH(s.created) as month, o.label as org, c.name as base, cat.label as category, COUNT(s.id) AS boxes, SUM(s.items) AS items
 FROM stock s
 LEFT JOIN products p ON p.id=s.product_id
 LEFT JOIN product_categories cat ON p.category_id = cat.id
@@ -61,3 +62,28 @@ LEFT JOIN camps c ON p.camp_id=c.id
 LEFT JOIN organisations o ON o.id=c.organisation_id
 WHERE s.box_state_id = 5  AND YEAR(s.modified) >= 2020
 GROUP BY YEAR(s.modified), MONTH(s.modified), o.id, o.label, c.id, c.name, cat.id;
+
+-- moved out boxes to compare with the statviz query
+SELECT 
+	DATE(s.modified) as moved_on, 
+    YEAR(s.modified) as moved_on_year,
+    cat.id as category_id,
+    p.name as product_name,
+    p.gender_id as gender,
+    s.size_id as size_id,
+    null as tag_ids,
+    l.label as target_id,
+    "OutgoingLocation" AS target_type,
+    c.id as base_id,
+    c.name as base_name,
+    o.label as org_name,
+    COUNT(s.id) AS boxes, 
+    SUM(s.items) AS items
+FROM stock s
+LEFT JOIN products p ON p.id=s.product_id
+LEFT JOIN product_categories cat ON p.category_id = cat.id
+LEFT JOIN locations l ON l.id = s.location_id
+LEFT JOIN camps c ON p.camp_id=c.id
+LEFT JOIN organisations o ON o.id=c.organisation_id
+WHERE s.box_state_id = 5 AND YEAR(s.modified) < 2024 AND YEAR(s.modified) > 2019
+GROUP BY DATE(s.modified), YEAR(s.modified), cat.id, p.id, s.size_id, l.id, o.id, c.id;
