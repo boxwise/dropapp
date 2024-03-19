@@ -23,7 +23,7 @@ FROM (
 WHERE year >= 2020
 GROUP BY year, month, o_id, b_id;
 
--- newly registered refugees by year, month, organisation and camp
+-- newly registered beneficiaries by year, month, organisation and base
 SELECT YEAR(peo.created), MONTH(peo.created), o.label, c.name, COUNT(peo.id)
 FROM people peo
 LEFT JOIN camps c ON peo.camp_id=c.id
