@@ -144,7 +144,7 @@ if (!$ajax) {
                         ('all' == $_SESSION['filter']['stock_overview'] ? '' :
                             ($_SESSION['filter']['stock_overview'] ? ' AND (stock.box_state_id = '.box_state_id_from_filter($_SESSION['filter']['stock_overview']).') ' :
                                 ' AND (stock.box_state_id = 1) ')))
-                    .($listconfig['multiplefilter_selected'] ? ' AND tags.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '')
+                    .($listconfig['multiplefilter_selected'] ? ' AND tags.id IN ('.implode(',', $listconfig['multiplefilter_selected'] ?? []).') ' : '')
                 .' GROUP BY 
                         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
                     ) as agrouping
