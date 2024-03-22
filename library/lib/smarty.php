@@ -52,6 +52,7 @@ class Zmarty extends Smarty
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'array_slice', 'array_slice_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'implode', 'implode_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'implode_array', 'implode_array_modifier');
+        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'intval', 'intval_modifier');
     }
 }
 
@@ -85,4 +86,9 @@ function implode_array_modifier($value, $glue = '')
     }
 
     return implode($glue, $value);
+}
+
+function intval_modifier($value)
+{
+    return intval($value);
 }
