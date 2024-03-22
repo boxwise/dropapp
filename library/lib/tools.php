@@ -321,44 +321,49 @@ function displayDate($datum, $time = false, $long = false)
 {
     global $_txt;
 
-    if (!is_int($datum)) {
-        $datum = strtotime((string) $datum);
+    // If $datum is null or false, return 'Unknown'
+    if (null === $datum || false === $datum) {
+        return 'Unknown';
     }
-    $d = (new DateTime('@'.$datum))->format('Y-m-d');
 
-    if ($d == (new DateTime('+2 days'))->format('Y-m-d')) {
-        $dmy = 'Tomorrow'.(new DateTime('@'.$datum))->format('l');
+    // If $datum is not an integer, attempt to convert it to a timestamp
+    if (!is_int($datum)) {
+        $timestamp = strtotime($datum);
+        if (false === $timestamp) {
+            return 'Unknown';
+        }
+    } else {
+        $timestamp = $datum;
     }
-    if ($d == (new DateTime('+1 day'))->format('Y-m-d')) {
+
+    $dateObj = new DateTime();
+    $dateObj->setTimestamp($timestamp);
+
+    // Handle different date phrases
+    $d = $dateObj->format('Y-m-d');
+    $dmy = '';
+
+    if ($d == $dateObj->modify('+2 days')->format('Y-m-d')) {
+        $dmy = 'Tomorrow'.$dateObj->format('l');
+    } elseif ($d == $dateObj->modify('+1 day')->format('Y-m-d')) {
         $dmy = 'Tomorrow';
-    }
-    if ($d == (new DateTime())->format('Y-m-d')) {
+    } elseif ($d == (new DateTime())->format('Y-m-d')) {
         $dmy = $_txt['today'];
-    }
-    if ($d == (new DateTime('-1 day'))->format('Y-m-d')) {
+    } elseif ($d == $dateObj->modify('-1 day')->format('Y-m-d')) {
         $dmy = 'Yesterday';
-    }
-    if ($d == (new DateTime('-2 day'))->format('Y-m-d')) {
+    } elseif ($d == $dateObj->modify('-2 days')->format('Y-m-d')) {
         $dmy = 'Two days ago';
     }
 
-    if (!$datum) {
-        return 'Unknown';
-    }
+    // Format the date with or without time
     if ($time) {
-        if (!$dmy) {
-            return (new DateTime('@'.$datum))->format('j F Y, H:i');
-        }
+        return $dmy ? $dmy.$dateObj->format(', H:i') : $dateObj->format('j F Y, H:i');
     }
 
-    return $dmy.(new DateTime('@'.$datum))->format(', H:i');
+    // Long format if specified
     if ($long) {
-        if (!$dmy) {
-            return (new DateTime('@'.$datum))->format('j F Y');
-        }
-
-        return $dmy;
+        return $dmy ? $dmy : $dateObj->format('j F Y');
     }
 
-    return (new DateTime('@'.$datum))->format('d-m-Y');
+    return $dateObj->format('d-m-Y');
 }
