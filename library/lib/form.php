@@ -23,9 +23,15 @@ function addfield($type, $label = false, $field = false, $array = [])
         }
 
         // set default list behaviour, can be overridden by $array values
-        $keys = array_keys($formdata[$field]['data'][0]);
-        $hasShowHide = in_array('visible', $keys);
-        $hasSeq = in_array('seq', $keys);
+        $keys = [];
+        $hasShowHide = false;
+        $hasSeq = false;
+
+        if (isset($formdata[$field]['data'][0])) {
+            $keys = array_keys($formdata[$field]['data'][0]);
+            $hasShowHide = in_array('visible', $keys);
+            $hasSeq = in_array('seq', $keys);
+        }
 
         $formdata[$field]['allowshowhide'] = $hasShowHide;
 

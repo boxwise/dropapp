@@ -6,10 +6,15 @@ $table = 'transactions';
 $action = 'check_out';
 
 // for external checkouts - HAC use case
-$hideprivatedata = db_value('SELECT allow_borrow_adddelete FROM cms_usergroups WHERE id = :usergroup', ['usergroup' => $_SESSION['usergroup']['id']]);
+$hideprivatedata = db_value('SELECT allow_borrow_adddelete FROM cms_usergroups WHERE id = :usergroup', ['usergroup' => $_SESSION['usergroup']['id']]) ?? [];
 
 if (!$ajax) {
     $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
+
+    // Check if $data is false, then set it to an empty array
+    if (false === $data) {
+        $data = [];
+    }
 
     if (!$id) {
         $data['visible'] = 1;
@@ -237,12 +242,14 @@ if (!$ajax) {
                 people.id
             ORDER BY 
                 people.parent_id, people.seq', ['id' => $data['people_id']]);
-    foreach ($data['people'] as $key => $person) {
-        if ($data['people'][$key]['taglabels']) {
-            $taglabels = explode(chr(0x1D), (string) $data['people'][$key]['taglabels']);
-            $tagcolors = explode(',', (string) $data['people'][$key]['tagcolors']);
-            foreach ($taglabels as $tagkey => $taglabel) {
-                $data['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+    if (is_array($data['people'])) {
+        foreach ($data['people'] as $key => $person) {
+            if ($data['people'][$key]['taglabels']) {
+                $taglabels = explode(chr(0x1D), (string) $data['people'][$key]['taglabels']);
+                $tagcolors = explode(',', (string) $data['people'][$key]['tagcolors']);
+                foreach ($taglabels as $tagkey => $taglabel) {
+                    $data['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                }
             }
         }
     }

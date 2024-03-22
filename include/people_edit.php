@@ -208,6 +208,10 @@ $data = db_row('
         GROUP BY
             people.id', ['id' => $id]);
 
+if (false == $data) {
+    $data = [];
+}
+
 if ($data['taglabels']) {
     $taglabels = explode(chr(0x1D), (string) $data['taglabels']);
     $tagcolors = explode(',', (string) $data['tagcolors']);
