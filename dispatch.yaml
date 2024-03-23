@@ -24,7 +24,11 @@ dispatch:
 ## Staging
 - url: "v2-staging.boxtribute.org/*"
   service: v2-staging
-- url: "api-staging.boxtribute.org/*"
+# Fetch docs including images, CSS, and JS
+- url: "api-staging.boxtribute.org/docs/*"
+  service: api-staging
+# Intended for GraphQL explorer
+- url: "api-staging.boxtribute.org"
   service: api-staging
 ## Demo
 - url: "v2-demo.boxtribute.org/*"
