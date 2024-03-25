@@ -17,7 +17,7 @@ if ($ajax) {
     // and list tabs have their own page, action needs to be edited to match DB table name
     // origin stays the same so after confirm, user gets navigated back to the tab he came from
     $replaceArray = ['_expired'];
-    $editedaction = str_ireplace($replaceArray, '', $action);
+    $editedaction = str_ireplace($replaceArray, '', (string) $action);
     listsetting('edit', $editedaction.'_edit');
 
     $camps = db_value(

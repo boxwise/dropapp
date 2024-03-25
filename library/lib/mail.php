@@ -27,7 +27,7 @@ function sendmail($to_email, $to_name, $subject, $content, $email_template = 'cm
     $template = new Zmarty();
     $template->assign('content', $content);
     $boilerPlateContent = $translate['cms_email_boilerplate'];
-    $boilerPlateContent = str_ireplace('{orgname}', $_SESSION['organisation']['label'], $boilerPlateContent);
+    $boilerPlateContent = str_ireplace('{orgname}', (string) $_SESSION['organisation']['label'], (string) $boilerPlateContent);
     $template->assign('boilerPlateContent', $boilerPlateContent);
     $template->assign('domain', $_SERVER['HTTP_HOST']);
 

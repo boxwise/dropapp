@@ -45,7 +45,7 @@ if (!$ajax) {
 } else {
     switch ($_POST['do']) {
         case 'unarchive':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listUndelete($table, $ids, false);
             $redirect = true;
 

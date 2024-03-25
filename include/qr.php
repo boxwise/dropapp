@@ -13,11 +13,11 @@ if ($_POST) {
     $data['fulllabel'] = $_POST['fulllabel'];
 
     if ($_POST['fulllabel']) {
-        $labels = explode(',', $_POST['label']);
+        $labels = explode(',', (string) $_POST['label']);
         redirect('/pdf/qr.php?count='.$_POST['count']);
     } elseif ($_POST['label']) {
         $i = 0;
-        $labels = explode(',', $_POST['label']);
+        $labels = explode(',', (string) $_POST['label']);
         foreach ($labels as $l) {
             $data['labels'][$i] = db_row('
 				SELECT s.box_id, qr.code AS hash, qr.legacy AS legacy, CONCAT(p.name," (",s.items,"x)") AS product, g.shortlabel AS gender, s2.label AS size

@@ -25,7 +25,7 @@ $pdf->SetAutoPageBreak(false);
 $pdf->SetLineWidth(0.1);
 
 // $id = "1050,1067,1068,1084,1093";
-$ids = explode(',', $_GET['id']);
+$ids = explode(',', (string) $_GET['id']);
 foreach ($ids as $key => $id) {
     $ids[$key] = intval($id);
 }

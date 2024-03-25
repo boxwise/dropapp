@@ -59,7 +59,7 @@ if (!$ajax) {
     addcolumn('text', 'Gender', 'gender2');
     addcolumn('text', 'Age', 'age');
     addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
-    addcolumn('text', ucwords($_SESSION['camp']['currencyname']), 'drops');
+    addcolumn('text', ucwords((string) $_SESSION['camp']['currencyname']), 'drops');
     addcolumn('datetime', 'Last active', 'lastactive');
 
     addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'oneitemonly' => false, 'testId' => 'recoverDeactivatedUser']);
@@ -85,7 +85,7 @@ if (!$ajax) {
 } else {
     switch ($_POST['do']) {
         case 'undelete':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             $finalIds = [];
             $errorMessage = '';
             foreach ($ids as $id) {
@@ -113,7 +113,7 @@ if (!$ajax) {
             break;
 
         case 'realdelete':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             // Transaction block added over update queries
             [$success, $message, $redirect] = db_transaction(function () use ($ids, $table) {
                 foreach ($ids as $id) {
@@ -150,8 +150,8 @@ function correctdrops($id)
     $person = db_row('SELECT * FROM people AS p WHERE id = :id', ['id' => $id]);
 
     if ($drops && $person['parent_id']) {
-        db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
-        db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords($_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
+        db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['parent_id'].', '.$drops.', "'.ucwords((string) $_SESSION['camp']['currencyname']).' moved from family member to family head", NOW(), '.$_SESSION['user']['id'].')');
+        db_query('INSERT INTO transactions (people_id, drops, description, transaction_date, user_id) VALUES ('.$person['id'].', -'.$drops.', "'.ucwords((string) $_SESSION['camp']['currencyname']).' moved to new family head", NOW(), '.$_SESSION['user']['id'].')');
         $newamount = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :id', ['id' => $person['parent_id']]);
         $aftermove = 'correctDrops({id:'.$person['id'].', value: ""}, {id:'.$person['parent_id'].', value: '.$newamount.'})';
 

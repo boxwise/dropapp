@@ -6,8 +6,8 @@ $action = 'camps_edit';
 if ($_POST) {
     db_transaction(function () use ($table, $rolesToActions, $menusToActions) {
         $handler = new formHandler($table);
-        $baseName = trim($_POST['name']);
-        $baseIsNew = !(!empty($_POST['id']) && preg_match('/\d+/', $_POST['id']));
+        $baseName = trim((string) $_POST['name']);
+        $baseIsNew = !(!empty($_POST['id']) && preg_match('/\d+/', (string) $_POST['id']));
 
         $savekeys = ['name', 'market', 'familyidentifier', 'delete_inactive_users', 'food', 'bicycle', 'idcard', 'workshop', 'laundry', 'schedulestart', 'schedulestop', 'schedulebreak', 'schedulebreakstart', 'schedulebreakduration', 'scheduletimeslot', 'currencyname', 'dropsperadult', 'dropsperchild', 'dropcapadult', 'dropcapchild', 'bicyclerenttime', 'adult_age', 'daystokeepdeletedpersons', 'extraportion', 'maxfooddrops_adult', 'maxfooddrops_child', 'bicycle_closingtime', 'bicycle_closingtime_saturday', 'organisation_id', 'resettokens', 'beneficiaryisregistered', 'beneficiaryisvolunteer'];
         $id = $handler->savePost($savekeys);

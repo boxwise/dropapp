@@ -133,8 +133,8 @@ $data = db_row('SELECT
                     WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
 
 if ($data['taglabels']) {
-    $taglabels = explode(chr(0x1D), $data['taglabels']);
-    $tagcolors = explode(',', $data['tagcolors']);
+    $taglabels = explode(chr(0x1D), (string) $data['taglabels']);
+    $tagcolors = explode(',', (string) $data['tagcolors']);
     foreach ($taglabels as $tagkey => $taglabel) {
         $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
     }

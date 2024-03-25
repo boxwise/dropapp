@@ -38,7 +38,7 @@ $result = db_query('SELECT
 while ($row = db_fetch($result)) {
     foreach ($rolesTemplate as $roleName) {
         $prefixedRole = 'base_'.$row['base_id'].'_'.$roleName;
-        $prefixedRoleDescription = ucwords($row['label']).' - Base '.$row['base_id'].' ('.$row['name'].') - '.ucwords(preg_replace('/\_/', ' ', $roleName));
+        $prefixedRoleDescription = ucwords((string) $row['label']).' - Base '.$row['base_id'].' ('.$row['name'].') - '.ucwords((string) preg_replace('/\_/', ' ', $roleName));
         // create roles in auth0
         $auth0Role = createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRoleDescription);
 

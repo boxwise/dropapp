@@ -138,12 +138,12 @@ function bootstrap_exception_handler(Throwable $ex)
         if (401 === $ex->getCode() && 'This user is not currently active' === $ex->getMessage()) {
             $error->assign('message', 'You will be redirected to login.');
             logout();
-            $error->assign('logoutWithRedirect', 'https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
+            $error->assign('logoutWithRedirect', 'https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode((string) $settings['auth0_redirect_uri']));
         }
         if (404 === $ex->getCode() && 'User not found in database' === $ex->getMessage()) {
             $error->assign('message', 'You will be redirected to login.');
             logout();
-            $error->assign('logoutWithRedirect', 'https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode($settings['auth0_redirect_uri']));
+            $error->assign('logoutWithRedirect', 'https://'.$settings['auth0_domain'].'/v2/logout?client_id='.$settings['auth0_client_id'].'&returnTo='.urlencode((string) $settings['auth0_redirect_uri']));
         }
     }
 
@@ -189,15 +189,11 @@ class boxwise_error_handler_class
      *
      * @see http://php.net/set_error_handler
      *
-     * @param int   $errno      Error level
-     * @param mixed $errstr
-     * @param mixed $errfile
-     * @param mixed $errline
-     * @param mixed $errcontext
+     * @param int $errno Error level
      *
      * @return bool
      */
-    public static function boxwise_error_handler($errno, $errstr, $errfile, $errline, $errcontext = [])
+    public static function boxwise_error_handler($errno, mixed $errstr, mixed $errfile, mixed $errline, mixed $errcontext = [])
     {
         Sentry\configureScope('boxwise_sentry_scope');
 
@@ -221,7 +217,7 @@ boxwise_error_handler_class::add_error_handler();
 
 function logfile($content)
 {
-    $content = str_replace('<br />', ' ', $content);
+    $content = str_replace('<br />', ' ', (string) $content);
     db_query('INSERT INTO log (logdate, content, ip, user) VALUES (NOW(), :content, :ip, :user)', ['content' => $content, 'ip' => $_SERVER['REMOTE_ADDR'], 'user' => $_SESSION['user']['naam']]);
 }
 

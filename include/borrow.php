@@ -46,11 +46,11 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
     }
 
     foreach ($data as $key => $value) {
-        if (strpos($data[$key]['user'], '###')) {
-            $data[$key]['user'] = str_replace('###', '🧢', $data[$key]['user']);
+        if (strpos((string) $data[$key]['user'], '###')) {
+            $data[$key]['user'] = str_replace('###', '🧢', (string) $data[$key]['user']);
         }
-        if (strpos($data[$key]['user'], '***')) {
-            $data[$key]['user'] = str_replace('***', '💡', $data[$key]['user']);
+        if (strpos((string) $data[$key]['user'], '***')) {
+            $data[$key]['user'] = str_replace('***', '💡', (string) $data[$key]['user']);
         }
     }
     /*
@@ -95,32 +95,32 @@ FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.cate
             break;
 
         case 'move':
-            $ids = json_decode($_POST['ids']);
+            $ids = json_decode((string) $_POST['ids']);
             [$success, $message, $redirect] = listMove($table, $ids);
 
             break;
 
         case 'delete':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listDelete($table, $ids);
 
             break;
 
         case 'copy':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listCopy($table, $ids, 'menutitle');
 
             break;
 
         case 'hide':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listShowHide($table, $ids, 0);
             $message = $_POST['ids'];
 
             break;
 
         case 'show':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listShowHide($table, $ids, 1);
 
             break;

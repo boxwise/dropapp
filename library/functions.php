@@ -51,9 +51,9 @@ function generateBoxID($length = 8, $possible = '0123456789')
     $randomString = '';
     $i = 0;
     while ($i < $length) {
-        $possible = (0 === $i) ? substr($possible, 1, strlen($possible) - 1) : $possible;
+        $possible = (0 === $i) ? substr((string) $possible, 1, strlen((string) $possible) - 1) : $possible;
 
-        $char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
+        $char = substr((string) $possible, mt_rand(0, strlen((string) $possible) - 1), 1);
         if (!strstr($randomString, $char)) {
             $randomString .= $char;
             ++$i;
@@ -206,9 +206,9 @@ function get_text_color($hexColor)
     }
 
     // hexColor RGB
-    $R1 = hexdec(substr($hexColor, 1, 2));
-    $G1 = hexdec(substr($hexColor, 3, 2));
-    $B1 = hexdec(substr($hexColor, 5, 2));
+    $R1 = hexdec(substr((string) $hexColor, 1, 2));
+    $G1 = hexdec(substr((string) $hexColor, 3, 2));
+    $B1 = hexdec(substr((string) $hexColor, 5, 2));
 
     // Black RGB
     $blackColor = '#000000';
@@ -261,7 +261,7 @@ function v2_forward($base_url, $route)
         redirect($base_url.'/bases/'.$_SESSION['camp']['id'].$route);
     } else {
         // I add a link to the same REQUEST_URI just with a changed view preference so that the SESSION is changed, too.
-        $url = str_replace(['?&', '&&'], ['?', '&'], str_replace('preference=classic', '', $_SERVER['REQUEST_URI']).'&preference=v2');
+        $url = str_replace(['?&', '&&'], ['?', '&'], str_replace('preference=classic', '', (string) $_SERVER['REQUEST_URI']).'&preference=v2');
 
         return '<div data-testid="v2-link">Try out the new Boxtribute.</div><a href="'.$url.'" data-testid="v2-link-url">Switch here to the NEW Version!</a>';
     }

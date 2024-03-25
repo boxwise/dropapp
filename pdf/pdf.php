@@ -148,7 +148,7 @@ class PDF extends FPDF
     {
         if ('Type0' == $this->CurrentFont['type']) {
             $len = 0;
-            $nbbytes = strlen($s);
+            $nbbytes = strlen((string) $s);
             for ($i = 0; $i < $nbbytes; ++$i) {
                 if (ord($s[$i]) < 128) {
                     ++$len;
@@ -161,7 +161,7 @@ class PDF extends FPDF
             return $len;
         }
 
-        return strlen($s);
+        return strlen((string) $s);
     }
 }
 function shorten($text, $length, $span = true, $isHTML = false)
@@ -170,7 +170,7 @@ function shorten($text, $length, $span = true, $isHTML = false)
     $suffix = '...';
     $tags = [];
     if ($isHTML) {
-        preg_match_all('/<[^> ]+>([^<]*)/', $text, $m, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+        preg_match_all('/<[^> ]+>([^<]*)/', (string) $text, $m, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
         foreach ($m as $o) {
             if ($o[0][1] - $i >= $length) {
                 break;
@@ -185,14 +185,14 @@ function shorten($text, $length, $span = true, $isHTML = false)
         }
     }
 
-    $output = str_replace(["\n", "\r", "\t"], ' ', $text);
+    $output = str_replace(["\n", "\r", "\t"], ' ', (string) $text);
     $output = utf8_substr($output, 0, $length = min(strlen($output), $length + $i)).(count($tags = array_reverse($tags)) ? '</'.implode('></', $tags).'>' : '');
 
-    if (strlen(strip_tags($output)) < strlen(strip_tags($text))) {
+    if (strlen(strip_tags($output)) < strlen(strip_tags((string) $text))) {
         $one = utf8_substr($output, 0, strrpos($output, ' '));
         $two = utf8_substr($output, strrpos($output, ' '), strlen($output) - strrpos($output, ' '));
-        preg_match_all('/<(.*?)>/s', $two, $tags);
-        if (strlen($text) > $length) {
+        preg_match_all('/<(.*?)>/s', (string) $two, $tags);
+        if (strlen((string) $text) > $length) {
             $one .= $suffix;
         }
 
@@ -200,9 +200,9 @@ function shorten($text, $length, $span = true, $isHTML = false)
         $output = $one.implode('', $tags);
     }
 
-    if (strlen($text) > $length && $span) {
+    if (strlen((string) $text) > $length && $span) {
         if ($isHTML) {
-            $span = html_entity_decode(strip_tags($text));
+            $span = html_entity_decode(strip_tags((string) $text));
         } else {
             $span = $text;
         }
@@ -211,9 +211,9 @@ function shorten($text, $length, $span = true, $isHTML = false)
             $output = utf8_substr($text, 0, $length).'...';
         }
 
-        return "<span title='".htmlentities($span, ENT_QUOTES)."'>".$output.'</span>';
+        return "<span title='".htmlentities((string) $span, ENT_QUOTES)."'>".$output.'</span>';
     }
-    if (strlen($text) > $length) {
+    if (strlen((string) $text) > $length) {
         return $output;
     }
 
@@ -222,7 +222,7 @@ function shorten($text, $length, $span = true, $isHTML = false)
 
 function utf8_substr($str, $start)
 {
-    preg_match_all('/./su', $str, $ar);
+    preg_match_all('/./su', (string) $str, $ar);
 
     if (func_num_args() >= 3) {
         $end = func_get_arg(2);

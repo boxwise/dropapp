@@ -863,7 +863,7 @@ class Demo extends AbstractSeed
         for ($i = 20; $i <= 1000; ++$i) {
             // qr code not unique because faker in Cypress.php intervene
             $tempdata = [
-                'code' => substr($faker->unique()->md5, 0, -1),
+                'code' => substr((string) $faker->unique()->md5, 0, -1),
                 'id' => $i,
             ];
             $qr[] = $tempdata;

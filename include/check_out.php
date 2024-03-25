@@ -6,10 +6,15 @@ $table = 'transactions';
 $action = 'check_out';
 
 // for external checkouts - HAC use case
-$hideprivatedata = db_value('SELECT allow_borrow_adddelete FROM cms_usergroups WHERE id = :usergroup', ['usergroup' => $_SESSION['usergroup']['id']]);
+$hideprivatedata = db_value('SELECT allow_borrow_adddelete FROM cms_usergroups WHERE id = :usergroup', ['usergroup' => $_SESSION['usergroup']['id']]) ?? [];
 
 if (!$ajax) {
     $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
+
+    // Check if $data is false, then set it to an empty array
+    if (false === $data) {
+        $data = [];
+    }
 
     if (!$id) {
         $data['visible'] = 1;
@@ -57,7 +62,7 @@ if (!$ajax) {
     $cmsmain->assign('formbuttons', $formbuttons);
 } else {
     if ('delete' == $_POST['do']) {
-        $ids = explode(',', $_POST['ids']);
+        $ids = explode(',', (string) $_POST['ids']);
         // check if person is allowed to delete transaction
         foreach ($ids as $id) {
             verify_campaccess_people(db_value('SELECT people_id FROM transactions WHERE id=:id', ['id' => $id]));
@@ -83,7 +88,7 @@ if (!$ajax) {
 
     // Ajax POST request of shopping cart
     if ($_POST['cart']) {
-        $cart = json_decode($_POST['cart'], true);
+        $cart = json_decode((string) $_POST['cart'], true);
         // validate if beneficiary has enough drops
         $availableDrops = db_value('SELECT SUM(drops) FROM transactions WHERE people_id = :people_id', ['people_id' => $_POST['people_id']]);
         $totalDrops = 0;
@@ -98,7 +103,7 @@ if (!$ajax) {
             exit;
         }
 
-        $_POST['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
+        $_POST['transaction_date'] = (new DateTime())->format('Y-m-d H:i:s');
         $_POST['user_id'] = $_SESSION['user']['id'];
 
         $savekeys = ['people_id', 'product_id', 'count', 'drops', 'transaction_date', 'user_id'];
@@ -184,7 +189,7 @@ if (!$ajax) {
     addfield('list', '', 'purch', [
         'width' => 10,
         'data' => $datalastpurchases,
-        'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($camp['currencyname']), 'user' => 'Transaction made by', 'tdate' => 'Date'],
+        'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords((string) $camp['currencyname']), 'user' => 'Transaction made by', 'tdate' => 'Date'],
         'allowedit' => false,
         'allowadd' => false,
         'allowselect' => $allowdeletelastpurchases,
@@ -237,12 +242,14 @@ if (!$ajax) {
                 people.id
             ORDER BY 
                 people.parent_id, people.seq', ['id' => $data['people_id']]);
-    foreach ($data['people'] as $key => $person) {
-        if ($data['people'][$key]['taglabels']) {
-            $taglabels = explode(chr(0x1D), $data['people'][$key]['taglabels']);
-            $tagcolors = explode(',', $data['people'][$key]['tagcolors']);
-            foreach ($taglabels as $tagkey => $taglabel) {
-                $data['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+    if (is_array($data['people'])) {
+        foreach ($data['people'] as $key => $person) {
+            if ($data['people'][$key]['taglabels']) {
+                $taglabels = explode(chr(0x1D), (string) $data['people'][$key]['taglabels']);
+                $tagcolors = explode(',', (string) $data['people'][$key]['tagcolors']);
+                foreach ($taglabels as $tagkey => $taglabel) {
+                    $data['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
+                }
             }
         }
     }

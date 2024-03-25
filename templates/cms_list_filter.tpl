@@ -106,7 +106,7 @@
 						<option></option>
 						{foreach $listconfig['multiplefilter']['options'] as $option}
 							<option 
-								{if in_array($option['value'],$listconfig['multiplefilter_selected'])}selected {/if}
+								{if isset($listconfig['multiplefilter_selected']) && in_array($option['value'],$listconfig['multiplefilter_selected'])}selected {/if}
 								value="{$option['value']}" >{$option['label']}
 							</option> 
 						{/foreach}

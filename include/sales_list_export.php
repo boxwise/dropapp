@@ -3,8 +3,8 @@
 $action = 'sales_list_export';
 $cancel = 'sales_list';
 
-$start = strftime('%Y-%m-%d', strtotime($_SESSION['salesstart']));
-$end = strftime('%Y-%m-%d', strtotime($_SESSION['salesend']));
+$start = (new DateTime($_SESSION['salesstart']))->format('Y-m-d');
+$end = (new DateTime($_SESSION['salesend']))->format('Y-m-d');
 
 $query = db_query('
 	SELECT tran.people_id AS familyhead, cat.label AS product_category, pro.name AS product, gen.label AS gender, tran.count AS amount, -tran.drops AS price, tran.transaction_date AS transaction_date,

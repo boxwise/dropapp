@@ -48,13 +48,13 @@ if (!$ajax) {
 } else {
     switch ($_POST['do']) {
         case 'move':
-            $ids = json_decode($_POST['ids']);
+            $ids = json_decode((string) $_POST['ids']);
             [$success, $message, $redirect] = listMove($table, $ids);
 
             break;
 
         case 'archive':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             $ids_array = $ids;
             foreach ($ids as $id) {
                 if (db_value('SELECT id FROM stock WHERE location_id = :location AND box_state_id IN (1,3) AND (NOT deleted or deleted IS NULL) LIMIT 1', ['location' => $id])) {

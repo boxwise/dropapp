@@ -4,7 +4,7 @@ $table = 'transactions';
 $action = 'give';
 
 if ($_POST) {
-    $people = explode(',', $_POST['people']);
+    $people = explode(',', (string) $_POST['people']);
 
     foreach ($people as $person) {
         $f = db_row('SELECT * FROM people WHERE id = :id', ['id' => $person]);
@@ -29,7 +29,7 @@ if ($_POST) {
 }
 
 $data['people'] = $_GET['ids'];
-foreach (explode(',', $data['people']) as $familyhead) {
+foreach (explode(',', (string) $data['people']) as $familyhead) {
     $names[] = db_value('SELECT CONCAT(container, " ", firstname, " ", lastname) AS name FROM people WHERE id = :id', ['id' => $familyhead]);
 }
 $data['names'] = join(', ', $names);
@@ -38,16 +38,16 @@ $data['names'] = join(', ', $names);
 $cmsmain->assign('include', 'cms_form.tpl');
 
 // put a title above the form
-$cmsmain->assign('title', 'Give '.ucwords($_SESSION['camp']['currencyname']).' to selected families');
+$cmsmain->assign('title', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' to selected families');
 
 addfield('hidden', 'people', 'people');
 
 addfield('text', 'Families', 'names', ['readonly' => true]);
 addfield('line', '', '');
-addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']), 'dropsfamily', ['testid' => 'dropsfamily']);
+addfield('text', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']), 'dropsfamily', ['testid' => 'dropsfamily']);
 addfield('line', '', '');
-addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per adult', 'dropsadult', ['testid' => 'dropsadult']);
-addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per child', 'dropschild', ['testid' => 'dropschild']);
+addfield('text', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' per adult', 'dropsadult', ['testid' => 'dropsadult']);
+addfield('text', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' per child', 'dropschild', ['testid' => 'dropschild']);
 addfield('line', '', '');
 
 addfield('text', 'Comments', 'description');

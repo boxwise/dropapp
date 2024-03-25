@@ -7,7 +7,7 @@ $ajax = checkajax();
 if (!$ajax) {
     initlist();
 
-    [$boxstate, $locationfromfilter, $category, $product, $gender, $size, $location] = explode('-', $_GET['id']);
+    [$boxstate, $locationfromfilter, $category, $product, $gender, $size, $location] = explode('-', (string) $_GET['id']);
 
     $productname = ($product ? db_value('SELECT name FROM products WHERE id = :id AND camp_id = :camp_id AND (NOT deleted OR deleted IS NULL)', ['id' => $product, 'camp_id' => $_SESSION['camp']['id']]) : '');
     $cmsmain->assign('title', ($boxstate ? db_value('SELECT label FROM box_state WHERE id = :id', ['id' => $boxstate]).' ' : '').'Boxes for: '.
@@ -69,7 +69,7 @@ if (!$ajax) {
         } elseif (in_array(intval($data[$key]['box_state_id']), [4, 7])) {
             $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
         } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
-            $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';
+            $modifiedtext = $data[$key]['modified'] ? 'on '.(new DateTime((string) $data[$key]['modified']))->format('d-m-Y') : '';
             $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban' : 'fa-chain-broken';
             $statelabel = 2 === intval($data[$key]['box_state_id']) ? 'lost' : 'scrapped';
             $data[$key]['order'] = sprintf('<span class="hide">3</span><i class="fa %s tooltip-this" style="color: red" title="This box was %s %s"></i>', $icon, $statelabel, $modifiedtext);
@@ -78,8 +78,8 @@ if (!$ajax) {
         }
 
         if ($data[$key]['taglabels']) {
-            $taglabels = explode(chr(0x1D), $data[$key]['taglabels']);
-            $tagcolors = explode(',', $data[$key]['tagcolors']);
+            $taglabels = explode(chr(0x1D), (string) $data[$key]['taglabels']);
+            $tagcolors = explode(',', (string) $data[$key]['tagcolors']);
             foreach ($taglabels as $tagkey => $taglabel) {
                 $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
             }
@@ -124,7 +124,7 @@ if (!$ajax) {
 } else {
     switch ($_POST['do']) {
         case 'movebox':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
 
             [$count, $message] = move_boxes($ids, $_POST['option']);
 
