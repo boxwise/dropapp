@@ -337,10 +337,10 @@ SELECT
     d.source_size_id AS size_id,
     GROUP_CONCAT(DISTINCT tr.tag_id) AS tag_ids,
     c.name AS target_id,
+    "Shipment" AS target_type,
     c.id AS base_id,
     c.name as base_name,
     o.label as org_name,
-    "Shipment" AS target_type,
     COUNT(d.box_id) AS boxes_count,
     SUM(d.source_quantity) AS items_count
 FROM
