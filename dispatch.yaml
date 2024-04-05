@@ -24,15 +24,27 @@ dispatch:
 ## Staging
 - url: "v2-staging.boxtribute.org/*"
   service: v2-staging
-- url: "api-staging.boxtribute.org/*"
+# Fetch docs including images, CSS, and JS
+- url: "api-staging.boxtribute.org/docs/*"
+  service: api-staging
+# Intended for GraphQL explorer
+- url: "api-staging.boxtribute.org"
   service: api-staging
 ## Demo
 - url: "v2-demo.boxtribute.org/*"
   service: v2-demo
-- url: "api-demo.boxtribute.org/*"
+# Fetch docs including images, CSS, and JS
+- url: "api-demo.boxtribute.org/docs/*"
+  service: api-demo
+# Intended for GraphQL explorer
+- url: "api-demo.boxtribute.org"
   service: api-demo
 ## Production
 - url: "v2.boxtribute.org/*"
   service: v2-production
-- url: "api.boxtribute.org/*"
+# Fetch docs including images, CSS, and JS
+- url: "api.boxtribute.org/docs/*"
+  service: api-production
+# Intended for GraphQL explorer
+- url: "api.boxtribute.org"
   service: api-production
