@@ -49,7 +49,7 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 5. To initialize the database for the first time, you should run:
 
        vendor/bin/phinx migrate -e development
-       vendor/bin/phinx seed:run -e development
+       vendor/bin/phinx seed:run -e development (outdated since our faker library is sunsetted)
  
    The first command creates the schema, the second command seeds the database with some dummy data
 
@@ -158,7 +158,7 @@ To create an migration run
 
 It creates an file in `db/migrations`. Please use this file to write your db migration.
 
-#### Database seeding
+#### Database seeding (outdated since our faker library is sunsetted)
 
 If you want to re-seed your database, just run
 
@@ -169,9 +169,6 @@ The `ClearMinimalDb` phinx-seeder clears all old tables before re-inserting the 
 If you want to re-seed the users in Auth0 at the same time, call in any Browser the following script instead of running the command above.
 
               http://localhost:8100/reseed-db.php
-
-
-
 
 
 ### Cypress and testing
