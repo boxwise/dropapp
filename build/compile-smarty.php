@@ -18,8 +18,6 @@ $deploymentRootFolder = '/workspace';
 $smarty = new Zmarty();
 precompileTemplates($smarty);
 rewriteAllTemplateHashes($smarty, $deploymentRootFolder);
-$smarty->setErrorReporting(E_ALL & ~E_NOTICE);
-$smarty->muteUndefinedOrNullWarnings();
 
 function precompileTemplates($smarty)
 {
