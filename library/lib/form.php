@@ -102,7 +102,7 @@ function addfield($type, $label = false, $field = false, $array = [])
         $formdata[$field]['dateformat'] = 'DD-MM-YYYY';
     } elseif ($formdata[$field]['time']) {
         if ($data[$field]) {
-            $data[$field] = (new DateTime((string) $data[$field]))->format('d-m-Y');
+            $data[$field] = (new DateTime((string) $data[$field]))->format('H:i');
         }
         $formdata[$field]['dateformat'] = 'H:mm';
     }
