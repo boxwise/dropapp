@@ -51,8 +51,8 @@ class Zmarty extends Smarty
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'is_array', 'is_array_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'array_slice', 'array_slice_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'implode', 'implode_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'implode_array', 'implode_array_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'intval', 'intval_modifier');
+        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'explode', 'explode_modifier');
     }
 }
 
@@ -63,6 +63,8 @@ function is_array_modifier($value)
 
 function array_slice_modifier($value, $offset, $length = null, $preserveKeys = false)
 {
+
+    echo "offset: $offset, length: $length, preserveKeys: $preserveKeys";
     if (!is_array($value)) {
         return $value;
     }
@@ -70,25 +72,28 @@ function array_slice_modifier($value, $offset, $length = null, $preserveKeys = f
     return array_slice($value, $offset, $length, $preserveKeys);
 }
 
-function implode_modifier($value, $glue = ', ')
+function implode_modifier($value, $sep = '-')
 {
     if (!is_array($value)) {
         return $value;
     }
 
-    return implode($glue, $value);
+    return implode($sep, $value);
 }
 
-function implode_array_modifier($value, $glue = '')
-{
-    if (!is_array($value)) {
+function explode_modifier($value, $glue = '') {
+    if (!is_string($value)) {
         return $value;
     }
-
-    return implode($glue, $value);
+    return explode($value, $glue);
 }
 
 function intval_modifier($value)
 {
     return intval($value);
+}
+
+function count_modifier($value)
+{
+    return count($value);
 }

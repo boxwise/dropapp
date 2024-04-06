@@ -150,7 +150,7 @@
 									{assign var="prevlevel" value=$prevlevel-1}
 				    		{/while}
 				    	{/if}
-					    {if $listconfig['allowmove']}<tr class="level-{$row['level']} inbetween" data-level="{$row['level']}"><td colspan="{$listdata|@count}"><span></span></td></tr>{/if}				    
+					    {if $listconfig['allowmove']}<tr class="level-{$row['level']} inbetween" data-level="{$row['level']}"><td colspan="{$listdata|count}"><span></span></td></tr>{/if}				    
 							<tr id="row-{$row['id']}" data-id="{$row['id']}" data-level="{$row['level']}"
 								class="item {if isset($row['visible']) and !$row['visible']}item-hidden{/if} level-{$row['level']}
 								{if !$row['preventedit'] && ($listconfig['allowedit'][$row['level']] or !isset($listconfig['allowedit'])) && !isset($listconfig['listrownotclickable'])}item-clickable{/if}
@@ -164,7 +164,7 @@
 								{if $listconfig['allowcollapse'] && $row['level']} 
 									{foreach $parent_array as $level=>$parent}
 										{assign var="parent_array_slice" value=$parent_array|array_slice:0:($level+3)}
-										data-hidecollapseparent{$level-$counter}={'-'|implode:$parent_array_slice}
+										data-hidecollapseparent{$level-$counter}={$parent_array_slice|implode:'-'}
 									{/foreach}
 									data-collapseparent={$row['parent_id']}
 								{/if}>
