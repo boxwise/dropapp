@@ -122,4 +122,3 @@ function number_format_modifier($value, $decimals, $dec_point, $thousands_sep)
 {
     return number_format($value, $decimals, $dec_point, $thousands_sep);
 }
-
