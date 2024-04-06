@@ -6,15 +6,10 @@ $table = 'transactions';
 $action = 'check_out';
 
 // for external checkouts - HAC use case
-$hideprivatedata = db_value('SELECT allow_borrow_adddelete FROM cms_usergroups WHERE id = :usergroup', ['usergroup' => $_SESSION['usergroup']['id']]) ?? [];
+$hideprivatedata = db_value('SELECT allow_borrow_adddelete FROM cms_usergroups WHERE id = :usergroup', ['usergroup' => $_SESSION['usergroup']['id']]) ?? 0;
 
 if (!$ajax) {
-    $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
-
-    // Check if $data is false, then set it to an empty array
-    if (false === $data) {
-        $data = [];
-    }
+    $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]) ?? [];
 
     if (!$id) {
         $data['visible'] = 1;
