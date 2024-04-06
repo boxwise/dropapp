@@ -55,6 +55,7 @@ class Zmarty extends Smarty
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'explode', 'explode_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'count', 'count_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'round', 'round_modifier');
+        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'trim', 'trim_modifier');
     }
 }
 
@@ -103,4 +104,9 @@ function count_modifier($value)
 function round_modifier($value)
 {
     return round($value);
+}
+
+function trim_modifier($value)
+{
+    return trim($value);
 }
