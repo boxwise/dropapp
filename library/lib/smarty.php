@@ -53,6 +53,8 @@ class Zmarty extends Smarty
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'implode', 'implode_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'intval', 'intval_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'explode', 'explode_modifier');
+        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'count', 'count_modifier');
+        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'round', 'round_modifier');
     }
 }
 
@@ -63,8 +65,6 @@ function is_array_modifier($value)
 
 function array_slice_modifier($value, $offset, $length = null, $preserveKeys = false)
 {
-
-    echo "offset: $offset, length: $length, preserveKeys: $preserveKeys";
     if (!is_array($value)) {
         return $value;
     }
@@ -81,10 +81,12 @@ function implode_modifier($value, $sep = '-')
     return implode($sep, $value);
 }
 
-function explode_modifier($value, $glue = '') {
+function explode_modifier($value, $glue = '')
+{
     if (!is_string($value)) {
         return $value;
     }
+
     return explode($value, $glue);
 }
 
@@ -96,4 +98,9 @@ function intval_modifier($value)
 function count_modifier($value)
 {
     return count($value);
+}
+
+function round_modifier($value)
+{
+    return round($value);
 }
