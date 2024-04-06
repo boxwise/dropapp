@@ -57,6 +57,7 @@ class Zmarty extends Smarty
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'round', 'round_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'trim', 'trim_modifier');
         $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'substr', 'substr_modifier');
+        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'number_format', 'number_format_modifier');
     }
 }
 
@@ -116,5 +117,9 @@ function substr_modifier($value, $start, $length = null)
 {
     return substr($value, $start, $length);
 }
-    
+
+function number_format_modifier($value, $decimals, $dec_point, $thousands_sep)
+{
+    return number_format($value, $decimals, $dec_point, $thousands_sep);
+}
 
