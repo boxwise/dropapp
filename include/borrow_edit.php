@@ -80,8 +80,6 @@ if ('out' == $data['status']) {
         // Calculate the time in decimal hours
         $time = $hour + ($minute / 60);
 
-        echo $time;
-
         addfield('hidden', '', 'location_id');
 
         if (1 == $data['category_id'] || 3 == $data['category_id']) {
