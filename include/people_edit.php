@@ -296,7 +296,7 @@ if ($id) {
     $side['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => $sideid]);
     $side['givedropsurl'] = '?action=give&ids='.$sideid;
 
-    $side['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $sideid]), true);
+    $side['lasttransaction'] = (new DateTime(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $sideid])))->format('d F Y, H:i');
 
     $ajaxaside->assign('currency', $_SESSION['camp']['currencyname']);
     $ajaxaside->assign('data', $side);
