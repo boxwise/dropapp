@@ -9,7 +9,11 @@ $action = 'check_out';
 $hideprivatedata = db_value('SELECT allow_borrow_adddelete FROM cms_usergroups WHERE id = :usergroup', ['usergroup' => $_SESSION['usergroup']['id']]) ?? 0;
 
 if (!$ajax) {
-    $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]) ?? [];
+    $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
+
+    if (!$data) {
+        $data = [];
+    }
 
     if (!$id) {
         $data['visible'] = 1;
