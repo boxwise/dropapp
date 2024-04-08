@@ -65,7 +65,7 @@ class formHandler
 
                     case 'date':
                         if ($value) {
-                            $value = (new DateTimeImmutable('@'.(string) $value))->format('Y-m-d H:i:s');
+                            $value = (new DateTime((string) $value))->format('Y-m-d H:i:s');
                         }
 
                         break;
