@@ -42,7 +42,7 @@ if (!$ajax) {
         addcolumn('text', 'Items', 'items');
     }
     if ($_SESSION['camp']['market']) {
-        addcolumn('text', ucfirst($_SESSION['camp']['currencyname']), 'drops');
+        addcolumn('text', ucfirst((string) $_SESSION['camp']['currencyname']), 'drops');
     }
     addcolumn('text', 'Description', 'comments');
     if (db_value('SELECT id FROM locations WHERE camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock AND type = "Warehouse"') || $_SESSION['camp']['separateshopandwhproducts']) {
@@ -70,31 +70,31 @@ if (!$ajax) {
 } else {
     switch ($_POST['do']) {
         case 'move':
-            $ids = json_decode($_POST['ids']);
+            $ids = json_decode((string) $_POST['ids']);
             [$success, $message, $redirect] = listMove($table, $ids);
 
             break;
 
         case 'delete':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listDelete($table, $ids);
 
             break;
 
         case 'copy':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listCopy($table, $ids, 'menutitle');
 
             break;
 
         case 'hide':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listShowHide($table, $ids, 0);
 
             break;
 
         case 'show':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listShowHide($table, $ids, 1);
 
             break;

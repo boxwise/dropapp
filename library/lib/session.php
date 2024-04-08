@@ -87,7 +87,7 @@ function authenticate($settings, $ajax)
 
 function loadSessionData($userInfo)
 {
-    $userId = ($userInfo['email'] !== $_SESSION['user']['email']) ? preg_replace('/auth0\|/', '', $userInfo['sub']) : $_SESSION['user']['id'];
+    $userId = ($userInfo['email'] !== $_SESSION['user']['email']) ? preg_replace('/auth0\|/', '', (string) $userInfo['sub']) : $_SESSION['user']['id'];
     // update local user info with auth0 info
     $user = db_row('SELECT id, naam, email, is_admin, lastlogin, lastaction, created, created_by, modified, modified_by, language, deleted, cms_usergroups_id, valid_firstday, valid_lastday FROM cms_users WHERE id = :id', ['id' => $userId]);
     // does user exist in the app db and in the auth0 db
@@ -141,7 +141,7 @@ function logoutWithRedirect()
     exit;
 }
 
-function loginWithRedirect()
+function loginWithRedirect(): never
 {
     global $settings;
     $auth0 = getAuth0($settings);

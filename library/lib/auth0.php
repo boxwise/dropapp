@@ -121,7 +121,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
     ];
     if ('0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted'])) {
         $auth0UserData['app_metadata']['last_blocked_date'] = $dbUserData['deleted'];
-        $auth0UserData['email'] = preg_replace('/\.deleted\.\d+/', '', $dbUserData['email']);
+        $auth0UserData['email'] = preg_replace('/\.deleted\.\d+/', '', (string) $dbUserData['email']);
     }
     if ($dbUserData['valid_firstday'] && '0000-00-00' != $dbUserData['valid_firstday']) {
         $auth0UserData['app_metadata']['valid_firstday'] = $dbUserData['valid_firstday'];
@@ -215,7 +215,7 @@ function isUserInSyncWithAuth0($userId)
     } elseif ($dbUser && $auth0User) {
         $validationResult = [];
         $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
-        $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
+        $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', (string) $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', (string) $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
         $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
         $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
         $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
@@ -271,7 +271,7 @@ function isUserInSyncWithAuth0($userId)
 
         foreach ($auth0UserRoles as $auth0UserRole) {
             $auth0Roles[] = $auth0UserRole['id'];
-            $tmp = explode('_', $auth0UserRole['name'], 3);
+            $tmp = explode('_', (string) $auth0UserRole['name'], 3);
             if ((bool) $tmp[1]) {
                 $auth0BasesInRoles[] = $tmp[1];
             }
@@ -394,7 +394,7 @@ function getRolesByBaseIds(array $baseIds)
         if (HttpResponse::wasSuccessful($response)) {
             $res = HttpResponse::decodeContent($response);
             foreach ($res as $role) {
-                if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', $role['name'])) {
+                if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', (string) $role['name'])) {
                     array_push($roles, $role);
                 }
             }
@@ -622,7 +622,7 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         // preparing $userGroupsRoles for db-table cms_usergroups_roles
         foreach ($auth0Roles as $auth0Role) {
             $currentRole = 'administrator' !== $auth0Role ? 'base_'.$baseId.'_'.$auth0Role : $auth0Role;
-            $currentRoleDescription = 'administrator' !== $auth0Role ? ucwords($orgName).' - Base '.$baseId.' ('.ucwords($baseName).') - '.ucwords(preg_replace('/\_/', ' ', $auth0Role)) : 'Someone who manage all bases within an organization';
+            $currentRoleDescription = 'administrator' !== $auth0Role ? ucwords($orgName).' - Base '.$baseId.' ('.ucwords($baseName).') - '.ucwords((string) preg_replace('/\_/', ' ', $auth0Role)) : 'Someone who manage all bases within an organization';
 
             if (false == array_search($currentRole, array_column($userGroupsRoles, 'roleName'))) {
                 $userGroupsRoles[] = [
@@ -692,10 +692,10 @@ function updateRolesForBase($baseId, $baseName)
     while ($usergroup = db_fetch($result)) {
         // check if the usergroup is based on new standard user groups
         $regx = '/Base (.*) - (Coordinator|Label Creation|Volunteer|Volunteer) ?(\(Free Shop\)|\(Warehouse\))?/m';
-        if (preg_match($regx, $usergroup['label'])) {
-            $roleName = trim(preg_split('/-/', $usergroup['label'])[1]);
+        if (preg_match($regx, (string) $usergroup['label'])) {
+            $roleName = trim(preg_split('/-/', (string) $usergroup['label'])[1]);
 
-            $newUserGroupLabel = sprintf('Base %s - %s', ucwords($baseName), $roleName);
+            $newUserGroupLabel = sprintf('Base %s - %s', ucwords((string) $baseName), $roleName);
             db_query('UPDATE cms_usergroups SET label = :newUserGroupLabel WHERE id = :userGroupId', [
                 'newUserGroupLabel' => $newUserGroupLabel,
                 'userGroupId' => $usergroup['id'],

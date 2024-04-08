@@ -44,7 +44,7 @@ if (!$ajax) {
 } else {
     switch ($_POST['do']) {
         case 'changecategory':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             foreach ($ids as $id) {
                 db_query('UPDATE '.$table.' SET category_id = :option WHERE id = :id', ['option' => $_POST['option'], 'id' => $id]);
             }
@@ -55,31 +55,31 @@ if (!$ajax) {
             break;
 
         case 'move':
-            $ids = json_decode($_POST['ids']);
+            $ids = json_decode((string) $_POST['ids']);
             [$success, $message, $redirect] = listMove($table, $ids);
 
             break;
 
         case 'delete':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listDelete($table, $ids);
 
             break;
 
         case 'copy':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listCopy($table, $ids, 'code');
 
             break;
 
         case 'hide':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listShowHide($table, $ids, 0);
 
             break;
 
         case 'show':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listShowHide($table, $ids, 1);
 
             break;

@@ -5,7 +5,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/php:8.0-browsers
+      - image: cimg/php:8.2-browsers
     working_directory: ~/project
     steps:
       - checkout
@@ -47,7 +47,7 @@ jobs:
       envVariablePrefix:
         type: string
     docker:
-      - image: cimg/php:8.0-browsers
+      - image: cimg/php:8.2-browsers
     steps:
       - attach_workspace:
           at: workspace

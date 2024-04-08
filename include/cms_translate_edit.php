@@ -32,7 +32,7 @@ $data = db_row('SELECT * FROM '.$table.' WHERE id = :id', ['id' => $id]);
 $cmsmain->assign('include', 'cms_form.tpl');
 
 // put a title above the form
-$cmsmain->assign('title', ucfirst($translate['cms_translate']));
+$cmsmain->assign('title', ucfirst((string) $translate['cms_translate']));
 
 addfield('text', $translate['cms_translate_code'], 'code', ['required' => true, 'readonly' => !$_SESSION['user']['is_admin']]);
 

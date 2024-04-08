@@ -50,7 +50,7 @@ if ('out' == $data['status']) {
     $cmsmain->assign('include', 'library_return.tpl');
 } else {
     $data['status'] = 'out';
-    $data['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
+    $data['transaction_date'] = (new DateTime((string) $data[$field]))->format('Y-m-d H:i:s');
 
     $translate['cms_form_submit'] = 'Start borrowing';
     $cmsmain->assign('translate', $translate);

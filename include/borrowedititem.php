@@ -5,7 +5,7 @@ $action = 'borrow';
 
 if ($_POST) {
     if ($_POST['pass']) {
-        $_POST['pass'] = md5($_POST['pass']);
+        $_POST['pass'] = md5((string) $_POST['pass']);
     }
 
     $handler = new formHandler($table);

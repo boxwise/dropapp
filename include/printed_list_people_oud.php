@@ -52,9 +52,9 @@ if ($_GET['export']) {
     header('Pragma: no-cache');
     foreach ($list as $l) {
         if ($l['id']) {
-            echo '"◻","'.trim($l['name']).'",'.$l['age'].','.$l['gender'].',"'.$l['number'].' people ('.($l['green'] ? $l['green'].' green' : '').($l['green'] && $l['red'] ? ', ' : '').($l['red'] ? $l['red'].' red' : '').')'."\"\n";
+            echo '"◻","'.trim((string) $l['name']).'",'.$l['age'].','.$l['gender'].',"'.$l['number'].' people ('.($l['green'] ? $l['green'].' green' : '').($l['green'] && $l['red'] ? ', ' : '').($l['red'] ? $l['red'].' red' : '').')'."\"\n";
         } else {
-            echo '"","'.trim($l['name']).'",'.$l['age'].','.$l['gender']."\n";
+            echo '"","'.trim((string) $l['name']).'",'.$l['age'].','.$l['gender']."\n";
         }
     }
 
