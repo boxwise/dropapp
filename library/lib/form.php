@@ -137,11 +137,11 @@ function addfield($type, $label = false, $field = false, $array = [])
 
     if ('created' == $type) {
         if (strtotime((string) $data['created'])) {
-            $data['created'] = formatdate('%A %d %B %Y %H:%M', strtotime((string) $data['created']));
+            $data['created'] = date('l d F Y H:i', strtotime((string) $data['created']));
             $data['created_by'] = getCMSuser($data['created_by']);
         }
         if (strtotime((string) $data['modified'])) {
-            $data['modified'] = formatdate('%A %d %B %Y %H:%M', strtotime((string) $data['modified']));
+            $data['modified'] = date('l d F Y H:i', strtotime((string) $data['modified']));
             $data['modified_by'] = getCMSuser($data['modified_by']);
         }
     }
@@ -197,15 +197,4 @@ function getParentarray($table, $minlevel, $maxlevel, $field, $level = 0, $paren
     }
 
     return $parentarray;
-}
-
-function formatdate($output, $date)
-{
-    global $translate;
-
-    $output = str_replace('%A', $translate[(new DateTime('@'.$date))->format('l')], (string) $output);
-    $output = str_replace('%B', $translate[(new DateTime('@'.$date))->format('F')], $output);
-    $output = (new DateTimeImmutable())->setTimestamp($date)->format('Y-m-d H:i:s');
-
-    return $output;
 }
