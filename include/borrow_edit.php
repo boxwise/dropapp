@@ -2,13 +2,16 @@
 
 $table = 'cms_users';
 
-if (6 == strftime('%w')) {
+$currentDayOfWeek = (new DateTime())->format('w');
+
+if (6 == $currentDayOfWeek) {
     $endtime = $_SESSION['camp']['bicycle_closingtime_saturday'];
 } else {
     $endtime = $_SESSION['camp']['bicycle_closingtime'];
 }
+
 if ($endtime) {
-    $endtime = substr($endtime, 0, strpos($endtime, ':')) + (substr($endtime, strpos($endtime, ':') + 1) / 60);
+    $endtime = substr((string) $endtime, 0, strpos((string) $endtime, ':')) + (substr((string) $endtime, strpos((string) $endtime, ':') + 1) / 60);
 } else {
     $endtime = 24;
 }
@@ -58,7 +61,7 @@ if ('out' == $data['status']) {
     $data['bicycle_id'] = $id;
     $data['status'] = 'out';
     $data['category_id'] = db_value('SELECT category_id FROM borrow_items WHERE id = :id', ['id' => $id]);
-    $data['transaction_date'] = strftime('%Y-%m-%d %H:%M:%S');
+    $data['transaction_date'] = (new DateTime())->format('Y-m-d H:i:s');
     $data['location_id'] = $_SESSION['filter2']['borrow'];
 
     if ($visible) {
@@ -67,7 +70,16 @@ if ('out' == $data['status']) {
         $translate['cms_form_submit'] = 'Start borrowing';
         $cmsmain->assign('translate', $translate);
 
-        $time = strftime('%H') + (strftime('%M') / 60);
+        // Create a new DateTime object
+        $now = new DateTime();
+
+        // Get the hour and minute separately
+        $hour = $now->format('H');
+        $minute = $now->format('i');
+
+        // Calculate the time in decimal hours
+        $time = $hour + ($minute / 60);
+
         addfield('hidden', '', 'location_id');
 
         if (1 == $data['category_id'] || 3 == $data['category_id']) {
@@ -75,7 +87,7 @@ if ('out' == $data['status']) {
                 addfield('custom', '&nbsp', '<h2><span class="warning">After '.sprintf('%02d:%02d', (int) $endtime, fmod($endtime, 1) * 60).' we do not start new rentals!</span></h2>');
                 $data['hidesubmit'] = true;
             } else {
-                addfield('custom', '&nbsp', '<h3>Check the user\'s Bicycle Certificate, and make sure the user has a reflective vest, front light, helmet and key. <br />Asure the user to be back before '.strftime('%H:%M', strtotime('+2 Hours')).'</h3>');
+                addfield('custom', '&nbsp', '<h3>Check the user\'s Bicycle Certificate, and make sure the user has a reflective vest, front light, helmet and key. <br />Asure the user to be back before '.(new DateTime('+2 Hours'))->format('H:i').'</h3>');
                 addfield('select', 'Find person', 'people_id', ['required' => true, 'multiple' => false, 'query' => 'SELECT p.id AS value, CONCAT(p.firstname, " ", p.lastname, " (", p.container, ")"," ",IF(bicycleban >= DATE_FORMAT(NOW(),"%Y-%m-%d"),CONCAT("(BAN UNTIL ",DATE_FORMAT(bicycleban,"%d-%m-%Y"),")"),"")) AS label, 
 					IF(bicycleban >= DATE_FORMAT(NOW(),"%Y-%m-%d"),1,0) AS disabled FROM people AS p WHERE p.bicycletraining AND NOT p.deleted AND camp_id = '.$_SESSION['camp']['id'].' GROUP BY p.id ORDER BY SUBSTRING(REPLACE(container,"PK","Z"),1,1), SUBSTRING(REPLACE(container,"PK","Z"), 2, 10)*1']);
                 addfield('checkbox', 'Rented out with helmet', 'helmet');

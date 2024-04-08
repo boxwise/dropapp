@@ -6,7 +6,7 @@ $action = 'people_edit';
 if ($_POST) {
     // delete a transaction of a person
     if ('delete' == $_POST['do']) {
-        $ids = explode(',', $_POST['ids']);
+        $ids = explode(',', (string) $_POST['ids']);
         // check if person is allowed to delete transaction
         foreach ($ids as $id) {
             verify_campaccess_people(db_value('SELECT people_id FROM transactions WHERE id=:id', ['id' => $id]));
@@ -43,7 +43,7 @@ if ($_POST) {
                         LEFT OUTER JOIN genders AS g ON p.gender_id = g.id 
                         WHERE t.people_id = '.$_POST['people_id'].' AND t.product_id IS NOT NULL 
                         ORDER BY t.transaction_date DESC',
-                'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Purchase made by', 'tdate' => 'Date'],
+                'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords((string) $_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Purchase made by', 'tdate' => 'Date'],
                 'allowedit' => false,
                 'allowadd' => true,
                 'add' => 'New Purchase',
@@ -90,7 +90,7 @@ if ($_POST) {
                         LEFT OUTER JOIN cms_users AS u ON u.id = t.user_id 
                         WHERE t.people_id = '.$_POST['people_id'].' AND t.product_id IS NULL 
                         ORDER BY t.transaction_date DESC',
-                'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
+                'columns' => ['drops2' => ucwords((string) $_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
                 'allowedit' => false,
                 'allowadd' => false,
                 'allowselect' => false,
@@ -137,7 +137,7 @@ if ($_POST) {
         // edit tags
         db_query('DELETE FROM tags_relations WHERE object_id = :people_id AND object_type = "People"', [':people_id' => $id]);
         $params = [];
-        $tags = $_POST['tags'];
+        $tags = $_POST['tags'] ?? [];
         if (sizeof($tags) > 0) {
             $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
 
@@ -208,9 +208,13 @@ $data = db_row('
         GROUP BY
             people.id', ['id' => $id]);
 
+if (false == $data) {
+    $data = [];
+}
+
 if ($data['taglabels']) {
-    $taglabels = explode(chr(0x1D), $data['taglabels']);
-    $tagcolors = explode(',', $data['tagcolors']);
+    $taglabels = explode(chr(0x1D), (string) $data['taglabels']);
+    $tagcolors = explode(',', (string) $data['tagcolors']);
     foreach ($taglabels as $tagkey => $taglabel) {
         $data['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
     }
@@ -271,8 +275,8 @@ if ($id) {
             $side['people'][$key]['hide'] = true;
         }
         if ($side['people'][$key]['taglabels']) {
-            $taglabels = explode(chr(0x1D), $side['people'][$key]['taglabels']);
-            $tagcolors = explode(',', $side['people'][$key]['tagcolors']);
+            $taglabels = explode(chr(0x1D), (string) $side['people'][$key]['taglabels']);
+            $tagcolors = explode(',', (string) $side['people'][$key]['tagcolors']);
             foreach ($taglabels as $tagkey => $taglabel) {
                 $side['people'][$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
             }
@@ -292,7 +296,7 @@ if ($id) {
     $side['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => $sideid]);
     $side['givedropsurl'] = '?action=give&ids='.$sideid;
 
-    $side['lasttransaction'] = displaydate(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $sideid]), true);
+    $side['lasttransaction'] = (new DateTime(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $sideid])))->format('d F Y, H:i');
 
     $ajaxaside->assign('currency', $_SESSION['camp']['currencyname']);
     $ajaxaside->assign('data', $side);
@@ -364,8 +368,8 @@ if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admi
 
     $result = db_query("SELECT changedate, to_int, u.naam, (SELECT SUBSTR(changes,POSITION('\" to \"' IN changes)+5) FROM history WHERE tablename = 'people' AND record_id = :id AND changedate = h.changedate AND changes LIKE \"%laundrycomment%\") AS comment FROM history AS h, cms_users AS u WHERE tablename = 'people' AND record_id = :id AND changes = 'laundryblock' AND user_id = u.id ORDER BY changedate DESC", ['id' => $data['id']]);
     while ($row = db_fetch($result)) {
-        $row['comment'] = substr($row['comment'], 1, strlen($row['comment']) - 4);
-        $log[] = strftime('%d-%m-%Y %H:%M:%S', strtotime($row['changedate'])).' - '.$row['naam'].' '.($row['to_int'] ? 'enabled' : 'disabled').' the laundry block - '.($row['comment'] ? 'comment: '.$row['comment'] : '');
+        $row['comment'] = substr((string) $row['comment'], 1, strlen((string) $row['comment']) - 4);
+        $log[] = (new DateTime($row['changedate']))->format('d-m-Y H:i:s').' - '.$row['naam'].' '.($row['to_int'] ? 'enabled' : 'disabled').' the laundry block - '.($row['comment'] ? 'comment: '.$row['comment'] : '');
     }
     $data['log'] = join("\n", $log);
     addfield('textarea', 'Log', 'log', ['tab' => 'laundry', 'readonly' => true]);
@@ -402,7 +406,7 @@ if (0 == $data['parent_id']) {
                 'tab' => 'transaction',
                 'width' => 10,
                 'data' => $datalastpurchases,
-                'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Purchase made by', 'tdate' => 'Date'],
+                'columns' => ['product' => 'Product', 'count' => 'Amount', 'drops2' => ucwords((string) $_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Purchase made by', 'tdate' => 'Date'],
                 'allowedit' => false,
                 'allowadd' => true,
                 'add' => 'New Purchase',
@@ -444,10 +448,10 @@ if (0 == $data['parent_id']) {
                 'tab' => 'transaction',
                 'width' => 10,
                 'data' => $datalasttransactions,
-                'columns' => ['drops2' => ucwords($_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
+                'columns' => ['drops2' => ucwords((string) $_SESSION['camp']['currencyname']), 'description' => 'Note', 'user' => 'Transaction made by', 'tdate' => 'Date'],
                 'allowedit' => false,
                 'allowadd' => $data['allowdrops'],
-                'add' => 'Give '.ucwords($_SESSION['camp']['currencyname']),
+                'add' => 'Give '.ucwords((string) $_SESSION['camp']['currencyname']),
                 'addaction' => 'give&ids='.intval($id),
                 'allowsort' => false,
                 'allowselect' => true,

@@ -15,7 +15,7 @@ return RectorConfig::configure()
         __DIR__.'/templates',
     ])
     // uncomment to reach your current PHP version
-    ->withPhpSets(php80: true)
+    ->withPhpSets(php82: true)
     ->withRules([
         AddVoidReturnTypeWhereNoReturnRector::class,
     ])

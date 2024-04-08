@@ -8,7 +8,7 @@ function csvexport($data, $filename, $keys)
     header('Expires: 0');
 
     foreach ($keys as $key => $value) {
-        echo ucfirst($value).',';
+        echo ucfirst((string) $value).',';
     }
     echo "\n";
 

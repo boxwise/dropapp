@@ -7,7 +7,7 @@ function addfield($type, $label = false, $field = false, $array = [])
     }
     global $formdata, $data, $translate;
 
-    if ('url' == $field || strpos($field, '[url]')) {
+    if ('url' == $field || strpos((string) $field, '[url]')) {
         $type = 'url';
     }
 
@@ -19,13 +19,19 @@ function addfield($type, $label = false, $field = false, $array = [])
 
     if ('list' == $type) {
         if ($array['query']) {
-            $formdata[$field]['data'] = getlistdata($array['query'], $array['parent_id']);
+            $formdata[$field]['data'] = getlistdata($array['query']);
         }
 
         // set default list behaviour, can be overridden by $array values
-        $keys = array_keys($formdata[$field]['data'][0]);
-        $hasShowHide = in_array('visible', $keys);
-        $hasSeq = in_array('seq', $keys);
+        $keys = [];
+        $hasShowHide = false;
+        $hasSeq = false;
+
+        if (isset($formdata[$field]['data'][0])) {
+            $keys = array_keys($formdata[$field]['data'][0]);
+            $hasShowHide = in_array('visible', $keys);
+            $hasSeq = in_array('seq', $keys);
+        }
 
         $formdata[$field]['allowshowhide'] = $hasShowHide;
 
@@ -60,7 +66,7 @@ function addfield($type, $label = false, $field = false, $array = [])
         if ('selectedtags' == $key) {
             $array = db_array($value);
             if ($array) {
-                $formdata[$field]['selectedtags'] = explode(',', $array[0]['value']);
+                $formdata[$field]['selectedtags'] = explode(',', (string) $array[0]['value']);
             } else {
                 $formdata[$field]['selectedtags'] = '';
             }
@@ -86,17 +92,17 @@ function addfield($type, $label = false, $field = false, $array = [])
 
     if ($formdata[$field]['date'] && $formdata[$field]['time']) {
         if ($data[$field] && '0000-00-00 00:00:00' != $data[$field]) {
-            $data[$field] = strftime('%d-%m-%Y %H:%M', strtotime($data[$field]));
+            $data[$field] = (new DateTime((string) $data[$field]))->format('d-m-Y H:i');
         }
         $formdata[$field]['dateformat'] = 'DD-MM-YYYY H:mm';
     } elseif ($formdata[$field]['date']) {
         if ($data[$field] && '0000-00-00' != $data[$field]) {
-            $data[$field] = strftime('%d-%m-%Y', strtotime($data[$field]));
+            $data[$field] = (new DateTime((string) $data[$field]))->format('d-m-Y');
         }
         $formdata[$field]['dateformat'] = 'DD-MM-YYYY';
     } elseif ($formdata[$field]['time']) {
         if ($data[$field]) {
-            $data[$field] = strftime('%H:%M', strtotime($data[$field]));
+            $data[$field] = (new DateTime((string) $data[$field]))->format('H:i');
         }
         $formdata[$field]['dateformat'] = 'H:mm';
     }
@@ -107,19 +113,19 @@ function addfield($type, $label = false, $field = false, $array = [])
     */
     if ('fileselect' == $type) {
         $icons = ['doc' => 'word', 'docx' => 'word', 'mp3' => 'sound', 'pdf' => 'pdf-o', 'ppt' => 'powerpoint', 'txt' => 'text', 'xls' => 'excel', 'xlsx' => 'excel', 'zip' => 'zip-o'];
-        $formdata[$field]['icon'] = $icons[substr($data[$field], strrpos($data[$field], '.') + 1)];
+        $formdata[$field]['icon'] = $icons[substr((string) $data[$field], strrpos((string) $data[$field], '.') + 1)];
         if (!$formdata[$field]['icon']) {
             $formdata[$field]['icon'] = 'o';
         }
-        $formdata[$field]['basename'] = basename($data[$field]);
+        $formdata[$field]['basename'] = basename((string) $data[$field]);
 
         // Create a JS friendly field ID
-        $fieldid = str_replace('[', '_', $formdata[$field]['field']);
+        $fieldid = str_replace('[', '_', (string) $formdata[$field]['field']);
         $fieldid = str_replace(']', '', $fieldid);
         $formdata[$field]['fieldid'] = $fieldid;
 
         $formdata[$field]['preview'] = $data[$field];
-        $aResize = unserialize(str_replace("'", '"', stripslashes($formdata[$field]['resizeproperties'])));
+        $aResize = unserialize(str_replace("'", '"', stripslashes((string) $formdata[$field]['resizeproperties'])));
         foreach ($aResize as $resize) {
             if (true == $resize['preview']) {
                 $aPathInfo = pathinfo($_SERVER['DOCUMENT_ROOT'].$data[$field]);
@@ -130,12 +136,12 @@ function addfield($type, $label = false, $field = false, $array = [])
     }
 
     if ('created' == $type) {
-        if (strtotime($data['created'])) {
-            $data['created'] = formatdate('%A %d %B %Y %H:%M', strtotime($data['created']));
+        if (strtotime((string) $data['created'])) {
+            $data['created'] = date('l d F Y H:i', strtotime((string) $data['created']));
             $data['created_by'] = getCMSuser($data['created_by']);
         }
-        if (strtotime($data['modified'])) {
-            $data['modified'] = formatdate('%A %d %B %Y %H:%M', strtotime($data['modified']));
+        if (strtotime((string) $data['modified'])) {
+            $data['modified'] = date('l d F Y H:i', strtotime((string) $data['modified']));
             $data['modified_by'] = getCMSuser($data['modified_by']);
         }
     }
@@ -191,15 +197,4 @@ function getParentarray($table, $minlevel, $maxlevel, $field, $level = 0, $paren
     }
 
     return $parentarray;
-}
-
-function formatdate($output, $date)
-{
-    global $translate;
-
-    $output = str_replace('%A', $translate[strftime('%A', $date)], $output);
-    $output = str_replace('%B', $translate[strftime('%B', $date)], $output);
-    $output = strftime($output, $date);
-
-    return $output;
 }

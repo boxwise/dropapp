@@ -29,7 +29,7 @@ $cmsmain->assign('title', 'Product');
 addfield('text', 'Name', 'name');
 addfield('select', 'Category', 'category_id', ['required' => true, 'width' => 3, 'multiple' => false, 'query' => 'SELECT id AS value, label FROM product_categories ORDER BY seq']);
 if ($_SESSION['camp']['market']) {
-    addfield('text', ucwords($_SESSION['camp']['currencyname']), 'value');
+    addfield('text', ucwords((string) $_SESSION['camp']['currencyname']), 'value');
 }
 
 addfield('line', '', '');

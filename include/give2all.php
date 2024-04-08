@@ -4,7 +4,7 @@ $table = 'transactions';
 $action = 'give';
 
 if ($_POST) {
-    $people = explode(',', $_POST['people']);
+    $people = explode(',', (string) $_POST['people']);
 
     /*
             if($_POST['startration']) {
@@ -15,7 +15,7 @@ if ($_POST) {
     // Validate tokens input value to be a valid integer
     // Allowance for 0 is specifically for the "reset tokens" feature, as requested by Darbazar
     // Related to https://trello.com/c/Um44yV7y
-    if (!preg_match('/[0-9]\d*/', $_POST['dropsadult']) || !preg_match('/[0-9]\d*/', $_POST['dropschild'])) {
+    if (!preg_match('/[0-9]\d*/', (string) $_POST['dropsadult']) || !preg_match('/[0-9]\d*/', (string) $_POST['dropschild'])) {
         redirect('?action=give2all&warning=1&message=The number of tokens should be specified');
         trigger_error('The number of tokens should be specified', E_USER_NOTICE);
     }
@@ -72,19 +72,19 @@ while ($row = db_fetch($result)) {
 $data['people'] = join(',', $ids);
 
 $data['names'] = 'All families';
-$data['description'] = 'New cycle started '.strftime('%A %e %B %Y');
-$translate['cms_form_submit'] = 'Give '.ucwords($_SESSION['camp']['currencyname']);
+$data['description'] = 'New cycle started '.(new DateTime())->format('l j F Y');
+$translate['cms_form_submit'] = 'Give '.ucwords((string) $_SESSION['camp']['currencyname']);
 $cmsmain->assign('translate', $translate);
 
 // open the template
 $cmsmain->assign('include', 'cms_form.tpl');
 
 // put a title above the form
-$cmsmain->assign('title', 'Give '.ucwords($_SESSION['camp']['currencyname']).' to all families');
+$cmsmain->assign('title', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' to all families');
 
 addfield('hidden', 'people', 'people');
 
-addfield('custom', '', '<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords($_SESSION['camp']['currencyname']).'" button on the right, you can\'t turn back anymore!</p></div>');
+addfield('custom', '', '<div class="noprint tipofday"><h3>👨‍🏫 Be careful</h3><p>If you press the "Give '.ucwords((string) $_SESSION['camp']['currencyname']).'" button on the right, you can\'t turn back anymore!</p></div>');
 
 addfield('text', 'Families', 'names', ['readonly' => true]);
 addfield('line', '', '');
@@ -92,8 +92,8 @@ $data['hidecancel'] = true;
 $data['dropsadult'] = $_SESSION['camp']['dropsperadult'];
 $data['dropschild'] = $_SESSION['camp']['dropsperchild'];
 
-addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per adult', 'dropsadult', ['required' => true]);
-addfield('text', 'Give '.ucwords($_SESSION['camp']['currencyname']).' per child', 'dropschild', ['required' => true]);
+addfield('text', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' per adult', 'dropsadult', ['required' => true]);
+addfield('text', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' per child', 'dropschild', ['required' => true]);
 // 	$data['startration'] = 1;
 // 	addfield('checkbox','Reset ration period','startration');
 addfield('line', '', '');

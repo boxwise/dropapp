@@ -19,15 +19,15 @@ if (!isset($data['offset'])) {
 
 $_SESSION['laundryoffset'] = $data['offset'];
 
-$cyclestart = strftime('%Y-%m-%d', strtotime('+'.$data['offset'].' days', strtotime($_SESSION['camp']['laundry_cyclestart'])));
+$cyclestart = (new DateTime((string) $_SESSION['camp']['laundry_cyclestart']))->modify('+'.$data['offset'].' days')->format('Y-m-d');
 
 $data['times'] = db_simplearray('SELECT DISTINCT ls.time, lt.label FROM laundry_slots AS ls, laundry_times AS lt WHERE lt.id = ls.time');
 
 $result = db_query('SELECT DISTINCT day FROM laundry_slots');
 while ($day = db_fetch($result)) {
     $t = strtotime('+'.$day['day'].' days', strtotime($cyclestart));
-    $data['dates'][$day['day']]['label'] = strftime('%A %d %B %Y', $t);
-    if ($t < strtotime(strftime('%Y-%m-%d'))) {
+    $data['dates'][$day['day']]['label'] = date('l d F Y', $t);
+    if ($t < strtotime(date('Y-m-d'))) {
         $data['dates'][$day['day']]['past'] = true;
     }
 }

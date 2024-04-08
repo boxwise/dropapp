@@ -8,12 +8,12 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     if ($_POST) {
         // remove leading and trailing whitespace from name
         if ($_POST['naam']) {
-            $_POST['naam'] = trim($_POST['naam']);
+            $_POST['naam'] = trim((string) $_POST['naam']);
         }
         // lowercase email and remove leading and trailing whitespace
         if ($_POST['email']) {
-            $_POST['email'] = strtolower(trim($_POST['email']));
-            $_POST['email2'] = strtolower(trim($_POST['email2']));
+            $_POST['email'] = strtolower(trim((string) $_POST['email']));
+            $_POST['email2'] = strtolower(trim((string) $_POST['email2']));
         }
 
         // Validate if E-mail is already active

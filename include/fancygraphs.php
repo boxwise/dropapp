@@ -4,9 +4,11 @@ $data['men'] = db_simplearray('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date
 
 $data['women'] = db_simplearray('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0, COUNT(id) FROM people WHERE visible AND NOT deleted AND camp_id = :camp_id AND date_of_birth IS NOT NULL AND UNIX_TIMESTAMP(date_of_birth) != 0 AND gender = "F" GROUP BY DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0', ['camp_id' => $_SESSION['camp']['id']]);
 
-$data['oldest'] = db_value('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 FROM people WHERE visible AND NOT deleted AND date_of_birth IS NOT NULL AND UNIX_TIMESTAMP(date_of_birth) != 0 AND camp_id = :camp_id ORDER BY date_of_birth LIMIT 1', ['camp_id' => $_SESSION['camp']['id']]);
-$data['oldest'] = ceil($data['oldest'] / 10) * 10;
+$data['oldest'] = db_value('SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 FROM people WHERE visible AND NOT deleted AND date_of_birth IS NOT NULL AND UNIX_TIMESTAMP(date_of_birth) != 0 AND camp_id = :camp_id ORDER BY date_of_birth LIMIT 1', ['camp_id' => $_SESSION['camp']['id']]) ?? 0;
 
+if ($data['oldest'] > 0) {
+    $data['oldest'] = ceil($data['oldest'] / 10) * 10;
+}
 $array = db_array('SELECT lastname,
 (SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id)+1 AS size,
 (SELECT COUNT(p2.id) FROM people AS p2 WHERE p2.visible AND NOT deleted AND p2.parent_id = p.id AND gender = "M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p2.date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult_age'].')+IF(p.gender="M" AND DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), p.date_of_birth)), "%Y")+0 >= '.$_SESSION['camp']['adult_age'].',1,0) AS male,

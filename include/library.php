@@ -41,13 +41,13 @@ if (!$ajax) {
 } else {
     switch ($_POST['do']) {
         case 'move':
-            $ids = json_decode($_POST['ids']);
+            $ids = json_decode((string) $_POST['ids']);
             [$success, $message, $redirect] = listMove($table, $ids);
 
             break;
 
         case 'delete':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             foreach ($ids as $id) {
                 if ($id) {
                     db_query('DELETE FROM borrow_transactions WHERE id = :id', ['id' => $id]);
@@ -60,20 +60,20 @@ if (!$ajax) {
             break;
 
         case 'copy':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listCopy($table, $ids, 'menutitle');
 
             break;
 
         case 'hide':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listShowHide($table, $ids, 0);
             $message = $_POST['ids'];
 
             break;
 
         case 'show':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
             [$success, $message, $redirect] = listShowHide($table, $ids, 1);
 
             break;

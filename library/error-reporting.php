@@ -7,7 +7,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_WARNING);
 
 // this behaviour is disabled by default, but can be turned
 // on if you want to see the warnings
-if ('localhost' == @parse_url($_SERVER['HTTP_HOST'], PHP_URL_HOST) && false) {
+if ('localhost' == @parse_url((string) $_SERVER['HTTP_HOST'], PHP_URL_HOST) && false) {
     // report all errors in local development
     error_reporting(E_ALL);
 }
