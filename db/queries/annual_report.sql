@@ -91,6 +91,12 @@ GROUP BY DATE(s.modified), YEAR(s.modified), cat.id, p.id, s.size_id, l.id, o.id
 -- boxes moved out of stock; grouped by product category, product name, product gender, size, tags, base, organisation
 -- Variant of https://github.com/boxwise/boxtribute/blob/master/back/boxtribute_server/business_logic/statistics/sql.py
 
+-- NOTE: three of the CTEs are simply subqueries to create the
+-- BoxStateChangeVersions and CreateDonateBoxes temporary tables.
+-- Check the explain plan to be sure since it's possible that properly
+-- materializing the final "temporary" tables for re-use, and then dropping the
+-- previous CTEs from memory would scale much better.
+
 -- Common Table Expression (CTE) to identify valid boxes
 WITH recursive ValidBoxes AS (
     SELECT
