@@ -16,14 +16,6 @@ cron:
   url: /cron/dailyroutine.php?action=auth0_check_synk
   target: staging
   schedule: every day 01:00
-- description: "db minimal reseed staging"
-  url: /cron/reseed-db.php?seeds=minimal
-  target: staging
-  schedule: every day 00:18
-- description: "db testing reseed staging"
-  url: /cron/reseed-db.php?seeds=testing
-  target: staging
-  schedule: every day 00:30
 - description: "auth0 reseed staging"
   url: /cron/reseed-auth0.php
   target: staging
@@ -46,14 +38,6 @@ cron:
   url: /cron/dailyroutine.php?action=db
   target: demo
   schedule: every day 00:09
-- description: "db minimal reseed demo"
-  url: /cron/reseed-db.php?seeds=minimal
-  target: demo
-  schedule: every 99999 hours
-- description: "db testing reseed demo"
-  url: /cron/reseed-db.php?seeds=testing
-  target: demo
-  schedule: every 99999 hours
 - description: "auth0 reseed demo"
   url: /cron/reseed-auth0.php
   target: demo
