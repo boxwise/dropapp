@@ -71,16 +71,16 @@ if (isset($_SESSION['camp']['id'])) {
 
     $data['totalcardsM'] = db_value('SELECT COUNT(id) FROM people WHERE NOT deleted AND bicycletraining AND gender = "M"');
     $data['totalcardsF'] = db_value('SELECT COUNT(id) FROM people WHERE NOT deleted AND bicycletraining AND gender = "F"');
-    $data['cardsM'] = intval(100 * $data['totalcardsM'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "M" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
-    $data['cardsF'] = intval(100 * $data['totalcardsF'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "F" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
+    // $data['cardsM'] = intval(100 * $data['totalcardsM'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "M" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
+    // $data['cardsF'] = intval(100 * $data['totalcardsF'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "F" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
 
     $data['newbrcardsM'] = db_value('SELECT COUNT(p.id) FROM history AS h LEFT OUTER JOIN people AS p ON p.id = h.record_id WHERE changedate >= "'.$start_week.'" AND changedate <= "'.$end_week.'" AND tablename = "people" AND changes = "workshoptraining" AND p.gender = "M"');
     $data['newbrcardsF'] = db_value('SELECT COUNT(p.id) FROM history AS h LEFT OUTER JOIN people AS p ON p.id = h.record_id WHERE changedate >= "'.$start_week.'" AND changedate <= "'.$end_week.'" AND tablename = "people" AND changes = "workshoptraining" AND p.gender = "F"');
 
     $data['totalbrcardsM'] = db_value('SELECT COUNT(id) FROM people WHERE NOT deleted AND workshoptraining AND gender = "M"');
     $data['totalbrcardsF'] = db_value('SELECT COUNT(id) FROM people WHERE NOT deleted AND workshoptraining AND gender = "F"');
-    $data['brcardsM'] = intval(100 * $data['totalbrcardsM'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "M" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
-    $data['brcardsF'] = intval(100 * $data['totalbrcardsF'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "F" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
+    // $data['brcardsM'] = intval(100 * $data['totalbrcardsM'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "M" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
+    // $data['brcardsF'] = intval(100 * $data['totalbrcardsF'] / db_value('SELECT COUNT(id) FROM people WHERE DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(), date_of_birth)), "%Y")+0 >= 15 AND gender = "F" AND NOT deleted AND LEFT(container,2) != "PK" AND camp_id = 1'));
 
     $data['laundry_appointments'] = db_value('SELECT COUNT(id) FROM laundry_appointments WHERE people_id > 0 AND cyclestart = :cyclestart', ['cyclestart' => $_SESSION['camp']['laundry_cyclestart']]);
     $data['laundry_slots'] = db_value('SELECT COUNT(id) FROM laundry_slots');
