@@ -1,6 +1,5 @@
 <?php
 
-use Faker\Factory;
 use Phinx\Seed\AbstractSeed;
 
 class DemoUsers extends AbstractSeed
@@ -20,12 +19,6 @@ class DemoUsers extends AbstractSeed
         // /(INSERT INTO (.*))/g
         // and replacement pattern:
         // // $this->execute("$1");\n
-
-        // Faker library
-        // https://github.com/fzaninotto/Faker
-        $faker = Factory::create();
-        // to make the seed reproducible
-        $faker->seed(2);
 
         // ------------------- organisations
         $this->execute("INSERT INTO `organisations` (`id`, `label`, `deleted`) VALUES
