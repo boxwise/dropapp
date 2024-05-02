@@ -16,6 +16,10 @@ cron:
   url: /cron/dailyroutine.php?action=auth0_check_synk
   target: staging
   schedule: every day 01:00
+- description: "db minimal reseed staging"
+  url: /cron/reseed-db.php?seeds=minimal
+  target: staging
+  schedule: every day 00:18
 - description: "auth0 reseed staging"
   url: /cron/reseed-auth0.php
   target: staging

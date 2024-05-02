@@ -40,8 +40,10 @@ if ('minimal' === $_GET['seeds']) {
     $manager->seed('current', 'Minimal');
     $manager->seed('current', 'Cypress');
     $manager->seed('current', 'ActionPermissions');
+    $manager->seed('current', 'DemoUsers');
 }
 if ('testing' === $_GET['seeds']) {
-    $manager->seed('current', 'DemoUsers');
+    // The following script does not work anymore because it relies on the
+    // outdated faker library
     $manager->seed('current', 'Demo');
 }
