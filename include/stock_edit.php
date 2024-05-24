@@ -229,6 +229,10 @@ if ($id) {
 }
 addfield('created', 'Created', 'created', ['aside' => true]);
 
+if (!$id) {
+    addformbutton('submitandnew', 'Save and new item');
+}
+
 // place the form elements and data in the template
 $cmsmain->assign('data', $data);
 $cmsmain->assign('formelements', $formdata);
