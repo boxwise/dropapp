@@ -2,12 +2,13 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class PopulateStandardProducts extends AbstractMigration
+class PopulateStandardProductsTable extends AbstractMigration
 {
     public function up(): void
     {
         $table = $this->table('standard_product');
-        $this->execute('
+        $this->execute(
+            '
 INSERT INTO standard_product
 (id,gender_id,name,size_range_id,category_id,version,added_by,added_on)
 VALUES
@@ -52,10 +53,10 @@ VALUES
 (39,9,"Baby Onesies",21,12,1,1,UTC_TIMESTAMP()),
 (40,9,"Baby Rompers / Bodies",21,12,1,1,UTC_TIMESTAMP()),
 (41,9,"Baby Socks",6,12,1,1,UTC_TIMESTAMP()),
-(42,11,"Gloves",6,12,1,1,UTC_TIMESTAMP()),
-(43,11,"Scarves",6,12,1,1,UTC_TIMESTAMP()),
-(44,11,"Thick Socks",6,12,1,1,UTC_TIMESTAMP()),
-(45,11,"Thin Socks",6,12,1,1,UTC_TIMESTAMP()),
+(42,6,"Gloves",6,12,1,1,UTC_TIMESTAMP()),
+(43,6,"Scarves",6,12,1,1,UTC_TIMESTAMP()),
+(44,6,"Thick Socks",6,12,1,1,UTC_TIMESTAMP()),
+(45,6,"Thin Socks",6,12,1,1,UTC_TIMESTAMP()),
 (46,10,"Basins",6,11,1,1,UTC_TIMESTAMP()),
 (47,10,"Bleach",6,10,1,1,UTC_TIMESTAMP()),
 (48,10,"Bowls",6,11,1,1,UTC_TIMESTAMP()),
@@ -70,7 +71,7 @@ VALUES
 (57,10,"ASTM 1 Masks",6,10,1,1,UTC_TIMESTAMP()),
 (58,10,"ASTM 2 Masks ",6,10,1,1,UTC_TIMESTAMP()),
 (59,10,"ASTM 3/FFP2/FFP3/N95 Masks",6,10,1,1,UTC_TIMESTAMP()),
-(60,10,""Combs", Hair Ties, Brushes",6,10,1,1,UTC_TIMESTAMP()),
+(60,10,"Combs, Hair Ties, Brushes",6,10,1,1,UTC_TIMESTAMP()),
 (61,10,"Condoms",7,10,1,1,UTC_TIMESTAMP()),
 (62,10,"Deodorant",7,10,1,1,UTC_TIMESTAMP()),
 (63,10,"Disposable Gloves",6,10,1,1,UTC_TIMESTAMP()),
@@ -97,7 +98,7 @@ VALUES
 (84,9,"Diapers Size 4",12,10,1,1,UTC_TIMESTAMP()),
 (85,9,"Diapers Size 5",12,10,1,1,UTC_TIMESTAMP()),
 (86,9,"Diapers Size 6",12,10,1,1,UTC_TIMESTAMP()),
-(87,9,""Diapers", Unsized",6,10,1,1,UTC_TIMESTAMP()),
+(87,9,"Diapers, Unsized",6,10,1,1,UTC_TIMESTAMP()),
 (88,5,"Summer Jackets",18,6,1,1,UTC_TIMESTAMP()),
 (89,5,"Winter Jackets",18,6,1,1,UTC_TIMESTAMP()),
 (90,1,"Summer Jackets",1,6,1,1,UTC_TIMESTAMP()),
@@ -108,7 +109,7 @@ VALUES
 (95,2,"Winter Jackets",1,6,1,1,UTC_TIMESTAMP()),
 (96,3,"Misc. Outer Protective Gear",6,6,1,1,UTC_TIMESTAMP()),
 (97,9,"Baby Jackets / Outerwear",21,6,1,1,UTC_TIMESTAMP()),
-(98,11,"Misc. Outer Protective Gear",6,6,1,1,UTC_TIMESTAMP()),
+(98,6,"Misc. Outer Protective Gear",6,6,1,1,UTC_TIMESTAMP()),
 (99,10,"Backpacks",6,9,1,1,UTC_TIMESTAMP()),
 (100,10,"Suitcases and Bags",6,9,1,1,UTC_TIMESTAMP()),
 (101,10,"Toys",6,14,1,1,UTC_TIMESTAMP()),
@@ -138,7 +139,7 @@ VALUES
 (125,2,"Sandals & Flip Flops",8,5,1,1,UTC_TIMESTAMP()),
 (126,3,"Rubber Rain Boots",6,5,1,1,UTC_TIMESTAMP()),
 (127,9,"Baby Shoes",21,5,1,1,UTC_TIMESTAMP()),
-(128,11,"Rubber Rain Boots",6,5,1,1,UTC_TIMESTAMP()),
+(128,6,"Rubber Rain Boots",6,5,1,1,UTC_TIMESTAMP()),
 (129,5,"Jumpers",18,3,1,1,UTC_TIMESTAMP()),
 (130,5,"Long Sleeve Tops",18,3,1,1,UTC_TIMESTAMP()),
 (131,5,"T-Shirts / Short Sleeves",18,3,1,1,UTC_TIMESTAMP()),
@@ -158,7 +159,7 @@ VALUES
 (145,2,"Undershirts / Tank Tops",1,3,1,1,UTC_TIMESTAMP()),
 (146,9,"Baby Jumpers",21,3,1,1,UTC_TIMESTAMP()),
 (147,9,"Baby Tops",21,3,1,1,UTC_TIMESTAMP()),
-(148,11,"Bodywarmers / Sleeveless Jumpers",18,3,1,1,UTC_TIMESTAMP()),
+(148,6,"Bodywarmers / Sleeveless Jumpers",18,3,1,1,UTC_TIMESTAMP()),
 (149,5,"Underwear",18,1,1,1,UTC_TIMESTAMP()),
 (150,1,"Bras",13,1,1,1,UTC_TIMESTAMP()),
 (151,1,"Leggings",1,1,1,1,UTC_TIMESTAMP()),
