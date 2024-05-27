@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class AddStandardProductForeignKey extends AbstractMigration
+class AddStandardProductFk extends AbstractMigration
 {
     public function up(): void
     {
