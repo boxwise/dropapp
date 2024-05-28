@@ -46,12 +46,11 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
        php -S localhost:8000 gcloud-entry.php 
 
-5. To initialize the database for the first time, you should run:
+5. To initialize the database for the first time, you should run this command to create the schema:
 
        vendor/bin/phinx migrate -e development
-       vendor/bin/phinx seed:run -e development (outdated since our faker library is sunsetted)
  
-   The first command creates the schema, the second command seeds the database with some dummy data
+   The database seed `db/init.sql` is generated in v2 and copied from there.
 
 6. If you want to additionally want to connect the users from the seed to auth0 and populate the db table cms_usergroups_roles then open a browser and request `http://localhost:8100/cron/reseed-auth0.php`
 
