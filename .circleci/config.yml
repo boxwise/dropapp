@@ -83,7 +83,6 @@ jobs:
             \$settings['jwt_claim_prefix'] = 'https://www.boxtribute.com';" > library/config.php
           echo "paths:
             migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'
-            seeds: '%%PHINX_CONFIG_DIR%%/db/seeds'
           environments:
             default_migration_table: phinxlog
             << parameters.serviceName >>:
