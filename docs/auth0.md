@@ -55,4 +55,4 @@ The following data of each user are currently saved in the [auth0 user db](https
 ## Auth0 re-seeding
 If you want to re-seed the users in Auth0, start the dropapp-php server and call in any Browser the following script.
 
-              http://localhost:8100/reseed-db.php
+              http://localhost:8100/reseed-auth0.php
