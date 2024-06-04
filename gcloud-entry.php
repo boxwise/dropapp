@@ -84,7 +84,6 @@ Tracer::inSpan(
             case '/pdf/qr.php':
             case '/pdf/dryfood.php':
             case '/cron/dailyroutine.php':
-            case '/cron/reseed-db.php':
             case '/cron/reseed-auth0.php':
             case '/cron/reseed-roles-auth0.php':
             case '/fake-error.php':

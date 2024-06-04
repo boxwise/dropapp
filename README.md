@@ -141,11 +141,11 @@ The password for the root-user for the db `dropapp_dev` is `dropapp_root`.
 
 #### MySQL workbench access
 
-Most of use use workbench to acces the MySQL database. To establish a connection you need to enter your `localhost`-address, e.g. `127.0.0.1`, for 'Hostname' and `9906` for 'Port'.
+Most of use use workbench to access the MySQL database. To establish a connection you need to enter your `localhost`-address, e.g. `127.0.0.1`, for 'Hostname' and `9906` for 'Port'.
 
 #### Phinx migrations
 
-We're using [Phinx](https://phinx.org/) to run database migration and create database seeds.
+We're using [Phinx](https://phinx.org/) to run database migrations.
 
 To migrate to the current database version run
 
@@ -156,19 +156,6 @@ To create an migration run
         vendor/bin/phinx create <NameOfMigrationInCamelCaseFormat>
 
 It creates an file in `db/migrations`. Please use this file to write your db migration.
-
-#### Database seeding (outdated since our faker library is sunsetted)
-
-If you want to re-seed your database, just run
-
-        vendor/bin/phinx seed:run -e development
-
-The `ClearMinimalDb` phinx-seeder clears all old tables before re-inserting the seed.
-
-If you want to re-seed the users in Auth0 at the same time, call in any Browser the following script instead of running the command above.
-
-              http://localhost:8100/reseed-db.php
-
 
 ### Cypress and testing
 
@@ -191,7 +178,7 @@ If the tests 2.4 and 2.9 fail, check
 
 All tests in `cypress/integrations` should be found and can be directly executed. When writing tests, try to follow these guidelines if possible:
 
-+ Avoid any duplication of helper functions across several files! If testing the same page in several test suites (files), there's a tendency to copy-paste the whole file and then rewrite tests. This leads to code duplication of helper functions. Instead, helper functions needed in several locations should be defined in one of `cypress/support` files - then they're available globally. Find the matching one by name or create a new one. In latter case, don't forget to import it in `cypress/integrations/index.js`. Avoid creating miscellaneuos file names as it tends to lead to chaos.
++ Avoid any duplication of helper functions across several files! If testing the same page in several test suites (files), there's a tendency to copy-paste the whole file and then rewrite tests. This leads to code duplication of helper functions. Instead, helper functions needed in several locations should be defined in one of `cypress/support` files - then they're available globally. Find the matching one by name or create a new one. In latter case, don't forget to import it in `cypress/integrations/index.js`. Avoid creating miscellaneous file names as it tends to lead to chaos.
 + Local helper functions defined in test files should have functional and easy-to-understand rather than technical names. Meaning, `clickNewUserButton()` is better than `clickElementByTypeAndTestId('button','new-user-button')`.
 + More general use helpers like 'clickElementByTypeAndTestId' can be used within the local helper functions if preferred. The reason for functional naming preference lies in increased readability of tests.
 + Current codebase doesn't 100% follow everything stated above but it'd definitely help organising the test helpers accordingly from now on.
