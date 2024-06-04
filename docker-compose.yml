@@ -9,7 +9,6 @@ services:
       MYSQL_ROOT_HOST: '%'
       MYSQL_DATABASE: dropapp_dev
     volumes:
-      - ./.docker/data/mysql:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "9906:3306"
