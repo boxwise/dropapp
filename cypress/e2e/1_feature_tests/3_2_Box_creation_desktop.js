@@ -114,11 +114,11 @@ context("Box_creation_tests", () => {
             ContinueToMenu();
             SearchBoxById(Test_id);
             clearSearchbox();
-            cy.deleteAllBoxesExceptSeed();
             // Pdf cannot be opened in circle ci
             CreateQR();
             // CheckUrl('pdf');
             // CheckUrl('label');
+            cy.deleteAllBoxesExceptSeed();
         });
     });
 });
