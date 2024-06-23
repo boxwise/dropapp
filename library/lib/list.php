@@ -825,7 +825,7 @@ function addcolumn($type, $label = false, $field = false, $array = [])
     if ('date' == $listdata[$field]['type']) {
         foreach ($data as $key => $row) {
             if ($row[$field] && strtotime((string) $row[$field]) > 0) {
-                $data[$key][$field] = date('F j, Y', strtotime($row[$field]));
+                $data[$key][$field] = date('j F Y', strtotime($row[$field]));
             } else {
                 $data[$key][$field] = '';
             }
