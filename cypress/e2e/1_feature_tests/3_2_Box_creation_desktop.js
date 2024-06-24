@@ -113,11 +113,11 @@ context("Box_creation_tests", () => {
             const Test_id = IdFromMessage($message) ;
             ContinueToMenu();
             SearchBoxById(Test_id);
-            clearSearchbox();
             // Pdf cannot be opened in circle ci
             CreateQR();
             // CheckUrl('pdf');
             // CheckUrl('label');
+            clearSearchbox();
             cy.deleteAllBoxesExceptSeed();
         });
     });
