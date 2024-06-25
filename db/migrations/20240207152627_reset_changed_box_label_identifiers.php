@@ -8,7 +8,7 @@ class ResetChangedBoxLabelIdentifiers extends AbstractMigration
     {
         $updated_box_id_rows = $this->execute('
 -- MAIN QUERY to reset box label identifiers to original.
--- Should update 167 rows
+-- Should update 165 rows
 UPDATE
     stock AS s
 SET
@@ -37,7 +37,7 @@ SET
             where
                 tablename = "stock"
                 and changes like "box_id changed from %"
-                and record_id <> 51103
+                and NOT record_id IN (51103,64681,72054)
             group by
                 record_id
             order by
@@ -60,21 +60,20 @@ WHERE
     WHERE
         tablename = "stock"
         and changes like "box_id changed from %"
-        and record_id <> 51103
+        and NOT record_id IN (51103,64681,72054)
 );
         ');
         $this->output->writeln('Updated box_id rows: '.$updated_box_id_rows);
 
         $deleted_history_entries = $this->execute('
 -- Delete all annoying change records
--- Should update 299 rows
+-- Should update 300 rows
 DELETE
 FROM
     history
 WHERE
     tablename = "stock"
-    and changes like "box_id changed from %"
-    and record_id <> 51103;
+    and changes like "box_id changed from %";
         ');
         $this->output->writeln('Deleted history entries: '.$deleted_history_entries);
     }
