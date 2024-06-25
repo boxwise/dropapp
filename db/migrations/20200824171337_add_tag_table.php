@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddTagTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $tag = $this->table('tags');
         $tag->addColumn('label', 'string')

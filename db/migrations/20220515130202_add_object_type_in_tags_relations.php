@@ -7,7 +7,7 @@ class AddObjectTypeInTagsRelations extends AbstractMigration
     /**
      * Migrate Up.
      */
-    public function up()
+    public function up(): void
     {
         $table = $this->table('tags_relations');
         if ($table) {
@@ -23,7 +23,7 @@ class AddObjectTypeInTagsRelations extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
+    public function down(): void
     {
         $table = $this->table('tags_relations');
         if ($table) {

@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddSignatureDateInPeople extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('people')
             ->addColumn('date_of_signature', 'datetime', [

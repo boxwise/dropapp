@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class DropOrganisationIdFromCmsUsers extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $table = $this->table('cms_users');
         if ($table->hasColumn('organisation_id')) {

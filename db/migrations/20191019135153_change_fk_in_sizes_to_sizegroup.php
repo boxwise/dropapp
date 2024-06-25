@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class ChangeFkInSizesToSizegroup extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('sizes')
             ->dropForeignKey('sizegroup_id')

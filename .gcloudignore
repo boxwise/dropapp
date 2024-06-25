@@ -20,3 +20,4 @@
 phinx.yml
 docker-compose.yml
 build.php
+db/init.sql

@@ -12,13 +12,13 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 /**
  * Getting Auth0 configurations.
  *
- * @param bool  $apiCall  Optional. This will be used to distingush some configuration when custom domain is being used, as API management call does not work with custom domain.
- * @param mixed $settings
+ * @param bool $apiCall Optional. This will be used to distingush some configuration when custom domain is being used, as API management call does not work with custom domain.
  */
-function getAuth0SdkConfiguration($settings, $apiCall = false)
+function getAuth0SdkConfiguration(mixed $settings, $apiCall = false)
 {
     $Psr17Library = new Psr17Factory();
     $Psr18Library = new MultiCurl($Psr17Library);
+
     // in the auth0 php sdk 8 configration pass as class
     return new SdkConfiguration([
         'httpClient' => $Psr18Library,
@@ -36,12 +36,11 @@ function getAuth0SdkConfiguration($settings, $apiCall = false)
         'scope' => ['openid', 'profile', 'email'],
     ]);
 }
+
 /**
  * Getting Auth0 instance.
- *
- * @param mixed $settings
  */
-function getAuth0($settings)
+function getAuth0(mixed $settings)
 {
     $configuration = getAuth0SdkConfiguration($settings);
     // set session sotarage
@@ -49,30 +48,29 @@ function getAuth0($settings)
 
     return new Auth0($configuration);
 }
+
 /**
  * Getting Auth0 API Management instance.
- *
- * @param mixed $settings
  */
-function getAuth0Management($settings)
+function getAuth0Management(mixed $settings)
 {
     $configuration = getAuth0SdkConfiguration($settings, true);
 
     $auth0 = new Auth0($configuration);
 
-    return $auth0->management(); //new Management($configuration);
+    return $auth0->management(); // new Management($configuration);
 }
+
 /**
  * Getting Auth0 Authentication instance.
- *
- * @param mixed $settings
  */
-function getAuth0Authentication($settings)
+function getAuth0Authentication(mixed $settings)
 {
     $auth0 = getAuth0($settings);
 
     return $auth0->authentication();
 }
+
 /**
  * Deleting user from Auth0.
  *
@@ -100,7 +98,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
     $auth0UserId = 'auth0|'.intval($userId);
     $dbUserData = db_row('
         SELECT 
-            u.email, u.naam, u.deleted, u.is_admin, u.cms_usergroups_id, u.valid_firstday, u.valid_lastday,
+            u.email, u.naam, u.deleted, u.cms_usergroups_id, u.valid_firstday, u.valid_lastday,
             ug.organisation_id
         FROM 
             cms_users u
@@ -115,7 +113,6 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
         'name' => $dbUserData['naam'],
         'blocked' => '0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted']),
         'app_metadata' => [
-            'is_god' => $dbUserData['is_admin'],
             'usergroup_id' => $dbUserData['cms_usergroups_id'],
             'organisation_id' => $dbUserData['organisation_id'],
             'base_ids' => $dbUserData['base_ids'],
@@ -124,7 +121,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
     ];
     if ('0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted'])) {
         $auth0UserData['app_metadata']['last_blocked_date'] = $dbUserData['deleted'];
-        $auth0UserData['email'] = preg_replace('/\.deleted\.\d+/', '', $dbUserData['email']);
+        $auth0UserData['email'] = preg_replace('/\.deleted\.\d+/', '', (string) $dbUserData['email']);
     }
     if ($dbUserData['valid_firstday'] && '0000-00-00' != $dbUserData['valid_firstday']) {
         $auth0UserData['app_metadata']['valid_firstday'] = $dbUserData['valid_firstday'];
@@ -177,6 +174,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
         $mgmtAPI->users()->update($auth0UserId, ['password' => $setPwd]);
     }
 }
+
 /**
  * Update user password in Auth0.
  *
@@ -189,6 +187,7 @@ function updateAuth0Password($userId, $password)
     $mgmtAPI = getAuth0Management($settings);
     $mgmtAPI->users()->update('auth0|'.intval($userId), ['password' => $password, 'connection' => 'Username-Password-Authentication']);
 }
+
 /**
  * Checking if user in DB is in sync with Auth0.
  *
@@ -216,9 +215,8 @@ function isUserInSyncWithAuth0($userId)
     } elseif ($dbUser && $auth0User) {
         $validationResult = [];
         $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
-        $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
+        $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', (string) $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', (string) $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
         $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
-        $validationResult['is_god'] = ($auth0User['app_metadata']['is_god'] == $dbUser['is_admin']) ? 'true' : 'false';
         $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
         $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
         if ($dbUser['base_ids']) {
@@ -273,7 +271,7 @@ function isUserInSyncWithAuth0($userId)
 
         foreach ($auth0UserRoles as $auth0UserRole) {
             $auth0Roles[] = $auth0UserRole['id'];
-            $tmp = explode('_', $auth0UserRole['name'], 3);
+            $tmp = explode('_', (string) $auth0UserRole['name'], 3);
             if ((bool) $tmp[1]) {
                 $auth0BasesInRoles[] = $tmp[1];
             }
@@ -307,6 +305,14 @@ function isUserInSyncWithAuth0($userId)
             $return_value = false;
         }
     } elseif (!$dbUserRoles && $auth0UserRoles) {
+        if ('boxtribute_god' == $auth0UserRoles[0]['name']) {
+            if ($dbUser['is_admin']) {
+                $return_value = true;
+            } else {
+                $messageAppendix = ' User is not an admin in DB, but in Auth0!';
+                $return_value = false;
+            }
+        }
         $messageAppendix = ' No Roles were associated in DB!';
         $return_value = false;
     } elseif ($dbUserRoles && !$auth0UserRoles) {
@@ -320,6 +326,7 @@ function isUserInSyncWithAuth0($userId)
 
     return $return_value;
 }
+
 /**
  * Gett user by email.
  *
@@ -348,6 +355,7 @@ function getAuth0UserByEmail($email)
         return null;
     }
 }
+
 /**
  * Getting user information from Auth0.
  *
@@ -365,6 +373,7 @@ function getAuth0User($userId)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Getting roles by base ids.
  */
@@ -385,7 +394,7 @@ function getRolesByBaseIds(array $baseIds)
         if (HttpResponse::wasSuccessful($response)) {
             $res = HttpResponse::decodeContent($response);
             foreach ($res as $role) {
-                if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', $role['name'])) {
+                if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', (string) $role['name'])) {
                     array_push($roles, $role);
                 }
             }
@@ -397,6 +406,7 @@ function getRolesByBaseIds(array $baseIds)
 
     return $roles;
 }
+
 /**
  * Getting roles by name.
  *
@@ -421,6 +431,7 @@ function getRolesByName($roleName)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Create Role.
  *
@@ -440,6 +451,7 @@ function createRole($roleName)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Update role in Auth0.
  *
@@ -464,6 +476,7 @@ function updateRole($roleId, $roleName, $roleDescription)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Update role permissions.
  *
@@ -494,6 +507,7 @@ function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
 
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
+
 /**
  * Get all roles.
  */
@@ -608,7 +622,7 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         // preparing $userGroupsRoles for db-table cms_usergroups_roles
         foreach ($auth0Roles as $auth0Role) {
             $currentRole = 'administrator' !== $auth0Role ? 'base_'.$baseId.'_'.$auth0Role : $auth0Role;
-            $currentRoleDescription = 'administrator' !== $auth0Role ? ucwords($orgName).' - Base '.$baseId.' ('.ucwords($baseName).') - '.ucwords(preg_replace('/\_/', ' ', $auth0Role)) : 'Someone who manage all bases within an organization';
+            $currentRoleDescription = 'administrator' !== $auth0Role ? ucwords($orgName).' - Base '.$baseId.' ('.ucwords($baseName).') - '.ucwords((string) preg_replace('/\_/', ' ', $auth0Role)) : 'Someone who manage all bases within an organization';
 
             if (false == array_search($currentRole, array_column($userGroupsRoles, 'roleName'))) {
                 $userGroupsRoles[] = [
@@ -678,10 +692,10 @@ function updateRolesForBase($baseId, $baseName)
     while ($usergroup = db_fetch($result)) {
         // check if the usergroup is based on new standard user groups
         $regx = '/Base (.*) - (Coordinator|Label Creation|Volunteer|Volunteer) ?(\(Free Shop\)|\(Warehouse\))?/m';
-        if (preg_match($regx, $usergroup['label'])) {
-            $roleName = trim(preg_split('/-/', $usergroup['label'])[1]);
+        if (preg_match($regx, (string) $usergroup['label'])) {
+            $roleName = trim(preg_split('/-/', (string) $usergroup['label'])[1]);
 
-            $newUserGroupLabel = sprintf('Base %s - %s', ucwords($baseName), $roleName);
+            $newUserGroupLabel = sprintf('Base %s - %s', ucwords((string) $baseName), $roleName);
             db_query('UPDATE cms_usergroups SET label = :newUserGroupLabel WHERE id = :userGroupId', [
                 'newUserGroupLabel' => $newUserGroupLabel,
                 'userGroupId' => $usergroup['id'],
@@ -691,6 +705,7 @@ function updateRolesForBase($baseId, $baseName)
 
     return true;
 }
+
 /**
  * Getting available actions with role name.
  *
@@ -702,6 +717,7 @@ function getMethodByRole($roleName)
 
     return $rolesToActions[$roleName];
 }
+
 /**
  * Create or update role and permissions in auth0.
  *
@@ -732,6 +748,7 @@ function createOrUpdateRoleAndPermission($roleName, $prefixedRole, $prefixedRole
 
     return $role;
 }
+
 /**
  * Getting available menues by role.
  *
@@ -751,6 +768,7 @@ function getMenusByRole($role, array &$rolesToActions, array &$menusToActions)
 
     return array_unique($menuIds);
 }
+
 /**
  * Assign roles to auth0 user. (it will remove all roles alreadys assigned then add new roles).
  *
@@ -791,12 +809,11 @@ function assignRolesToUser($userId, array $roleIds)
         throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
 }
+
 /**
  * Getting user assigned roles.
- *
- * @param mixed $userId
  */
-function getUserAssignedRoles($userId)
+function getUserAssignedRoles(mixed $userId)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
@@ -813,10 +830,8 @@ function getUserAssignedRoles($userId)
 
 /**
  * Getting all the users.
- *
- * @param mixed $query
  */
-function getAllUsers($query)
+function getAllUsers(mixed $query)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);

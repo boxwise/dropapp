@@ -37,7 +37,7 @@ while ($container = db_fetch($result)) {
         $container['container'] = ' ';
     }
 
-    $letter = strtoupper(substr($container['container'], 0, 1));
+    $letter = strtoupper(substr((string) $container['container'], 0, 1));
     if ($letter != $oldletter) {
         $pdf->newPage($container['container']);
     }
@@ -72,7 +72,7 @@ function Writename($person)
     if (is_null($person['age'])) {
         $person['age'] = '?';
     }
-    $pdf->SetFont('helvetica', ($person['parent_id'] ? '' : 'B'), 10);
+    $pdf->SetFont('helvetica', $person['parent_id'] ? '' : 'B', 10);
 
     $parent = ($person['parent_id'] ? 4 : 0);
 

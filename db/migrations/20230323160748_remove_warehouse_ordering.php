@@ -5,7 +5,7 @@ use Phinx\Migration\AbstractMigration;
 
 class RemoveWarehouseOrdering extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $table = $this->table('stock');
         $table
@@ -23,7 +23,7 @@ class RemoveWarehouseOrdering extends AbstractMigration
         ;
     }
 
-    public function down()
+    public function down(): void
     {
         $table = $this->table('stock');
         $table

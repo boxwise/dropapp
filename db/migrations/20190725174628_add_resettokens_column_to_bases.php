@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddResettokensColumnToBases extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('camps')
             ->addColumn('resettokens', 'boolean', [

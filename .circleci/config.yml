@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  gcp-cli: circleci/gcp-cli@1.8.4
+  gcp-cli: circleci/gcp-cli@3.1.1
   cypress: cypress-io/cypress@2.2.0
 jobs:
   build:
     docker:
-      - image: cimg/php:7.4-browsers
+      - image: cimg/php:8.2-browsers
     working_directory: ~/project
     steps:
       - checkout
@@ -47,7 +47,7 @@ jobs:
       envVariablePrefix:
         type: string
     docker:
-      - image: cimg/php:7.4-browsers
+      - image: cimg/php:8.2-browsers
     steps:
       - attach_workspace:
           at: workspace
@@ -83,7 +83,6 @@ jobs:
             \$settings['jwt_claim_prefix'] = 'https://www.boxtribute.com';" > library/config.php
           echo "paths:
             migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'
-            seeds: '%%PHINX_CONFIG_DIR%%/db/seeds'
           environments:
             default_migration_table: phinxlog
             << parameters.serviceName >>:
@@ -118,10 +117,6 @@ jobs:
           vendor/bin/phinx migrate -e << parameters.serviceName >>
           # deploy
           gcloud app deploy app-<< parameters.serviceName >>.yaml --version ${CIRCLE_BUILD_NUM}
-          gcloud app deploy cron.yaml --version ${CIRCLE_BUILD_NUM}
-          # There is a problem with the dispatch.yaml and we get a 500 error when we try to deplay
-          # something similar to this: https://www.googlecloudcommunity.com/gc/Serverless/gcloud-app-deploy-dispatch-yaml-ERROR-gcloud-app-deploy-Server/m-p/549190#M1544
-          # gcloud app deploy dispatch.yaml --version ${CIRCLE_BUILD_NUM}
   
   create-sentry-release:
     docker: 

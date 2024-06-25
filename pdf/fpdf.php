@@ -13,64 +13,64 @@ class FPDF
 {
     protected $page;               // current page number
     protected $n;                  // current object number
-protected $offsets;            // array of object offsets
-protected $buffer;             // buffer holding in-memory PDF
-protected $pages;              // array containing pages
-protected $state;              // current document state
-protected $compress;           // compression flag
-protected $k;                  // scale factor (number of points in user unit)
-protected $DefOrientation;     // default orientation
-protected $CurOrientation;     // current orientation
-protected $StdPageSizes;       // standard page sizes
-protected $DefPageSize;        // default page size
-protected $CurPageSize;        // current page size
-protected $CurRotation;        // current page rotation
-protected $PageInfo;           // page-related data
-protected $wPt;
+    protected $offsets;            // array of object offsets
+    protected $buffer;             // buffer holding in-memory PDF
+    protected $pages;              // array containing pages
+    protected $state;              // current document state
+    protected $compress;           // compression flag
+    protected $k;                  // scale factor (number of points in user unit)
+    protected $DefOrientation;     // default orientation
+    protected $CurOrientation;     // current orientation
+    protected $StdPageSizes;       // standard page sizes
+    protected $DefPageSize;        // default page size
+    protected $CurPageSize;        // current page size
+    protected $CurRotation;        // current page rotation
+    protected $PageInfo;           // page-related data
+    protected $wPt;
     protected $hPt;          // dimensions of current page in points
     protected $w;
     protected $h;              // dimensions of current page in user unit
-protected $lMargin;            // left margin
-protected $tMargin;            // top margin
-protected $rMargin;            // right margin
-protected $bMargin;            // page break margin
-protected $cMargin;            // cell margin
-protected $x;
+    protected $lMargin;            // left margin
+    protected $tMargin;            // top margin
+    protected $rMargin;            // right margin
+    protected $bMargin;            // page break margin
+    protected $cMargin;            // cell margin
+    protected $x;
     protected $y;              // current position in user unit
-protected $lasth;              // height of last printed cell
-protected $LineWidth;          // line width in user unit
-protected $fontpath;           // path containing fonts
-protected $CoreFonts;          // array of core font names
-protected $fonts;              // array of used fonts
-protected $FontFiles;          // array of font files
-protected $encodings;          // array of encodings
-protected $cmaps;              // array of ToUnicode CMaps
-protected $FontFamily;         // current font family
-protected $FontStyle;          // current font style
-protected $underline;          // underlining flag
-protected $CurrentFont;        // current font info
-protected $FontSizePt;         // current font size in points
-protected $FontSize;           // current font size in user unit
-protected $DrawColor;          // commands for drawing color
-protected $FillColor;          // commands for filling color
-protected $TextColor;          // commands for text color
-protected $ColorFlag;          // indicates whether fill and text colors are different
-protected $WithAlpha;          // indicates whether alpha channel is used
-protected $ws;                 // word spacing
-protected $images;             // array of used images
-protected $PageLinks;          // array of links in pages
-protected $links;              // array of internal links
-protected $AutoPageBreak;      // automatic page breaking
-protected $PageBreakTrigger;   // threshold used to trigger page breaks
-protected $InHeader;           // flag set when processing header
-protected $InFooter;           // flag set when processing footer
-protected $AliasNbPages;       // alias for total number of pages
-protected $ZoomMode;           // zoom display mode
-protected $LayoutMode;         // layout display mode
-protected $metadata;           // document properties
-protected $PDFVersion;         // PDF version number
+    protected $lasth;              // height of last printed cell
+    protected $LineWidth;          // line width in user unit
+    protected $fontpath;           // path containing fonts
+    protected $CoreFonts;          // array of core font names
+    protected $fonts;              // array of used fonts
+    protected $FontFiles;          // array of font files
+    protected $encodings;          // array of encodings
+    protected $cmaps;              // array of ToUnicode CMaps
+    protected $FontFamily;         // current font family
+    protected $FontStyle;          // current font style
+    protected $underline;          // underlining flag
+    protected $CurrentFont;        // current font info
+    protected $FontSizePt;         // current font size in points
+    protected $FontSize;           // current font size in user unit
+    protected $DrawColor;          // commands for drawing color
+    protected $FillColor;          // commands for filling color
+    protected $TextColor;          // commands for text color
+    protected $ColorFlag;          // indicates whether fill and text colors are different
+    protected $WithAlpha;          // indicates whether alpha channel is used
+    protected $ws;                 // word spacing
+    protected $images;             // array of used images
+    protected $PageLinks;          // array of links in pages
+    protected $links;              // array of internal links
+    protected $AutoPageBreak;      // automatic page breaking
+    protected $PageBreakTrigger;   // threshold used to trigger page breaks
+    protected $InHeader;           // flag set when processing header
+    protected $InFooter;           // flag set when processing footer
+    protected $AliasNbPages;       // alias for total number of pages
+    protected $ZoomMode;           // zoom display mode
+    protected $LayoutMode;         // layout display mode
+    protected $metadata;           // document properties
+    protected $PDFVersion;         // PDF version number
 
-// Public methods
+    // Public methods
 
     public function __construct($orientation = 'P', $unit = 'mm', $size = 'A4')
     {
@@ -105,11 +105,11 @@ protected $PDFVersion;         // PDF version number
         // Font path
         if (defined('FPDF_FONTPATH')) {
             $this->fontpath = FPDF_FONTPATH;
-            if ('/' != substr($this->fontpath, -1) && '\\' != substr($this->fontpath, -1)) {
+            if (!str_ends_with($this->fontpath, '/') && !str_ends_with($this->fontpath, '\\')) {
                 $this->fontpath .= '/';
             }
-        } elseif (is_dir(dirname(__FILE__).'/font')) {
-            $this->fontpath = dirname(__FILE__).'/font/';
+        } elseif (is_dir(__DIR__.'/font')) {
+            $this->fontpath = __DIR__.'/font/';
         } else {
             $this->fontpath = '';
         }
@@ -134,7 +134,7 @@ protected $PDFVersion;         // PDF version number
         $this->DefPageSize = $size;
         $this->CurPageSize = $size;
         // Page orientation
-        $orientation = strtolower($orientation);
+        $orientation = strtolower((string) $orientation);
         if ('p' == $orientation || 'portrait' == $orientation) {
             $this->DefOrientation = 'P';
             $this->w = $size[0];
@@ -168,7 +168,7 @@ protected $PDFVersion;         // PDF version number
         $this->PDFVersion = '1.3';
     }
 
-    public function SetMargins($left, $top, $right = null)
+    public function SetMargins($left, $top, $right = null): void
     {
         // Set left, top and right margins
         $this->lMargin = $left;
@@ -179,7 +179,7 @@ protected $PDFVersion;         // PDF version number
         $this->rMargin = $right;
     }
 
-    public function SetLeftMargin($margin)
+    public function SetLeftMargin($margin): void
     {
         // Set left margin
         $this->lMargin = $margin;
@@ -188,19 +188,19 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function SetTopMargin($margin)
+    public function SetTopMargin($margin): void
     {
         // Set top margin
         $this->tMargin = $margin;
     }
 
-    public function SetRightMargin($margin)
+    public function SetRightMargin($margin): void
     {
         // Set right margin
         $this->rMargin = $margin;
     }
 
-    public function SetAutoPageBreak($auto, $margin = 0)
+    public function SetAutoPageBreak($auto, $margin = 0): void
     {
         // Set auto page break mode and triggering margin
         $this->AutoPageBreak = $auto;
@@ -208,7 +208,7 @@ protected $PDFVersion;         // PDF version number
         $this->PageBreakTrigger = $this->h - $margin;
     }
 
-    public function SetDisplayMode($zoom, $layout = 'default')
+    public function SetDisplayMode($zoom, $layout = 'default'): void
     {
         // Set display mode in viewer
         if ('fullpage' == $zoom || 'fullwidth' == $zoom || 'real' == $zoom || 'default' == $zoom || !is_string($zoom)) {
@@ -223,7 +223,7 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function SetCompression($compress)
+    public function SetCompression($compress): void
     {
         // Set page compression
         if (function_exists('gzcompress')) {
@@ -233,49 +233,49 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function SetTitle($title, $isUTF8 = false)
+    public function SetTitle($title, $isUTF8 = false): void
     {
         // Title of document
-        $this->metadata['Title'] = $isUTF8 ? $title : utf8_encode($title);
+        $this->metadata['Title'] = $isUTF8 ? $title : mb_convert_encoding((string) $title, 'UTF-8', 'ISO-8859-1');
     }
 
-    public function SetAuthor($author, $isUTF8 = false)
+    public function SetAuthor($author, $isUTF8 = false): void
     {
         // Author of document
-        $this->metadata['Author'] = $isUTF8 ? $author : utf8_encode($author);
+        $this->metadata['Author'] = $isUTF8 ? $author : mb_convert_encoding((string) $author, 'UTF-8', 'ISO-8859-1');
     }
 
-    public function SetSubject($subject, $isUTF8 = false)
+    public function SetSubject($subject, $isUTF8 = false): void
     {
         // Subject of document
-        $this->metadata['Subject'] = $isUTF8 ? $subject : utf8_encode($subject);
+        $this->metadata['Subject'] = $isUTF8 ? $subject : mb_convert_encoding((string) $subject, 'UTF-8', 'ISO-8859-1');
     }
 
-    public function SetKeywords($keywords, $isUTF8 = false)
+    public function SetKeywords($keywords, $isUTF8 = false): void
     {
         // Keywords of document
-        $this->metadata['Keywords'] = $isUTF8 ? $keywords : utf8_encode($keywords);
+        $this->metadata['Keywords'] = $isUTF8 ? $keywords : mb_convert_encoding((string) $keywords, 'UTF-8', 'ISO-8859-1');
     }
 
-    public function SetCreator($creator, $isUTF8 = false)
+    public function SetCreator($creator, $isUTF8 = false): void
     {
         // Creator of document
-        $this->metadata['Creator'] = $isUTF8 ? $creator : utf8_encode($creator);
+        $this->metadata['Creator'] = $isUTF8 ? $creator : mb_convert_encoding((string) $creator, 'UTF-8', 'ISO-8859-1');
     }
 
-    public function AliasNbPages($alias = '{nb}')
+    public function AliasNbPages($alias = '{nb}'): void
     {
         // Define an alias for total number of pages
         $this->AliasNbPages = $alias;
     }
 
-    public function Error($msg)
+    public function Error($msg): never
     {
         // Fatal error
         throw new Exception('FPDF error: '.$msg);
     }
 
-    public function Close()
+    public function Close(): void
     {
         // Terminate document
         if (3 == $this->state) {
@@ -294,7 +294,7 @@ protected $PDFVersion;         // PDF version number
         $this->_enddoc();
     }
 
-    public function AddPage($orientation = '', $size = '', $rotation = 0)
+    public function AddPage($orientation = '', $size = '', $rotation = 0): void
     {
         // Start a new page
         if (3 == $this->state) {
@@ -364,12 +364,12 @@ protected $PDFVersion;         // PDF version number
         $this->ColorFlag = $cf;
     }
 
-    public function Header()
+    public function Header(): void
     {
         // To be implemented in your own inherited class
     }
 
-    public function Footer()
+    public function Footer(): void
     {
         // To be implemented in your own inherited class
     }
@@ -380,7 +380,7 @@ protected $PDFVersion;         // PDF version number
         return $this->page;
     }
 
-    public function SetDrawColor($r, $g = null, $b = null)
+    public function SetDrawColor($r, $g = null, $b = null): void
     {
         // Set color for all stroking operations
         if ((0 == $r && 0 == $g && 0 == $b) || null === $g) {
@@ -393,7 +393,7 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function SetFillColor($r, $g = null, $b = null)
+    public function SetFillColor($r, $g = null, $b = null): void
     {
         // Set color for all filling operations
         if ((0 == $r && 0 == $g && 0 == $b) || null === $g) {
@@ -407,7 +407,7 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function SetTextColor($r, $g = null, $b = null)
+    public function SetTextColor($r, $g = null, $b = null): void
     {
         // Set color for text
         if ((0 == $r && 0 == $g && 0 == $b) || null === $g) {
@@ -432,7 +432,7 @@ protected $PDFVersion;         // PDF version number
         return $w * $this->FontSize / 1000;
     }
 
-    public function SetLineWidth($width)
+    public function SetLineWidth($width): void
     {
         // Set line width
         $this->LineWidth = $width;
@@ -441,13 +441,13 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function Line($x1, $y1, $x2, $y2)
+    public function Line($x1, $y1, $x2, $y2): void
     {
         // Draw a line
         $this->_out(sprintf('%.2F %.2F m %.2F %.2F l S', $x1 * $this->k, ($this->h - $y1) * $this->k, $x2 * $this->k, ($this->h - $y2) * $this->k));
     }
 
-    public function Rect($x, $y, $w, $h, $style = '')
+    public function Rect($x, $y, $w, $h, $style = ''): void
     {
         // Draw a rectangle
         if ('F' == $style) {
@@ -460,14 +460,14 @@ protected $PDFVersion;         // PDF version number
         $this->_out(sprintf('%.2F %.2F %.2F %.2F re %s', $x * $this->k, ($this->h - $y) * $this->k, $w * $this->k, -$h * $this->k, $op));
     }
 
-    public function AddFont($family, $style = '', $file = '')
+    public function AddFont($family, $style = '', $file = ''): void
     {
         // Add a TrueType, OpenType or Type1 font
-        $family = strtolower($family);
+        $family = strtolower((string) $family);
         if ('' == $file) {
-            $file = str_replace(' ', '', $family).strtolower($style).'.php';
+            $file = str_replace(' ', '', $family).strtolower((string) $style).'.php';
         }
-        $style = strtoupper($style);
+        $style = strtoupper((string) $style);
         if ('IB' == $style) {
             $style = 'BI';
         }
@@ -488,16 +488,16 @@ protected $PDFVersion;         // PDF version number
         $this->fonts[$fontkey] = $info;
     }
 
-    public function SetFont($family, $style = '', $size = 0)
+    public function SetFont($family, $style = '', $size = 0): void
     {
         // Select a font; size given in points
         if ('' == $family) {
             $family = $this->FontFamily;
         } else {
-            $family = strtolower($family);
+            $family = strtolower((string) $family);
         }
-        $style = strtoupper($style);
-        if (false !== strpos($style, 'U')) {
+        $style = strtoupper((string) $style);
+        if (str_contains($style, 'U')) {
             $this->underline = true;
             $style = str_replace('U', '', $style);
         } else {
@@ -543,7 +543,7 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function SetFontSize($size)
+    public function SetFontSize($size): void
     {
         // Set font size in points
         if ($this->FontSizePt == $size) {
@@ -565,7 +565,7 @@ protected $PDFVersion;         // PDF version number
         return $n;
     }
 
-    public function SetLink($link, $y = 0, $page = -1)
+    public function SetLink($link, $y = 0, $page = -1): void
     {
         // Set destination of internal link
         if (-1 == $y) {
@@ -577,13 +577,13 @@ protected $PDFVersion;         // PDF version number
         $this->links[$link] = [$page, $y];
     }
 
-    public function Link($x, $y, $w, $h, $link)
+    public function Link($x, $y, $w, $h, $link): void
     {
         // Put a link on the page
         $this->PageLinks[$this->page][] = [$x * $this->k, $this->hPt - $y * $this->k, $w * $this->k, $h * $this->k, $link];
     }
 
-    public function Text($x, $y, $txt)
+    public function Text($x, $y, $txt): void
     {
         // Output a string
         if (!isset($this->CurrentFont)) {
@@ -605,7 +605,7 @@ protected $PDFVersion;         // PDF version number
         return $this->AutoPageBreak;
     }
 
-    public function Cell($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = '')
+    public function Cell($w, $h = 0, $txt = '', $border = 0, $ln = 0, $align = '', $fill = false, $link = ''): void
     {
         // Output a cell
         $k = $this->k;
@@ -639,16 +639,16 @@ protected $PDFVersion;         // PDF version number
         if (is_string($border)) {
             $x = $this->x;
             $y = $this->y;
-            if (false !== strpos($border, 'L')) {
+            if (str_contains($border, 'L')) {
                 $s .= sprintf('%.2F %.2F m %.2F %.2F l S ', $x * $k, ($this->h - $y) * $k, $x * $k, ($this->h - ($y + $h)) * $k);
             }
-            if (false !== strpos($border, 'T')) {
+            if (str_contains($border, 'T')) {
                 $s .= sprintf('%.2F %.2F m %.2F %.2F l S ', $x * $k, ($this->h - $y) * $k, ($x + $w) * $k, ($this->h - $y) * $k);
             }
-            if (false !== strpos($border, 'R')) {
+            if (str_contains($border, 'R')) {
                 $s .= sprintf('%.2F %.2F m %.2F %.2F l S ', ($x + $w) * $k, ($this->h - $y) * $k, ($x + $w) * $k, ($this->h - ($y + $h)) * $k);
             }
-            if (false !== strpos($border, 'B')) {
+            if (str_contains($border, 'B')) {
                 $s .= sprintf('%.2F %.2F m %.2F %.2F l S ', $x * $k, ($this->h - ($y + $h)) * $k, ($x + $w) * $k, ($this->h - ($y + $h)) * $k);
             }
         }
@@ -692,7 +692,7 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function MultiCell($w, $h, $txt, $border = 0, $align = 'J', $fill = false)
+    public function MultiCell($w, $h, $txt, $border = 0, $align = 'J', $fill = false): void
     {
         // Output text with automatic or explicit line breaks
         if (!isset($this->CurrentFont)) {
@@ -703,7 +703,7 @@ protected $PDFVersion;         // PDF version number
             $w = $this->w - $this->rMargin - $this->x;
         }
         $wmax = ($w - 2 * $this->cMargin) * 1000 / $this->FontSize;
-        $s = str_replace("\r", '', $txt);
+        $s = str_replace("\r", '', (string) $txt);
         $nb = strlen($s);
         if ($nb > 0 && "\n" == $s[$nb - 1]) {
             --$nb;
@@ -716,13 +716,13 @@ protected $PDFVersion;         // PDF version number
                 $b2 = 'LR';
             } else {
                 $b2 = '';
-                if (false !== strpos($border, 'L')) {
+                if (str_contains((string) $border, 'L')) {
                     $b2 .= 'L';
                 }
-                if (false !== strpos($border, 'R')) {
+                if (str_contains((string) $border, 'R')) {
                     $b2 .= 'R';
                 }
-                $b = (false !== strpos($border, 'T')) ? $b2.'T' : $b2;
+                $b = (str_contains((string) $border, 'T')) ? $b2.'T' : $b2;
             }
         }
         $sep = -1;
@@ -795,14 +795,14 @@ protected $PDFVersion;         // PDF version number
             $this->ws = 0;
             $this->_out('0 Tw');
         }
-        if ($border && false !== strpos($border, 'B')) {
+        if ($border && str_contains((string) $border, 'B')) {
             $b .= 'B';
         }
         $this->Cell($w, $h, substr($s, $j, $i - $j), $b, 2, $align, $fill);
         $this->x = $this->lMargin;
     }
 
-    public function Write($h, $txt, $link = '')
+    public function Write($h, $txt, $link = ''): void
     {
         // Output text in flowing mode
         if (!isset($this->CurrentFont)) {
@@ -811,7 +811,7 @@ protected $PDFVersion;         // PDF version number
         $cw = &$this->CurrentFont['cw'];
         $w = $this->w - $this->rMargin - $this->x;
         $wmax = ($w - 2 * $this->cMargin) * 1000 / $this->FontSize;
-        $s = str_replace("\r", '', $txt);
+        $s = str_replace("\r", '', (string) $txt);
         $nb = strlen($s);
         $sep = -1;
         $i = 0;
@@ -882,7 +882,7 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function Ln($h = null)
+    public function Ln($h = null): void
     {
         // Line feed; default value is the last cell height
         $this->x = $this->lMargin;
@@ -893,7 +893,7 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function Image($file, $x = null, $y = null, $w = 0, $h = 0, $type = '', $link = '')
+    public function Image($file, $x = null, $y = null, $w = 0, $h = 0, $type = '', $link = ''): void
     {
         // Put an image on the page
         if ('' == $file) {
@@ -902,13 +902,13 @@ protected $PDFVersion;         // PDF version number
         if (!isset($this->images[$file])) {
             // First use of this image, get info
             if ('' == $type) {
-                $pos = strrpos($file, '.');
+                $pos = strrpos((string) $file, '.');
                 if (!$pos) {
                     $this->Error('Image file has no extension and no type was specified: '.$file);
                 }
-                $type = substr($file, $pos + 1);
+                $type = substr((string) $file, $pos + 1);
             }
-            $type = strtolower($type);
+            $type = strtolower((string) $type);
             if ('jpeg' == $type) {
                 $type = 'jpg';
             }
@@ -981,7 +981,7 @@ protected $PDFVersion;         // PDF version number
         return $this->x;
     }
 
-    public function SetX($x)
+    public function SetX($x): void
     {
         // Set x position
         if ($x >= 0) {
@@ -997,7 +997,7 @@ protected $PDFVersion;         // PDF version number
         return $this->y;
     }
 
-    public function SetY($y, $resetX = true)
+    public function SetY($y, $resetX = true): void
     {
         // Set y position and optionally reset x
         if ($y >= 0) {
@@ -1010,7 +1010,7 @@ protected $PDFVersion;         // PDF version number
         }
     }
 
-    public function SetXY($x, $y)
+    public function SetXY($x, $y): void
     {
         // Set x and y positions
         $this->SetX($x);
@@ -1021,7 +1021,7 @@ protected $PDFVersion;         // PDF version number
     {
         // Output PDF to some destination
         $this->Close();
-        if (1 == strlen($name) && 1 != strlen($dest)) {
+        if (1 == strlen((string) $name) && 1 != strlen((string) $dest)) {
             // Fix parameter order
             $tmp = $dest;
             $dest = $name;
@@ -1034,47 +1034,47 @@ protected $PDFVersion;         // PDF version number
             $name = 'doc.pdf';
         }
 
-        switch (strtoupper($dest)) {
-        case 'I':
-            // Send to standard output
-            $this->_checkoutput();
-            if (PHP_SAPI != 'cli') {
-                // We send to a browser
-                header('Content-Type: application/pdf');
-                header('Content-Disposition: inline; '.$this->_httpencode('filename', $name, $isUTF8));
+        switch (strtoupper((string) $dest)) {
+            case 'I':
+                // Send to standard output
+                $this->_checkoutput();
+                if (PHP_SAPI != 'cli') {
+                    // We send to a browser
+                    header('Content-Type: application/pdf');
+                    header('Content-Disposition: inline; '.$this->_httpencode('filename', $name, $isUTF8));
+                    header('Cache-Control: private, max-age=0, must-revalidate');
+                    header('Pragma: public');
+                }
+                echo $this->buffer;
+
+                break;
+
+            case 'D':
+                // Download file
+                $this->_checkoutput();
+                header('Content-Type: application/x-download');
+                header('Content-Disposition: attachment; '.$this->_httpencode('filename', $name, $isUTF8));
                 header('Cache-Control: private, max-age=0, must-revalidate');
                 header('Pragma: public');
-            }
-            echo $this->buffer;
+                echo $this->buffer;
 
-            break;
+                break;
 
-        case 'D':
-            // Download file
-            $this->_checkoutput();
-            header('Content-Type: application/x-download');
-            header('Content-Disposition: attachment; '.$this->_httpencode('filename', $name, $isUTF8));
-            header('Cache-Control: private, max-age=0, must-revalidate');
-            header('Pragma: public');
-            echo $this->buffer;
+            case 'F':
+                // Save to local file
+                if (!file_put_contents($name, $this->buffer)) {
+                    $this->Error('Unable to create output file: '.$name);
+                }
 
-            break;
+                break;
 
-        case 'F':
-            // Save to local file
-            if (!file_put_contents($name, $this->buffer)) {
-                $this->Error('Unable to create output file: '.$name);
-            }
+            case 'S':
+                // Return as a string
+                return $this->buffer;
 
-            break;
-
-        case 'S':
-            // Return as a string
-            return $this->buffer;
-
-        default:
-            $this->Error('Incorrect output destination: '.$dest);
-    }
+            default:
+                $this->Error('Incorrect output destination: '.$dest);
+        }
 
         return '';
     }
@@ -1138,7 +1138,7 @@ protected $PDFVersion;         // PDF version number
         if ('' == $orientation) {
             $orientation = $this->DefOrientation;
         } else {
-            $orientation = strtoupper($orientation[0]);
+            $orientation = strtoupper((string) $orientation[0]);
         }
         if ('' == $size) {
             $size = $this->DefPageSize;
@@ -1180,7 +1180,7 @@ protected $PDFVersion;         // PDF version number
     protected function _loadfont($font)
     {
         // Load a font definition file from the font directory
-        if (false !== strpos($font, '/') || false !== strpos($font, '\\')) {
+        if (str_contains((string) $font, '/') || str_contains((string) $font, '\\')) {
             $this->Error('Incorrect font definition file name: '.$font);
         }
 
@@ -1189,7 +1189,7 @@ protected $PDFVersion;         // PDF version number
             $this->Error('Could not include font definition file');
         }
         if (isset($enc)) {
-            $enc = strtolower($enc);
+            $enc = strtolower((string) $enc);
         }
         if (!isset($subsetted)) {
             $subsetted = false;
@@ -1201,7 +1201,7 @@ protected $PDFVersion;         // PDF version number
     protected function _isascii($s)
     {
         // Test if string is ASCII
-        $nb = strlen($s);
+        $nb = strlen((string) $s);
         for ($i = 0; $i < $nb; ++$i) {
             if (ord($s[$i]) > 127) {
                 return false;
@@ -1218,20 +1218,20 @@ protected $PDFVersion;         // PDF version number
             return $param.'="'.$value.'"';
         }
         if (!$isUTF8) {
-            $value = utf8_encode($value);
+            $value = mb_convert_encoding((string) $value, 'UTF-8', 'ISO-8859-1');
         }
-        if (false !== strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
-            return $param.'="'.rawurlencode($value).'"';
+        if (str_contains((string) $_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
+            return $param.'="'.rawurlencode((string) $value).'"';
         }
 
-        return $param."*=UTF-8''".rawurlencode($value);
+        return $param."*=UTF-8''".rawurlencode((string) $value);
     }
 
     protected function _UTF8toUTF16($s)
     {
         // Convert UTF-8 to UTF-16BE with BOM
         $res = "\xFE\xFF";
-        $nb = strlen($s);
+        $nb = strlen((string) $s);
         $i = 0;
         while ($i < $nb) {
             $c1 = ord($s[$i++]);
@@ -1258,8 +1258,8 @@ protected $PDFVersion;         // PDF version number
     protected function _escape($s)
     {
         // Escape special characters
-        if (false !== strpos($s, '(') || false !== strpos($s, ')') || false !== strpos($s, '\\') || false !== strpos($s, "\r")) {
-            return str_replace(['\\', '(', ')', "\r"], ['\\\\', '\\(', '\\)', '\\r'], $s);
+        if (str_contains((string) $s, '(') || str_contains((string) $s, ')') || str_contains((string) $s, '\\') || str_contains((string) $s, "\r")) {
+            return str_replace(['\\', '(', ')', "\r"], ['\\\\', '\\(', '\\)', '\\r'], (string) $s);
         }
 
         return $s;
@@ -1280,7 +1280,7 @@ protected $PDFVersion;         // PDF version number
         // Underline text
         $up = $this->CurrentFont['up'];
         $ut = $this->CurrentFont['ut'];
-        $w = $this->GetStringWidth($txt) + $this->ws * substr_count($txt, ' ');
+        $w = $this->GetStringWidth($txt) + $this->ws * substr_count((string) $txt, ' ');
 
         return sprintf('%.2F %.2F %.2F %.2F re f', $x * $this->k, ($this->h - ($y - $up / 1000 * $this->FontSize)) * $this->k, $w * $this->k, -$ut / 1000 * $this->FontSizePt);
     }
@@ -1302,7 +1302,7 @@ protected $PDFVersion;         // PDF version number
         } else {
             $colspace = 'DeviceGray';
         }
-        $bpc = isset($a['bits']) ? $a['bits'] : 8;
+        $bpc = $a['bits'] ?? 8;
         $data = file_get_contents($file);
 
         return ['w' => $a[0], 'h' => $a[1], 'cs' => $colspace, 'bpc' => $bpc, 'f' => 'DCTDecode', 'data' => $data];
@@ -1376,11 +1376,11 @@ protected $PDFVersion;         // PDF version number
                 // Read transparency info
                 $t = $this->_readstream($f, $n);
                 if (0 == $ct) {
-                    $trns = [ord(substr($t, 1, 1))];
+                    $trns = [ord(substr((string) $t, 1, 1))];
                 } elseif (2 == $ct) {
-                    $trns = [ord(substr($t, 1, 1)), ord(substr($t, 3, 1)), ord(substr($t, 5, 1))];
+                    $trns = [ord(substr((string) $t, 1, 1)), ord(substr((string) $t, 3, 1)), ord(substr((string) $t, 5, 1))];
                 } else {
-                    $pos = strpos($t, chr(0));
+                    $pos = strpos((string) $t, chr(0));
                     if (false !== $pos) {
                         $trns = [$pos];
                     }
@@ -1467,7 +1467,7 @@ protected $PDFVersion;         // PDF version number
     protected function _readint($f)
     {
         // Read a 4-byte integer from stream
-        $a = unpack('Ni', $this->_readstream($f, 4));
+        $a = unpack('Ni', (string) $this->_readstream($f, 4));
 
         return $a['i'];
     }
@@ -1523,7 +1523,7 @@ protected $PDFVersion;         // PDF version number
 
     protected function _getoffset()
     {
-        return strlen($this->buffer);
+        return strlen((string) $this->buffer);
     }
 
     protected function _newobj($n = null)
@@ -1547,11 +1547,11 @@ protected $PDFVersion;         // PDF version number
     {
         if ($this->compress) {
             $entries = '/Filter /FlateDecode ';
-            $data = gzcompress($data);
+            $data = gzcompress((string) $data);
         } else {
             $entries = '';
         }
-        $entries .= '/Length '.strlen($data);
+        $entries .= '/Length '.strlen((string) $data);
         $this->_newobj();
         $this->_put('<<'.$entries.'>>');
         $this->_putstream($data);
@@ -1597,7 +1597,7 @@ protected $PDFVersion;         // PDF version number
         $this->_put('endobj');
         // Page content
         if (!empty($this->AliasNbPages)) {
-            $this->pages[$n] = str_replace($this->AliasNbPages, $this->page, $this->pages[$n]);
+            $this->pages[$n] = str_replace($this->AliasNbPages, $this->page, (string) $this->pages[$n]);
         }
         $this->_putstreamobject($this->pages[$n]);
     }
@@ -1642,7 +1642,7 @@ protected $PDFVersion;         // PDF version number
             if (!$font) {
                 $this->Error('Font file not found: '.$file);
             }
-            $compressed = ('.z' == substr($file, -2));
+            $compressed = str_ends_with((string) $file, '.z');
             if (!$compressed && isset($info['length2'])) {
                 $font = substr($font, 6, $info['length1']).substr($font, 6 + $info['length1'] + 6, $info['length2']);
             }
@@ -1743,7 +1743,7 @@ protected $PDFVersion;         // PDF version number
                 $this->_put('endobj');
             } else {
                 // Allow for additional types
-                $mtd = '_put'.strtolower($type);
+                $mtd = '_put'.strtolower((string) $type);
                 if (!method_exists($this, $mtd)) {
                     $this->Error('Unsupported font type: '.$type);
                 }
@@ -1815,7 +1815,7 @@ protected $PDFVersion;         // PDF version number
         $this->_put('/Width '.$info['w']);
         $this->_put('/Height '.$info['h']);
         if ('Indexed' == $info['cs']) {
-            $this->_put('/ColorSpace [/Indexed /DeviceRGB '.(strlen($info['pal']) / 3 - 1).' '.($this->n + 1).' 0 R]');
+            $this->_put('/ColorSpace [/Indexed /DeviceRGB '.(strlen((string) $info['pal']) / 3 - 1).' '.($this->n + 1).' 0 R]');
         } else {
             $this->_put('/ColorSpace /'.$info['cs']);
             if ('DeviceCMYK' == $info['cs']) {
@@ -1839,7 +1839,7 @@ protected $PDFVersion;         // PDF version number
         if (isset($info['smask'])) {
             $this->_put('/SMask '.($this->n + 1).' 0 R');
         }
-        $this->_put('/Length '.strlen($info['data']).'>>');
+        $this->_put('/Length '.strlen((string) $info['data']).'>>');
         $this->_putstream($info['data']);
         $this->_put('endobj');
         // Soft mask

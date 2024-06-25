@@ -1,5 +1,5 @@
 <?php
 
-    $card = 'occ';
+$card = 'occ';
 
-    require 'bicyclecard.php';
+require 'bicyclecard.php';

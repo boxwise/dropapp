@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class CleanUpProductsTable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('products')
             ->removeColumn('groupname')

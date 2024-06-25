@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeTransactionIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('transactions')
             ->changeColumn('id', 'integer', ['identity' => true, 'signed' => false])
@@ -15,7 +15,5 @@ class MakeTransactionIdUnsigned extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Google\Cloud\Datastore\DatastoreClient;
+use Google\Cloud\Datastore\DatastoreSessionHandler;
 use Google\Cloud\Storage\StorageClient;
 use OpenCensus\Trace\Exporter\StackdriverExporter;
 use OpenCensus\Trace\Integrations\Mysql;
@@ -40,9 +42,9 @@ function registerGoogleCloudServices($projectId)
     $settings['upload_dir'] = "gs://{$projectId}.appspot.com/{$hostName}/uploads";
 
     // configure session storage
-    $datastore = new Google\Cloud\Datastore\DatastoreClient();
+    $datastore = new DatastoreClient();
     ini_set('session.save_path', "sessions-{$projectId}-{$hostName}");
-    session_set_save_handler(new Google\Cloud\Datastore\DatastoreSessionHandler($datastore), true);
+    session_set_save_handler(new DatastoreSessionHandler($datastore), true);
 }
 
 $googleProjectId = getenv('GOOGLE_CLOUD_PROJECT');

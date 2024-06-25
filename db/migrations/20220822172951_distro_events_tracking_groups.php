@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class DistroEventsTrackingGroups extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $distroEventsTrackingGroups = $this->table('distro_events_tracking_groups', [
             'id' => true,

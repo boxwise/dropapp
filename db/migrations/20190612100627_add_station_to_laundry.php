@@ -5,7 +5,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddStationToLaundry extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('laundry_machines', [
             'id' => false,

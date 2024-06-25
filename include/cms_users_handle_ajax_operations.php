@@ -5,8 +5,8 @@ if ($ajax) {
 
     switch ($_POST['do']) {
         case 'delete':
-            $ids = explode(',', $_POST['ids']);
-            list($success, $message, $redirect) = db_transaction(function () use ($table, $ids) {
+            $ids = explode(',', (string) $_POST['ids']);
+            [$success, $message, $redirect] = db_transaction(function () use ($table, $ids) {
                 [$success, $message, $redirect] = listDelete($table, $ids);
                 if ($success) {
                     foreach ($ids as $id) {
@@ -21,8 +21,8 @@ if ($ajax) {
             break;
 
         case 'undelete':
-            $ids = explode(',', $_POST['ids']);
-            list($success, $message, $redirect) = db_transaction(function () use ($table, $ids) {
+            $ids = explode(',', (string) $_POST['ids']);
+            [$success, $message, $redirect] = db_transaction(function () use ($table, $ids) {
                 [$success, $message, $redirect] = listUndelete($table, $ids);
                 if ($success) {
                     foreach ($ids as $id) {
@@ -38,9 +38,9 @@ if ($ajax) {
 
         case 'extendActive':
         case 'extend':
-            $ids = explode(',', $_POST['ids']);
+            $ids = explode(',', (string) $_POST['ids']);
 
-            list($success, $message, $redirect, $data) = db_transaction(function () use ($table, $ids) {
+            [$success, $message, $redirect, $data] = db_transaction(function () use ($table, $ids) {
                 // check if user have proper permission to extend access of selected the account
                 // related to this trello card https://trello.com/c/KI47eGPI
                 $in = implode(',', array_map('intval', $ids));
@@ -78,16 +78,16 @@ if ($ajax) {
             break;
 
         case 'sendlogindata':
-            $ids = explode(',', $_POST['ids']);
-            list($success, $message, $redirect) = sendlogindata($table, $ids);
+            $ids = explode(',', (string) $_POST['ids']);
+            [$success, $message, $redirect] = sendlogindata($table, $ids);
             // defining own message because returned one sounds as if user resetted the password themselves
             $message = 'User will receive an email with instructions and their password within couple of minutes!';
 
             break;
 
         case 'loginasuser':
-            $ids = explode(',', $_POST['ids']);
-            list($success, $message, $redirect) = loginasuser($table, $ids);
+            $ids = explode(',', (string) $_POST['ids']);
+            [$success, $message, $redirect] = loginasuser($table, $ids);
 
             break;
     }
@@ -96,5 +96,5 @@ if ($ajax) {
 
     echo json_encode($return);
 
-    exit();
+    exit;
 }

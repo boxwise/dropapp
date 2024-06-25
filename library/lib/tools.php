@@ -26,7 +26,7 @@ function checkURL($url)
 
 function checkEmail($email)
 {
-    list($user, $domain) = preg_split('/@/', $email);
+    [$user, $domain] = preg_split('/@/', (string) $email);
 
     return (bool) (filter_var($email, FILTER_VALIDATE_EMAIL) && checkdnsrr($domain, 'MX'));
 }
@@ -34,15 +34,15 @@ function checkEmail($email)
 function checkPasswordStrength($pass)
 {
     return (bool) (
-        strlen($pass) >= 12
+        strlen((string) $pass) >= 12
         // a regular expression to check at least 12 characters including at least 3 of the following 4 types of characters: a lower-case letter, an upper-case letter, a number, a special character (such as !@#$%^&*).
-        && preg_match('/((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])).{12,}$/m', $pass)
+        && preg_match('/((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])|(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])|(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%&\/=?_.,:;\\\\-])).{12,}$/m', (string) $pass)
     );
 }
 
 function grammarRealign($row)
 {
-    $parts = explode(' ', $row);
+    $parts = explode(' ', (string) $row);
     $new_order = $parts;
     $new_order[0] = strtolower($parts[1]);
     $new_order[1] = strtolower($parts[0]);
@@ -59,12 +59,12 @@ function showHistory($table, $id)
 
     $result = db_query('SELECT h.*, u.naam FROM history AS h LEFT OUTER JOIN cms_users AS u ON h.user_id = u.id WHERE tablename = :table AND record_id = :id ORDER BY changedate DESC', ['table' => $table, 'id' => $id]);
     while ($row = db_fetch($result)) {
-        $row['changedate'] = strftime('%A %d %B %Y, %H:%M', strtotime($row['changedate']));
-        $row['changes'] = strip_tags($row['changes']);
+        $row['changedate'] = (new DateTime($row['changedate']))->format('l d F Y, H:i');
+        $row['changes'] = strip_tags((string) $row['changes']);
         $change = $row['changes'];
         $change = str_replace(';', '', $change);
 
-        //cases for properly created change-messages(location_id, product_id,items...)
+        // cases for properly created change-messages(location_id, product_id,items...)
         if (in_array($change, ['location_id', 'product_id', 'items', 'size_id', 'box_state_id'])) {
             if ('items' == $change) {
                 $change = 'changed the number of items from '.$row['from_int'].' to '.$row['to_int'];
@@ -89,10 +89,10 @@ function showHistory($table, $id)
                 $box_state_new = db_row('SELECT box_state.label FROM box_state WHERE box_state.id = :id_new', ['id_new' => $box_state_ids[1]]);
                 $change = 'changed box state from '.$box_state_orig['label'].' to '.$box_state_new['label'];
             }
-        }   //Cases where the grammar has to be realigned to make it readable
+        }   // Cases where the grammar has to be realigned to make it readable
         elseif (in_array(explode(' ', $change)[0], ['Box', 'Record', 'comments', 'signaturefield'])) {
-            //special cases first
-            $change = trim(grammarRealign($change));
+            // special cases first
+            $change = trim((string) grammarRealign($change));
             if ('order box made undone' == $change) {
                 $change = 'canceled the order';
             }
@@ -144,10 +144,10 @@ function ConvertURL()
 {
     global $lan, $settings;
     $qs = $_SERVER['REQUEST_URI'];
-    if (strpos($qs, '?')) {
-        $qs = substr($qs, 0, strpos($qs, '?'));
+    if (strpos((string) $qs, '?')) {
+        $qs = substr((string) $qs, 0, strpos((string) $qs, '?'));
     }
-    $items = explode('/', $qs);
+    $items = explode('/', (string) $qs);
     if ($settings['site_multilanguage']) {
         $lan = $items[1];
         array_shift($items);
@@ -166,18 +166,18 @@ function ConvertURL()
     }
 }
 
-function redirect($url, $status = 301)
+function redirect($url, $status = 301): never
 {
     header('Location: '.$url, true, $status);
 
-    exit();
+    exit;
 }
 
 function CMSmenu()
 {
     global $action, $lan;
 
-    $result1 = db_query('SELECT f.* FROM cms_functions AS f WHERE f.visible AND f.parent_id IS NULL ORDER BY f.seq', ['camp' => $_SESSION['camp']['id']]);
+    $result1 = db_query('SELECT f.* FROM cms_functions AS f WHERE f.visible AND f.parent_id IS NULL ORDER BY f.seq');
     while ($row1 = db_fetch($result1)) {
         $submenu = [];
 
@@ -210,14 +210,14 @@ function CMSmenu()
             if ($row2['include'] == $action || $row2['include'].'_edit' == $action) {
                 $row2['active'] = true;
             }
-            if ($row2['title'.'_'.$lan]) {
-                $row2['title'] = $row2['title'.'_'.$lan];
+            if ($row2['title_'.$lan]) {
+                $row2['title'] = $row2['title_'.$lan];
             }
             $submenu[] = $row2;
         }
 
-        if ($row1['title'.'_'.$lan]) {
-            $row1['title'] = $row1['title'.'_'.$lan];
+        if ($row1['title_'.$lan]) {
+            $row1['title'] = $row1['title_'.$lan];
         }
         $row1['sub'] = $submenu;
         if ($submenu) {
@@ -234,15 +234,11 @@ function getCMSuser($id)
     // 	return '<a href="mailto:'.$user['email'].'">'.$user['naam'].'</a>';
 }
 
-if (function_exists('date_default_timezone_set')) {
-    date_default_timezone_set('Europe/Amsterdam');
-}
-
 function safestring($input)
 {
     $safestringchar = '-';
-    $input = str_replace(['!', '?', '&'], '', $input);
-    $input = utf8_decode($input);
+    $input = str_replace(['!', '?', '&'], '', (string) $input);
+    $input = mb_convert_encoding($input, 'ISO-8859-1');
 
     $x = '';
     for ($i = 0; $i < strlen($input); ++$i) {
@@ -271,11 +267,11 @@ function safestring($input)
     }
 
     $x = strtolower($x);
-    if ('-' == substr($x, -1)) {
+    if (str_ends_with($x, '-')) {
         $x = substr($x, 0, strlen($x) - 1);
     }
 
-    return utf8_encode($x);
+    return mb_convert_encoding($x, 'UTF-8', 'ISO-8859-1');
 }
 
 function utf8_decode_array($array)
@@ -284,7 +280,7 @@ function utf8_decode_array($array)
         return false;
     }
     foreach ($array as $key => $value) {
-        $array[$key] = utf8_decode($value);
+        $array[$key] = mb_convert_encoding((string) $value, 'ISO-8859-1');
     }
 
     return $array;
@@ -292,7 +288,7 @@ function utf8_decode_array($array)
 
 function simpleSaveChangeHistory($table, $record, $changes, $from = [], $to = [])
 {
-    //from and to variable must be arrays with entry 'int' or 'float'
+    // from and to variable must be arrays with entry 'int' or 'float'
     if (!db_tableexists('history')) {
         return;
     }
@@ -301,67 +297,22 @@ function simpleSaveChangeHistory($table, $record, $changes, $from = [], $to = []
 
 function simpleBulkSaveChangeHistory($table, $records, $changes, $from = [], $to = [])
 {
-    //from and to variable must be arrays with entry 'int' or 'float'
+    // from and to variable must be arrays with entry 'int' or 'float'
     if (!db_tableexists('history')) {
         return;
     }
     $query = '';
     $params = [];
-
-    for ($i = 0; $i < sizeof($records); ++$i) {
-        $query .= "(:table{$i},:id{$i},:change{$i},:user_id{$i},:ip{$i},NOW(), :from_int{$i}, :from_float{$i}, :to_int{$i}, :to_float{$i})";
-        $params = array_merge($params, ['table'.$i => $table, 'id'.$i => $records[$i], 'change'.$i => $changes, 'user_id'.$i => $_SESSION['user']['id'], 'ip'.$i => $_SERVER['REMOTE_ADDR'], 'from_int'.$i => $from['int'], 'from_float'.$i => $from['float'], 'to_int'.$i => $to['int'], 'to_float'.$i => $to['float']]);
-        if ($i !== sizeof($records) - 1) {
-            $query .= ',';
+    if (is_iterable($records)) {
+        for ($i = 0; $i < sizeof($records); ++$i) {
+            $query .= "(:table{$i},:id{$i},:change{$i},:user_id{$i},:ip{$i},NOW(), :from_int{$i}, :from_float{$i}, :to_int{$i}, :to_float{$i})";
+            $params = array_merge($params, ['table'.$i => $table, 'id'.$i => $records[$i], 'change'.$i => $changes, 'user_id'.$i => $_SESSION['user']['id'], 'ip'.$i => $_SERVER['REMOTE_ADDR'], 'from_int'.$i => $from['int'], 'from_float'.$i => $from['float'], 'to_int'.$i => $to['int'], 'to_float'.$i => $to['float']]);
+            if ($i !== sizeof($records) - 1) {
+                $query .= ',';
+            }
         }
     }
     if (strlen($query) > 0) {
         db_query("INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES {$query}", $params);
     }
-}
-
-function displayDate($datum, $time = false, $long = false)
-{
-    global $_txt;
-
-    if (!is_int($datum)) {
-        $datum = strtotime($datum);
-    }
-    $d = strftime('%Y-%m-%d', $datum);
-
-    if ($d == strftime('%Y-%m-%d', strtotime('+2 day'))) {
-        $dmy = 'Tomorrow'.strftime('%A', $datum);
-    }
-    if ($d == strftime('%Y-%m-%d', strtotime('+1 day'))) {
-        $dmy = 'Tomorrow';
-    }
-    if ($d == strftime('%Y-%m-%d')) {
-        $dmy = $_txt['today'];
-    }
-    if ($d == strftime('%Y-%m-%d', strtotime('-1 day'))) {
-        $dmy = 'Yesterday';
-    }
-    if ($d == strftime('%Y-%m-%d', strtotime('-2 day'))) {
-        $dmy = 'Two days ago';
-    }
-
-    if (!$datum) {
-        return 'Unknown';
-    }
-    if ($time) {
-        if (!$dmy) {
-            return strftime('%e %B %Y, %H:%M', $datum);
-        }
-    }
-
-    return $dmy.strftime(', %H:%M', $datum);
-    if ($long) {
-        if (!$dmy) {
-            return strftime('%e %B %Y', $datum);
-        }
-
-        return $dmy;
-    }
-
-    return strftime('%d-%m-%Y', $datum);
 }

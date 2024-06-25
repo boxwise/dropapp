@@ -3,7 +3,7 @@
 use OpenCensus\Trace\Tracer;
 
 Tracer::inSpan(
-    ['name' => ('stock.php')],
+    ['name' => 'stock.php'],
     function () use ($action, &$cmsmain) {
         global $table, $listconfig, $listdata;
 
@@ -14,13 +14,13 @@ Tracer::inSpan(
             initlist();
             listsetting('manualquery', true);
 
-            //title
+            // title
             $cmsmain->assign('title', 'Manage Boxes');
 
-            //search box
+            // search box
             listsetting('search', ['box_id', 'l.label', 's.label', 'g.label', 'p.name', 'stock.comments']);
 
-            //Location filter
+            // Location filter
             listfilter(['label' => 'By Location', 'query' => 'SELECT id, label FROM locations WHERE deleted IS NULL AND locations.box_state_id IN (1,5) AND camp_id = '.$_SESSION['camp']['id'].' AND type = "Warehouse" ORDER BY seq', 'filter' => 'l.id']);
 
             // Status Filter
@@ -41,31 +41,16 @@ Tracer::inSpan(
 
             function get_filter2_query($applied_filter)
             {
-                switch ($applied_filter) {
-                case 'in_stock':
-                    return ' AND stock.box_state_id = 1 ';
-
-                case 'all':
-                    return ' ';
-
-                case 'donated':
-                    return ' AND stock.box_state_id = 5';
-
-                case 'lost':
-                    return ' AND stock.box_state_id = 2';
-
-                case 'scrap':
-                    return ' AND stock.box_state_id = 6';
-
-                case 'marked_for_shipment':
-                    return ' AND stock.box_state_id = 3';
-
-                case 'dispose':
-                    return ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1';
-
-                default:
-                    return ' AND stock.box_state_id = 1';
-            }
+                return match ($applied_filter) {
+                    'in_stock' => ' AND stock.box_state_id = 1 ',
+                    'all' => ' ',
+                    'donated' => ' AND stock.box_state_id = 5',
+                    'lost' => ' AND stock.box_state_id = 2',
+                    'scrap' => ' AND stock.box_state_id = 6',
+                    'marked_for_shipment' => ' AND stock.box_state_id = 3',
+                    'dispose' => ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1',
+                    default => ' AND stock.box_state_id = 1',
+                };
             }
             $applied_filter2_query = get_filter2_query($_SESSION['filter2']['stock']);
 
@@ -73,7 +58,7 @@ Tracer::inSpan(
             $genders = db_simplearray('SELECT id AS value, label FROM genders ORDER BY seq');
             listfilter3(['label' => 'Gender', 'options' => $genders, 'filter' => '"s.gender_id"']);
 
-            //Category Filter
+            // Category Filter
             $itemlist = db_simplearray('SELECT pc.id, pc.label from products AS p INNER JOIN product_categories AS pc ON pc.id = p.category_id WHERE (camp_id = '.$_SESSION['camp']['id'].')');
             listfilter4(['label' => 'Category', 'options' => $itemlist, 'filter' => 'p.category_id']);
 
@@ -148,7 +133,7 @@ Tracer::inSpan(
                 } elseif (in_array(intval($data[$key]['box_state_id']), [4, 7])) {
                     $data[$key]['order'] = '<span class="hide">2</span><i class="fa fa-truck green tooltip-this" title="This box is being shipped."></i>';
                 } elseif (in_array(intval($data[$key]['box_state_id']), [2, 6])) {
-                    $modifiedtext = $data[$key]['modified'] ? 'on '.strftime('%d-%m-%Y', strtotime($data[$key]['modified'])) : '';
+                    $modifiedtext = $data[$key]['modified'] ? 'on '.(string) $data[$key]['modified']?->format('d-m-Y') : '';
                     $icon = 2 === intval($data[$key]['box_state_id']) ? 'fa-ban' : 'fa-chain-broken';
                     $statelabel = 2 === intval($data[$key]['box_state_id']) ? 'lost' : 'scrapped';
                     $data[$key]['order'] = sprintf('<span class="hide">3</span><i class="fa %s tooltip-this" style="color: red" title="This box was %s %s"></i>', $icon, $statelabel, $modifiedtext);
@@ -159,8 +144,8 @@ Tracer::inSpan(
                 $totalitems += $value['items'];
 
                 if ($data[$key]['taglabels']) {
-                    $taglabels = explode(chr(0x1D), $data[$key]['taglabels']);
-                    $tagcolors = explode(',', $data[$key]['tagcolors']);
+                    $taglabels = explode(chr(0x1D), (string) $data[$key]['taglabels']);
+                    $tagcolors = explode(',', (string) $data[$key]['tagcolors']);
                     foreach ($taglabels as $tagkey => $taglabel) {
                         $data[$key]['tags'][$tagkey] = ['label' => $taglabel, 'color' => $tagcolors[$tagkey], 'textcolor' => get_text_color($tagcolors[$tagkey])];
                     }
@@ -219,167 +204,167 @@ Tracer::inSpan(
             $cmsmain->assign('include', 'cms_list.tpl');
         } else {
             switch ($_POST['do']) {
-            case 'movebox':
-                //@todo: replace signle update/insert to bulk update/insert
+                case 'movebox':
+                    // @todo: replace signle update/insert to bulk update/insert
 
-                $ids = explode(',', $_POST['ids']);
+                    $ids = explode(',', (string) $_POST['ids']);
 
-                [$count, $message] = move_boxes($ids, $_POST['option']);
+                    [$count, $message] = move_boxes($ids, $_POST['option']);
 
-                $success = $count;
-                $redirect = '?action='.$_GET['action'];
+                    $success = $count;
+                    $redirect = '?action='.$_GET['action'];
 
-                break;
+                    break;
 
-            case 'qr':
-                $id = $_POST['ids'];
-                $redirect = '/pdf/qr.php?label='.$id;
+                case 'qr':
+                    $id = $_POST['ids'];
+                    $redirect = '/pdf/qr.php?label='.$id;
 
-                break;
+                    break;
 
-            case 'move':
-                $ids = json_decode($_POST['ids']);
-                list($success, $message, $redirect) = listMove($table, $ids);
+                case 'move':
+                    $ids = json_decode((string) $_POST['ids']);
+                    [$success, $message, $redirect] = listMove($table, $ids);
 
-                break;
+                    break;
 
-            case 'delete':
-                $stock_ids = explode(',', $_POST['ids']);
-                [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
-                    list($success, $message, $redirect) = listDelete($table, $stock_ids);
-
-                    $params = [];
-                    $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (`object_id`) IN (';
-                    foreach ($stock_ids as $index => $stock_id) {
-                        $query .= sprintf(' (:stock_id_%s) ', $index);
-
-                        if (sizeof($stock_ids) - 1 !== $index) {
-                            $query .= ', ';
-                        } else {
-                            $query .= ') ';
-                        }
-
-                        $params = array_merge($params, ['stock_id_'.$index => $stock_id]);
-                    }
-                    if (sizeof($params) > 0) {
-                        db_query($query, $params);
-                    }
-
-                    return [$success, $message, $redirect];
-                });
-
-                break;
-
-            case 'copy':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listCopy($table, $ids, 'menutitle');
-
-                break;
-
-            case 'hide':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 0);
-
-                break;
-
-            case 'show':
-                $ids = explode(',', $_POST['ids']);
-                list($success, $message, $redirect) = listShowHide($table, $ids, 1);
-
-                break;
-
-            case 'export':
-                $_SESSION['export_ids_stock'] = $_POST['ids'];
-                list($success, $message, $redirect) = [true, '', '?action=stock_export'];
-
-                break;
-
-            case 'tag':
-                $ids = explode(',', $_POST['ids']);
-                if ('undefined' == $_POST['option']) {
-                    $success = false;
-                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
-                    $redirect = false;
-                } else {
-                    // set tag id
-                    $tag_id = $_POST['option'];
-                    $stock_ids = $ids;
-                    if (sizeof($stock_ids) > 0) {
-                        // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
-                        $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+                case 'delete':
+                    $stock_ids = explode(',', (string) $_POST['ids']) ?? [];
+                    [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
+                        [$success, $message, $redirect] = listDelete($table, $stock_ids);
 
                         $params = [];
+                        $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (`object_id`) IN (';
+                        foreach ($stock_ids as $index => $stock_id) {
+                            $query .= sprintf(' (:stock_id_%s) ', $index);
 
-                        for ($i = 0; $i < sizeof($stock_ids); ++$i) {
-                            $query .= "(:tag_id, 'Stock', :stock_id{$i})";
-                            $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
-                            if ($i !== sizeof($stock_ids) - 1) {
-                                $query .= ',';
+                            if (sizeof($stock_ids) - 1 !== $index) {
+                                $query .= ', ';
+                            } else {
+                                $query .= ') ';
                             }
+
+                            $params = array_merge($params, ['stock_id_'.$index => $stock_id]);
+                        }
+                        if (sizeof($params) > 0) {
+                            db_query($query, $params);
                         }
 
-                        $params = array_merge($params, ['tag_id' => $tag_id]);
-                        db_query($query, $params);
+                        return [$success, $message, $redirect];
+                    });
 
-                        $success = true;
-                        $message = 'Tags added';
-                        $redirect = true;
-                    } else {
+                    break;
+
+                case 'copy':
+                    $ids = explode(',', (string) $_POST['ids']);
+                    [$success, $message, $redirect] = listCopy($table, $ids, 'menutitle');
+
+                    break;
+
+                case 'hide':
+                    $ids = explode(',', (string) $_POST['ids']);
+                    [$success, $message, $redirect] = listShowHide($table, $ids, 0);
+
+                    break;
+
+                case 'show':
+                    $ids = explode(',', (string) $_POST['ids']);
+                    [$success, $message, $redirect] = listShowHide($table, $ids, 1);
+
+                    break;
+
+                case 'export':
+                    $_SESSION['export_ids_stock'] = $_POST['ids'];
+                    [$success, $message, $redirect] = [true, '', '?action=stock_export'];
+
+                    break;
+
+                case 'tag':
+                    $ids = explode(',', (string) $_POST['ids']);
+                    if ('undefined' == $_POST['option']) {
                         $success = false;
-                        $message = 'To apply the tag, the beneficiary must be checked';
+                        $message = 'No tags exist. Please go to "Manage tags" to create tags.';
                         $redirect = false;
-                    }
-                }
-
-                break;
-
-            case 'rtag':
-                $ids = explode(',', $_POST['ids']);
-                if ('undefined' == $_POST['option']) {
-                    $success = false;
-                    $message = 'No tags exist. Please go to "Manage tags" to create tags.';
-                    $redirect = false;
-                } else {
-                    // set tag id
-                    $tag_id = $_POST['option'];
-                    $stock_ids = $ids;
-                    if (sizeof($stock_ids) > 0) {
-                        db_transaction(function () use ($tag_id, $stock_ids) {
-                            $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (tag_id, `object_id`) IN (';
+                    } else {
+                        // set tag id
+                        $tag_id = $_POST['option'];
+                        $stock_ids = $ids;
+                        if (is_array($stock_ids) && sizeof($stock_ids) > 0) {
+                            // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
+                            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
 
                             $params = [];
 
                             for ($i = 0; $i < sizeof($stock_ids); ++$i) {
-                                $query .= "(:tag_id, :stock_id{$i})";
+                                $query .= "(:tag_id, 'Stock', :stock_id{$i})";
                                 $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
                                 if ($i !== sizeof($stock_ids) - 1) {
                                     $query .= ',';
-                                } else {
-                                    $query .= ')';
                                 }
                             }
 
                             $params = array_merge($params, ['tag_id' => $tag_id]);
                             db_query($query, $params);
-                        });
-                        $success = true;
-                        $message = 'Tags removed';
-                        $redirect = true;
-                    } else {
-                        $success = false;
-                        $message = 'To remove the tag, the boxes must be checked';
-                        $redirect = false;
-                    }
-                }
 
-                break;
-        }
+                            $success = true;
+                            $message = 'Tags added';
+                            $redirect = true;
+                        } else {
+                            $success = false;
+                            $message = 'To apply the tag, the beneficiary must be checked';
+                            $redirect = false;
+                        }
+                    }
+
+                    break;
+
+                case 'rtag':
+                    $ids = explode(',', (string) $_POST['ids']);
+                    if ('undefined' == $_POST['option']) {
+                        $success = false;
+                        $message = 'No tags exist. Please go to "Manage tags" to create tags.';
+                        $redirect = false;
+                    } else {
+                        // set tag id
+                        $tag_id = $_POST['option'];
+                        $stock_ids = $ids;
+                        if (is_array($stock_ids) && sizeof($stock_ids) > 0) {
+                            db_transaction(function () use ($tag_id, $stock_ids) {
+                                $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (tag_id, `object_id`) IN (';
+
+                                $params = [];
+
+                                for ($i = 0; $i < sizeof($stock_ids); ++$i) {
+                                    $query .= "(:tag_id, :stock_id{$i})";
+                                    $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
+                                    if ($i !== sizeof($stock_ids) - 1) {
+                                        $query .= ',';
+                                    } else {
+                                        $query .= ')';
+                                    }
+                                }
+
+                                $params = array_merge($params, ['tag_id' => $tag_id]);
+                                db_query($query, $params);
+                            });
+                            $success = true;
+                            $message = 'Tags removed';
+                            $redirect = true;
+                        } else {
+                            $success = false;
+                            $message = 'To remove the tag, the boxes must be checked';
+                            $redirect = false;
+                        }
+                    }
+
+                    break;
+            }
 
             $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect];
 
             echo json_encode($return);
 
-            exit();
+            exit;
         }
     }
 );

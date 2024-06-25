@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class MakeLocationIdUnsigned extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $this->table('stock')
             ->dropForeignKey('location_id')
@@ -46,7 +46,5 @@ class MakeLocationIdUnsigned extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
-    {
-    }
+    public function down() {}
 }

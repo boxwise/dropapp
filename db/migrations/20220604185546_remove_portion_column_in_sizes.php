@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class RemovePortionColumnInSizes extends AbstractMigration
 {
-    public function up()
+    public function up(): void
     {
         $sizes = $this->table('sizes');
         $sizes->removeColumn('portion')
@@ -12,7 +12,7 @@ class RemovePortionColumnInSizes extends AbstractMigration
         ;
     }
 
-    public function down()
+    public function down(): void
     {
         $sizes = $this->table('sizes');
         $sizes->addColumn('portion', 'integer', [

@@ -27,14 +27,14 @@ function generateQrPng($hash, $legacy = false)
                     ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
                     ->setForegroundColor(new Color(0, 0, 0))
                     ->setBackgroundColor(new Color(255, 255, 255))
-                    ;
+                ;
 
                 $result = $writer->write($qrCode);
 
                 $testUrl = '/mobile.php?'.explode('/mobile.php?', $qrCode->getData())[1];
 
                 $return = [$result->getDataUri(), $testUrl];
-            } catch (Exception $e) {
+            } catch (Exception) {
                 trigger_error('QR-code png generation error.');
 
                 $return = ['QR-CODE ERROR', 'QR-CODE ERROR'];
@@ -51,9 +51,9 @@ function generateBoxID($length = 8, $possible = '0123456789')
     $randomString = '';
     $i = 0;
     while ($i < $length) {
-        $possible = (0 === $i) ? substr($possible, 1, strlen($possible) - 1) : $possible;
+        $possible = (0 === $i) ? substr((string) $possible, 1, strlen((string) $possible) - 1) : $possible;
 
-        $char = substr($possible, mt_rand(0, strlen($possible) - 1), 1);
+        $char = substr((string) $possible, mt_rand(0, strlen((string) $possible) - 1), 1);
         if (!strstr($randomString, $char)) {
             $randomString .= $char;
             ++$i;
@@ -74,7 +74,7 @@ function generateQRIDForDB()
     $hash = md5($id);
     db_query('INSERT INTO qr (id, code, created) VALUES ('.$id.',"'.$hash.'",NOW())');
 
-    //test if generated qr-code is already connected to a box
+    // test if generated qr-code is already connected to a box
     if (db_value('SELECT id FROM stock WHERE qr_id = :id', ['id' => $id])) {
         throw new Exception('QR-Generation error! Please report to the Boxtribute team!');
     }
@@ -87,7 +87,7 @@ function generateSecureRandomString(
     string $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 ): string {
     if ($length < 1) {
-        throw new \RangeException('Length must be a positive integer');
+        throw new RangeException('Length must be a positive integer');
     }
     $pieces = [];
     $max = mb_strlen($keyspace, '8bit') - 1;
@@ -165,7 +165,7 @@ function getcampdata($id)
 		ORDER BY c.seq', ['camp' => $id, 'organisation_id' => $_SESSION['organisation']['id']]);
 }
 
-//this function verifies if a people id belongs to a camp that the current user has access to.
+// this function verifies if a people id belongs to a camp that the current user has access to.
 function verify_campaccess_people($id)
 {
     if (!$id) {
@@ -178,7 +178,7 @@ function verify_campaccess_people($id)
     }
 }
 
-//this function verifies if a location id belongs to a camp that the current user has access to.
+// this function verifies if a location id belongs to a camp that the current user has access to.
 function verify_campaccess_location($id)
 {
     if (!$id) {
@@ -206,9 +206,9 @@ function get_text_color($hexColor)
     }
 
     // hexColor RGB
-    $R1 = hexdec(substr($hexColor, 1, 2));
-    $G1 = hexdec(substr($hexColor, 3, 2));
-    $B1 = hexdec(substr($hexColor, 5, 2));
+    $R1 = hexdec(substr((string) $hexColor, 1, 2));
+    $G1 = hexdec(substr((string) $hexColor, 3, 2));
+    $B1 = hexdec(substr((string) $hexColor, 5, 2));
 
     // Black RGB
     $blackColor = '#000000';
@@ -217,13 +217,13 @@ function get_text_color($hexColor)
     $B2BlackColor = hexdec(substr($blackColor, 5, 2));
 
     // Calc contrast ratio
-    $L1 = 0.2126 * pow($R1 / 255, 2.2) +
-               0.7152 * pow($G1 / 255, 2.2) +
-               0.0722 * pow($B1 / 255, 2.2);
+    $L1 = 0.2126 * ($R1 / 255) ** 2.2 +
+               0.7152 * ($G1 / 255) ** 2.2 +
+               0.0722 * ($B1 / 255) ** 2.2;
 
-    $L2 = 0.2126 * pow($R2BlackColor / 255, 2.2) +
-              0.7152 * pow($G2BlackColor / 255, 2.2) +
-              0.0722 * pow($B2BlackColor / 255, 2.2);
+    $L2 = 0.2126 * ($R2BlackColor / 255) ** 2.2 +
+              0.7152 * ($G2BlackColor / 255) ** 2.2 +
+              0.0722 * ($B2BlackColor / 255) ** 2.2;
 
     $contrastRatio = 0;
     if ($L1 > $L2) {
@@ -236,6 +236,7 @@ function get_text_color($hexColor)
     if ($contrastRatio > 5) {
         return '#000000';
     }
+
     // if not, return white color.
     return '#FFFFFF';
 }
@@ -260,7 +261,7 @@ function v2_forward($base_url, $route)
         redirect($base_url.'/bases/'.$_SESSION['camp']['id'].$route);
     } else {
         // I add a link to the same REQUEST_URI just with a changed view preference so that the SESSION is changed, too.
-        $url = str_replace(['?&', '&&'], ['?', '&'], str_replace('preference=classic', '', $_SERVER['REQUEST_URI']).'&preference=v2');
+        $url = str_replace(['?&', '&&'], ['?', '&'], str_replace('preference=classic', '', (string) $_SERVER['REQUEST_URI']).'&preference=v2');
 
         return '<div data-testid="v2-link">Try out the new Boxtribute.</div><a href="'.$url.'" data-testid="v2-link-url">Switch here to the NEW Version!</a>';
     }
@@ -344,7 +345,7 @@ function move_boxes($ids, $newlocationid, $mobile = false)
                         modified = NOW(), 
                         modified_by = :user_id 
                     WHERE id = :id',
-                    ['box_state_id' => $newlocation['box_state_id'],  'id' => $id, 'user_id' => $_SESSION['user']['id']]
+                    ['box_state_id' => $newlocation['box_state_id'], 'id' => $id, 'user_id' => $_SESSION['user']['id']]
                 );
                 simpleSaveChangeHistory('stock', $id, 'box_state_id', $from, $to);
                 $mobile_message .= ' and its state changed to '.$newlocation['box_state_name'];

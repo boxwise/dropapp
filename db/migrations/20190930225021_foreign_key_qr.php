@@ -29,7 +29,7 @@ class ForeignKeyQr extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
         $this->table('stock')
             ->changeColumn('qr_id', 'integer', [
@@ -49,13 +49,14 @@ class ForeignKeyQr extends AbstractMigration
             ->changeColumn('category_id', 'integer', [
                 'signed' => false,
                 'null' => true,
-            ])->save();
+            ])->save()
+        ;
         $this->execute('update translate SET category_id = NULL WHERE category_id = 0');
         $this->table('translate')
             ->addForeignKey('category_id', 'translate_categories', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
-    ;
+        ;
     }
 }

@@ -5,7 +5,7 @@ use Phinx\Migration\AbstractMigration;
 
 class AddTagDescription extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $tag = $this->table('tags');
         $tag->addColumn('description', 'text', ['limit' => MysqlAdapter::TEXT_REGULAR])

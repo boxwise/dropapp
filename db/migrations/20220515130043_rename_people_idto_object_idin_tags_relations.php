@@ -7,7 +7,7 @@ class RenamePeopleIdtoObjectIdinTagsRelations extends AbstractMigration
     /**
      * Migrate Up.
      */
-    public function up()
+    public function up(): void
     {
         $table = $this->table('tags_relations');
         if ($table) {
@@ -18,7 +18,7 @@ class RenamePeopleIdtoObjectIdinTagsRelations extends AbstractMigration
     /**
      * Migrate Down.
      */
-    public function down()
+    public function down(): void
     {
         $table = $this->table('tags_relations');
         if ($table) {

@@ -5,7 +5,7 @@ use Phinx\Migration\AbstractMigration;
 
 class UsergroupsLevels extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('cms_usergroups', [
             'id' => false,

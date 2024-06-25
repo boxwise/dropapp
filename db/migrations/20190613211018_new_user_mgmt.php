@@ -5,7 +5,7 @@ use Phinx\Migration\AbstractMigration;
 
 class NewUserMgmt extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('camps', [
             'id' => false,
@@ -135,7 +135,7 @@ class NewUserMgmt extends AbstractMigration
         $this->table('settings')
             ->rename('cms_settings')
             ->save()
-            ;
+        ;
         $this->table('cms_usergroups', [
             'id' => false,
             'primary_key' => ['id'],

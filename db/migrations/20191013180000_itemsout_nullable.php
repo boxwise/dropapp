@@ -4,11 +4,12 @@ use Phinx\Migration\AbstractMigration;
 
 class ItemsOutNullable extends AbstractMigration
 {
-    public function change()
+    public function change(): void
     {
         $this->table('itemsout')
             ->changeColumn('from_location', 'integer', [
                 'null' => true,
-            ])->save();
+            ])->save()
+        ;
     }
 }

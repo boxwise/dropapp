@@ -1,6 +1,6 @@
 <?php
 
-function db_connect($dsn, $username, $password)
+function db_connect($dsn, $username, $password): PDO
 {
     global $defaultdbid;
 
@@ -58,7 +58,7 @@ function db_array($query, $array = [], $dbid = false, $idaskey = false)
     if (!$dbid) {
         $dbid = $defaultdbid;
     }
-    $resultarray = null;
+    $resultarray = [];
     $result = db_query($query, $array, $dbid);
     while ($row = db_fetch($result)) {
         if ($idaskey && $row['id']) {
@@ -77,6 +77,8 @@ function db_simplearray($query, $array = [], $dbid = false, $keyneeded = true)
     if (!$dbid) {
         $dbid = $defaultdbid;
     }
+
+    $resultarray = [];
 
     $result = db_query($query, $array, $dbid);
     while ($row = db_fetch($result, PDO::FETCH_NUM)) {
@@ -241,7 +243,7 @@ function db_tableexists($table, $dbid = false)
         $dbid = $defaultdbid;
     }
 
-    $tables = db_listtables($table, $dbid);
+    $tables = db_listtables($dbid);
 
     return in_array($table, $tables);
 }

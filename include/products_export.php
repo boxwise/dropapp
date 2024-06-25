@@ -2,11 +2,11 @@
 
 $locations = join(',', db_simplearray('SELECT id, id FROM locations WHERE camp_id = :camp_id AND type = "Warehouse"', ['camp_id' => $_SESSION['camp']['id']]));
 
-//Create array with the export_ids_people in it
-$export_ids_array = explode(',', $_SESSION['export_ids_products']);
-//Create a list of placeholders ? the same length as export ids given
+// Create array with the export_ids_people in it
+$export_ids_array = explode(',', (string) $_SESSION['export_ids_products']);
+// Create a list of placeholders ? the same length as export ids given
 $id_pars = str_repeat('?,', count($export_ids_array) - 1).'?';
-//Put camp id as first element in the list
+// Put camp id as first element in the list
 
 if ('' != $export_ids_array[0]) {
     array_unshift($export_ids_array, $_SESSION['camp']['id']);
