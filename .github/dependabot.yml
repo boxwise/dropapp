@@ -6,5 +6,4 @@ updates:
       interval: "weekly"
     assignees:
       - "haguesto"
-    allow:
-      - dependency-name: "sentry*"
+    open-pull-requests-limit: 10
