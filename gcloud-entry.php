@@ -1,5 +1,8 @@
 <?php
 
+// The GAE environment requires a single entry point, so we're
+// doing basic routing from here
+
 // // Allow dev localhost ports, and boxtribute subdomains as origins
 // // As we need to call the dropapp from the v2 app we should set the allowed CORS urls
 // $origins = [
@@ -35,9 +38,7 @@ require_once 'library/lib/errorhandling.php';
 
 require_once 'library/constants.php';
 
-// The GAE environment requires a single entry point, so we're
-// doing basic routing from here
-use OpenCensus\Trace\Tracer;
+// use OpenCensus\Trace\Tracer;
 
 // permanent redirect for old market.drapenihavet.no url
 // ideally it wouldn't need to run PHP code to do this redirect
@@ -52,56 +53,57 @@ if (('market.drapenihavet.no' == $_SERVER['HTTP_HOST']) || ('www.market.drapenih
 }
 
 $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
-Tracer::inSpan(
-    ['name' => ('gcloud-entry:'.$parsedUrl)],
-    function () use ($parsedUrl) {
-        // this is horrible, but in order to wrap these includes in this tracing function
-        // we have to declare every possible global variable usage
-        // ideally we wouldn't be using globals at all, but that's for another day :)
-        global $settings,$translate,$action,$lan,$pdf,$_txt,$formbuttons;
-        global $error,$listdata,$data,$table,$listconfig,$thisfile,$formdata;
-        global $rolesToActions, $menusToActions;
+// Tracer::inSpan(
+//     ['name' => ('gcloud-entry:'.$parsedUrl)],
+//     function () use ($parsedUrl) {
+//         // this is horrible, but in order to wrap these includes in this tracing function
+//         // we have to declare every possible global variable usage
+//         // ideally we wouldn't be using globals at all, but that's for another day :)
+//         global $settings,$translate,$action,$lan,$pdf,$_txt,$formbuttons;
+//         global $error,$listdata,$data,$table,$listconfig,$thisfile,$formdata;
+//         global $rolesToActions, $menusToActions;
 
-        switch ($parsedUrl) {
-            case '/':
-            case '/index.php':
-                require 'index.php';
+switch ($parsedUrl) {
+    case '/':
+    case '/index.php':
+        require 'index.php';
 
-                break;
+        break;
 
-                // old path of QR-codes
-            case '/flip/scan.php':
-                require 'mobile.php';
+        // old path of QR-codes
+    case '/flip/scan.php':
+        require 'mobile.php';
 
-                break;
+        break;
 
-            case '/ajax.php':
-            case '/mobile.php':
-            case '/cypress-session.php':
-            case '/pdf/workshopcard.php':
-            case '/pdf/bicyclecard.php':
-            case '/pdf/idcard.php':
-            case '/pdf/qr.php':
-            case '/pdf/dryfood.php':
-            case '/cron/dailyroutine.php':
-            case '/cron/reseed-auth0.php':
-            case '/cron/reseed-roles-auth0.php':
-            case '/fake-error.php':
-                require substr($parsedUrl, 1); // trim /
+    case '/ajax.php':
+    case '/mobile.php':
+    case '/cypress-session.php':
+    case '/pdf/workshopcard.php':
+    case '/pdf/bicyclecard.php':
+    case '/pdf/idcard.php':
+    case '/pdf/qr.php':
+    case '/pdf/dryfood.php':
+    case '/cron/dailyroutine.php':
+    case '/cron/reseed-auth0.php':
+    case '/cron/reseed-roles-auth0.php':
+    case '/fake-error.php':
+        require substr($parsedUrl, 1); // trim /
 
-                break;
+        break;
 
-            case '/ping':
-                http_response_code(200);
+    case '/ping':
+        http_response_code(200);
 
-                exit('pong');
+        exit('pong');
 
-                break;
+        break;
 
-            default:
-                http_response_code(404);
+    default:
+        http_response_code(404);
 
-                exit('Not Found');
-        }
-    }
-);
+        exit('Not Found');
+}
+
+//     }
+// );
