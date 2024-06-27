@@ -201,6 +201,20 @@ $menusToActions = [
         ],
     ],
     [
+        'id' => 167,
+        'module' => 'Report',
+        'menu' => 'Statistics v2 (<span>beta</span>)',
+        'action' => 'statviz_dashboard',
+        'adminonly' => '0',
+        'visible' => '1',
+        'allusers' => '0',
+        'allcamps' => '0',
+        'action_permission' => [
+            'view_inventory',
+            'view_beneficiary_graph',
+        ],
+    ],
+    [
         'id' => 145,
         'module' => 'Library',
         'menu' => 'Library titles (<span>beta</span>)',
