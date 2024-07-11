@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   gcp-cli: circleci/gcp-cli@3.1.1
-  cypress: cypress-io/cypress@2.2.0
+  cypress: cypress-io/cypress@3.3.1
 jobs:
   build:
     docker:
@@ -142,7 +142,7 @@ workflows:
     # baseUrl for cypress is set in cypress.json (currently staging.boxtribute.org)
     - cypress/run:
         name: cypress-feature-tests
-        executor: cypress/base-14
+        executor: default
         yarn: true
         record: true # cypress tests are uploaded to https://dashboard.cypress.io/
         wait-on: 'https://staging.boxtribute.org/assets/img/boxtribute.png'
@@ -155,7 +155,7 @@ workflows:
             only: master
     - cypress/run:
         name: cypress-auth-tests
-        executor: cypress/base-14
+        executor: default
         yarn: true
         record: true # cypress tests are uploaded to https://dashboard.cypress.io/
         wait-on: 'https://staging.boxtribute.org/assets/img/boxtribute.png'
