@@ -142,12 +142,8 @@ workflows:
     # baseUrl for cypress is set in cypress.json (currently staging.boxtribute.org)
     - cypress/run:
         name: cypress-feature-tests
-        executor: default
-        yarn: true
-        record: true # cypress tests are uploaded to https://dashboard.cypress.io/
-        wait-on: 'https://staging.boxtribute.org/assets/img/boxtribute.png'
-        no-workspace: true
-        spec: cypress/e2e/1_feature_tests/*
+        package-manager: yarn
+        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec cypress/e2e/1_feature_tests/*
         requires:
           - deploy-staging
         filters:
@@ -155,12 +151,8 @@ workflows:
             only: master
     - cypress/run:
         name: cypress-auth-tests
-        executor: default
-        yarn: true
-        record: true # cypress tests are uploaded to https://dashboard.cypress.io/
-        wait-on: 'https://staging.boxtribute.org/assets/img/boxtribute.png'
-        no-workspace: true
-        spec: cypress/e2e/2_auth_tests/*
+        package-manager: yarn
+        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec cypress/e2e/2_auth_tests/*
         requires:
           - deploy-staging
         filters:
