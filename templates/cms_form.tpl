@@ -29,17 +29,17 @@
 					{if isset($activetab)}
 						{foreach $tabs as $key=>$value name="tabs"}
 							{if $key == $activetab}
-								<li class="active"><a id="tabid_{$key}" href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$smarty.foreach.tabs.iteration}"> {$value}</a></li>
+								<li class="active"><a id="tabid_{$key}" href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$value@iteration}"> {$value}</a></li>
 							{else}
-								<li><a id="tabid_{$key}" href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$smarty.foreach.tabs.iteration}" {if $hiddentabs[$key]}class="hidden"{/if}> {$value}</a></li>
+								<li><a id="tabid_{$key}" href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$value@iteration}" {if $hiddentabs[$key]}class="hidden"{/if}> {$value}</a></li>
 							{/if}
 						{/foreach}
 					{else}
 						{foreach $tabs as $key=>$value name="tabs"}
-							{if $smarty.foreach.tabs.first}
-								<li class="active"><a id="tabid_{$key}" href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$smarty.foreach.tabs.iteration}"> {$value}</a></li>
+							{if $value@first}
+								<li class="active"><a id="tabid_{$key}" href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$value@iteration}"> {$value}</a></li>
 							{else}
-								<li><a id="tabid_{$key}" href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$smarty.foreach.tabs.iteration}" {if $hiddentabs[$key]}class="hidden"{/if}> {$value}</a></li>
+								<li><a id="tabid_{$key}" href="#tab_{$key}" data-toggle="tab" style="z-index: {$tabs|count-$value@iteration}" {if $hiddentabs[$key]}class="hidden"{/if}> {$value}</a></li>
 							{/if}
 						{/foreach}
 					{/if}
@@ -48,7 +48,7 @@
 
 			<div class="tab-content">
 				{foreach $tabs as $key=>$value name="tabcontent"}
-				<div class="tab-pane fade {if (isset($activetab) && $key == $activetab) || (!isset($activetab) && $smarty.foreach.tabcontent.first)}in active{/if}" id="tab_{$key}">
+				<div class="tab-pane fade {if (isset($activetab) && $key == $activetab) || (!isset($activetab) && $value@first)}in active{/if}" id="tab_{$key}">
 				
 					{foreach $formelements as $element}
 						{if $element['tab'] and $element['tab']==$key and !$element['aside']}{include file="cms_form_{$element['type']}.tpl"}{/if}

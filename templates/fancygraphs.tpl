@@ -99,7 +99,7 @@ var chart2 = AmCharts.makeChart("chartdiv2", {
 	        "female": {$d['female']},
 	        "boys": {$d['boys']},
 	        "girls": {$d['girls']},
-	    } {if not $smarty.foreach.size.last},{/if}
+	    } {if not $d@last},{/if}
     {/foreach}
     
     ],

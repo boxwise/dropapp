@@ -1,16 +1,16 @@
 <div class="info-aside" id="people_id_selected" data-testid="info-aside">{$data['test']}
 	<ul class="people-list">
 		{foreach $data['people'] as $person name=peopleaside}
-			{if $smarty.foreach.peopleaside.total > 1 && $smarty.foreach.peopleaside.first}
+			{if $person@total > 1 && $person@first}
 				<li class="highlight">Family Members</li>
 			{/if}
 			{if !$person['hide']}
 				<li>
 					<div class="people-info">
 					{if !$data['hideprivatedata']}
-						<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{if is_null($person['parent_id'])}FH: {/if}{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
+						<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{if !$person['parent_id']}FH: {/if}{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
 					{else}
-						<div data-testid="familyMember">{if is_null($person['parent_id'])}FH: {/if}{$person['firstname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</div>
+						<div data-testid="familyMember">{if !$person['parent_id']}FH: {/if}{$person['firstname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</div>
 					{/if}
 					{if $person['taglabels'] || $person['comments']}
 						{if $person['taglabels'] && !$data['hideprivatedata']}
