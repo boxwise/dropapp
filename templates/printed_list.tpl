@@ -9,7 +9,7 @@
 {/if}    
             <tr><td class="square">&#9723;</td><td>{$container['container']}</td><td>{$container['count']}</td></tr>
 
-{if $smarty.foreach.containers.iteration is div by $length} 
+{if $container@iteration is div by $length} 
 	</table> 
 	{$newcol = true} 
 {/if} 
