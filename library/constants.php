@@ -203,7 +203,7 @@ $menusToActions = [
     [
         'id' => 167,
         'module' => 'Report',
-        'menu' => 'Statistics v2 (<span>beta</span>)',
+        'menu' => 'V2 Dashboard (<span>beta</span>)',
         'action' => 'statviz_dashboard',
         'adminonly' => '0',
         'visible' => '1',
