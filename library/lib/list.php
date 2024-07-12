@@ -229,10 +229,19 @@ function listDeleteMessage($table, $id, $foreignkey, $restricted)
 function listDeleteAction($table, $id, $count = 0, $recursive = false)
 {
     $hasPrevent = db_fieldexists($table, 'preventdelete');
+    // prevent deletion of deleted records
+    // trello card: https://trello.com/c/HAUEkahK
+    $hasDeleted = db_fieldexists($table, 'deleted');
 
-    $result = db_query('UPDATE '.$table.' SET deleted = NOW(), modified = NOW(), modified_by = :user_id WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id, 'user_id' => $_SESSION['user']['id']]);
+    $query = 'UPDATE '.$table.' SET deleted = NOW(), modified = NOW(), modified_by = :user_id WHERE id = :id';
+    $query .= ($hasPrevent ? ' AND NOT preventdelete' : '');
+    $query .= ($hasDeleted ? ' AND NOT deleted' : '');
+    $result = db_query($query, [
+        'id' => $id,
+        'user_id' => $_SESSION['user']['id'],
+    ]);
     $count += $result->rowCount();
-    if ($result->rowCount()) {
+    if (1 === $result->rowCount()) {
         simpleSaveChangeHistory($table, $id, 'Record deleted');
     }
 
