@@ -143,7 +143,7 @@ workflows:
     - cypress/run:
         name: cypress-feature-tests
         package-manager: yarn
-        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec cypress/e2e/1_feature_tests/*
+        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec "cypress/e2e/1_feature_tests/*"
         requires:
           - deploy-staging
         filters:
@@ -152,7 +152,7 @@ workflows:
     - cypress/run:
         name: cypress-auth-tests
         package-manager: yarn
-        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec cypress/e2e/2_auth_tests/*
+        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec "cypress/e2e/2_auth_tests/*"
         requires:
           - deploy-staging
         filters:
