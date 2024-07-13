@@ -203,7 +203,7 @@ $menusToActions = [
     [
         'id' => 167,
         'module' => 'Report',
-        'menu' => 'V2 Dashboard (<span>beta</span>)',
+        'menu' => 'Dashboard v2 (<span>beta</span>)',
         'action' => 'statviz_dashboard',
         'adminonly' => '0',
         'visible' => '1',
@@ -211,6 +211,7 @@ $menusToActions = [
         'allcamps' => '0',
         'action_permission' => [
             'view_inventory',
+            'view_shipments',
             'view_beneficiary_graph',
         ],
     ],
