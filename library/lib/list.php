@@ -230,12 +230,11 @@ function listDeleteAction($table, $id, $count = 0, $recursive = false)
 {
     $hasPrevent = db_fieldexists($table, 'preventdelete');
     // prevent deletion of deleted records
-    // trello card: https://trello.com/c/HAUEkahK
     $hasDeleted = db_fieldexists($table, 'deleted');
 
     $query = 'UPDATE '.$table.' SET deleted = NOW(), modified = NOW(), modified_by = :user_id WHERE id = :id';
     $query .= ($hasPrevent ? ' AND NOT preventdelete' : '');
-    $query .= ($hasDeleted ? ' AND NOT deleted' : '');
+    $query .= ($hasDeleted ? ' AND (NOT deleted OR deleted IS NULL)' : '');
     $result = db_query($query, [
         'id' => $id,
         'user_id' => $_SESSION['user']['id'],
