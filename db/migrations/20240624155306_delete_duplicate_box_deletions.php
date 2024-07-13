@@ -11,16 +11,20 @@ class DeleteDuplicateBoxDeletions extends AbstractMigration
         $deleted_rows = $this->execute('
 DELETE FROM history
 WHERE id IN (
-    SELECT MAX(h.id) as max_id, h.record_id
-    FROM history h
-    INNER JOIN stock s
-    ON s.id = h.record_id
-    AND h.tablename = "stock"
-    AND (DATE(h.changedate) = "2023-01-12" OR DATE(h.changedate) = "2023-01-11")
-    AND h.changes = "Record deleted"
-    INNER JOIN locations l
-    ON l.id = s.location_id AND l.camp_id = 43
-    GROUP BY h.record_id
+    SELECT tmp.max_id 
+    FROM (
+        SELECT h.record_id, MAX(h.id) as max_id
+        FROM history h
+        INNER JOIN stock s
+        ON s.id = h.record_id
+            AND h.tablename = "stock"
+            AND (DATE(h.changedate) = "2023-01-12" OR DATE(h.changedate) = "2023-01-11")
+            AND h.changes = "Record deleted"
+        INNER JOIN locations l
+        ON l.id = s.location_id AND l.camp_id = 43
+        GROUP BY h.record_id
+        HAVING COUNT(h.id) > 1
+    ) tmp
 );
         ');
         $this->output->writeln('Deleted box_id rows: '.$deleted_rows);
