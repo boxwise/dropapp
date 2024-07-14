@@ -169,7 +169,7 @@
 									data-collapseparent={$row['parent_id']}
 								{/if}>
 								{foreach $listdata as $key=>$column name="rows"}
-									{if $smarty.foreach.rows.first}
+									{if $column@first}
 										<td class="controls-front list-level-{$row['level']} list-column-{$key} {if $listconfig['noindent']}no-indent{/if}">
 											<div class="td-content">
 												<div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>

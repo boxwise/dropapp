@@ -133,7 +133,7 @@
                                 {if $element['allowmove']}item-zortable{/if} 
                                 {if $element['allowselect']}item-selectable{/if}">
                                 {foreach $element['columns'] as $innerColumnKey => $innerColumn}
-                                    {if $smarty.foreach.rows.first}
+                                    {if $innerColumn@first}
                                         <td class="controls-front list-level-0">
                                             <div class="td-content">
                                                 <div class="handle"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>                        

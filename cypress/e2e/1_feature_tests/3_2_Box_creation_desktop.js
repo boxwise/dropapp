@@ -6,6 +6,7 @@ context("Box_creation_tests", () => {
     let Test_size = "S";  
 
     beforeEach(function() {
+        cy.setupAjaxActionHook();
         cy.loginAsVolunteer();
         cy.visit('/?action=stock_edit&origin=stock');
     })
@@ -52,6 +53,7 @@ context("Box_creation_tests", () => {
     function CreateQR() {
         cy.get("input[data-testid='select-id']").first().click();
         cy.get("i[class='fa fa-print']").click();
+        cy.waitForAjaxActionWithoutAssert();
     }
     function CheckUrl(Text){
         cy.url().should('contain',Text);
@@ -117,6 +119,7 @@ context("Box_creation_tests", () => {
             CreateQR();
             // CheckUrl('pdf');
             // CheckUrl('label');
+            getBoxesMenu();
             clearSearchbox();
             cy.deleteAllBoxesExceptSeed();
         });

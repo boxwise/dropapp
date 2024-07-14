@@ -75,7 +75,7 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 		        "{$key}": {$value['count']},
 			{/foreach}
 		}
-		{if not $smarty.foreach.days.last},{/if}
+		{if not $borrow@last},{/if}
 	{/foreach}
 
 

@@ -32,10 +32,10 @@ var chart = AmCharts.makeChart("chartdiv", {
         "date": "{$date}",
 			{foreach $day as $key=>$value name=groups}
 		        "{$key}": {$value}
-				{if not $smarty.foreach.groups.last},{/if}
+				{if not $value@last},{/if}
 			{/foreach}
 		}
-		{if not $smarty.foreach.days.last},{/if}
+		{if not $day@last},{/if}
 	{/foreach}
 	],
     "valueAxes": [{
