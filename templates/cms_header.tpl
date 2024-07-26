@@ -27,9 +27,11 @@
 
 {* <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script> *}
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" href="/assets/img/favicon-32x32-boxtribute.png" sizes="32x32">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon-boxtribute.png">
+    <link rel="icon" type="image/png" href="/assets/img/favicon-32x32-boxtribute.png" sizes="32x32" >
     <link rel="icon" type="image/png" href="/assets/img/favicon-16x16-boxtribute.png" sizes="16x16">	
+    <link rel="icon" type="image/png" href="/assets/img/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/assets/img/android-chrome-512x512.png" sizes="512x512">
     {* <link rel="icon" type="image/png" href="/assets/img/Boxtribute Main Logo-03 (2).png" sizes="16x16">
     <link rel="icon" type="image/png" href="/assets/img/Boxtribute Main Logo-03 (2).png" sizes="32x32">	 *}
    
