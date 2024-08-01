@@ -10,12 +10,10 @@
         "robmorgan/phinx": "^0.12",
         "symfony/yaml": "^5.0",
         "google/cloud-storage": "^1.12",
-        "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
         "smarty/smarty": "^4.5.3",
         "sendgrid/sendgrid": "^7.3",
         "google/cloud-logging": "^1.18",
         "auth0/auth0-php": "^8.0.5",
-        "opencensus/opencensus": "^0.6.0",
         "kriswallsmith/buzz": "^1.2",
         "nyholm/psr7": "^1.4",
         "steampixel/simple-php-router": "^0.7.0",
@@ -24,9 +22,7 @@
         "sentry/sentry": "^4.3",
         "php-http/curl-client": "^2.2",
         "google/cloud-error-reporting": "^0.19.5",
-        "google/cloud-datastore": "^1.18",
-        "open-telemetry/exporter-otlp": "^1.0",
-        "open-telemetry/sdk": "^1.0"    },
+        "google/cloud-datastore": "^1.18"    },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true

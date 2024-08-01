@@ -1,6 +1,6 @@
 <?php
 
-use OpenCensus\Trace\Tracer;
+// use OpenCensus\Trace\Tracer;
 
 $table = 'people';
 $action = 'people';
@@ -66,18 +66,18 @@ if (!$ajax) {
     addbutton('realdelete', 'Full delete', ['icon' => 'fa-trash', 'oneitemonly' => false, 'confirm' => true, 'testId' => 'fullDeleteUser']);
     addcolumn('html', '&nbsp;', 'icons');
 
-    Tracer::inSpan(
-        ['name' => 'include/people_deactivated.php:hasActiveParent'],
-        function () use (&$data) {
-            global $settings;
+    // Tracer::inSpan(
+    //     ['name' => 'include/people_deactivated.php:hasActiveParent'],
+    //     function () use (&$data) {
+    //         global $settings;
 
-            foreach ($data as $key => $value) {
-                if ('1' == $data[$key]['has_not_active_parent']) {
-                    $data[$key]['icons'] .= sprintf('<i class="fa fa-exclamation-triangle warning tooltip-this" title="To reactivate %s please make sure you reactivate their family head (%s) first."></i>', $data[$key]['firstname'].' '.$data[$key]['lastname'], $data[$key]['family_head']);
-                }
-            }
+    foreach ($data as $key => $value) {
+        if ('1' == $data[$key]['has_not_active_parent']) {
+            $data[$key]['icons'] .= sprintf('<i class="fa fa-exclamation-triangle warning tooltip-this" title="To reactivate %s please make sure you reactivate their family head (%s) first."></i>', $data[$key]['firstname'].' '.$data[$key]['lastname'], $data[$key]['family_head']);
         }
-    );
+    }
+    //     }
+    // );
     $cmsmain->assign('data', $data);
     $cmsmain->assign('listconfig', $listconfig);
     $cmsmain->assign('listdata', $listdata);
