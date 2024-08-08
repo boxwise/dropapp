@@ -225,7 +225,7 @@ $menusToActions = [
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
-            'manage_books',
+            'manage_library',
         ],
     ],
     [
@@ -238,7 +238,7 @@ $menusToActions = [
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
-            'lend_books',
+            'show_library_history',
         ],
     ],
     [
@@ -471,8 +471,8 @@ $rolesToActions = [
     ],
 
     'library_volunteer' => [
-        'manage_books',
-        'lend_books',
+        'manage_library',
+        'show_library_history',
         'view_start_page',
         'be_user',
     ],
