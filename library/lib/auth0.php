@@ -227,11 +227,20 @@ function isUserInSyncWithAuth0($userId)
         $return_value = true;
     } elseif ($dbUser && $auth0User && $hasActiveBase) {
         $validationResult = [];
-        $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
-        $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', (string) $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', (string) $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
-        $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
-        $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
-        $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
+
+        // deleted user no longer has name/email/usergroup/organisation/base
+        // ref. trello card: https://trello.com/c/68xRRHny
+        if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
+            $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
+            $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
+            $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
+        } else {
+            $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
+            $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', (string) $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', (string) $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
+            $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
+            $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
+            $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
+        }
 
         if ($dbUser['active_base_ids']) {
             // check if all active bases are in sync
@@ -246,14 +255,17 @@ function isUserInSyncWithAuth0($userId)
             $validationResult['valid_lastday'] = (!empty($auth0User['app_metadata']['valid_lastday']) && $auth0User['app_metadata']['valid_lastday'] == $dbUser['valid_lastday']) ? 'true' : 'false';
         }
 
-        if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
-            $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
-            $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
-        }
-
         $false_key = array_search('false', $validationResult);
         $return_value = !$false_key;
     } elseif ($dbUser && $auth0User && !$hasActiveBase) {
+        // check if deleted user that no active base is in sync with auth0
+        if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
+            $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
+            $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
+            $false_key = array_search('false', $validationResult);
+
+            $return_value = !$false_key;
+        }
         // the user active in db but has no active bases
         $return_value = false;
     } elseif ((!$dbUser || $auth0User) && ($dbUser || !$auth0User)) {
