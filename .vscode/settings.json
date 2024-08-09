@@ -1,7 +1,7 @@
 {
     "[php]": {
         "editor.formatOnSave": true,
-        "editor.defaultFormatter": "fterrag.vscode-php-cs-fixer"
+        "editor.defaultFormatter": "junstyle.php-cs-fixer"
     },
     "php-cs-fixer.rules": "@PhpCsFixer",
     "intelephense.format.enable": false
