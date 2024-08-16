@@ -480,6 +480,11 @@ $rolesToActions = [
         'be_user',
     ],
 
+    'external_free_shop_checkout' => [
+        'checkout_beneficiaries',
+        'be_user',
+    ],
+
     'authenticated_user' => [
         'be_user',
     ],
