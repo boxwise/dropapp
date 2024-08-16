@@ -34,10 +34,15 @@ class AddTemporalColumnsToTagsRelations extends AbstractMigration
             ])
             ->update()
         ;
+        // Drop the composite primary key (object_id, tag_id, object_type)
+        $this->execute('ALTER TABLE tags_relations DROP PRIMARY KEY');
+        // Add integer PK to have table ordering, cf. https://stackoverflow.com/a/9070808/3865876
+        $this->execute('ALTER TABLE tags_relations ADD id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST');
     }
 
     public function down(): void
     {
+        $this->execute('ALTER TABLE tags_relations DROP PRIMARY KEY');
         $this->table('tags_relations')
             ->dropForeignKey('created_by_id')
             ->removeColumn('created_by_id')
@@ -45,7 +50,9 @@ class AddTemporalColumnsToTagsRelations extends AbstractMigration
             ->removeColumn('deleted_by_id')
             ->removeColumn('created_on')
             ->removeColumn('deleted_on')
+            ->removeColumn('id')
             ->save()
         ;
+        $this->execute('ALTER TABLE tags_relations ADD PRIMARY KEY(object_id,tag_id,object_type)');
     }
 }
