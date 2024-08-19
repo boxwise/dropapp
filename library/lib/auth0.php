@@ -581,6 +581,8 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         // this feature removed for the new org
         // 'Volunteer (Library)' => ['library_volunteer'],
         'Label Creation' => ['label_creation'],
+        // This role is manually created only
+        // 'External Checkout (Free Shop)' => ['external_free_shop_checkout'],
     ];
 
     if (!$isFirstBase) {
