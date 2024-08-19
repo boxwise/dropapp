@@ -225,7 +225,7 @@ $menusToActions = [
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
-            'manage_books',
+            'manage_library',
         ],
     ],
     [
@@ -238,7 +238,7 @@ $menusToActions = [
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
-            'lend_books',
+            'show_library_history',
         ],
     ],
     [
@@ -375,6 +375,7 @@ $menusToActions = [
     ],
 ];
 
+// This has to be identical to the rolesMapping in the Auth0 dynamic-permissions script
 $rolesToActions = [
     'boxtribute_god' => [
         'be_god',
@@ -471,8 +472,8 @@ $rolesToActions = [
     ],
 
     'library_volunteer' => [
-        'manage_books',
-        'lend_books',
+        'manage_library',
+        'show_library_history',
         'view_start_page',
         'be_user',
     ],
