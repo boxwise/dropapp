@@ -241,10 +241,15 @@ function isUserInSyncWithAuth0($userId)
             $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
         }
 
-        if ($dbUser['active_base_ids']) {
-            // check if all active bases are in sync
-            $validationResult['base_ids'] = ($auth0User['app_metadata']['base_ids'] == array_intersect($auth0User['app_metadata']['base_ids'], $dbUser['active_base_ids'])) ? 'true' : 'false';
-        }
+        $auth0ActiveBaseIds = isset($auth0User['active_base_ids']) && is_array($auth0User['active_base_ids']) ? $auth0User['active_base_ids'] : [];
+        $dbUserActiveBaseIds = isset($dbUser['active_base_ids']) && is_array($dbUser['active_base_ids']) ? $dbUser['active_base_ids'] : [];
+
+        // Sort the base ids to ensure they can be compared regardless of order
+        sort($auth0ActiveBaseIds);
+        sort($dbUserActiveBaseIds);
+
+        // check if all active bases are in sync
+        $validationResult['base_ids'] = ($auth0ActiveBaseIds === $dbUserActiveBaseIds) ? 'true' : 'false';
 
         if ($dbUser['valid_firstday'] && '0000-00-00' != $dbUser['valid_firstday']) {
             $validationResult['valid_firstday'] = (!empty($auth0User['app_metadata']['valid_firstday']) && $auth0User['app_metadata']['valid_firstday'] == $dbUser['valid_firstday']) ? 'true' : 'false';
@@ -257,7 +262,7 @@ function isUserInSyncWithAuth0($userId)
         $false_key = array_search('false', $validationResult);
         $return_value = !$false_key;
     } elseif ($dbUser && $auth0User && !$hasActiveBase) {
-        // check if deleted user that no active base is in sync with auth0
+        // check if deleted user without active base is in sync with Auth0
         if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
             $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
             $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
