@@ -241,8 +241,8 @@ function isUserInSyncWithAuth0($userId)
             $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
         }
 
-        $auth0ActiveBaseIds = isset($auth0User['active_base_ids']) && is_array($auth0User['active_base_ids']) ? $auth0User['active_base_ids'] : [];
-        $dbUserActiveBaseIds = isset($dbUser['active_base_ids']) && is_array($dbUser['active_base_ids']) ? $dbUser['active_base_ids'] : [];
+        $auth0ActiveBaseIds = isset($auth0User['active_base_ids']) && is_array($auth0User['active_base_ids']) ? array_values($auth0User['active_base_ids']) : [];
+        $dbUserActiveBaseIds = isset($dbUser['active_base_ids']) && is_array($dbUser['active_base_ids']) ? array_values($dbUser['active_base_ids']) : [];
 
         // Sort the base ids to ensure they can be compared regardless of order
         sort($auth0ActiveBaseIds);
