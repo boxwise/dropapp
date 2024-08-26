@@ -149,7 +149,7 @@ Tracer::inSpan(
                     // Join tags here only if a tag filter is selected and only people with a certain tag should be returned
                     ($listconfig['multiplefilter_selected'] ? '
                         LEFT JOIN
-                            tags_relations AS people_tags_filter ON people_tags_filter.object_id = people.id AND people_tags_filter.object_type = "People"
+                            tags_relations AS people_tags_filter ON people_tags_filter.object_id = people.id AND people_tags_filter.object_type = "People" AND people_tags_filter.deleted_on IS NULL
                         LEFT JOIN
                             tags AS tags_filter ON tags_filter.id = people_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').'
                     WHERE
@@ -173,7 +173,7 @@ Tracer::inSpan(
                     ) AS people_filtered
                 LEFT JOIN
                     tags_relations 
-                    ON tags_relations.object_id = people_filtered.id AND tags_relations.object_type = "People"
+                    ON tags_relations.object_id = people_filtered.id AND tags_relations.object_type = "People" AND tags_relations.deleted_on IS NULL
                 LEFT JOIN
                     tags 
                     ON tags.id = tags_relations.tag_id 

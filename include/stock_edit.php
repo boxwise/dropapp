@@ -105,7 +105,7 @@ if (1 == $_GET['created']) {
                 LEFT OUTER JOIN products AS p ON p.id = s.product_id 
                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
                 LEFT OUTER JOIN locations AS l ON l.id = s.location_id
-                LEFT JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
+                LEFT JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
                 LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
             WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $_GET['created_id']]);
     $smarty->assign('box', $box);
@@ -128,7 +128,7 @@ $data = db_row('SELECT
                         LEFT OUTER JOIN products AS p ON p.id = stock.product_id 
                         LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
                         LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
-                        LEFT JOIN tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock"
+                        LEFT JOIN tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
                         LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
                     WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
 
@@ -214,6 +214,7 @@ addfield('select', 'Tag(s)', 'tags', [
                             ON tags.id = tags_relations.tag_id 
                                 AND tags_relations.object_id = '.intval($id).' 
                                 AND tags_relations.object_type = "Stock" 
+                                AND tags_relations.deleted_on IS NULL
                     WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","Stock")',
 ]);
 addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'readonly' => $disabled]);

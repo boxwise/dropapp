@@ -36,6 +36,7 @@ $data = db_row('SELECT
                         tags
                             LEFT JOIN
                         tags_relations ON tags_relations.tag_id = tags.id
+                        AND tags_relations.deleted_on IS NULL
                     WHERE
                         tags.deleted IS NULL AND tags.id = :id
                     GROUP BY tags.id ', ['id' => $id]);

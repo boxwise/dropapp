@@ -88,7 +88,7 @@ Tracer::inSpan(
                             // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
                             ($listconfig['multiplefilter_selected'] ? '
                                 LEFT JOIN
-                                    tags_relations AS stock_tags_filter ON stock_tags_filter.object_id = stock.id AND stock_tags_filter.object_type = "Stock"
+                                    tags_relations AS stock_tags_filter ON stock_tags_filter.object_id = stock.id AND stock_tags_filter.object_type = "Stock" AND stock_tags_filter.deleted_on IS NULL
                                 LEFT JOIN
                                     tags AS tags_filter ON tags_filter.id = stock_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').' 
                         LEFT OUTER JOIN 
@@ -117,7 +117,7 @@ Tracer::inSpan(
                         GROUP BY 
                             stock.id ) AS stock_filtered
                     LEFT JOIN 
-                        tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock"
+                        tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
                     LEFT JOIN
                         tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
                     GROUP BY
