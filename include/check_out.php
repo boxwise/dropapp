@@ -115,7 +115,7 @@ if (!$ajax) {
             $notificationText = $notificationText.'<li>'.$item['count'].'x '.$item['nameWithoutPrice'].' - '.$_POST['drops'] * (-1).' '.$camp['currencyname'].'</li>';
 
             $handler = new formHandler($table);
-            $id = $handler->savePost($savekeys);
+            $id = $handler->savePost($savekeys, [], false);
         }
         $notificationText = $notificationText.'</ul> </br> <b>Thanks for helping!</b>';
         $return = ['success' => true, 'message' => $notificationText, 'redirect' => '?action=check_out'];
