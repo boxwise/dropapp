@@ -26,7 +26,7 @@ $menusToActions = [
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
-            'view_stockroom',
+            'view_inventory',
         ],
     ],
     [
@@ -225,7 +225,7 @@ $menusToActions = [
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
-            'manage_books',
+            'manage_library',
         ],
     ],
     [
@@ -238,7 +238,7 @@ $menusToActions = [
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
-            'lend_books',
+            'show_library_history',
         ],
     ],
     [
@@ -375,6 +375,7 @@ $menusToActions = [
     ],
 ];
 
+// This has to be identical to the rolesMapping in the Auth0 dynamic-permissions script
 $rolesToActions = [
     'boxtribute_god' => [
         'be_god',
@@ -396,7 +397,6 @@ $rolesToActions = [
         'manage_tags',
         'manage_tokens',
         'checkout_beneficiaries',
-        'view_stockroom',
         'list_sales',
         'view_beneficiary_graph',
         'view_start_page',
@@ -428,7 +428,6 @@ $rolesToActions = [
         'manage_tags',
         'manage_tokens',
         'checkout_beneficiaries',
-        'view_stockroom',
         'list_sales',
         'view_beneficiary_graph',
         'view_start_page',
@@ -450,7 +449,6 @@ $rolesToActions = [
         'create_label',
         'view_inventory',
         'manage_inventory',
-        'view_stockroom',
         'view_start_page',
         'be_user',
         'receive_shipment',
@@ -463,7 +461,7 @@ $rolesToActions = [
         'create_beneficiaries',
         'manage_beneficiaries',
         'checkout_beneficiaries',
-        'view_stockroom',
+        'view_inventory',
         'view_beneficiary_graph',
         'view_start_page',
         'be_user',
@@ -471,14 +469,19 @@ $rolesToActions = [
     ],
 
     'library_volunteer' => [
-        'manage_books',
-        'lend_books',
+        'manage_library',
+        'show_library_history',
         'view_start_page',
         'be_user',
     ],
 
     'label_creation' => [
         'create_label',
+        'be_user',
+    ],
+
+    'external_free_shop_checkout' => [
+        'checkout_beneficiaries',
         'be_user',
     ],
 
