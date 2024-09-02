@@ -14,3 +14,4 @@ phpmyadmin/*
 node_modules
 cypress.env.json
 db/queries/*.csv
+.php-cs-fixer.*

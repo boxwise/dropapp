@@ -207,21 +207,49 @@ function isUserInSyncWithAuth0($userId)
             cms_usergroups ug ON u.cms_usergroups_id=ug.id
         WHERE 
             u.id=:id', ['id' => $userId]);
-    $dbUser['base_ids'] = db_simplearray('SELECT camp_id FROM cms_usergroups_camps WHERE cms_usergroups_id=:ugid', ['ugid' => $dbUser['cms_usergroups_id']], false, false);
+
+    // get active base ids for this user
+    $dbUser['active_base_ids'] = db_simplearray(
+        'SELECT 
+            uc.camp_id 
+         FROM cms_usergroups_camps uc 
+         INNER JOIN camps c ON c.id= uc.camp_id 
+         WHERE uc.cms_usergroups_id=:ugid AND (NOT c.deleted OR c.deleted IS NULL)',
+        ['ugid' => $dbUser['cms_usergroups_id']],
+        false,
+        false
+    );
+
     $auth0User = getAuth0User($userId);
+    $hasActiveBase = (sizeof($dbUser['active_base_ids']) > 0);
 
     if (!$dbUser && !$auth0User) {
         $return_value = true;
-    } elseif ($dbUser && $auth0User) {
+    } elseif ($dbUser && $auth0User && $hasActiveBase) {
         $validationResult = [];
+
         $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
-        $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', (string) $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', (string) $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
-        $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
-        $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
-        $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
-        if ($dbUser['base_ids']) {
-            $validationResult['base_ids'] = ($auth0User['app_metadata']['base_ids'] == array_intersect($auth0User['app_metadata']['base_ids'], $dbUser['base_ids'])) ? 'true' : 'false';
+        // deleted user no longer has name/email/usergroup/organisation/base
+        // ref. trello card: https://trello.com/c/68xRRHny
+        if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
+            $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
+            $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
+        } else {
+            $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', (string) $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', (string) $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
+            $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
+            $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
+            $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
         }
+
+        $auth0ActiveBaseIds = isset($auth0User['active_base_ids']) && is_array($auth0User['active_base_ids']) ? array_values($auth0User['active_base_ids']) : [];
+        $dbUserActiveBaseIds = isset($dbUser['active_base_ids']) && is_array($dbUser['active_base_ids']) ? array_values($dbUser['active_base_ids']) : [];
+
+        // Sort the base ids to ensure they can be compared regardless of order
+        sort($auth0ActiveBaseIds);
+        sort($dbUserActiveBaseIds);
+
+        // check if all active bases are in sync
+        $validationResult['base_ids'] = ($auth0ActiveBaseIds === $dbUserActiveBaseIds) ? 'true' : 'false';
 
         if ($dbUser['valid_firstday'] && '0000-00-00' != $dbUser['valid_firstday']) {
             $validationResult['valid_firstday'] = (!empty($auth0User['app_metadata']['valid_firstday']) && $auth0User['app_metadata']['valid_firstday'] == $dbUser['valid_firstday']) ? 'true' : 'false';
@@ -231,13 +259,19 @@ function isUserInSyncWithAuth0($userId)
             $validationResult['valid_lastday'] = (!empty($auth0User['app_metadata']['valid_lastday']) && $auth0User['app_metadata']['valid_lastday'] == $dbUser['valid_lastday']) ? 'true' : 'false';
         }
 
+        $false_key = array_search('false', $validationResult);
+        $return_value = !$false_key;
+    } elseif ($dbUser && $auth0User && !$hasActiveBase) {
+        // check if deleted user without active base is in sync with Auth0
         if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
             $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
             $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
-        }
+            $false_key = array_search('false', $validationResult);
 
-        $false_key = array_search('false', $validationResult);
-        $return_value = !$false_key;
+            $return_value = !$false_key;
+        }
+        // the user active in db but has no active bases
+        $return_value = false;
     } elseif ((!$dbUser || $auth0User) && ($dbUser || !$auth0User)) {
         $return_value = false;
     }
@@ -282,7 +316,7 @@ function isUserInSyncWithAuth0($userId)
 
         $dbRolesNotInAuth0 = array_diff($dbRoles, $auth0Roles);
         $auth0RolesNotInDB = array_diff($auth0Roles, $dbRoles);
-        $auth0BasesInRolesNotInDB = array_diff($auth0BasesInRoles, $dbUser['base_ids']);
+        $auth0BasesInRolesNotInDB = array_diff($auth0BasesInRoles, $dbUser['active_base_ids']);
 
         if ((bool) $dbRolesNotInAuth0) {
             foreach ($dbRolesNotInAuth0 as $item) {
