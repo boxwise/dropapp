@@ -442,19 +442,21 @@ Tracer::inSpan(
                             $people_ids = $ids ?? [];
                             if (sizeof($people_ids) > 0) {
                                 // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
-                                $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+                                $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
 
+                                $now = (new DateTime())->format('Y-m-d H:i:s');
+                                $user_id = $_SESSION['user']['id'];
                                 $params = [];
 
                                 for ($i = 0; $i < sizeof($people_ids); ++$i) {
-                                    $query .= "(:tag_id, 'People', :people_id{$i})";
+                                    $query .= "(:tag_id, 'People', :people_id{$i}, :created_on, :created_by)";
                                     $params = array_merge($params, ['people_id'.$i => $people_ids[$i]]);
                                     if ($i !== sizeof($people_ids) - 1) {
                                         $query .= ',';
                                     }
                                 }
 
-                                $params = array_merge($params, ['tag_id' => $tag_id]);
+                                $params = array_merge($params, ['tag_id' => $tag_id, 'created_on' => $now, 'created_by' => $user_id]);
                                 db_query($query, $params);
 
                                 $success = true;
@@ -482,12 +484,14 @@ Tracer::inSpan(
                                 // Query speed optimised using transaction block and bulk delete
                                 // related to this trello card https://trello.com/c/g24mIVb8
                                 db_transaction(function () use ($tag_id, $people_ids) {
+                                    $now = (new DateTime())->format('Y-m-d H:i:s');
+                                    $user_id = $_SESSION['user']['id'];
                                     $deleteClause = [];
                                     foreach ($people_ids as $people_id) {
                                         $deleteClause[] = sprintf('(%d, "%s", %d)', $tag_id, 'People', $people_id);
                                     }
                                     if (sizeof($deleteClause) > 0) {
-                                        db_query('DELETE FROM tags_relations WHERE (tag_id, object_type, `object_id`) IN ('.join(',', $deleteClause).')');
+                                        db_query('UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE deleted_on IS NULL AND (tag_id, object_type, `object_id`) IN ('.join(',', $deleteClause).')', ['deleted_on' => $now, 'deleted_by' => $user_id]);
                                     }
                                 });
                                 $success = true;

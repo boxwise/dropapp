@@ -135,20 +135,22 @@ if ($_POST) {
         $id = $handler->savePost($savekeys, ['parent_id']);
 
         // edit tags
-        db_query('DELETE FROM tags_relations WHERE object_id = :people_id AND object_type = "People"', [':people_id' => $id]);
+        $now = (new DateTime())->format('Y-m-d H:i:s');
+        $user_id = $_SESSION['user']['id'];
+        db_query('UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_id = :people_id AND object_type = "People" AND deleted_on IS NULL', [':people_id' => $id, ':deleted_on' => $now, ':deleted_by' => $user_id]);
         $params = [];
         $tags = $_POST['tags'] ?? [];
         if (sizeof($tags) > 0) {
-            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
 
             for ($i = 0; $i < sizeof($tags); ++$i) {
-                $query .= "(:tag_id{$i}, 'People', :people_id)";
+                $query .= "(:tag_id{$i}, 'People', :people_id, :created_on, :created_by)";
                 $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
                 if ($i !== sizeof($tags) - 1) {
                     $query .= ',';
                 }
             }
-            $params = array_merge($params, ['people_id' => $id]);
+            $params = array_merge($params, ['people_id' => $id, 'created_on' => $now, 'created_by' => $user_id]);
             db_query($query, $params);
         }
         // edit other N:N relationships
