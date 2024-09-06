@@ -100,8 +100,6 @@ if (false !== strpos($_SERVER['HTTP_HOST'], 'boxwise.co')) {
     }
 }
 
-exit;
-
 $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
 Tracer::inSpan(
     ['name' => ('gcloud-entry:'.$parsedUrl)],
