@@ -51,6 +51,44 @@ if (('market.drapenihavet.no' == $_SERVER['HTTP_HOST']) || ('www.market.drapenih
     return;
 }
 
+// Fix domain forwarding for old boxwise.co subdomains
+// trello ref. https://trello.com/c/t6sW9Qg7
+if (false !== strpos($_SERVER['HTTP_HOST'], 'boxwise.co')) {
+    $fullUrl = $_SERVER['REQUEST_SCHEME'].'://'.$fullHost.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    $parsedUrl = @parse_url('http://'.$fullUrl);
+    $host = $parsedUrl['host'] ?? '';
+    $path = $parsedUrl['path'] ?? '/';
+    $query = !empty($parsedUrl['query']) ? '?'.$parsedUrl['query'] : '';
+    $fullPath = $path.$query;
+
+    // normalize host by removing www. prefix
+    if (0 === strpos($host, 'www.')) {
+        $host = substr($host, 4);
+    }
+
+    $parts = explode('.', $host);
+    $subdomain = count($parts) > 2 ? $parts[0] : '';
+    $domain = implode('.', array_slice($parts, -2));
+
+    if ('boxwise.co' === $domain && (in_array($subdomain, $validSubdomains, true) || '' === $subdomain)) {
+        foreach ($validRoutes as $route) {
+            if (preg_match($route, $fullPath)) {
+                $newHost = '' === $subdomain ? 'boxtribute.org' : $subdomain.'.boxtribute.org';
+                $newUrl = 'https://'.$newHost.$fullPath;
+
+                header('Location: '.$newUrl, true, 301);
+
+                return;
+            }
+        }
+
+        // Redirect to default URL if no valid route matches
+        header('Location: https://www.boxtribute.org', true, 301);
+
+        return;
+    }
+}
+
 $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
 Tracer::inSpan(
     ['name' => ('gcloud-entry:'.$parsedUrl)],
