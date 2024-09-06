@@ -54,7 +54,7 @@ if (('market.drapenihavet.no' == $_SERVER['HTTP_HOST']) || ('www.market.drapenih
 // Fix domain forwarding for old boxwise.co subdomains
 // trello ref. https://trello.com/c/t6sW9Qg7
 
-$validSubdomains = ['staging', 'www.staging'];
+$validSubdomains = ['staging', 'www.staging', 'app', 'demo'];
 $validRoutes = [
     '#^/(\?.*)?$#', // Root path and any query string
     '#^/index\.php(\?.*)?$#',
@@ -66,7 +66,7 @@ $validRoutes = [
 
 if (false !== strpos($_SERVER['HTTP_HOST'], 'boxwise.co')) {
     $fullUrl = $_SERVER['REQUEST_SCHEME'].'://'.$fullHost.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-    $parsedUrl = @parse_url('http://'.$fullUrl);
+    $parsedUrl = @parse_url($fullUrl);
     $host = $parsedUrl['host'] ?? '';
     $path = $parsedUrl['path'] ?? '/';
     $query = !empty($parsedUrl['query']) ? '?'.$parsedUrl['query'] : '';
@@ -99,6 +99,8 @@ if (false !== strpos($_SERVER['HTTP_HOST'], 'boxwise.co')) {
         return;
     }
 }
+
+exit;
 
 $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
 Tracer::inSpan(
