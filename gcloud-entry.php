@@ -53,6 +53,17 @@ if (('market.drapenihavet.no' == $_SERVER['HTTP_HOST']) || ('www.market.drapenih
 
 // Fix domain forwarding for old boxwise.co subdomains
 // trello ref. https://trello.com/c/t6sW9Qg7
+
+$validSubdomains = ['staging', 'www.staging'];
+$validRoutes = [
+    '#^/(\?.*)?$#', // Root path and any query string
+    '#^/index\.php(\?.*)?$#',
+    '#^/flip/scan\.php(\?.*)?$#',
+    '#^/ajax\.php(\?.*)?$#',
+    '#^/mobile\.php(\?.*)?$#',
+    '#^/pdf/(workshopcard|bicyclecard|idcard|qr|dryfood)\.php(\?.*)?$#',
+];
+
 if (false !== strpos($_SERVER['HTTP_HOST'], 'boxwise.co')) {
     $fullUrl = $_SERVER['REQUEST_SCHEME'].'://'.$fullHost.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     $parsedUrl = @parse_url('http://'.$fullUrl);
