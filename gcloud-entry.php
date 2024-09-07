@@ -65,7 +65,7 @@ $validRoutes = [
 ];
 
 if (false !== strpos($_SERVER['HTTP_HOST'], 'boxwise.co')) {
-    $fullUrl = $_SERVER['REQUEST_SCHEME'].'://'.$fullHost.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    $fullUrl = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     $parsedUrl = @parse_url($fullUrl);
     $host = $parsedUrl['host'] ?? '';
     $path = $parsedUrl['path'] ?? '/';
