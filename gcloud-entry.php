@@ -92,12 +92,12 @@ if (false !== strpos($_SERVER['HTTP_HOST'], 'boxwise.co')) {
                 return;
             }
         }
-
-        // Redirect to default URL if no valid route matches
-        header('Location: https://www.boxtribute.org', true, 301);
-
-        return;
     }
+
+    // Redirect to default URL if no valid route matches
+    header('Location: https://www.boxtribute.org', true, 301);
+
+    return;
 }
 
 $parsedUrl = @parse_url($_SERVER['REQUEST_URI'])['path'];
