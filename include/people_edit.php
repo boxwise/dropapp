@@ -11,7 +11,7 @@ if ($_POST) {
         foreach ($ids as $id) {
             verify_campaccess_people(db_value('SELECT people_id FROM transactions WHERE id=:id', ['id' => $id]));
         }
-        [$success, $message, $redirect] = listDelete('transactions', $ids);
+        [$success, $message, $redirect] = listDelete('transactions', $ids, false, null, false);
 
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 

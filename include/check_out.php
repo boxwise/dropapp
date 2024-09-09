@@ -66,7 +66,7 @@ if (!$ajax) {
         foreach ($ids as $id) {
             verify_campaccess_people(db_value('SELECT people_id FROM transactions WHERE id=:id', ['id' => $id]));
         }
-        [$success, $message, $redirect] = listDelete($table, $ids);
+        [$success, $message, $redirect] = listDelete($table, $ids, false, null, false);
         $return = ['success' => $success, 'message' => $message, 'redirect' => false, 'action' => "$('#field_people_id').trigger('change')"];
 
         echo json_encode($return);
@@ -115,7 +115,7 @@ if (!$ajax) {
             $notificationText = $notificationText.'<li>'.$item['count'].'x '.$item['nameWithoutPrice'].' - '.$_POST['drops'] * (-1).' '.$camp['currencyname'].'</li>';
 
             $handler = new formHandler($table);
-            $id = $handler->savePost($savekeys);
+            $id = $handler->savePost($savekeys, [], false);
         }
         $notificationText = $notificationText.'</ul> </br> <b>Thanks for helping!</b>';
         $return = ['success' => true, 'message' => $notificationText, 'redirect' => '?action=check_out'];

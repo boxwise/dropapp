@@ -14,14 +14,14 @@ class formHandler
         $this->id = intval($_POST['id']);
     }
 
-    public function savePost($keys, $nullIfEmptyKeys = [])
+    public function savePost($keys, $nullIfEmptyKeys = [], $saveHistory = true)
     {
         $this->nullIfEmpty = array_fill_keys($nullIfEmptyKeys, null);
         $this->keys = $keys;
         $this->saveCreatedModified();
 
         $this->modifyData($this->keys);
-        $this->buildQuery();
+        $this->buildQuery($saveHistory);
 
         return $this->id;
     }
@@ -124,7 +124,7 @@ class formHandler
         }
     }
 
-    public function buildQuery(): void
+    public function buildQuery($saveHistory): void
     {
         $updatequery = 'UPDATE '.$this->table.' SET ';
         $insertquery = 'INSERT INTO '.$this->table;
@@ -150,7 +150,9 @@ class formHandler
         $insertquery .= ' ('.join(', ', $insertqueryfields).') VALUES ('.join(', ', $insertqueryfields2).')';
 
         if ($this->id > 0) {
-            $this->saveChangeHistory();
+            if ($saveHistory) {
+                $this->saveChangeHistory();
+            }
             if ($this->debug) {
                 dump($updatequery);
                 dump(join(',', $queryvalues));
@@ -164,7 +166,9 @@ class formHandler
             } else {
                 db_query($insertquery, $queryvalues);
                 $this->id = db_insertid();
-                $this->saveNewrecordInHistory();
+                if ($saveHistory) {
+                    $this->saveNewrecordInHistory();
+                }
             }
         }
     }
