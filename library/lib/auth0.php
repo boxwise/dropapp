@@ -222,12 +222,11 @@ function isUserInSyncWithAuth0($userId)
 
     $auth0User = getAuth0User($userId);
     $hasActiveBase = (sizeof($dbUser['active_base_ids']) > 0);
+    $validationResult = [];
 
     if (!$dbUser && !$auth0User) {
         $return_value = true;
     } elseif ($dbUser && $auth0User && $hasActiveBase) {
-        $validationResult = [];
-
         $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
         // deleted user no longer has name/email/usergroup/organisation/base
         // ref. trello card: https://trello.com/c/68xRRHny
@@ -266,12 +265,14 @@ function isUserInSyncWithAuth0($userId)
         if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
             $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
             $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
-            $false_key = array_search('false', $validationResult);
-
-            $return_value = !$false_key;
+        } else {
+            // God user, and users without active base but not deleted
+            $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', (string) $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', (string) $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
+            $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
+            $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
         }
-        // the user active in db but has no active bases
-        $return_value = false;
+        $false_key = array_search('false', $validationResult);
+        $return_value = !$false_key;
     } elseif ((!$dbUser || $auth0User) && ($dbUser || !$auth0User)) {
         $return_value = false;
     }
