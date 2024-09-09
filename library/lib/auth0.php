@@ -306,10 +306,10 @@ function isUserInSyncWithAuth0($userId)
         }
 
         foreach ($auth0UserRoles as $auth0UserRole) {
+            $auth0Roles[] = $auth0UserRole['id'];
             if ('boxtribute_god' == $auth0UserRole['name']) {
                 continue;
             }
-            $auth0Roles[] = $auth0UserRole['id'];
             $tmp = explode('_', (string) $auth0UserRole['name'], 3);
             if ((bool) $tmp[1]) {
                 $auth0BasesInRoles[] = $tmp[1];
