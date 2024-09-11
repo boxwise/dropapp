@@ -1,6 +1,6 @@
 <?php
 
-use OpenCensus\Trace\Tracer;
+// use OpenCensus\Trace\Tracer;
 
 class Zmarty extends Smarty
 {
@@ -31,18 +31,20 @@ class Zmarty extends Smarty
 
     public function display($template = null, $cache_id = null, $compile_id = null, $parent = null)
     {
-        return Tracer::inSpan(
-            ['name' => 'smarty:display:'.$template],
-            fn () => parent::display($template, $cache_id, $compile_id, $parent)
-        );
+        // return Tracer::inSpan(
+        //     ['name' => 'smarty:display:'.$template],
+        //     fn () => parent::display($template, $cache_id, $compile_id, $parent)
+        // );
+        return parent::display($template, $cache_id, $compile_id, $parent);
     }
 
     public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null)
     {
-        return Tracer::inSpan(
-            ['name' => 'smarty:fetch:'.$template],
-            fn () => parent::fetch($template, $cache_id, $compile_id, $parent)
-        );
+        // return Tracer::inSpan(
+        //     ['name' => 'smarty:fetch:'.$template],
+        //     fn () => parent::fetch($template, $cache_id, $compile_id, $parent)
+        // );
+        return parent::fetch($template, $cache_id, $compile_id, $parent);
     }
 
     // Register custom modifiers
