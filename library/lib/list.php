@@ -139,7 +139,7 @@ function listBulkRealDelete($table, $ids, $uri = false)
     return [false, $translate['cms_list_deleteerror'], false];
 }
 
-function listDelete($table, $ids, $uri = false, $fktables = null)
+function listDelete($table, $ids, $uri = false, $fktables = null, $saveHistory = true)
 {
     global $translate, $action;
 
@@ -185,7 +185,7 @@ function listDelete($table, $ids, $uri = false, $fktables = null)
             } else {
                 $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
                 $count += $result->rowCount();
-                if ($result->rowCount()) {
+                if ($result->rowCount() && $saveHistory) {
                     simpleSaveChangeHistory($table, $id, 'Record deleted');
                 }
             }

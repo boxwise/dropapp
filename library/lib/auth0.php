@@ -222,12 +222,11 @@ function isUserInSyncWithAuth0($userId)
 
     $auth0User = getAuth0User($userId);
     $hasActiveBase = (sizeof($dbUser['active_base_ids']) > 0);
+    $validationResult = [];
 
     if (!$dbUser && !$auth0User) {
         $return_value = true;
     } elseif ($dbUser && $auth0User && $hasActiveBase) {
-        $validationResult = [];
-
         $validationResult['id'] = ($auth0User['identities'][0]['user_id'] == $userId) ? 'true' : 'false';
         // deleted user no longer has name/email/usergroup/organisation/base
         // ref. trello card: https://trello.com/c/68xRRHny
@@ -241,7 +240,8 @@ function isUserInSyncWithAuth0($userId)
             $validationResult['organisation_id'] = ($auth0User['app_metadata']['organisation_id'] == $dbUser['organisation_id'] || null == $dbUser['cms_organisation_id']) ? 'true' : 'false';
         }
 
-        $auth0ActiveBaseIds = isset($auth0User['active_base_ids']) && is_array($auth0User['active_base_ids']) ? array_values($auth0User['active_base_ids']) : [];
+        // Convert Auth0 base IDs to int
+        $auth0ActiveBaseIds = isset($auth0User['app_metadata']['base_ids']) ? array_map('intval', $auth0User['app_metadata']['base_ids']) : [];
         $dbUserActiveBaseIds = isset($dbUser['active_base_ids']) && is_array($dbUser['active_base_ids']) ? array_values($dbUser['active_base_ids']) : [];
 
         // Sort the base ids to ensure they can be compared regardless of order
@@ -266,12 +266,14 @@ function isUserInSyncWithAuth0($userId)
         if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
             $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
             $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
-            $false_key = array_search('false', $validationResult);
-
-            $return_value = !$false_key;
+        } else {
+            // God user, and users without active base but not deleted
+            $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', (string) $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', (string) $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
+            $validationResult['name'] = ($auth0User['name'] == $dbUser['naam']) ? 'true' : 'false';
+            $validationResult['usergroup_id'] = ($auth0User['app_metadata']['usergroup_id'] == $dbUser['cms_usergroups_id'] || null == $dbUser['cms_usergroups_id']) ? 'true' : 'false';
         }
-        // the user active in db but has no active bases
-        $return_value = false;
+        $false_key = array_search('false', $validationResult);
+        $return_value = !$false_key;
     } elseif ((!$dbUser || $auth0User) && ($dbUser || !$auth0User)) {
         $return_value = false;
     }
@@ -304,10 +306,10 @@ function isUserInSyncWithAuth0($userId)
         }
 
         foreach ($auth0UserRoles as $auth0UserRole) {
+            $auth0Roles[] = $auth0UserRole['id'];
             if ('boxtribute_god' == $auth0UserRole['name']) {
                 continue;
             }
-            $auth0Roles[] = $auth0UserRole['id'];
             $tmp = explode('_', (string) $auth0UserRole['name'], 3);
             if ((bool) $tmp[1]) {
                 $auth0BasesInRoles[] = $tmp[1];
@@ -615,8 +617,7 @@ function createRolesForBase($orgId, $orgName, $baseId, $baseName, array &$rolesT
         // this feature removed for the new org
         // 'Volunteer (Library)' => ['library_volunteer'],
         'Label Creation' => ['label_creation'],
-        // This role is manually created only
-        // 'External Checkout (Free Shop)' => ['external_free_shop_checkout'],
+        'External Free Shop Checkout' => ['external_free_shop_checkout'],
     ];
 
     if (!$isFirstBase) {
