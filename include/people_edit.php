@@ -174,17 +174,17 @@ if ($_POST) {
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
         $postid = ($_POST['id'] ?: $id);
-        // if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
-        //     if ('image/jpeg' == $_FILES['picture']['type']) {
-        //         $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
-        //         $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
-        //         if (!$res) {
-        //             error_log("Could not save uploaded file to {$targetFile}");
-        //         }
-        //     } else {
-        //         error_log('Skipped uploaded file of type '.$_FILES['picture']['type']);
-        //     }
-        // }
+        if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
+            if ('image/jpeg' == $_FILES['picture']['type']) {
+                $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
+                $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
+                if (!$res) {
+                    error_log("Could not save uploaded file to {$targetFile}");
+                }
+            } else {
+                error_log('Skipped uploaded file of type '.$_FILES['picture']['type']);
+            }
+        }
         if ($_POST['picture_delete']) {
             unlink($settings['upload_dir'].'/people/'.$postid.'.jpg');
         }
