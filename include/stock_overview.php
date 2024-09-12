@@ -131,7 +131,7 @@ if (!$ajax) {
                 // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
                 ($listconfig['multiplefilter_selected'] ? '
                         INNER JOIN
-                            tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock"
+                            tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
                         INNER JOIN
                             tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'] : '').' 
                     WHERE 

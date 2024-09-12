@@ -48,22 +48,24 @@ if ($_POST) {
                 $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments', 'box_state_id'];
                 $id = $handler->savePost($savekeys);
 
-                db_query('DELETE FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock"', [':stock_id' => $id]);
+                $now = (new DateTime())->format('Y-m-d H:i:s');
+                $user_id = $_SESSION['user']['id'];
+                db_query('UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_id = :stock_id AND object_type = "Stock" AND deleted_on IS NULL', [':stock_id' => $id, ':deleted_on' => $now, ':deleted_by' => $user_id]);
 
                 $params = [];
                 $tags = $_POST['tags'];
                 if (isset($_POST['tags']) && is_array($_POST['tags']) && sizeof($_POST['tags']) > 0) {
-                    $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+                    $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
 
                     for ($i = 0; $i < sizeof($tags); ++$i) {
-                        $query .= "(:tag_id{$i}, 'Stock', :stock_id)";
+                        $query .= "(:tag_id{$i}, 'Stock', :stock_id, :created_on, :created_by)";
                         $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
                         if ($i !== sizeof($tags) - 1) {
                             $query .= ',';
                         }
                     }
 
-                    $params = array_merge($params, ['stock_id' => $id]);
+                    $params = array_merge($params, ['stock_id' => $id, ':created_on' => $now, ':created_by' => $user_id]);
                     db_query($query, $params);
                 }
             } else {
@@ -105,7 +107,7 @@ if (1 == $_GET['created']) {
                 LEFT OUTER JOIN products AS p ON p.id = s.product_id 
                 LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
                 LEFT OUTER JOIN locations AS l ON l.id = s.location_id
-                LEFT JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock"
+                LEFT JOIN tags_relations ON tags_relations.object_id = s.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
                 LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
             WHERE (NOT s.deleted OR s.deleted IS NULL) AND s.id = :id', ['id' => $_GET['created_id']]);
     $smarty->assign('box', $box);
@@ -128,7 +130,7 @@ $data = db_row('SELECT
                         LEFT OUTER JOIN products AS p ON p.id = stock.product_id 
                         LEFT OUTER JOIN genders AS g ON g.id = p.gender_id 
                         LEFT OUTER JOIN locations AS l ON l.id = stock.location_id
-                        LEFT JOIN tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock"
+                        LEFT JOIN tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
                         LEFT JOIN tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
                     WHERE (NOT stock.deleted OR stock.deleted IS NULL) AND stock.id = :id', ['id' => $id]);
 
@@ -214,6 +216,7 @@ addfield('select', 'Tag(s)', 'tags', [
                             ON tags.id = tags_relations.tag_id 
                                 AND tags_relations.object_id = '.intval($id).' 
                                 AND tags_relations.object_type = "Stock" 
+                                AND tags_relations.deleted_on IS NULL
                     WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","Stock")',
 ]);
 addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'readonly' => $disabled]);
