@@ -42,7 +42,6 @@ class AddTemporalColumnsToTagsRelations extends AbstractMigration
 
     public function down(): void
     {
-        $this->execute('ALTER TABLE tags_relations DROP PRIMARY KEY');
         $this->table('tags_relations')
             ->dropForeignKey('created_by_id')
             ->removeColumn('created_by_id')
@@ -53,6 +52,8 @@ class AddTemporalColumnsToTagsRelations extends AbstractMigration
             ->removeColumn('id')
             ->save()
         ;
+
+        // Add the original composite primary key back
         $this->execute('ALTER TABLE tags_relations ADD PRIMARY KEY(object_id,tag_id,object_type)');
     }
 }
