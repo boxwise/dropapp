@@ -439,25 +439,28 @@ Tracer::inSpan(
                         } else {
                             // set tag id
                             $tag_id = $_POST['option'];
-                            $people_ids = $ids ?? [];
-                            if (sizeof($people_ids) > 0) {
-                                // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
-                                $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
+                            // validate input
+                            $people_ids = array_filter($ids, fn($id) => ctype_digit($id));
+                            if (is_array($people_ids) && sizeof($people_ids) > 0) {
+                                $people_with_this_tag = db_simplearray('SELECT object_id FROM tags_relations WHERE tag_id = :tag_id AND object_type = "People" AND object_id IN ('.implode(',', $people_ids).') AND deleted_on IS NULL', ['tag_id' => $tag_id], false, false);
+                                $people_ids_to_add = array_values(array_diff($people_ids, $people_with_this_tag));
 
-                                $now = (new DateTime())->format('Y-m-d H:i:s');
-                                $user_id = $_SESSION['user']['id'];
-                                $params = [];
+                                if (sizeof($people_ids_to_add) > 0) {
+                                    // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
+                                    $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
+                                    $now = (new DateTime())->format('Y-m-d H:i:s');
+                                    $user_id = $_SESSION['user']['id'];
+                                    $params = ['tag_id' => $tag_id, 'created_on' => $now, 'created_by' => $user_id];
 
-                                for ($i = 0; $i < sizeof($people_ids); ++$i) {
-                                    $query .= "(:tag_id, 'People', :people_id{$i}, :created_on, :created_by)";
-                                    $params = array_merge($params, ['people_id'.$i => $people_ids[$i]]);
-                                    if ($i !== sizeof($people_ids) - 1) {
-                                        $query .= ',';
+                                    for ($i = 0; $i < sizeof($people_ids_to_add); ++$i) {
+                                        $query .= "(:tag_id, 'People', :people_id{$i}, :created_on, :created_by)";
+                                        $params = array_merge($params, ['people_id'.$i => $people_ids_to_add[$i]]);
+                                        if ($i !== sizeof($people_ids_to_add) - 1) {
+                                            $query .= ',';
+                                        }
                                     }
+                                    db_query($query, $params);
                                 }
-
-                                $params = array_merge($params, ['tag_id' => $tag_id, 'created_on' => $now, 'created_by' => $user_id]);
-                                db_query($query, $params);
 
                                 $success = true;
                                 $message = 'Tags added';
