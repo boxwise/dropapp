@@ -137,37 +137,54 @@ if ($_POST) {
         // edit tags
         $now = (new DateTime())->format('Y-m-d H:i:s');
         $user_id = $_SESSION['user']['id'];
-        db_query('UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_id = :people_id AND object_type = "People" AND deleted_on IS NULL', [':people_id' => $id, ':deleted_on' => $now, ':deleted_by' => $user_id]);
-        $params = [];
+        $existing_tags = db_simplearray('SELECT tag_id FROM tags_relations WHERE object_id = :people_id AND object_type = "People" AND deleted_on IS NULL', [':people_id' => $id], false, false);
         $tags = $_POST['tags'] ?? [];
-        if (sizeof($tags) > 0) {
-            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
+        $tags_to_add = array_values(array_diff($tags, $existing_tags));
+        $tags_to_remove = array_values(array_diff($existing_tags, $tags));
 
-            for ($i = 0; $i < sizeof($tags); ++$i) {
+        if (sizeof($tags_to_add) > 0) {
+            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, object_id, created_on, created_by_id) VALUES ';
+            $params = ['people_id' => $id, 'created_on' => $now, 'created_by' => $user_id];
+
+            for ($i = 0; $i < sizeof($tags_to_add); ++$i) {
                 $query .= "(:tag_id{$i}, 'People', :people_id, :created_on, :created_by)";
-                $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
-                if ($i !== sizeof($tags) - 1) {
+                $params = array_merge($params, ['tag_id'.$i => $tags_to_add[$i]]);
+                if ($i !== sizeof($tags_to_add) - 1) {
                     $query .= ',';
                 }
             }
-            $params = array_merge($params, ['people_id' => $id, 'created_on' => $now, 'created_by' => $user_id]);
+            db_query($query, $params);
+        }
+
+        if (sizeof($tags_to_remove) > 0) {
+            $query = 'UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_id = :people_id AND object_type = "People" AND tag_id IN (';
+            $params = ['people_id' => $id, 'deleted_on' => $now, 'deleted_by' => $user_id];
+
+            for ($i = 0; $i < sizeof($tags_to_remove); ++$i) {
+                $query .= ':tag_id'.$i;
+                $params = array_merge($params, ['tag_id'.$i => $tags_to_remove[$i]]);
+                if ($i !== sizeof($tags_to_remove) - 1) {
+                    $query .= ',';
+                }
+            }
+            $query .= ')';
             db_query($query, $params);
         }
         // edit other N:N relationships
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
         $postid = ($_POST['id'] ?: $id);
-        if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
-            if ('image/jpeg' == $_FILES['picture']['type']) {
-                $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
-                $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
-                if (!$res) {
-                    error_log("Could not save uploaded file to {$targetFile}");
-                }
-            } else {
-                error_log('Skipped uploaded file of type '.$_FILES['picture']['type']);
-            }
-        }
+        // if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
+        //     if ('image/jpeg' == $_FILES['picture']['type']) {
+        //         $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
+        //         $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
+        //         if (!$res) {
+        //             error_log("Could not save uploaded file to {$targetFile}");
+        //         }
+        //     } else {
+        //         error_log('Skipped uploaded file of type '.$_FILES['picture']['type']);
+        //     }
+        // }
         if ($_POST['picture_delete']) {
             unlink($settings['upload_dir'].'/people/'.$postid.'.jpg');
         }
