@@ -157,7 +157,7 @@ if ($_POST) {
         }
 
         if (sizeof($tags_to_remove) > 0) {
-            $query = 'UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_id = :people_id AND object_type = "People" AND tag_id IN (';
+            $query = 'UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_id = :people_id AND object_type = "People" AND deleted_on IS NULL AND tag_id IN (';
             $params = ['people_id' => $id, 'deleted_on' => $now, 'deleted_by' => $user_id];
 
             for ($i = 0; $i < sizeof($tags_to_remove); ++$i) {
