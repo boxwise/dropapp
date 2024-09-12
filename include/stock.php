@@ -235,7 +235,7 @@ Tracer::inSpan(
 
                         $now = (new DateTime())->format('Y-m-d H:i:s');
                         $user_id = $_SESSION['user']['id'];
-                        $params = [':deleted_on' => $now, ':deleted_by' => $user_id];
+                        $params = ['deleted_on' => $now, 'deleted_by' => $user_id];
                         $query = 'UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_type = "Stock" AND deleted_on IS NULL AND (`object_id`) IN (';
                         foreach ($stock_ids as $index => $stock_id) {
                             $query .= sprintf(' (:stock_id_%s) ', $index);
@@ -291,7 +291,7 @@ Tracer::inSpan(
                         // set tag id
                         $tag_id = $_POST['option'];
                         // validate input
-                        $stock_ids = array_filter($ids, fn($id) => ctype_digit($id));
+                        $stock_ids = array_filter($ids, fn ($id) => ctype_digit($id));
                         if (is_array($stock_ids) && sizeof($stock_ids) > 0) {
                             $boxes_with_this_tag = db_simplearray('SELECT object_id FROM tags_relations WHERE object_type = "Stock" AND tag_id = :tag_id AND object_id IN ('.implode(',', $stock_ids).') AND deleted_on IS NULL', ['tag_id' => $tag_id], false, false);
                             $stock_ids_to_add = array_values(array_diff($stock_ids, $boxes_with_this_tag));

@@ -440,7 +440,7 @@ Tracer::inSpan(
                             // set tag id
                             $tag_id = $_POST['option'];
                             // validate input
-                            $people_ids = array_filter($ids, fn($id) => ctype_digit($id));
+                            $people_ids = array_filter($ids, fn ($id) => ctype_digit($id));
                             if (is_array($people_ids) && sizeof($people_ids) > 0) {
                                 $people_with_this_tag = db_simplearray('SELECT object_id FROM tags_relations WHERE tag_id = :tag_id AND object_type = "People" AND object_id IN ('.implode(',', $people_ids).') AND deleted_on IS NULL', ['tag_id' => $tag_id], false, false);
                                 $people_ids_to_add = array_values(array_diff($people_ids, $people_with_this_tag));
