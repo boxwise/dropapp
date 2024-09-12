@@ -48,24 +48,40 @@ if ($_POST) {
                 $savekeys = ['box_id', 'product_id', 'size_id', 'items', 'location_id', 'comments', 'box_state_id'];
                 $id = $handler->savePost($savekeys);
 
+                // Save tags
                 $now = (new DateTime())->format('Y-m-d H:i:s');
                 $user_id = $_SESSION['user']['id'];
-                db_query('UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_id = :stock_id AND object_type = "Stock" AND deleted_on IS NULL', [':stock_id' => $id, ':deleted_on' => $now, ':deleted_by' => $user_id]);
+                $tags = $_POST['tags'] ?? [];
+                $existing_tags = db_simplearray('SELECT tag_id FROM tags_relations WHERE object_id = :stock_id AND object_type = "Stock" AND deleted_on IS NULL', ['stock_id' => $id], false, false);
+                $tags_to_add = array_values(array_diff($tags, $existing_tags));
+                $tags_to_remove = array_values(array_diff($existing_tags, $tags));
 
-                $params = [];
-                $tags = $_POST['tags'];
-                if (isset($_POST['tags']) && is_array($_POST['tags']) && sizeof($_POST['tags']) > 0) {
-                    $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
+                if (sizeof($tags_to_add) > 0) {
+                    $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, object_id, created_on, created_by_id) VALUES ';
+                    $params = ['stock_id' => $id, 'created_on' => $now, 'created_by' => $user_id];
 
-                    for ($i = 0; $i < sizeof($tags); ++$i) {
+                    for ($i = 0; $i < sizeof($tags_to_add); ++$i) {
                         $query .= "(:tag_id{$i}, 'Stock', :stock_id, :created_on, :created_by)";
-                        $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
-                        if ($i !== sizeof($tags) - 1) {
+                        $params = array_merge($params, ['tag_id'.$i => $tags_to_add[$i]]);
+                        if ($i !== sizeof($tags_to_add) - 1) {
                             $query .= ',';
                         }
                     }
+                    db_query($query, $params);
+                }
 
-                    $params = array_merge($params, ['stock_id' => $id, ':created_on' => $now, ':created_by' => $user_id]);
+                if (sizeof($tags_to_remove) > 0) {
+                    $query = 'UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_id = :stock_id AND object_type = "Stock" AND tag_id IN (';
+                    $params = ['stock_id' => $id, 'deleted_on' => $now, 'deleted_by' => $user_id];
+
+                    for ($i = 0; $i < sizeof($tags_to_remove); ++$i) {
+                        $query .= ':tag_id'.$i;
+                        $params = array_merge($params, ['tag_id'.$i => $tags_to_remove[$i]]);
+                        if ($i !== sizeof($tags_to_remove) - 1) {
+                            $query .= ',';
+                        }
+                    }
+                    $query .= ')';
                     db_query($query, $params);
                 }
             } else {
