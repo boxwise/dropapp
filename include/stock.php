@@ -298,7 +298,7 @@ Tracer::inSpan(
 
                             if (sizeof($stock_ids_to_add) > 0) {
                                 // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
-                                $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
+                                $query = 'INSERT INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
                                 $now = (new DateTime())->format('Y-m-d H:i:s');
                                 $user_id = $_SESSION['user']['id'];
                                 $params = ['tag_id' => $tag_id, 'created_on' => $now, 'created_by' => $user_id];

@@ -143,7 +143,7 @@ if ($_POST) {
         $tags_to_remove = array_values(array_diff($existing_tags, $tags));
 
         if (sizeof($tags_to_add) > 0) {
-            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, object_id, created_on, created_by_id) VALUES ';
+            $query = 'INSERT INTO tags_relations (tag_id, object_type, object_id, created_on, created_by_id) VALUES ';
             $params = ['people_id' => $id, 'created_on' => $now, 'created_by' => $user_id];
 
             for ($i = 0; $i < sizeof($tags_to_add); ++$i) {
