@@ -27,8 +27,14 @@ class UpdateUnitsTable extends AbstractMigration
                 'limit' => 255,
                 'after' => 'name',
             ])
-            ->addColumn('conversion_factor', 'float', [
+            ->addColumn('conversion_factor', 'decimal', [
                 'null' => false,
+                'default' => null,
+                'signed' => false,
+                // Values for DECIMAL columns are stored using a binary format
+                // that packs nine decimal digits into 4 bytes
+                'precision' => 36,
+                'scale' => 18,
                 'after' => 'symbol',
             ])
             ->addColumn('dimension_id', 'integer', [
@@ -38,6 +44,7 @@ class UpdateUnitsTable extends AbstractMigration
             ])
             ->addForeignKey('dimension_id', 'sizegroup', 'id', [
                 'update' => 'CASCADE',
+                'delete' => 'RESTRICT',
             ])
             ->create()
         ;
@@ -49,14 +56,15 @@ INSERT INTO units
 VALUES
 (1,"kilogram","kg",1.0,28),
 (2,"liter","l",1.0,29),
-(3,"gram","g",1000.0,28),
-(4,"milligram","mg",1000000.0,28),
-(5,"metric ton","t",0.001,28),
-(6,"pound","lb",2.2046,28),
-(7,"ounce","oz",35.274,28),
-(8,"gallon (US)","gal (US)",0.2642,29),
-(9,"pint (US)","pt (US)",2.1134,29),
-(10,"fluid ounce (US)","fl oz (US)",33.814,29)
+(3,"milliliter","ml",1000.0,29),
+(4,"gram","g",1000.0,28),
+(5,"milligram","mg",1000000.0,28),
+(6,"metric ton","t",0.001,28),
+(7,"pound","lb",2.2046,28),
+(8,"ounce","oz",35.274,28),
+(9,"gallon (US)","gal (US)",0.2642,29),
+(10,"pint (US)","pt (US)",2.1134,29),
+(11,"fluid ounce (US)","fl oz (US)",33.814,29)
 ;'
         );
     }
