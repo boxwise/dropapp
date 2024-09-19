@@ -7,7 +7,7 @@ class AddUnitValueToStock extends AbstractMigration
     public function up(): void
     {
         $this->table('stock')
-            ->addColumn('unit_id', 'integer', [
+            ->addColumn('display_unit_id', 'integer', [
                 'null' => true,
                 'default' => null,
                 'signed' => false,
@@ -21,9 +21,12 @@ class AddUnitValueToStock extends AbstractMigration
                 // that packs nine decimal digits into 4 bytes
                 'precision' => 36,
                 'scale' => 18,
-                'after' => 'unit_id',
+                'after' => 'display_unit_id',
             ])
-            ->addForeignKey('unit_id', 'units', 'id', [
+            ->save()
+        ;
+        $this->table('stock')
+            ->addForeignKey('display_unit_id', 'units', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
             ])
             ->save()
@@ -32,9 +35,9 @@ class AddUnitValueToStock extends AbstractMigration
 
     public function down(): void
     {
-        $this->table('products')
-            ->dropForeignKey('unit_id')
-            ->removeColumn('unit_id')
+        $this->table('stock')
+            ->dropForeignKey('display_unit_id')
+            ->removeColumn('display_unit_id')
             ->removeColumn('measure_value')
             ->save()
         ;
