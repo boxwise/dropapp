@@ -116,13 +116,15 @@ if (!$ajax) {
             $ids = explode(',', (string) $_POST['ids']);
             // Transaction block added over update queries
             [$success, $message, $redirect] = db_transaction(function () use ($ids, $table) {
+                $now = (new DateTime())->format('Y-m-d H:i:s');
+                $user_id = $_SESSION['user']['id'];
                 foreach ($ids as $id) {
                     // unlink transactions
                     db_query('UPDATE transactions SET people_id = NULL WHERE people_id = :id', ['id' => $id]);
                     // unlink parent from children
                     db_query('UPDATE people SET parent_id = NULL WHERE parent_id = :id AND deleted', ['id' => $id]);
                     // remove tags already assigned to the beneficiary
-                    db_query('DELETE FROM tags_relations WHERE `object_id` = :id AND object_type = "People"', ['id' => $id]);
+                    db_query('UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE `object_id` = :id AND object_type = "People" AND deleted_on IS NULL', ['id' => $id, 'deleted_on' => $now, 'deleted_by' => $user_id]);
                 }
 
                 // Optimized by using bulk inserts and transactions over delete queries

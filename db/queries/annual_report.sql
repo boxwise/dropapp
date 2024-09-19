@@ -289,7 +289,7 @@ JOIN products p ON p.id = t.product
 JOIN locations loc ON loc.id = t.location_id
 JOIN camps c ON c.id = loc.camp_id
 JOIN organisations o ON o.id = c.organisation_id
-LEFT OUTER JOIN tags_relations tr ON tr.object_id = t.box_id AND tr.object_type = "Stock"
+LEFT OUTER JOIN tags_relations tr ON tr.object_id = t.box_id AND tr.object_type = "Stock" AND tr.deleted_on IS NULL
 GROUP BY moved_on, p.category_id, p.name, p.gender_id, t.size_id, loc.label, c.id, c.name, o.label
 
 UNION ALL
@@ -326,7 +326,7 @@ JOIN products p ON p.id = t.product
 JOIN locations loc ON loc.id = t.location_id
 JOIN camps c ON c.id = loc.camp_id
 JOIN organisations o ON o.id = c.organisation_id
-LEFT OUTER JOIN tags_relations tr ON tr.object_id = t.box_id AND tr.object_type = "Stock"
+LEFT OUTER JOIN tags_relations tr ON tr.object_id = t.box_id AND tr.object_type = "Stock" AND tr.deleted_on IS NULL
 WHERE (t.prev_box_state_id = 1 AND t.box_state_id = 5) OR
       (t.prev_box_state_id = 5 AND t.box_state_id = 1)
 GROUP BY moved_on, p.category_id, p.name, p.gender_id, t.size_id, loc.label, c.id, c.name, o.label
@@ -360,7 +360,7 @@ ON
 JOIN camps c ON c.id = sh.target_base_id
 JOIN organisations o ON o.id = c.organisation_id
 JOIN products p ON p.id = d.source_product_id
-LEFT OUTER JOIN tags_relations tr ON tr.object_id = d.box_id AND tr.object_type = "Stock"
+LEFT OUTER JOIN tags_relations tr ON tr.object_id = d.box_id AND tr.object_type = "Stock" AND tr.deleted_on IS NULL
 GROUP BY moved_on, p.category_id, p.name, p.gender_id, d.source_size_id, c.name, c.id, c.name, o.label
 
 UNION ALL
@@ -397,5 +397,5 @@ JOIN box_state bs on bs.id = h.to_int
 JOIN locations loc ON loc.id = b.location_id
 JOIN camps c ON c.id = loc.camp_id
 JOIN organisations o ON o.id = c.organisation_id
-LEFT OUTER JOIN tags_relations tr ON tr.object_id = b.id AND tr.object_type = "Stock"
+LEFT OUTER JOIN tags_relations tr ON tr.object_id = b.id AND tr.object_type = "Stock" AND tr.deleted_on IS NULL
 GROUP BY moved_on, p.category_id, p.name, p.gender_id, b.size_id, bs.label, c.id, c.name, o.label

@@ -15,7 +15,9 @@ if ($_POST) {
         // related trello https://trello.com/c/XjNwO3sL
         if ('All' !== $_POST['type'][0]) {
             $objectType = ('People' === $_POST['type'][0]) ? 'Stock' : 'People';
-            db_query('DELETE FROM tags_relations WHERE tag_id = :tagId AND object_type = :objectType ', ['tagId' => $id, 'objectType' => $objectType]);
+            $now = (new DateTime())->format('Y-m-d H:i:s');
+            $user_id = $_SESSION['user']['id'];
+            db_query('UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE tag_id = :tagId AND object_type = :objectType AND deleted_on IS NULL', ['tagId' => $id, 'objectType' => $objectType, 'deleted_on' => $now, 'deleted_by' => $user_id]);
         }
     });
 
@@ -36,6 +38,7 @@ $data = db_row('SELECT
                         tags
                             LEFT JOIN
                         tags_relations ON tags_relations.tag_id = tags.id
+                        AND tags_relations.deleted_on IS NULL
                     WHERE
                         tags.deleted IS NULL AND tags.id = :id
                     GROUP BY tags.id ', ['id' => $id]);

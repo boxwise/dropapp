@@ -231,7 +231,7 @@ if (!$ajax) {
             FROM 
                 people 
             LEFT JOIN
-                tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People"
+                tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People" AND tags_relations.deleted_on IS NULL
             LEFT JOIN
                 tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
             WHERE 
