@@ -11,8 +11,8 @@ class AddMassVolumeSizegroups extends AbstractMigration
 INSERT INTO sizegroup
 (id,label,seq)
 VALUES
-(28,"Mass",120),
-(29,"Volume",121);'
+(28,"Mass",3),
+(29,"Volume",4);'
         );
     }
 
