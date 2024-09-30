@@ -88,7 +88,7 @@ Tracer::inSpan(
                             // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
                             ($listconfig['multiplefilter_selected'] ? '
                                 LEFT JOIN
-                                    tags_relations AS stock_tags_filter ON stock_tags_filter.object_id = stock.id AND stock_tags_filter.object_type = "Stock"
+                                    tags_relations AS stock_tags_filter ON stock_tags_filter.object_id = stock.id AND stock_tags_filter.object_type = "Stock" AND stock_tags_filter.deleted_on IS NULL
                                 LEFT JOIN
                                     tags AS tags_filter ON tags_filter.id = stock_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').' 
                         LEFT OUTER JOIN 
@@ -117,7 +117,7 @@ Tracer::inSpan(
                         GROUP BY 
                             stock.id ) AS stock_filtered
                     LEFT JOIN 
-                        tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock"
+                        tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
                     LEFT JOIN
                         tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
                     GROUP BY
@@ -235,8 +235,10 @@ Tracer::inSpan(
                     [$success, $message, $redirect] = db_transaction(function () use ($table, $stock_ids) {
                         [$success, $message, $redirect] = listDelete($table, $stock_ids);
 
-                        $params = [];
-                        $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (`object_id`) IN (';
+                        $now = (new DateTime())->format('Y-m-d H:i:s');
+                        $user_id = $_SESSION['user']['id'];
+                        $params = ['deleted_on' => $now, 'deleted_by' => $user_id];
+                        $query = 'UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_type = "Stock" AND deleted_on IS NULL AND (`object_id`) IN (';
                         foreach ($stock_ids as $index => $stock_id) {
                             $query .= sprintf(' (:stock_id_%s) ', $index);
 
@@ -290,24 +292,28 @@ Tracer::inSpan(
                     } else {
                         // set tag id
                         $tag_id = $_POST['option'];
-                        $stock_ids = $ids;
+                        // validate input
+                        $stock_ids = array_filter($ids, fn ($id) => ctype_digit($id));
                         if (is_array($stock_ids) && sizeof($stock_ids) > 0) {
-                            // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
-                            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+                            $boxes_with_this_tag = db_simplearray('SELECT object_id FROM tags_relations WHERE object_type = "Stock" AND tag_id = :tag_id AND object_id IN ('.implode(',', $stock_ids).') AND deleted_on IS NULL', ['tag_id' => $tag_id], false, false);
+                            $stock_ids_to_add = array_values(array_diff($stock_ids, $boxes_with_this_tag));
 
-                            $params = [];
+                            if (sizeof($stock_ids_to_add) > 0) {
+                                // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
+                                $query = 'INSERT INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
+                                $now = (new DateTime())->format('Y-m-d H:i:s');
+                                $user_id = $_SESSION['user']['id'];
+                                $params = ['tag_id' => $tag_id, 'created_on' => $now, 'created_by' => $user_id];
 
-                            for ($i = 0; $i < sizeof($stock_ids); ++$i) {
-                                $query .= "(:tag_id, 'Stock', :stock_id{$i})";
-                                $params = array_merge($params, ['stock_id'.$i => $stock_ids[$i]]);
-                                if ($i !== sizeof($stock_ids) - 1) {
-                                    $query .= ',';
+                                for ($i = 0; $i < sizeof($stock_ids_to_add); ++$i) {
+                                    $query .= "(:tag_id, 'Stock', :stock_id{$i}, :created_on, :created_by)";
+                                    $params = array_merge($params, ['stock_id'.$i => $stock_ids_to_add[$i]]);
+                                    if ($i !== sizeof($stock_ids_to_add) - 1) {
+                                        $query .= ',';
+                                    }
                                 }
+                                db_query($query, $params);
                             }
-
-                            $params = array_merge($params, ['tag_id' => $tag_id]);
-                            db_query($query, $params);
-
                             $success = true;
                             $message = 'Tags added';
                             $redirect = true;
@@ -332,7 +338,9 @@ Tracer::inSpan(
                         $stock_ids = $ids;
                         if (is_array($stock_ids) && sizeof($stock_ids) > 0) {
                             db_transaction(function () use ($tag_id, $stock_ids) {
-                                $query = 'DELETE FROM tags_relations WHERE object_type = "Stock" AND (tag_id, `object_id`) IN (';
+                                $now = (new DateTime())->format('Y-m-d H:i:s');
+                                $user_id = $_SESSION['user']['id'];
+                                $query = 'UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_type = "Stock" AND deleted_on IS NULL AND (tag_id, `object_id`) IN (';
 
                                 $params = [];
 
@@ -346,7 +354,7 @@ Tracer::inSpan(
                                     }
                                 }
 
-                                $params = array_merge($params, ['tag_id' => $tag_id]);
+                                $params = array_merge($params, ['tag_id' => $tag_id, 'deleted_on' => $now, 'deleted_by' => $user_id]);
                                 db_query($query, $params);
                             });
                             $success = true;

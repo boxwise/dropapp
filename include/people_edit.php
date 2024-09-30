@@ -11,7 +11,7 @@ if ($_POST) {
         foreach ($ids as $id) {
             verify_campaccess_people(db_value('SELECT people_id FROM transactions WHERE id=:id', ['id' => $id]));
         }
-        [$success, $message, $redirect] = listDelete('transactions', $ids);
+        [$success, $message, $redirect] = listDelete('transactions', $ids, false, null, false);
 
         $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'action' => $aftermove];
 
@@ -135,20 +135,39 @@ if ($_POST) {
         $id = $handler->savePost($savekeys, ['parent_id']);
 
         // edit tags
-        db_query('DELETE FROM tags_relations WHERE object_id = :people_id AND object_type = "People"', [':people_id' => $id]);
-        $params = [];
+        $now = (new DateTime())->format('Y-m-d H:i:s');
+        $user_id = $_SESSION['user']['id'];
+        $existing_tags = db_simplearray('SELECT tag_id FROM tags_relations WHERE object_id = :people_id AND object_type = "People" AND deleted_on IS NULL', [':people_id' => $id], false, false);
         $tags = $_POST['tags'] ?? [];
-        if (sizeof($tags) > 0) {
-            $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+        $tags_to_add = array_values(array_diff($tags, $existing_tags));
+        $tags_to_remove = array_values(array_diff($existing_tags, $tags));
 
-            for ($i = 0; $i < sizeof($tags); ++$i) {
-                $query .= "(:tag_id{$i}, 'People', :people_id)";
-                $params = array_merge($params, ['tag_id'.$i => $tags[$i]]);
-                if ($i !== sizeof($tags) - 1) {
+        if (sizeof($tags_to_add) > 0) {
+            $query = 'INSERT INTO tags_relations (tag_id, object_type, object_id, created_on, created_by_id) VALUES ';
+            $params = ['people_id' => $id, 'created_on' => $now, 'created_by' => $user_id];
+
+            for ($i = 0; $i < sizeof($tags_to_add); ++$i) {
+                $query .= "(:tag_id{$i}, 'People', :people_id, :created_on, :created_by)";
+                $params = array_merge($params, ['tag_id'.$i => $tags_to_add[$i]]);
+                if ($i !== sizeof($tags_to_add) - 1) {
                     $query .= ',';
                 }
             }
-            $params = array_merge($params, ['people_id' => $id]);
+            db_query($query, $params);
+        }
+
+        if (sizeof($tags_to_remove) > 0) {
+            $query = 'UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE object_id = :people_id AND object_type = "People" AND deleted_on IS NULL AND tag_id IN (';
+            $params = ['people_id' => $id, 'deleted_on' => $now, 'deleted_by' => $user_id];
+
+            for ($i = 0; $i < sizeof($tags_to_remove); ++$i) {
+                $query .= ':tag_id'.$i;
+                $params = array_merge($params, ['tag_id'.$i => $tags_to_remove[$i]]);
+                if ($i !== sizeof($tags_to_remove) - 1) {
+                    $query .= ',';
+                }
+            }
+            $query .= ')';
             db_query($query, $params);
         }
         // edit other N:N relationships
@@ -200,7 +219,7 @@ $data = db_row('
         FROM 
             people
         LEFT JOIN
-            tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People"
+            tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People" AND tags_relations.deleted_on IS NULL
         LEFT JOIN
             tags ON tags.id = tags_relations.tag_id AND tags_relations.object_type = "People" AND tags.deleted IS NULL
         WHERE 
@@ -260,7 +279,7 @@ if ($id) {
             FROM 
                 people 
             LEFT JOIN
-                tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People"
+                tags_relations ON tags_relations.object_id = people.id AND tags_relations.object_type = "People" AND tags_relations.deleted_on IS NULL
             LEFT JOIN
                 tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL
             WHERE 
@@ -320,7 +339,7 @@ addfield('select', 'Gender', 'gender', ['testid' => 'gender_id', 'tab' => 'peopl
     'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);
 addfield('date', 'Date of birth', 'date_of_birth', ['testid' => 'date_of_birth_id', 'tab' => 'people', 'date' => true, 'time' => false]);
 addfield('line', '', '', ['tab' => 'people']);
-addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(tags_relations.object_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN tags_relations ON tags.id = tags_relations.tag_id AND tags_relations.object_id = '.intval($id).' AND tags_relations.object_type = "People" WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","People") ORDER BY seq']);
+addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(tags_relations.object_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN tags_relations ON tags.id = tags_relations.tag_id AND tags_relations.object_id = '.intval($id).' AND tags_relations.object_type = "People" AND tags_relations.deleted_on IS NULL WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","People") ORDER BY seq']);
 addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
 addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
 addfield('line', '', '', ['tab' => 'people']);

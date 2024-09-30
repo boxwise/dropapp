@@ -149,7 +149,7 @@ Tracer::inSpan(
                     // Join tags here only if a tag filter is selected and only people with a certain tag should be returned
                     ($listconfig['multiplefilter_selected'] ? '
                         LEFT JOIN
-                            tags_relations AS people_tags_filter ON people_tags_filter.object_id = people.id AND people_tags_filter.object_type = "People"
+                            tags_relations AS people_tags_filter ON people_tags_filter.object_id = people.id AND people_tags_filter.object_type = "People" AND people_tags_filter.deleted_on IS NULL
                         LEFT JOIN
                             tags AS tags_filter ON tags_filter.id = people_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').'
                     WHERE
@@ -173,7 +173,7 @@ Tracer::inSpan(
                     ) AS people_filtered
                 LEFT JOIN
                     tags_relations 
-                    ON tags_relations.object_id = people_filtered.id AND tags_relations.object_type = "People"
+                    ON tags_relations.object_id = people_filtered.id AND tags_relations.object_type = "People" AND tags_relations.deleted_on IS NULL
                 LEFT JOIN
                     tags 
                     ON tags.id = tags_relations.tag_id 
@@ -439,23 +439,28 @@ Tracer::inSpan(
                         } else {
                             // set tag id
                             $tag_id = $_POST['option'];
-                            $people_ids = $ids ?? [];
-                            if (sizeof($people_ids) > 0) {
-                                // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
-                                $query = 'INSERT IGNORE INTO tags_relations (tag_id, object_type, `object_id`) VALUES ';
+                            // validate input
+                            $people_ids = array_filter($ids, fn ($id) => ctype_digit($id));
+                            if (is_array($people_ids) && sizeof($people_ids) > 0) {
+                                $people_with_this_tag = db_simplearray('SELECT object_id FROM tags_relations WHERE tag_id = :tag_id AND object_type = "People" AND object_id IN ('.implode(',', $people_ids).') AND deleted_on IS NULL', ['tag_id' => $tag_id], false, false);
+                                $people_ids_to_add = array_values(array_diff($people_ids, $people_with_this_tag));
 
-                                $params = [];
+                                if (sizeof($people_ids_to_add) > 0) {
+                                    // Query speed optimised for 500 records from 3.2 seconds to 0.039 seconds using bulk inserts
+                                    $query = 'INSERT INTO tags_relations (tag_id, object_type, `object_id`, created_on, created_by_id) VALUES ';
+                                    $now = (new DateTime())->format('Y-m-d H:i:s');
+                                    $user_id = $_SESSION['user']['id'];
+                                    $params = ['tag_id' => $tag_id, 'created_on' => $now, 'created_by' => $user_id];
 
-                                for ($i = 0; $i < sizeof($people_ids); ++$i) {
-                                    $query .= "(:tag_id, 'People', :people_id{$i})";
-                                    $params = array_merge($params, ['people_id'.$i => $people_ids[$i]]);
-                                    if ($i !== sizeof($people_ids) - 1) {
-                                        $query .= ',';
+                                    for ($i = 0; $i < sizeof($people_ids_to_add); ++$i) {
+                                        $query .= "(:tag_id, 'People', :people_id{$i}, :created_on, :created_by)";
+                                        $params = array_merge($params, ['people_id'.$i => $people_ids_to_add[$i]]);
+                                        if ($i !== sizeof($people_ids_to_add) - 1) {
+                                            $query .= ',';
+                                        }
                                     }
+                                    db_query($query, $params);
                                 }
-
-                                $params = array_merge($params, ['tag_id' => $tag_id]);
-                                db_query($query, $params);
 
                                 $success = true;
                                 $message = 'Tags added';
@@ -482,12 +487,14 @@ Tracer::inSpan(
                                 // Query speed optimised using transaction block and bulk delete
                                 // related to this trello card https://trello.com/c/g24mIVb8
                                 db_transaction(function () use ($tag_id, $people_ids) {
+                                    $now = (new DateTime())->format('Y-m-d H:i:s');
+                                    $user_id = $_SESSION['user']['id'];
                                     $deleteClause = [];
                                     foreach ($people_ids as $people_id) {
                                         $deleteClause[] = sprintf('(%d, "%s", %d)', $tag_id, 'People', $people_id);
                                     }
                                     if (sizeof($deleteClause) > 0) {
-                                        db_query('DELETE FROM tags_relations WHERE (tag_id, object_type, `object_id`) IN ('.join(',', $deleteClause).')');
+                                        db_query('UPDATE tags_relations SET deleted_on = :deleted_on, deleted_by_id = :deleted_by WHERE deleted_on IS NULL AND (tag_id, object_type, `object_id`) IN ('.join(',', $deleteClause).')', ['deleted_on' => $now, 'deleted_by' => $user_id]);
                                     }
                                 });
                                 $success = true;

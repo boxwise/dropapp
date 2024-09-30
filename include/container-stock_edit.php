@@ -52,7 +52,7 @@ if (!$ajax) {
                 l.camp_id = '.$_SESSION['camp']['id'].'
 				AND stock.box_state_id = 1) AS stock_filtered
         LEFT JOIN 
-            tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock"
+            tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
         LEFT JOIN
             tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
         GROUP BY

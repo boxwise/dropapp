@@ -57,7 +57,7 @@ if (!$ajax) {
             ($boxstate ? 'stock.box_state_id='.db_value('SELECT id FROM box_state WHERE id = :id', ['id' => $boxstate]).' AND ' : '').
             '(NOT stock.deleted OR stock.deleted IS NULL)) AS stock_filtered
             LEFT JOIN 
-                tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock"
+                tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
             LEFT JOIN
                 tags ON tags.id = tags_relations.tag_id AND tags.deleted IS NULL AND tags.camp_id = '.$_SESSION['camp']['id'].'
             GROUP BY
