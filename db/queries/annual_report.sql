@@ -361,7 +361,7 @@ JOIN camps c ON c.id = sh.target_base_id
 JOIN organisations o ON o.id = c.organisation_id
 JOIN products p ON p.id = d.source_product_id
 LEFT OUTER JOIN tags_relations tr ON tr.object_id = d.box_id AND tr.object_type = "Stock" AND tr.deleted_on IS NULL
-GROUP BY moved_on, p.category_id, p.name, p.gender_id, d.source_size_id, c.name, c.id, c.name, o.label
+GROUP BY moved_on, p.category_id, p.name, p.gender_id, d.source_size_id, c.id, c.name, o.label
 
 UNION ALL
 
