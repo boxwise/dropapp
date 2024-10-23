@@ -30,6 +30,14 @@ LEFT JOIN camps c ON peo.camp_id=c.id
 LEFT JOIN organisations o ON o.id=c.organisation_id
 WHERE YEAR(peo.created) >= 2020
 GROUP BY YEAR(peo.created), MONTH(peo.created), o.id, o.label, c.id, c.name;
+-- since the free shop is continuously hard deleting benefciaries, we need to use the history table to get the number of newly registered beneficiaries
+SELECT YEAR(h.changedate) as year, MONTH(h.changedate) as month, o.label as org, ug.label as usergroup, COUNT(h.record_id) as beneficiaries_registered 
+FROM history h
+LEFT JOIN cms_users u ON u.id=h.user_id
+LEFT JOIN cms_usergroups ug ON ug.id=u.cms_usergroups_id
+LEFT JOIN organisations o ON o.id=ug.organisation_id
+WHERE h.changes = "Record created" AND h.tablename="people" AND YEAR(h.changedate)>=2023
+GROUP BY YEAR(h.changedate), MONTH(h.changedate), o.label, ug.label;
 
 -- items distributed in shop by year, month, organisation and camp
 SELECT YEAR(t.transaction_date) as year, MONTH(t.transaction_date) as month, o.label as org, c.name as base, cat.label as category, SUM(t.count) as items
