@@ -22,7 +22,6 @@ WHERE id = 87;'
         );
     }
 
-
     public function down(): void
     {
         $this->execute(
