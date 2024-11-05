@@ -242,7 +242,7 @@ if ($data['taglabels']) {
 if (!$id) {
     $data['visible'] = 1;
     $data['camp_id'] = $_SESSION['camp']['id'];
-} 
+}
 
 if ($id && !$data['parent_id']) {
     $data['members'] = db_array('SELECT firstname, lastname FROM people WHERE parent_id = :id', ['id' => $id]);
