@@ -1,71 +1,109 @@
 
 <div class="col-md-8 col-sm-12 col-md-offset-2 signature-text">
-	{if {$currentOrg['label']}=='IHA'}
+	{if {$currentOrg['id']}==1}
 		<div id="IHA">
 			<ul class="nav nav-tabs">
 				<li class = "active"><a href="#languagetab_en" data-toggle="tab">English</a></li>
 				<li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
+				<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li>
 				<li><a href="#languagetab_km" data-toggle="tab">Kurmancî</a></li>
-				<!-- <li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li>
-				<li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li> -->
+				<li><a href="#languagetab_tu" data-toggle="tab">TÜRKÇE</a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane fade in active" id="languagetab_en">
-					<h3> Privacy declaration of IHA </h3><br />
-					<p>IHA collects personal data needed for you to participate in our distributions and activities. This includes:</p>
+					<h3>Data Consent Form</h3><br />
+					<p>I understand that the <i>InterEuropean Human Aid Association - IHA</i> (hereafter Organisation) collects, stores and processes personal data from its service-users in order to provide humanitarian assistance and support. I hereby provide my consent for the Organisation to collect, store and process my personal data in accordance with the European General Data Protection Regulation (GDPR) and humanitarian principles.</p>
+					<p>I understand that my personal data may include but is not limited to: <i>name, contact information, date of birth, gender, nationality, and any other information</i> necessary for the purposes of providing assistance and support.</p>
+					<p>I understand that my personal data will be processed securely and confidentially by the Organisation and will only be shared with authorised personnel who need access to it for the purpose of providing assistance and support.</p>
+					<p>I understand that I have the right to access and request correction or deletion of my personal data at any time by contacting the Organisation.</p>
+					<p>I understand that my personal data may be used for statistical analysis and reporting purposes, but will <i>always be anonymized to protect my identity</i>.</p>
+					<p>I understand that my consent is voluntary and that I have the right to withdraw my consent at any time by contacting the Organisation.</p>
+					<p><strong>My signature below indicates my consent for InterEuropean Human Aid Association - IHA to collect, store, and process my personal data, as well as my child's data if applicable, for the purposes described above.</strong></p>
 					<ul>
-						<li>Name</li>
-						<li>Date of Birth</li>
-						<li>Nationality </li>
-						<li>Address  </li>
-						<li>Gender</li>
+						<li>Name: <strong>{$data['firstname']} {$data['lastname']}</strong></li>
+						<li>Date of Birth: <strong>{$data['date_of_birth']}</strong></li>
+						{if {$data['members']}}<li>Children first and last names:
+							{foreach from=$data['members'] item=member name=memberLoop}
+								<strong>{$member['firstname']} {$member['lastname']}</strong>{if !$smarty.foreach.memberLoop.last}, {/if}
+							{/foreach}
+						</li>{/if}
 					</ul>
-					<p>We are committed to protecting your privacy rights. You have the right to access, delete or change your personal data at any time. You can learn more about our privacy policies here: <a href="https://www.iha.help/en/data-privacy"> www.iha.help/en/data-privacy</a></p>
-					<p>I, <strong>{$data['firstname']} {$data['lastname']}</strong>, agree to my personal data being collected and processed for this purpose.<br />
-					I also agree that my family's personal data is being collected and processed.</p>
 				</div>
 				<div class="tab-pane fade" id="languagetab_ar" dir="rtl">
-					<p>
-						تجمع IHA البيانات الشخصية اللازمة لكي تشارك في عمليات التوزيع والأنشطة الخاصة بنا.
-						هذا يشمل:
-					</p>
+					<h3>Data Consent Form</h3><br />
+					<p>I understand that the <i>InterEuropean Human Aid Association - IHA</i> (hereafter Organisation) collects, stores and processes personal data from its service-users in order to provide humanitarian assistance and support. I hereby provide my consent for the Organisation to collect, store and process my personal data in accordance with the European General Data Protection Regulation (GDPR) and humanitarian principles.</p>
+					<p>I understand that my personal data may include but is not limited to: <i>name, contact information, date of birth, gender, nationality, and any other information</i> necessary for the purposes of providing assistance and support.</p>
+					<p>I understand that my personal data will be processed securely and confidentially by the Organisation and will only be shared with authorised personnel who need access to it for the purpose of providing assistance and support.</p>
+					<p>I understand that I have the right to access and request correction or deletion of my personal data at any time by contacting the Organisation.</p>
+					<p>I understand that my personal data may be used for statistical analysis and reporting purposes, but will <i>always be anonymized to protect my identity</i>.</p>
+					<p>I understand that my consent is voluntary and that I have the right to withdraw my consent at any time by contacting the Organisation.</p>
+					<p><strong>My signature below indicates my consent for InterEuropean Human Aid Association - IHA to collect, store, and process my personal data, as well as my child's data if applicable, for the purposes described above.</strong></p>
 					<ul>
-						<li>
-							اسم
-						</li>
-						<li>
-							تاريخ الولادة
-						</li>
-						<li>
-							جنسية
-						</li>
-						<li>
-							عنوان
-						</li>
-						<li>
-							ذكر أو أنثى 
-						</li>
+						<li>Name: <strong>{$data['firstname']} {$data['lastname']}</strong></li>
+						<li>Date of Birth: <strong>{$data['date_of_birth']}</strong></li>
+						{if {$data['members']}}<li>Children first and last names:
+							{foreach from=$data['members'] item=member name=memberLoop}
+								<strong>{$member['firstname']} {$member['lastname']}</strong>{if !$smarty.foreach.memberLoop.last}, {/if}
+							{/foreach}
+						</li>{/if}
 					</ul>
-					<p>
-						نحن ملتزمون بحماية حقوق الخصوصية الخاصة بك.  لديك الحق في الوصول إلى أو حذف أو تغيير بياناتك الشخصية في أي وقت.  يمكنك معرفة المزيد حول سياسات الخصوصية الخاصة بنا هنا: <a href="https://www.iha.help/ar/data-privacy"> www.iha.help/ar/data-privacy</a>
-					</p>
-					<p>
-						أوافق (الاسم) على جمع بياناتي الشخصية ومعالجتها لهذا الغرض.
-						أوافق أيضًا على أن البيانات الشخصية لعائلتي يتم جمعها ومعالجتها.
-					</p>
+				</div>
+				<div class="tab-pane fade" id="languagetab_fa" dir="rtl">
+					<h3>Data Consent Form</h3><br />
+					<p>I understand that the <i>InterEuropean Human Aid Association - IHA</i> (hereafter Organisation) collects, stores and processes personal data from its service-users in order to provide humanitarian assistance and support. I hereby provide my consent for the Organisation to collect, store and process my personal data in accordance with the European General Data Protection Regulation (GDPR) and humanitarian principles.</p>
+					<p>I understand that my personal data may include but is not limited to: <i>name, contact information, date of birth, gender, nationality, and any other information</i> necessary for the purposes of providing assistance and support.</p>
+					<p>I understand that my personal data will be processed securely and confidentially by the Organisation and will only be shared with authorised personnel who need access to it for the purpose of providing assistance and support.</p>
+					<p>I understand that I have the right to access and request correction or deletion of my personal data at any time by contacting the Organisation.</p>
+					<p>I understand that my personal data may be used for statistical analysis and reporting purposes, but will <i>always be anonymized to protect my identity</i>.</p>
+					<p>I understand that my consent is voluntary and that I have the right to withdraw my consent at any time by contacting the Organisation.</p>
+					<p><strong>My signature below indicates my consent for InterEuropean Human Aid Association - IHA to collect, store, and process my personal data, as well as my child's data if applicable, for the purposes described above.</strong></p>
+					<ul>
+						<li>Name: <strong>{$data['firstname']} {$data['lastname']}</strong></li>
+						<li>Date of Birth: <strong>{$data['date_of_birth']}</strong></li>
+						{if {$data['members']}}<li>Children first and last names:
+							{foreach from=$data['members'] item=member name=memberLoop}
+								<strong>{$member['firstname']} {$member['lastname']}</strong>{if !$smarty.foreach.memberLoop.last}, {/if}
+							{/foreach}
+						</li>{/if}
+					</ul>
 				</div>
 				<div class="tab-pane fade" id="languagetab_km">
-					<p>IHA daneyên kesane yên ku ji bo beşdarî di belavkirin û çalakiyên me de hewce dike kom dike. Ev tê de ye: </p>
+					<h3>Forma razîbûna Datayan</h3><br />
+					<p>Ez fam dikim ku Komeleya Alîkariya Mirovî ya InterEwropî - IHA (li vir Rêxistin) daneyên kesane yên bikarhênerên karûbarê xwe berhev dike, hilîne û pêvajoyê dike da ku arîkarî û piştgirîya mirovahî peyda bike. Ez bi vê yekê razîbûna xwe pêşkêşî Rêxistinê dikim ku daneyên min ên kesane li gorî Rêziknameya Parastina Daneyên Giştî ya Ewropî (GDPR) û prensîbên mirovahî berhev bike, hilîne û pêvajoyê bike.</p>
+					<p>Ez fam dikim ku daneyên min ên kesane dibe ku di nav wan de bin, lê ne bi sînorkirî ne: nav, agahdariya têkiliyê, dîroka jidayikbûnê, zayendî, hemwelatî, û her agahdariya din a ku ji bo mebestên arîkarî û piştgirîyê hewce dike.</p>
+					<p>Ez fam dikim ku daneyên min ên kesane dê ji hêla Rêxistinê ve bi ewlehî û nepenî werin hilanîn û dê tenê bi personelên rayedar ên ku ji bo peydakirina arîkarî û piştgirîyê hewceyê gihîştina wê ne re were parve kirin.</p>
+					<p>Ez fêm dikim ku mafê min heye ku bi riya têkiliyê bi Rêxistinê re di her kêliyê de bigihêjim û daxwaza rastkirin an jêbirina daneyên xwe yên kesane bikim.</p>
+					<p>Ez fam dikim ku daneyên min ên kesane dibe ku ji bo analîzên statîstîkî û mebestên raporkirinê werin bikar anîn, lê ji bo parastina nasnameya min dê her gav bênav bibin.</p>
+					<p>Ez fam dikim ku razîbûna min dilxwazî ​​ye û mafê min heye ku ez razîbûna xwe di her kêliyê de vekişînim û bi Rêxistinê re têkilî daynin.</p>
+					<p><strong>Îmzeya min a li jêr razîbûna min ji bo Komela Alîkariya Mirovî ya InterEwropî - IHA nîşan dide ku daneyên min ên kesane berhev bike, hilîne û bixebite, her weha heke hebe, daneyên zarokê min, ji bo mebestên ku li jor hatine destnîşan kirin.</strong></p>
 					<ul>
-						<li>Nav</li>
-						<li>Dîroka jidayikbûnê</li>
-						<li>Netewbûn</li>
-						<li>Navnîşan</li>
-						<li>Seks</li>
+						<li>Nav û Paşnav: <strong>{$data['firstname']} {$data['lastname']}</strong></li>
+						<li>Roja bûyînê: <strong>{$data['date_of_birth']}</strong></li>
+						{if {$data['members']}}<li>Nav û paşnavên zarokan:
+							{foreach from=$data['members'] item=member name=memberLoop}
+								<strong>{$member['firstname']} {$member['lastname']}</strong>{if !$smarty.foreach.memberLoop.last}, {/if}
+							{/foreach}
+						</li>{/if}
 					</ul>
-					<p>Em soz didin ku mafê we yê nepenî biparêzin.  Mafê we heye ku di her kêliyê de bigihîje, jêbirin an biguhezin daneyên kesane.  Hûn dikarin di derheqê polîtîkayên nepeniya me de bêtir fêr bibin: <a href="https://www.iha.help/en/data-privacy"> www.iha.help/en/data-privacy</a></p>
-					<p>Ez razî me, <strong>{$data['firstname']} {$data['lastname']}</strong>, da ku ji bo vê armancê daneyên kesane yên min kom bike û Armanc bike. </br>
-					Ez di heman demê de bipejirînim ku daneyên kesane yên malbata min hatine komkirin û pêvajoyê ne.</p>
+				</div>
+				<div class="tab-pane fade" id="languagetab_tu">
+					<h3>Veri Onay Formu</h3><br />
+					<p>InterEuropean Human Aid Association - IHA'nın (bundan böyle "Kurum" olarak anılacaktır) insani yardım ve destek sağlamak amacıyla hizmet kullanıcılarından kişisel veri topladığını, depoladığını ve işlediğini anlıyorum. Kişisel verilerimin Avrupa Genel Veri Koruma Yönetmeliği (GDPR) ve insani yardım ilkelerine uygun olarak Kurum tarafından toplanmasına, depolanmasına ve işlenmesine burada onay veriyorum.</p>
+					<p>Kişisel verilerimin; ad, iletişim bilgileri, doğum tarihi, cinsiyet, uyruk ve destek ve yardım sağlamak amacıyla gerekli diğer bilgileri içerebileceğini anlıyorum.</p>
+					<p>Kişisel verilerimin Kurum tarafından güvenli ve gizli bir şekilde işleneceğini ve yalnızca yardım ve destek sağlama amacıyla erişim ihtiyacı duyan yetkili personelle paylaşılacağını anlıyorum.</p>
+					<p>Kişisel verilerime erişme, düzeltme veya silinmesini talep etme hakkımın olduğunu ve bunu yapmak için Kurum ile iletişime geçebileceğimi anlıyorum.</p>
+					<p>Kişisel verilerimin istatistiksel analiz ve raporlama amaçlarıyla kullanılabileceğini, ancak kimliğimi korumak için her zaman anonim hale getirileceğini anlıyorum.</p>
+					<p>Onayımın gönüllü olduğunu ve istediğim zaman Kurum ile iletişime geçerek onayımı geri çekme hakkına sahip olduğumu anlıyorum.</p>
+					<p><strong>Aşağıdaki imzam, InterEuropean Human Aid Association - IHA'nın yukarıda açıklanan amaçlar doğrultusunda kişisel verilerimi ve varsa çocuğuma ait verileri toplamasına, depolamasına ve işlemesine onay verdiğimi belirtir.</strong></p>
+					<ul>
+						<li>Ad Soyad: <strong>{$data['firstname']} {$data['lastname']}</strong></li>
+						<li>Doğum Tarihi: <strong>{$data['date_of_birth']}</strong></li>
+						{if {$data['members']}}<li>Çocukların Adı Soyadı:
+							{foreach from=$data['members'] item=member name=memberLoop}
+								<strong>{$member['firstname']} {$member['lastname']}</strong>{if !$smarty.foreach.memberLoop.last}, {/if}
+							{/foreach}
+						</li>{/if}
+					</ul>
 				</div>
 			</div>
 		</div>	
@@ -390,6 +428,7 @@
 			</div>
 		{/if}
 	{/if}
+	{if {$data['approvalsigned']}}<p>Signed on: {$data['date_of_signature']}</p>{/if}
 	<div class="fc"></div>
 	<div id="sig" ></div>
 	<p style="clear: both;">
