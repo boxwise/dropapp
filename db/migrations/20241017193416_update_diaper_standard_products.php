@@ -8,6 +8,11 @@ class UpdateDiaperStandardProducts extends AbstractMigration
     {
         $this->execute(
             '
+DELETE FROM products
+WHERE standard_product_id >= 80 AND standard_product_id < 87;'
+        );
+        $this->execute(
+            '
 DELETE FROM standard_product
 WHERE id >= 80 AND id < 87;'
         );
