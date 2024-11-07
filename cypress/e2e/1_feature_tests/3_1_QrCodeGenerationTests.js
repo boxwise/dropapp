@@ -22,7 +22,7 @@ describe('QR labels tests - user with rights', () => {
     it('Left panel navigation', () => {
         cy.visit('/');
         cy.viewport(1280, 720);
-        cy.get("a[class='menu_qr']").last().contains("Print box labels").click();
+        cy.get("a[class='menu_qr']").last().contains("Print Box Labels").click();
         labelsCountInputIsVisible();
         cy.verifyActiveSideMenuNavigation('menu_qr');
     });

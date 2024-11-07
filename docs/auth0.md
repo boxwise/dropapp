@@ -1,6 +1,6 @@
 # Auth0
 
-We are using Auth0 for the authentication of Boxtribute. As an introduction see the a quickstart guides, e.g. for [react](https://auth0.com/docs/quickstart/spa/react)
+We are using Auth0 for the authentication of Boxtribute. As an introduction see the quickstart guides, e.g. for [react](https://auth0.com/docs/quickstart/spa/react)
 
 ## General
 
@@ -16,7 +16,7 @@ This is the tenant for the demo instance for interested ngos.
 We are only using [email-password authentication](https://auth0.com/docs/connections/database) and do not have any social logins enabled at the moment. We are using the Auth0 user store to administrate the user accounts. 
 Every tenant has only one [Database Connection](https://auth0.com/docs/connections/database) since the Auth0 authentication does not allow multiple Database Connections for the same Application.
 
-The development and staging include demo user accounts which match the accounts in the database seed of the dropapp and boxtribute-flask repo.
+The development and staging include demo user accounts which match the accounts in the database seed of the dropapp and boxtribute repo.
 These demo users are imported and updated by hand at the moment.
 
 ## Applications
@@ -43,14 +43,18 @@ The following data of each user are currently saved in the [auth0 user db](https
 `deleted`-column in `cms_users` table.
 - `app_metadata['last_blocked_date']` (date)
 `deleted`-column in `cms_users` table.
+- `app_metadata['organisation_id']` (int)
+`organisation_id`-column in `cms_usergroups` table. OPTIONAL, not filled if user is a God Admin.
+- `app_metadata['base_ids']` (list of int)
+aggregation of `camp_id`-columns in `cms_usergroup_camps` table. OPTIONAL, not filled if user is a God Admin.
 - `app_metadata['usergroup_id']` (int)
 `cms_usergroups_id`-column in `cms_users` table. OPTIONAL, not filled if user is a God Admin.
-- `app_metadata['is_god']` (int)
-`is_admin`-column in `cms_users` table. Boolean to identify God Admin with access to multiple organisations.
 - `app_metadata['valid_firstday']` (int)
 `valid_firstday`-column in `cms_users` table. OPTIONAL, only filled if user has a time-limited access.
 - `app_metadata['valid_lastday']` (int)
 `valid_lastday`-column in `cms_users` table. OPTIONAL, only filled if user has a time-limited access.
+
+A user is a God Admin if they have the "Boxtribute God" role assigned. For these users, the `is_admin`-column in `cms_users` table equals 1.
 
 ## Auth0 re-seeding
 If you want to re-seed the users in Auth0, start the dropapp-php server and call in any Browser the following script.
