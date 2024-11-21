@@ -244,6 +244,10 @@ if (!$id) {
     $data['camp_id'] = $_SESSION['camp']['id'];
 }
 
+if ($id && !$data['parent_id']) {
+    $data['members'] = db_array('SELECT firstname, lastname FROM people WHERE parent_id = :id', ['id' => $id]);
+}
+
 $cmsmain->assign('include', 'cms_form.tpl');
 if ($data['firstname'] || $data['lastname']) {
     $titlewithtags = $data['firstname'].' '.$data['lastname'].(is_null($data['parent_id']) ? ' - Family head -' : '');
