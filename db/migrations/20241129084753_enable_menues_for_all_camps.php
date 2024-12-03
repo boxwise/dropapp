@@ -6,8 +6,11 @@ class EnableMenuesForAllCamps extends AbstractMigration
 {
     public function up(): void
     {
-        // check for prod DB
-        // 
+        $dbName = $this->fetchRow('SELECT DATABASE();');
+        if ('dropapp_production' != $dbName) {
+            return;
+        }
+
         $this->execute(
             '
 INSERT INTO cms_functions_camps
@@ -205,8 +208,9 @@ VALUES
     }
 
     public function down() {
-        $this->execute('DELETE FROM cms_functions_camps WHERE cms_functions_id=117');
-        $this->execute('DELETE FROM cms_usergroups_functions WHERE cms_functions_id=117');
-        $this->execute('DELETE FROM cms_functions WHERE id=117');
+        $dbName = $this->fetchRow('SELECT DATABASE();');
+        if ('dropapp_production' != $dbName) {
+            return;
+        }
     }
 }
