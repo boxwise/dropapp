@@ -70,7 +70,6 @@ VALUES
 INSERT INTO cms_usergroups_functions
 VALUES
 -- // Manage Beneficiaries
--- Camp 14
 -- Camp 17
 (118, 28),
 (118, 29),
@@ -92,7 +91,6 @@ VALUES
 -- Camp 49, entries already exist for usergroups 145, 163, 164, 166
 
 -- // Add Beneficiary
--- Camp 14
 -- Camp 17
 (158, 28),
 (158, 29),
@@ -109,10 +107,8 @@ VALUES
 -- Camp 31
 (158, 79),
 (158, 80),
--- Camp 49, see above
 
 -- // Checkout
--- Camp 14
 -- Camp 17
 (87, 28),
 (87, 29),
@@ -131,19 +127,16 @@ VALUES
 -- Camp 31
 (87, 79),
 (87, 80),
--- Camp 49, see above
 
 -- // Give tokens
 -- Camp 1 (Test HoO)
 (92, 9),
--- Camp 2
--- Camp 14
--- Camp 15, entry (92, 50) already exists
+-- Camp 15
+-- (92, 50) already exists
 -- Camp 17
 (92, 28),
 (92, 29),
 (92, 40),
--- Camp 18
 -- Camp 25
 (92, 59),
 (92, 60),
@@ -158,16 +151,13 @@ VALUES
 -- Camp 31
 (92, 79),
 (92, 80),
--- Camp 49, see above
 
 -- // Stockroom
 -- Camp 3
 (110, 8),
--- Camp 14
 -- Camp 15
 -- (110, 50), -- deleted UG
 -- (110, 58), -- deleted UG
--- Camp 16
 -- Camp 17
 -- (110, 28) already exists
 (110, 29),
@@ -178,7 +168,6 @@ VALUES
 (110, 47),
 (110, 48),
 (110, 49),
--- Camp 24
 -- Camp 25
 (110, 59),
 (110, 60),
@@ -206,12 +195,10 @@ VALUES
 (110, 82),
 (110, 83),
 -- (110, 84) already exists
--- Camp 35
 -- Camp 36
 (110, 92),
 (110, 93),
 -- (110, 94) already exists
--- Camp 49, see above
 ;
 '
         );
