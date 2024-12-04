@@ -16,7 +16,6 @@ class EnableMenuesForAllCamps extends AbstractMigration
 INSERT INTO cms_functions_camps
 VALUES
 -- Manage Beneficiaries
-(118, 14),
 (118, 17),
 (118, 25),
 (118, 28),
@@ -24,7 +23,6 @@ VALUES
 (118, 31),
 (118, 49),
 -- Add Beneficiary
-(158, 14),
 (158, 17),
 (158, 25),
 (158, 28),
@@ -32,7 +30,6 @@ VALUES
 (158, 31),
 (158, 49),
 -- Checkout
-(87, 14),
 (87, 17),
 (87, 25),
 (87, 28),
@@ -41,28 +38,19 @@ VALUES
 (87, 49),
 -- Give Tokens to all
 (92, 1),
-(92, 2),
-(92, 14),
-(92, 15),
 (92, 17),
-(92, 18),
 (92, 25),
 (92, 28),
 (92, 29),
 (92, 31),
 (92, 49),
 -- Stockroom
-(110, 14),
-(110, 15),
-(110, 16),
-(110, 24),
 (110, 25),
 (110, 28),
 (110, 29),
 (110, 30),
 (110, 31),
 (110, 32),
-(110, 35),
 (110, 36),
 (110, 49);
 '
@@ -134,8 +122,6 @@ VALUES
 -- // Give tokens
 -- Camp 1 (Test HoO)
 (92, 9),
--- Camp 15
--- (92, 50) already exists
 -- Camp 17
 (92, 28),
 (92, 29),
@@ -158,9 +144,6 @@ VALUES
 -- // Stockroom
 -- Camp 3
 (110, 8),
--- Camp 15
--- (110, 50), -- deleted UG
--- (110, 58), -- deleted UG
 -- Camp 17
 -- (110, 28) already exists
 (110, 29),
@@ -218,7 +201,6 @@ VALUES
 DELETE FROM cms_functions_camps
 WHERE (cms_functions_id, camps_id) in (
 -- Manage Beneficiaries
-(118, 14),
 (118, 17),
 (118, 25),
 (118, 28),
@@ -226,7 +208,6 @@ WHERE (cms_functions_id, camps_id) in (
 (118, 31),
 (118, 49),
 -- Add Beneficiary
-(158, 14),
 (158, 17),
 (158, 25),
 (158, 28),
@@ -234,7 +215,6 @@ WHERE (cms_functions_id, camps_id) in (
 (158, 31),
 (158, 49),
 -- Checkout
-(87, 14),
 (87, 17),
 (87, 25),
 (87, 28),
@@ -243,28 +223,19 @@ WHERE (cms_functions_id, camps_id) in (
 (87, 49),
 -- Give Tokens to all
 (92, 1),
-(92, 2),
-(92, 14),
-(92, 15),
 (92, 17),
-(92, 18),
 (92, 25),
 (92, 28),
 (92, 29),
 (92, 31),
 (92, 49),
 -- Stockroom
-(110, 14),
-(110, 15),
-(110, 16),
-(110, 24),
 (110, 25),
 (110, 28),
 (110, 29),
 (110, 30),
 (110, 31),
 (110, 32),
-(110, 35),
 (110, 36),
 (110, 49)
 );
