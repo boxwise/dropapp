@@ -183,7 +183,7 @@ VALUES
 -- (110, 84) already exists
 -- Camp 36
 (110, 92),
-(110, 93),
+(110, 93)
 -- (110, 94) already exists
 ;
 '
