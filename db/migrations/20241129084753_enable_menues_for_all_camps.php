@@ -7,7 +7,7 @@ class EnableMenuesForAllCamps extends AbstractMigration
     public function up(): void
     {
         $dbName = $this->fetchRow('SELECT DATABASE();');
-        if ('dropapp_production' != $dbName) {
+        if ('dropapp_production' != $dbName[0]) {
             return;
         }
 
@@ -158,7 +158,6 @@ VALUES
 (110, 59),
 (110, 60),
 (110, 61),
-(110, 62),
 -- Camp 27
 (110, 75),
 -- Camp 28
@@ -190,9 +189,10 @@ VALUES
         );
     }
 
-    public function down() {
+    public function down()
+    {
         $dbName = $this->fetchRow('SELECT DATABASE();');
-        if ('dropapp_production' != $dbName) {
+        if ('dropapp_production' != $dbName[0]) {
             return;
         }
 
@@ -314,7 +314,6 @@ WHERE (cms_functions_id, cms_usergroups_id) in (
 (110, 59),
 (110, 60),
 (110, 61),
-(110, 62),
 (110, 75),
 (110, 69),
 (110, 70),
