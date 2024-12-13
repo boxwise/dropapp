@@ -5,6 +5,8 @@ $action = 'give';
 
 if ($_POST) {
     $people = explode(',', (string) $_POST['people']);
+    $source = !empty($_GET['source']) ? $_GET['source'] : null;
+    $personId = $preAction ? $preAction : $people[0];
 
     foreach ($people as $person) {
         $f = db_row('SELECT * FROM people WHERE id = :id', ['id' => $person]);
@@ -24,6 +26,9 @@ if ($_POST) {
 
             db_query('INSERT INTO transactions (people_id,description,drops,transaction_date,user_id) VALUES (:people_id,:description,:drops,NOW(),:user_id)', ['people_id' => $person, 'description' => $_POST['description'], 'drops' => $drops, 'user_id' => $_SESSION['user']['id']]);
         }
+    }
+    if ('check_out' === $source) {
+        redirect('?action=check_out&people_id='.$personId);
     }
     redirect('?action=people');
 }

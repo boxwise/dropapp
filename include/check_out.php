@@ -262,7 +262,7 @@ if (!$ajax) {
 
     $data['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => $data['people_id']]);
 
-    $data['givedropsurl'] = '?action=give&ids='.$data['people_id'];
+    $data['givedropsurl'] = '?action=give&source=check_out&ids='.$data['people_id'];
     $data['person'] = $data['people_id'];
     $data['lasttransaction'] = (new DateTime(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $data['people_id']])))->format('d F Y, H:i');
 
