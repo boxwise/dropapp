@@ -37,6 +37,14 @@ if ($_POST) {
             $children += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE visible AND NOT deleted AND id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) < '.$_SESSION['camp']['adult_age'], ['id' => $person]);
             $adults = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE visible AND NOT deleted AND parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$_SESSION['camp']['adult_age'], ['id' => $person]);
             $adults += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE visible AND NOT deleted AND id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$_SESSION['camp']['adult_age'], ['id' => $person]);
+
+            // Treat people with no DOB as adults if checkbox is checked
+            // Related to https://trello.com/c/jWvgvDtE
+            if (isset($_POST['treatnodobasadult'])) {
+                $nodob = db_numrows('SELECT * FROM people WHERE visible AND NOT deleted AND (id = :id OR parent_id = :id) AND (date_of_birth IS NULL OR NOT date_of_birth)', ['id' => $person]);
+                $adults += $nodob;
+            }
+
             $drops = intval($_POST['dropsadult']) * $adults;
             $drops += intval($_POST['dropschild']) * $children;
 
@@ -65,6 +73,7 @@ if ($_POST) {
     redirect('?action=people');
 }
 
+$nodob_count = db_value('SELECT COUNT(*) FROM people WHERE camp_id = :camp_id AND (date_of_birth IS NULL OR NOT date_of_birth)', ['camp_id' => $_SESSION['camp']['id']]);
 $result = db_query('SELECT * FROM people WHERE camp_id = :camp_id AND visible AND parent_id IS NULL AND NOT deleted', ['camp_id' => $_SESSION['camp']['id']]);
 while ($row = db_fetch($result)) {
     $ids[] = $row['id'];
@@ -92,6 +101,9 @@ $data['hidecancel'] = true;
 $data['dropsadult'] = $_SESSION['camp']['dropsperadult'];
 $data['dropschild'] = $_SESSION['camp']['dropsperchild'];
 
+if ($nodob_count > 0) {
+    addfield('checkbox', 'Treat beneficiaries with no age ( '.$nodob_count.' people with no date of birth registered) the same as adults', 'treatnodobasadult');
+}
 addfield('text', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' per adult', 'dropsadult', ['required' => true]);
 addfield('text', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' per child', 'dropschild', ['required' => true]);
 // 	$data['startration'] = 1;
