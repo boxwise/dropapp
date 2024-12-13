@@ -6,7 +6,7 @@ $action = 'give';
 if ($_POST) {
     $people = explode(',', (string) $_POST['people']);
     $source = !empty($_GET['source']) ? $_GET['source'] : null;
-    $personId = $preAction ? $preAction : $people[0];
+    $personId = $people[0];
 
     foreach ($people as $person) {
         $f = db_row('SELECT * FROM people WHERE id = :id', ['id' => $person]);
