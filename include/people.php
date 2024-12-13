@@ -82,6 +82,12 @@ Tracer::inSpan(
 
             // List Buttons
             addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
+
+            // Show export all button if there are more than 500 beneficiaries
+            // Related to https://trello.com/c/TYgsqCRH
+            if ($number_of_people > 500) {
+                addbutton('export_all', 'Export All', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportAllBeneficiariesButton']);
+            }
             if (!empty($tags)) {
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
                 addbutton('rtag', 'Remove Tag', ['icon' => 'fa-tags', 'options' => $tags]);
@@ -427,6 +433,17 @@ Tracer::inSpan(
                     case 'export':
                         $success = true;
                         $_SESSION['export_ids_people'] = $_POST['ids'];
+                        $_SESSION['export_all_people'] = false;
+                        $redirect = '?action=people_export';
+
+                        break;
+
+                        // Add support for exporting all beneficiaries
+                        // Related to https://trello.com/c/TYgsqCRH
+                    case 'export_all':
+                        $success = true;
+                        $_SESSION['export_ids_people'] = $_POST['ids'];
+                        $_SESSION['export_all_people'] = true;
                         $redirect = '?action=people_export';
 
                         break;
