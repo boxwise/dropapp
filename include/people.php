@@ -84,9 +84,8 @@ Tracer::inSpan(
             addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
 
             // Show export all button if there are more than 500 beneficiaries
-            // Related to https://trello.com/c/TYgsqCRH
             if ($number_of_people > 500) {
-                addbutton('export_all', 'Export All', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportAllBeneficiariesButton']);
+                addbutton('export_all', 'Export All', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportAllBeneficiariesButton']);
             }
             if (!empty($tags)) {
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
@@ -220,10 +219,10 @@ Tracer::inSpan(
                     global $listconfig;
 
                     foreach ($data as $key => $value) {
-                        $created = new DateTime($data[$key]['created']);
-                        $modified = is_null($data[$key]['modified']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['modified']);
-                        $last_activity = is_null($data[$key]['last_activity']) ? new DateTime($data[$key]['created']) : new DateTime($data[$key]['last_activity']);
-                        $data[$key]['last_activity'] = $last_activity->format('Y-m-d');
+                        $created = is_null($data[$key]['created']) ? null : new DateTime($data[$key]['created']);
+                        $modified = is_null($data[$key]['modified']) ? $created : new DateTime($data[$key]['modified']);
+                        $last_activity = is_null($data[$key]['last_activity']) ? $created : new DateTime($data[$key]['last_activity']);
+                        $data[$key]['last_activity'] = is_null($last_activity) ? null : $last_activity->format('Y-m-d');
                         $data[$key]['days_last_active'] = max($created, $modified, $last_activity)->diff(new DateTime())->format('%a');
                         $data[$key]['tokens'] = $data[$key]['level'] ? null : $data[$key]['tokens'];
 
@@ -293,6 +292,14 @@ Tracer::inSpan(
                     $cmsmain->assign('include', 'cms_list.tpl');
                 }
             );
+        } else if ('export_all' == $_POST['do']) {
+                // Add support for exporting all beneficiaries
+                // since the redirect only works if the user is authorized, we do not have to validate anything else
+                $_SESSION['export_ids_people'] = 'all';
+
+                echo json_encode(['success' => true, 'redirect' => '?action=people_export']);
+    
+                exit;
         } else {
             $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
             $ids = [];
@@ -433,17 +440,6 @@ Tracer::inSpan(
                     case 'export':
                         $success = true;
                         $_SESSION['export_ids_people'] = $_POST['ids'];
-                        $_SESSION['export_all_people'] = false;
-                        $redirect = '?action=people_export';
-
-                        break;
-
-                        // Add support for exporting all beneficiaries
-                        // Related to https://trello.com/c/TYgsqCRH
-                    case 'export_all':
-                        $success = true;
-                        $_SESSION['export_ids_people'] = $_POST['ids'];
-                        $_SESSION['export_all_people'] = true;
                         $redirect = '?action=people_export';
 
                         break;
