@@ -264,7 +264,7 @@ if (!$ajax) {
 
     $data['givedropsurl'] = '?action=give&ids='.$data['people_id'];
     $data['person'] = $data['people_id'];
-    $lasttransactiondbvalue = db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $sideid]);
+    $lasttransactiondbvalue = db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $data['people_id']]);
     $data['lasttransaction'] = $lasttransactiondbvalue ? (new DateTime($lasttransactiondbvalue))->format('d F Y, H:i') : null;
 
     $ajaxaside->assign('data', $data);
