@@ -102,7 +102,7 @@ $data['dropsadult'] = $_SESSION['camp']['dropsperadult'];
 $data['dropschild'] = $_SESSION['camp']['dropsperchild'];
 
 if ($nodob_count > 0) {
-    addfield('checkbox', 'Treat beneficiaries with no age ( '.$nodob_count.' people with no date of birth registered) the same as adults', 'treatnodobasadult');
+    addfield('checkbox', 'Treat beneficiaries with no age ('.$nodob_count.' people with no date of birth registered) the same as adults', 'treatnodobasadult');
 }
 addfield('text', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' per adult', 'dropsadult', ['required' => true]);
 addfield('text', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']).' per child', 'dropschild', ['required' => true]);
