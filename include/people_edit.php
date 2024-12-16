@@ -116,7 +116,7 @@ if ($_POST) {
     }
 
     // all other form submission
-    [$message, $id] = db_transaction(function () use ($table, $settings) {
+    [$message, $id] = db_transaction(function () use ($table) {
         // save the People edit form
         if ($_POST['id']) {
             $oldcontainer = db_value('SELECT container FROM people WHERE id = :id', ['id' => $_POST['id']]);
