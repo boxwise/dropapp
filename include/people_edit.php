@@ -174,20 +174,20 @@ if ($_POST) {
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
         $postid = ($_POST['id'] ?: $id);
-        if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
-            if ('image/jpeg' == $_FILES['picture']['type']) {
-                $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
-                $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
-                if (!$res) {
-                    error_log("Could not save uploaded file to {$targetFile}");
-                }
-            } else {
-                error_log('Skipped uploaded file of type '.$_FILES['picture']['type']);
-            }
-        }
-        if ($_POST['picture_delete']) {
-            unlink($settings['upload_dir'].'/people/'.$postid.'.jpg');
-        }
+        // if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
+        //     if ('image/jpeg' == $_FILES['picture']['type']) {
+        //         $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
+        //         $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
+        //         if (!$res) {
+        //             error_log("Could not save uploaded file to {$targetFile}");
+        //         }
+        //     } else {
+        //         error_log('Skipped uploaded file of type '.$_FILES['picture']['type']);
+        //     }
+        // }
+        // if ($_POST['picture_delete']) {
+        //     unlink($settings['upload_dir'].'/people/'.$postid.'.jpg');
+        // }
 
         $message = $_POST['firstname'].($_POST['firstname'] ? ' '.$_POST['lastname'] : '').' was added.<br>'.$_SESSION['camp']['familyidentifier'].' is '.$_POST['container'].'.';
 
@@ -319,7 +319,8 @@ if ($id) {
     $side['dropcoins'] = db_value('SELECT SUM(drops) FROM transactions AS t WHERE people_id = :id', ['id' => $sideid]);
     $side['givedropsurl'] = '?action=give&ids='.$sideid;
 
-    $side['lasttransaction'] = (new DateTime(db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $sideid])))->format('d F Y, H:i');
+    $lasttransactiondbvalue = db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $sideid]);
+    $side['lasttransaction'] = $lasttransactiondbvalue ? (new DateTime($lasttransactiondbvalue))->format('d F Y, H:i') : null;
 
     $ajaxaside->assign('currency', $_SESSION['camp']['currencyname']);
     $ajaxaside->assign('data', $side);
