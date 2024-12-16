@@ -1,14 +1,22 @@
 <?php
 
-// Create array with the export_ids_people in it
-$export_ids_array = explode(',', (string) $_SESSION['export_ids_people']);
-// Create a list of placeholders ? the same length as export ids given
-$id_pars = str_repeat('?,', count($export_ids_array) - 1).'?';
-// Put camp id as first element in the list
-if ('' != $export_ids_array[0]) {
-    array_unshift($export_ids_array, $_SESSION['camp']['id']);
+$variables = [];
+$id_pars = '';
+
+if ($_SESSION['export_ids_people'] === 'all') {
+    // just export all beneficiaries
+    $variables = [$_SESSION['camp']['id']];
 } else {
-    $export_ids_array = [$_SESSION['camp']['id']];
+    // Create array with the export_ids_people in it
+    $variables = explode(',', (string) $_SESSION['export_ids_people']);
+    // Create a list of placeholders ? the same length as export ids given
+    $id_pars = str_repeat('?,', count($variables) - 1).'?';
+    // Put camp id as first element in the list
+    if ('' != $variables[0]) {
+        array_unshift($variables, $_SESSION['camp']['id']);
+    } else {
+        $variables = [$_SESSION['camp']['id']];
+    }
 }
 
 $query = '
@@ -24,17 +32,13 @@ $query = '
             WHERE tr.object_type = "People" AND tr.object_id = p.id
         ) AS tags
     FROM people AS p
-    WHERE camp_id = ? AND (NOT deleted OR deleted IS NULL) ';
+    WHERE p.camp_id = ? AND (NOT p.deleted OR p.deleted IS NULL) ';
 
 // Conditionally add export ids or export all
-// Related to https://trello.com/c/TYgsqCRH
-$query .= ($_SESSION['export_ids_people'] && false == $_SESSION['export_all_people'] && $id_pars ? 'AND p.id IN ('.$id_pars.')' : ' ');
+$query .= ($_SESSION['export_ids_people'] !== 'all' && $id_pars ? 'AND p.id IN ('.$id_pars.')' : '');
 
-$result = db_query(
-    $query,
-    false == $_SESSION['export_all_people'] ? $export_ids_array : [$export_ids_array[0]]
-);
-unset($_SESSION['export_ids_people'], $_SESSION['export_all_people']);
+$result = db_query($query, $variables);
+unset($_SESSION['export_ids_people']);
 
 $keys = [
     'container' => $_SESSION['camp']['familyidentifier'],
@@ -42,10 +46,10 @@ $keys = [
     'lastname' => 'Surname',
     'gender' => 'Gender',
     'age' => 'Age',
+    'tags' => 'Tags',
     'comments' => 'Comments',
     'boxtribute_family_id' => 'Boxtribute Family ID',
     'familyhead' => 'Head of Family',
-    'tags' => 'Tags',
 ];
 
 csvexport($result, 'Beneficiaries_'.$_SESSION['camp']['name'], $keys);
