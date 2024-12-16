@@ -3,7 +3,7 @@
 $variables = [];
 $id_pars = '';
 
-if ($_SESSION['export_ids_people'] === 'all') {
+if ('all' === $_SESSION['export_ids_people']) {
     // just export all beneficiaries
     $variables = [$_SESSION['camp']['id']];
 } else {
@@ -35,7 +35,7 @@ $query = '
     WHERE p.camp_id = ? AND (NOT p.deleted OR p.deleted IS NULL) ';
 
 // Conditionally add export ids or export all
-$query .= ($_SESSION['export_ids_people'] !== 'all' && $id_pars ? 'AND p.id IN ('.$id_pars.')' : '');
+$query .= ('all' !== $_SESSION['export_ids_people'] && $id_pars ? 'AND p.id IN ('.$id_pars.')' : '');
 
 $result = db_query($query, $variables);
 unset($_SESSION['export_ids_people']);

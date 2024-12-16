@@ -292,14 +292,14 @@ Tracer::inSpan(
                     $cmsmain->assign('include', 'cms_list.tpl');
                 }
             );
-        } else if ('export_all' == $_POST['do']) {
-                // Add support for exporting all beneficiaries
-                // since the redirect only works if the user is authorized, we do not have to validate anything else
-                $_SESSION['export_ids_people'] = 'all';
+        } elseif ('export_all' == $_POST['do']) {
+            // Add support for exporting all beneficiaries
+            // since the redirect only works if the user is authorized, we do not have to validate anything else
+            $_SESSION['export_ids_people'] = 'all';
 
-                echo json_encode(['success' => true, 'redirect' => '?action=people_export']);
-    
-                exit;
+            echo json_encode(['success' => true, 'redirect' => '?action=people_export']);
+
+            exit;
         } else {
             $valid_ids = array_column(db_array('SELECT id from people as p where p.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]), 'id');
             $ids = [];
