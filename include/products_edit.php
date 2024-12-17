@@ -41,7 +41,7 @@ addfield('line');
 $stockroomlocationexists = db_value('SELECT id FROM locations WHERE deleted IS NULL AND camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock AND type = "Warehouse"');
 if ($stockroomlocationexists || $_SESSION['camp']['separateshopandwhproducts']) {
     if ($stockroomlocationexists) {
-        addfield('checkbox', 'in Free Shop?', 'stockincontainer', ['tooltip' => 'Always show product in Stockroom menu?']);
+        addfield('checkbox', 'Pin to Stockroom?', 'stockincontainer', ['tooltip' => 'Pinning the product means it will always show in Stockroom even when no items are on location.']);
     } else {
         addfield('checkbox', 'in Free Shop?', 'stockincontainer');
     }

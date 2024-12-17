@@ -46,7 +46,7 @@ if (!$ajax) {
     }
     addcolumn('text', 'Description', 'comments');
     if (db_value('SELECT id FROM locations WHERE camp_id = '.intval($_SESSION['camp']['id']).' AND container_stock AND type = "Warehouse"') || $_SESSION['camp']['separateshopandwhproducts']) {
-        addcolumn('toggle', 'In Shop?', 'stockincontainer', ['do' => 'togglecontainer']);
+        addcolumn('toggle', 'Pin in Stockroom?', 'stockincontainer', ['do' => 'togglecontainer']);
     }
 
     addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false]);
