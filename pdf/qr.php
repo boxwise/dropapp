@@ -45,7 +45,29 @@ Tracer::inSpan(
             }
 
             if ($labels[$i]) {
-                $box = db_row('SELECT s.box_id, p.name AS product, s.items, s2.label AS size, g.label AS gender, s.qr_id, qr.code, qr.legacy FROM stock AS s LEFT OUTER JOIN products AS p ON s.product_id = p.id LEFT OUTER JOIN sizes AS s2 ON s.size_id = s2.id LEFT OUTER JOIN genders AS g ON p.gender_id = g.id LEFT OUTER JOIN qr ON s.qr_id = qr.id WHERE s.id = :id', ['id' => $labels[$i]]);
+                $box = db_row(
+                    '
+                SELECT s.box_id,
+                    p.name AS product,
+                    s.items,
+                    s2.label AS size,
+                    g.label AS gender,
+                    s.qr_id,
+                    qr.code,
+                    qr.legacy
+                FROM
+                    stock AS s
+                LEFT OUTER JOIN products AS p ON
+                    s.product_id = p.id
+                LEFT OUTER JOIN sizes AS s2 ON
+                    s.size_id = s2.id
+                LEFT OUTER JOIN genders AS g ON
+                    p.gender_id = g.id
+                LEFT OUTER JOIN qr ON
+                    s.qr_id = qr.id
+                WHERE s.id = :id',
+                    ['id' => $labels[$i]]
+                );
             }
 
             // qr code generation
