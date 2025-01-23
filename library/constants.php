@@ -412,6 +412,7 @@ $rolesToActions = [
         'view_transfer_agreements',
         'view_shipments',
         'fill_shipment',
+        'create_shareable_link',
     ],
 
     'coordinator' => [
@@ -443,6 +444,7 @@ $rolesToActions = [
         'view_transfer_agreements',
         'view_shipments',
         'fill_shipment',
+        'create_shareable_link',
     ],
 
     'warehouse_volunteer' => [
