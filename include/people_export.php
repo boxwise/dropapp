@@ -29,7 +29,7 @@ $query = '
             SELECT GROUP_CONCAT(t.label) 
             FROM tags t 
             INNER JOIN tags_relations tr ON t.id = tr.tag_id 
-            WHERE tr.object_type = "People" AND tr.object_id = p.id
+            WHERE tr.object_type = "People" AND tr.object_id = p.id AND tr.deleted_on IS NULL
         ) AS tags
     FROM people AS p
     WHERE p.camp_id = ? AND (NOT p.deleted OR p.deleted IS NULL) ';
