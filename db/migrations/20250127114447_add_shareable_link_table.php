@@ -33,24 +33,29 @@ class AddShareableLinkTable extends AbstractMigration
             ])
             ->addColumn('base_id', 'integer', [
                 'null' => true,
+                'signed' => false,
                 'after' => 'view',
             ])
             ->addColumn('url_parameters', 'string', [
                 'null' => true,
-                'limit' => 65535,
+                'limit' => 2000,
                 'after' => 'base_id',
             ])
             ->addColumn('created_on', 'datetime', [
                 'null' => false,
                 'after' => 'url_parameters',
             ])
-            ->addColumn('created_by', 'integer', [
+            ->addColumn('created_by_id', 'integer', [
                 'null' => true,
                 'signed' => false,
                 'after' => 'created_on',
             ])
 
-            ->addForeignKey('created_by', 'cms_users', 'id', [
+            ->addForeignKey('created_by_id', 'cms_users', 'id', [
+                'delete' => 'SET_NULL', 'update' => 'CASCADE',
+            ])
+
+            ->addForeignKey('base_id', 'camps', 'id', [
                 'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
 
@@ -58,7 +63,7 @@ class AddShareableLinkTable extends AbstractMigration
                 'unique' => true,
                 'name' => 'shareable_link_code',
             ])
-            ->addIndex(['created_by'], ['name' => 'shareable_link_created_by'])
+
             ->create()
         ;
     }
