@@ -1,4 +1,5 @@
 <?php
+
 /*
 * FPDF                                                                         *
 *                                                                              *
@@ -1259,7 +1260,7 @@ class FPDF
     {
         // Escape special characters
         if (str_contains((string) $s, '(') || str_contains((string) $s, ')') || str_contains((string) $s, '\\') || str_contains((string) $s, "\r")) {
-            return str_replace(['\\', '(', ')', "\r"], ['\\\\', '\\(', '\\)', '\\r'], (string) $s);
+            return str_replace(['\\', '(', ')', "\r"], ['\\\\', '\(', '\)', '\r'], (string) $s);
         }
 
         return $s;
