@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "auth0/auth0-php",
-            "version": "8.11.1",
+            "version": "8.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auth0/auth0-PHP.git",
-                "reference": "5d132ad4b3b95c5d5d342d09088d469568bfa627"
+                "reference": "3acf0f4d847f355eada5ac3f3336b175238c8ef1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/5d132ad4b3b95c5d5d342d09088d469568bfa627",
-                "reference": "5d132ad4b3b95c5d5d342d09088d469568bfa627",
+                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/3acf0f4d847f355eada5ac3f3336b175238c8ef1",
+                "reference": "3acf0f4d847f355eada5ac3f3336b175238c8ef1",
                 "shasum": ""
             },
             "require": {
@@ -32,19 +32,19 @@
                 "psr/http-message-implementation": "^1"
             },
             "require-dev": {
-                "ergebnis/composer-normalize": "^2",
-                "friendsofphp/php-cs-fixer": "^3",
-                "mockery/mockery": "^1",
-                "pestphp/pest": "^2",
-                "phpstan/phpstan": "^1",
-                "phpstan/phpstan-strict-rules": "^1",
-                "psr-mock/http": "^1",
-                "rector/rector": "0.17.6",
-                "spatie/ray": "^1",
+                "ergebnis/composer-normalize": "~2.43.0",
+                "friendsofphp/php-cs-fixer": "~3.59.0",
+                "mockery/mockery": "~1.6.0",
+                "pestphp/pest": "~2.34.0",
+                "phpstan/phpstan": "~1.11.0",
+                "phpstan/phpstan-strict-rules": "~1.6.0",
+                "psr-mock/http": "~1.0.0",
+                "rector/rector": "~0.17.0",
+                "spatie/ray": "~1.41.0",
                 "symfony/cache": "^4 || ^5 || ^6",
                 "symfony/event-dispatcher": "^4 || ^5 || ^6",
-                "vimeo/psalm": "^5",
-                "wikimedia/composer-merge-plugin": "^2"
+                "vimeo/psalm": "~5.25.0",
+                "wikimedia/composer-merge-plugin": "~2.1.0"
             },
             "suggest": {
                 "psr/cache-implementation": "(PSR-6 Cache) Improve performance by avoiding making redundant network requests.",
@@ -53,16 +53,16 @@
             "type": "library",
             "extra": {
                 "merge-plugin": {
-                    "ignore-duplicates": false,
                     "include": [
                         "composer.local.json"
                     ],
+                    "recurse": true,
+                    "replace": true,
                     "merge-dev": true,
                     "merge-extra": false,
-                    "merge-extra-deep": false,
                     "merge-scripts": false,
-                    "recurse": true,
-                    "replace": true
+                    "merge-extra-deep": false,
+                    "ignore-duplicates": false
                 }
             },
             "autoload": {
@@ -101,9 +101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/auth0/auth0-PHP/issues",
-                "source": "https://github.com/auth0/auth0-PHP/tree/8.11.1"
+                "source": "https://github.com/auth0/auth0-PHP/tree/8.13.0"
             },
-            "time": "2024-01-11T15:28:10+00:00"
+            "time": "2024-11-15T11:08:53+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -583,24 +583,24 @@
         },
         {
             "name": "composer/semver",
-            "version": "3.4.0",
+            "version": "3.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "35e8d0af4486141bc745f23a29cc2091eb624a32"
+                "reference": "4313d26ada5e0c4edfbd1dc481a92ff7bff91f12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/35e8d0af4486141bc745f23a29cc2091eb624a32",
-                "reference": "35e8d0af4486141bc745f23a29cc2091eb624a32",
+                "url": "https://api.github.com/repos/composer/semver/zipball/4313d26ada5e0c4edfbd1dc481a92ff7bff91f12",
+                "reference": "4313d26ada5e0c4edfbd1dc481a92ff7bff91f12",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.4",
-                "symfony/phpunit-bridge": "^4.2 || ^5"
+                "phpstan/phpstan": "^1.11",
+                "symfony/phpunit-bridge": "^3 || ^7"
             },
             "type": "library",
             "extra": {
@@ -644,7 +644,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.4.0"
+                "source": "https://github.com/composer/semver/tree/3.4.3"
             },
             "funding": [
                 {
@@ -660,7 +660,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-31T09:50:34+00:00"
+            "time": "2024-09-19T14:15:21+00:00"
         },
         {
             "name": "dasprid/enum",
@@ -2850,16 +2850,16 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.19.4",
+            "version": "1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "0700efda8d7526335132360167315fdab3aeb599"
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/0700efda8d7526335132360167315fdab3aeb599",
-                "reference": "0700efda8d7526335132360167315fdab3aeb599",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/82fe4c73ef3363caed49ff8dd1539ba06044910d",
+                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d",
                 "shasum": ""
             },
             "require": {
@@ -2923,9 +2923,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/discovery/issues",
-                "source": "https://github.com/php-http/discovery/tree/1.19.4"
+                "source": "https://github.com/php-http/discovery/tree/1.20.0"
             },
-            "time": "2024-03-29T13:00:05+00:00"
+            "time": "2024-10-02T11:20:13+00:00"
         },
         {
             "name": "php-http/httplug",
@@ -3055,16 +3055,16 @@
         },
         {
             "name": "php-http/multipart-stream-builder",
-            "version": "1.3.0",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/multipart-stream-builder.git",
-                "reference": "f5938fd135d9fa442cc297dc98481805acfe2b6a"
+                "reference": "10086e6de6f53489cca5ecc45b6f468604d3460e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/multipart-stream-builder/zipball/f5938fd135d9fa442cc297dc98481805acfe2b6a",
-                "reference": "f5938fd135d9fa442cc297dc98481805acfe2b6a",
+                "url": "https://api.github.com/repos/php-http/multipart-stream-builder/zipball/10086e6de6f53489cca5ecc45b6f468604d3460e",
+                "reference": "10086e6de6f53489cca5ecc45b6f468604d3460e",
                 "shasum": ""
             },
             "require": {
@@ -3105,9 +3105,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/multipart-stream-builder/issues",
-                "source": "https://github.com/php-http/multipart-stream-builder/tree/1.3.0"
+                "source": "https://github.com/php-http/multipart-stream-builder/tree/1.4.2"
             },
-            "time": "2023-04-28T14:10:22+00:00"
+            "time": "2024-09-04T13:22:54+00:00"
         },
         {
             "name": "php-http/promise",
@@ -3163,40 +3163,40 @@
         },
         {
             "name": "psr-discovery/all",
-            "version": "1.0.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psr-discovery/all.git",
-                "reference": "e353ca0cac46b2e954f4a3ee3a13f0de8be7b87b"
+                "reference": "840bc0cde7d56e9296606f7a6f0cfc8301fda57d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psr-discovery/all/zipball/e353ca0cac46b2e954f4a3ee3a13f0de8be7b87b",
-                "reference": "e353ca0cac46b2e954f4a3ee3a13f0de8be7b87b",
+                "url": "https://api.github.com/repos/psr-discovery/all/zipball/840bc0cde7d56e9296606f7a6f0cfc8301fda57d",
+                "reference": "840bc0cde7d56e9296606f7a6f0cfc8301fda57d",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
-                "psr-discovery/cache-implementations": "^1.0",
-                "psr-discovery/container-implementations": "^1.0",
-                "psr-discovery/event-dispatcher-implementations": "^1.0",
-                "psr-discovery/http-client-implementations": "^1.0",
-                "psr-discovery/http-factory-implementations": "^1.0",
-                "psr-discovery/log-implementations": "^1.0"
+                "php": "^8.2",
+                "psr-discovery/cache-implementations": "^1",
+                "psr-discovery/container-implementations": "^1",
+                "psr-discovery/event-dispatcher-implementations": "^1",
+                "psr-discovery/http-client-implementations": "^1",
+                "psr-discovery/http-factory-implementations": "^1",
+                "psr-discovery/log-implementations": "^1"
             },
             "type": "metapackage",
             "extra": {
                 "merge-plugin": {
-                    "ignore-duplicates": false,
                     "include": [
                         "composer.local.json"
                     ],
+                    "recurse": true,
+                    "replace": true,
                     "merge-dev": true,
                     "merge-extra": false,
-                    "merge-extra-deep": false,
                     "merge-scripts": false,
-                    "recurse": true,
-                    "replace": true
+                    "merge-extra-deep": false,
+                    "ignore-duplicates": false
                 }
             },
             "autoload": {
@@ -3228,26 +3228,26 @@
                 "psr-6"
             ],
             "support": {
-                "source": "https://github.com/psr-discovery/all/tree/1.0.1"
+                "source": "https://github.com/psr-discovery/all/tree/1.2.0"
             },
-            "time": "2024-03-04T21:20:17+00:00"
+            "time": "2024-12-05T17:59:32+00:00"
         },
         {
             "name": "psr-discovery/cache-implementations",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psr-discovery/cache-implementations.git",
-                "reference": "ebede0af34a7fd3c5564809e659ee69c0ab85ff6"
+                "reference": "ba247db9da1289b5880bf1b28c4280c16370ea3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psr-discovery/cache-implementations/zipball/ebede0af34a7fd3c5564809e659ee69c0ab85ff6",
-                "reference": "ebede0af34a7fd3c5564809e659ee69c0ab85ff6",
+                "url": "https://api.github.com/repos/psr-discovery/cache-implementations/zipball/ba247db9da1289b5880bf1b28c4280c16370ea3e",
+                "reference": "ba247db9da1289b5880bf1b28c4280c16370ea3e",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
+                "php": "^8.2",
                 "psr-discovery/discovery": "^1.0",
                 "psr/cache": "^1.0 | ^2.0 | ^3.0"
             },
@@ -3264,16 +3264,16 @@
             "type": "library",
             "extra": {
                 "merge-plugin": {
-                    "ignore-duplicates": false,
                     "include": [
                         "composer.local.json"
                     ],
+                    "recurse": true,
+                    "replace": true,
                     "merge-dev": true,
                     "merge-extra": false,
-                    "merge-extra-deep": false,
                     "merge-scripts": false,
-                    "recurse": true,
-                    "replace": true
+                    "merge-extra-deep": false,
+                    "ignore-duplicates": false
                 }
             },
             "autoload": {
@@ -3303,26 +3303,26 @@
             ],
             "support": {
                 "issues": "https://github.com/psr-discovery/cache-implementations/issues",
-                "source": "https://github.com/psr-discovery/cache-implementations/tree/1.1.1"
+                "source": "https://github.com/psr-discovery/cache-implementations/tree/1.2.0"
             },
-            "time": "2024-03-04T21:22:36+00:00"
+            "time": "2024-12-05T17:55:07+00:00"
         },
         {
             "name": "psr-discovery/container-implementations",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psr-discovery/container-implementations.git",
-                "reference": "728a452b32b0bb60c4bac43b18db2e3105bb8d7e"
+                "reference": "451bb93b473f194a2984c3e7ae0b162e44c55ba1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psr-discovery/container-implementations/zipball/728a452b32b0bb60c4bac43b18db2e3105bb8d7e",
-                "reference": "728a452b32b0bb60c4bac43b18db2e3105bb8d7e",
+                "url": "https://api.github.com/repos/psr-discovery/container-implementations/zipball/451bb93b473f194a2984c3e7ae0b162e44c55ba1",
+                "reference": "451bb93b473f194a2984c3e7ae0b162e44c55ba1",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
+                "php": "^8.2",
                 "psr-discovery/discovery": "^1.0",
                 "psr/container": "^1.0 | ^2.0"
             },
@@ -3339,16 +3339,16 @@
             "type": "library",
             "extra": {
                 "merge-plugin": {
-                    "ignore-duplicates": false,
                     "include": [
                         "composer.local.json"
                     ],
+                    "recurse": true,
+                    "replace": true,
                     "merge-dev": true,
                     "merge-extra": false,
-                    "merge-extra-deep": false,
                     "merge-scripts": false,
-                    "recurse": true,
-                    "replace": true
+                    "merge-extra-deep": false,
+                    "ignore-duplicates": false
                 }
             },
             "autoload": {
@@ -3376,27 +3376,27 @@
             ],
             "support": {
                 "issues": "https://github.com/psr-discovery/container-implementations/issues",
-                "source": "https://github.com/psr-discovery/container-implementations/tree/1.1.1"
+                "source": "https://github.com/psr-discovery/container-implementations/tree/1.2.0"
             },
-            "time": "2024-03-04T21:24:05+00:00"
+            "time": "2024-12-05T17:42:15+00:00"
         },
         {
             "name": "psr-discovery/discovery",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psr-discovery/discovery.git",
-                "reference": "9fb31dca2030accd9d3de21fb8806478e9df5b2b"
+                "reference": "636f67406eadd33a66a7e65b9f0e26abfd7614ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psr-discovery/discovery/zipball/9fb31dca2030accd9d3de21fb8806478e9df5b2b",
-                "reference": "9fb31dca2030accd9d3de21fb8806478e9df5b2b",
+                "url": "https://api.github.com/repos/psr-discovery/discovery/zipball/636f67406eadd33a66a7e65b9f0e26abfd7614ac",
+                "reference": "636f67406eadd33a66a7e65b9f0e26abfd7614ac",
                 "shasum": ""
             },
             "require": {
                 "composer/semver": "^3.0",
-                "php": "^8.1"
+                "php": "^8.2"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.14",
@@ -3411,16 +3411,16 @@
             "type": "library",
             "extra": {
                 "merge-plugin": {
-                    "ignore-duplicates": false,
                     "include": [
                         "composer.local.json"
                     ],
+                    "recurse": true,
+                    "replace": true,
                     "merge-dev": true,
                     "merge-extra": false,
-                    "merge-extra-deep": false,
                     "merge-scripts": false,
-                    "recurse": true,
-                    "replace": true
+                    "merge-extra-deep": false,
+                    "ignore-duplicates": false
                 }
             },
             "autoload": {
@@ -3453,26 +3453,26 @@
             ],
             "support": {
                 "issues": "https://github.com/psr-discovery/discovery/issues",
-                "source": "https://github.com/psr-discovery/discovery/tree/1.1.1"
+                "source": "https://github.com/psr-discovery/discovery/tree/1.2.0"
             },
-            "time": "2024-03-04T21:26:05+00:00"
+            "time": "2024-12-05T16:59:22+00:00"
         },
         {
             "name": "psr-discovery/event-dispatcher-implementations",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psr-discovery/event-dispatcher-implementations.git",
-                "reference": "9033bb984613703e4c4f795ef0657184dc1c70eb"
+                "reference": "8ccb36eca9c7a685d91316d1f64cff6253e38825"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psr-discovery/event-dispatcher-implementations/zipball/9033bb984613703e4c4f795ef0657184dc1c70eb",
-                "reference": "9033bb984613703e4c4f795ef0657184dc1c70eb",
+                "url": "https://api.github.com/repos/psr-discovery/event-dispatcher-implementations/zipball/8ccb36eca9c7a685d91316d1f64cff6253e38825",
+                "reference": "8ccb36eca9c7a685d91316d1f64cff6253e38825",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
+                "php": "^8.2",
                 "psr-discovery/discovery": "^1.0",
                 "psr/event-dispatcher": "^1.0"
             },
@@ -3489,16 +3489,16 @@
             "type": "library",
             "extra": {
                 "merge-plugin": {
-                    "ignore-duplicates": false,
                     "include": [
                         "composer.local.json"
                     ],
+                    "recurse": true,
+                    "replace": true,
                     "merge-dev": true,
                     "merge-extra": false,
-                    "merge-extra-deep": false,
                     "merge-scripts": false,
-                    "recurse": true,
-                    "replace": true
+                    "merge-extra-deep": false,
+                    "ignore-duplicates": false
                 }
             },
             "autoload": {
@@ -3526,26 +3526,26 @@
             ],
             "support": {
                 "issues": "https://github.com/psr-discovery/event-dispatcher-implementations/issues",
-                "source": "https://github.com/psr-discovery/event-dispatcher-implementations/tree/1.1.1"
+                "source": "https://github.com/psr-discovery/event-dispatcher-implementations/tree/1.2.0"
             },
-            "time": "2024-03-04T21:27:10+00:00"
+            "time": "2024-12-05T17:29:26+00:00"
         },
         {
             "name": "psr-discovery/http-client-implementations",
-            "version": "1.2.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psr-discovery/http-client-implementations.git",
-                "reference": "a05c54087d13504d8e48c27395fbab638fb0a114"
+                "reference": "3999d98e4fcbf099efeda07df82c59134f932ad8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psr-discovery/http-client-implementations/zipball/a05c54087d13504d8e48c27395fbab638fb0a114",
-                "reference": "a05c54087d13504d8e48c27395fbab638fb0a114",
+                "url": "https://api.github.com/repos/psr-discovery/http-client-implementations/zipball/3999d98e4fcbf099efeda07df82c59134f932ad8",
+                "reference": "3999d98e4fcbf099efeda07df82c59134f932ad8",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
+                "php": "^8.2",
                 "psr-discovery/discovery": "^1.0",
                 "psr/http-client": "^1.0"
             },
@@ -3562,16 +3562,16 @@
             "type": "library",
             "extra": {
                 "merge-plugin": {
-                    "ignore-duplicates": false,
                     "include": [
                         "composer.local.json"
                     ],
+                    "recurse": true,
+                    "replace": true,
                     "merge-dev": true,
                     "merge-extra": false,
-                    "merge-extra-deep": false,
                     "merge-scripts": false,
-                    "recurse": true,
-                    "replace": true
+                    "merge-extra-deep": false,
+                    "ignore-duplicates": false
                 }
             },
             "autoload": {
@@ -3599,26 +3599,26 @@
             ],
             "support": {
                 "issues": "https://github.com/psr-discovery/http-client-implementations/issues",
-                "source": "https://github.com/psr-discovery/http-client-implementations/tree/1.2.0"
+                "source": "https://github.com/psr-discovery/http-client-implementations/tree/1.4.0"
             },
-            "time": "2024-03-16T05:29:47+00:00"
+            "time": "2024-12-05T18:08:01+00:00"
         },
         {
             "name": "psr-discovery/http-factory-implementations",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psr-discovery/http-factory-implementations.git",
-                "reference": "4ee07ae795b794e61578db32b5422a780b01b833"
+                "reference": "3979e3d9a95bedd91c13e1de12c6e99a74c449d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psr-discovery/http-factory-implementations/zipball/4ee07ae795b794e61578db32b5422a780b01b833",
-                "reference": "4ee07ae795b794e61578db32b5422a780b01b833",
+                "url": "https://api.github.com/repos/psr-discovery/http-factory-implementations/zipball/3979e3d9a95bedd91c13e1de12c6e99a74c449d3",
+                "reference": "3979e3d9a95bedd91c13e1de12c6e99a74c449d3",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
+                "php": "^8.2",
                 "psr-discovery/discovery": "^1.1",
                 "psr/http-factory": "^1.0"
             },
@@ -3635,16 +3635,16 @@
             "type": "library",
             "extra": {
                 "merge-plugin": {
-                    "ignore-duplicates": false,
                     "include": [
                         "composer.local.json"
                     ],
+                    "recurse": true,
+                    "replace": true,
                     "merge-dev": true,
                     "merge-extra": false,
-                    "merge-extra-deep": false,
                     "merge-scripts": false,
-                    "recurse": true,
-                    "replace": true
+                    "merge-extra-deep": false,
+                    "ignore-duplicates": false
                 }
             },
             "autoload": {
@@ -3672,26 +3672,26 @@
             ],
             "support": {
                 "issues": "https://github.com/psr-discovery/http-factory-implementations/issues",
-                "source": "https://github.com/psr-discovery/http-factory-implementations/tree/1.1.1"
+                "source": "https://github.com/psr-discovery/http-factory-implementations/tree/1.2.0"
             },
-            "time": "2024-03-04T21:31:16+00:00"
+            "time": "2024-12-05T17:18:21+00:00"
         },
         {
             "name": "psr-discovery/log-implementations",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/psr-discovery/log-implementations.git",
-                "reference": "384894384663fa5e1b2186112fb8ffe3f81a0b22"
+                "reference": "8cc55fcaa6b7481244e491a005263459fdfc6cba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psr-discovery/log-implementations/zipball/384894384663fa5e1b2186112fb8ffe3f81a0b22",
-                "reference": "384894384663fa5e1b2186112fb8ffe3f81a0b22",
+                "url": "https://api.github.com/repos/psr-discovery/log-implementations/zipball/8cc55fcaa6b7481244e491a005263459fdfc6cba",
+                "reference": "8cc55fcaa6b7481244e491a005263459fdfc6cba",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1",
+                "php": "^8.2",
                 "psr-discovery/discovery": "^1.0",
                 "psr/log": "^1.0 | ^2.0 | ^3.0"
             },
@@ -3708,16 +3708,16 @@
             "type": "library",
             "extra": {
                 "merge-plugin": {
-                    "ignore-duplicates": false,
                     "include": [
                         "composer.local.json"
                     ],
+                    "recurse": true,
+                    "replace": true,
                     "merge-dev": true,
                     "merge-extra": false,
-                    "merge-extra-deep": false,
                     "merge-scripts": false,
-                    "recurse": true,
-                    "replace": true
+                    "merge-extra-deep": false,
+                    "ignore-duplicates": false
                 }
             },
             "autoload": {
@@ -3747,9 +3747,9 @@
             ],
             "support": {
                 "issues": "https://github.com/psr-discovery/log-implementations/issues",
-                "source": "https://github.com/psr-discovery/log-implementations/tree/1.0.1"
+                "source": "https://github.com/psr-discovery/log-implementations/tree/1.1.0"
             },
-            "time": "2024-03-04T21:32:27+00:00"
+            "time": "2024-12-05T17:06:04+00:00"
         },
         {
             "name": "psr/cache",
@@ -3957,20 +3957,20 @@
         },
         {
             "name": "psr/http-factory",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-factory.git",
-                "reference": "e616d01114759c4c489f93b099585439f795fe35"
+                "reference": "2b4765fddfe3b508ac62f829e852b1501d3f6e8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/e616d01114759c4c489f93b099585439f795fe35",
-                "reference": "e616d01114759c4c489f93b099585439f795fe35",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/2b4765fddfe3b508ac62f829e852b1501d3f6e8a",
+                "reference": "2b4765fddfe3b508ac62f829e852b1501d3f6e8a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0.0",
+                "php": ">=7.1",
                 "psr/http-message": "^1.0 || ^2.0"
             },
             "type": "library",
@@ -3994,7 +3994,7 @@
                     "homepage": "https://www.php-fig.org/"
                 }
             ],
-            "description": "Common interfaces for PSR-7 HTTP message factories",
+            "description": "PSR-17: Common interfaces for PSR-7 HTTP message factories",
             "keywords": [
                 "factory",
                 "http",
@@ -4006,9 +4006,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-factory/tree/1.0.2"
+                "source": "https://github.com/php-fig/http-factory"
             },
-            "time": "2023-04-10T20:10:41+00:00"
+            "time": "2024-04-15T12:06:14+00:00"
         },
         {
             "name": "psr/http-message",
@@ -7674,5 +7674,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
