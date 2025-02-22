@@ -5,10 +5,13 @@ $action = 'products_edit';
 
 if ($_POST) {
     $handler = new formHandler($table);
-
+    // Trelo ref https://trello.com/c/NRHVvf2u
+    $product = db_row('SELECT standard_product_id FROM products WHERE id = :id', ['id' => $_POST['id']]);
+    if (!empty($product['standard_product_id'])) {
+        throw new Exception('This product is a STANDARD ASSORT PRODUCT and cannot be edited');
+    }
     $savekeys = ['name', 'gender_id', 'value', 'category_id', 'maxperadult', 'maxperchild', 'sizegroup_id', 'camp_id', 'comments', 'stockincontainer'];
     $id = $handler->savePost($savekeys);
-
     redirect('?action='.$_POST['_origin']);
 }
 
