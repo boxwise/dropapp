@@ -4,7 +4,9 @@ $table = $action;
 $ajax = checkajax();
 if (!$ajax) {
     initlist();
-
+    listsetting('haspagemenu', true);
+    addpagemenu('base_products', strtoupper((string) $_SESSION['camp']['name']).' PRODUCTS', ['active' => true, 'link' => '?action=products', 'testid' => 'products']);
+    addpagemenu('assort_products', 'ASSORT STANDARD PRODUCTS', ['link' => $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/products']);
     $cmsmain->assign('title', 'Products');
     listsetting('search', ['name', 'g.label', 'products.comments']);
 
