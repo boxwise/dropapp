@@ -19,7 +19,8 @@ if (!$ajax) {
                 g.label AS gender, 
                 CONCAT(products.value," '.$_SESSION['camp']['currencyname'].'") AS drops, 
                 COALESCE(SUM(s.items),0) AS items, 
-                IF(SUM(s.items),1,0) AS preventdelete 
+                IF(SUM(s.items) OR products.standard_product_id IS NOT NULL, 1, 0) AS preventdelete,
+                IF(products.standard_product_id,1,0) AS preventedit
             FROM products
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
