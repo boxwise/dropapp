@@ -37,7 +37,7 @@ if (!$ajax) {
         $count += $d['items'];
     }
 
-    addcolumn('text', 'Product name', 'name');
+    addcolumn('text_cond_icon', 'Product name', 'name');
     addcolumn('text', 'Gender', 'gender');
     addcolumn('text', 'Sizegroup', 'sizegroup');
     if ($count) {
