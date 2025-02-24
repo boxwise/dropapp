@@ -4,7 +4,9 @@ $table = $action;
 $ajax = checkajax();
 if (!$ajax) {
     initlist();
-
+    listsetting('haspagemenu', true);
+    addpagemenu('base_products', strtoupper((string) $_SESSION['camp']['name']).' PRODUCTS', ['active' => true, 'link' => '?action=products', 'testid' => 'products']);
+    addpagemenu('assort_products', 'ASSORT STANDARD PRODUCTS', ['link' => $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/products']);
     $cmsmain->assign('title', 'Products');
     listsetting('search', ['name', 'g.label', 'products.comments']);
 
@@ -17,7 +19,8 @@ if (!$ajax) {
                 g.label AS gender, 
                 CONCAT(products.value," '.$_SESSION['camp']['currencyname'].'") AS drops, 
                 COALESCE(SUM(s.items),0) AS items, 
-                IF(SUM(s.items),1,0) AS preventdelete 
+                IF(SUM(s.items) OR products.standard_product_id IS NOT NULL, 1, 0) AS preventdelete,
+                IF(products.standard_product_id,1,0) AS preventedit
             FROM products
 			LEFT OUTER JOIN genders AS g ON g.id = products.gender_id
 			LEFT OUTER JOIN sizegroup AS sg ON sg.id = products.sizegroup_id
@@ -35,7 +38,7 @@ if (!$ajax) {
         $count += $d['items'];
     }
 
-    addcolumn('text', 'Product name', 'name');
+    addcolumn('text_cond_icon', 'Product name', 'name');
     addcolumn('text', 'Gender', 'gender');
     addcolumn('text', 'Sizegroup', 'sizegroup');
     if ($count) {
