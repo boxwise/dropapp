@@ -141,19 +141,35 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 	<h1>Hello there!</h1>
 	
 	{if $smarty.session.camp['market']}
-		<h1 class="light">
-			There {if $data['residents']==1} is {else} are {/if} currently <span class="number">{$data['residents']}</span> {if $data['residents']==1} person {else} people {/if} living in <span class="number">{$data['families']}</span> {if $data['families']==1} familiy {else} families {/if} in {$currentcamp['name']}.
-      <span class="men">{($data['totalmen'])}</span> {if $data['totalmen']==1} is {else} are {/if} male (<span class="men">{$data['menperc']|round}%</span>) and <span class="women">{$data['totalwomen']}</span> {if $data['totalwomen']==1} is {else} are {/if} female (<span class="women">{$data['womenperc']|round}%</span>).
-      <span class="number">{$data['children']}</span> {if $data['children']==1}person is {else} people are {/if} {$smarty.session.camp['adult_age']-1} or younger (<span class="number">{($data['childrenprcnt'])|round}%</span>).
-      <br>
+    <h1 class="light">
+        There {if $data['residents']==1} is {else} are {/if} currently 
+        <span class="number">{$data['residents']}</span> 
+        {if $data['residents']==1} person {else} people {/if} living in 
+        <span class="number">{$data['families']}</span> 
+        {if $data['families']==1} family {else} families {/if} in {$currentcamp['name']}.
+        
+        <span class="men">{$data['totalmen']}</span> 
+        {if $data['totalmen']==1} is {else} are {/if} male 
+        (<span class="men">{$data['menperc']|round}%</span>) and 
+        
+        <span class="women">{$data['totalwomen']}</span> 
+        {if $data['totalwomen']==1} is {else} are {/if} female 
+        (<span class="women">{$data['womenperc']|round}%</span>).
+
+        {assign var="child_age" value=$smarty.session.camp['adult_age']-1}
+        {if $child_age < 0}
+            {assign var="child_age" value=0}
+        {/if}
+
+        {if $data['children'] > 0}
+            <span class="number">{$data['children']}</span> 
+            {if $data['children']==1} person is {else} people are {/if} 
+            {$child_age} or younger 
+            (<span class="number">{$data['childrenprcnt']|round}%</span>).
+        {/if}
+        
+        <br>
     </h1>
-    <h1 class = "light">
-    <hr />
-      {$data['weeklabel']} week, {if $data['newpeople']}<span class="number">{$data['newpeople']}</span>{else}no{/if} new {if $data['newpeople']==1} beneficiary was {else} beneficiaries were {/if} registered in {$currentcamp['name']}.
- 			{if isset($data['notregistered'])}
-  				Additionally there {if $data['notregistered']==1}is {else} are {/if} <span class="number">{$data['notregistered']}</span> unregistered {if $data['notregistered']==1} person{else} people{/if}.
-  			{/if}
-		</h1>
 	{/if}
 <hr />
 
