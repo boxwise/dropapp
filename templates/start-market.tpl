@@ -173,10 +173,19 @@ var chart = AmCharts.makeChart( "chartdiv2", {
 	{/if}
 <hr />
 
-<h1 class="light">
 {if $smarty.session.camp['market']}
-  All beneficiaries together own <span class="number">{$data['bank']|number_format:0:",":"."}</span> {$currentcamp['currencyname']}.
-	<span class="number">{$data['sold']|number_format:0:",":"."}</span> items have been sold in the shop in <span class="number">{$data['marketdays']}</span> opening days. The most popular item is <span class="number">{$data['popularname']}</span>, with <span class="number">{$data['popularcount']|number_format:0:",":"."}</span> items sold.</h1>
+  <h1 class="light">
+    All beneficiaries together own 
+    <span class="number">{if !empty($data['bank'])}{$data['bank']|number_format:0:",":"."}{else}0{/if}</span> {$currentcamp['currencyname']}.
+    
+    <span class="number">{if !empty($data['sold'])}{$data['sold']|number_format:0:",":"."}{else}0{/if}</span> items have been sold in the shop in 
+    <span class="number">{if !empty($data['marketdays'])}{$data['marketdays']}{else}0{/if}</span> opening days. 
+    
+    {if !empty($data['popularname']) && $data['popularname'] != 'none'}
+      The most popular item is <span class="number">{$data['popularname']}</span>, with 
+      <span class="number">{if !empty($data['popularcount'])}{$data['popularcount']|number_format:0:",":"."}{else}0{/if}</span> items sold.
+    {/if}
+  </h1>
 {/if}
 
 {if $smarty.session.camp['bicycle']}<hr />
