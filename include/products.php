@@ -10,8 +10,8 @@ if (!$ajax) {
     $betaUser = isset($_SESSION['auth0_user']['https://www.boxtribute.com/beta_user']) ? ((int) $_SESSION['auth0_user']['https://www.boxtribute.com/beta_user']) : 0;
     if ($betaUser >= 4) {
         addpagemenu('base_products', strtoupper((string) $_SESSION['camp']['name']).' PRODUCTS', ['active' => true, 'link' => '?action=products', 'testid' => 'products']);
+        addpagemenu('assort_products', 'ASSORT STANDARD PRODUCTS', ['link' => $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/products']);
     }
-    addpagemenu('assort_products', 'ASSORT STANDARD PRODUCTS', ['link' => $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/products']);
     $cmsmain->assign('title', 'Products');
     listsetting('search', ['name', 'g.label', 'products.comments']);
 
