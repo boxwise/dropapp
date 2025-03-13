@@ -7,7 +7,7 @@ $ajax = checkajax();
 if (!$ajax) {
     initlist();
 
-    $cmsmain->assign('title', 'Stock Overview');
+    $cmsmain->assign('title', 'Stock Planning');
 
     listsetting('allowcopy', false);
     listsetting('allowadd', false);
