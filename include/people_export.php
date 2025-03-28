@@ -52,4 +52,24 @@ $keys = [
     'familyhead' => 'Head of Family',
 ];
 
+// Add custom fields if they are enabled
+if ($_SESSION['camp']['email_enabled']) {
+    $keys['email'] = 'Email';
+}
+if ($_SESSION['camp']['phone_enabled']) {
+    $keys['phone'] = 'Phone';
+}
+if ($_SESSION['camp']['additional_field1_enabled']) {
+    $keys['customfield1_value'] = trim($_SESSION['camp']['additional_field1_label']);
+}
+if ($_SESSION['camp']['additional_field2_enabled']) {
+    $keys['customfield2_value'] = trim($_SESSION['camp']['additional_field2_label']);
+}
+if ($_SESSION['camp']['additional_field3_enabled']) {
+    $keys['customfield3_value'] = trim($_SESSION['camp']['additional_field3_label']);
+}
+if ($_SESSION['camp']['additional_field4_enabled']) {
+    $keys['customfield4_value'] = trim($_SESSION['camp']['additional_field4_label']);
+}
+
 csvexport($result, 'Beneficiaries_'.$_SESSION['camp']['name'], $keys);
