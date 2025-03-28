@@ -16,6 +16,7 @@
 	 			onblur="{$element['onblur']};" 
 				{if $element['minlength']}minlength="{$element['minlength']}"{/if}
 				{if $element['readonly'] || $element['locked']}readonly{/if} 
+				{if $element['disabled']}disabled{/if} 
 				{if $element['required']}required{/if}
 				{if isset($element['testid'])}data-testid="{$element['testid']}"{/if}
 			>
