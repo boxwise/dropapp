@@ -644,3 +644,19 @@ function toggleFood() {
 function toggleBikes() {
     $("#tabid_bicycle").toggleClass("hidden");
 }
+
+// Function to handle conditional toggling based on checkbox field
+function conditionalToggle(checkboxName, textFieldName) {
+    const checkbox = document.querySelector(`input[name="${checkboxName}"]`);
+    const targetField = document.querySelector(`input[name="${textFieldName}"]`);
+
+    if (checkbox && targetField) {
+        document.addEventListener("change", function (e) {
+            if (e.target === checkbox) {
+                targetField.disabled = !checkbox.checked;
+                if (checkbox.checked) targetField.focus();
+                else targetField.value = "";
+            }
+        });
+    }
+}
