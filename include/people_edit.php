@@ -132,6 +132,18 @@ if ($_POST) {
             $savekeys[] = 'laundryblock';
             $savekeys[] = 'laundrycomment';
         }
+        if ($_SESSION['camp']['additional_field1_enabled']) {
+            $savekeys[] = 'customfield1_value';
+        }
+        if ($_SESSION['camp']['additional_field2_enabled']) {
+            $savekeys[] = 'customfield2_value';
+        }
+        if ($_SESSION['camp']['additional_field3_enabled']) {
+            $savekeys[] = 'customfield3_value';
+        }
+        if ($_SESSION['camp']['additional_field4_enabled']) {
+            $savekeys[] = 'customfield4_value';
+        }
         $id = $handler->savePost($savekeys, ['parent_id']);
 
         // edit tags
@@ -344,6 +356,24 @@ addfield('select', 'Gender', 'gender', ['testid' => 'gender_id', 'tab' => 'peopl
     'options' => [['value' => 'M', 'label' => 'Male'], ['value' => 'F', 'label' => 'Female']], ]);
 addfield('date', 'Date of birth', 'date_of_birth', ['testid' => 'date_of_birth_id', 'tab' => 'people', 'date' => true, 'time' => false]);
 addfield('line', '', '', ['tab' => 'people']);
+if ($_SESSION['camp']['email_enabled']) {
+    addfield('text', 'Email address', 'email', ['tab' => 'people']);
+}
+if ($_SESSION['camp']['phone_enabled']) {
+    addfield('text', 'Phone number', 'phone', ['tab' => 'people']);
+}
+if ($_SESSION['camp']['additional_field1_enabled']) {
+    addfield('text', $_SESSION['camp']['additional_field1_label'], 'customfield1_value', ['tab' => 'people']);
+}
+if ($_SESSION['camp']['additional_field2_enabled']) {
+    addfield('text', $_SESSION['camp']['additional_field2_label'], 'customfield2_value', ['tab' => 'people']);
+}
+if ($_SESSION['camp']['additional_field3_enabled']) {
+    addfield('number', $_SESSION['camp']['additional_field3_label'], 'customfield3_value', ['tab' => 'people', 'size' => 2]);
+}
+if ($_SESSION['camp']['additional_field4_enabled']) {
+    addfield('date', $_SESSION['camp']['additional_field4_label'], 'customfield4_value', ['tab' => 'people', 'time' => false, 'date' => true]);
+}
 addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT tags.id AS value, tags.label, IF(tags_relations.object_id IS NOT NULL, 1,0) AS selected FROM tags LEFT JOIN tags_relations ON tags.id = tags_relations.tag_id AND tags_relations.object_id = '.intval($id).' AND tags_relations.object_type = "People" AND tags_relations.deleted_on IS NULL WHERE tags.camp_id = '.$_SESSION['camp']['id'].' AND tags.deleted IS NULL AND tags.type IN ("All","People") ORDER BY seq']);
 addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
 addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
@@ -441,9 +471,9 @@ if (0 == $data['parent_id']) {
                 'redirect' => true,
                 'allowsort' => false,
                 'modal' => false,
-                'button' => (count($datalastpurchases) == $limitlastpurchases ?
-                    ['showallpurchases&people_id='.$id => ['label' => 'Show all', 'showalways' => true]] :
-                    []),
+                'button' => (count($datalastpurchases) == $limitlastpurchases
+                    ? ['showallpurchases&people_id='.$id => ['label' => 'Show all', 'showalways' => true]]
+                    : []),
             ]
         );
         addfield('ajaxend', '', '', ['tab' => 'transaction']);
@@ -483,9 +513,9 @@ if (0 == $data['parent_id']) {
                 'action' => 'people_edit',
                 'redirect' => true,
                 'modal' => false,
-                'button' => (count($datalasttransactions) == $limitlasttransactions ?
-                    ['showalltransactions&people_id='.$id => ['label' => 'Show all', 'showalways' => true]] :
-                    []),
+                'button' => (count($datalasttransactions) == $limitlasttransactions
+                    ? ['showalltransactions&people_id='.$id => ['label' => 'Show all', 'showalways' => true]]
+                    : []),
             ]
         );
         addfield('ajaxend', '', '', ['tab' => 'transaction']);
