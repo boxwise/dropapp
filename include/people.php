@@ -38,7 +38,21 @@ Tracer::inSpan(
 
             // Search
             listsetting('manualquery', true);
-            listsetting('search', ['firstname', 'lastname', 'container', 'comments']);
+            $search_fields = ['firstname', 'lastname', 'container', 'comments'];
+            // Add search fields for the additional custom fields if enabled
+            if ($_SESSION['camp']['email_enabled']) {
+                $search_fields[] = 'email';
+            }
+            if ($_SESSION['camp']['phone_enabled']) {
+                $search_fields[] = 'phone';
+            }
+            if ($_SESSION['camp']['additional_field1_enabled']) {
+                $search_fields[] = 'customfield1_value';
+            }
+            if ($_SESSION['camp']['additional_field2_enabled']) {
+                $search_fields[] = 'customfield2_value';
+            }
+            listsetting('search', $search_fields);
             $search = substr((string) db_escape(trim((string) $listconfig['searchvalue'])), 1, strlen((string) db_escape(trim((string) $listconfig['searchvalue']))) - 2);
 
             $is_filtered = (isset($listconfig['filtervalue3']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
@@ -122,6 +136,26 @@ Tracer::inSpan(
             if ($is_filtered) {
                 addcolumn('text', 'Last Activity', 'last_activity');
             }
+            // Display additional custom fields if enabled
+            if ($_SESSION['camp']['email_enabled']) {
+                addcolumn('text', 'Email address', 'email');
+            }
+            if ($_SESSION['camp']['phone_enabled']) {
+                addcolumn('text', 'Phone number', 'phone');
+            }
+            if ($_SESSION['camp']['additional_field1_enabled']) {
+                addcolumn('text', $_SESSION['camp']['additional_field1_label'], 'customfield1_value');
+            }
+            if ($_SESSION['camp']['additional_field2_enabled']) {
+                addcolumn('text', $_SESSION['camp']['additional_field2_label'], 'customfield2_value');
+            }
+            if ($_SESSION['camp']['additional_field3_enabled']) {
+                addcolumn('text', $_SESSION['camp']['additional_field3_label'], 'customfield3_value');
+            }
+            if ($_SESSION['camp']['additional_field4_enabled']) {
+                addcolumn('text', $_SESSION['camp']['additional_field4_label'], 'customfield4_value');
+            }
+
             addcolumn('html', '&nbsp;', 'icons');
 
             // Query
@@ -148,31 +182,42 @@ Tracer::inSpan(
                         people.comments,
                         people.created,
                         people.modified,
-                        people.approvalsigned
+                        people.approvalsigned,
+                        people.email,
+                        people.phone,
+                        people.customfield1_value,
+                        people.customfield2_value,
+                        people.customfield3_value,
+                        people.customfield4_value
                     FROM
-                        people'.
+                        people'
                     // Join tags here only if a tag filter is selected and only people with a certain tag should be returned
-                    ($listconfig['multiplefilter_selected'] ? '
+                    .($listconfig['multiplefilter_selected'] ? '
                         LEFT JOIN
                             tags_relations AS people_tags_filter ON people_tags_filter.object_id = people.id AND people_tags_filter.object_type = "People" AND people_tags_filter.deleted_on IS NULL
                         LEFT JOIN
                             tags AS tags_filter ON tags_filter.id = people_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').'
                     WHERE
                         people.deleted IS NULL AND
-                        people.camp_id = '.$_SESSION['camp']['id'].
-                        ('day' == $listconfig['filtervalue3'] ? ' AND DATE(NOW()) = DATE(people.created) ' : '').
-                        ('week' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") ' : '').
-                        ('month' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") ' : '').
-                        ('volunteer' == $listconfig['filtervalue3'] ? ' AND people.volunteer ' : '').
-                        ('notregistered' == $listconfig['filtervalue3'] ? ' AND people.notregistered ' : '').
-                        ($listconfig['searchvalue'] ? ' AND
+                        people.camp_id = '.$_SESSION['camp']['id']
+                        .('day' == $listconfig['filtervalue3'] ? ' AND DATE(NOW()) = DATE(people.created) ' : '')
+                        .('week' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") ' : '')
+                        .('month' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") ' : '')
+                        .('volunteer' == $listconfig['filtervalue3'] ? ' AND people.volunteer ' : '')
+                        .('notregistered' == $listconfig['filtervalue3'] ? ' AND people.notregistered ' : '')
+                        .($listconfig['searchvalue'] ? ' AND
                             (people.lastname LIKE "%'.$search.'%" OR 
                             people.firstname LIKE "%'.$search.'%" OR 
                             people.container = "'.$search.'" OR 
-                            people.comments LIKE "%'.$search.'%")
-                        ' : ' ').
+                            people.comments LIKE "%'.$search.'%"'
+                            // Update query to include search fields for the additional custom fields if enabled
+                            .($_SESSION['camp']['email_enabled'] ? ' OR people.email LIKE "%'.$search.'%"' : '')
+                            .($_SESSION['camp']['phone_enabled'] ? ' OR people.phone LIKE "%'.$search.'%"' : '')
+                            .($_SESSION['camp']['additional_field1_enabled'] ? ' OR people.customfield1_value LIKE "%'.$search.'%"' : '')
+                            .($_SESSION['camp']['additional_field2_enabled'] ? ' OR people.customfield2_value LIKE "%'.$search.'%"' : '')
+                            .')' : ' ')
                         // filter for selected tags
-                        ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
+                        .($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
                     GROUP BY 
                         people.id
                     ) AS people_filtered
@@ -190,8 +235,8 @@ Tracer::inSpan(
             LEFT JOIN
                 people AS parent ON people_filtered_with_tags.parent_id = parent.id
             LEFT JOIN
-                transactions ON transactions.people_id = people_filtered_with_tags.id '.
-            (
+                transactions ON transactions.people_id = people_filtered_with_tags.id '
+            .(
                 'approvalsigned' == $listconfig['filtervalue3'] ? '
                 WHERE 
                     ((NOT people_filtered_with_tags.approvalsigned AND people_filtered_with_tags.parent_id IS NULL) OR NOT parent.approvalsigned)' : ''
@@ -223,6 +268,11 @@ Tracer::inSpan(
                         $modified = is_null($data[$key]['modified']) ? $created : new DateTime($data[$key]['modified']);
                         $last_activity = is_null($data[$key]['last_activity']) ? $created : new DateTime($data[$key]['last_activity']);
                         $data[$key]['last_activity'] = is_null($last_activity) ? null : $last_activity->format('Y-m-d');
+                        // If custom date field is not empty, and enabled in base settings, format to date format
+                        if ($_SESSION['camp']['additional_field4_enabled'] && !empty($data[$key]['customfield4_value'])) {
+                            $customfield4_value = is_null($data[$key]['customfield4_value']) ? null : new DateTime($data[$key]['customfield4_value']);
+                            $data[$key]['customfield4_value'] = is_null($customfield4_value) ? null : $customfield4_value->format('Y-m-d');
+                        }
                         $data[$key]['days_last_active'] = max($created, $modified, $last_activity)->diff(new DateTime())->format('%a');
                         $data[$key]['tokens'] = $data[$key]['level'] ? null : $data[$key]['tokens'];
 
