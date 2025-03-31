@@ -20,9 +20,9 @@ final class AddAdditionalFieldsToPeople extends AbstractMigration
     public function change(): void
     {
         $this->table('people')
-            ->addColumn('customfield1_value', 'string', ['default' => '', 'null' => false])
-            ->addColumn('customfield2_value', 'string', ['default' => '', 'null' => false])
-            ->addColumn('customfield3_value', 'string', ['default' => '', 'null' => false])
+            ->addColumn('customfield1_value', 'string', ['default' => null, 'null' => true])
+            ->addColumn('customfield2_value', 'string', ['default' => null, 'null' => true])
+            ->addColumn('customfield3_value', 'string', ['default' => null, 'null' => true])
             ->addColumn('customfield4_value', 'datetime', ['default' => null, 'null' => true])
             ->save()
         ;

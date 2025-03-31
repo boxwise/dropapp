@@ -26,10 +26,10 @@ final class AddAdditionalSettingsForBases extends AbstractMigration
             ->addColumn('additional_field2_enabled', 'boolean', ['default' => 0, 'null' => false])
             ->addColumn('additional_field3_enabled', 'boolean', ['default' => 0, 'null' => false])
             ->addColumn('additional_field4_enabled', 'boolean', ['default' => 0, 'null' => false])
-            ->addColumn('additional_field1_label', 'string', ['default' => '', 'null' => false])
-            ->addColumn('additional_field2_label', 'string', ['default' => '', 'null' => false])
-            ->addColumn('additional_field3_label', 'string', ['default' => '', 'null' => false])
-            ->addColumn('additional_field4_label', 'string', ['default' => '', 'null' => false])
+            ->addColumn('additional_field1_label', 'string', ['default' => null, 'null' => true])
+            ->addColumn('additional_field2_label', 'string', ['default' => null, 'null' => true])
+            ->addColumn('additional_field3_label', 'string', ['default' => null, 'null' => true])
+            ->addColumn('additional_field4_label', 'string', ['default' => null, 'null' => true])
             ->save()
         ;
     }
