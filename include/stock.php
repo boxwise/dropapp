@@ -82,7 +82,8 @@ Tracer::inSpan(
                             g.label AS gender, p.name AS product, 
                             s.label AS size, l.label AS location, 
                             IF(DATEDIFF(now(),stock.created) = 1, "1 day", CONCAT(DATEDIFF(now(),stock.created), " days")) AS boxage,
-                            stock.box_state_id IN (3,4,7,8) AS disableifistrue
+                            stock.box_state_id IN (3,4,7,8) AS disableifistrue,
+                            p.standard_product_id
                         FROM 
                             stock '.
                             // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
@@ -158,7 +159,7 @@ Tracer::inSpan(
             }
 
             addcolumn('text', 'Box ID', 'box_id');
-            addcolumn('text', 'Product', 'product');
+            addcolumn('text_cond_icon', 'Product', 'product');
             addcolumn('text', 'Gender', 'gender');
             addcolumn('text', 'Size', 'size');
             if (!empty($tags)) {
