@@ -9,7 +9,50 @@ if ($_POST) {
         $baseName = trim((string) $_POST['name']);
         $baseIsNew = !(!empty($_POST['id']) && preg_match('/\d+/', (string) $_POST['id']));
 
-        $savekeys = ['name', 'market', 'familyidentifier', 'delete_inactive_users', 'food', 'bicycle', 'idcard', 'workshop', 'laundry', 'schedulestart', 'schedulestop', 'schedulebreak', 'schedulebreakstart', 'schedulebreakduration', 'scheduletimeslot', 'currencyname', 'dropsperadult', 'dropsperchild', 'dropcapadult', 'dropcapchild', 'bicyclerenttime', 'adult_age', 'daystokeepdeletedpersons', 'extraportion', 'maxfooddrops_adult', 'maxfooddrops_child', 'bicycle_closingtime', 'bicycle_closingtime_saturday', 'organisation_id', 'resettokens', 'beneficiaryisregistered', 'beneficiaryisvolunteer'];
+        $savekeys = [
+            'name',
+            'market',
+            'familyidentifier',
+            'delete_inactive_users',
+            'food',
+            'bicycle',
+            'idcard',
+            'workshop',
+            'laundry',
+            'schedulestart',
+            'schedulestop',
+            'schedulebreak',
+            'schedulebreakstart',
+            'schedulebreakduration',
+            'scheduletimeslot',
+            'currencyname',
+            'dropsperadult',
+            'dropsperchild',
+            'dropcapadult',
+            'dropcapchild',
+            'bicyclerenttime',
+            'adult_age',
+            'daystokeepdeletedpersons',
+            'extraportion',
+            'maxfooddrops_adult',
+            'maxfooddrops_child',
+            'bicycle_closingtime',
+            'bicycle_closingtime_saturday',
+            'organisation_id',
+            'resettokens',
+            'beneficiaryisregistered',
+            'beneficiaryisvolunteer',
+            'email_enabled',
+            'phone_enabled',
+            'additional_field1_enabled',
+            'additional_field2_enabled',
+            'additional_field3_enabled',
+            'additional_field4_enabled',
+            'additional_field1_label',
+            'additional_field2_label',
+            'additional_field3_label',
+            'additional_field4_label',
+        ];
         $id = $handler->savePost($savekeys);
         // $handler->saveMultiple('functions', 'cms_functions_camps', 'camps_id', 'cms_functions_id');
         if ($baseIsNew) {
@@ -77,6 +120,80 @@ addfield('text', 'Location identifier for beneficiaries', 'familyidentifier', ['
 addfield('checkbox', 'Do you give out beneficiaries ID-cards?', 'idcard', ['tab' => 'beneficiaries']);
 addfield('checkbox', 'Do you track if your beneficiaries are officially registered?', 'beneficiaryisregistered', ['tab' => 'beneficiaries']);
 addfield('checkbox', 'Can your beneficiaries be volunteers in your organisation?', 'beneficiaryisvolunteer', ['tab' => 'beneficiaries']);
+
+// Add options to choose to enable email and/or phone fields, and to define custom fields for the beneficiary form
+// Trello Ref. https://trello.com/c/WmBmSHyp
+addfield('checkbox', 'Enable email field for beneficiaries?', 'email_enabled', [
+    'tab' => 'beneficiaries',
+    'tooltip' => 'Allow users to enter an email address for the beneficiary. This field is optional and can be used for communication purposes.',
+]);
+
+addfield('checkbox', 'Enable phone number field for beneficiaries?', 'phone_enabled', [
+    'tab' => 'beneficiaries',
+    'tooltip' => 'Allow users to enter a phone number for the beneficiary. This field is optional and can be used for direct communication.',
+]);
+
+addfield('line', '', '', ['tab' => 'beneficiaries']);
+
+addfield('title', 'Enable Additional Custom Fields', '', ['tab' => 'beneficiaries', 'tooltip' => 'If the checkbox is enabled, a text field will be added to the beneficiary form with the provided label.']);
+
+// Custom Text Field 1 (Free Text)
+addfield('checkbox', 'Enable text field 1 (e.g., Family Size)', 'additional_field1_enabled', [
+    'tab' => 'beneficiaries',
+    'size' => 2,
+    'onchange' => 'conditionalToggle("additional_field1_enabled", "additional_field1_label")',
+]);
+
+addfield('text', 'Text field 1 label', 'additional_field1_label', [
+    'tab' => 'beneficiaries',
+    'disabled' => $data['additional_field1_enabled'] ? false : true,
+    'required' => $data['additional_field1_enabled'],
+    'tooltip' => 'Provide a label for this field (e.g., "Family Size" or "Occupation").',
+]);
+
+// Custom Text Field 2 (Free Text)
+addfield('checkbox', 'Enable text field 2 (e.g., Living Area)', 'additional_field2_enabled', [
+    'tab' => 'beneficiaries',
+    'onchange' => 'conditionalToggle("additional_field2_enabled", "additional_field2_label")',
+    'checked' => $data['additional_field2_enabled'],
+]);
+
+addfield('text', 'Text field 2 label', 'additional_field2_label', [
+    'tab' => 'beneficiaries',
+    'disabled' => $data['additional_field2_enabled'] ? false : true,
+    'required' => $data['additional_field2_enabled'],
+    'tooltip' => 'Provide a label for the second custom field (e.g., "Living Area" or "Notes").',
+]);
+
+addfield('line', '', '', ['tab' => 'beneficiaries']);
+
+// Custom Number Field (e.g., Number of Family Members)
+addfield('checkbox', 'Enable number field (e.g., Family Members)', 'additional_field3_enabled', [
+    'tab' => 'beneficiaries',
+    'onchange' => 'conditionalToggle("additional_field3_enabled", "additional_field3_label")',
+]);
+
+addfield('text', 'Number field label', 'additional_field3_label', [
+    'tab' => 'beneficiaries',
+    'disabled' => $data['additional_field3_enabled'] ? false : true,
+    'required' => $data['additional_field3_enabled'],
+    'tooltip' => 'Provide a label for the number field (e.g., "Number of Family Members").',
+]);
+
+addfield('line', '', '', ['tab' => 'beneficiaries']);
+
+// Custom Date Field (e.g., Next Visit Date)
+addfield('checkbox', 'Enable date field (e.g., Next Visit Date)', 'additional_field4_enabled', [
+    'tab' => 'beneficiaries',
+    'onchange' => 'conditionalToggle("additional_field4_enabled", "additional_field4_label")',
+]);
+
+addfield('text', 'Date field label', 'additional_field4_label', [
+    'tab' => 'beneficiaries',
+    'disabled' => $data['additional_field4_enabled'] ? false : true,
+    'required' => $data['additional_field4_enabled'],
+    'tooltip' => 'Provide a label for the date field (e.g., "Next Visit Date").',
+]);
 
 addfield('text', 'Currency name', 'currencyname', ['tab' => 'market', 'required' => true, 'width' => 2, 'tooltip' => 'Will get active after first page reload']);
 addfield('line', '', '', ['tab' => 'market']);
