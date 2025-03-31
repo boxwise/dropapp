@@ -146,6 +146,12 @@ if ($_POST) {
         }
         $id = $handler->savePost($savekeys, ['parent_id']);
 
+        // Validate if E-mail address is correct
+        if (!empty($_POST['email']) && !checkEmail($_POST['email'])) {
+            redirect('?action=people_edit&id='.$id.'&origin='.$_POST['_origin'].'&warning=1&message=This beneficiary email is not valid');
+            trigger_error('This beneficiary email is not valid', E_USER_NOTICE);
+        }
+
         // edit tags
         $now = (new DateTime())->format('Y-m-d H:i:s');
         $user_id = $_SESSION['user']['id'];
@@ -357,7 +363,7 @@ addfield('select', 'Gender', 'gender', ['testid' => 'gender_id', 'tab' => 'peopl
 addfield('date', 'Date of birth', 'date_of_birth', ['testid' => 'date_of_birth_id', 'tab' => 'people', 'date' => true, 'time' => false]);
 addfield('line', '', '', ['tab' => 'people']);
 if ($_SESSION['camp']['email_enabled']) {
-    addfield('text', 'Email address', 'email', ['tab' => 'people']);
+    addfield('email', 'Email address', 'email', ['tab' => 'people']);
 }
 if ($_SESSION['camp']['phone_enabled']) {
     addfield('text', 'Phone number', 'phone', ['tab' => 'people']);
