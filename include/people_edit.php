@@ -186,7 +186,7 @@ if ($_POST) {
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
         $postid = ($_POST['id'] ?: $id);
-        if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
+        if (isset($_FILES['picture']) && !empty($_FILES['picture']['tmp_name']) && is_uploaded_file($_FILES['picture']['tmp_name'])) {
             if ('image/jpeg' == $_FILES['picture']['type']) {
                 $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
                 $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
