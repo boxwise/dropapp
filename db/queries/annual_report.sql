@@ -381,7 +381,7 @@ GROUP BY moved_on, p.category_id, p.name, p.gender_id, t.size_id, loc.label, c.i
 UNION ALL
 
 -- Collect information about boxes being moved between states InStock and Donated
-select
+SELECT
     t.moved_on,
     p.category_id,
     TRIM(LOWER(p.name)) AS product_name,
@@ -485,3 +485,4 @@ JOIN camps c ON c.id = loc.camp_id
 JOIN organisations o ON o.id = c.organisation_id
 LEFT OUTER JOIN tags_relations tr ON tr.object_id = b.id AND tr.object_type = "Stock" AND tr.deleted_on IS NULL
 GROUP BY moved_on, p.category_id, p.name, p.gender_id, b.size_id, bs.label, c.id, c.name, o.label
+;
