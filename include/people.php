@@ -531,6 +531,43 @@ Tracer::inSpan(
                         }
 
                         break;
+
+                    case 'service':
+                        if ('undefined' == $_POST['option']) {
+                            $success = false;
+                            $message = 'No service exist. Please go to "Manage Services" to create services.';
+                            $redirect = false;
+                        } else {
+                            // set service id
+                            $service_id = $_POST['option'];
+                            // validate input
+                            $people_ids = array_filter($ids, fn ($id) => ctype_digit($id));
+                            if (is_array($people_ids) && sizeof($people_ids) > 0) {
+                                $query = 'INSERT INTO services_relations (service_id, `people_id`, created, created_by) VALUES ';
+                                $now = (new DateTime())->format('Y-m-d H:i:s');
+                                $user_id = $_SESSION['user']['id'];
+                                $params = ['service_id' => $service_id, 'created' => $now, 'created_by' => $user_id];
+
+                                for ($i = 0; $i < sizeof($people_ids); ++$i) {
+                                    $query .= "(:service_id, :people_id{$i}, :created, :created_by)";
+                                    $params = array_merge($params, ['people_id'.$i => $people_ids[$i]]);
+                                    if ($i !== sizeof($people_ids) - 1) {
+                                        $query .= ',';
+                                    }
+                                }
+                                db_query($query, $params);
+
+                                $success = true;
+                                $message = 'Service attendance recorded';
+                                $redirect = true;
+                            } else {
+                                $success = false;
+                                $message = 'To record the service attendance, the beneficiary must be checked';
+                                $redirect = false;
+                            }
+                        }
+
+                        break;
                 }
             }
 
