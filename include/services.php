@@ -35,6 +35,7 @@ if (!$ajax) {
 
     addcolumn('text', 'Name', 'label');
     addcolumn('text', 'Description', 'description');
+    addcolumn('datetime', 'Created', 'created');
 
     listsetting('add', 'Add a service');
 

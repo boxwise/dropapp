@@ -40,6 +40,8 @@ if (!$ajax) {
 
     addcolumn('text', 'Name', 'label');
     addcolumn('text', 'Description', 'description');
+    addcolumn('datetime', 'Created', 'created');
+    addcolumn('datetime', 'Deactivated', 'deleted');
 
     $cmsmain->assign('data', $data);
     $cmsmain->assign('listconfig', $listconfig);
