@@ -27,6 +27,8 @@ Tracer::inSpan(
                 listsetting('multiplefilter', $tagfilter);
             }
 
+            $services = db_simplearray('SELECT id, label FROM services WHERE camp_id = :camp_id AND deleted IS NULL ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']]);
+
             $statusarray = ['day' => 'New today', 'week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'notregistered' => 'Not registered'];
             if ($_SESSION['camp']['beneficiaryisregistered']) {
                 $statusarray['notregistered'] = 'Not registered';
