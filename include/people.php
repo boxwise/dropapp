@@ -27,12 +27,6 @@ Tracer::inSpan(
                 listsetting('multiplefilter', $tagfilter);
             }
 
-            $services = db_simplearray('SELECT id, label FROM services WHERE camp_id = :camp_id AND deleted IS NULL ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']]);
-            if (!empty($services)) {
-                $servicefilter = ['id' => 'servicefilter', 'placeholder' => 'Service filter', 'options' => db_array('SELECT id, id AS value, label FROM services WHERE camp_id = :camp_id AND deleted IS NULL ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']])];
-                listsetting('multiplefilter', $servicefilter);
-            }
-
             $statusarray = ['day' => 'New today', 'week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'notregistered' => 'Not registered'];
             if ($_SESSION['camp']['beneficiaryisregistered']) {
                 $statusarray['notregistered'] = 'Not registered';
