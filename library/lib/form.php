@@ -177,7 +177,7 @@ function getParentarray($table, $minlevel, $maxlevel, $field, $level = 0, $paren
 
     $lan = $settings['languages'][0]['id'];
 
-    $result = db_query('SELECT a.id, a.'.$field.', a.parent_id FROM '.$table.' AS a WHERE a.parent_id '.($parent ? '= :parent_id' : 'IS NULL').($hasDeleted ? ' AND NOT a.deleted' : '').' ORDER BY '.($hasSeq ? 'a.seq' : 'a.menutitle ASC'), ['parent_id' => $parent]);
+    $result = db_query('SELECT a.id, a.'.$field.', a.parent_id FROM '.$table.' AS a WHERE a.parent_id '.($parent ? '= :parent_id' : 'IS NULL').($hasDeleted ? ' AND NOT a.deleted' : '').' ORDER BY '.($hasSeq ? 'a.seq' : 'a.menutitle ASC'), $parent ? ['parent_id' => $parent] : []);
 
     while ($row = db_fetch($result)) {
         if ($level < $maxlevel) {
