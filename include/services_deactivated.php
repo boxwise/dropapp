@@ -23,16 +23,25 @@ if (!$ajax) {
 
     $data = getlistdata('
             SELECT 
-                services.*
+                s.id,
+                s.label,
+                s.description,
+                s.deleted,
+                s.modified,
+                COUNT(sr.id) AS total_usage,
+                COUNT(DISTINCT sr.people_id) AS unique_usage,
+                MAX(sr.created) AS last_used
             FROM 
-                services
+                services s
+            LEFT JOIN
+                services_relations sr ON sr.service_id = s.id
             WHERE 
-                services.deleted IS NOT NULL AND
-                services.camp_id = '.$_SESSION['camp']['id'].'
+                s.deleted IS NOT NULL AND
+                s.camp_id = '.$_SESSION['camp']['id'].'
             GROUP BY
-                services.id
+                s.id
             ORDER BY 
-                services.seq');
+                s.seq');
 
     foreach ($data as $key => $value) {
         $data[$key]['services'] = [['label' => $data[$key]['label'], 'color' => $data[$key]['color'], 'textcolor' => get_text_color($data[$key]['color'])]];
@@ -40,8 +49,10 @@ if (!$ajax) {
 
     addcolumn('text', 'Name', 'label');
     addcolumn('text', 'Description', 'description');
-    addcolumn('datetime', 'Created', 'created');
+    addcolumn('text', 'Total Usage', 'total_usage');
+    addcolumn('text', 'Unique Usage', 'unique_usage');
     addcolumn('datetime', 'Deactivated', 'deleted');
+    addcolumn('datetime', 'Last Used', 'last_used');
 
     $cmsmain->assign('data', $data);
     $cmsmain->assign('listconfig', $listconfig);
