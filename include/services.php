@@ -12,7 +12,7 @@ if (!$ajax) {
     listsetting('allowsort', true);
     listsetting('allowshowhide', false);
     listsetting('allowdelete', true);
-    listsetting('allowedit', false);
+    listsetting('allowedit', true);
     listsetting('search', ['label', 'description']);
     listsetting('allowadd', true);
     listsetting('delete', 'Deactivate');
@@ -22,20 +22,32 @@ if (!$ajax) {
 
     $data = getlistdata('
             SELECT 
-                services.*
+                s.id,
+                s.label,
+                s.description,
+                s.created,
+                s.modified,
+                COUNT(sr.id) AS total_usage,
+                COUNT(DISTINCT sr.people_id) AS unique_usage,
+                MAX(sr.created) AS last_used
             FROM 
-                services
+                services s
+            LEFT JOIN
+                services_relations sr ON sr.service_id = s.id
             WHERE 
-                services.deleted IS NULL AND
-                services.camp_id = '.$_SESSION['camp']['id'].'
+                s.deleted IS NULL AND
+                s.camp_id = '.$_SESSION['camp']['id'].'
             GROUP BY
-                services.id
+                s.id
             ORDER BY 
-                services.seq');
+                s.seq');
 
     addcolumn('text', 'Name', 'label');
     addcolumn('text', 'Description', 'description');
+    addcolumn('text', 'Total Usage', 'total_usage');
+    addcolumn('text', 'Unique Usage', 'unique_usage');
     addcolumn('datetime', 'Created', 'created');
+    addcolumn('datetime', 'Last Used', 'last_used');
 
     listsetting('add', 'Add a service');
 
