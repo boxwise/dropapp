@@ -34,6 +34,13 @@ final class AddServicesTable extends AbstractMigration
                 'null' => true,
                 'default' => null,
             ])
+            ->addColumn('deleted_by', 'integer', [
+                'null' => true,
+                'signed' => false,
+            ])
+            ->addForeignKey('deleted_by', 'cms_users', 'id', [
+                'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
             ->addColumn('created', 'datetime', [
                 'null' => true,
             ])

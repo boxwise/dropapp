@@ -43,12 +43,8 @@ final class AddServicesRelations extends AbstractMigration
                 'null' => false,
             ])
             ->addColumn('created_by', 'integer', [
-                'null' => false,
-                'signed' => true,
-            ])
-            ->addColumn('deleted', 'datetime', [
                 'null' => true,
-                'default' => null,
+                'signed' => false,
             ])
             ->addForeignKey('people_id', 'people', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
@@ -56,6 +52,9 @@ final class AddServicesRelations extends AbstractMigration
 
             ->addForeignKey('service_id', 'services', 'id', [
                 'delete' => 'RESTRICT', 'update' => 'CASCADE',
+            ])
+            ->addForeignKey('created_by', 'cms_users', 'id', [
+                'delete' => 'SET_NULL', 'update' => 'CASCADE',
             ])
             ->create()
         ;
