@@ -4,7 +4,7 @@ $result = db_query('
     SELECT 
         s.label,
         sr.created as used_on,
-        sr.created_by as registered_by,
+        u.naam as registered_by,
         p.container,
         p.firstname,
         p.lastname,
@@ -25,6 +25,8 @@ $result = db_query('
         services s ON sr.service_id = s.id
     LEFT JOIN 
         people p ON sr.people_id = p.id AND (NOT p.deleted OR p.deleted IS NULL)
+    LEFT JOIN
+        cms_users u ON sr.created_by = u.id
     WHERE sr.service_id = :id AND s.camp_id = :camp_id
     ORDER BY sr.created DESC', ['camp_id'=>$_SESSION['camp']['id'],'id' => $id]);
 

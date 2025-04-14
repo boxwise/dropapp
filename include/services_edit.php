@@ -50,8 +50,8 @@ $data=[];
 $data = getlistdata('
 SELECT 
 	p.id,
-    sr.created,
-    sr.created_by,
+    sr.created as used_on,
+    u.naam as registered_by,
     p. firstname,
     p.lastname,
     p.container
@@ -61,6 +61,8 @@ LEFT JOIN
     services s ON sr.service_id = s.id
 LEFT JOIN 
 	people p ON sr.people_id = p.id AND (NOT p.deleted OR p.deleted IS NULL)
+LEFT JOIN
+    cms_users u ON sr.created_by = u.id
 WHERE sr.service_id = :id AND s.camp_id = :camp_id
 ORDER BY sr.created DESC', ['camp_id'=>$_SESSION['camp']['id'], 'id' => $id]);
 
@@ -77,10 +79,11 @@ if ($data) {
     listsetting('allowdelete', false);
     listsetting('nolisttitle', true);
 
+    addcolumn('datetime', 'Used On', 'used_on');
+    addcolumn('text', 'Registered By', 'registered_by');
     addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
     addcolumn('text', 'Surname', 'lastname');
     addcolumn('text', 'Firstname', 'firstname');
-    addcolumn('datetime', 'Used On', 'created');
 
     addbutton('export', 'Export All', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportUsedServiceButton']);
 
