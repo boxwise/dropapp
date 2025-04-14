@@ -12,7 +12,6 @@ if (!$ajax) {
     listsetting('allowsort', true);
     listsetting('allowshowhide', false);
     listsetting('allowdelete', true);
-    listsetting('allowedit', true);
     listsetting('search', ['label', 'description']);
     listsetting('allowadd', true);
     listsetting('delete', 'Deactivate');
