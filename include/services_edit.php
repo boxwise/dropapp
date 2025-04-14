@@ -85,6 +85,7 @@ if ($data) {
     addcolumn('text', 'Surname', 'lastname');
     addcolumn('text', 'Firstname', 'firstname');
 
+    addbutton('register', 'Register Person', ['icon' => 'fa-plus', 'link' => '?action=use_service&service_id='.$id, 'showalways' => true, 'testid' => 'registerPersonButton']);
     addbutton('export', 'Export All', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportUsedServiceButton']);
 
     $cmsmain->assign('include2', 'cms_list.tpl');
