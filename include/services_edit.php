@@ -4,6 +4,14 @@ $action = 'services_edit';
 $table = 'services';
 
 if ($_POST) {
+    if ($_POST['do'] == 'export') {
+        $return = ['success' => true, 'redirect' => '?action=services_export&id='.$id];
+
+        echo json_encode($return);
+
+        exit;
+    }
+
     db_transaction(function () use ($table) {
         $_POST['camp_id'] = $_SESSION['camp']['id'];
 
@@ -23,8 +31,8 @@ $data = db_row('SELECT
                     FROM
                         services
                     WHERE
-                        services.deleted IS NULL AND services.id = :id
-                    GROUP BY services.id ', ['id' => $id]);
+                        services.deleted IS NULL AND services.id = :id AND services.camp_id = :camp_id
+                    GROUP BY services.id ', ['camp_id'=>$_SESSION['camp']['id'], 'id' => $id]);
 
 addfield('text', 'Name', 'label', ['required' => true]);
 
@@ -49,10 +57,12 @@ SELECT
     p.container
 FROM 
 	services_relations sr
+LEFT JOIN
+    services s ON sr.service_id = s.id
 LEFT JOIN 
 	people p ON sr.people_id = p.id AND (NOT p.deleted OR p.deleted IS NULL)
-WHERE sr.service_id = :id
-ORDER BY sr.created DESC', ['id' => $id]);
+WHERE sr.service_id = :id AND s.camp_id = :camp_id
+ORDER BY sr.created DESC', ['camp_id'=>$_SESSION['camp']['id'], 'id' => $id]);
 
 if ($data) {
     initlist();
@@ -71,6 +81,8 @@ if ($data) {
     addcolumn('text', 'Surname', 'lastname');
     addcolumn('text', 'Firstname', 'firstname');
     addcolumn('datetime', 'Used On', 'created');
+
+    addbutton('export', 'Export All', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportUsedServiceButton']);
 
     $cmsmain->assign('include2', 'cms_list.tpl');
     $cmsmain->assign('listconfig', $listconfig);
