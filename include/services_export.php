@@ -28,7 +28,7 @@ $result = db_query('
     LEFT JOIN
         cms_users u ON sr.created_by = u.id
     WHERE sr.service_id = :id AND s.camp_id = :camp_id
-    ORDER BY sr.created DESC', ['camp_id'=>$_SESSION['camp']['id'],'id' => $id]);
+    ORDER BY sr.created DESC', ['camp_id' => $_SESSION['camp']['id'], 'id' => $id]);
 
 $keys = [
     'label' => 'Service',

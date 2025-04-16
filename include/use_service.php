@@ -27,7 +27,7 @@ $serviceoptions = db_array('
         services
     WHERE 
         deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
-addfield('select', 'Service', 'service_id', ['placeholder' => 'Type to search', 'required' => true, 'options' =>$serviceoptions]);
+addfield('select', 'Service', 'service_id', ['placeholder' => 'Type to search', 'required' => true, 'options' => $serviceoptions]);
 $beneficiaryoptions = db_array('
     SELECT 
         id AS value, CONCAT(container, " ",firstname, " ", lastname) AS label
@@ -46,7 +46,7 @@ if ($service_id) {
         FROM
             services
         WHERE
-            deleted IS NULL AND services.id = :id AND services.camp_id = :camp_id', ['camp_id'=>$_SESSION['camp']['id'], 'id' => $service_id]);
+            deleted IS NULL AND services.id = :id AND services.camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id'], 'id' => $service_id]);
     $cmsmain->assign('data', $data);
 }
 $translate['cms_form_submit'] = 'Save';

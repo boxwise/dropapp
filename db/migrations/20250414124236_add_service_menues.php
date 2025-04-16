@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
@@ -23,7 +24,7 @@ final class AddServiceMenues extends AbstractMigration
 
         // enable everywhere except in production
         if ('dropapp_production' != $dbName[0]) {
-            //cms_functions_camps
+            // cms_functions_camps
             $this->execute("
                 INSERT INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES ('168', '1');
                 INSERT INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES ('168', '2');
@@ -39,7 +40,7 @@ final class AddServiceMenues extends AbstractMigration
                 INSERT INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES ('169', '100000001');
             ");
 
-            //cms_usergroups_functions for Use Service
+            // cms_usergroups_functions for Use Service
             $this->execute("
                 INSERT INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES ('168', '1');
                 INSERT INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES ('168', '2');
@@ -68,7 +69,7 @@ final class AddServiceMenues extends AbstractMigration
                 INSERT INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES ('168', '100000210');
             ");
 
-            //cms_usergroups_functions for Manage Services
+            // cms_usergroups_functions for Manage Services
             $this->execute("
                 INSERT INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES ('169', '1');
                 INSERT INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES ('169', '2');
@@ -81,9 +82,9 @@ final class AddServiceMenues extends AbstractMigration
                 INSERT INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES ('169', '100000002');
                 INSERT INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES ('169', '100000206');
                 INSERT INTO `cms_usergroups_functions` (`cms_functions_id`, `cms_usergroups_id`) VALUES ('169', '100000207');
-            "); 
+            ");
         } else {
-            $this->output->writeln("Only cms_functions is touched since we are in dropapp_production");
+            $this->output->writeln('Only cms_functions is touched since we are in dropapp_production');
         }
     }
 
@@ -100,7 +101,7 @@ final class AddServiceMenues extends AbstractMigration
                 DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` IN ('168', '169');
             ");
         } else {
-            $this->output->writeln("Only cms_functions is touched since we are in dropapp_production");
+            $this->output->writeln('Only cms_functions is touched since we are in dropapp_production');
         }
 
         $this->execute("

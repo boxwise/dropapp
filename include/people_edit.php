@@ -504,7 +504,7 @@ if (0 == $data['parent_id']) {
 
 $datausedservices = [];
 if ($id) {
-    $datausedservices=db_array('
+    $datausedservices = db_array('
         SELECT 
             s.label,
             sr.created as used_on,
@@ -516,7 +516,7 @@ if ($id) {
         LEFT JOIN
             cms_users u ON sr.created_by = u.id
         WHERE sr.people_id = :id AND s.camp_id = :camp_id
-        ORDER BY sr.created DESC', ['camp_id'=>$_SESSION['camp']['id'], 'id' => $id]);
+        ORDER BY sr.created DESC', ['camp_id' => $_SESSION['camp']['id'], 'id' => $id]);
 
     addfield(
         'list',
@@ -565,7 +565,7 @@ if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admi
 if (!$data['parent_id'] && $data['id']) {
     $tabs['transaction'] = 'Transactions';
 }
-if (authorize('register_service_usage',4)) {
+if (authorize('register_service_usage', 4)) {
     $tabs['services'] = 'Used Services';
 }
 $tabs['services'] = 'Services';

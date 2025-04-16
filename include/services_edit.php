@@ -4,7 +4,7 @@ $action = 'services_edit';
 $table = 'services';
 
 if ($_POST) {
-    if ($_POST['do'] == 'export') {
+    if ('export' == $_POST['do']) {
         $return = ['success' => true, 'redirect' => '?action=services_export&id='.$id];
 
         echo json_encode($return);
@@ -32,7 +32,7 @@ $data = db_row('SELECT
                         services
                     WHERE
                         services.deleted IS NULL AND services.id = :id AND services.camp_id = :camp_id
-                    GROUP BY services.id ', ['camp_id'=>$_SESSION['camp']['id'], 'id' => $id]);
+                    GROUP BY services.id ', ['camp_id' => $_SESSION['camp']['id'], 'id' => $id]);
 
 addfield('text', 'Name', 'label', ['required' => true]);
 
@@ -46,7 +46,7 @@ $cmsmain->assign('formelements', $formdata);
 $cmsmain->assign('formbuttons', $formbuttons);
 
 // add an overview table of people that attended
-$data=[];
+$data = [];
 $data = getlistdata('
 SELECT 
 	p.id,
@@ -64,7 +64,7 @@ LEFT JOIN
 LEFT JOIN
     cms_users u ON sr.created_by = u.id
 WHERE sr.service_id = :id AND s.camp_id = :camp_id
-ORDER BY sr.created DESC', ['camp_id'=>$_SESSION['camp']['id'], 'id' => $id]);
+ORDER BY sr.created DESC', ['camp_id' => $_SESSION['camp']['id'], 'id' => $id]);
 
 if ($data) {
     initlist();

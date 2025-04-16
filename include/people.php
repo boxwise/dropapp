@@ -94,7 +94,7 @@ Tracer::inSpan(
                 addbutton('rtag', 'Remove Tag', ['icon' => 'fa-tags', 'options' => $tags]);
             }
 
-            if (!empty($services) && authorize('register_service_usage',4)) {
+            if (!empty($services) && authorize('register_service_usage', 4)) {
                 addbutton('service', 'Use Service', ['icon' => 'fa-user', 'options' => $services]);
             }
             addbutton('give', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
