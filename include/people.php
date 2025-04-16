@@ -94,8 +94,8 @@ Tracer::inSpan(
                 addbutton('rtag', 'Remove Tag', ['icon' => 'fa-tags', 'options' => $tags]);
             }
 
-            if (!empty($services)) {
-                addbutton('service', 'Service Attendance', ['icon' => 'fa-user', 'options' => $services]);
+            if (!empty($services) && authorize('register_service_usage',4)) {
+                addbutton('service', 'Use Service', ['icon' => 'fa-user', 'options' => $services]);
             }
             addbutton('give', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
             addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
@@ -554,11 +554,11 @@ Tracer::inSpan(
                                 db_query($query, $params);
 
                                 $success = true;
-                                $message = 'Service attendance recorded';
+                                $message = 'Service usage recorded';
                                 $redirect = true;
                             } else {
                                 $success = false;
-                                $message = 'To record the service attendance, the beneficiary must be checked';
+                                $message = 'To record the service usage, the beneficiary must be checked';
                                 $redirect = false;
                             }
                         }

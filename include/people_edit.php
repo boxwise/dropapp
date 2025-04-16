@@ -565,8 +565,7 @@ if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admi
 if (!$data['parent_id'] && $data['id']) {
     $tabs['transaction'] = 'Transactions';
 }
-$betaUser = isset($_SESSION['auth0_user']['https://www.boxtribute.com/beta_user']) ? ((int) $_SESSION['auth0_user']['https://www.boxtribute.com/beta_user']) : 0;
-if ($betaUser>=4) {
+if (authorize('register_service_usage',4)) {
     $tabs['services'] = 'Used Services';
 }
 $tabs['services'] = 'Services';
