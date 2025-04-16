@@ -267,8 +267,9 @@ function loginasuser($table, $ids)
     return [$success, $message, true];
 }
 
-function authorize($abp, $beta) {
-    return in_array('boxtribute_god',$_SESSION['auth0_user']['https://www.boxtribute.com/roles']) || 
-    (in_array($abp,$_SESSION['auth0_user']['https://www.boxtribute.com/actions']) && 
-    $_SESSION['auth0_user']['https://www.boxtribute.com/beta_user'] >=$beta);
+function authorize($abp, $beta)
+{
+    return in_array('boxtribute_god', $_SESSION['auth0_user']['https://www.boxtribute.com/roles'])
+    || (in_array($abp, $_SESSION['auth0_user']['https://www.boxtribute.com/actions'])
+    && $_SESSION['auth0_user']['https://www.boxtribute.com/beta_user'] >= $beta);
 }
