@@ -502,6 +502,45 @@ if (0 == $data['parent_id']) {
     }
 }
 
+$datausedservices = [];
+if ($id) {
+    $datausedservices = db_array('
+        SELECT 
+            s.label,
+            sr.created as used_on,
+            u.naam as registered_by
+        FROM 
+            services_relations sr
+        LEFT JOIN
+            services s ON sr.service_id = s.id
+        LEFT JOIN
+            cms_users u ON sr.created_by = u.id
+        WHERE sr.people_id = :id AND s.camp_id = :camp_id
+        ORDER BY sr.created DESC', ['camp_id' => $_SESSION['camp']['id'], 'id' => $id]);
+
+    addfield(
+        'list',
+        'Used Services',
+        'services',
+        [
+            'tab' => 'services',
+            'width' => 10,
+            'data' => $datausedservices,
+            'columns' => ['label' => 'Service', 'used_on' => 'Used On', 'registered_by' => 'Registered By'],
+            'allowedit' => false,
+            'allowadd' => true,
+            'add' => 'Register Usage',
+            'addaction' => 'use_service',
+            'allowselect' => false,
+            'allowselectall' => false,
+            'action' => 'people_edit',
+            'redirect' => true,
+            'allowsort' => true,
+            'modal' => false,
+        ]
+    );
+}
+
 if ($id) {
     addfield('line', '', '', ['aside' => true]);
     addfield('created', 'Created', 'created', ['aside' => true]);
@@ -525,6 +564,9 @@ if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admi
 }
 if (!$data['parent_id'] && $data['id']) {
     $tabs['transaction'] = 'Transactions';
+}
+if (authorize('register_service_usage', 4)) {
+    $tabs['services'] = 'Used Services';
 }
 $tabs['signature'] = 'Privacy declaration';
 if (isset($_GET['active'], $tabs[$_GET['active']])) {

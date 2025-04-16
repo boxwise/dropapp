@@ -27,6 +27,8 @@ Tracer::inSpan(
                 listsetting('multiplefilter', $tagfilter);
             }
 
+            $services = db_simplearray('SELECT id, label FROM services WHERE camp_id = :camp_id AND deleted IS NULL ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']]);
+
             $statusarray = ['day' => 'New today', 'week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'notregistered' => 'Not registered'];
             if ($_SESSION['camp']['beneficiaryisregistered']) {
                 $statusarray['notregistered'] = 'Not registered';
@@ -91,6 +93,10 @@ Tracer::inSpan(
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
                 addbutton('rtag', 'Remove Tag', ['icon' => 'fa-tags', 'options' => $tags]);
             }
+
+            if (!empty($services) && authorize('register_service_usage', 4)) {
+                addbutton('service', 'Use Service', ['icon' => 'fa-user', 'options' => $services]);
+            }
             addbutton('give', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
             addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
             addbutton('detach', 'Detach from family', ['icon' => 'fa-unlink', 'oneitemonly' => false, 'testid' => 'detachFromFamily']);
@@ -150,29 +156,29 @@ Tracer::inSpan(
                         people.modified,
                         people.approvalsigned
                     FROM
-                        people'.
+                        people'
                     // Join tags here only if a tag filter is selected and only people with a certain tag should be returned
-                    ($listconfig['multiplefilter_selected'] ? '
+                    .($listconfig['multiplefilter_selected'] ? '
                         LEFT JOIN
                             tags_relations AS people_tags_filter ON people_tags_filter.object_id = people.id AND people_tags_filter.object_type = "People" AND people_tags_filter.deleted_on IS NULL
                         LEFT JOIN
                             tags AS tags_filter ON tags_filter.id = people_tags_filter.tag_id AND tags_filter.deleted IS NULL AND tags_filter.camp_id = '.$_SESSION['camp']['id'] : '').'
                     WHERE
                         people.deleted IS NULL AND
-                        people.camp_id = '.$_SESSION['camp']['id'].
-                        ('day' == $listconfig['filtervalue3'] ? ' AND DATE(NOW()) = DATE(people.created) ' : '').
-                        ('week' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") ' : '').
-                        ('month' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") ' : '').
-                        ('volunteer' == $listconfig['filtervalue3'] ? ' AND people.volunteer ' : '').
-                        ('notregistered' == $listconfig['filtervalue3'] ? ' AND people.notregistered ' : '').
-                        ($listconfig['searchvalue'] ? ' AND
+                        people.camp_id = '.$_SESSION['camp']['id']
+                        .('day' == $listconfig['filtervalue3'] ? ' AND DATE(NOW()) = DATE(people.created) ' : '')
+                        .('week' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%v-%x") = DATE_FORMAT(people.created,"%v-%x") ' : '')
+                        .('month' == $listconfig['filtervalue3'] ? ' AND DATE_FORMAT(NOW(),"%m-%Y") = DATE_FORMAT(people.created,"%m-%Y") ' : '')
+                        .('volunteer' == $listconfig['filtervalue3'] ? ' AND people.volunteer ' : '')
+                        .('notregistered' == $listconfig['filtervalue3'] ? ' AND people.notregistered ' : '')
+                        .($listconfig['searchvalue'] ? ' AND
                             (people.lastname LIKE "%'.$search.'%" OR 
                             people.firstname LIKE "%'.$search.'%" OR 
                             people.container = "'.$search.'" OR 
                             people.comments LIKE "%'.$search.'%")
-                        ' : ' ').
+                        ' : ' ')
                         // filter for selected tags
-                        ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
+                        .($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
                     GROUP BY 
                         people.id
                     ) AS people_filtered
@@ -190,8 +196,8 @@ Tracer::inSpan(
             LEFT JOIN
                 people AS parent ON people_filtered_with_tags.parent_id = parent.id
             LEFT JOIN
-                transactions ON transactions.people_id = people_filtered_with_tags.id '.
-            (
+                transactions ON transactions.people_id = people_filtered_with_tags.id '
+            .(
                 'approvalsigned' == $listconfig['filtervalue3'] ? '
                 WHERE 
                     ((NOT people_filtered_with_tags.approvalsigned AND people_filtered_with_tags.parent_id IS NULL) OR NOT parent.approvalsigned)' : ''
@@ -516,6 +522,43 @@ Tracer::inSpan(
                             } else {
                                 $success = false;
                                 $message = 'To remove the tag, the beneficiary must be checked';
+                                $redirect = false;
+                            }
+                        }
+
+                        break;
+
+                    case 'service':
+                        if ('undefined' == $_POST['option']) {
+                            $success = false;
+                            $message = 'No service exist. Please go to "Manage Services" to create services.';
+                            $redirect = false;
+                        } else {
+                            // set service id
+                            $service_id = $_POST['option'];
+                            // validate input
+                            $people_ids = array_filter($ids, fn ($id) => ctype_digit($id));
+                            if (is_array($people_ids) && sizeof($people_ids) > 0) {
+                                $query = 'INSERT INTO services_relations (service_id, `people_id`, created, created_by) VALUES ';
+                                $now = (new DateTime())->format('Y-m-d H:i:s');
+                                $user_id = $_SESSION['user']['id'];
+                                $params = ['service_id' => $service_id, 'created' => $now, 'created_by' => $user_id];
+
+                                for ($i = 0; $i < sizeof($people_ids); ++$i) {
+                                    $query .= "(:service_id, :people_id{$i}, :created, :created_by)";
+                                    $params = array_merge($params, ['people_id'.$i => $people_ids[$i]]);
+                                    if ($i !== sizeof($people_ids) - 1) {
+                                        $query .= ',';
+                                    }
+                                }
+                                db_query($query, $params);
+
+                                $success = true;
+                                $message = 'Service usage recorded';
+                                $redirect = true;
+                            } else {
+                                $success = false;
+                                $message = 'To record the service usage, the beneficiary must be checked';
                                 $redirect = false;
                             }
                         }
