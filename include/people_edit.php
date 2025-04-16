@@ -568,7 +568,6 @@ if (!$data['parent_id'] && $data['id']) {
 if (authorize('register_service_usage', 4)) {
     $tabs['services'] = 'Used Services';
 }
-$tabs['services'] = 'Services';
 $tabs['signature'] = 'Privacy declaration';
 if (isset($_GET['active'], $tabs[$_GET['active']])) {
     $cmsmain->assign('activetab', $_GET['active']);
