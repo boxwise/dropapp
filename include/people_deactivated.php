@@ -21,7 +21,21 @@ if (!$ajax) {
     listsetting('allowdelete', false);
     listsetting('allowedit', false);
     // listsetting('allowselect',array(1));
-    listsetting('search', ['firstname', 'lastname', 'container']);
+    $search_fields = ['firstname', 'lastname', 'container'];
+    // Add search fields for the additional custom fields if enabled
+    if ($_SESSION['camp']['email_enabled']) {
+        $search_fields[] = 'email';
+    }
+    if ($_SESSION['camp']['phone_enabled']) {
+        $search_fields[] = 'phone';
+    }
+    if ($_SESSION['camp']['additional_field1_enabled']) {
+        $search_fields[] = 'customfield1_value';
+    }
+    if ($_SESSION['camp']['additional_field2_enabled']) {
+        $search_fields[] = 'customfield2_value';
+    }
+    listsetting('search', $search_fields);
     listsetting('allowadd', false);
     listsetting('haspagemenu', true);
 
@@ -61,6 +75,25 @@ if (!$ajax) {
     addcolumn('text', $_SESSION['camp']['familyidentifier'], 'container');
     addcolumn('text', ucwords((string) $_SESSION['camp']['currencyname']), 'drops');
     addcolumn('datetime', 'Last active', 'lastactive');
+    // Display additional custom fields if enabled
+    if ($_SESSION['camp']['email_enabled']) {
+        addcolumn('text', 'Email address', 'email');
+    }
+    if ($_SESSION['camp']['phone_enabled']) {
+        addcolumn('text', 'Phone number', 'phone');
+    }
+    if ($_SESSION['camp']['additional_field1_enabled']) {
+        addcolumn('text', $_SESSION['camp']['additional_field1_label'], 'customfield1_value');
+    }
+    if ($_SESSION['camp']['additional_field2_enabled']) {
+        addcolumn('text', $_SESSION['camp']['additional_field2_label'], 'customfield2_value');
+    }
+    if ($_SESSION['camp']['additional_field3_enabled']) {
+        addcolumn('text', $_SESSION['camp']['additional_field3_label'], 'customfield3_value');
+    }
+    if ($_SESSION['camp']['additional_field4_enabled']) {
+        addcolumn('date', $_SESSION['camp']['additional_field4_label'], 'customfield4_value');
+    }
 
     addbutton('undelete', 'Activate', ['icon' => 'fa-history', 'oneitemonly' => false, 'testId' => 'recoverDeactivatedUser']);
     addbutton('realdelete', 'Full delete', ['icon' => 'fa-trash', 'oneitemonly' => false, 'confirm' => true, 'testId' => 'fullDeleteUser']);
