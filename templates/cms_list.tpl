@@ -1,17 +1,19 @@
 <div class="row">
 	<div class="col-sm-{$listconfig['width']}">
-		<div class="row row-title">
-			<div class="col-sm-12">
-				<h1>{$title nofilter}</h1>
-				{if $listconfig['haspagemenu']}
-					<ul class="pagemenu list-unstyled" data-testid="listTab">
-					{foreach $listconfig['pagemenu'] as $code=>$pagemenu}
-						<li><a class="{if $pagemenu['active']}active{/if}" href="{$pagemenu['link']}" {if isset($pagemenu['testid'])}data-testid="{$pagemenu['testid']}"{/if} >{$pagemenu['label']}</a>
-					{/foreach}
-					</ul>
-				{/if}
+		{if !$listconfig['nolisttitle']}
+			<div class="row row-title">
+				<div class="col-sm-12">
+					<h1>{$title nofilter}</h1>
+					{if $listconfig['haspagemenu']}
+						<ul class="pagemenu list-unstyled" data-testid="listTab">
+						{foreach $listconfig['pagemenu'] as $code=>$pagemenu}
+							<li><a class="{if $pagemenu['active']}active{/if}" href="{$pagemenu['link']}" {if isset($pagemenu['testid'])}data-testid="{$pagemenu['testid']}"{/if} >{$pagemenu['label']}</a>
+						{/foreach}
+						</ul>
+					{/if}
+				</div>
 			</div>
-		</div>
+		{/if}
 		<div class="table-parent {if $listconfig['tree']}list-tree{/if} {if $listconfig['allowsort']}sortable{/if} {if $listconfig['allowmove']}zortable{/if}" data-table="tablename" data-startlevel="{$listconfig['allowmovefrom']}" data-maxlevel="{if $listconfig['tree']}{$listconfig['allowmoveto']}{else}0{/if}" data-inheritvisibility="{$settings['inheritvisibility']}" data-action="{$listconfig['thisfile']}" data-saveonchange="1" {if $listconfig['maxheight']}data-maxheight="{$listconfig['maxheight']}"{/if}>
 
 			<div class="table-nav">
@@ -138,8 +140,9 @@
 							{/foreach}
 					  	</tr>
 					</thead>
-					<tbody>					
-				    {foreach $data as $row}
+					<tbody>		
+					{if !$listcontentdata}	{assign var="listcontentdata" value=$data} {/if}
+				    {foreach $listcontentdata as $row}
 						{* prepare parent_array for collapsing *}
 						{if $listconfig['allowcollapse'] && $row['level']}
 							{assign var="parent_array" value="-"|explode:$row['parent_id']}

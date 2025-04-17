@@ -27,6 +27,8 @@ Tracer::inSpan(
                 listsetting('multiplefilter', $tagfilter);
             }
 
+            $services = db_simplearray('SELECT id, label FROM services WHERE camp_id = :camp_id AND deleted IS NULL ORDER BY seq', ['camp_id' => $_SESSION['camp']['id']]);
+
             $statusarray = ['day' => 'New today', 'week' => 'New this week', 'month' => 'New this month', 'inactive' => 'Inactive', 'approvalsigned' => 'No signature', 'notregistered' => 'Not registered'];
             if ($_SESSION['camp']['beneficiaryisregistered']) {
                 $statusarray['notregistered'] = 'Not registered';
@@ -104,6 +106,10 @@ Tracer::inSpan(
             if (!empty($tags)) {
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
                 addbutton('rtag', 'Remove Tag', ['icon' => 'fa-tags', 'options' => $tags]);
+            }
+
+            if (!empty($services) && authorize('register_service_usage', 4)) {
+                addbutton('service', 'Use Service', ['icon' => 'fa-user', 'options' => $services]);
             }
             addbutton('give', 'Give '.ucwords((string) $_SESSION['camp']['currencyname']), ['image' => 'one_coin.png', 'imageClass' => 'coinsImage', 'oneitemonly' => false, 'testid' => 'giveTokensListButton']);
             addbutton('merge', 'Merge to family', ['icon' => 'fa-link', 'oneitemonly' => false, 'testid' => 'mergeToFamily']);
@@ -566,6 +572,43 @@ Tracer::inSpan(
                             } else {
                                 $success = false;
                                 $message = 'To remove the tag, the beneficiary must be checked';
+                                $redirect = false;
+                            }
+                        }
+
+                        break;
+
+                    case 'service':
+                        if ('undefined' == $_POST['option']) {
+                            $success = false;
+                            $message = 'No service exist. Please go to "Manage Services" to create services.';
+                            $redirect = false;
+                        } else {
+                            // set service id
+                            $service_id = $_POST['option'];
+                            // validate input
+                            $people_ids = array_filter($ids, fn ($id) => ctype_digit($id));
+                            if (is_array($people_ids) && sizeof($people_ids) > 0) {
+                                $query = 'INSERT INTO services_relations (service_id, `people_id`, created, created_by) VALUES ';
+                                $now = (new DateTime())->format('Y-m-d H:i:s');
+                                $user_id = $_SESSION['user']['id'];
+                                $params = ['service_id' => $service_id, 'created' => $now, 'created_by' => $user_id];
+
+                                for ($i = 0; $i < sizeof($people_ids); ++$i) {
+                                    $query .= "(:service_id, :people_id{$i}, :created, :created_by)";
+                                    $params = array_merge($params, ['people_id'.$i => $people_ids[$i]]);
+                                    if ($i !== sizeof($people_ids) - 1) {
+                                        $query .= ',';
+                                    }
+                                }
+                                db_query($query, $params);
+
+                                $success = true;
+                                $message = 'Service usage recorded';
+                                $redirect = true;
+                            } else {
+                                $success = false;
+                                $message = 'To record the service usage, the beneficiary must be checked';
                                 $redirect = false;
                             }
                         }
