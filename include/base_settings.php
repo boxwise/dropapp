@@ -3,8 +3,8 @@
 $table = 'camps';
 $action = 'base_settings';
 
-if ($_POST && authorize('manage_base_settings',4)) {
-    db_transaction(function () use ($table, $rolesToActions, $menusToActions) {
+if ($_POST && authorize('manage_base_settings', 4)) {
+    db_transaction(function () use ($table) {
         $_POST['id'] = $_SESSION['camp']['id'];
         $handler = new formHandler($table);
 
@@ -23,7 +23,7 @@ if ($_POST && authorize('manage_base_settings',4)) {
             'additional_field3_label',
             'additional_field4_label',
             'delete_inactive_users',
-            'daystokeepdeletedpersons',            
+            'daystokeepdeletedpersons',
             'adult_age',
             'currencyname',
             'dropsperadult',
@@ -114,16 +114,15 @@ addfield('text', 'Label', 'additional_field4_label', [
     'tooltip' => 'Provide a label for the date field (e.g., "Next Visit Date").',
 ]);
 
-
 addfield('number', 'Days to deactivate inactive beneficiaries', 'delete_inactive_users', ['tab' => 'market', 'width' => 2, 'tooltip' => 'Beneficiaries without activity in Boxtribute will be deactivated. Deactivated beneficiaries will remain visible in the Deactivated tab in the Beneficiaries page.']);
 addfield('number', 'Days to keep deactivated beneficiaries', 'daystokeepdeletedpersons', ['tab' => 'market', 'width' => 2, 'tooltip' => 'Deactivate beneficiaries will remain visible in the Deactivated tab in the beneficiaries page and will be completely deleted after a while. Here you can define how long they will remain in the Deactivated list.']);
 addfield('number', 'Adult age', 'adult_age', ['tab' => 'market', 'width' => 2, 'tooltip' => 'For some functions we distinct between children and adults. Fill in here the lowest age considered adult for this base.']);
 addfield('text', 'Currency name', 'currencyname', ['tab' => 'market', 'required' => true, 'width' => 2, 'tooltip' => 'Will get active after first page reload']);
 addfield('line', '', '', ['tab' => 'market']);
-addfield('title', 'Default '. $_SESSION['camp']['currencyname'].' per cycle', '', ['tab' => 'market']);
+addfield('title', 'Default '.$_SESSION['camp']['currencyname'].' per cycle', '', ['tab' => 'market']);
 addfield('number', $_SESSION['camp']['currencyname'].' per adult', 'dropsperadult', ['tab' => 'market', 'width' => 2]);
 addfield('number', $_SESSION['camp']['currencyname'].' per child', 'dropsperchild', ['tab' => 'market', 'width' => 2]);
-addfield('checkbox', 'Reset tokens on cycle restart', 'resettokens', ['tab' => 'market', 'tooltip'=>'If you distribute tokens to a person, first all tokens of the beneficiary are reset to 0 before new ones are distributed.']);
+addfield('checkbox', 'Reset tokens on cycle restart', 'resettokens', ['tab' => 'market', 'tooltip' => 'If you distribute tokens to a person, first all tokens of the beneficiary are reset to 0 before new ones are distributed.']);
 
 // place the form elements and data in the template
 $cmsmain->assign('data', $data);
