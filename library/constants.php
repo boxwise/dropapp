@@ -413,6 +413,9 @@ $rolesToActions = [
         'view_shipments',
         'fill_shipment',
         'create_shareable_link',
+        'manage_services',
+        'register_service_usage',
+        'manage_base_settings',
     ],
 
     'coordinator' => [
@@ -445,6 +448,9 @@ $rolesToActions = [
         'view_shipments',
         'fill_shipment',
         'create_shareable_link',
+        'manage_services',
+        'register_service_usage',
+        'manage_base_settings',
     ],
 
     'warehouse_volunteer' => [
@@ -468,6 +474,7 @@ $rolesToActions = [
         'view_start_page',
         'be_user',
         'list_sales',
+        'register_service_usage',
     ],
 
     'library_volunteer' => [
