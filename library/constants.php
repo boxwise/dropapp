@@ -373,6 +373,45 @@ $menusToActions = [
             'view_transfer_agreements',
         ],
     ],
+    [
+        'id' => 168,
+        'module' => 'Sevices',
+        'menu' => 'Use Service (<span>beta</span>)',
+        'action' => 'use_service',
+        'adminonly' => '0',
+        'visible' => '1',
+        'allusers' => '0',
+        'allcamps' => '0',
+        'action_permission' => [
+            'register_service_usage',
+        ],
+    ],
+    [
+        'id' => 169,
+        'module' => 'Services',
+        'menu' => 'Manage Services (<span>beta</span>)',
+        'action' => 'services',
+        'adminonly' => '0',
+        'visible' => '1',
+        'allusers' => '0',
+        'allcamps' => '0',
+        'action_permission' => [
+            'manage_services',
+        ],
+    ],
+    [
+        'id' => 170,
+        'module' => 'Admin',
+        'menu' => 'Base Settings (<span>beta</span>)',
+        'action' => 'base_settings',
+        'adminonly' => '0',
+        'visible' => '1',
+        'allusers' => '0',
+        'allcamps' => '1',
+        'action_permission' => [
+            'manage_base_settings',
+        ],
+    ],
 ];
 
 // This has to be identical to the rolesMapping in the Auth0 dynamic-permissions script
