@@ -644,9 +644,9 @@ function addpagemenu($code, $label, $options = [])
 
 // this is a huge SQL injection risk, as we're forcing consumers
 // to pass $query with all parameters already supplied. WHY?
-function getlistdata($query)
+function getlistdata($query, $array = [])
 {
-    return db_array(buildlistdataquery($query));
+    return db_array(buildlistdataquery($query), $array);
 }
 
 function gettreedata($query)

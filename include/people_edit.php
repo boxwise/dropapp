@@ -132,7 +132,25 @@ if ($_POST) {
             $savekeys[] = 'laundryblock';
             $savekeys[] = 'laundrycomment';
         }
+        if ($_SESSION['camp']['additional_field1_enabled']) {
+            $savekeys[] = 'customfield1_value';
+        }
+        if ($_SESSION['camp']['additional_field2_enabled']) {
+            $savekeys[] = 'customfield2_value';
+        }
+        if ($_SESSION['camp']['additional_field3_enabled']) {
+            $savekeys[] = 'customfield3_value';
+        }
+        if ($_SESSION['camp']['additional_field4_enabled']) {
+            $savekeys[] = 'customfield4_value';
+        }
         $id = $handler->savePost($savekeys, ['parent_id']);
+
+        // Validate if E-mail address is correct
+        if (!empty($_POST['email']) && !checkEmail($_POST['email'])) {
+            redirect('?action=people_edit&id='.$id.'&origin='.$_POST['_origin'].'&warning=1&message=This beneficiary email is not valid');
+            trigger_error('This beneficiary email is not valid', E_USER_NOTICE);
+        }
 
         // edit tags
         $now = (new DateTime())->format('Y-m-d H:i:s');
@@ -174,7 +192,7 @@ if ($_POST) {
         $handler->saveMultiple('languages', 'x_people_languages', 'people_id', 'language_id');
 
         $postid = ($_POST['id'] ?: $id);
-        if (is_uploaded_file($_FILES['picture']['tmp_name'])) {
+        if (isset($_FILES['picture']) && !empty($_FILES['picture']['tmp_name']) && is_uploaded_file($_FILES['picture']['tmp_name'])) {
             if ('image/jpeg' == $_FILES['picture']['type']) {
                 $targetFile = $settings['upload_dir'].'/people/'.$postid.'.jpg';
                 $res = move_uploaded_file($_FILES['picture']['tmp_name'], $targetFile);
@@ -348,6 +366,26 @@ addfield('select', 'Tag(s)', 'tags', ['testid' => 'tag_id', 'tab' => 'people', '
 addfield('select', 'Language(s)', 'languages', ['testid' => 'language_id', 'tab' => 'people', 'multiple' => true, 'query' => 'SELECT a.id AS value, a.name AS label, IF(x.people_id IS NOT NULL, 1,0) AS selected FROM languages AS a LEFT OUTER JOIN x_people_languages AS x ON a.id = x.language_id AND x.people_id = '.intval($id).' WHERE a.visible']);
 addfield('textarea', 'Comments', 'comments', ['testid' => 'comments_id', 'tab' => 'people']);
 addfield('line', '', '', ['tab' => 'people']);
+
+// custom fields
+if ($_SESSION['camp']['email_enabled']) {
+    addfield('email', 'Email address', 'email', ['tab' => 'people']);
+}
+if ($_SESSION['camp']['phone_enabled']) {
+    addfield('text', 'Phone number', 'phone', ['tab' => 'people']);
+}
+if ($_SESSION['camp']['additional_field1_enabled']) {
+    addfield('text', $_SESSION['camp']['additional_field1_label'], 'customfield1_value', ['tab' => 'people']);
+}
+if ($_SESSION['camp']['additional_field2_enabled']) {
+    addfield('text', $_SESSION['camp']['additional_field2_label'], 'customfield2_value', ['tab' => 'people']);
+}
+if ($_SESSION['camp']['additional_field3_enabled']) {
+    addfield('number', $_SESSION['camp']['additional_field3_label'], 'customfield3_value', ['tab' => 'people', 'size' => 2]);
+}
+if ($_SESSION['camp']['additional_field4_enabled']) {
+    addfield('date', $_SESSION['camp']['additional_field4_label'], 'customfield4_value', ['tab' => 'people', 'time' => false, 'date' => true]);
+}
 if ($_SESSION['camp']['beneficiaryisregistered']) {
     addfield('checkbox', 'This person is not officially registered.', 'notregistered', ['testid' => 'registered_id', 'tab' => 'people']);
 }
@@ -441,9 +479,9 @@ if (0 == $data['parent_id']) {
                 'redirect' => true,
                 'allowsort' => false,
                 'modal' => false,
-                'button' => (count($datalastpurchases) == $limitlastpurchases ?
-                    ['showallpurchases&people_id='.$id => ['label' => 'Show all', 'showalways' => true]] :
-                    []),
+                'button' => (count($datalastpurchases) == $limitlastpurchases
+                    ? ['showallpurchases&people_id='.$id => ['label' => 'Show all', 'showalways' => true]]
+                    : []),
             ]
         );
         addfield('ajaxend', '', '', ['tab' => 'transaction']);
@@ -483,9 +521,9 @@ if (0 == $data['parent_id']) {
                 'action' => 'people_edit',
                 'redirect' => true,
                 'modal' => false,
-                'button' => (count($datalasttransactions) == $limitlasttransactions ?
-                    ['showalltransactions&people_id='.$id => ['label' => 'Show all', 'showalways' => true]] :
-                    []),
+                'button' => (count($datalasttransactions) == $limitlasttransactions
+                    ? ['showalltransactions&people_id='.$id => ['label' => 'Show all', 'showalways' => true]]
+                    : []),
             ]
         );
         addfield('ajaxend', '', '', ['tab' => 'transaction']);
@@ -500,6 +538,45 @@ if (0 == $data['parent_id']) {
                 'allowedit' => false, 'allowadd' => false, 'allowsort' => false, 'allowselect' => false, 'allowselectall' => false, 'redirect' => false, 'modal' => false, ]);
         }
     }
+}
+
+$datausedservices = [];
+if ($id) {
+    $datausedservices = db_array('
+        SELECT 
+            s.label,
+            sr.created as used_on,
+            u.naam as registered_by
+        FROM 
+            services_relations sr
+        LEFT JOIN
+            services s ON sr.service_id = s.id
+        LEFT JOIN
+            cms_users u ON sr.created_by = u.id
+        WHERE sr.people_id = :id AND s.camp_id = :camp_id
+        ORDER BY sr.created DESC', ['camp_id' => $_SESSION['camp']['id'], 'id' => $id]);
+
+    addfield(
+        'list',
+        'Used Services',
+        'services',
+        [
+            'tab' => 'services',
+            'width' => 10,
+            'data' => $datausedservices,
+            'columns' => ['label' => 'Service', 'used_on' => 'Used On', 'registered_by' => 'Registered By'],
+            'allowedit' => false,
+            'allowadd' => true,
+            'add' => 'Register Usage',
+            'addaction' => 'use_service',
+            'allowselect' => false,
+            'allowselectall' => false,
+            'action' => 'people_edit',
+            'redirect' => true,
+            'allowsort' => true,
+            'modal' => false,
+        ]
+    );
 }
 
 if ($id) {
@@ -525,6 +602,9 @@ if (($_SESSION['usergroup']['allow_laundry_block'] || $_SESSION['user']['is_admi
 }
 if (!$data['parent_id'] && $data['id']) {
     $tabs['transaction'] = 'Transactions';
+}
+if (authorize('register_service_usage', 4)) {
+    $tabs['services'] = 'Used Services';
 }
 $tabs['signature'] = 'Privacy declaration';
 if (isset($_GET['active'], $tabs[$_GET['active']])) {
