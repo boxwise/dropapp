@@ -375,7 +375,7 @@ $menusToActions = [
     ],
     [
         'id' => 168,
-        'module' => 'Sevices',
+        'module' => 'Services',
         'menu' => 'Use Service (<span>beta</span>)',
         'action' => 'use_service',
         'adminonly' => '0',
