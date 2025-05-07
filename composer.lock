@@ -2034,16 +2034,16 @@
         },
         {
             "name": "kriswallsmith/buzz",
-            "version": "1.2.1",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/Buzz.git",
-                "reference": "2db23c3627ae7a86240ef2e68c6f8bb2c622e90d"
+                "reference": "94c65f64b24d90ab9ca2ca82f40368fa0a1d61dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/2db23c3627ae7a86240ef2e68c6f8bb2c622e90d",
-                "reference": "2db23c3627ae7a86240ef2e68c6f8bb2c622e90d",
+                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/94c65f64b24d90ab9ca2ca82f40368fa0a1d61dd",
+                "reference": "94c65f64b24d90ab9ca2ca82f40368fa0a1d61dd",
                 "shasum": ""
             },
             "require": {
@@ -2051,8 +2051,8 @@
                 "php-http/httplug": "^1.1 || ^2.0",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.0",
-                "symfony/options-resolver": "^3.4 || ^4.0 || ^5.0 || ^6.0"
+                "psr/http-message": "^1.1 || ^2.0",
+                "symfony/options-resolver": "^3.4 || ^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
             "provide": {
                 "php-http/client-implementation": "1.0",
@@ -2098,9 +2098,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kriswallsmith/Buzz/issues",
-                "source": "https://github.com/kriswallsmith/Buzz/tree/1.2.1"
+                "source": "https://github.com/kriswallsmith/Buzz/tree/1.3.0"
             },
-            "time": "2022-03-25T13:55:55+00:00"
+            "time": "2024-09-23T13:16:34+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -3013,16 +3013,16 @@
         },
         {
             "name": "php-http/httplug",
-            "version": "2.4.0",
+            "version": "2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/httplug.git",
-                "reference": "625ad742c360c8ac580fcc647a1541d29e257f67"
+                "reference": "5cad731844891a4c282f3f3e1b582c46839d22f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/httplug/zipball/625ad742c360c8ac580fcc647a1541d29e257f67",
-                "reference": "625ad742c360c8ac580fcc647a1541d29e257f67",
+                "url": "https://api.github.com/repos/php-http/httplug/zipball/5cad731844891a4c282f3f3e1b582c46839d22f4",
+                "reference": "5cad731844891a4c282f3f3e1b582c46839d22f4",
                 "shasum": ""
             },
             "require": {
@@ -3064,9 +3064,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-http/httplug/issues",
-                "source": "https://github.com/php-http/httplug/tree/2.4.0"
+                "source": "https://github.com/php-http/httplug/tree/2.4.1"
             },
-            "time": "2023-04-14T15:10:03+00:00"
+            "time": "2024-09-23T11:39:58+00:00"
         },
         {
             "name": "php-http/message",
@@ -4096,16 +4096,16 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.1",
+            "version": "2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
+                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
-                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/402d35bcb92c70c026d1a6a9883f06b2ead23d71",
+                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71",
                 "shasum": ""
             },
             "require": {
@@ -4114,7 +4114,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -4129,7 +4129,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for HTTP messages",
@@ -4143,9 +4143,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/1.1"
+                "source": "https://github.com/php-fig/http-message/tree/2.0"
             },
-            "time": "2023-04-04T09:50:52+00:00"
+            "time": "2023-04-04T09:54:51+00:00"
         },
         {
             "name": "psr/log",
@@ -5163,16 +5163,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.4.0",
+            "version": "v3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf"
+                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/7c3aff79d10325257a001fcf92d991f24fc967cf",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
+                "reference": "74c71c939a79f7d5bf3c1ce9f5ea37ba0114c6f6",
                 "shasum": ""
             },
             "require": {
@@ -5180,12 +5180,12 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-main": "3.4-dev"
-                },
                 "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
+                    "url": "https://github.com/symfony/contracts",
+                    "name": "symfony/contracts"
+                },
+                "branch-alias": {
+                    "dev-main": "3.5-dev"
                 }
             },
             "autoload": {
@@ -5210,7 +5210,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.4.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.5.1"
             },
             "funding": [
                 {
@@ -5226,7 +5226,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-23T14:45:45+00:00"
+            "time": "2024-09-25T14:20:29+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -5293,20 +5293,20 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v6.4.0",
+            "version": "v7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/options-resolver.git",
-                "reference": "22301f0e7fdeaacc14318928612dee79be99860e"
+                "reference": "7da8fbac9dcfef75ffc212235d76b2754ce0cf50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/22301f0e7fdeaacc14318928612dee79be99860e",
-                "reference": "22301f0e7fdeaacc14318928612dee79be99860e",
+                "url": "https://api.github.com/repos/symfony/options-resolver/zipball/7da8fbac9dcfef75ffc212235d76b2754ce0cf50",
+                "reference": "7da8fbac9dcfef75ffc212235d76b2754ce0cf50",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.1",
+                "php": ">=8.2",
                 "symfony/deprecation-contracts": "^2.5|^3"
             },
             "type": "library",
@@ -5340,7 +5340,7 @@
                 "options"
             ],
             "support": {
-                "source": "https://github.com/symfony/options-resolver/tree/v6.4.0"
+                "source": "https://github.com/symfony/options-resolver/tree/v7.2.0"
             },
             "funding": [
                 {
@@ -5356,7 +5356,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-08-08T10:16:24+00:00"
+            "time": "2024-11-20T11:17:29+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -7410,26 +7410,26 @@
         },
         {
             "name": "symfony/polyfill-php73",
-            "version": "v1.29.0",
+            "version": "v1.31.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php73.git",
-                "reference": "21bd091060673a1177ae842c0ef8fe30893114d2"
+                "reference": "0f68c03565dcaaf25a890667542e8bd75fe7e5bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/21bd091060673a1177ae842c0ef8fe30893114d2",
-                "reference": "21bd091060673a1177ae842c0ef8fe30893114d2",
+                "url": "https://api.github.com/repos/symfony/polyfill-php73/zipball/0f68c03565dcaaf25a890667542e8bd75fe7e5bb",
+                "reference": "0f68c03565dcaaf25a890667542e8bd75fe7e5bb",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=7.2"
             },
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -7466,7 +7466,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php73/tree/v1.29.0"
+                "source": "https://github.com/symfony/polyfill-php73/tree/v1.31.0"
             },
             "funding": [
                 {
@@ -7482,7 +7482,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-29T20:11:03+00:00"
+            "time": "2024-09-09T11:45:10+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
