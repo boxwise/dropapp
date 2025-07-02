@@ -5,5 +5,5 @@ updates:
     schedule:
       interval: "weekly"
     assignees:
-      - "haguesto"
+      - "HaGuesto"
     open-pull-requests-limit: 10
