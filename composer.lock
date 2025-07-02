@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3460293222cae02a76703c727342fc4f",
+    "content-hash": "cc783f6ce6eff6067db4b00546651b64",
     "packages": [
         {
             "name": "auth0/auth0-php",
@@ -6897,20 +6897,20 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.66",
+            "version": "2.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "94779c987e4ebd620025d9e5fdd23323903950bd"
+                "reference": "89b5ef665716fa2a52ecd2633f21007a6a349053"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/94779c987e4ebd620025d9e5fdd23323903950bd",
-                "reference": "94779c987e4ebd620025d9e5fdd23323903950bd",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/89b5ef665716fa2a52ecd2633f21007a6a349053",
+                "reference": "89b5ef665716fa2a52ecd2633f21007a6a349053",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0"
+                "php": "^7.4|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -6949,31 +6949,27 @@
                 {
                     "url": "https://github.com/phpstan",
                     "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
-                    "type": "tidelift"
                 }
             ],
-            "time": "2024-03-28T16:17:31+00:00"
+            "time": "2025-05-21T20:55:28+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "1.0.4",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "6e04d0eb087aef707fa0c5686d33d6ff61f4a555"
+                "reference": "d513dea45a94394b660e15c155d1fa27826f8e30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/6e04d0eb087aef707fa0c5686d33d6ff61f4a555",
-                "reference": "6e04d0eb087aef707fa0c5686d33d6ff61f4a555",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/d513dea45a94394b660e15c155d1fa27826f8e30",
+                "reference": "d513dea45a94394b660e15c155d1fa27826f8e30",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0",
-                "phpstan/phpstan": "^1.10.57"
+                "php": "^7.4|^8.0",
+                "phpstan/phpstan": "^2.1.17"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -6998,6 +6994,7 @@
                 "MIT"
             ],
             "description": "Instant Upgrade and Automated Refactoring of any PHP code",
+            "homepage": "https://getrector.com/",
             "keywords": [
                 "automation",
                 "dev",
@@ -7006,7 +7003,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.0.4"
+                "source": "https://github.com/rectorphp/rector/tree/2.1.0"
             },
             "funding": [
                 {
@@ -7014,7 +7011,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-04-05T09:01:07+00:00"
+            "time": "2025-06-24T20:26:57+00:00"
         },
         {
             "name": "riimu/kit-phpencoder",
