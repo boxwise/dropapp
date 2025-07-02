@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "auth0/auth0-php",
-            "version": "8.13.0",
+            "version": "8.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auth0/auth0-PHP.git",
-                "reference": "3acf0f4d847f355eada5ac3f3336b175238c8ef1"
+                "reference": "7f4414045fc7dc257baf8451a9cda2aacb7ed03b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/3acf0f4d847f355eada5ac3f3336b175238c8ef1",
-                "reference": "3acf0f4d847f355eada5ac3f3336b175238c8ef1",
+                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/7f4414045fc7dc257baf8451a9cda2aacb7ed03b",
+                "reference": "7f4414045fc7dc257baf8451a9cda2aacb7ed03b",
                 "shasum": ""
             },
             "require": {
@@ -101,9 +101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/auth0/auth0-PHP/issues",
-                "source": "https://github.com/auth0/auth0-PHP/tree/8.13.0"
+                "source": "https://github.com/auth0/auth0-PHP/tree/8.15.0"
             },
-            "time": "2024-11-15T11:08:53+00:00"
+            "time": "2025-05-30T09:50:59+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
