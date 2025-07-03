@@ -58,11 +58,29 @@ $(document).ready(function() {
         }
     }
 
+    // Show cart restored notification
+    function showCartRestoredNotification(itemCount) {
+        var itemText = itemCount === 1 ? 'item' : 'items';
+        
+        if (typeof noty === 'function') {
+            noty({
+                text: "Welcome back! Your shopping cart has been restored with " + itemCount + " " + itemText + ".",
+                type: "information",
+                closeWith: ['click'],
+                timeout: 4000
+            });
+        }
+    }
+
     var shoppingCart = (function() {
         // =============================
         // Private methods and properties
         // =============================
         var cart = [];
+        // Notification and session management
+        var notificationShown = false;
+        var initialCartExisted = false;
+        var isNewSession = isNewBrowserSession();
         
         // Constructor
         function Item(id, name, nameWithoutPrice, count, price) {
@@ -146,9 +164,10 @@ $(document).ready(function() {
             }
         }
 
-        // Initialize cart on module load if we have people_id
+        // Initialize cart on module load and track initial state
         if (getCurrentPeopleId()) {
-            loadCart();
+            var initialLoad = loadCart();
+            initialCartExisted = initialLoad.hasData && !initialLoad.isExpired;
         }
 
         // =============================
@@ -259,14 +278,44 @@ $(document).ready(function() {
 
         // Expose loadCart for external use
         obj.loadCart = loadCart;
+        
+        // Notification and session management methods
+        obj.isNotificationShown = function() {
+            return notificationShown;
+        };
+        
+        obj.setNotificationShown = function(value) {
+            notificationShown = value;
+        };
+        
+        obj.resetNotificationFlag = function() {
+            notificationShown = false;
+        };
+        
+        obj.hadInitialCart = function() {
+            return initialCartExisted;
+        };
+        
+        obj.isNewSession = function() {
+            return isNewSession;
+        };
       
         return obj;
     })();
 
-    // Enhanced renderCart with load result checking
+    // Make shoppingCart globally accessible
+    window.shoppingCart = shoppingCart;
+
+    // Enhanced renderCart with notification logic
     function renderCart(){
         var loadResult = shoppingCart.loadCart();
         var peopleId = getCurrentPeopleId();
+        
+        // Wait for required elements to load
+        if ($("#shopping_cart").length === 0 && $("#shopping_cart_outer_div").length > 0) {
+            setTimeout(renderCart, 100);
+            return loadResult;
+        }
         
         // Show/hide cart based on items and people_id
         if (shoppingCart.totalCount() && peopleId) {
@@ -282,6 +331,18 @@ $(document).ready(function() {
         $("#shopping_cart").find("tr:gt(0)").remove();
         var cartItems = shoppingCart.listCart();
         
+        // Show notification for restored cart (only for new sessions)
+        if (!shoppingCart.isNotificationShown() && 
+            shoppingCart.isNewSession() && 
+            shoppingCart.hadInitialCart() && 
+            loadResult.hasData && 
+            !loadResult.isExpired && 
+            cartItems.length > 0) {
+            
+            showCartRestoredNotification(shoppingCart.totalCount());
+            shoppingCart.setNotificationShown(true);
+        }
+        
         // Show expiration message if cart was expired
         if (loadResult.isExpired && typeof noty === 'function') {
             noty({
@@ -294,6 +355,7 @@ $(document).ready(function() {
         
         cartItems.forEach((item) => {
           let tableRef = document.getElementById("shopping_cart");
+          if (!tableRef) return;
           
           let tr = jQuery('<tr/>')
             .appendTo(tableRef);
@@ -379,7 +441,7 @@ $(document).ready(function() {
 
     // Enhanced updatePriceInRow with cart loading
     function updatePriceInRow(){
-        shoppingCart.loadCart(); // NEW: Ensure cart is loaded
+        shoppingCart.loadCart();
         var cartItems = shoppingCart.listCart();
         cartItems.forEach((item) => {
             var totalPriceCell = $("#totalSum_" + item.id);
@@ -396,18 +458,21 @@ $(document).ready(function() {
         $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
     });
 
-    // Enhanced people_id change handler
+    // Enhanced people_id change handler with notification reset
     $("#field_people_id").on('change', function(e) {
         var people_id = $("#field_people_id").val();
         if (people_id === ""){
             $("[id=ajax-content]").hide();
         } else {
             $("[id=ajax-content]").show();
-            // Load cart for new person
-            shoppingCart.loadCart(people_id);
-            setTimeout(function() {
-                renderCart();
-            }, 100);
+            // Load cart for new person - only if not being called from selectFamily
+            if (!$("body").hasClass("loading")) {
+                shoppingCart.resetNotificationFlag(); // NEW: Reset notification flag
+                shoppingCart.loadCart(people_id);
+                setTimeout(function() {
+                    renderCart();
+                }, 100);
+            }
         }
     });
 
@@ -492,9 +557,27 @@ $(document).ready(function() {
         });
     });    
 
-    // Initialize people_id from URL on page load
+    // Enhanced initialization with notification support
     setTimeout(function() {
         initializePeopleIdFromUrl();
-        renderCart();
+        
+        var peopleId = getCurrentPeopleId();
+        
+        if (peopleId) {
+            // Only render cart if the required elements exist
+            if ($("#shopping_cart").length > 0 || $("#shopping_cart_outer_div").length > 0) {
+                renderCart();
+            } else {
+                // If elements don't exist yet, try again later
+                setTimeout(function() {
+                    renderCart();
+                }, 500);
+            }
+        } else {
+            renderCart();
+        }
     }, 100);
+
+    // Make renderCart globally accessible
+    window.renderCart = renderCart;
 });
