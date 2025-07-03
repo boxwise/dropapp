@@ -1,6 +1,6 @@
 $(document).ready(function() {
     // =============================
-    // NEW: Configuration constants
+    // Configuration constants
     // =============================
     const CART_EXPIRATION_HOURS = 2;
     const CART_EXPIRATION_MS = CART_EXPIRATION_HOURS * 60 * 60 * 1000;
@@ -8,7 +8,7 @@ $(document).ready(function() {
     const SHOPPING_CART_PREFIX = 'shopping_cart_';
 
     // =============================
-    // NEW: Helper functions
+    // Helper functions
     // =============================
     
     // Helper function to get people_id from URL
@@ -73,19 +73,83 @@ $(document).ready(function() {
           this.count = count;
         }
         
-        // Save cart
+        // Enhanced save cart with localStorage and timestamp
         function saveCart() {
-            sessionStorage.setItem('shoppingCart', JSON.stringify(cart));
+            var peopleId = getCurrentPeopleId();
+            if (!peopleId) return;
+            
+            try {
+                if (typeof(Storage) !== "undefined" && window.localStorage) {
+                    var cartData = {
+                        cart: cart,
+                        timestamp: new Date().getTime()
+                    };
+                    localStorage.setItem(SHOPPING_CART_PREFIX + peopleId, JSON.stringify(cartData));
+                }
+            } catch (e) {
+                console.warn('Could not save cart to localStorage:', e);
+            }
         }
         
-        // Load cart
-        function loadCart() {
-          cart = JSON.parse(sessionStorage.getItem('shoppingCart'));
+        // Enhanced load cart with expiration check
+        function loadCart(pid) {
+            var peopleId = pid || getCurrentPeopleId();
+            if (!peopleId) return { hasData: false, isExpired: false };
+            
+            try {
+                if (typeof(Storage) === "undefined" || !window.localStorage) {
+                    cart = [];
+                    return { hasData: false, isExpired: false };
+                }
+
+                var storedData = localStorage.getItem(SHOPPING_CART_PREFIX + peopleId);
+                
+                if (!storedData) {
+                    cart = [];
+                    return { hasData: false, isExpired: false };
+                }
+
+                var parsedData = JSON.parse(storedData);
+                
+                // Check if data includes timestamp
+                if (parsedData.timestamp && parsedData.cart) {
+                    var now = new Date().getTime();
+                    var isExpired = (now - parsedData.timestamp) > CART_EXPIRATION_MS;
+                    
+                    if (isExpired) {
+                        localStorage.removeItem(SHOPPING_CART_PREFIX + peopleId);
+                        cart = [];
+                        return { hasData: true, isExpired: true };
+                    }
+                    
+                    cart = parsedData.cart || [];
+                    return { hasData: cart.length > 0, isExpired: false };
+                } else {
+                    // Handle legacy format
+                    if (Array.isArray(parsedData)) {
+                        cart = parsedData;
+                        return { hasData: cart.length > 0, isExpired: true };
+                    } else {
+                        cart = [];
+                        return { hasData: true, isExpired: true };
+                    }
+                }
+            } catch (error) {
+                console.warn('Error loading cart:', error);
+                try {
+                    localStorage.removeItem(SHOPPING_CART_PREFIX + peopleId);
+                } catch (e) {
+                    console.warn('Could not clear corrupted cart data:', e);
+                }
+                cart = [];
+                return { hasData: false, isExpired: false };
+            }
         }
-        if (sessionStorage.getItem("shoppingCart") != null) {
-          loadCart();
+
+        // Initialize cart on module load if we have people_id
+        if (getCurrentPeopleId()) {
+            loadCart();
         }
-        
 
         // =============================
         // Public methods and properties
@@ -192,19 +256,41 @@ $(document).ready(function() {
           }
           return cartCopy;
         }
+
+        // Expose loadCart for external use
+        obj.loadCart = loadCart;
       
         return obj;
     })();
 
+    // Enhanced renderCart with load result checking
     function renderCart(){
-        if (shoppingCart.totalCount()) {
+        var loadResult = shoppingCart.loadCart();
+        var peopleId = getCurrentPeopleId();
+        
+        // Show/hide cart based on items and people_id
+        if (shoppingCart.totalCount() && peopleId) {
             $('#shopping_cart_outer_div').removeClass('hidden');
+            $("[id=ajax-content]").show();
         } else {
             $('#shopping_cart_outer_div').addClass('hidden');
+            if (!peopleId) {
+                $("[id=ajax-content]").hide();
+            }
         }
 
         $("#shopping_cart").find("tr:gt(0)").remove();
         var cartItems = shoppingCart.listCart();
+        
+        // Show expiration message if cart was expired
+        if (loadResult.isExpired && typeof noty === 'function') {
+            noty({
+                text: "Your cart has expired and been cleared.",
+                type: "warning",
+                closeWith: ['click'],
+                timeout: 3000
+            });
+        }
         
         cartItems.forEach((item) => {
           let tableRef = document.getElementById("shopping_cart");
@@ -253,14 +339,25 @@ $(document).ready(function() {
           }).appendTo(deleteCellButton);
         });
         updateCartRelatedElements();
+        
+        return loadResult;
     }
 
+    // Enhanced updateCartRelatedElements with better safety checks
     function updateCartRelatedElements(){
         var dropcredit = $("#dropcredit").data("dropCredit") || 0;
 
-        // Calculate cart value and remaining credit
-        $("#cartvalue_aside")[0].innerText = shoppingCart.totalCart();
-        $("#creditvalue_aside")[0].innerText = dropcredit - shoppingCart.totalCart();
+        // Calculate cart value and remaining credit with safety checks
+        var cartValueElement = $("#cartvalue_aside");
+        if (cartValueElement.length > 0) {
+            cartValueElement.text(shoppingCart.totalCart());
+        }
+        
+        var creditValueElement = $("#creditvalue_aside");
+        if (creditValueElement.length > 0) {
+            creditValueElement.text(dropcredit - shoppingCart.totalCart());
+        }
+
         if (shoppingCart.totalCart()) {
             $('#cart_value').removeClass('hidden');
         } else {
@@ -280,13 +377,14 @@ $(document).ready(function() {
         $('#submitShoppingCart').prop("disabled", isCartEmpty || !enough_tokens);
     }
 
+    // Enhanced updatePriceInRow with cart loading
     function updatePriceInRow(){
+        shoppingCart.loadCart(); // NEW: Ensure cart is loaded
         var cartItems = shoppingCart.listCart();
         cartItems.forEach((item) => {
-            var id = "totalSum_" + item.id;
-            var totalPriceCell = $("#"+id)[0];
-            if (totalPriceCell) {
-                totalPriceCell.innerText = item.price * item.count;
+            var totalPriceCell = $("#totalSum_" + item.id);
+            if (totalPriceCell.length > 0) {
+                totalPriceCell.text(item.price * item.count);
             }
         });
         updateCartRelatedElements();
@@ -294,16 +392,22 @@ $(document).ready(function() {
 
     $("#field_product_id").on('change', function(e) {
         var product_id = $("#field_product_id").val();
-        var people_id = getCurrentPeopleId(); // UPDATED: Use helper function
+        var people_id = getCurrentPeopleId();
         $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
     });
 
+    // Enhanced people_id change handler
     $("#field_people_id").on('change', function(e) {
         var people_id = $("#field_people_id").val();
         if (people_id === ""){
             $("[id=ajax-content]").hide();
         } else {
             $("[id=ajax-content]").show();
+            // Load cart for new person
+            shoppingCart.loadCart(people_id);
+            setTimeout(function() {
+                renderCart();
+            }, 100);
         }
     });
 
