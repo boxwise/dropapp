@@ -77,21 +77,20 @@ $(document).ready(function() {
         // Private methods and properties
         // =============================
         var cart = [];
-        // Notification and session management
         var notificationShown = false;
         var initialCartExisted = false;
         var isNewSession = isNewBrowserSession();
         
         // Constructor
         function Item(id, name, nameWithoutPrice, count, price) {
-          this.id = id;
-          this.name = name;
-          this.nameWithoutPrice = nameWithoutPrice;
-          this.price = price;
-          this.count = count;
+            this.id = id;
+            this.name = name;
+            this.nameWithoutPrice = nameWithoutPrice;
+            this.price = price;
+            this.count = count;
         }
         
-        // Enhanced save cart with localStorage and timestamp
+        // Save cart with timestamp to localStorage
         function saveCart() {
             var peopleId = getCurrentPeopleId();
             if (!peopleId) return;
@@ -109,7 +108,7 @@ $(document).ready(function() {
             }
         }
         
-        // Enhanced load cart with expiration check
+        // Load cart with expiration check and better error handling
         function loadCart(pid) {
             var peopleId = pid || getCurrentPeopleId();
             if (!peopleId) return { hasData: false, isExpired: false };
@@ -164,7 +163,7 @@ $(document).ready(function() {
             }
         }
 
-        // Initialize cart on module load and track initial state
+        // Initialize cart on module load if we have people_id
         if (getCurrentPeopleId()) {
             var initialLoad = loadCart();
             initialCartExisted = initialLoad.hasData && !initialLoad.isExpired;
@@ -177,109 +176,114 @@ $(document).ready(function() {
         
         // Add to cart
         obj.addItemToCart = function(id, name, price, count) {
-          loadCart();
-          for(var i = 0; i < cart.length; i++) {
-            if(cart[i].id === id) {
-                cart[i].count = parseInt(cart[i].count) + parseInt(count);
-                saveCart();
-                return;
-            }
-          }
-          var nameWithoutPrice = name.substr(0, name.indexOf('('));
-          var item = new Item(id, name, nameWithoutPrice, parseInt(count), parseInt(price));
-          cart.push(item);
-          saveCart();
-        }
-        
-        // Set count from item
-        obj.setCountForItem = function(name, count) {
-          for(var i = 0; i < cart.length; i++) {
-            if (cart[i].name === name) {
-              cart[i].count = count;
-              break;
-            }
-          }
-          saveCart();
-        };
-        
-        // Remove item from cart
-        obj.removeItemFromCart = function(id) {
-            for(var i = 0; i < cart.length; i++) {
-              if(cart[i].id === id) {
-                cart[i].count --;
-                if(cart[i].count === 0) {
-                  cart.splice(i, 1);
+            loadCart();
+            
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i].id === id) {
+                    cart[i].count = parseInt(cart[i].count) + parseInt(count);
+                    saveCart();
+                    return;
                 }
-                break;
-              }
-          }
-          saveCart();
-        }
-      
-        // Remove all items from cart
-        obj.removeItemFromCartAll = function(id) {
-          for(var i = 0; i < cart.length; i++) {
-            if(cart[i].id === id) {
-              cart.splice(i, 1);
-              break;
             }
-          }
-          saveCart();
-        }
+            
+            var nameWithoutPrice = name.indexOf('(') !== -1 ? name.substring(0, name.indexOf('(')) : name;
+            var item = new Item(id, name, nameWithoutPrice, parseInt(count), parseInt(price));
+            cart.push(item);
+            saveCart();
+        };
 
-        // Update quantity of one product in cart
-        obj.updateItemQuantityInCart = function(id, newQuantity) {
-            for(var i = 0; i < cart.length; i++) {
-                if(cart[i].id === id) {
-                    cart[i].count = newQuantity;
+        // Set count for item
+        obj.setCountForItem = function(name, count) {
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i].name === name) {
+                    cart[i].count = count;
+                    break;
                 }
             }
             saveCart();
-          }
+        };
+
+        // Remove item from cart (decrease count by 1)
+        obj.removeItemFromCart = function(id) {
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i].id === id) {
+                    cart[i].count--;
+                    if (cart[i].count === 0) {
+                        cart.splice(i, 1);
+                    }
+                    break;
+                }
+            }
+            saveCart();
+        };
+      
+        // Remove all items from cart
+        obj.removeItemFromCartAll = function(id) {
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i].id === id) {
+                    cart.splice(i, 1);
+                    break;
+                }
+            }
+            saveCart();
+        };
+
+        // Update quantity of one product in cart
+        obj.updateItemQuantityInCart = function(id, newQuantity) {
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i].id === id) {
+                    cart[i].count = parseInt(newQuantity);
+                    break;
+                }
+            }
+            saveCart();
+        };
       
         // Clear cart
         obj.clearCart = function() {
-          cart = [];
-          saveCart();
-        }
+            cart = [];
+            saveCart();
+        };
       
-        // Count cart 
+        // Count total items in cart
         obj.totalCount = function() {
-          var totalCount = 0;
-          for(var i = 0; i < cart.length; i++) {
-            totalCount += cart[i].count;
-          }
-          return totalCount;
-        }
-      
-        // Total cart
-        obj.totalCart = function() {
-          var totalCart = 0;
-          for(var i = 0; i < cart.length; i++) {
-            totalCart += cart[i].price * cart[i].count;
-          }
-          return Number(totalCart.toFixed(2));
-        }
-      
-        // List cart
-        obj.listCart = function() {
-          var cartCopy = [];
-          for(var i = 0; i < cart.length; i++) {
-            var item = cart[i];
-            var itemCopy = {};
-            for(var p in item) {
-              itemCopy[p] = item[p];
+            var totalCount = 0;
+            for (var i = 0; i < cart.length; i++) {
+                totalCount += cart[i].count;
             }
-            itemCopy.total = Number(item.price * item.count).toFixed(2);
-            cartCopy.push(itemCopy)
-          }
-          return cartCopy;
-        }
-
+            return totalCount;
+        };
+      
+        // Calculate total cart value
+        obj.totalCart = function() {
+            var totalCart = 0;
+            for (var i = 0; i < cart.length; i++) {
+                totalCart += cart[i].price * cart[i].count;
+            }
+            return Number(totalCart.toFixed(2));
+        };
+      
+        // List cart items with totals
+        obj.listCart = function() {
+            var cartCopy = [];
+            for (var i = 0; i < cart.length; i++) {
+                var item = cart[i];
+                var itemCopy = {};
+                for (var p in item) {
+                    if (item.hasOwnProperty(p)) {
+                        itemCopy[p] = item[p];
+                    }
+                }
+                itemCopy.total = Number(item.price * item.count).toFixed(2);
+                cartCopy.push(itemCopy);
+            }
+            return cartCopy;
+        };
+      
         // Expose loadCart for external use
         obj.loadCart = loadCart;
         
-        // Notification and session management methods
+        // Notification and session management
         obj.isNotificationShown = function() {
             return notificationShown;
         };
@@ -299,15 +303,15 @@ $(document).ready(function() {
         obj.isNewSession = function() {
             return isNewSession;
         };
-      
+
         return obj;
     })();
 
     // Make shoppingCart globally accessible
     window.shoppingCart = shoppingCart;
 
-    // Enhanced renderCart with notification logic
-    function renderCart(){
+    // Enhanced renderCart with comprehensive logic
+    function renderCart() {
         var loadResult = shoppingCart.loadCart();
         var peopleId = getCurrentPeopleId();
         
@@ -328,6 +332,7 @@ $(document).ready(function() {
             }
         }
 
+        // Clear existing cart rows
         $("#shopping_cart").find("tr:gt(0)").remove();
         var cartItems = shoppingCart.listCart();
         
@@ -353,63 +358,57 @@ $(document).ready(function() {
             });
         }
         
-        cartItems.forEach((item) => {
-          let tableRef = document.getElementById("shopping_cart");
-          if (!tableRef) return;
-          
-          let tr = jQuery('<tr/>')
-            .appendTo(tableRef);
+        // Render cart items
+        cartItems.forEach(function(item) {
+            var tableRef = document.getElementById("shopping_cart");
+            if (!tableRef) return;
+            
+            var tr = jQuery('<tr/>').appendTo(tableRef);
 
-          jQuery('<td />')
-            .text(item.name)
-            .appendTo(tr);
+            jQuery('<td/>').text(item.name).appendTo(tr);
 
-          let amountCell = jQuery('<td/>').appendTo(tr);
-          jQuery('<input/>', {
-            'type': 'number',
-            'class': 'form-control valid changeQuantity',
-            'data-testid': 'changeQuantity',
-            'step': '1',
-            'min': '1',
-            'productid': item.id,
-            'value': item.count,
-          }).appendTo(amountCell);
+            var amountCell = jQuery('<td/>').appendTo(tr);
+            jQuery('<input/>', {
+                'type': 'number',
+                'class': 'form-control valid changeQuantity',
+                'data-testid': 'changeQuantity',
+                'step': '1',
+                'min': '1',
+                'productid': item.id,
+                'value': item.count
+            }).appendTo(amountCell);
 
-          jQuery('<td />', {
-            'data-testid': 'price'
-          })
-            .text(item.price)
-            .appendTo(tr);
+            jQuery('<td/>', {
+                'data-testid': 'price'
+            }).text(item.price).appendTo(tr);
 
-          jQuery('<td />', {
-            'id': 'totalSum_' + item.id,
-            'data-testid': 'totalPrice'
-          })
-            .text(item.price * item.count)
-            .appendTo(tr);
+            jQuery('<td/>', {
+                'id': 'totalSum_' + item.id,
+                'data-testid': 'totalPrice'
+            }).text(item.price * item.count).appendTo(tr);
 
-          let deleteCell = jQuery('<td/>')
-            .appendTo(tr);
-          let deleteCellButton = jQuery('<button/>', {
-            'type': 'button',
-            'class': 'btn btn-sm deleteFromCart',
-            'data-testid': 'deleteFromCart',
-            'productid': item.id,
-          }).appendTo(deleteCell);
-          jQuery('<i/>', {
-            'class': 'fa fa-trash-o'
-          }).appendTo(deleteCellButton);
+            var deleteCell = jQuery('<td/>').appendTo(tr);
+            var deleteCellButton = jQuery('<button/>', {
+                'type': 'button',
+                'class': 'btn btn-sm deleteFromCart',
+                'data-testid': 'deleteFromCart',
+                'productid': item.id
+            }).appendTo(deleteCell);
+            
+            jQuery('<i/>', {
+                'class': 'fa fa-trash-o'
+            }).appendTo(deleteCellButton);
         });
-        updateCartRelatedElements();
         
+        updateCartRelatedElements();
         return loadResult;
     }
 
-    // Enhanced updateCartRelatedElements with better safety checks
-    function updateCartRelatedElements(){
+    // Enhanced updateCartRelatedElements with comprehensive safety checks
+    function updateCartRelatedElements() {
         var dropcredit = $("#dropcredit").data("dropCredit") || 0;
 
-        // Calculate cart value and remaining credit with safety checks
+        // Update cart value and remaining credit with safety checks
         var cartValueElement = $("#cartvalue_aside");
         if (cartValueElement.length > 0) {
             cartValueElement.text(shoppingCart.totalCart());
@@ -419,7 +418,8 @@ $(document).ready(function() {
         if (creditValueElement.length > 0) {
             creditValueElement.text(dropcredit - shoppingCart.totalCart());
         }
-
+        
+        // Show/hide cart value
         if (shoppingCart.totalCart()) {
             $('#cart_value').removeClass('hidden');
         } else {
@@ -434,16 +434,15 @@ $(document).ready(function() {
             $(".aside-form").addClass("not_enough_coins");
         }
 
-        //not the same as totalCart worth zero! some items can be free of charge
-        var isCartEmpty = shoppingCart.totalCount() == 0;
+        // Enable/disable submit button
+        var isCartEmpty = shoppingCart.totalCount() === 0;
         $('#submitShoppingCart').prop("disabled", isCartEmpty || !enough_tokens);
     }
 
-    // Enhanced updatePriceInRow with cart loading
-    function updatePriceInRow(){
+    // Enhanced updatePriceInRow
+    function updatePriceInRow() {
         shoppingCart.loadCart();
-        var cartItems = shoppingCart.listCart();
-        cartItems.forEach((item) => {
+        shoppingCart.listCart().forEach(function(item) {
             var totalPriceCell = $("#totalSum_" + item.id);
             if (totalPriceCell.length > 0) {
                 totalPriceCell.text(item.price * item.count);
@@ -452,22 +451,22 @@ $(document).ready(function() {
         updateCartRelatedElements();
     }
 
+    // Event Handlers
     $("#field_product_id").on('change', function(e) {
         var product_id = $("#field_product_id").val();
         var people_id = getCurrentPeopleId();
         $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
     });
 
-    // Enhanced people_id change handler with notification reset
     $("#field_people_id").on('change', function(e) {
         var people_id = $("#field_people_id").val();
-        if (people_id === ""){
+        if (people_id === "") {
             $("[id=ajax-content]").hide();
         } else {
             $("[id=ajax-content]").show();
             // Load cart for new person - only if not being called from selectFamily
             if (!$("body").hasClass("loading")) {
-                shoppingCart.resetNotificationFlag(); // NEW: Reset notification flag
+                shoppingCart.resetNotificationFlag();
                 shoppingCart.loadCart(people_id);
                 setTimeout(function() {
                     renderCart();
@@ -476,48 +475,56 @@ $(document).ready(function() {
         }
     });
 
+    // Enhanced add to cart with better validation
     $("#add-to-cart-button").click(function(e) {
         e.preventDefault();
 
         var count = $(this).closest("form").find("input[name='count']").val();
         var productId = $("#field_product_id").val();
-        var productName = $("#select2-chosen-2")[0].innerText;
-        var price = parseInt($("#field_product_id").children(":selected").data("price"));
-        shoppingCart.addItemToCart(productId, productName, parseInt(price), parseInt(count));
+        var productName = $("#select2-chosen-2").length > 0 ? $("#select2-chosen-2")[0].innerText : '';
+        var price = parseInt($("#field_product_id").children(":selected").data("price")) || 0;
+        
+        shoppingCart.addItemToCart(productId, productName, price, parseInt(count));
         renderCart();
 
-        //reset form
+        // Reset form
         $('#field_product_id').val(null).trigger('change');
         $("#field_count").val(1);
     });
 
-    $(document).on("click",'.deleteFromCart', function(e){
+    $(document).on("click", '.deleteFromCart', function(e) {
         var productId = e.target.getAttribute('productId');
         if (!productId) {
-            // event triggered by the trash icon rather than button itself
-            var productId = e.target.parentElement.getAttribute('productId');
+            // Event triggered by the trash icon rather than button itself
+            productId = e.target.parentElement.getAttribute('productId');
         }
         shoppingCart.removeItemFromCartAll(productId);
         renderCart();
     });
 
-    $(document).on("change",'.changeQuantity', function(e){
+    // Enhanced quantity change with validation
+    $(document).on("change", '.changeQuantity', function(e) {
         e.preventDefault();
-        var productId = event.target.getAttribute('productId');
-        var newQuantity = event.target.value;
-        shoppingCart.updateItemQuantityInCart(productId, newQuantity);
-        updatePriceInRow();
+        var productId = e.target.getAttribute('productId');
+        var newQuantity = e.target.value;
+        if (newQuantity > 0) {
+            shoppingCart.updateItemQuantityInCart(productId, newQuantity);
+            updatePriceInRow();
+        }
     });
 
-    $(document).on("keydown keyup keypress",'.changeQuantity', function(e){
-        if (e.which == 13) e.preventDefault();
+    $(document).on("keydown keyup keypress", '.changeQuantity', function(e) {
+        if (e.which === 13) e.preventDefault();
     });
 
-    $(document).on("click",'#submitShoppingCart', function(e){
+    // Enhanced checkout with better error handling
+    $(document).on("click", '#submitShoppingCart', function(e) {
         e.preventDefault();
         $("#submitShoppingCart").prop("disabled", true);
+        
         var cart = shoppingCart.listCart();
         var people_id = getCurrentPeopleId();
+        
         $.ajax({
             type: "post",
             url: "ajax.php?file=check_out",
@@ -528,8 +535,8 @@ $(document).ready(function() {
             dataType: "json",
             success: function(result) {
                 if (result.success) {
-                  shoppingCart.clearCart();
-                  renderCart();
+                    shoppingCart.clearCart();
+                    renderCart();
                     if (result.message) {
                         noty({
                             text: result.message,
@@ -538,26 +545,28 @@ $(document).ready(function() {
                             timeout: 5000,
                             callback: {
                                 afterClose: function() {
-                                    execReload(result.redirect);
+                                    if (typeof execReload === 'function') {
+                                        execReload(result.redirect);
+                                    }
                                 }
                             }
                         });
-                    }          
+                    }
                 } else {
-                  $("#submitShoppingCart").prop("disabled", false);
+                    $("#submitShoppingCart").prop("disabled", false);
                 }
             },
             error: function(result) {
                 $("#submitShoppingCart").prop("disabled", false);
-                var n = noty({
+                noty({
                     text: "We cannot connect to the Boxtribute server.<br> Do you have internet?",
                     type: "error"
                 });
             }
         });
-    });    
+    });
 
-    // Enhanced initialization with notification support
+    // Final initialization
     setTimeout(function() {
         initializePeopleIdFromUrl();
         
