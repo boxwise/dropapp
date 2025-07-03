@@ -1,4 +1,63 @@
 $(document).ready(function() {
+    // =============================
+    // NEW: Configuration constants
+    // =============================
+    const CART_EXPIRATION_HOURS = 2;
+    const CART_EXPIRATION_MS = CART_EXPIRATION_HOURS * 60 * 60 * 1000;
+    const SESSION_KEY = 'shopping_cart_session_active';
+    const SHOPPING_CART_PREFIX = 'shopping_cart_';
+
+    // =============================
+    // NEW: Helper functions
+    // =============================
+    
+    // Helper function to get people_id from URL
+    function getPeopleIdFromUrl() {
+        var search = window.location.search;
+        if (!search) return null;
+        
+        var params = {};
+        var pairs = search.substring(1).split('&');
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i].split('=');
+            if (pair.length === 2) {
+                params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            }
+        }
+        return params.people_id || null;
+    }
+
+    // Get current people_id from either dropdown field or URL
+    function getCurrentPeopleId() {
+        return $("#field_people_id").val() || getPeopleIdFromUrl();
+    }
+
+    // Check if this is a new browser session (new tab)
+    function isNewBrowserSession() {
+        try {
+            if (typeof(Storage) !== "undefined" && window.sessionStorage) {
+                var sessionActive = sessionStorage.getItem(SESSION_KEY);
+                if (!sessionActive) {
+                    sessionStorage.setItem(SESSION_KEY, 'true');
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        } catch (e) {
+            console.warn('Session storage not available:', e);
+            return false;
+        }
+    }
+
+    // Initialize people_id from URL if present
+    function initializePeopleIdFromUrl() {
+        var peopleId = getPeopleIdFromUrl();
+        if (peopleId && $("#field_people_id").length) {
+            $("#field_people_id").val(peopleId);
+        }
+    }
+
     var shoppingCart = (function() {
         // =============================
         // Private methods and properties
@@ -51,7 +110,7 @@ $(document).ready(function() {
         
         // Set count from item
         obj.setCountForItem = function(name, count) {
-          for(var i = 0; i < cart.length; i++) { // FIXED: Use proper array iteration
+          for(var i = 0; i < cart.length; i++) {
             if (cart[i].name === name) {
               cart[i].count = count;
               break;
@@ -235,12 +294,12 @@ $(document).ready(function() {
 
     $("#field_product_id").on('change', function(e) {
         var product_id = $("#field_product_id").val();
-        var people_id =  $("#field_people_id").val();
+        var people_id = getCurrentPeopleId(); // UPDATED: Use helper function
         $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
     });
 
     $("#field_people_id").on('change', function(e) {
-        var people_id =  $("#field_people_id").val();
+        var people_id = $("#field_people_id").val();
         if (people_id === ""){
             $("[id=ajax-content]").hide();
         } else {
@@ -289,7 +348,7 @@ $(document).ready(function() {
         e.preventDefault();
         $("#submitShoppingCart").prop("disabled", true);
         var cart = shoppingCart.listCart();
-        var people_id = $("#field_people_id").val();
+        var people_id = getCurrentPeopleId();
         $.ajax({
             type: "post",
             url: "ajax.php?file=check_out",
@@ -328,4 +387,10 @@ $(document).ready(function() {
             }
         });
     });    
+
+    // Initialize people_id from URL on page load
+    setTimeout(function() {
+        initializePeopleIdFromUrl();
+        renderCart();
+    }, 100);
 });
