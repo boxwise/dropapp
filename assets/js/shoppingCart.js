@@ -1,9 +1,9 @@
 $(document).ready(function() {
     var shoppingCart = (function() {
         // =============================
-        // Private methods and propeties
+        // Private methods and properties
         // =============================
-        cart = [];
+        var cart = [];
         
         // Constructor
         function Item(id, name, nameWithoutPrice, count, price) {
@@ -19,7 +19,7 @@ $(document).ready(function() {
             sessionStorage.setItem('shoppingCart', JSON.stringify(cart));
         }
         
-          // Load cart
+        // Load cart
         function loadCart() {
           cart = JSON.parse(sessionStorage.getItem('shoppingCart'));
         }
@@ -29,41 +29,44 @@ $(document).ready(function() {
         
 
         // =============================
-        // Public methods and propeties
+        // Public methods and properties
         // =============================
         var obj = {};
         
         // Add to cart
         obj.addItemToCart = function(id, name, price, count) {
           loadCart();
-          for(var item in cart) {
-            if(cart[item].id === id) {
-                cart[item].count = parseInt(cart[item].count) + parseInt(count);
+          for(var i = 0; i < cart.length; i++) {
+            if(cart[i].id === id) {
+                cart[i].count = parseInt(cart[i].count) + parseInt(count);
                 saveCart();
                 return;
             }
           }
-          var nameWithoutPrice= name.substr(0, name.indexOf('('));
+          var nameWithoutPrice = name.substr(0, name.indexOf('('));
           var item = new Item(id, name, nameWithoutPrice, parseInt(count), parseInt(price));
           cart.push(item);
-          saveCart();nameWithoutPrice
+          saveCart();
         }
+        
         // Set count from item
         obj.setCountForItem = function(name, count) {
-          for(var i in cart) {
+          for(var i = 0; i < cart.length; i++) { // FIXED: Use proper array iteration
             if (cart[i].name === name) {
               cart[i].count = count;
               break;
             }
           }
+          saveCart();
         };
+        
         // Remove item from cart
         obj.removeItemFromCart = function(id) {
-            for(var item in cart) {
-              if(cart[item].id === id) {
-                cart[item].count --;
-                if(cart[item].count === 0) {
-                  cart.splice(item, 1);
+            for(var i = 0; i < cart.length; i++) {
+              if(cart[i].id === id) {
+                cart[i].count --;
+                if(cart[i].count === 0) {
+                  cart.splice(i, 1);
                 }
                 break;
               }
@@ -73,9 +76,9 @@ $(document).ready(function() {
       
         // Remove all items from cart
         obj.removeItemFromCartAll = function(id) {
-          for(var item in cart) {
-            if(cart[item].id === id) {
-              cart.splice(item, 1);
+          for(var i = 0; i < cart.length; i++) {
+            if(cart[i].id === id) {
+              cart.splice(i, 1);
               break;
             }
           }
@@ -84,9 +87,9 @@ $(document).ready(function() {
 
         // Update quantity of one product in cart
         obj.updateItemQuantityInCart = function(id, newQuantity) {
-            for(var item in cart) {
-                if(cart[item].id === id) {
-                    cart[item].count = newQuantity;
+            for(var i = 0; i < cart.length; i++) {
+                if(cart[i].id === id) {
+                    cart[i].count = newQuantity;
                 }
             }
             saveCart();
@@ -101,8 +104,8 @@ $(document).ready(function() {
         // Count cart 
         obj.totalCount = function() {
           var totalCount = 0;
-          for(var item in cart) {
-            totalCount += cart[item].count;
+          for(var i = 0; i < cart.length; i++) {
+            totalCount += cart[i].count;
           }
           return totalCount;
         }
@@ -110,8 +113,8 @@ $(document).ready(function() {
         // Total cart
         obj.totalCart = function() {
           var totalCart = 0;
-          for(var item in cart) {
-            totalCart += cart[item].price * cart[item].count;
+          for(var i = 0; i < cart.length; i++) {
+            totalCart += cart[i].price * cart[i].count;
           }
           return Number(totalCart.toFixed(2));
         }
@@ -119,12 +122,11 @@ $(document).ready(function() {
         // List cart
         obj.listCart = function() {
           var cartCopy = [];
-          for(i in cart) {
-            item = cart[i];
-            itemCopy = {};
-            for(p in item) {
+          for(var i = 0; i < cart.length; i++) {
+            var item = cart[i];
+            var itemCopy = {};
+            for(var p in item) {
               itemCopy[p] = item[p];
-      
             }
             itemCopy.total = Number(item.price * item.count).toFixed(2);
             cartCopy.push(itemCopy)
@@ -132,17 +134,6 @@ $(document).ready(function() {
           return cartCopy;
         }
       
-        // cart : Array
-        // Item : Object/Class
-        // addItemToCart : Function
-        // removeItemFromCart : Function
-        // removeItemFromCartAll : Function
-        // clearCart : Function
-        // countCart : Function
-        // totalCart : Function
-        // listCart : Function
-        // saveCart : Function
-        // loadCart : Function
         return obj;
     })();
 
@@ -154,7 +145,9 @@ $(document).ready(function() {
         }
 
         $("#shopping_cart").find("tr:gt(0)").remove();
-        cart.forEach((item) => {
+        var cartItems = shoppingCart.listCart();
+        
+        cartItems.forEach((item) => {
           let tableRef = document.getElementById("shopping_cart");
           
           let tr = jQuery('<tr/>')
@@ -204,7 +197,7 @@ $(document).ready(function() {
     }
 
     function updateCartRelatedElements(){
-        dropcredit = $("#dropcredit").data("dropCredit");
+        var dropcredit = $("#dropcredit").data("dropCredit") || 0;
 
         // Calculate cart value and remaining credit
         $("#cartvalue_aside")[0].innerText = shoppingCart.totalCart();
@@ -229,22 +222,25 @@ $(document).ready(function() {
     }
 
     function updatePriceInRow(){
-        cart.forEach((item) => {
+        var cartItems = shoppingCart.listCart();
+        cartItems.forEach((item) => {
             var id = "totalSum_" + item.id;
             var totalPriceCell = $("#"+id)[0];
-            totalPriceCell.innerText = item.price * item.count;
+            if (totalPriceCell) {
+                totalPriceCell.innerText = item.price * item.count;
+            }
         });
         updateCartRelatedElements();
     }
 
     $("#field_product_id").on('change', function(e) {
-        product_id = $("#field_product_id").val();
-        people_id =  $("#field_people_id").val();
+        var product_id = $("#field_product_id").val();
+        var people_id =  $("#field_people_id").val();
         $("#add-to-cart-button").prop("disabled", !(people_id && product_id));
     });
 
     $("#field_people_id").on('change', function(e) {
-        people_id =  $("#field_people_id").val();
+        var people_id =  $("#field_people_id").val();
         if (people_id === ""){
             $("[id=ajax-content]").hide();
         } else {
