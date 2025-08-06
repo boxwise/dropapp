@@ -75,12 +75,6 @@ if (!$ajax) {
             [$success, $message, $redirect, $newvalue] = listSwitch($table, 'stockincontainer', $_POST['id']);
 
             break;
-
-        case 'export':
-            $success = true;
-            $redirect = '?action=products_export';
-
-            break;
     }
 
     $return = ['success' => $success, 'message' => $message, 'redirect' => $redirect, 'newvalue' => $newvalue];
