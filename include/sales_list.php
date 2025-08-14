@@ -111,6 +111,41 @@ if ($_POST) {
             addcolumn('text', 'Items', 'aantal');
             addcolumn('text', 'Drops', 'drops');
             $cmsmain->assign('listfooter', ['Total sales', $totalsales.' items', $totaldrops.' '.$_SESSION['camp']['currencyname']]);
+        } elseif ('people' == $type) {
+            // Get adult_age from camps table
+            $adult_age = db_value('SELECT adult_age FROM camps WHERE id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
+            
+            // Distribution of beneficiaries by gender and age group
+            $data = getlistdata('SELECT 
+					CASE 
+						WHEN p.date_of_birth IS NULL AND p.gender = "M" THEN "Male (No DoB)"
+						WHEN p.date_of_birth IS NULL AND p.gender = "F" THEN "Female (No DoB)"
+						WHEN p.date_of_birth IS NULL THEN "No Gender (No DoB)"
+						WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Male"
+						WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Female"
+						WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < '.$adult_age.' THEN "Boy"
+						WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < '.$adult_age.' THEN "Girl"
+						WHEN TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "No Gender"
+						ELSE "No Gender (Child)"
+					END AS gender_category,
+					COUNT(DISTINCT p.id) AS unique_recipients,
+					COUNT(t.id) AS total_transactions
+					FROM people AS p
+					INNER JOIN transactions AS t ON p.id = t.people_id
+					WHERE p.camp_id = '.$_SESSION['camp']['id'].' AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"
+					GROUP BY gender_category
+					ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "No Gender (Child)", "Male (No DoB)", "Female (No DoB)", "No Gender (No DoB)")');
+
+            addcolumn('text', 'Gender/Age Group', 'gender_category');
+            addcolumn('text', 'Unique Recipients', 'unique_recipients');
+            addcolumn('text', 'Total Transactions', 'total_transactions');
+            
+            // Add informational text about adult age
+            $cmsmain->assign('notification', 'Adults are beneficiaries of age '.$adult_age.' and older.');
+            
+            $total_recipients = array_sum(array_column($data, 'unique_recipients'));
+            $total_transactions_count = array_sum(array_column($data, 'total_transactions'));
+            $cmsmain->assign('listfooter', ['Total', $total_recipients.' recipients', $total_transactions_count.' transactions']);
         } else {
             // Distribution of sales by products
             $data = getlistdata('SELECT p.name, g.label AS gender, SUM(t.count) AS aantal 
@@ -163,6 +198,7 @@ if ($_POST) {
         ['value' => 'category', 'label' => 'By product category'],
         ['value' => 'gender', 'label' => 'By gender'],
         ['value' => 'byday', 'label' => 'Total sales by day'],
+        ['value' => 'people', 'label' => 'By People'],
         ['value' => 'export', 'label' => 'All sales (csv)'], ]]);
 
     // open the template
