@@ -363,7 +363,7 @@ $menusToActions = [
     [
         'id' => 165,
         'module' => 'Transfers',
-        'menu' => 'Manage Agreements',
+        'menu' => 'Manage Network',
         'action' => 'transfer_agreements',
         'adminonly' => '0',
         'visible' => '1',
