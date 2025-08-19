@@ -18,14 +18,14 @@ if ($_POST) {
 
         while (strtotime($date) <= strtotime($end)) {
             $sales = db_value(
-                'SELECT COUNT(t.id) 
-					FROM transactions AS t, people AS p 
+                'SELECT COUNT(t.id)
+					FROM transactions AS t, people AS p
 					WHERE t.people_id = p.id AND p.camp_id = :camp_id AND t.product_id > 0 AND DATE_FORMAT(t.transaction_date,"%Y-%m-%d") = :date',
                 ['date' => $date, 'camp_id' => $_SESSION['camp']['id']]
             );
 
             if ($sales) {
-                $test = db_simplearray('SELECT c.label AS gender, SUM(t.count) 
+                $test = db_simplearray('SELECT c.label AS gender, SUM(t.count)
 						AS aantal FROM (transactions AS t, people AS pp)
 						LEFT OUTER JOIN products AS p ON t.product_id = p.id
 						LEFT OUTER JOIN product_categories AS c ON c.id = p.category_id
@@ -53,13 +53,13 @@ if ($_POST) {
 
         // Total Sales and Drops added at each request at the bottom row
         $totalsales = db_value(
-            'SELECT SUM(t.count) AS aantal 
+            'SELECT SUM(t.count) AS aantal
 				FROM transactions AS t, people AS p
 				WHERE t.people_id = p.id AND p.camp_id = :camp_id AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"',
             ['camp_id' => $_SESSION['camp']['id']]
         );
         $totaldrops = -1 * db_value(
-            'SELECT SUM(t.drops) AS aantal 
+            'SELECT SUM(t.drops) AS aantal
 				FROM transactions AS t, people AS p
 				WHERE t.people_id = p.id AND p.camp_id = :camp_id AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"',
             ['camp_id' => $_SESSION['camp']['id']]
@@ -67,7 +67,7 @@ if ($_POST) {
 
         if ('gender' == $type) {
             // Distribution of sales by gender
-            $data = getlistdata('SELECT g.label AS gender, SUM(t.count) AS aantal 
+            $data = getlistdata('SELECT g.label AS gender, SUM(t.count) AS aantal
 					FROM (transactions AS t, people AS pp)
 					LEFT OUTER JOIN products AS p ON t.product_id = p.id
 					LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
@@ -114,10 +114,10 @@ if ($_POST) {
         } elseif ('people' == $type) {
             // Get adult_age from camps table
             $adult_age = db_value('SELECT adult_age FROM camps WHERE id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
-            
+
             // Distribution of beneficiaries by gender and age group
-            $data = getlistdata('SELECT 
-					CASE 
+            $data = getlistdata('SELECT
+					CASE
 						WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "M" THEN "Male (No DoB)"
 						WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "F" THEN "Female (No DoB)"
 						WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) THEN "No Gender (No DoB)"
@@ -139,16 +139,16 @@ if ($_POST) {
             addcolumn('text', 'Gender/Age Group', 'gender_category');
             addcolumn('text', 'Unique Recipients', 'unique_recipients');
             addcolumn('text', 'Total Transactions', 'total_transactions');
-            
+
             // Add informational text about adult age
             $cmsmain->assign('notification', 'Adults are beneficiaries of age '.$adult_age.' and older.');
-            
+
             $total_recipients = array_sum(array_column($data, 'unique_recipients'));
             $total_transactions_count = array_sum(array_column($data, 'total_transactions'));
             $cmsmain->assign('listfooter', ['Total', $total_recipients.' recipients', $total_transactions_count.' transactions']);
         } else {
             // Distribution of sales by products
-            $data = getlistdata('SELECT p.name, g.label AS gender, SUM(t.count) AS aantal 
+            $data = getlistdata('SELECT p.name, g.label AS gender, SUM(t.count) AS aantal
 					FROM (transactions AS t, people AS pp)
 					LEFT OUTER JOIN products AS p ON t.product_id = p.id
 					LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
