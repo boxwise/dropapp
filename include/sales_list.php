@@ -118,9 +118,9 @@ if ($_POST) {
             // Distribution of beneficiaries by gender and age group
             $data = getlistdata('SELECT 
 					CASE 
-						WHEN p.date_of_birth IS NULL AND p.gender = "M" THEN "Male (No DoB)"
-						WHEN p.date_of_birth IS NULL AND p.gender = "F" THEN "Female (No DoB)"
-						WHEN p.date_of_birth IS NULL THEN "No Gender (No DoB)"
+						WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "M" THEN "Male (No DoB)"
+						WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "F" THEN "Female (No DoB)"
+						WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) THEN "No Gender (No DoB)"
 						WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Male"
 						WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Female"
 						WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < '.$adult_age.' THEN "Boy"
