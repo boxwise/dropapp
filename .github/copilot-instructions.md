@@ -15,6 +15,7 @@ Dropapp is a PHP web application for managing donated goods distribution to refu
    - Production dependencies install reliably
    - For development dependencies: `composer install` (may require GitHub token)
    - If prompted for GitHub token, either provide one or use `--no-interaction` flag
+   - If you get vendor directory errors, run: `rm -rf vendor/ && composer install`
 
 2. **Install development dependencies (for linting):**
    ```bash
@@ -142,6 +143,10 @@ php build.php
 ### Composer GitHub Authentication
 - If prompted for GitHub token, provide one or use `--no-interaction` flag
 - Production dependencies usually install without token
+
+### Composer State Issues
+- If you get "uncommitted changes" errors, run: `rm -rf vendor/ && composer install`
+- This clears any problematic vendor directory state
 
 ### Docker Build Failures
 - Xdebug installation often fails in Docker environment
