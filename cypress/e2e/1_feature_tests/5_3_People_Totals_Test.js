@@ -11,8 +11,8 @@ context("People_Totals_Test", () => {
             // Look for a row that contains "Total" in the first cell
             cy.get('tr').contains('Total').should('exist');
             
-            // Check that the total row also contains "beneficiaries"
-            cy.get('tr').contains('Total').should('contain', 'beneficiaries');
+            // Check that the table contains "beneficiaries" (in the same row but different cell)
+            cy.get('tr').contains('Total').parent().should('contain', 'beneficiaries');
         });
         
         // The totals should be displayed in both header and footer
@@ -34,7 +34,8 @@ context("People_Totals_Test", () => {
         });
 
         // Apply a filter (use the search functionality)
-        cy.get('input[type="search"]').type('test_filter_that_should_reduce_results');
+        cy.get('input[data-testid="box-search"]').clear().type('test_filter_that_should_reduce_results');
+        cy.get('button[data-testid="search-button"]').click();
         
         // Check that the total has changed (should be less or equal)
         cy.get('tr').contains('Total').invoke('text').then((text) => {
