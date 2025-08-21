@@ -128,8 +128,9 @@ if ($_POST) {
 						WHEN TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "No Gender"
 						ELSE "No Gender (Child)"
 					END AS gender_category,
-					COUNT(DISTINCT p.id) AS unique_recipients,
-					COUNT(t.id) AS total_transactions
+					COUNT(DISTINCT p.id) AS total_families,
+					SUM(t.count) AS total_items,
+					COUNT(DISTINCT t.transaction_date) AS total_visits
 					FROM people AS p
 					INNER JOIN transactions AS t ON p.id = t.people_id
 					WHERE p.camp_id = '.$_SESSION['camp']['id'].' AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"
@@ -137,15 +138,16 @@ if ($_POST) {
 					ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "No Gender (Child)", "Male (No DoB)", "Female (No DoB)", "No Gender (No DoB)")');
 
             addcolumn('text', 'Gender/Age Group', 'gender_category');
-            addcolumn('text', 'Unique Recipients', 'unique_recipients');
-            addcolumn('text', 'Total Transactions', 'total_transactions');
+            addcolumn('text', 'Total families served', 'total_families');
+            addcolumn('text', 'Total items checked out', 'total_items');
+            addcolumn('text', 'Total number of visits', 'total_visits');
 
             // Add informational text about adult age
             $cmsmain->assign('notification', 'Adults are beneficiaries of age '.$adult_age.' and older.');
 
-            $total_recipients = array_sum(array_column($data, 'unique_recipients'));
-            $total_transactions_count = array_sum(array_column($data, 'total_transactions'));
-            $cmsmain->assign('listfooter', ['Total', $total_recipients.' recipients', $total_transactions_count.' transactions']);
+            $total_families = array_sum(array_column($data, 'total_families'));
+            $total_items = array_sum(array_column($data, 'total_items'));
+            $cmsmain->assign('listfooter', ['Total', $total_families.' recipients', $total_items.' transactions']);
         } else {
             // Distribution of sales by products
             $data = getlistdata('SELECT p.name, g.label AS gender, SUM(t.count) AS aantal
