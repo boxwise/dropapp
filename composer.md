@@ -4,7 +4,7 @@
 
 ### ✅ **Currently Used Packages**
 
-#### **robmorgan/phinx** - `^0.12`
+#### **robmorgan/phinx** - `^0.14`
 
 - **Status**: ✅ **ACTIVELY USED**
 - **Purpose**: Database migration tool
@@ -23,7 +23,7 @@
   - Compiled templates in `templates/templates_c/` directory
   - Referenced in build process
 
-#### **sendgrid/sendgrid** - `^7.3`
+#### **sendgrid/sendgrid** - `^8.1`
 
 - **Status**: ✅ **PARTIALLY USED**
 - **Purpose**: Email sending service
@@ -45,21 +45,21 @@
   - Configuration in `library/config.php`
   - Multiple Auth0-related settings and functions
 
-#### **google/cloud-storage** - `^1.12`
+#### **google/cloud-storage** - `^1.48`
 
 - **Status**: ✅ **ACTIVELY USED**
 - **Purpose**: Google Cloud Storage integration
 - **Usage**: File storage and management
 - **Evidence**: Used in `library/gcloud.php` with `StorageClient`
 
-#### **google/cloud-logging** - `^1.18`
+#### **google/cloud-logging** - `^1.31`
 
 - **Status**: ✅ **ACTIVELY USED**
 - **Purpose**: Google Cloud Logging integration
 - **Usage**: Application logging in Google Cloud environment
 - **Evidence**: Integrated in Google Cloud services setup in `library/gcloud.php`
 
-#### **google/cloud-error-reporting** - `^0.19.5`
+#### **google/cloud-error-reporting** - `^0.22`
 
 - **Status**: ✅ **ACTIVELY USED**
 - **Purpose**: Google Cloud Error Reporting
@@ -68,7 +68,7 @@
   - Loaded in `library/gcloud.php`
   - Prepend file included for automatic error reporting
 
-#### **google/cloud-datastore** - `^1.18`
+#### **google/cloud-datastore** - `^1.32`
 
 - **Status**: ✅ **ACTIVELY USED**
 - **Purpose**: Google Cloud Datastore (NoSQL database)
@@ -103,7 +103,7 @@
   - Multiple QR code classes imported and used
   - QR code generation function for mobile app integration
 
-#### **sentry/sentry** - `^4.3`
+#### **sentry/sentry** - `^4.15`
 
 - **Status**: ✅ **ACTIVELY USED**
 - **Purpose**: Error tracking and monitoring
@@ -128,38 +128,6 @@
 - **Evidence**: Used in `library/lib/auth0.php` as `Psr17Factory`
 
 ### ❓ **Unclear/Potentially Unused Packages**
-
-#### **symfony/yaml** - `^5.0`
-
-- **Status**: ❓ **NO DIRECT USAGE FOUND**
-- **Purpose**: YAML parsing library
-- **Usage**: Likely used by Phinx for `phinx.yml` configuration
-- **Evidence**: No direct imports found, but `phinx.yml` exists
-- **Recommendation**: Probably safe to keep as Phinx dependency
-
-#### **steampixel/simple-php-router** - `^0.7.0`
-
-- **Status**: ❓ **NO USAGE FOUND**
-- **Purpose**: Simple PHP routing library
-- **Usage**: No evidence of usage found
-- **Evidence**: No imports or usage patterns found
-- **Recommendation**: Consider removing if not used
-
-#### **guzzlehttp/guzzle** - `^7.3`
-
-- **Status**: ❓ **NO DIRECT USAGE FOUND**
-- **Purpose**: HTTP client library
-- **Usage**: Possibly used internally by other packages
-- **Evidence**: No direct usage found in codebase
-- **Recommendation**: May be a dependency of other packages
-
-#### **php-http/curl-client** - `^2.2`
-
-- **Status**: ❓ **NO USAGE FOUND**
-- **Purpose**: PSR-18 HTTP client using cURL
-- **Usage**: No evidence of usage found
-- **Evidence**: No imports found
-- **Recommendation**: Consider removing
 
 #### **open-telemetry/exporter-otlp** - `^1.0`
 
@@ -204,47 +172,3 @@
 - **Usage**: Code modernization and refactoring
 - **Evidence**: Configuration file `rector.php` exists with rules configured
 - **Note**: Configured but usage in CI not confirmed
-
-### ❓ **Unclear/Potentially Unused Dev Packages**
-
-#### **odan/phinx-migrations-generator** - `^5.4.0`
-
-- **Status**: ❓ **NO ACTIVE USAGE FOUND**
-- **Purpose**: Generate Phinx migrations from database changes
-- **Usage**: Development tool for creating migrations
-- **Evidence**: No usage patterns found in CI or scripts
-- **Recommendation**: Keep if used for development workflow
-
-## Summary
-
-### Packages to Keep (15 + 3 dev)
-
-- **Production**: 15 packages actively used
-- **Development**: 3 packages actively used in CI/CD
-
-### Packages to Investigate (6 + 2 dev)
-
-- **Production**: 6 packages with no clear usage pattern
-- **Development**: 2 packages not integrated in CI
-
-### Recommendations
-
-1. **High Priority Review**:
-
-   - `steampixel/simple-php-router` - No usage found
-   - `php-http/curl-client` - No usage found
-   - OpenTelemetry packages - May be intended for OpenCensus migration
-
-2. **Medium Priority Review**:
-
-   - `guzzlehttp/guzzle` - May be transitive dependency
-   - `symfony/yaml` - Likely used by Phinx
-
-3. **Development Tools**:
-
-   - Consider integrating Phan into CI pipeline
-   - Verify Rector usage in development workflow
-
-4. **OpenTelemetry Migration**:
-   - Investigate if OpenTelemetry packages are for migrating from OpenCensus
-   - OpenCensus is deprecated, migration to OpenTelemetry recommended
