@@ -17,7 +17,6 @@
         "opencensus/opencensus": "^0.7.0",
         "kriswallsmith/buzz": "^1.2",
         "nyholm/psr7": "^1.4",
-        "guzzlehttp/guzzle": "^7.3",
         "endroid/qr-code": "^4.4",
         "sentry/sentry": "^4.3",
         "google/cloud-error-reporting": "^0.19.5",
