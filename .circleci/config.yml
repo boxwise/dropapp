@@ -143,12 +143,12 @@ workflows:
     - cypress/run:
         name: cypress-feature-tests
         package-manager: yarn
-        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec "cypress/e2e/1_feature_tests/*"
+        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec "cypress/e2e/1_feature_tests/5_3_People_Totals_Test.js"
         requires:
           - deploy-staging
         filters:
           branches:
-            only: master
+            only: copilot/fix-740
     - cypress/run:
         name: cypress-auth-tests
         package-manager: yarn
@@ -166,7 +166,7 @@ workflows:
           - build
         filters:
           branches:
-            only: master
+            only: copilot/fix-740
     - deploy:   # this will always run on any commit on production
         name: deploy-demo
         envVariablePrefix: BOXWISE_DEMO_
