@@ -19,7 +19,7 @@ jobs:
       # load composer cache
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "composer.lock" }}
+            - composer-v1-{{ checksum "composer.lock" }}
       - run: composer install -n
       # run linting (before we generate templates)
       - run: vendor/bin/parallel-lint --exclude vendor .
