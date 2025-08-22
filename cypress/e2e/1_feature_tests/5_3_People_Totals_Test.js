@@ -12,7 +12,7 @@ context("People_Totals_Test", () => {
             cy.get('tr').contains('Total').should('exist');
             
             // Check that the table contains "beneficiaries" (in the same row but different cell)
-            cy.get('tr').contains('Total').parent().should('contain', 'beneficiaries');
+            cy.get('tr').contains('Total').parent().parent().contains('beneficiaries').should('exist');
         });
         
         // The totals should be displayed in both header and footer
