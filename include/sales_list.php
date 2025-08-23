@@ -116,28 +116,25 @@ if ($_POST) {
             $adult_age = db_value('SELECT adult_age FROM camps WHERE id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
 
             // Distribution of beneficiaries by gender and age group
-            $data = getlistdata('WITH beneficiaries AS (
-	SELECT p.id, p.parent_id
-	FROM people p
-	WHERE camp_id = 11
-),
-served_beneficiaries AS (
+            $data = getlistdata('WITH served_beneficiaries AS (
 	SELECT
 		p.id,
 		SUM(t.count) as total_items,
 		COUNT(DISTINCT t.transaction_date) as total_visits
-	FROM beneficiaries p
+	FROM people p
 	INNER JOIN transactions t
 	ON t.people_id = p.id
 	WHERE t.product_id > 0
 	AND t.transaction_date <= "2024-12-31 23:59"
+	AND camp_id = 11
 	GROUP BY p.id
 ),
 -- select * from served_beneficiaries;
 family_members AS (
 	SELECT parent_id, COUNT(DISTINCT p.id) as cnt
-	FROM beneficiaries p
+	FROM people p
 	WHERE parent_id IS NOT NULL
+	AND camp_id = 11
 	GROUP BY parent_id
 )
 -- SELECT * from family_members where cnt > 1;
@@ -153,7 +150,7 @@ CASE
 	WHEN TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= 15 THEN "No Gender"
 	ELSE "No Gender (Child)"
 END AS gender_category,
-COUNT(p.id) AS total_families,
+COUNT(DISTINCT IFNULL(fm.parent_id, p.id)) AS total_families,
 SUM(IFNULL(fm.cnt+1, 1)) AS unique_recipients,
 SUM(sb.total_items) AS total_items,
 SUM(sb.total_visits) AS total_visits
