@@ -116,24 +116,49 @@ if ($_POST) {
             $adult_age = db_value('SELECT adult_age FROM camps WHERE id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
 
             // Distribution of beneficiaries by gender and age group
-            $data = getlistdata('SELECT
-					CASE
-						WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "M" THEN "Male (No DoB)"
-						WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "F" THEN "Female (No DoB)"
-						WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) THEN "No Gender (No DoB)"
-						WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Male"
-						WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Female"
-						WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < '.$adult_age.' THEN "Boy"
-						WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < '.$adult_age.' THEN "Girl"
-						WHEN TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "No Gender"
-						ELSE "No Gender (Child)"
-					END AS gender_category,
-					COUNT(DISTINCT p.id) AS total_families,
-					SUM(t.count) AS total_items,
-					COUNT(DISTINCT t.transaction_date) AS total_visits
-					FROM people AS p
-					INNER JOIN transactions AS t ON p.id = t.people_id
-					WHERE p.camp_id = '.$_SESSION['camp']['id'].' AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"
+            $data = getlistdata('WITH served_beneficiaries AS (
+	SELECT
+		p.id,
+		SUM(t.count) as total_items,
+		COUNT(DISTINCT t.transaction_date) as total_visits
+	FROM people p
+	INNER JOIN transactions t
+	ON t.people_id = p.id
+	WHERE t.product_id > 0
+	AND t.transaction_date <= "2024-12-31 23:59"
+	AND camp_id = 11
+	GROUP BY p.id
+),
+-- select * from served_beneficiaries;
+family_members AS (
+	SELECT parent_id, COUNT(DISTINCT p.id) as cnt
+	FROM people p
+	WHERE parent_id IS NOT NULL
+	AND camp_id = 11
+	GROUP BY parent_id
+)
+-- SELECT * from family_members where cnt > 1;
+SELECT
+CASE
+	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "M" THEN "Male (No DoB)"
+	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "F" THEN "Female (No DoB)"
+	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) THEN "No Gender (No DoB)"
+	WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= 15 THEN "Male"
+	WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= 15 THEN "Female"
+	WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < 15 THEN "Boy"
+	WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < 15 THEN "Girl"
+	WHEN TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= 15 THEN "No Gender"
+	ELSE "No Gender (Child)"
+END AS gender_category,
+COUNT(DISTINCT IFNULL(fm.parent_id, p.id)) AS total_families,
+SUM(IFNULL(fm.cnt+1, 1)) AS unique_recipients,
+SUM(sb.total_items) AS total_items,
+SUM(sb.total_visits) AS total_visits
+FROM served_beneficiaries sb
+INNER JOIN people AS p
+ON p.id = sb.id
+LEFT JOIN family_members fm
+ON fm.parent_id = p.id
 					GROUP BY gender_category
 					ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "No Gender (Child)", "Male (No DoB)", "Female (No DoB)", "No Gender (No DoB)")');
 
