@@ -336,6 +336,46 @@ Tracer::inSpan(
                 }
             );
 
+            // Calculate totals for display
+            $totalpeople = count($data);
+
+            // Create totals row - need to count the number of columns to match them with empty strings
+            $totalColumnsCount = 8; // Base columns: surname, firstname, gender, age, container, tokens, comments, icons
+            if (!empty($tags)) {
+                ++$totalColumnsCount; // Add tags column if tags exist
+            }
+            if ($is_filtered) {
+                ++$totalColumnsCount; // Add last activity column if filtered
+            }
+            // Add custom field columns if enabled
+            if ($_SESSION['camp']['email_enabled']) {
+                ++$totalColumnsCount;
+            }
+            if ($_SESSION['camp']['phone_enabled']) {
+                ++$totalColumnsCount;
+            }
+            if ($_SESSION['camp']['additional_field1_enabled']) {
+                ++$totalColumnsCount;
+            }
+            if ($_SESSION['camp']['additional_field2_enabled']) {
+                ++$totalColumnsCount;
+            }
+            if ($_SESSION['camp']['additional_field3_enabled']) {
+                ++$totalColumnsCount;
+            }
+            if ($_SESSION['camp']['additional_field4_enabled']) {
+                ++$totalColumnsCount;
+            }
+
+            // Create the totals array with 'Total' and count, then fill remaining columns with empty strings
+            $totalsArray = ['Total', $totalpeople.' beneficiaries'];
+            for ($i = 2; $i < $totalColumnsCount; ++$i) {
+                $totalsArray[] = '';
+            }
+
+            $cmsmain->assign('firstline', $totalsArray);
+            $cmsmain->assign('listfooter', $totalsArray);
+
             Tracer::inSpan(
                 ['name' => 'people.php:addtemplatedata'],
                 function () use ($cmsmain, $data) {
