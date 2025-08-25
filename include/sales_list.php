@@ -126,8 +126,9 @@ if ($_POST) {
 	INNER JOIN transactions t
 	ON t.people_id = p.id
 	WHERE t.product_id > 0
-	AND t.transaction_date <= "2024-12-31 23:59"
-	AND camp_id = 11
+	AND t.transaction_date >= "'.$start.' 00:00"
+	AND t.transaction_date <= "'.$end.' 23:59"
+	AND camp_id = '.$_SESSION['camp']['id'].'
 	GROUP BY p.id
 ),
 -- CTE to count number of family members per family head
@@ -135,7 +136,7 @@ family_members AS (
 	SELECT parent_id, COUNT(DISTINCT p.id) as cnt
 	FROM people p
 	WHERE parent_id IS NOT NULL
-	AND camp_id = 11
+	AND camp_id = '.$_SESSION['camp']['id'].'
 	GROUP BY parent_id
 )
 -- Main query
@@ -144,11 +145,11 @@ CASE
 	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "M" THEN "Male (No DoB)"
 	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "F" THEN "Female (No DoB)"
 	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) THEN "No Gender (No DoB)"
-	WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= 15 THEN "Male"
-	WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= 15 THEN "Female"
-	WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < 15 THEN "Boy"
-	WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < 15 THEN "Girl"
-	WHEN TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= 15 THEN "No Gender"
+	WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Male"
+	WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Female"
+	WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < '.$adult_age.' THEN "Boy"
+	WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < '.$adult_age.' THEN "Girl"
+	WHEN TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "No Gender"
 	ELSE "No Gender (Child)"
 END AS gender_category,
 -- If a family member made the transaction, assign it with the family head to obtain number of benefitting families
@@ -168,6 +169,7 @@ ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "N
 
             addcolumn('text', 'Gender/Age Group', 'gender_category');
             addcolumn('text', 'Total families served', 'total_families');
+            addcolumn('text', 'Unique people reached', 'unique_recipients');
             addcolumn('text', 'Total items checked out', 'total_items');
             addcolumn('text', 'Total number of visits', 'total_visits');
 
