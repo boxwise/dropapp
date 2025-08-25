@@ -117,6 +117,7 @@ if ($_POST) {
 
             // Distribution of beneficiaries by gender and age group
             $data = getlistdata('WITH served_beneficiaries AS (
+	-- CTE to obtain all beneficiaries involved in transactions in the specified camp and timeframe
 	SELECT
 		p.id,
 		SUM(t.count) as total_items,
@@ -129,7 +130,7 @@ if ($_POST) {
 	AND camp_id = 11
 	GROUP BY p.id
 ),
--- select * from served_beneficiaries;
+-- CTE to count number of family members per family head
 family_members AS (
 	SELECT parent_id, COUNT(DISTINCT p.id) as cnt
 	FROM people p
@@ -137,7 +138,7 @@ family_members AS (
 	AND camp_id = 11
 	GROUP BY parent_id
 )
--- SELECT * from family_members where cnt > 1;
+-- Main query
 SELECT
 CASE
 	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "M" THEN "Male (No DoB)"
@@ -150,7 +151,10 @@ CASE
 	WHEN TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= 15 THEN "No Gender"
 	ELSE "No Gender (Child)"
 END AS gender_category,
+-- If a family member made the transaction, assign it with the family head to obtain number of benefitting families
 COUNT(DISTINCT IFNULL(fm.parent_id, p.id)) AS total_families,
+-- If a family consists of the head only, count 1 (i.e. fm.cnt is NULL); otherwise take the number
+-- of family members plus 1 to account for the family head
 SUM(IFNULL(fm.cnt+1, 1)) AS unique_recipients,
 SUM(sb.total_items) AS total_items,
 SUM(sb.total_visits) AS total_visits
@@ -159,8 +163,8 @@ INNER JOIN people AS p
 ON p.id = sb.id
 LEFT JOIN family_members fm
 ON fm.parent_id = p.id
-					GROUP BY gender_category
-					ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "No Gender (Child)", "Male (No DoB)", "Female (No DoB)", "No Gender (No DoB)")');
+GROUP BY gender_category
+ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "No Gender (Child)", "Male (No DoB)", "Female (No DoB)", "No Gender (No DoB)")');
 
             addcolumn('text', 'Gender/Age Group', 'gender_category');
             addcolumn('text', 'Total families served', 'total_families');
