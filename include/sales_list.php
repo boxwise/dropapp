@@ -177,8 +177,10 @@ ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "N
             $cmsmain->assign('notification', 'Adults are beneficiaries of age '.$adult_age.' and older.');
 
             $total_families = array_sum(array_column($data, 'total_families'));
+            $total_recipients = array_sum(array_column($data, 'unique_recipients'));
             $total_items = array_sum(array_column($data, 'total_items'));
-            $cmsmain->assign('listfooter', ['Total', $total_families.' recipients', $total_items.' transactions']);
+            $total_visits = array_sum(array_column($data, 'total_visits'));
+            $cmsmain->assign('listfooter', ['Total', $total_families, $total_recipients, $total_items, $total_visits]);
         } else {
             // Distribution of sales by products
             $data = getlistdata('SELECT p.name, g.label AS gender, SUM(t.count) AS aantal
