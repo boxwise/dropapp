@@ -220,6 +220,16 @@
 				</table>
 			</div>
 
+			{if isset($list_info_text)}
+			<div class="row" style="margin-top: 15px;">
+				<div class="col-sm-12">
+					<div class="alert alert-info">
+						{$list_info_text nofilter}
+					</div>
+				</div>
+			</div>
+			{/if}
+
 			<fieldset></fieldset> <!-- all order changes made in zortable are saved here -->
 		</div>
 	</div>

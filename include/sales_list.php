@@ -115,6 +115,9 @@ if ($_POST) {
             // Get adult_age from camps table
             $adult_age = db_value('SELECT adult_age FROM camps WHERE id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
 
+            // Check if base has families (people with parent_id IS NOT NULL)
+            $baseHasFamilies = db_value('SELECT COUNT(id) FROM people WHERE camp_id = '.$_SESSION['camp']['id'].' AND parent_id IS NOT NULL') > 0;
+
             // Distribution of beneficiaries by gender and age group
             $data = getlistdata('WITH served_beneficiaries AS (
 	-- CTE to obtain all beneficiaries involved in transactions in the specified camp and timeframe
@@ -168,19 +171,31 @@ GROUP BY gender_category
 ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "No Gender (Child)", "Male (No DoB)", "Female (No DoB)", "No Gender (No DoB)")');
 
             addcolumn('text', 'Gender/Age Group', 'gender_category');
-            addcolumn('text', 'Total families served', 'total_families');
+            if ($baseHasFamilies) {
+                addcolumn('text', 'Total families served', 'total_families');
+            }
             addcolumn('text', 'Unique people reached', 'unique_recipients');
             addcolumn('text', 'Total items checked out', 'total_items');
             addcolumn('text', 'Total number of visits', 'total_visits');
 
-            // Add informational text about adult age
-            $cmsmain->assign('notification', 'Adults are beneficiaries of age '.$adult_age.' and older.');
+            // Create informational text about adult age
+            $info_text = 'Adults are beneficiaries of age '.$adult_age.' and older.';
+            $info_text .= ' You can adjust this value in "Base Settings" -> "Free Shop".';
+            if ($baseHasFamilies) {
+                $info_text .= "<br>\n".'The gender/maturity grouping in the first column refers to the family heads.';
+            }
+            $cmsmain->assign('list_info_text', $info_text);
 
             $total_families = array_sum(array_column($data, 'total_families'));
             $total_recipients = array_sum(array_column($data, 'unique_recipients'));
             $total_items = array_sum(array_column($data, 'total_items'));
             $total_visits = array_sum(array_column($data, 'total_visits'));
-            $cmsmain->assign('listfooter', ['Total', $total_families, $total_recipients, $total_items, $total_visits]);
+
+            if ($baseHasFamilies) {
+                $cmsmain->assign('listfooter', ['Total', $total_families, $total_recipients, $total_items, $total_visits]);
+            } else {
+                $cmsmain->assign('listfooter', ['Total', $total_recipients, $total_items, $total_visits]);
+            }
         } else {
             // Distribution of sales by products
             $data = getlistdata('SELECT p.name, g.label AS gender, SUM(t.count) AS aantal
