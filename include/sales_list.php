@@ -170,7 +170,7 @@ ON fm.parent_id = p.id
 GROUP BY gender_category
 ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "No Gender (Child)", "Male (No DoB)", "Female (No DoB)", "No Gender (No DoB)")');
 
-            addcolumn('text', 'Gender/Age Group', 'gender_category');
+            addcolumn('text', 'Gender/Maturity', 'gender_category');
             if ($baseHasFamilies) {
                 addcolumn('text', 'Total families served', 'total_families');
             }
@@ -179,11 +179,11 @@ ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "N
             addcolumn('text', 'Total number of visits', 'total_visits');
 
             // Create informational text about adult age
-            $info_text = 'Adults are beneficiaries of age '.$adult_age.' and older.';
-            $info_text .= ' You can adjust this value in "Base Settings" -> "Free Shop".';
+            $info_text = "'Male' and 'Female' refer to adults of age ".$adult_age.' and older. ';
             if ($baseHasFamilies) {
-                $info_text .= "<br>\n".'The gender/maturity grouping in the first column refers to the family heads.';
+                $info_text .= "All groupings listed in the 'Gender/Maturity' column refer to the gender and maturity of designated family heads. ";
             }
+            $info_text .= 'The age of adulthood is configured by the Head of Operations or the Base Coordinator under <i>Base Settings -> Free Shop</i>.';
             $cmsmain->assign('list_info_text', $info_text);
 
             $total_families = array_sum(array_column($data, 'total_families'));
