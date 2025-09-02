@@ -40,7 +40,7 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
 4.  To run the application, we assume you have Docker installed. You can then run:
 
-        docker-compose up
+       docker compose up
 
     Alternatively, you can run using the PHP development server
 
@@ -107,7 +107,7 @@ in the root manually.
 
 ### Debugging
 
-We have enabled XDebug remote debugging in the default Docker configuration, so you can step through your code. Please run `docker-compose up --build` next time you start up your server to update your docker image.
+We have enabled XDebug remote debugging in the default Docker configuration, so you can step through your code. Please run `docker compose up --build` next time you start up your server to update your docker image.
 
 If you're using VS Code, if you install the [PHP Debug](https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug) extension and start the 'Listen for XDebug' configuration, you can then set breakpoints in your code.
 
@@ -129,9 +129,9 @@ Enter the address in `docker-compose.yaml` here:
 
 #### Command-line access
 
-If you want to connect to the MySQL server from your host machine, you can do this using
+If you want to connect to the MySQL server from your host machine, first execute `docker compose up`, then
 
-    docker exec -it <name of the db docker container> mysql -u root -p
+    docker compose exec db_mysql mysql -u root -p -D dropapp_dev
 
 The mysql server in your docker container is also reachable on port 9906 of your localhost
 
@@ -156,6 +156,16 @@ To create an migration run
         vendor/bin/phinx create <NameOfMigrationInCamelCaseFormat>
 
 It creates an file in `db/migrations`. Please use this file to write your db migration.
+
+To rollback the migrations applied last run
+
+        vendor/bin/phinx migrate
+
+Again, these command can be executed in the Docker container, too. After running `docker compose up` execute
+
+        docker compose exec web bash
+
+to launch a shell inside the Docker container and run the phinx commands there. Note that you have to update `phinx.yml` to use host `db_mysql` and port `3306`.
 
 ### Cypress and testing
 
