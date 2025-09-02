@@ -183,7 +183,7 @@ ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "N
             if ($baseHasFamilies) {
                 $info_text .= "All groupings listed in the 'Gender/Maturity' column refer to the gender and maturity of designated family heads. ";
             }
-            $info_text .= 'The age of adulthood is configured by the Head of Operations or the Base Coordinator under <i>Base Settings -> Free Shop</i>.';
+            $info_text .= 'The age of adulthood is configured in <i>Base Settings -> Free Shop</i>.';
             $cmsmain->assign('list_info_text', $info_text);
 
             $total_families = array_sum(array_column($data, 'total_families'));
