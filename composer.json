@@ -20,7 +20,8 @@
         "google/cloud-error-reporting": "^0.22",
         "google/cloud-datastore": "^1.32",
         "open-telemetry/exporter-otlp": "^1.0",
-        "open-telemetry/sdk": "^1.0"
+        "open-telemetry/sdk": "^1.0",
+        "symfony/yaml": "^7.3"
     },
     "config": {
         "allow-plugins": {
