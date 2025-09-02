@@ -201,7 +201,7 @@ function CMSmenu()
             $result2 = db_query('
 			SELECT f.*, title_en AS title 
 			FROM (cms_functions AS f, cms_usergroups_functions AS uf, cms_functions_camps AS fc)
-			WHERE uf.cms_functions_id = f.id AND uf.cms_usergroups_id = :usergroup AND ((fc.cms_functions_id = f.id AND fc.camps_id = :camp) OR f.allcamps) AND (f.parent_id = :parent_id)
+			WHERE f.visible AND uf.cms_functions_id = f.id AND uf.cms_usergroups_id = :usergroup AND ((fc.cms_functions_id = f.id AND fc.camps_id = :camp) OR f.allcamps) AND (f.parent_id = :parent_id)
 			GROUP BY f.id 
 			ORDER BY seq', ['camp' => $_SESSION['camp']['id'], 'parent_id' => $row1['id'], 'usergroup' => $_SESSION['usergroup']['id']]);
         }
