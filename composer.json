@@ -21,7 +21,8 @@
         "google/cloud-datastore": "^1.32",
         "open-telemetry/exporter-otlp": "^1.0",
         "open-telemetry/sdk": "^1.0",
-        "symfony/yaml": "^7.3"
+        "symfony/yaml": "^7.3",
+        "psr/log": "^1.1"
     },
     "config": {
         "allow-plugins": {

@@ -145,6 +145,12 @@
 - **Evidence**: No imports found
 - **Recommendation**: Consider removing or investigate migration from OpenCensus
 
+#### **psr/log** - `^1.1`
+
+needed to lock down this version. Otherwise, this error happens:
+
+> PHP message: PHP Fatal error: Declaration of Google\Cloud\Logging\PsrLogger::emergency(Stringable|string $message, array $context = []): void must be compatible with Psr\Log\LoggerInterface::emergency($message, array $context = []) in /workspace/vendor/google/cloud-logging/src/PsrLogger.php on line 172
+
 ## Development Dependencies (`require-dev`)
 
 ### ✅ **Currently Used Packages**
