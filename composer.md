@@ -52,12 +52,16 @@
 - **Usage**: File storage and management
 - **Evidence**: Used in `library/gcloud.php` with `StorageClient`
 
-#### **google/cloud-logging** - `^1.31`
+#### **google/cloud-logging** - `1.28.*`
 
 - **Status**: ✅ **ACTIVELY USED**
 - **Purpose**: Google Cloud Logging integration
 - **Usage**: Application logging in Google Cloud environment
 - **Evidence**: Integrated in Google Cloud services setup in `library/gcloud.php`
+
+needed to lock down this version. Otherwise, this error happens:
+
+> PHP message: PHP Fatal error: Declaration of Google\Cloud\Logging\PsrLogger::emergency(Stringable|string $message, array $context = []): void must be compatible with Psr\Log\LoggerInterface::emergency($message, array $context = []) in /workspace/vendor/google/cloud-logging/src/PsrLogger.php on line 172
 
 #### **google/cloud-error-reporting** - `^0.22`
 
@@ -144,12 +148,6 @@
 - **Usage**: No evidence of usage found
 - **Evidence**: No imports found
 - **Recommendation**: Consider removing or investigate migration from OpenCensus
-
-#### **psr/log** - `^1.1`
-
-needed to lock down this version. Otherwise, this error happens:
-
-> PHP message: PHP Fatal error: Declaration of Google\Cloud\Logging\PsrLogger::emergency(Stringable|string $message, array $context = []): void must be compatible with Psr\Log\LoggerInterface::emergency($message, array $context = []) in /workspace/vendor/google/cloud-logging/src/PsrLogger.php on line 172
 
 ## Development Dependencies (`require-dev`)
 

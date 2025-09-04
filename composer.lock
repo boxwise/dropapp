@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4db9c164f2729e3e505d7b545f3c01e5",
+    "content-hash": "f91fea22b3c74dfb0d239a77c354058d",
     "packages": [
         {
             "name": "auth0/auth0-php",
@@ -1020,28 +1020,27 @@
         },
         {
             "name": "google/cloud-error-reporting",
-            "version": "v0.22.8",
+            "version": "v0.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-errorreporting.git",
-                "reference": "7d24db029bca83f1b5f692d95747abe843a67b23"
+                "reference": "2a6c9e18f04e54a8b3a8046ba9f121069ac54272"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-errorreporting/zipball/7d24db029bca83f1b5f692d95747abe843a67b23",
-                "reference": "7d24db029bca83f1b5f692d95747abe843a67b23",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-errorreporting/zipball/2a6c9e18f04e54a8b3a8046ba9f121069ac54272",
+                "reference": "2a6c9e18f04e54a8b3a8046ba9f121069ac54272",
                 "shasum": ""
             },
             "require": {
-                "google/cloud-logging": "^1.29",
-                "google/gax": "^1.34.0",
-                "php": "^8.0"
+                "google/cloud-logging": "^1.16",
+                "google/gax": "^1.26.0",
+                "php": ">=7.4"
             },
             "require-dev": {
                 "google/cloud-core": "^1.52.7",
                 "phpspec/prophecy-phpunit": "^2.0",
-                "phpunit/phpunit": "^9.0",
-                "psr/log": "^2.0||^3.0"
+                "phpunit/phpunit": "^9.0"
             },
             "suggest": {
                 "ext-grpc": "The gRPC extension allows more granular control over Error Reporting",
@@ -1068,42 +1067,43 @@
             ],
             "description": "Stackdriver Error Reporting Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-errorreporting/tree/v0.22.8"
+                "source": "https://github.com/googleapis/google-cloud-php-errorreporting/tree/v0.22.0"
             },
-            "time": "2024-11-06T21:50:43+00:00"
+            "time": "2024-01-05T17:34:35+00:00"
         },
         {
             "name": "google/cloud-logging",
-            "version": "v1.31.2",
+            "version": "v1.28.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-logging.git",
-                "reference": "de7f60d641d49f4519f9ecd8e2fddf1f165b4ec3"
+                "reference": "8d711bdb2683a0ddcfebb60d0594904ecc44ab19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-logging/zipball/de7f60d641d49f4519f9ecd8e2fddf1f165b4ec3",
-                "reference": "de7f60d641d49f4519f9ecd8e2fddf1f165b4ec3",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-logging/zipball/8d711bdb2683a0ddcfebb60d0594904ecc44ab19",
+                "reference": "8d711bdb2683a0ddcfebb60d0594904ecc44ab19",
                 "shasum": ""
             },
             "require": {
-                "google/cloud-core": "^1.58",
-                "google/gax": "^1.34.0",
-                "php": "^8.0"
+                "google/cloud-core": "^1.52.7",
+                "google/gax": "^1.24.0",
+                "php": ">=7.4"
+            },
+            "conflict": {
+                "psr/log": ">=3"
             },
             "provide": {
-                "psr/log-implementation": "2.0||3.0"
+                "psr/log-implementation": "1.0|2.0"
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
-                "fig/log-test": "^1.1",
+                "fig/log-test": "^1.0",
                 "google/cloud-bigquery": "^1.0",
-                "google/cloud-pubsub": "^2.0",
+                "google/cloud-pubsub": "^1.0",
                 "google/cloud-storage": "^1.3",
-                "monolog/monolog": "^3.8",
                 "opis/closure": "^3",
-                "phpdocumentor/reflection": "^5.3.3",
-                "phpdocumentor/reflection-docblock": "^5.3",
+                "phpdocumentor/reflection": "^5.0",
                 "phpspec/prophecy-phpunit": "^2.0",
                 "phpunit/phpunit": "^9.0",
                 "squizlabs/php_codesniffer": "2.*"
@@ -1134,9 +1134,9 @@
             ],
             "description": "Stackdriver Logging Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-logging/tree/v1.31.2"
+                "source": "https://github.com/googleapis/google-cloud-php-logging/tree/v1.28.5"
             },
-            "time": "2024-12-07T00:30:26+00:00"
+            "time": "2023-12-01T17:35:56+00:00"
         },
         {
             "name": "google/cloud-storage",
