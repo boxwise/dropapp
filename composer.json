@@ -10,7 +10,7 @@
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
         "smarty/smarty": "^4.5.3",
         "sendgrid/sendgrid": "^8.1",
-        "google/cloud-logging": "^1.31",
+        "google/cloud-logging": "^1.30",
         "auth0/auth0-php": "^8.0.5",
         "opencensus/opencensus": "^0.7.0",
         "kriswallsmith/buzz": "^1.2",
@@ -21,8 +21,7 @@
         "google/cloud-datastore": "^1.32",
         "open-telemetry/exporter-otlp": "^1.0",
         "open-telemetry/sdk": "^1.0",
-        "symfony/yaml": "^7.3",
-        "psr/log": "^1.1"
+        "symfony/yaml": "^7.3"
     },
     "config": {
         "allow-plugins": {
