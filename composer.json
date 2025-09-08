@@ -8,7 +8,7 @@
         "robmorgan/phinx": "^0.14",
         "google/cloud-storage": "^1.48",
         "opencensus/opencensus-exporter-stackdriver": "^0.1.0",
-        "smarty/smarty": "^4.5.3",
+        "smarty/smarty": "^5.5.2",
         "sendgrid/sendgrid": "^8.1",
         "google/cloud-logging": "1.28.*",
         "auth0/auth0-php": "^8.0.5",
