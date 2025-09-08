@@ -4,6 +4,14 @@ Always reference these instructions first and fallback to search or bash command
 
 Dropapp is a PHP web application for managing donated goods distribution to refugees and people in need. It uses PHP 8.2+, MySQL, Smarty templates, Auth0 authentication, Docker for local development, and Cypress for browser testing.
 
+## General Instructions
+
+**Think first and make a plan before you start implementing.** Always analyze the problem, understand the codebase, and create a clear implementation plan before making any changes.
+
+**CRITICAL**: NEVER modify `.circleci/config.yml` or trigger any deployment manually. If changes to CI configuration are absolutely necessary, request approval in a PR comment.
+
+**Always report issues with building/testing in the PR.** If you encounter build failures, test failures, or other issues during development, document them clearly in your progress reports so stakeholders are aware of any blockers or limitations.
+
 ## Working Effectively
 
 ### Bootstrap and Install Dependencies
@@ -41,6 +49,14 @@ Dropapp is a PHP web application for managing donated goods distribution to refu
    - Edit `library/config.php` to add Auth0 credentials if needed
    - Default config works for local development
 
+5. **Configure Auth0 credentials (if available):**
+   Copy the values from the repository environment variables/secrets to the respective places in `library/config.php`:
+   - `AUTH0_API_AUDIENCE` → `$settings['auth0_api_audience']`
+   - `AUTH0_CLIENT_ID` → `$settings['auth0_client_id']`
+   - `AUTH0_CLIENT_SECRET` → `$settings['auth0_client_secret']`
+   - `AUTH0_COOKIE_SECRET` → `$settings['auth0_cookie_secret']`
+   - `AUTH0_DB_CONNECTION_ID` → `$settings['auth0_db_connection_id']`
+
 ### Running the Application
 
 #### Option 1: PHP Development Server (RECOMMENDED)
@@ -61,7 +77,7 @@ docker compose up --build
 - Use PHP dev server if Docker fails
 
 ### Database Setup
-5. **Run database migrations:**
+6. **Run database migrations:**
    ```bash
    vendor/bin/phinx migrate -e development
    ```
