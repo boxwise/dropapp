@@ -128,6 +128,15 @@ npm install  # May fail due to network restrictions
 - Installation frequently fails due to inability to download Cypress binary
 - If installation fails, skip browser testing
 
+### Running Cypress Tests (IF AVAILABLE)
+If npm install succeeded and Cypress binary was downloaded:
+```bash
+npm run cypress:local
+```
+- Runs Cypress with baseUrl set to http://localhost:8100
+- Requires the application to be running on localhost:8100 (Docker setup)
+- If Cypress is not installed, command will fail with "cypress: not found"
+
 Test user credentials (when Auth0 is configured):
 - admin@admin.co / Browser_tests
 - coordinator@coordinator.co / Browser_tests  
@@ -172,6 +181,7 @@ php build.php
 - Network restrictions prevent Cypress binary download
 - Skip browser testing if installation fails
 - Manual testing is sufficient for most development
+- If `npm run cypress:local` shows "cypress: not found", Cypress binary was not installed successfully
 
 ### Generated Template Formatting
 - Smarty compiled templates in `templates/templates_c/` show CS Fixer violations
