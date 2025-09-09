@@ -18,14 +18,14 @@ if ($_POST) {
 
         while (strtotime($date) <= strtotime($end)) {
             $sales = db_value(
-                'SELECT COUNT(t.id) 
-					FROM transactions AS t, people AS p 
+                'SELECT COUNT(t.id)
+					FROM transactions AS t, people AS p
 					WHERE t.people_id = p.id AND p.camp_id = :camp_id AND t.product_id > 0 AND DATE_FORMAT(t.transaction_date,"%Y-%m-%d") = :date',
                 ['date' => $date, 'camp_id' => $_SESSION['camp']['id']]
             );
 
             if ($sales) {
-                $test = db_simplearray('SELECT c.label AS gender, SUM(t.count) 
+                $test = db_simplearray('SELECT c.label AS gender, SUM(t.count)
 						AS aantal FROM (transactions AS t, people AS pp)
 						LEFT OUTER JOIN products AS p ON t.product_id = p.id
 						LEFT OUTER JOIN product_categories AS c ON c.id = p.category_id
@@ -53,13 +53,13 @@ if ($_POST) {
 
         // Total Sales and Drops added at each request at the bottom row
         $totalsales = db_value(
-            'SELECT SUM(t.count) AS aantal 
+            'SELECT SUM(t.count) AS aantal
 				FROM transactions AS t, people AS p
 				WHERE t.people_id = p.id AND p.camp_id = :camp_id AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"',
             ['camp_id' => $_SESSION['camp']['id']]
         );
         $totaldrops = -1 * db_value(
-            'SELECT SUM(t.drops) AS aantal 
+            'SELECT SUM(t.drops) AS aantal
 				FROM transactions AS t, people AS p
 				WHERE t.people_id = p.id AND p.camp_id = :camp_id AND t.product_id > 0 AND t.transaction_date >= "'.$start.' 00:00" AND t.transaction_date <= "'.$end.' 23:59"',
             ['camp_id' => $_SESSION['camp']['id']]
@@ -67,7 +67,7 @@ if ($_POST) {
 
         if ('gender' == $type) {
             // Distribution of sales by gender
-            $data = getlistdata('SELECT g.label AS gender, SUM(t.count) AS aantal 
+            $data = getlistdata('SELECT g.label AS gender, SUM(t.count) AS aantal
 					FROM (transactions AS t, people AS pp)
 					LEFT OUTER JOIN products AS p ON t.product_id = p.id
 					LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
@@ -111,9 +111,94 @@ if ($_POST) {
             addcolumn('text', 'Items', 'aantal');
             addcolumn('text', 'Drops', 'drops');
             $cmsmain->assign('listfooter', ['Total sales', $totalsales.' items', $totaldrops.' '.$_SESSION['camp']['currencyname']]);
+        } elseif ('people' == $type) {
+            // Get adult_age from camps table
+            $adult_age = db_value('SELECT adult_age FROM camps WHERE id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
+
+            // Check if base has families (people with parent_id IS NOT NULL)
+            $baseHasFamilies = db_value('SELECT COUNT(id) FROM people WHERE camp_id = '.$_SESSION['camp']['id'].' AND parent_id IS NOT NULL') > 0;
+
+            // Distribution of beneficiaries by gender and age group
+            $data = getlistdata('WITH served_beneficiaries AS (
+	-- CTE to obtain all beneficiaries involved in transactions in the specified camp and timeframe
+	SELECT
+		p.id,
+		SUM(t.count) as total_items,
+		COUNT(DISTINCT t.transaction_date) as total_visits
+	FROM people p
+	INNER JOIN transactions t
+	ON t.people_id = p.id
+	WHERE t.product_id > 0
+	AND t.transaction_date >= "'.$start.' 00:00"
+	AND t.transaction_date <= "'.$end.' 23:59"
+	AND camp_id = '.$_SESSION['camp']['id'].'
+	GROUP BY p.id
+),
+-- CTE to count number of family members per family head
+family_members AS (
+	SELECT parent_id, COUNT(DISTINCT p.id) as cnt
+	FROM people p
+	WHERE parent_id IS NOT NULL
+	AND camp_id = '.$_SESSION['camp']['id'].'
+	GROUP BY parent_id
+)
+-- Main query
+SELECT
+CASE
+	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "M" THEN "Male (No DoB)"
+	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) AND p.gender = "F" THEN "Female (No DoB)"
+	WHEN (p.date_of_birth IS NULL OR NOT p.date_of_birth) THEN "No Gender (No DoB)"
+	WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Male"
+	WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "Female"
+	WHEN p.gender = "M" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < '.$adult_age.' THEN "Boy"
+	WHEN p.gender = "F" AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) < '.$adult_age.' THEN "Girl"
+	WHEN TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= '.$adult_age.' THEN "No Gender"
+	ELSE "No Gender (Child)"
+END AS gender_category,
+-- If a family member made the transaction, assign it with the family head to obtain number of benefitting families
+COUNT(DISTINCT IFNULL(fm.parent_id, p.id)) AS total_families,
+-- If a family consists of the head only, count 1 (i.e. fm.cnt is NULL); otherwise take the number
+-- of family members plus 1 to account for the family head
+SUM(IFNULL(fm.cnt+1, 1)) AS unique_recipients,
+SUM(sb.total_items) AS total_items,
+SUM(sb.total_visits) AS total_visits
+FROM served_beneficiaries sb
+INNER JOIN people AS p
+ON p.id = sb.id
+LEFT JOIN family_members fm
+ON fm.parent_id = p.id
+GROUP BY gender_category
+ORDER BY FIELD(gender_category, "Male", "Female", "Boy", "Girl", "No Gender", "No Gender (Child)", "Male (No DoB)", "Female (No DoB)", "No Gender (No DoB)")');
+
+            addcolumn('text', 'Gender/Maturity', 'gender_category');
+            if ($baseHasFamilies) {
+                addcolumn('text', 'Total families served', 'total_families');
+            }
+            addcolumn('text', 'Unique people reached', 'unique_recipients');
+            addcolumn('text', 'Total items checked out', 'total_items');
+            addcolumn('text', 'Total number of visits', 'total_visits');
+
+            // Create informational text about adult age
+            $info_text = "'Male' and 'Female' refer to adults of age ".$adult_age.' and older. ';
+            if ($baseHasFamilies) {
+                $info_text .= "All groupings listed in the 'Gender/Maturity' column refer to the gender and maturity of designated family heads. ";
+            }
+            $info_text .= 'The age of adulthood is configured in <i>Base Settings -> Free Shop</i>.';
+            $cmsmain->assign('list_info_text', $info_text);
+
+            $total_families = array_sum(array_column($data, 'total_families'));
+            $total_recipients = array_sum(array_column($data, 'unique_recipients'));
+            $total_items = array_sum(array_column($data, 'total_items'));
+            $total_visits = array_sum(array_column($data, 'total_visits'));
+
+            if ($baseHasFamilies) {
+                $cmsmain->assign('listfooter', ['Total', $total_families, $total_recipients, $total_items, $total_visits]);
+            } else {
+                $cmsmain->assign('listfooter', ['Total', $total_recipients, $total_items, $total_visits]);
+            }
         } else {
             // Distribution of sales by products
-            $data = getlistdata('SELECT p.name, g.label AS gender, SUM(t.count) AS aantal 
+            $data = getlistdata('SELECT p.name, g.label AS gender, SUM(t.count) AS aantal
 					FROM (transactions AS t, people AS pp)
 					LEFT OUTER JOIN products AS p ON t.product_id = p.id
 					LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
@@ -163,6 +248,7 @@ if ($_POST) {
         ['value' => 'category', 'label' => 'By product category'],
         ['value' => 'gender', 'label' => 'By gender'],
         ['value' => 'byday', 'label' => 'Total sales by day'],
+        ['value' => 'people', 'label' => 'By People'],
         ['value' => 'export', 'label' => 'All sales (csv)'], ]]);
 
     // open the template
