@@ -302,7 +302,7 @@ function selectFamily(field, reload, target) {
     $("#add-to-cart-button").prop("disabled", !(product && value));
     var queryDict = {};
     location.search
-        .substr(1)
+        .substring(1)
         .split("&")
         .forEach(function (item) {
             queryDict[item.split("=")[0]] = item.split("=")[1];
@@ -345,6 +345,18 @@ function selectFamily(field, reload, target) {
                     $(".not_enough_coins").removeClass("not_enough_coins");
                     $("#field_" + field).prop("disabled", false);
                     $("body").removeClass("loading");
+                    
+                    // Load cart for the selected person
+                    if (typeof window.shoppingCart !== 'undefined' && window.shoppingCart.loadCart) {
+                        window.shoppingCart.loadCart(value);
+                        
+                        // Render cart after DOM is ready
+                        setTimeout(function() {
+                            if (typeof window.renderCart === 'function') {
+                                window.renderCart();
+                            }
+                        }, 150);
+                    }
                 }
                 AjaxCheckSuccess(result);
             },
@@ -354,9 +366,6 @@ function selectFamily(field, reload, target) {
         $("#dropcredit").data({ dropCredit: 0 });
         $("#people_id_selected").addClass("hidden");
     }
-
-    //clear cart
-    sessionStorage.setItem("shoppingCart", JSON.stringify([]));
 }
 
 function selectFamilyhead(field, targetfield) {
