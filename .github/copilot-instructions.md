@@ -113,29 +113,38 @@ php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --rules @PhpCsFixer
 
 ## Testing
 
-### Cypress Browser Tests (LIMITED AVAILABILITY)
-**NOTE: Cypress installation often fails due to network restrictions.**
+### Cypress Browser Tests (WORKAROUND AVAILABLE)
+**NOTE: Cypress binary download often fails due to network restrictions, but CLI functionality is available.**
 
 Browser test structure:
 - `cypress/e2e/1_feature_tests/` - Feature and UI tests
 - `cypress/e2e/2_auth_tests/` - Authentication and user management tests
 
-If Cypress is available:
+**Cypress Installation Workaround:**
 ```bash
-npm install  # May fail due to network restrictions
+CYPRESS_INSTALL_BINARY=0 npm install
 ```
-- Takes 60-300 seconds. NEVER CANCEL. Set timeout to 600+ seconds.
-- Installation frequently fails due to inability to download Cypress binary
-- If installation fails, skip browser testing
+- Takes 10-30 seconds. NEVER CANCEL. Set timeout to 60+ seconds.
+- Installs Cypress package without downloading the binary
+- Cypress CLI commands will work, but tests requiring the browser binary will fail
 
-### Running Cypress Tests (IF AVAILABLE)
-If npm install succeeded and Cypress binary was downloaded:
+### Running Cypress Tests
+**Option 1: With Binary (if available)**
+If you have manually placed the Cypress binary or it downloaded successfully:
 ```bash
 npm run cypress:local
 ```
 - Runs Cypress with baseUrl set to http://localhost:8100
 - Requires the application to be running on localhost:8100 (Docker setup)
-- If Cypress is not installed, command will fail with "cypress: not found"
+- Requires Cypress binary to be installed
+
+**Option 2: CLI Only (always available)**
+```bash
+npx cypress version  # Check installation status
+npx cypress help     # Show available commands
+```
+- Cypress CLI functionality works without binary
+- Can be used for configuration validation and setup verification
 
 Test user credentials (when Auth0 is configured):
 - admin@admin.co / Browser_tests
@@ -179,9 +188,10 @@ php build.php
 
 ### Cypress Installation Failures
 - Network restrictions prevent Cypress binary download
-- Skip browser testing if installation fails
-- Manual testing is sufficient for most development
-- If `npm run cypress:local` shows "cypress: not found", Cypress binary was not installed successfully
+- **WORKAROUND**: Use `CYPRESS_INSTALL_BINARY=0 npm install` to install package without binary
+- Cypress CLI commands work without binary: `npx cypress version`, `npx cypress help`
+- Full test execution requires manual binary installation or unrestricted network access
+- Manual testing is sufficient for most development scenarios
 
 ### Generated Template Formatting
 - Smarty compiled templates in `templates/templates_c/` show CS Fixer violations
