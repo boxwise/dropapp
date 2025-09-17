@@ -48,6 +48,9 @@ Dropapp is a PHP web application for managing donated goods distribution to refu
    ```
    - Edit `library/config.php` to add Auth0 credentials if needed
    - Default config works for local development
+   - **IMPORTANT**: For PHP development server, update database configuration:
+     - Change `$settings['db_host'] = 'db_mysql'` to `$settings['db_host'] = '127.0.0.1'`
+     - Add `$settings['db_port'] = '9906'` for Docker MySQL container
 
 5. **Configure Auth0 credentials (if available):**
    Copy the values from the repository environment variables/secrets to the respective places in `library/config.php`:
@@ -77,7 +80,15 @@ docker compose up --build
 - Use PHP dev server if Docker fails
 
 ### Database Setup
-6. **Run database migrations:**
+6. **Start MySQL database via Docker:**
+   ```bash
+   docker compose up -d db_mysql
+   ```
+   - Takes 30-120 seconds for initial pull. NEVER CANCEL. Set timeout to 180+ seconds.
+   - Database accessible on localhost:9906
+   - Verify with: `nc -z localhost 9906`
+
+7. **Run database migrations:**
    ```bash
    vendor/bin/phinx migrate -e development
    ```
@@ -85,6 +96,15 @@ docker compose up --build
    - Requires MySQL database running (via Docker or local install)
    - Database config in `phinx.yml`
    - Initial seed data available in `db/init.sql` (2700+ lines)
+
+**CRITICAL Database Configuration for PHP Development Server:**
+- The default `library/config.php.default` uses `db_host = 'db_mysql'` which only works in Docker containers
+- For PHP development server, you MUST update the database configuration:
+  ```php
+  $settings['db_host'] = '127.0.0.1';
+  $settings['db_port'] = '9906';
+  ```
+- Also ensure `library/core.php` supports the `db_port` parameter (already implemented in this repo)
 
 ## Linting and Code Quality
 
@@ -164,6 +184,31 @@ After making changes, ALWAYS test the following scenarios:
 
 **NOTE:** Application requires database connection to fully function. Without MySQL running, you'll see database connection errors, which is expected.
 
+### Cypress Binary Testing
+After setting up the development environment, verify Cypress functionality:
+
+```bash
+CYPRESS_baseUrl=http://localhost:8000 npx cypress
+```
+
+**Expected Output:** Should display Cypress help menu with available commands:
+```
+Usage: cypress <command> [options]
+
+Options:
+  -v, --version      prints Cypress version
+  -h, --help         display help for command
+
+Commands:
+  help               Shows CLI help and exits
+  version [options]  prints Cypress version
+  open [options]     Opens Cypress in the interactive GUI.
+  run [options]      Runs Cypress tests from the CLI without the GUI
+  [... additional commands ...]
+```
+
+**If this fails:** Check that Cypress binary was installed properly with `npx cypress version`
+
 ### Pre-commit Validation
 ALWAYS run these commands before committing:
 ```bash
@@ -232,7 +277,8 @@ dropapp/
 - **PHP linting:** 1.4 seconds - timeout: 30+ seconds
 - **Code formatting:** 14 seconds - timeout: 60+ seconds
 - **Database migration:** 10-30 seconds - timeout: 60+ seconds
+- **Docker database startup:** 30-120 seconds - timeout: 180+ seconds
 - **Docker build:** 5-15 minutes - timeout: 20+ minutes
-- **npm install:** 60-300 seconds - timeout: 600+ seconds
+- **npm install:** 20-60 seconds - timeout: 120+ seconds (with Cypress binary)
 
 **CRITICAL:** Always use the specified timeouts. NEVER CANCEL long-running operations prematurely.
