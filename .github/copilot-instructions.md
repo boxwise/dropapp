@@ -188,24 +188,29 @@ After making changes, ALWAYS test the following scenarios:
 After setting up the development environment, verify Cypress functionality:
 
 ```bash
-CYPRESS_baseUrl=http://localhost:8000 npx cypress
+CYPRESS_baseUrl=http://localhost:8000 npx cypress run
 ```
 
-**Expected Output:** Should display Cypress help menu with available commands:
+**Expected Output:** Should start Cypress and run all test specs:
 ```
-Usage: cypress <command> [options]
+Opening Cypress...
 
-Options:
-  -v, --version      prints Cypress version
-  -h, --help         display help for command
+====================================================================================================
 
-Commands:
-  help               Shows CLI help and exits
-  version [options]  prints Cypress version
-  open [options]     Opens Cypress in the interactive GUI.
-  run [options]      Runs Cypress tests from the CLI without the GUI
-  [... additional commands ...]
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v20.19.5 (/usr/local/bin/node)                                                 │
+  │ Specs:          16 found (1_feature_tests/3_1_QrCodeGenerationTests.js, ...)                  │
+  │ Searched:       cypress/e2e/**/*.js                                                            │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+  Running tests...
 ```
+
+**Note:** Tests may fail due to authentication requirements, but the binary execution itself should work correctly.
 
 **If this fails:** Check that Cypress binary was installed properly with `npx cypress version`
 
