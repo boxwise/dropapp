@@ -187,10 +187,12 @@ php build.php
 - Use PHP development server instead: `php -S localhost:8000 gcloud-entry.php`
 
 ### Cypress Installation Failures
-- Network restrictions prevent Cypress binary download
+- Network restrictions prevent Cypress binary download from `download.cypress.io` and related CDNs
 - **WORKAROUND**: Use `CYPRESS_INSTALL_BINARY=0 npm install` to install package without binary
 - Cypress CLI commands work without binary: `npx cypress version`, `npx cypress help`
-- Full test execution requires manual binary installation or unrestricted network access
+- **LIMITATION**: Cannot run `CYPRESS_baseUrl=http://localhost:8000 cypress` without binary
+- **Attempted Solutions**: Different proxies, mirrors, DNS settings, Docker containers, manual downloads - all blocked
+- **Resolution Required**: Network allowlist for Cypress CDN domains or manual binary provision
 - Manual testing is sufficient for most development scenarios
 
 ### Generated Template Formatting
