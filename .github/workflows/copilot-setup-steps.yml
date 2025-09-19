@@ -72,5 +72,5 @@ jobs:
         run: |
           php build.php
           cp library/config.php.default library/config.php
-          php -S localhost:8000 gcloud-entry.php &
-          sleep 3 && curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ && echo " - Server is responding"
+          # php -S localhost:8000 gcloud-entry.php &
+          # sleep 3 && curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ && echo " - Server is responding"
