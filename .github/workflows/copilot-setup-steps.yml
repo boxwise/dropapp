@@ -51,13 +51,16 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # - name: Install dependencies
-      #   uses: php-actions/composer@v6
-      #   with:
-      #     php_version: "8.2"
-
-      - name: Install FE dependencies
+      - name: Install dependencies
         run: |
+          php --version
+          curl -s https://getcomposer.org/installer | php
+          mv composer.phar composer
+          ./composer install -n
+
+      - name: Install testing dependencies
+        run: |
+          node --version
           npm install
           npx cypress version
 
