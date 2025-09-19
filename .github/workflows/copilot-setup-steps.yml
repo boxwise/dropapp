@@ -6,8 +6,8 @@ name: "Copilot Setup Steps"
 on:
   workflow_dispatch:
   push:
-    paths:
-      - .github/workflows/copilot-setup-steps.yml
+    branches:
+      - master
   pull_request:
     paths:
       - .github/workflows/copilot-setup-steps.yml
@@ -29,15 +29,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Install pnpm
-      #   uses: pnpm/action-setup@v2
-      #   with:
-      #     version: 9
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, exif, gd
 
       - name: Cache Composer dependencies
         uses: actions/cache@v3
         with:
-          path: /tmp/composer-cache
+          path: vendor
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
       - uses: actions/setup-node@v4
@@ -46,12 +47,15 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_version: "8.2"
-
-      - name: Install FE dependencies
         run: |
+          php --version
+          curl -s https://getcomposer.org/installer | php
+          mv composer.phar composer
+          ./composer install -n
+
+      - name: Install testing dependencies
+        run: |
+          node --version
           npm install
           npx cypress version
 
@@ -67,5 +71,6 @@ jobs:
       - name: Start PHP server
         run: |
           php build.php
-          # php -S localhost:8000 gcloud-entry.php
+          cp library/config.php.default library/config.php
+          # php -S localhost:8000 gcloud-entry.php &
           # sleep 3 && curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ && echo " - Server is responding"
