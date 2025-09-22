@@ -25,6 +25,9 @@ Tracer::inSpan(
             $db_dsn = 'mysql:dbname='.$settings['db_database'].';unix_socket='.$settings['db_socket'];
         } else {
             $db_dsn = 'mysql:host='.$settings['db_host'].';dbname='.$settings['db_database'];
+            if (array_key_exists('db_port', $settings)) {
+                $db_dsn .= ';port='.$settings['db_port'];
+            }
         }
         db_connect($db_dsn, $settings['db_user'], $settings['db_pass']);
 
