@@ -3,7 +3,7 @@ FROM php:8.2-apache
 RUN a2enmod rewrite
 # install needed libraries
 RUN apt-get update \
-    && apt-get -y --no-install-recommends install libfontconfig1 libxrender1 libxext6 zlib1g-dev libpng-dev libfreetype6-dev libjpeg62-turbo-dev \
+    && apt-get -y --no-install-recommends install libfontconfig1 libxrender1 libxext6 zlib1g-dev libpng-dev libfreetype6-dev libjpeg62-turbo-dev zip unzip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* 
 # PHP extensions
