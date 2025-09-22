@@ -46,19 +46,7 @@ Dropapp is a PHP web application for managing donated goods distribution to refu
    ```bash
    cp library/config.php.default library/config.php
    ```
-   - Edit `library/config.php` to add Auth0 credentials if needed
-   - Default config works for local development
-   - **IMPORTANT**: For PHP development server, update database configuration:
-     - Change `$settings['db_host'] = 'db_mysql'` to `$settings['db_host'] = '127.0.0.1'`
-     - Add `$settings['db_port'] = '9906'` for Docker MySQL container
-
-5. **Configure Auth0 credentials (if available):**
-   Copy the values from the repository environment variables/secrets to the respective places in `library/config.php`:
-   - `AUTH0_API_AUDIENCE` → `$settings['auth0_api_audience']`
-   - `AUTH0_CLIENT_ID` → `$settings['auth0_client_id']`
-   - `AUTH0_CLIENT_SECRET` → `$settings['auth0_client_secret']`
-   - `AUTH0_COOKIE_SECRET` → `$settings['auth0_cookie_secret']`
-   - `AUTH0_DB_CONNECTION_ID` → `$settings['auth0_db_connection_id']`
+   - Default config works for local development by using configured Auth0 environment variables
 
 ### Running the Application
 
@@ -140,22 +128,20 @@ Browser test structure:
 - `cypress/e2e/1_feature_tests/` - Feature and UI tests
 - `cypress/e2e/2_auth_tests/` - Authentication and user management tests
 
-**Cypress Installation Workaround:**
+**Cypress Installation:**
 ```bash
-CYPRESS_INSTALL_BINARY=0 npm install
+npm install
 ```
 - Takes 10-30 seconds. NEVER CANCEL. Set timeout to 60+ seconds.
-- Installs Cypress package without downloading the binary
-- Cypress CLI commands will work, but tests requiring the browser binary will fail
 
 ### Running Cypress Tests
 **Option 1: With Binary (if available)**
 If you have manually placed the Cypress binary or it downloaded successfully:
 ```bash
-npm run cypress:local
+CYPRESS_baseUrl=http://localhost:8000 npx run cypress --spec 'cypress/e2e/1_feature_tests/*.js'
 ```
-- Runs Cypress with baseUrl set to http://localhost:8100
-- Requires the application to be running on localhost:8100 (Docker setup)
+- Runs Cypress with baseUrl set to http://localhost:8000
+- Requires the application to be running on localhost:8000 (local PHP setup)
 - Requires Cypress binary to be installed
 
 **Option 2: CLI Only (always available)**
@@ -193,7 +179,7 @@ After making changes, ALWAYS test the following scenarios:
 After setting up the development environment, verify Cypress functionality:
 
 ```bash
-CYPRESS_baseUrl=http://localhost:8000 npx cypress run --spec 'cypress/e2e/**/*'
+CYPRESS_baseUrl=http://localhost:8000 npx cypress run --spec 'cypress/e2e/1_feature_tests/*.js'
 ```
 
 **Expected Results:** Cypress 15.2.0 with excellent performance:
@@ -253,15 +239,6 @@ php build.php
 ### Docker Build Failures
 - Xdebug installation often fails in Docker environment
 - Use PHP development server instead: `php -S localhost:8000 gcloud-entry.php`
-
-### Cypress Installation Failures
-- Network restrictions prevent Cypress binary download from `download.cypress.io` and related CDNs
-- **WORKAROUND**: Use `CYPRESS_INSTALL_BINARY=0 npm install` to install package without binary
-- Cypress CLI commands work without binary: `npx cypress version`, `npx cypress help`
-- **LIMITATION**: Cannot run `CYPRESS_baseUrl=http://localhost:8000 cypress` without binary
-- **Attempted Solutions**: Different proxies, mirrors, DNS settings, Docker containers, manual downloads - all blocked
-- **Resolution Required**: Network allowlist for Cypress CDN domains or manual binary provision
-- Manual testing is sufficient for most development scenarios
 
 ### Generated Template Formatting
 - Smarty compiled templates in `templates/templates_c/` show CS Fixer violations
