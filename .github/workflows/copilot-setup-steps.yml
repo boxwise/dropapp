@@ -9,8 +9,8 @@ on:
     branches:
       - master
   pull_request:
-    paths:
-      - .github/workflows/copilot-setup-steps.yml
+    branches:
+      - master
 
 jobs:
   # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
