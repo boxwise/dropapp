@@ -130,7 +130,7 @@ Browser test structure:
 
 **Cypress Installation:**
 ```bash
-npm install
+yarn install
 ```
 - Takes 10-30 seconds. NEVER CANCEL. Set timeout to 60+ seconds.
 
@@ -138,7 +138,7 @@ npm install
 **Option 1: With Binary (if available)**
 If you have manually placed the Cypress binary or it downloaded successfully:
 ```bash
-CYPRESS_baseUrl=http://localhost:8000 npx run cypress --spec 'cypress/e2e/1_feature_tests/*.js'
+CYPRESS_baseUrl=http://localhost:8000 yarn run cypress --spec 'cypress/e2e/1_feature_tests/*.js'
 ```
 - Runs Cypress with baseUrl set to http://localhost:8000
 - Requires the application to be running on localhost:8000 (local PHP setup)
@@ -146,8 +146,8 @@ CYPRESS_baseUrl=http://localhost:8000 npx run cypress --spec 'cypress/e2e/1_feat
 
 **Option 2: CLI Only (always available)**
 ```bash
-npx cypress version  # Check installation status
-npx cypress help     # Show available commands
+yarn cypress version  # Check installation status
+yarn cypress help     # Show available commands
 ```
 - Cypress CLI functionality works without binary
 - Can be used for configuration validation and setup verification
@@ -179,7 +179,7 @@ After making changes, ALWAYS test the following scenarios:
 After setting up the development environment, verify Cypress functionality:
 
 ```bash
-CYPRESS_baseUrl=http://localhost:8000 npx cypress run --spec 'cypress/e2e/1_feature_tests/*.js'
+CYPRESS_baseUrl=http://localhost:8000 yarn cypress run --spec 'cypress/e2e/1_feature_tests/*.js'
 ```
 
 **Expected Results:** Cypress 15.2.0 with excellent performance:
@@ -216,7 +216,7 @@ Opening Cypress...
 
 **Note:** Some tests may fail due to authentication requirements or external dependencies, but core functionality (QR generation, navigation, permissions) works perfectly.
 
-**If this fails:** Check that Cypress binary was installed properly with `npx cypress version`
+**If this fails:** Check that Cypress binary was installed properly with `yarn cypress version`
 
 ### Pre-commit Validation
 ALWAYS run these commands before committing:
@@ -279,6 +279,6 @@ dropapp/
 - **Database migration:** 10-30 seconds - timeout: 60+ seconds
 - **Docker database startup:** 30-120 seconds - timeout: 180+ seconds
 - **Docker build:** 5-15 minutes - timeout: 20+ minutes
-- **npm install:** 20-60 seconds - timeout: 120+ seconds (with Cypress binary)
+- **yarn install:** 20-60 seconds - timeout: 120+ seconds (with Cypress binary)
 
 **CRITICAL:** Always use the specified timeouts. NEVER CANCEL long-running operations prematurely.
