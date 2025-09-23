@@ -20,35 +20,7 @@ Tracer::inSpan(
             $settings['upload_dir'] = $_SERVER['DOCUMENT_ROOT'].'/uploads';
         }
 
-        // Override config with environment variables if available
-        if (getenv('AUTH0_CLIENT_ID')) {
-            $settings['auth0_client_id'] = getenv('AUTH0_CLIENT_ID');
-        }
-        if (getenv('AUTH0_CLIENT_SECRET')) {
-            $settings['auth0_client_secret'] = getenv('AUTH0_CLIENT_SECRET');
-        }
-        if (getenv('AUTH0_COOKIE_SECRET')) {
-            $settings['auth0_cookie_secret'] = getenv('AUTH0_COOKIE_SECRET');
-        }
-        if (getenv('AUTH0_REDIRECT_URI')) {
-            $settings['auth0_redirect_uri'] = getenv('AUTH0_REDIRECT_URI');
-        }
-        if (getenv('AUTH0_API_ID')) {
-            $settings['auth0_api_id'] = getenv('AUTH0_API_ID');
-        }
-        if (getenv('AUTH0_DB_CONNECTION_ID')) {
-            $settings['auth0_db_connection_id'] = getenv('AUTH0_DB_CONNECTION_ID');
-        }
-
         // connect to database
-        // Override config with environment variables if available
-        if (getenv('MYSQL_HOST')) {
-            $settings['db_host'] = getenv('MYSQL_HOST');
-        }
-        if (getenv('MYSQL_PORT')) {
-            $settings['db_port'] = getenv('MYSQL_PORT');
-        }
-        
         if (array_key_exists('db_socket', $settings)) {
             $db_dsn = 'mysql:dbname='.$settings['db_database'].';unix_socket='.$settings['db_socket'];
         } else {
