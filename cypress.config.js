@@ -29,7 +29,7 @@ module.exports = defineConfig({
     successPwdChangeNotif:
       'Within a few minutes you will receive an e-mail with further instructions to reset your password.',
     orgName: 'TestOrganisation',
-    auth0Domain: 'staging-login.boxtribute.org',
+    auth0Domain: process.env.AUTH0_DOMAIN || 'staging-login.boxtribute.org',
   },
   e2e: {
     // We've imported your old cypress plugins here.
