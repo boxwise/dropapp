@@ -92,5 +92,5 @@ jobs:
 
       - name: Run cypress tests
         run: |
-          yarn cypress version
-          CYPRESS_baseUrl=http://localhost:8000 yarn run cypress --spec 'cypress/e2e/1_feature_tests/3_*.js' --env 'auth0Domain=boxtribute-dev.eu.auth0.com'
+          yarn cypress --version
+          CYPRESS_baseUrl=http://localhost:8000 yarn cypress run --spec 'cypress/e2e/1_feature_tests/3_*.js' --env 'auth0Domain=boxtribute-dev.eu.auth0.com'
