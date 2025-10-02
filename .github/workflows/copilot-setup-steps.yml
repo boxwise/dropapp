@@ -91,7 +91,18 @@ jobs:
             fi
           done
 
-      - name: Run cypress tests
-        run: |
-          yarn cypress --version
-          CYPRESS_baseUrl=http://localhost:8000 yarn cypress run --spec 'cypress/e2e/1_feature_tests/3_1*.js'
+      # - name: Run cypress tests
+      #   run: |
+      #     yarn cypress --version
+      #     CYPRESS_baseUrl=http://localhost:8000 yarn cypress run --spec 'cypress/e2e/1_feature_tests/3_1*.js'
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: php build.php
+          start: |
+            cp library/config.php.default library/config.php
+            php -S localhost:8000 gcloud-entry.php
+          spec: cypress/e2e/1_feature_tests/3_1*.js
+          config: baseUrl=http://localhost:8000
+          wait-on: 'http://localhost:8000'
