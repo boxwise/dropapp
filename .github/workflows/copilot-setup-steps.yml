@@ -79,7 +79,7 @@ jobs:
 
       - name: Start PHP server
         run: |
-          php build.php
+          php build.php >/dev/null 2>&1
           cp library/config.php.default library/config.php
           php -S localhost:8000 gcloud-entry.php &
 
