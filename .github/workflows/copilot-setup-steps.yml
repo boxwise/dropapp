@@ -73,10 +73,12 @@ jobs:
         run: |
           php build.php
           cp library/config.php.default library/config.php
+          env | grep AUTH0 | grep -v SECRET
+          env | grep MYSQL
           php -S localhost:8000 gcloud-entry.php &
-          sleep 5 && curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ && echo " - Server is responding"
 
       - name: Run cypress tests
         run: |
           yarn cypress version
+          sleep 10 && curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ && echo " - Server is responding"
           CYPRESS_baseUrl=http://localhost:8000 yarn run cypress --spec 'cypress/e2e/1_feature_tests/3_*.js' --env 'auth0Domain=boxtribute-dev.eu.auth0.com'
