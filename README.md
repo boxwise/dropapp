@@ -172,9 +172,9 @@ to launch a shell inside the Docker container and run the phinx commands there. 
 We use [Cypress](https://www.cypress.io) for Browser-test. To run Cypress tests on your local environment, please
 
 1. [Install Cypress via direct Download](https://docs.cypress.io/guides/getting-started/installing-cypress.html#Direct-download)
-2. Set the variable `baseURL` to your local address, e.g. `localhost:8100` in cypress.json.
-3. Set the env variable `auth0Domain` to the development Auth0 tenant,
-   e.g. `boxtribute-dev.eu.auth0.com` in cypress.json.
+2. Set the variable `baseURL` to your local address, e.g. `localhost:8100` in `cypress.config.js`.
+3. In the same file, set the env variable `auth0Domain` to the development Auth0 tenant,
+   e.g. `boxtribute-dev.eu.auth0.com`
 4. Open Cypress and this repo in Cypress
 
 #### Cypress Tests fail due to unsynchronized users with Auth0

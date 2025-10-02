@@ -9,8 +9,8 @@ on:
     branches:
       - master
   pull_request:
-    paths:
-      - .github/workflows/copilot-setup-steps.yml
+    branches:
+      - master
 
 jobs:
   # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'yarn'
 
       - name: Install dependencies
         run: |
@@ -52,11 +52,12 @@ jobs:
           curl -s https://getcomposer.org/installer | php
           mv composer.phar composer
           ./composer install -n
+          rm composer
 
       - name: Install testing dependencies
         run: |
           node --version
-          npm install
+          yarn install
           npx cypress version
 
       - name: Start MySQL database
