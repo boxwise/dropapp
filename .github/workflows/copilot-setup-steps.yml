@@ -69,6 +69,13 @@ jobs:
         run: |
           vendor/bin/phinx migrate -e development
 
+      - name: env variables
+        run: |
+          echo "$ALLMYVARS"
+        shell: bash
+        env:
+          ALLMYVARS: ${{ toJSON(vars) }}
+
       - name: Start PHP server
         run: |
           php build.php
@@ -76,7 +83,7 @@ jobs:
           echo foo
           # env | grep AUTH0 | grep -v SECRET
           echo bar
-          env | grep MYSQL
+          # env | grep MYSQL
           echo baz
           php -S localhost:8000 gcloud-entry.php &
 
