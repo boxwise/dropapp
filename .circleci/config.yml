@@ -139,7 +139,7 @@ workflows:
           filters: # required since `deploy-prod` has tag filters AND requires `build`
             tags:
               only: /^v.*/
-      # baseUrl for cypress is set in cypress.json (currently staging.boxtribute.org)
+      # baseUrl for cypress is set in cypress.config.js (currently staging.boxtribute.org)
       - cypress/run:
           name: cypress-feature-tests
           package-manager: yarn
