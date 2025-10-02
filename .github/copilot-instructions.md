@@ -15,38 +15,9 @@ Dropapp is a PHP web application for managing donated goods distribution to refu
 ## Working Effectively
 
 ### Bootstrap and Install Dependencies
-1. **Install PHP dependencies:**
-   ```bash
-   composer install --no-dev --prefer-dist --no-interaction
-   ```
-   - Takes 30-60 seconds. NEVER CANCEL. Set timeout to 90+ seconds.
-   - Production dependencies install reliably
-   - For development dependencies: `composer install` (may require GitHub token)
-   - If prompted for GitHub token, either provide one or use `--no-interaction` flag
-   - If you get vendor directory errors, run: `rm -rf vendor/ && composer install`
-
-2. **Install development dependencies (for linting):**
-   ```bash
-   composer install --prefer-dist --no-interaction
-   ```
-   - Takes 60-120 seconds. NEVER CANCEL. Set timeout to 180+ seconds.
-   - May fail on some packages due to network restrictions
-   - Continue with available packages if some fail
-
-3. **Build static assets and templates:**
-   ```bash
-   php build.php
-   ```
-   - Takes ~1 second. NEVER CANCEL. Set timeout to 30+ seconds.
-   - Compiles Smarty templates, minifies CSS/JS
-   - May show PHP warnings - these are normal
-
-### Setup Configuration
-4. **Copy default configuration:**
-   ```bash
-   cp library/config.php.default library/config.php
-   ```
-   - Default config works for local development by using configured Auth0 environment variables
+**The environment is already prepared through the Copilot Setup Steps.**
+- verify that the MySQL database is running on localhost:9906 (`nc -z localhost 9906`)
+- verify that the file `library/config.php` is present
 
 ### Running the Application
 
@@ -68,32 +39,19 @@ docker compose up --build
 - Use PHP dev server if Docker fails
 
 ### Database Setup
-6. **Start MySQL database via Docker:**
-   ```bash
-   docker compose up -d db_mysql
-   ```
-   - Takes 30-120 seconds for initial pull. NEVER CANCEL. Set timeout to 180+ seconds.
-   - Database accessible on localhost:9906
-   - Verify with: `nc -z localhost 9906`
+**Through the Copilot Setup Steps, the database is already set up and the migrations have run.**
 
-7. **Run database migrations:**
-   ```bash
-   vendor/bin/phinx migrate -e development
-   ```
-   - Takes 10-30 seconds. NEVER CANCEL. Set timeout to 60+ seconds.
-   - Requires MySQL database running (via Docker or local install)
-   - Database config in `phinx.yml`
-   - Initial seed data available in `db/init.sql` (2700+ lines)
+General database information:
+- Database config in `phinx.yml`
+- Initial seed data available in `db/init.sql` (2700+ lines)
 
 **CRITICAL Database Configuration for PHP Development Server:**
-- The default `library/config.php.default` uses `db_host = 'db_mysql'` which only works in Docker containers
-- For PHP development server, you MUST update the database configuration:
-  ```php
-  $settings['db_host'] = '127.0.0.1';
-  $settings['db_port'] = '9906';
+- The default `library/config.php` only works in Docker containers
+- For PHP development server, these environment variables must be set (they are already configured)
+  ```bash
+  MYSQL_HOST=127.0.0.1
+  MYSQL_PORT=9906
   ```
-- Also ensure `library/core.php` supports the `db_port` parameter (already implemented in this repo)
-
 ## Linting and Code Quality
 
 ### PHP Syntax Checking
@@ -121,40 +79,29 @@ php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --rules @PhpCsFixer
 
 ## Testing
 
-### Cypress Browser Tests (WORKAROUND AVAILABLE)
-**NOTE: Cypress binary download often fails due to network restrictions, but CLI functionality is available.**
+### Cypress Browser Tests
+**You don't have to install Cypress, it's already prepared through the Copilot Setup Steps.**
+
+Verify that Cypress is available:
+```bash
+yarn cypress version  # Check installation status
+```
 
 Browser test structure:
 - `cypress/e2e/1_feature_tests/` - Feature and UI tests
 - `cypress/e2e/2_auth_tests/` - Authentication and user management tests
 
-**Cypress Installation:**
-```bash
-yarn install
-```
-- Takes 10-30 seconds. NEVER CANCEL. Set timeout to 60+ seconds.
-
 ### Running Cypress Tests
-**Option 1: With Binary (if available)**
-If you have manually placed the Cypress binary or it downloaded successfully:
 ```bash
-CYPRESS_baseUrl=http://localhost:8000 yarn run cypress --spec 'cypress/e2e/1_feature_tests/*.js'
+CYPRESS_baseUrl=http://localhost:8000 yarn run cypress --spec 'cypress/e2e/1_feature_tests/*.js' --env 'auth0Domain=boxtribute-dev.eu.auth0.com'
 ```
-- Runs Cypress with baseUrl set to http://localhost:8000
+- Runs Cypress with baseUrl set to http://localhost:8000 and auth0Domain set to the development tenant
 - Requires the application to be running on localhost:8000 (local PHP setup)
 - Requires Cypress binary to be installed
 
-**Option 2: CLI Only (always available)**
-```bash
-yarn cypress version  # Check installation status
-yarn cypress help     # Show available commands
-```
-- Cypress CLI functionality works without binary
-- Can be used for configuration validation and setup verification
-
 Test user credentials (when Auth0 is configured):
 - admin@admin.co / Browser_tests
-- coordinator@coordinator.co / Browser_tests  
+- coordinator@coordinator.co / Browser_tests
 - user@user.co / Browser_tests
 
 ## Validation
@@ -169,54 +116,10 @@ After making changes, ALWAYS test the following scenarios:
 5. **Check console/logs** for PHP errors or warnings
 
 **NOTE:** Complete development environment now includes:
-- ✅ MySQL database on localhost:9906 with successful migrations  
+- ✅ MySQL database on localhost:9906 with successful migrations
 - ✅ Auth0 authentication with working login form
 - ✅ PHP development server with full database connectivity
 - ✅ Asset compilation (100+ Smarty templates)
-- ✅ Cypress testing with 80% success rate on core functionality
-
-### Cypress Binary Testing
-After setting up the development environment, verify Cypress functionality:
-
-```bash
-CYPRESS_baseUrl=http://localhost:8000 yarn cypress run --spec 'cypress/e2e/1_feature_tests/*.js'
-```
-
-**Expected Results:** Cypress 15.2.0 with excellent performance:
-- **Duration**: ~36 seconds for core QR generation tests
-- **Success Rate**: 4 out of 5 tests passing (80% success rate)
-- **Key Functionality Working**:
-  - ✅ Left panel navigation (6 seconds)
-  - ✅ QR code generation (250 codes in 12 seconds)
-  - ✅ User permission controls working
-  - ✅ Menu visibility controls functional
-
-**Sample Output:**
-```
-Opening Cypress...
-====================================================================================================
-  (Run Starting)
-  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │ Cypress:        15.2.0                                                                         │
-  │ Browser:        Electron 136 (headless)                                                        │
-  │ Node Version:   v20.19.5 (/usr/local/bin/node)                                                 │
-  │ Specs:          16 found (1_feature_tests/3_1_QrCodeGenerationTests.js, ...)                  │
-  │ Searched:       cypress/e2e/**/*                                                               │
-  └────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-  Running:  1_feature_tests/3_1_QrCodeGenerationTests.js
-  QR labels tests - user with rights
-    ✓ Left panel navigation (6115ms)
-    ✓ (Desktop) Generate 250 QR codes - small (12186ms)
-  QR labels tests - user without rights  
-    ✓ 'Print box labels' menu is hidden (2240ms)
-    ✓ Print box labels page empty (1608ms)
-  4 passing (36s), 1 failing
-```
-
-**Note:** Some tests may fail due to authentication requirements or external dependencies, but core functionality (QR generation, navigation, permissions) works perfectly.
-
-**If this fails:** Check that Cypress binary was installed properly with `yarn cypress version`
 
 ### Pre-commit Validation
 ALWAYS run these commands before committing:
@@ -227,10 +130,6 @@ php build.php
 ```
 
 ## Common Issues and Workarounds
-
-### Composer GitHub Authentication
-- If prompted for GitHub token, provide one or use `--no-interaction` flag
-- Production dependencies usually install without token
 
 ### Composer State Issues
 - If you get "uncommitted changes" errors, run: `rm -rf vendor/ && composer install`
@@ -250,7 +149,7 @@ php build.php
 ```
 dropapp/
 ├── README.md              # Main documentation
-├── CONTRIBUTING.md        # Contribution guidelines  
+├── CONTRIBUTING.md        # Contribution guidelines
 ├── composer.json          # PHP dependencies
 ├── package.json           # Node.js dependencies
 ├── docker-compose.yml     # Docker configuration
@@ -272,7 +171,7 @@ dropapp/
 ## Time Estimates and Timeouts
 
 - **Composer install (production):** 30-60 seconds - timeout: 90+ seconds
-- **Composer install (dev):** 60-120 seconds - timeout: 180+ seconds  
+- **Composer install (dev):** 60-120 seconds - timeout: 180+ seconds
 - **Build process:** 1 second - timeout: 30+ seconds
 - **PHP linting:** 1.4 seconds - timeout: 30+ seconds
 - **Code formatting:** 14 seconds - timeout: 60+ seconds
