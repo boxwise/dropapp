@@ -80,11 +80,6 @@ jobs:
         run: |
           php build.php
           cp library/config.php.default library/config.php
-          echo foo
-          # env | grep AUTH0 | grep -v SECRET
-          echo bar
-          # env | grep MYSQL
-          echo baz
           php -S localhost:8000 gcloud-entry.php &
 
           for i in {1..20}; do
