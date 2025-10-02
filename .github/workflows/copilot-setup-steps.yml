@@ -74,7 +74,7 @@ jobs:
           php build.php
           cp library/config.php.default library/config.php
           echo foo
-          env | grep AUTH0 | grep -v SECRET
+          # env | grep AUTH0 | grep -v SECRET
           echo bar
           env | grep MYSQL
           echo baz
