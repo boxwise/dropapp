@@ -94,4 +94,4 @@ jobs:
       - name: Run cypress tests
         run: |
           yarn cypress --version
-          DEBUG=cypress:* CYPRESS_baseUrl=http://localhost:8000 yarn cypress run --spec 'cypress/e2e/1_feature_tests/3_1*.js'
+          CYPRESS_baseUrl=http://localhost:8000 yarn cypress run --spec 'cypress/e2e/1_feature_tests/3_1*.js'
