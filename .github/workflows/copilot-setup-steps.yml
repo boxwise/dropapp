@@ -72,6 +72,7 @@ jobs:
       - name: env variables
         run: |
           echo "$ALLMYVARS"
+          echo "$MYSQL_PORT"
         shell: bash
         env:
           ALLMYVARS: ${{ toJSON(vars) }}
@@ -82,7 +83,7 @@ jobs:
           cp library/config.php.default library/config.php
           php -S localhost:8000 gcloud-entry.php &
 
-          for i in {1..20}; do
+          for i in {1..10}; do
             sleep 1
             if curl -s http://localhost:8000 > /dev/null; then
               echo "Server is responding after $i secs"
