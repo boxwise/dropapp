@@ -8,6 +8,7 @@ module.exports = defineConfig({
     openMode: 0,
   },
   env: {
+    auth0Domain: 'boxtribute-dev.eu.auth0.com',
     testAdmin: 'admin@admin.co',
     testAdminName: 'BrowserTestUser_Admin',
     testCoordinator: 'coordinator@coordinator.co',
@@ -29,7 +30,6 @@ module.exports = defineConfig({
     successPwdChangeNotif:
       'Within a few minutes you will receive an e-mail with further instructions to reset your password.',
     orgName: 'TestOrganisation',
-    auth0Domain: process.env.AUTH0_DOMAIN || 'staging-login.boxtribute.org',
   },
   e2e: {
     // We've imported your old cypress plugins here.
@@ -37,7 +37,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.js')(on, config)
     },
-    baseUrl: 'https://staging.boxtribute.org',
+    baseUrl: 'http://localhost:8000',
     specPattern: 'cypress/e2e/**/*.js',
   },
 })
