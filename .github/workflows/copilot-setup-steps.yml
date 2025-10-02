@@ -69,9 +69,29 @@ jobs:
         run: |
           vendor/bin/phinx migrate -e development
 
+      - name: env variables
+        run: |
+          echo "$ALLMYVARS"
+          echo "$MYSQL_PORT"
+        shell: bash
+        env:
+          ALLMYVARS: ${{ toJSON(vars) }}
+
       - name: Start PHP server
         run: |
-          php build.php
+          php build.php >/dev/null 2>&1
           cp library/config.php.default library/config.php
-          # php -S localhost:8000 gcloud-entry.php &
-          # sleep 3 && curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ && echo " - Server is responding"
+
+      # - name: Run cypress tests
+      #   run: |
+      #     yarn cypress --version
+      #     CYPRESS_baseUrl=http://localhost:8000 yarn cypress run --spec 'cypress/e2e/1_feature_tests/3_1*.js'
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: |
+            php -S localhost:8000 gcloud-entry.php
+          spec: cypress/e2e/1_feature_tests/3_1*.js
+          config: baseUrl=http://localhost:8000
+          wait-on: 'http://localhost:8000'
