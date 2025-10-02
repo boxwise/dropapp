@@ -81,15 +81,6 @@ jobs:
         run: |
           php build.php >/dev/null 2>&1
           cp library/config.php.default library/config.php
-          php -S localhost:8000 gcloud-entry.php &
-
-          for i in {1..10}; do
-            sleep 1
-            if curl -s http://localhost:8000 > /dev/null; then
-              echo "Server is responding after $i secs"
-              break
-            fi
-          done
 
       # - name: Run cypress tests
       #   run: |
@@ -99,9 +90,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: php build.php
           start: |
-            cp library/config.php.default library/config.php
             php -S localhost:8000 gcloud-entry.php
           spec: cypress/e2e/1_feature_tests/3_1*.js
           config: baseUrl=http://localhost:8000
