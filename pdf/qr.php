@@ -57,8 +57,7 @@ Tracer::inSpan(
                     ) AS size,
                     g.label AS gender,
                     s.qr_id,
-                    qr.code,
-                    qr.legacy
+                    qr.code
                 FROM
                     stock AS s
                 LEFT OUTER JOIN products AS p ON
@@ -77,7 +76,7 @@ Tracer::inSpan(
             }
 
             // qr code generation
-            if ($box['code'] && !$box['legacy']) {
+            if ($box['code']) {
                 // Box already has a QR code associated
                 $hash = $box['code'];
             } else {
@@ -86,13 +85,8 @@ Tracer::inSpan(
 
                 if ($labels[$i]) {
                     db_query('UPDATE stock SET qr_id = :qr_id WHERE id = :id', ['id' => $labels[$i], 'qr_id' => $id]);
-                    $from = [];
-                    if ($box['legacy']) {
-                        db_query('DELETE FROM qr WHERE id=:id', ['id' => $box['qr_id']]);
-                        $from['int'] = $box['qr_id'];
-                    }
                     //  Optimise query for updating history
-                    simpleBulkSaveChangeHistory('stock', $labels[$i], 'New Qr-code assigned by pdf generation.', $from, ['int' => $id]);
+                    simpleBulkSaveChangeHistory('stock', $labels[$i], 'New Qr-code assigned by pdf generation.');
                 }
             }
 
