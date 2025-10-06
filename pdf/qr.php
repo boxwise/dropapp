@@ -37,6 +37,7 @@ Tracer::inSpan(
             $_GET['count'] = count($labels);
         }
 
+        $box_ids_without_qr = [];
         for ($i = 0; $i < intval($_GET['count']); ++$i) {
             if (!($i % 2)) {
                 $pdf->AddPage();
@@ -85,8 +86,7 @@ Tracer::inSpan(
 
                 if ($labels[$i]) {
                     db_query('UPDATE stock SET qr_id = :qr_id WHERE id = :id', ['id' => $labels[$i], 'qr_id' => $id]);
-                    //  Optimise query for updating history
-                    simpleBulkSaveChangeHistory('stock', $labels[$i], 'New Qr-code assigned by pdf generation.');
+                    $box_ids_without_qr[] = $labels[$i];
                 }
             }
 
@@ -138,6 +138,7 @@ Tracer::inSpan(
                 // $pdf->Text(140,
             }
         }
+        simpleBulkSaveChangeHistory('stock', $box_ids_without_qr, 'New Qr-code assigned by pdf generation.');
 
         $pdf->Output('I');
     }
