@@ -39,7 +39,6 @@ if ($_POST) {
         for ($i = 0; $i < $_POST['count']; ++$i) {
             [$id, $data['labels'][$i]['hash']] = generateQRIDForDB();
             [$data['labels'][$i]['qrPng'], $data['labels'][$i]['data-testurl']] = generateQrPng($data['labels'][$i]['hash']);
-            simpleBulkSaveChangeHistory('qr', $id, 'New QR-code generated');
         }
     }
 
