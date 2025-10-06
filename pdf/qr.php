@@ -30,7 +30,9 @@ Tracer::inSpan(
         $pdf->SetFont('opensans', '', 9);
         $pdf->SetAutoPageBreak(false);
 
+        // If directed here from "Print labels", count is already set
         if ($_GET['label']) {
+            // Directed here from v2 ManageBoxes or BoxView
             $labels = explode(',', (string) $_GET['label']);
             $_GET['count'] = count($labels);
         }
@@ -76,8 +78,10 @@ Tracer::inSpan(
 
             // qr code generation
             if ($box['code'] && !$box['legacy']) {
+                // Box already has a QR code associated
                 $hash = $box['code'];
             } else {
+                // Box does not yet have a QR code associated. Generate one and link it to the box
                 [$id, $hash] = generateQRIDForDB();
 
                 if ($labels[$i]) {
