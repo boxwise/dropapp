@@ -17,7 +17,8 @@ if (!$ajax) {
     listsetting('allowsort', false);
     listsetting('allowmove', false);
     listsetting('allowcollapse', true);
-    listsetting('listrownotclickable', true);
+    listsetting('listrownotclickable', false);
+    listsetting('beta_box_view_edit', true);
 
     $statusarray = ['in_stock' => 'In Stock', 'all' => 'All Box States', 'donated' => 'Donated', 'lost' => 'Lost', 'scrap' => 'Scrap', 'untouched' => 'Untouched for 3 months'];
     listfilter(['label' => 'Boxes', 'options' => $statusarray]);
@@ -61,9 +62,9 @@ if (!$ajax) {
                 IF(isnull(a.location),IF(isnull(a.Gender),IF(isnull(a.prod_id),"Category","Product"),"Gender"),"Size") as labelname,
                 IF(isnull(a.location),IF(isnull(a.Gender),IF(isnull(a.prod_id),a.Category,a.Product),a.Gender),a.size) as label,
                 TRIM(trailing "-" from concat('
-                .('untouched' == $_SESSION['filter']['stock_overview'] ? 1 :
-                    ('all' == $_SESSION['filter']['stock_overview'] ? 0 :
-                        box_state_id_from_filter($_SESSION['filter']['stock_overview'])))
+                .('untouched' == $_SESSION['filter']['stock_overview'] ? 1
+                    : ('all' == $_SESSION['filter']['stock_overview'] ? 0
+                        : box_state_id_from_filter($_SESSION['filter']['stock_overview'])))
                 .',"-",'
                 .($_SESSION['filter3']['stock_overview'] ? intval($_SESSION['filter3']['stock_overview']) : 0)
                 .',"-",
@@ -127,9 +128,9 @@ if (!$ajax) {
                     INNER JOIN
                         locations on stock.location_id = locations.id 
                     INNER JOIN 
-                        box_state bs on bs.id = stock.box_state_id'.
+                        box_state bs on bs.id = stock.box_state_id'
                 // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
-                ($listconfig['multiplefilter_selected'] ? '
+                .($listconfig['multiplefilter_selected'] ? '
                         INNER JOIN
                             tags_relations ON tags_relations.object_id = stock.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
                         INNER JOIN
@@ -140,10 +141,10 @@ if (!$ajax) {
                         AND (NOT stock.deleted OR stock.deleted IS NULL)'
                     .($_SESSION['filter2']['stock_overview'] ? ' AND (g.id = '.intval($_SESSION['filter2']['stock_overview']).')' : '')
                     .($_SESSION['filter3']['stock_overview'] ? ' AND (locations.id = '.intval($_SESSION['filter3']['stock_overview']).')' : '')
-                    .('untouched' == $_SESSION['filter']['stock_overview'] ? ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1' :
-                        ('all' == $_SESSION['filter']['stock_overview'] ? '' :
-                            ($_SESSION['filter']['stock_overview'] ? ' AND (stock.box_state_id = '.box_state_id_from_filter($_SESSION['filter']['stock_overview']).') ' :
-                                ' AND (stock.box_state_id = 1) ')))
+                    .('untouched' == $_SESSION['filter']['stock_overview'] ? ' AND DATEDIFF(now(),stock.modified) > 90 AND stock.box_state_id = 1'
+                        : ('all' == $_SESSION['filter']['stock_overview'] ? ''
+                            : ($_SESSION['filter']['stock_overview'] ? ' AND (stock.box_state_id = '.box_state_id_from_filter($_SESSION['filter']['stock_overview']).') '
+                                : ' AND (stock.box_state_id = 1) ')))
                     .($listconfig['multiplefilter_selected'] ? ' AND tags.id IN ('.implode(',', $listconfig['multiplefilter_selected'] ?? []).') ' : '')
                 .' GROUP BY 
                         pc.label,pc.id,p.name,p.group_id,g.label,g.id,sizes.label,sizes.id,locations.label,locations.id WITH ROLLUP 
@@ -220,6 +221,45 @@ if (!$ajax) {
                 $row['notCollapsed'] = true;
             }
         }
+
+        // Build v2 URL with filter parameters
+        [$boxstate, $locationfromfilter, $category, $product, $gender, $size, $location] = explode('-', (string) $row['id']);
+
+        $filterParams = [];
+
+        if ($boxstate) {
+            $filterParams[] = 'state_ids='.$boxstate;
+        }
+        if ($category) {
+            $filterParams[] = 'product_category_ids='.$category;
+        }
+        if ($product) {
+            // Product in the ID is the group_id, need to get all product IDs with this group_id
+            $productIds = db_simplearray('SELECT id FROM products WHERE group_id = :group_id AND camp_id = :camp_id AND (NOT deleted OR deleted IS NULL)', ['group_id' => $product, 'camp_id' => $_SESSION['camp']['id']]);
+            if ($productIds) {
+                $filterParams[] = 'product_ids='.implode(',', $productIds);
+            }
+        }
+        if ($gender) {
+            $filterParams[] = 'gender_ids='.$gender;
+        }
+        if ($size) {
+            $filterParams[] = 'size_ids='.$size;
+        }
+        // Use location if present, otherwise use locationfromfilter
+        if ($location) {
+            $filterParams[] = 'location_ids='.$location;
+        } elseif ($locationfromfilter) {
+            $filterParams[] = 'location_ids='.$locationfromfilter;
+        }
+
+        // Add tag filters if present
+        if ($listconfig['multiplefilter_selected']) {
+            $filterParams[] = 'tag_ids='.implode(',', $listconfig['multiplefilter_selected']);
+        }
+
+        $queryString = $filterParams ? '?'.implode('&', $filterParams) : '';
+        $row['href'] = $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/boxes'.$queryString;
     }
 
     $cmsmain->assign('data', $data);
