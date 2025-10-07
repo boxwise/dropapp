@@ -234,11 +234,7 @@ if (!$ajax) {
             $filterParams[] = 'product_category_ids='.$category;
         }
         if ($product) {
-            // Product in the ID is the group_id, need to get all product IDs with this group_id
-            $productIds = db_simplearray('SELECT id FROM products WHERE group_id = :group_id AND camp_id = :camp_id AND (NOT deleted OR deleted IS NULL)', ['group_id' => $product, 'camp_id' => $_SESSION['camp']['id']]);
-            if ($productIds) {
-                $filterParams[] = 'product_ids='.implode(',', $productIds);
-            }
+            $filterParams[] = 'product_ids='.$product;
         }
         if ($gender) {
             $filterParams[] = 'gender_ids='.$gender;
