@@ -18,7 +18,7 @@ if (!$ajax) {
     listsetting('allowmove', false);
     listsetting('allowcollapse', true);
     listsetting('listrownotclickable', false);
-    listsetting('beta_box_view_edit', true);
+    listsetting('customhrefinrow', true);
 
     $statusarray = ['in_stock' => 'In Stock', 'all' => 'All Box States', 'donated' => 'Donated', 'lost' => 'Lost', 'scrap' => 'Scrap', 'untouched' => 'Untouched for 3 months'];
     listfilter(['label' => 'Boxes', 'options' => $statusarray]);

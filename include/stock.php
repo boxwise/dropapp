@@ -177,7 +177,7 @@ Tracer::inSpan(
 
             // TODO enable forward to new app only for beta users
             // if (in_array('beta_user', $_SESSION['auth0_user'][$settings['jwt_claim_prefix'].'/roles'])) {
-            //     listsetting('beta_box_view_edit', true);
+            //     listsetting('customhrefinrow', true);
             // }
 
             // related to https://trello.com/c/Ci74t1Wj

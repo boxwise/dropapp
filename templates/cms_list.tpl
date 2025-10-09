@@ -182,7 +182,7 @@
 												<label class="item-select-label">
 													<input class="item-select" data-testid='select-id' type="checkbox" {if !$listconfig['allowselectinvisible'] && !$row['visible']}disabled{/if}>
 												</label>
-													{if $listconfig['beta_box_view_edit']}
+													{if $listconfig['customhrefinrow']}
 														<a class="td-content-field" href="{$row['href']}">
 													{elseif !$row['preventedit'] and !isset($listconfig['allowedit'])}
 														<a class="td-content-field" href="?action={$listconfig['edit']}&origin={$listconfig['origin']}&id={$row['id']}">
