@@ -1,8 +1,5 @@
 <?php
 
-use Google\Cloud\Datastore\DatastoreClient;
-use Google\Cloud\Datastore\DatastoreSessionHandler;
-
 if (!array_key_exists('HTTP_X_APPENGINE_CRON', $_SERVER) && 'dropapp_dev' != $settings['db_database']) {
     throw new Exception('Not called from AppEngine cron service');
 }
