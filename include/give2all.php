@@ -37,15 +37,16 @@ if ($_POST) {
             $children += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE visible AND NOT deleted AND id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) < '.$_SESSION['camp']['adult_age'], ['id' => $person]);
             $adults = db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE visible AND NOT deleted AND parent_id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$_SESSION['camp']['adult_age'], ['id' => $person]);
             $adults += db_numrows('SELECT *, TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) AS age FROM people WHERE visible AND NOT deleted AND id = :id AND TIMESTAMPDIFF(YEAR,date_of_birth,CURDATE()) >= '.$_SESSION['camp']['adult_age'], ['id' => $person]);
+            $nodob = db_numrows('SELECT * FROM people WHERE visible AND NOT deleted AND (id = :id OR parent_id = :id) AND (date_of_birth IS NULL OR NOT date_of_birth)', ['id' => $person]);
+            $tmp = $adults;
 
             // Treat people with no DOB as adults if checkbox is checked
             // Related to https://trello.com/c/jWvgvDtE
             if (isset($_POST['treatnodobasadult'])) {
-                $nodob = db_numrows('SELECT * FROM people WHERE visible AND NOT deleted AND (id = :id OR parent_id = :id) AND (date_of_birth IS NULL OR NOT date_of_birth)', ['id' => $person]);
-                $adults += $nodob;
+                $tmp += $nodob;
             }
 
-            $drops = intval($_POST['dropsadult']) * $adults;
+            $drops = intval($_POST['dropsadult']) * $tmp;
             $drops += intval($_POST['dropschild']) * $children;
 
             $volunteers = db_value('SELECT COUNT(id) FROM people WHERE visible AND NOT deleted AND (id = :id OR parent_id = :id) AND volunteer', ['id' => $person]);
@@ -58,7 +59,7 @@ if ($_POST) {
             }
 
             if (!$volunteers) {
-                $max = $adults * $_SESSION['camp']['dropcapadult'] + $children * $_SESSION['camp']['dropcapchild'];
+                $max = ($adults + $nodob) * $_SESSION['camp']['dropcapadult'] + $children * $_SESSION['camp']['dropcapchild'];
                 $cap = -($currentdrops + $drops) + $max;
                 if ($cap < 0) {
                     $drops += $cap;

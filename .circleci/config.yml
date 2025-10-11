@@ -19,12 +19,12 @@ jobs:
       # load composer cache
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "composer.lock" }}
+            - composer-v1-{{ checksum "composer.lock" }}
       - run: composer install -n
       # run linting (before we generate templates)
       - run: vendor/bin/parallel-lint --exclude vendor .
-      # these rules match the ones enabled by default by the "fterrag.vscode-php-cs-fixer" vs code extension
-      - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --verbose --rules @PhpCsFixer
+      # Use the project's PHP CS Fixer configuration
+      - run: php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix --dry-run --verbose --diff
       # build static assets including templates
       - run: php build.php
       # install again, but with no dev dependencies this time (for deploy)
@@ -117,9 +117,9 @@ jobs:
           vendor/bin/phinx migrate -e << parameters.serviceName >>
           # deploy
           gcloud app deploy app-<< parameters.serviceName >>.yaml --version ${CIRCLE_BUILD_NUM}
-  
+
   create-sentry-release:
-    docker: 
+    docker:
       - image: circleci/node:4.8.2
     steps:
       - checkout
@@ -135,64 +135,64 @@ jobs:
 workflows:
   build-and-deploy:
     jobs:
-    - build:
-        filters:  # required since `deploy-prod` has tag filters AND requires `build`
-          tags:
-            only: /^v.*/
-    # baseUrl for cypress is set in cypress.json (currently staging.boxtribute.org)
-    - cypress/run:
-        name: cypress-feature-tests
-        package-manager: yarn
-        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec "cypress/e2e/1_feature_tests/*"
-        requires:
-          - deploy-staging
-        filters:
-          branches:
-            only: master
-    - cypress/run:
-        name: cypress-auth-tests
-        package-manager: yarn
-        cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec "cypress/e2e/2_auth_tests/*"
-        requires:
-          - deploy-staging
-        filters:
-          branches:
-            only: master
-    - deploy:
-        name: deploy-staging
-        envVariablePrefix: BOXWISE_STAGING_
-        serviceName: default
-        requires:
-          - build
-        filters:
-          branches:
-            only: master
-    - deploy:   # this will always run on any commit on production
-        name: deploy-demo
-        envVariablePrefix: BOXWISE_DEMO_
-        serviceName: demo
-        requires:
-          - build
-        filters:
-          branches:
-            only: production
-    - deploy:   # this can only be triggered by a tag
-        name: deploy-prod
-        envVariablePrefix: BOXWISE_PROD_
-        serviceName: production
-        requires:
-          - build
-        filters:
-          tags:
-            only: /^v.*/
-          branches:
-            ignore: /.*/
-    - create-sentry-release:
-        name: create-sentry-release-for-production
-        requires:
-          - deploy-prod
-        filters:
-          tags:
-            only: /^v.*/
-          branches:
-            ignore: /.*/
+      - build:
+          filters: # required since `deploy-prod` has tag filters AND requires `build`
+            tags:
+              only: /^v.*/
+      # baseUrl for cypress is set in cypress.config.js (currently staging.boxtribute.org)
+      - cypress/run:
+          name: cypress-feature-tests
+          package-manager: yarn
+          cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec "cypress/e2e/1_feature_tests/*"
+          requires:
+            - deploy-staging
+          filters:
+            branches:
+              only: master
+      - cypress/run:
+          name: cypress-auth-tests
+          package-manager: yarn
+          cypress-command: yarn wait-on https://staging.boxtribute.org/assets/img/boxtribute.png && yarn cypress run --record --spec "cypress/e2e/2_auth_tests/*"
+          requires:
+            - deploy-staging
+          filters:
+            branches:
+              only: master
+      - deploy:
+          name: deploy-staging
+          envVariablePrefix: BOXWISE_STAGING_
+          serviceName: default
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - deploy: # this will always run on any commit on production
+          name: deploy-demo
+          envVariablePrefix: BOXWISE_DEMO_
+          serviceName: demo
+          requires:
+            - build
+          filters:
+            branches:
+              only: production
+      - deploy: # this can only be triggered by a tag
+          name: deploy-prod
+          envVariablePrefix: BOXWISE_PROD_
+          serviceName: production
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - create-sentry-release:
+          name: create-sentry-release-for-production
+          requires:
+            - deploy-prod
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/

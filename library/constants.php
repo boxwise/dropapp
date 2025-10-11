@@ -58,7 +58,7 @@ $menusToActions = [
     [
         'id' => 67,
         'module' => 'Admin',
-        'menu' => 'Manage products',
+        'menu' => 'Manage Products v2',
         'action' => 'products',
         'adminonly' => '0',
         'visible' => '1',
@@ -115,7 +115,7 @@ $menusToActions = [
         'menu' => 'Manage Boxes',
         'action' => 'stock',
         'adminonly' => '0',
-        'visible' => '1',
+        'visible' => '0',
         'allusers' => '0',
         'allcamps' => '0',
         'action_permission' => [
@@ -125,7 +125,7 @@ $menusToActions = [
     [
         'id' => 166,
         'module' => 'Inventory',
-        'menu' => 'NEW Manage Boxes (<span>beta</span>)',
+        'menu' => 'Manage Boxes v2',
         'action' => 'new_manage_boxes',
         'adminonly' => '0',
         'visible' => '1',
@@ -363,7 +363,7 @@ $menusToActions = [
     [
         'id' => 165,
         'module' => 'Transfers',
-        'menu' => 'Manage Agreements',
+        'menu' => 'Manage Network',
         'action' => 'transfer_agreements',
         'adminonly' => '0',
         'visible' => '1',
