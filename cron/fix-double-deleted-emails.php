@@ -20,7 +20,8 @@ require_once 'library/core.php';
 $result = db_query("
     SELECT id, email
     FROM cms_users
-    WHERE email LIKE '%.deleted.%.deleted.%'
+    WHERE deleted IS NOT NULL
+      AND email REGEXP '@.*\.deleted\.[0-9]+.*\.deleted\.[0-9]+'
 ");
 
 $fixed_count = 0;
