@@ -104,6 +104,8 @@ if (!$ajax) {
                             prod_b.category_id as category_id,
                             prod_b.gender_id as gender_id
                         FROM
+                            -- get a list of unique product names (case-insensitive) for a given camp,
+                            -- each with the minimum product id serving as the group identifier
                             (SELECT 
                                 min(a.id) as group_id,
                                 upper(a.name) as name 
