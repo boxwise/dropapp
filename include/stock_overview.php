@@ -72,9 +72,12 @@ if (!$ajax) {
                     "-",
                     if(isnull(a.prod_id),"",a.prod_id),
                     "-",
-                    if(isnull(a.g_id),"",a.g_id),"-",if(isnull(a.size_id),"",a.size_id),
+                    if(isnull(a.g_id),"",a.g_id),
                     "-",
-                    if(isnull(a.loc_id),"",a.loc_id))) as new_id
+                    if(isnull(a.size_id),"",a.size_id),
+                    "-",
+                    if(isnull(a.loc_id),"",a.loc_id)
+                    )) as new_id
             FROM
                 (SELECT 
                     agrouping.*,
