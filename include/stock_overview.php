@@ -231,6 +231,9 @@ if (!$ajax) {
 
         if ($boxstate) {
             $filterParams[] = 'state_ids='.$boxstate;
+        } else {
+            $stateIds = db_simplearray('SELECT id FROM box_state', null, false, false);
+            $filterParams[] = 'state_ids='.implode(',', $stateIds);
         }
         if ($category) {
             $filterParams[] = 'product_category_ids='.$category;
