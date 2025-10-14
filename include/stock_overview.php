@@ -242,7 +242,11 @@ if (!$ajax) {
             $filterParams[] = 'product_category_ids='.$category;
         }
         if ($product) {
-            $filterParams[] = 'product_ids='.$product;
+            // Product in the ID is the group_id, need to get all IDs of non-deleted products in this base matching its name
+            $productIds = db_simplearray('SELECT id FROM products WHERE UPPER(name) = (SELECT UPPER(name) FROM products WHERE id = :group_id) AND camp_id = :camp_id AND (NOT deleted OR deleted IS NULL)', ['group_id' => $product, 'camp_id' => $_SESSION['camp']['id']], false, false);
+            if ($productIds) {
+                $filterParams[] = 'product_ids='.implode(',', $productIds);
+            }
         }
         if ($gender) {
             $filterParams[] = 'gender_ids='.$gender;
