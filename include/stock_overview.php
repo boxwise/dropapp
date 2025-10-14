@@ -219,6 +219,21 @@ if (!$ajax) {
                 CAST(SUBSTRING_INDEX(complete.id, "-",1) AS SIGNED), 
                 complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
 
+    $stateIds = db_simplearray('SELECT id FROM box_state ORDER BY id', null, false, false);
+    // Create look-up of product IDs grouped by name
+    $productIds = db_simplearray('
+                            SELECT
+                                min(a.id) as group_id,
+                                GROUP_CONCAT(DISTINCT b.id) as ids
+                            FROM
+                                products as a
+                            INNER JOIN
+                                products as b ON upper(a.name)=upper(b.name)
+                                AND a.camp_id = :camp_id AND b.camp_id = :camp_id AND a.id<=b.id
+                                AND (NOT a.deleted OR a.deleted IS NULL)
+                                AND (NOT b.deleted OR b.deleted IS NULL)
+                            GROUP BY
+                                upper(a.name)', ['camp_id' => $_SESSION['camp']['id']]);
     // Add what rows are expanded and collapsed
     foreach ($data as &$row) {
         if (isset($_SESSION['stock_overview']) && is_array($_SESSION['stock_overview'])) {
@@ -235,18 +250,13 @@ if (!$ajax) {
         if ($boxstate) {
             $filterParams[] = 'state_ids='.$boxstate;
         } else {
-            $stateIds = db_simplearray('SELECT id FROM box_state', null, false, false);
             $filterParams[] = 'state_ids='.implode(',', $stateIds);
         }
         if ($category) {
             $filterParams[] = 'product_category_ids='.$category;
         }
-        if ($product) {
-            // Product in the ID is the group_id, need to get all IDs of non-deleted products in this base matching its name
-            $productIds = db_simplearray('SELECT id FROM products WHERE UPPER(name) = (SELECT UPPER(name) FROM products WHERE id = :group_id) AND camp_id = :camp_id AND (NOT deleted OR deleted IS NULL)', ['group_id' => $product, 'camp_id' => $_SESSION['camp']['id']], false, false);
-            if ($productIds) {
-                $filterParams[] = 'product_ids='.implode(',', $productIds);
-            }
+        if ($product && isset($productIds[$product])) {
+            $filterParams[] = 'product_ids='.$productIds[$product];
         }
         if ($gender) {
             $filterParams[] = 'gender_ids='.$gender;
