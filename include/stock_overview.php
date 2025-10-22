@@ -219,7 +219,6 @@ if (!$ajax) {
                 CAST(SUBSTRING_INDEX(complete.id, "-",1) AS SIGNED), 
                 complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
 
-    $stateIds = db_simplearray('SELECT id FROM box_state ORDER BY id', null, false, false);
     // Create look-up of product IDs grouped by name
     $productIds = db_simplearray('
                             SELECT
@@ -249,8 +248,6 @@ if (!$ajax) {
 
         if ($boxstate) {
             $filterParams[] = 'state_ids='.$boxstate;
-        } else {
-            $filterParams[] = 'state_ids='.implode(',', $stateIds);
         }
         if ($category) {
             $filterParams[] = 'product_category_ids='.$category;
