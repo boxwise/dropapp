@@ -2,9 +2,9 @@
 
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use OpenCensus\Trace\Tracer;
 
@@ -19,15 +19,16 @@ function generateQrPng($hash, $legacy = false)
                 $writer = new PngWriter();
 
                 // Create QR code
-                $qrCode = QrCode::create('https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash.($legacy ? '&qrlegacy=1' : ''))
-                    ->setEncoding(new Encoding('UTF-8'))
-                    ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
-                    ->setSize(150)
-                    ->setMargin(0)
-                    ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-                    ->setForegroundColor(new Color(0, 0, 0))
-                    ->setBackgroundColor(new Color(255, 255, 255))
-                ;
+                $qrCode = new QrCode(
+                    data: 'https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash.($legacy ? '&qrlegacy=1' : ''),
+                    encoding: new Encoding('UTF-8'),
+                    errorCorrectionLevel: ErrorCorrectionLevel::Low,
+                    size: 150,
+                    margin: 0,
+                    roundBlockSizeMode: RoundBlockSizeMode::Margin,
+                    foregroundColor: new Color(0, 0, 0),
+                    backgroundColor: new Color(255, 255, 255)
+                );
 
                 $result = $writer->write($qrCode);
 
