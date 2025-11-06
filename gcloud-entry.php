@@ -135,7 +135,6 @@ Tracer::inSpan(
             case '/cron/dailyroutine.php':
             case '/cron/reseed-auth0.php':
             case '/cron/reseed-roles-auth0.php':
-            case '/cron/fix-double-deleted-emails.php':
             case '/fake-error.php':
                 require substr($parsedUrl, 1); // trim /
 
