@@ -11,22 +11,66 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
         $dbName = $this->fetchRow('SELECT DATABASE();');
         $this->output->writeln("Running upwards migration on database: {$dbName[0]}");
 
-        // Enable Base Settings menu (ID: 170) for all active camps
-        // Replace 99 with actual camp IDs
+        // Enable Base Settings menu (ID: 170) for few active camps
         $this->execute("
-            INSERT INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES ('170', '99');
+            INSERT INTO `cms_functions_camps`
+            (`cms_functions_id`, `camps_id`)
+            VALUES
+            ('170', '3'),  -- IHA
+            -- ('170', '20'), LHI
+            ('170', '27'); -- TFS
         ");
 
         // Enable Use Service menu (ID: 168) for all active camps
-        // Replace 99 with actual camp IDs
         $this->execute("
-            INSERT INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES ('168', '99');
+            INSERT INTO `cms_functions_camps`
+            (`cms_functions_id`, `camps_id`)
+            VALUES
+            -- ('168', '3'),
+            ('168', '17'),
+            -- ('168', '20'),
+            ('168', '22'),
+            ('168', '25'),
+            -- ('168', '27'),
+            ('168', '30'),
+            ('168', '36'),
+            ('168', '39'),
+            ('168', '41'),
+            ('168', '44'),
+            ('168', '46'),
+            ('168', '48'),
+            ('168', '49'),
+            ('168', '50'),
+            ('168', '51'),
+            ('168', '52'),
+            ('168', '53'),
+            ('168', '54');
         ");
 
         // Enable Manage Services menu (ID: 169) for all active camps
-        // Replace 99 with actual camp IDs
         $this->execute("
-            INSERT INTO `cms_functions_camps` (`cms_functions_id`, `camps_id`) VALUES ('169', '99');
+            INSERT INTO `cms_functions_camps`
+            (`cms_functions_id`, `camps_id`)
+            VALUES
+            -- ('169', '3'),
+            ('169', '17'),
+            -- ('169', '20'),
+            ('169', '22'),
+            ('169', '25'),
+            -- ('169', '27'),
+            ('169', '30'),
+            ('169', '36'),
+            ('169', '39'),
+            ('169', '41'),
+            ('169', '44'),
+            ('169', '46'),
+            ('169', '48'),
+            ('169', '49'),
+            ('169', '50'),
+            ('169', '51'),
+            ('169', '52'),
+            ('169', '53'),
+            ('169', '54');
         ");
 
         // Enable Base Settings menu (ID: 170) for all usergroups
