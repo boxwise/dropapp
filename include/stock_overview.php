@@ -17,8 +17,8 @@ if (!$ajax) {
     listsetting('allowsort', false);
     listsetting('allowmove', false);
     listsetting('allowcollapse', true);
-    listsetting('listrownotclickable', false);
-    listsetting('customhrefinrow', true);
+    listsetting('listrownotclickable', true);
+    listsetting('customhrefinrow', false);
 
     $statusarray = ['in_stock' => 'In Stock', 'all' => 'All Box States', 'donated' => 'Donated', 'lost' => 'Lost', 'scrap' => 'Scrap', 'untouched' => 'Untouched for 3 months'];
     listfilter(['label' => 'Boxes', 'options' => $statusarray]);
@@ -219,20 +219,6 @@ if (!$ajax) {
                 CAST(SUBSTRING_INDEX(complete.id, "-",1) AS SIGNED), 
                 complete.id;', ['camp_id' => $_SESSION['camp']['id']]);
 
-    // Create look-up of product IDs grouped by name
-    $productIds = db_simplearray('
-                            SELECT
-                                min(a.id) as group_id,
-                                GROUP_CONCAT(DISTINCT b.id) as ids
-                            FROM
-                                products as a
-                            INNER JOIN
-                                products as b ON upper(a.name)=upper(b.name)
-                                AND a.camp_id = :camp_id AND b.camp_id = :camp_id AND a.id<=b.id
-                                AND (NOT a.deleted OR a.deleted IS NULL)
-                                AND (NOT b.deleted OR b.deleted IS NULL)
-                            GROUP BY
-                                upper(a.name)', ['camp_id' => $_SESSION['camp']['id']]);
     // Add what rows are expanded and collapsed
     foreach ($data as &$row) {
         if (isset($_SESSION['stock_overview']) && is_array($_SESSION['stock_overview'])) {
@@ -240,41 +226,6 @@ if (!$ajax) {
                 $row['notCollapsed'] = true;
             }
         }
-
-        // Build v2 URL with filter parameters
-        [$boxstate, $locationfromfilter, $category, $product, $gender, $size, $location] = explode('-', (string) $row['id']);
-
-        $filterParams = [];
-
-        if ($boxstate) {
-            $filterParams[] = 'state_ids='.$boxstate;
-        }
-        if ($category) {
-            $filterParams[] = 'product_category_ids='.$category;
-        }
-        if ($product && isset($productIds[$product])) {
-            $filterParams[] = 'product_ids='.$productIds[$product];
-        }
-        if ($gender) {
-            $filterParams[] = 'gender_ids='.$gender;
-        }
-        if ($size) {
-            $filterParams[] = 'size_ids='.$size;
-        }
-        // Use location if present, otherwise use locationfromfilter
-        if ($location) {
-            $filterParams[] = 'location_ids='.$location;
-        } elseif ($locationfromfilter) {
-            $filterParams[] = 'location_ids='.$locationfromfilter;
-        }
-
-        // Add tag filters if present
-        if ($listconfig['multiplefilter_selected']) {
-            $filterParams[] = 'tag_ids='.implode(',', $listconfig['multiplefilter_selected']);
-        }
-
-        $queryString = $filterParams ? '?'.implode('&', $filterParams) : '';
-        $row['href'] = $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/boxes'.$queryString;
     }
 
     $cmsmain->assign('data', $data);
