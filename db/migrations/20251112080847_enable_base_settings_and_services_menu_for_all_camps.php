@@ -207,29 +207,144 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
 
         // Remove Base Settings menu (ID: 170) from camps
         $this->execute("
-            DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` = '170' AND `camps_id` IN ('3', '27');
+            DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` = '170' AND `camps_id` IN (
+                '3',
+                '27'
+            );
         ");
 
         // Remove Use Service menu (ID: 168) from camps
         $this->execute("
-            DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` = '168' AND `camps_id` IN ('17', '22', '25', '30', '36', '39', '41', '44', '46', '48', '49', '50', '51', '52', '53', '54');
+            DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` = '168' AND `camps_id` IN (
+                '17',
+                '22',
+                '25',
+                '30',
+                '36',
+                '39',
+                '41',
+                '44',
+                '46',
+                '48',
+                '49',
+                '50',
+                '51',
+                '52',
+                '53',
+                '54'
+            );
         ");
 
         // Remove Manage Services menu (ID: 169) from camps
         $this->execute("
-            DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` = '169' AND `camps_id` IN ('17', '22', '25', '30', '36', '39', '41', '44', '46', '48', '49', '50', '51', '52', '53', '54');
+            DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` = '169' AND `camps_id` IN (
+                '17',
+                '22',
+                '25',
+                '30',
+                '36',
+                '39',
+                '41',
+                '44',
+                '46',
+                '48',
+                '49',
+                '50',
+                '51',
+                '52',
+                '53',
+                '54'
+            );
         ");
 
         // Base Settings menu (ID: 170) for usergroups was already enabled, so no deletion needed
 
         // Remove Use Service menu (ID: 168) from usergroups
         $this->execute("
-            DELETE FROM `cms_usergroups_functions` WHERE `cms_functions_id` = '168' AND `cms_usergroups_id` IN ('9', '28', '47', '59', '76', '92', '132', '145', '168', '174', '29', '40', '48', '60', '77', '93', '98', '133', '146', '158', '163', '169', '175', '181', '187', '193', '2', '49', '78', '94', '99', '101', '134', '136', '147', '149', '159', '161', '164', '166', '170', '172', '176', '178', '182', '184', '188', '190', '194', '196');
+            DELETE FROM `cms_usergroups_functions` WHERE `cms_functions_id` = '168' AND `cms_usergroups_id` IN (
+                '9',
+                '28',
+                '47',
+                '59',
+                '76',
+                '92',
+                '132',
+                '145',
+                '168',
+                '174',
+                '29',
+                '40',
+                '48',
+                '60',
+                '77',
+                '93',
+                '98',
+                '133',
+                '146',
+                '158',
+                '163',
+                '169',
+                '175',
+                '181',
+                '187',
+                '193',
+                '2',
+                '49',
+                '78',
+                '94',
+                '99',
+                '101',
+                '134',
+                '136',
+                '147',
+                '149',
+                '159',
+                '161',
+                '164',
+                '166',
+                '170',
+                '172',
+                '176',
+                '178',
+                '182',
+                '184',
+                '188',
+                '190',
+                '194',
+                '196'
+            );
         ");
 
         // Remove Manage Services menu (ID: 169) from usergroups
         $this->execute("
-            DELETE FROM `cms_usergroups_functions` WHERE `cms_functions_id` = '169' AND `cms_usergroups_id` IN ('9', '28', '47', '59', '76', '92', '132', '145', '168', '174', '29', '40', '48', '60', '77', '93', '98', '133', '146', '158', '163', '169', '175', '181', '187', '193');
+            DELETE FROM `cms_usergroups_functions` WHERE `cms_functions_id` = '169' AND `cms_usergroups_id` IN (
+                '9',
+                '28',
+                '47',
+                '59',
+                '76',
+                '92',
+                '132',
+                '145',
+                '168',
+                '174',
+                '29',
+                '40',
+                '48',
+                '60',
+                '77',
+                '93',
+                '98',
+                '133',
+                '146',
+                '158',
+                '163',
+                '169',
+                '175',
+                '181',
+                '187',
+                '193'
+            );
         ");
     }
 }
