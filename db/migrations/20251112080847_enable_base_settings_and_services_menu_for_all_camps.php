@@ -9,6 +9,9 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
     public function up(): void
     {
         $dbName = $this->fetchRow('SELECT DATABASE();');
+        if ('dropapp_production' != $dbName[0]) {
+            return;
+        }
         $this->output->writeln("Running upwards migration on database: {$dbName[0]}");
 
         // Enable Base Settings menu (ID: 170) for few active camps
@@ -197,6 +200,9 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
     public function down(): void
     {
         $dbName = $this->fetchRow('SELECT DATABASE();');
+        if ('dropapp_production' != $dbName[0]) {
+            return;
+        }
         $this->output->writeln("Running downwards migration on database: {$dbName[0]}");
 
         // Remove Base Settings menu (ID: 170) from camps
