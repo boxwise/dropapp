@@ -76,7 +76,7 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
             ('169', '54');
         ");
 
-        // Base Settings menu (ID: 170) for all HoO usergroups of relevant camps already enabled
+        // No migration needed for Base Settings menu (ID: 170) usergroups: all relevant HoO usergroups already have access (verified prior to this migration).
 
         // Enable Use Service menu (ID: 168) for all relevant usergroups
         $this->execute("
