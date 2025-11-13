@@ -257,7 +257,8 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
             );
         ");
 
-        // Base Settings menu (ID: 170) for usergroups was already enabled, so no deletion needed
+        // No deletion needed for Base Settings menu (ID: 170) usergroups:
+        // The up() migration did not add any usergroup entries for menu 170, so nothing to remove here.
 
         // Remove Use Service menu (ID: 168) from usergroups
         $this->execute("
