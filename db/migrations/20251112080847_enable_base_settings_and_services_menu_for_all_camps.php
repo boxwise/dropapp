@@ -145,8 +145,10 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
             ('168', '188'),
             ('168', '190'),
             ('168', '194'),
+            -- ('168', '205'),
+            -- ('168', '207'),
+            -- ('168', '209'),
             ('168', '196');
-
         ");
 
         // Enable Manage Services menu (ID: 169) for HoO and Coordinator usergroups
