@@ -13,9 +13,11 @@ if ($_POST) {
     $data['fulllabel'] = $_POST['fulllabel'];
 
     if ($_POST['fulllabel']) {
+        // Create big label PDFs
         $labels = explode(',', (string) $_POST['label']);
         redirect('/pdf/qr.php?count='.$_POST['count']);
     } elseif ($_POST['label']) {
+        // internal service for non-PDF QR generation
         $i = 0;
         $labels = explode(',', (string) $_POST['label']);
         foreach ($labels as $l) {
@@ -36,10 +38,10 @@ if ($_POST) {
             ++$i;
         }
     } else {
+        // Create label PNGs
         for ($i = 0; $i < $_POST['count']; ++$i) {
             [$id, $data['labels'][$i]['hash']] = generateQRIDForDB();
             [$data['labels'][$i]['qrPng'], $data['labels'][$i]['data-testurl']] = generateQrPng($data['labels'][$i]['hash']);
-            simpleBulkSaveChangeHistory('qr', $id, 'New QR-code generated');
         }
     }
 
