@@ -15,3 +15,6 @@ node_modules
 cypress.env.json
 db/queries/*.csv
 .php-cs-fixer.cache
+# Cypress test artifacts
+cypress/screenshots/
+cypress/videos/

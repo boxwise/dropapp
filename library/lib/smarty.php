@@ -1,23 +1,38 @@
 <?php
 
 use OpenCensus\Trace\Tracer;
+use Smarty\Smarty;
 
 class Zmarty extends Smarty
 {
+    /**
+     * @var bool
+     */
+    public $escape_html_default;
+
     public function __construct()
     {
         global $settings, $translate, $lan;
 
         parent::__construct();
-        if ('localhost' != parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST)) {
+
+        // Handle CLI environment
+        if ('cli' === php_sapi_name() || !isset($_SERVER['HTTP_HOST'])) {
             $this->debugging = false;
             $this->compile_check = Smarty::COMPILECHECK_OFF;
+        } else {
+            if ('localhost' != parse_url('http://'.$_SERVER['HTTP_HOST'], PHP_URL_HOST)) {
+                $this->debugging = false;
+                $this->compile_check = Smarty::COMPILECHECK_OFF;
+            }
         }
+
         if (isset($_GET['smartydebug'])) {
             $this->debugging = true;
         }
 
-        $this->escape_html = true;
+        // Updated for Smarty 5.x compatibility
+        $this->escape_html_default = true; // Changed from escape_html
         $this->merge_compiled_includes = true;
         $this->setCompileDir(__DIR__.'/../../templates/templates_c');
         $this->setTemplateDir(__DIR__.'/../../templates');
@@ -45,19 +60,21 @@ class Zmarty extends Smarty
         );
     }
 
-    // Register custom modifiers
+    // Register custom modifiers - Updated for Smarty 5.x
     private function registerCustomModifiers()
     {
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'is_array', 'is_array_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'array_slice', 'array_slice_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'implode', 'implode_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'intval', 'intval_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'explode', 'explode_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'count', 'count_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'round', 'round_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'trim', 'trim_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'substr', 'substr_modifier');
-        $this->registerPlugin(Smarty::PLUGIN_MODIFIER, 'number_format', 'number_format_modifier');
+        // Smarty 5.x still supports registerPlugin for modifiers, but with updated syntax
+        $this->registerPlugin('modifier', 'is_array', 'is_array_modifier');
+        $this->registerPlugin('modifier', 'array_slice', 'array_slice_modifier');
+        $this->registerPlugin('modifier', 'implode', 'implode_modifier');
+        $this->registerPlugin('modifier', 'intval', 'intval_modifier');
+        $this->registerPlugin('modifier', 'explode', 'explode_modifier');
+        $this->registerPlugin('modifier', 'count', 'count_modifier');
+        $this->registerPlugin('modifier', 'round', 'round_modifier');
+        $this->registerPlugin('modifier', 'trim', 'trim_modifier');
+        $this->registerPlugin('modifier', 'substr', 'substr_modifier');
+        $this->registerPlugin('modifier', 'number_format', 'number_format_modifier');
+        $this->registerPlugin('modifier', 'abs', 'abs_modifier');
     }
 }
 
@@ -81,7 +98,7 @@ function implode_modifier($value, $sep = '-')
         return $value;
     }
 
-    return implode($sep, $value);
+    return join($sep, $value);
 }
 
 function explode_modifier($value, $glue = '')
@@ -90,7 +107,7 @@ function explode_modifier($value, $glue = '')
         return $value;
     }
 
-    return explode($value, $glue);
+    return explode($glue, $value);
 }
 
 function intval_modifier($value)
@@ -121,4 +138,9 @@ function substr_modifier($value, $start, $length = null)
 function number_format_modifier($value, $decimals, $dec_point, $thousands_sep)
 {
     return number_format($value, $decimals, $dec_point, $thousands_sep);
+}
+
+function abs_modifier($value)
+{
+    return abs($value);
 }
