@@ -15,7 +15,7 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
         $this->output->writeln("Running upwards migration on database: {$dbName[0]}");
 
         // Enable Base Settings menu (ID: 170) for few active camps
-        $this->execute("
+        $affectedRows = $this->execute("
             INSERT INTO `cms_functions_camps`
             (`cms_functions_id`, `camps_id`)
             VALUES
@@ -23,9 +23,10 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
             -- ('170', '20'), LHI
             ('170', '27'); -- TFS
         ");
+        $this->output->writeln("  Expected 2 rows, actually inserted: {$affectedRows}");
 
         // Enable Use Service menu (ID: 168) for all active camps
-        $this->execute("
+        $affectedRows = $this->execute("
             INSERT INTO `cms_functions_camps`
             (`cms_functions_id`, `camps_id`)
             VALUES
@@ -49,9 +50,10 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
             ('168', '53'),
             ('168', '54');
         ");
+        $this->output->writeln("  Expected 16 rows, actually inserted: {$affectedRows}");
 
         // Enable Manage Services menu (ID: 169) for all active camps
-        $this->execute("
+        $affectedRows = $this->execute("
             INSERT INTO `cms_functions_camps`
             (`cms_functions_id`, `camps_id`)
             VALUES
@@ -75,11 +77,12 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
             ('169', '53'),
             ('169', '54');
         ");
+        $this->output->writeln("  Expected 16 rows, actually inserted: {$affectedRows}");
 
         // No migration needed for Base Settings menu (ID: 170) usergroups: all relevant HoO usergroups already have access (verified prior to this migration).
 
         // Enable Use Service menu (ID: 168) for all relevant usergroups
-        $this->execute("
+        $affectedRows = $this->execute("
             INSERT INTO `cms_usergroups_functions`
             (`cms_functions_id`, `cms_usergroups_id`)
             VALUES
@@ -153,9 +156,10 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
             -- ('168', '209'),
             ('168', '196');
         ");
+        $this->output->writeln("  Expected 50 rows, actually inserted: {$affectedRows}");
 
         // Enable Manage Services menu (ID: 169) for HoO and Coordinator usergroups
-        $this->execute("
+        $affectedRows = $this->execute("
             INSERT INTO `cms_usergroups_functions`
             (`cms_functions_id`, `cms_usergroups_id`)
             VALUES
@@ -195,6 +199,7 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
             ('169', '187'),
             ('169', '193');
         ");
+        $this->output->writeln("  Expected 26 rows, actually inserted: {$affectedRows}");
     }
 
     public function down(): void
@@ -206,15 +211,16 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
         $this->output->writeln("Running downwards migration on database: {$dbName[0]}");
 
         // Remove Base Settings menu (ID: 170) from camps
-        $this->execute("
+        $affectedRows = $this->execute("
             DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` = '170' AND `camps_id` IN (
                 '3',
                 '27'
             );
         ");
+        $this->output->writeln("  Expected 2 rows, actually deleted: {$affectedRows}");
 
         // Remove Use Service menu (ID: 168) from camps
-        $this->execute("
+        $affectedRows = $this->execute("
             DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` = '168' AND `camps_id` IN (
                 '17',
                 '22',
@@ -234,9 +240,10 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
                 '54'
             );
         ");
+        $this->output->writeln("  Expected 16 rows, actually deleted: {$affectedRows}");
 
         // Remove Manage Services menu (ID: 169) from camps
-        $this->execute("
+        $affectedRows = $this->execute("
             DELETE FROM `cms_functions_camps` WHERE `cms_functions_id` = '169' AND `camps_id` IN (
                 '17',
                 '22',
@@ -256,12 +263,13 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
                 '54'
             );
         ");
+        $this->output->writeln("  Expected 16 rows, actually deleted: {$affectedRows}");
 
         // No deletion needed for Base Settings menu (ID: 170) usergroups:
         // The up() migration did not add any usergroup entries for menu 170, so nothing to remove here.
 
         // Remove Use Service menu (ID: 168) from usergroups
-        $this->execute("
+        $affectedRows = $this->execute("
             DELETE FROM `cms_usergroups_functions` WHERE `cms_functions_id` = '168' AND `cms_usergroups_id` IN (
                 '9',
                 '28',
@@ -315,9 +323,10 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
                 '196'
             );
         ");
+        $this->output->writeln("  Expected 50 rows, actually deleted: {$affectedRows}");
 
         // Remove Manage Services menu (ID: 169) from usergroups
-        $this->execute("
+        $affectedRows = $this->execute("
             DELETE FROM `cms_usergroups_functions` WHERE `cms_functions_id` = '169' AND `cms_usergroups_id` IN (
                 '9',
                 '28',
@@ -347,5 +356,6 @@ final class EnableBaseSettingsAndServicesMenuForAllCamps extends AbstractMigrati
                 '193'
             );
         ");
+        $this->output->writeln("  Expected 26 rows, actually deleted: {$affectedRows}");
     }
 }
