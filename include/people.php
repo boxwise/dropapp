@@ -439,7 +439,7 @@ Tracer::inSpan(
                                     }
                                 }
                             });
-                            simpleBulkSaveChangeHistory('people', $ids, 'Merged to family (head: '.$oldest.')');
+                            simpleBulkSaveChangeHistory('people', $ids, 'merged to family (head: '.$oldest.')');
                             $success = true;
                             $message = 'The merge has be successfully applied';
                             $redirect = true;
@@ -465,7 +465,7 @@ Tracer::inSpan(
                                     db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
                                 }
                             });
-                            simpleBulkSaveChangeHistory('people', $ids, 'Detached from family');
+                            simpleBulkSaveChangeHistory('people', $ids, 'detached from family');
                             $redirect = true;
                             $success = true;
                             $message = ($success) ? 'Selected people have been detached' : 'Something went wrong';
@@ -502,10 +502,10 @@ Tracer::inSpan(
                             }
 
                             if (!empty($addedToFamily)) {
-                                simpleBulkSaveChangeHistory('people', $addedToFamily, 'Added to family via drag & drop');
+                                simpleBulkSaveChangeHistory('people', $addedToFamily, 'added to family via drag & drop');
                             }
                             if (!empty($removedFromFamily)) {
-                                simpleBulkSaveChangeHistory('people', $removedFromFamily, 'Removed from family via drag & drop');
+                                simpleBulkSaveChangeHistory('people', $removedFromFamily, 'removed from family via drag & drop');
                             }
                         }
 
