@@ -439,6 +439,7 @@ Tracer::inSpan(
                                     }
                                 }
                             });
+                            simpleBulkSaveChangeHistory('people', $ids, 'Merged to family (head: '.$oldest.')');
                             $success = true;
                             $message = 'The merge has be successfully applied';
                             $redirect = true;
