@@ -465,6 +465,7 @@ Tracer::inSpan(
                                     db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
                                 }
                             });
+                            simpleBulkSaveChangeHistory('people', $ids, 'Detached from family');
                             $redirect = true;
                             $success = true;
                             $message = ($success) ? 'Selected people have been detached' : 'Something went wrong';
