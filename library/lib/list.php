@@ -55,7 +55,8 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetra
 
     $i = 1;
     $return = '';
-    $hookIds = db_transaction(function () use ($ids, $hasParent, $table, $hook, $i, $updatetransactions) {
+    $parentChanges = [];
+    $hookIds = db_transaction(function () use ($ids, $hasParent, $table, $hook, $i, $updatetransactions, &$parentChanges) {
         $hookIds = [];
         $seq = [];
         foreach ($ids as $line) {
@@ -72,6 +73,8 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetra
                     if ($updatetransactions && null != $new_parent_id) {
                         db_query('UPDATE transactions SET people_id = :parent_id WHERE people_id = :id', ['parent_id' => $new_parent_id, 'id' => $id]);
                     }
+                    // Track parent_id changes for history logging
+                    $parentChanges[] = ['id' => $id, 'old_parent_id' => $old_parent_id, 'new_parent_id' => $new_parent_id];
                 }
             }
 
@@ -88,7 +91,7 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetra
         $aftermove = $hook($hookIds);
     }
 
-    return [true, $return, false, $aftermove];
+    return [true, $return, false, $aftermove, $parentChanges];
 }
 
 function listRealDelete($table, $ids, $uri = false)
