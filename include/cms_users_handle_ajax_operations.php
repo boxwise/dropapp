@@ -10,7 +10,10 @@ if ($ajax) {
                 [$success, $message, $redirect] = listDelete($table, $ids);
                 if ($success) {
                     foreach ($ids as $id) {
-                        db_query('UPDATE '.$table.' SET email = CONCAT(email,".deleted.",id) WHERE id = :id', ['id' => $id]);
+                        // Only append .deleted suffix if the email doesn't already have it
+                        // This prevents double-deletion when someone tries to delete an already-deleted user
+                        // Pattern checks for .deleted.<digits> after the @ symbol (e.g., user@domain.com.deleted.123)
+                        db_query('UPDATE '.$table.' SET email = CONCAT(email,".deleted.",id) WHERE id = :id AND email NOT REGEXP "@.*\.deleted\.[0-9]+$"', ['id' => $id]);
                         updateAuth0UserFromDb($id);
                     }
                 }
