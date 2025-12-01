@@ -14,7 +14,6 @@ class RemoveQrFromHistory extends AbstractMigration
         $deleted_rows = $this->execute('
 DELETE FROM history
 WHERE tablename = "qr"
-AND changedate < "2025-01-01"
         ');
         $this->output->writeln('Deleted rows: '.$deleted_rows);
     }
