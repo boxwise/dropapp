@@ -159,7 +159,7 @@ It creates an file in `db/migrations`. Please use this file to write your db mig
 
 To rollback the migrations applied last run
 
-        vendor/bin/phinx migrate
+        vendor/bin/phinx rollback
 
 Again, these command can be executed in the Docker container, too. After running `docker compose up` execute
 
