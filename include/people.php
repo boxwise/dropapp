@@ -60,8 +60,8 @@ Tracer::inSpan(
             $is_filtered = (isset($listconfig['filtervalue3']) || isset($listconfig['multiplefilter_selected']) || isset($listconfig['searchvalue'])) ? true : false;
 
             // filter for up to 500 records
+            $number_of_people = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']]);
             if (!$is_filtered) {
-                $number_of_people = db_value('SELECT COUNT(id) FROM people WHERE camp_id = :camp_id AND deleted IS NULL', ['camp_id' => $_SESSION['camp']['id']]);
                 if ($number_of_people > 500) {
                     listfilter(['label' => 'List size', 'options' => ['all' => 'Show all'], 'filter' => '"show"']);
 
@@ -368,7 +368,8 @@ Tracer::inSpan(
             }
 
             // Create the totals array with 'Total' and count, then fill remaining columns with empty strings
-            $totalsArray = ['Total', $totalpeople.' beneficiaries'];
+            $beneficiaryMessage = ($number_of_people > 500) ? '500+ beneficiaries' : $totalpeople.' beneficiaries';
+            $totalsArray = ['Total', $beneficiaryMessage];
             for ($i = 2; $i < $totalColumnsCount; ++$i) {
                 $totalsArray[] = '';
             }

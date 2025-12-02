@@ -27,6 +27,7 @@
         "allow-plugins": {
             "php-http/discovery": true,
             "tbachert/spi": true
-        }
+        },
+        "process-timeout": 1800
     }
 }

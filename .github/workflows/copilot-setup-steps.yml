@@ -1,0 +1,77 @@
+# https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/agents/copilot-coding-agent/customizing-the-development-environment-for-copilot-coding-agent#preinstalling-tools-or-dependencies-in-copilots-environment
+name: "Copilot Setup Steps"
+
+# Automatically run the setup steps when they are changed to allow for easy validation, and
+# allow manual testing through the repository's "Actions" tab
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+
+    # Set the permissions to the lowest permissions possible needed for your steps.
+    # Copilot will be given its own token for its operations.
+    permissions:
+      # If you want to clone the repository as part of your setup steps, for example to install dependencies, you'll need the `contents: read` permission. If you don't clone the repository in your setup steps, Copilot will do this for you automatically after the steps complete.
+      contents: read
+
+    # You can define any steps you want, and they will run before the agent starts.
+    # If you do not check out your code, Copilot will do this for you.
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, exif, gd
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: |
+          php --version
+          curl -s https://getcomposer.org/installer | php
+          mv composer.phar composer
+          ./composer install -n
+          rm composer
+
+      - name: Install testing dependencies
+        run: |
+          node --version
+          yarn install
+          npx cypress version
+
+      - name: Start MySQL database
+        run: |
+          docker compose up -d db_mysql
+          sleep 10
+
+      - name: Run DB migrations
+        run: |
+          vendor/bin/phinx migrate -e development
+
+      - name: Start PHP server
+        run: |
+          php build.php
+          cp library/config.php.default library/config.php
+          # php -S localhost:8000 gcloud-entry.php &
+          # sleep 3 && curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ && echo " - Server is responding"

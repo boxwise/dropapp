@@ -7,8 +7,8 @@
     <script src="/assets/jsignature/jquery.signature.js"></script>
 
     <script src="/assets/js/magic.js?v=14"></script>
-    <script src="/assets/js/custom.js?v=13"></script> 
-    <script src="/assets/js/shoppingCart.js"></script>    
+    <script src="/assets/js/custom.js?v=14"></script> 
+    <script src="/assets/js/shoppingCart.js?v=2"></script>    
 
 	  {if $smarty.session.user}
       {include file="freshdesk.tpl"}
