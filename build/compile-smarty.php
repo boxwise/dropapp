@@ -48,11 +48,17 @@ function rewriteTemplateHash($smarty, $templateFileName, $originalTemplateDir, $
     $originalTemplateHash = $fileNameParts[0];
     $originalTemplateName = $fileNameParts[2].'.'.$fileNameParts[3];
     $originalTemplatePath = $originalTemplateDir.$originalTemplateName;
-
-    // For Smarty 5.x, we'll use a simpler approach - just extract the hash from the filename
-    // and use it directly without trying to recalculate
-    $hashToUse = $originalTemplateHash;
-
+    // work out what we expect the current hash to be, to ensure it matches
+    // if not, the algorithm has somehow changed, so we'll abort
+    $computedHashInput = $originalTemplatePath.$originalTemplateDir;
+    $computedHash = sha1($computedHashInput);
+    // the _0/_1/_3 suffix on the first component of the file name appears to
+    // vary based on Smarty configuration. We just extract it from the existing
+    // file name to save us working that bit out
+    $computedHashWithSuffix = $computedHash.'_'.explode('_', $originalTemplateHash)[1];
+    if ($computedHashWithSuffix != $originalTemplateHash) {
+        throw new Exception("Failed to anticipate current hash for {$templateFileName}\nHashed input: {$computedHashInput}\nCalculated hash: {$computedHashWithSuffix}\nActual hash: {$originalTemplateHash}");
+    }
     $newTemplatePath = $deployedTemplateDir.$originalTemplateName;
     // we want to
     // (a) replace the old file name and hash within the contents of the file
@@ -60,9 +66,9 @@ function rewriteTemplateHash($smarty, $templateFileName, $originalTemplateDir, $
     // (b) rename the template so it uses the new hash
     $newHash = sha1($newTemplatePath.$deployedTemplateDir);
     $currentTemplate = file_get_contents($templateFileName);
-    $newTemplate = str_replace($hashToUse, $newHash, $currentTemplate);
+    $newTemplate = str_replace($computedHash, $newHash, $currentTemplate);
     $newTemplate = str_replace($originalTemplatePath, $newTemplatePath, $newTemplate);
-    $newTemplateCompiledPath = str_replace($hashToUse, $newHash, $templateFileName);
+    $newTemplateCompiledPath = str_replace($computedHash, $newHash, $templateFileName);
     echo "Saving new template to {$newTemplateCompiledPath} and deleting the original\n";
     file_put_contents($newTemplateCompiledPath, $newTemplate);
     unlink($templateFileName);
