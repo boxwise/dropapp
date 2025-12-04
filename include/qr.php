@@ -29,11 +29,6 @@ if ($_POST) {
 				LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
 				LEFT OUTER JOIN qr ON s.qr_id = qr.id
 				WHERE s.id = :id', ['id' => $l]);
-            if ($data['labels'][$i]['legacy']) {
-                [$id, $data['labels'][$i]['hash']] = generateQRIDForDB();
-                db_query('UPDATE stock AS s SET qr_id = :qr_id, modified = NOW() WHERE id = :id', ['id' => $l, 'qr_id' => $id]);
-                simpleBulkSaveChangeHistory('qr', $id, 'New QR-code generated for existing box without QR-code');
-            }
             [$data['labels'][$i]['qrPng'], $data['labels'][$i]['data-testurl']] = generateQrPng($data['labels'][$i]['hash']);
             ++$i;
         }
