@@ -144,9 +144,8 @@
 					{if !$listcontentdata}	{assign var="listcontentdata" value=$data} {/if}
 				    {foreach $listcontentdata as $row}
 						{* prepare parent_array for collapsing *}
-						{* Note: parent_array is pre-computed in PHP to avoid Smarty explode() deprecation *}
-						{if $listconfig['allowcollapse'] && $row['level'] && isset($row['parent_array'])}
-							{assign var="parent_array" value=$row['parent_array']}
+						{if $listconfig['allowcollapse'] && $row['level']}
+							{assign var="parent_array" value=$row['parent_id']|split_string:"-"}
 						{/if}
 				    	{if $prevlevel > $row['level'] && $listconfig['allowmove']}
 				    		{while $prevlevel > $row['level']}
@@ -166,18 +165,10 @@
 								{if $listconfig['allowcollapse'] && $row['level']}collapse{/if}"
 								{* reference classes for collapse button *}
 								{if $listconfig['allowcollapse'] && $row['level']}
-									{* Use pre-computed collapse_parents from PHP to avoid Smarty implode deprecation *}
-									{if isset($row['collapse_parents'])}
-										{foreach $row['collapse_parents'] as $idx=>$parent_id}
-											data-hidecollapseparent{$idx}={$parent_id}
-										{/foreach}
-									{else}
-										{* Fallback if collapse_parents not pre-computed (shouldn't happen with stock_overview) *}
-										{foreach $parent_array as $level=>$parent}
-											{assign var="parent_array_slice" value=$parent_array|array_slice:0:($level+3)}
-											data-hidecollapseparent{$level-$counter}={$parent_array_slice|implode:'-'}
-										{/foreach}
-									{/if}
+									{foreach $parent_array as $level=>$parent}
+										{assign var="parent_array_slice" value=$parent_array|array_slice:0:($level+3)}
+										data-hidecollapseparent{$level-$counter}={$parent_array_slice|join_array:'-'}
+									{/foreach}
 									data-collapseparent={$row['parent_id']}
 								{/if}>
 								{foreach $listdata as $key=>$column name="rows"}

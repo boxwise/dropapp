@@ -75,6 +75,10 @@ class Zmarty extends Smarty
         $this->registerPlugin('modifier', 'substr', 'substr_modifier');
         $this->registerPlugin('modifier', 'number_format', 'number_format_modifier');
         $this->registerPlugin('modifier', 'abs', 'abs_modifier');
+
+        // Register alternative names to bypass Smarty 5 DefaultExtension deprecation warnings
+        $this->registerPlugin('modifier', 'split_string', 'explode_modifier');
+        $this->registerPlugin('modifier', 'join_array', 'implode_modifier');
     }
 }
 
@@ -98,7 +102,7 @@ function implode_modifier($value, $sep = '-')
         return $value;
     }
 
-    return join($sep, $value);
+    return implode($sep, $value);
 }
 
 function explode_modifier($value, $glue = '')
