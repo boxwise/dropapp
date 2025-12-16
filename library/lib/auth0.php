@@ -544,6 +544,8 @@ function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
         return $res;
     }
 
+    // If this fails with a 404, it's very likely that some of the submitted
+    // permissions are not actually registered as permissions in Auth0
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 
