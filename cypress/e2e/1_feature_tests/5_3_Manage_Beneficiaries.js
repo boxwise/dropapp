@@ -253,7 +253,15 @@ describe('Manage beneficiaries', () => {
         clickMergeButton();
         verifyBeneficiaryRowLevel(TEST_LASTNAME1,0);
         verifyBeneficiaryRowLevel(TEST_LASTNAME2,1);
-        
+
+        // Verify history logs for merge operation
+        cy.getBeneficiaryIdFromRow(TEST_LASTNAME1).then(id1 => {
+            cy.checkHistoryLog('people', id1, 'merged to family');
+        });
+        cy.getBeneficiaryIdFromRow(TEST_LASTNAME2).then(id2 => {
+            cy.checkHistoryLog('people', id2, 'merged to family');
+        });
+
         //cleanup
         fullDeleteOfMergedUsers();
     });
@@ -266,6 +274,12 @@ describe('Manage beneficiaries', () => {
         clickDetachButton();
         verifyBeneficiaryRowLevel(TEST_LASTNAME1,0);
         verifyBeneficiaryRowLevel(TEST_LASTNAME2,0);
+
+        // Verify history log for detach operation
+        cy.getBeneficiaryIdFromRow(TEST_LASTNAME2).then(id2 => {
+            cy.checkHistoryLog('people', id2, 'detached from family');
+        });
+
         //cleanup
         fullDeleteTestedBeneficiaries([TEST_FIRSTNAME1,TEST_FIRSTNAME2]);
     });
