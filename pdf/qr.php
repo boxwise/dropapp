@@ -85,7 +85,7 @@ Tracer::inSpan(
                 [$id, $hash] = generateQRIDForDB();
 
                 if ($labels[$i]) {
-                    db_query('UPDATE stock SET qr_id = :qr_id WHERE id = :id', ['id' => $labels[$i], 'qr_id' => $id]);
+                    db_query('UPDATE stock SET qr_id = :qr_id, modified = NOW(), modified_by = :user WHERE id = :id', ['id' => $labels[$i], 'qr_id' => $id, 'user' => $_SESSION['user']['id']]);
                     $box_ids_without_qr[] = $labels[$i];
                 }
             }
