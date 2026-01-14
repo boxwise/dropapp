@@ -76,5 +76,6 @@ if ($container_stock_locations) {
     $cmsmain->assign('listdata', $listdata);
     $cmsmain->assign('include', 'cms_list.tpl');
 } else {
-    throw new Exception('There is no Stockroom warehouse location defined! Ask your coordinator to correct this!');
+    $cmsmain->assign('list_info_text', 'There is no Stockroom warehouse location defined! Ask your coordinator to correct this.');
+    $cmsmain->assign('include', 'cms_list.tpl');
 }
