@@ -368,7 +368,8 @@ Tracer::inSpan(
             }
 
             // Create the totals array with 'Total' and count, then fill remaining columns with empty strings
-            $beneficiaryMessage = ($number_of_people > 500) ? '500+ beneficiaries' : $totalpeople.' beneficiaries';
+            $beneficiaryMessage = (($totalpeople >= 500) && ('all' != $listconfig['filtervalue']))
+                ? '500+ beneficiaries' : $totalpeople.' beneficiaries';
             $totalsArray = ['Total', $beneficiaryMessage];
             for ($i = 2; $i < $totalColumnsCount; ++$i) {
                 $totalsArray[] = '';
