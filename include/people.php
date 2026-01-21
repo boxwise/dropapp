@@ -97,11 +97,11 @@ Tracer::inSpan(
             addpagemenu('deactivated', 'Deactivated', ['link' => '?action=people_deactivated']);
 
             // List Buttons
-            addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
+            addbutton('export', 'Export Selected', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
 
-            // Show export all button if there are more than 500 beneficiaries
-            if ($number_of_people > 500) {
-                addbutton('export_all', 'Export All', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportAllBeneficiariesButton']);
+            // Show export all button if there are more than 500 beneficiaries, and if no filters applied
+            if (($number_of_people >= 500) && !$is_filtered) {
+                addbutton('export_all', 'Export All Records', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportAllBeneficiariesButton']);
             }
             if (!empty($tags)) {
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
