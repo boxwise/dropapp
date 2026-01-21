@@ -93,7 +93,7 @@ Browser test structure:
 
 ### Running Cypress Tests
 ```bash
-CYPRESS_baseUrl=http://localhost:8000 yarn run cypress --spec 'cypress/e2e/1_feature_tests/*.js' --env 'auth0Domain=boxtribute-dev.eu.auth0.com'
+CYPRESS_baseUrl=http://localhost:8000 yarn cypress run --spec 'cypress/e2e/1_feature_tests/*.js' --env 'auth0Domain=boxtribute-dev.eu.auth0.com'
 ```
 - Runs Cypress with baseUrl set to http://localhost:8000 and auth0Domain set to the development tenant
 - Requires the application to be running on localhost:8000 (local PHP setup)
