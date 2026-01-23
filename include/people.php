@@ -100,7 +100,7 @@ Tracer::inSpan(
             addbutton('export', 'Export Selected', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
 
             // Show export all button if there are more than 500 beneficiaries, and if no filters applied
-            if (($number_of_people >= 200) && !$is_filtered) {
+            if (($number_of_people >= 500) && !$is_filtered) {
                 listsetting('allowexportall', true);
             }
             if (!empty($tags)) {
