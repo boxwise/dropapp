@@ -97,11 +97,11 @@ Tracer::inSpan(
             addpagemenu('deactivated', 'Deactivated', ['link' => '?action=people_deactivated']);
 
             // List Buttons
-            addbutton('export', 'Export', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
+            addbutton('export', 'Export Selected', ['icon' => 'fa-download', 'showalways' => false, 'testid' => 'exportBeneficiariesButton']);
 
-            // Show export all button if there are more than 500 beneficiaries
-            if ($number_of_people > 500) {
-                addbutton('export_all', 'Export All', ['icon' => 'fa-download', 'showalways' => true, 'testid' => 'exportAllBeneficiariesButton']);
+            // Show export all button if there are more than 500 beneficiaries, and if no filters applied
+            if (($number_of_people >= 500) && !$is_filtered) {
+                listsetting('allowexportall', true);
             }
             if (!empty($tags)) {
                 addbutton('tag', 'Add Tag', ['icon' => 'fa-tag', 'options' => $tags]);
@@ -368,7 +368,8 @@ Tracer::inSpan(
             }
 
             // Create the totals array with 'Total' and count, then fill remaining columns with empty strings
-            $beneficiaryMessage = ($number_of_people > 500) ? '500+ beneficiaries' : $totalpeople.' beneficiaries';
+            $beneficiaryMessage = (($totalpeople >= 500) && ('all' != $listconfig['filtervalue']))
+                ? '500+ beneficiaries' : $totalpeople.' beneficiaries';
             $totalsArray = ['Total', $beneficiaryMessage];
             for ($i = 2; $i < $totalColumnsCount; ++$i) {
                 $totalsArray[] = '';

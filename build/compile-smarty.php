@@ -14,7 +14,10 @@ $deploymentRootFolder = '/workspace';
 // in the templates and on the file system so they will match
 // the paths of the target deployment system
 
-// The hash was reverse engineered from smarty_internal_resource_file.php
+// v4: The hash was reverse engineered from smarty_internal_resource_file.php
+// v5: The hash was reverse engineered from 
+// v5: vendor/smarty/smarty/src/Resource/FilePlugin.php
+// v5: $source->uid = sha1($source->name . $smarty->_joined_template_dir);
 $smarty = new Zmarty();
 precompileTemplates($smarty);
 rewriteAllTemplateHashes($smarty, $deploymentRootFolder);
@@ -28,46 +31,57 @@ function precompileTemplates($smarty)
 function rewriteAllTemplateHashes($smarty, $deploymentRootFolder)
 {
     $rootDir = realpath(__DIR__.'/../');
-    $originalTemplateDir = $smarty->getTemplateDir()[0];
+    echo "Original root dir: {$rootDir}\n";
     // swap out the root of originalTemplateDir for the new deployment path
-    $deployedTemplateDir = $deploymentRootFolder.str_replace($rootDir, '', $originalTemplateDir);
-    echo "Re-mapping templates from '{$originalTemplateDir}' to '{$deployedTemplateDir}'\n";
+    // v5: _joined_template_dir is all template dirs joined with #
+    $originalJoinedDir = join('#', $smarty->getTemplateDir());
+    $deployedJoinedDir = $deploymentRootFolder.str_replace($rootDir, '', $originalJoinedDir);
 
-    $it = new FilesystemIterator($smarty->getCompileDir());
+    echo "Re-mapping templates from '{$originalJoinedDir}' to '{$deployedJoinedDir}'\n";
+
     foreach (glob($smarty->getCompileDir().'*.tpl.php') as $fileName) {
-        rewriteTemplateHash($smarty, $fileName, $originalTemplateDir, $deployedTemplateDir);
+        rewriteTemplateHash($fileName, $originalJoinedDir, $deployedJoinedDir);
     }
 }
 
-function rewriteTemplateHash($smarty, $templateFileName, $originalTemplateDir, $deployedTemplateDir)
+function rewriteTemplateHash($templateFileName, $originalJoinedDir, $deployedJoinedDir)
 {
     // example file name format:
-    // 5ad5ecef0cb555f346e97a65e3cc109456de7a1a_1.file.mobile_scan.tpl.php
+    // Smarty 4: 5ad5ecef0cb555f346e97a65e3cc109456de7a1a_1.file.mobile_scan.tpl.php
+    // Smarty 5: {sha1}_{0|2}.file_{basename}.tpl.php
     echo "Processing compiled template {$templateFileName}\n";
-    $fileNameParts = explode('.', basename($templateFileName));
-    $originalTemplateHash = $fileNameParts[0];
-    $originalTemplateName = $fileNameParts[2].'.'.$fileNameParts[3];
-    $originalTemplatePath = $originalTemplateDir.$originalTemplateName;
+    $baseName = basename($templateFileName);
+
+    // Extract parts: hash_suffix.file_templatename.tpl.php
+    if (!preg_match('/^([a-f0-9]+)_(\d+)\.file_(.+\.tpl)\.php$/', $baseName, $matches)) {
+        echo "  Skipping - doesn't match expected pattern\n";
+        return;
+    }
+
+    $originalHash = $matches[1];
+    $suffix = $matches[2];
+    $templateName = $matches[3];
+
     // work out what we expect the current hash to be, to ensure it matches
     // if not, the algorithm has somehow changed, so we'll abort
-    $computedHashInput = $originalTemplatePath.$originalTemplateDir;
-    $computedHash = sha1($computedHashInput);
-    // the _0/_1/_3 suffix on the first component of the file name appears to
-    // vary based on Smarty configuration. We just extract it from the existing
-    // file name to save us working that bit out
-    $computedHashWithSuffix = $computedHash.'_'.explode('_', $originalTemplateHash)[1];
-    if ($computedHashWithSuffix != $originalTemplateHash) {
-        throw new Exception("Failed to anticipate current hash for {$templateFileName}\nHashed input: {$computedHashInput}\nCalculated hash: {$computedHashWithSuffix}\nActual hash: {$originalTemplateHash}");
+    // Smarty 4 hash: sha1($templatePath . $templateDir)
+    // Smarty 5 hash: sha1(templateName . joinedTemplateDirs)
+    $computedHash = sha1($templateName . $originalJoinedDir);
+    if ($computedHash !== $originalHash) {
+        throw new Exception("Failed to anticipate current hash for {$templateFileName}\nTemplate: {$templateName}\nJoined dirs: {$originalJoinedDir}\nCalculated hash: {$computedHash}\nActual hash: {$originalHash}");
     }
-    $newTemplatePath = $deployedTemplateDir.$originalTemplateName;
+
+    // Calculate new hash for deployment
+    $newHash = sha1($templateName . $deployedJoinedDir);
     // we want to
     // (a) replace the old file name and hash within the contents of the file
     //     with the new hash
-    // (b) rename the template so it uses the new hash
-    $newHash = sha1($newTemplatePath.$deployedTemplateDir);
     $currentTemplate = file_get_contents($templateFileName);
     $newTemplate = str_replace($computedHash, $newHash, $currentTemplate);
-    $newTemplate = str_replace($originalTemplatePath, $newTemplatePath, $newTemplate);
+    $rootDir = realpath(__DIR__.'/../');
+    $deploymentRootFolder = dirname($deployedJoinedDir);
+    $newTemplate = str_replace($rootDir, $deploymentRootFolder, $newTemplate);
+    // (b) rename the template so it uses the new hash
     $newTemplateCompiledPath = str_replace($computedHash, $newHash, $templateFileName);
     echo "Saving new template to {$newTemplateCompiledPath} and deleting the original\n";
     file_put_contents($newTemplateCompiledPath, $newTemplate);
