@@ -440,6 +440,7 @@ Tracer::inSpan(
                                     }
                                 }
                             });
+                            simpleBulkSaveChangeHistory('people', $ids, 'merged to family (head: '.$oldest.')');
                             $success = true;
                             $message = 'The merge has be successfully applied';
                             $redirect = true;
@@ -465,6 +466,7 @@ Tracer::inSpan(
                                     db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
                                 }
                             });
+                            simpleBulkSaveChangeHistory('people', $ids, 'detached from family');
                             $redirect = true;
                             $success = true;
                             $message = ($success) ? 'Selected people have been detached' : 'Something went wrong';
@@ -483,7 +485,30 @@ Tracer::inSpan(
                         $ids = json_decode((string) $_POST['ids']);
                         // list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
                         // Refactored list move method to use a transaction block and bulk insert for the correctdrops method
-                        [$success, $message, $redirect, $aftermove] = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
+                        [$success, $message, $redirect, $aftermove, $parentChanges] = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
+
+                        // Log history for drag & drop family operations
+                        if (!empty($parentChanges)) {
+                            $addedToFamily = [];
+                            $removedFromFamily = [];
+
+                            foreach ($parentChanges as $change) {
+                                if (is_null($change['old_parent_id']) && !is_null($change['new_parent_id'])) {
+                                    // Added to family
+                                    $addedToFamily[] = $change['id'];
+                                } elseif (!is_null($change['old_parent_id']) && is_null($change['new_parent_id'])) {
+                                    // Removed from family
+                                    $removedFromFamily[] = $change['id'];
+                                }
+                            }
+
+                            if (!empty($addedToFamily)) {
+                                simpleBulkSaveChangeHistory('people', $addedToFamily, 'added to family via drag & drop');
+                            }
+                            if (!empty($removedFromFamily)) {
+                                simpleBulkSaveChangeHistory('people', $removedFromFamily, 'removed from family via drag & drop');
+                            }
+                        }
 
                         break;
 
