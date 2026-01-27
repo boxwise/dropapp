@@ -48,9 +48,8 @@ if ('db' === $_GET['action']) {
             $row['diff'] = $date2->diff($date1)->format('%a');
 
             if ($row['diff'] > $row['treshold']) {
-                db_query('UPDATE people SET deleted = NOW() WHERE id = :id', ['id' => $row['id']]);
+                db_query('UPDATE people SET deleted = NOW(), modified = NOW(), modified_by = :user WHERE id = :id', ['user' => $_SESSION['user']['id'], 'id' => $row['id']]);
                 simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine');
-                db_touch('people', $row['id']);
             }
         }
     }
@@ -61,9 +60,8 @@ if ('db' === $_GET['action']) {
     FROM people AS p1, people AS p2 
     WHERE p2.parent_id = p1.id AND p1.deleted AND (NOT p2.deleted OR p2.deleted IS NULL)');
     while ($row = db_fetch($result)) {
-        db_query('UPDATE people SET deleted = NOW() WHERE id = :id', ['id' => $row['id']]);
+        db_query('UPDATE people SET deleted = NOW(), modified = NOW(), modified_by = :user WHERE id = :id', ['user' => $_SESSION['user']['id'], 'id' => $row['id']]);
         simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine because head of family/beneficiary was deleted');
-        db_touch('people', $row['id']);
     }
 
     // this notifies us when a new installation of the Drop App is made
