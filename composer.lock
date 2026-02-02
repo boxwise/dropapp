@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cca216383f560aaae7020adfae6a89fb",
+    "content-hash": "21c941cb325856d6e4810d1e68aca906",
     "packages": [
         {
             "name": "auth0/auth0-php",
-            "version": "8.15.0",
+            "version": "8.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/auth0/auth0-PHP.git",
-                "reference": "7f4414045fc7dc257baf8451a9cda2aacb7ed03b"
+                "reference": "0d78289d9ed0028e8832aca664d3c25d164972a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/7f4414045fc7dc257baf8451a9cda2aacb7ed03b",
-                "reference": "7f4414045fc7dc257baf8451a9cda2aacb7ed03b",
+                "url": "https://api.github.com/repos/auth0/auth0-PHP/zipball/0d78289d9ed0028e8832aca664d3c25d164972a1",
+                "reference": "0d78289d9ed0028e8832aca664d3c25d164972a1",
                 "shasum": ""
             },
             "require": {
@@ -101,9 +101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/auth0/auth0-PHP/issues",
-                "source": "https://github.com/auth0/auth0-PHP/tree/8.15.0"
+                "source": "https://github.com/auth0/auth0-PHP/tree/8.18.0"
             },
-            "time": "2025-05-30T09:50:59+00:00"
+            "time": "2025-12-16T12:30:04+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
