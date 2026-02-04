@@ -148,6 +148,7 @@ function listDelete($table, $ids, $uri = false, $fktables = null, $saveHistory =
     $hasPrevent = db_fieldexists($table, 'preventdelete');
     $hasTree = db_fieldexists($table, 'parent_id');
     $count = 0;
+    $now = date('Y-m-d H:i:s');
 
     try {
         foreach ($ids as $id) {
@@ -182,12 +183,12 @@ function listDelete($table, $ids, $uri = false, $fktables = null, $saveHistory =
                         }
                     }
                 }
-                $count += listDeleteAction($table, $id, 0, $hasTree);
+                $count += listDeleteAction($table, $id, $now, 0, $hasTree);
             } else {
                 $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
                 $count += $result->rowCount();
                 if ($result->rowCount() && $saveHistory) {
-                    simpleSaveChangeHistory($table, $id, 'Record deleted');
+                    simpleSaveChangeHistory($table, $id, 'Record deleted', $now);
                 }
             }
         }
@@ -227,13 +228,12 @@ function listDeleteMessage($table, $id, $foreignkey, $restricted)
     return 'This '.$table_name[$table].' cannot be removed since '.$object_table_name[$foreignkey['TABLE_NAME']].''.$object_name.' '.$id_name.' is still active. Please edit or remove it first!';
 }
 
-function listDeleteAction($table, $id, $count = 0, $recursive = false)
+function listDeleteAction($table, $id, $now, $count = 0, $recursive = false)
 {
     $hasPrevent = db_fieldexists($table, 'preventdelete');
     // prevent deletion of deleted records
     $hasDeleted = db_fieldexists($table, 'deleted');
 
-    $now = date('Y-m-d H:i:s');
     $query = 'UPDATE '.$table.' SET deleted = :now, modified = :now, modified_by = :user_id WHERE id = :id';
     $query .= ($hasPrevent ? ' AND NOT preventdelete' : '');
     $query .= ($hasDeleted ? ' AND (NOT deleted OR deleted IS NULL)' : '');
@@ -250,7 +250,7 @@ function listDeleteAction($table, $id, $count = 0, $recursive = false)
     if ($recursive) {
         $childs = db_array('SELECT id FROM '.$table.' WHERE parent_id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
         foreach ($childs as $child) {
-            $count += listDeleteAction($table, $child['id'], $count, true);
+            $count += listDeleteAction($table, $child['id'], $now, $count, true);
         }
     }
 
@@ -262,6 +262,7 @@ function listUndelete($table, $ids, $uri = false, $overwritehastree = false)
     global $translate, $action;
 
     $count = 0;
+    $now = date('Y-m-d H:i:s');
 
     $hasDeletefield = db_fieldexists($table, 'deleted');
     $hasPrevent = db_fieldexists($table, 'preventdelete');
@@ -273,7 +274,7 @@ function listUndelete($table, $ids, $uri = false, $overwritehastree = false)
 
     foreach ($ids as $id) {
         if ($hasDeletefield) {
-            $count += listUndeleteAction($table, $id, 0, $hasTree, db_nullable($table, 'deleted'));
+            $count += listUndeleteAction($table, $id, $now, 0, $hasTree, db_nullable($table, 'deleted'));
         }
     }
 
@@ -284,9 +285,8 @@ function listUndelete($table, $ids, $uri = false, $overwritehastree = false)
     return [false, $translate['cms_list_undeleteerror'], false];
 }
 
-function listUnDeleteAction($table, $id, $count = 0, $recursive = false, $null = true)
+function listUndeleteAction($table, $id, $now, $count = 0, $recursive = false, $null = true)
 {
-    $now = date('Y-m-d H:i:s');
     $result = db_query('UPDATE '.$table.' SET deleted = '.($null ? 'NULL' : '0').', modified = :now, modified_by = :user_id WHERE id = :id', ['now' => $now, 'id' => $id, 'user_id' => $_SESSION['user']['id']]);
     $count += $result->rowCount();
     if ($result->rowCount()) {
@@ -296,7 +296,7 @@ function listUnDeleteAction($table, $id, $count = 0, $recursive = false, $null =
     if ($recursive) {
         $childs = db_array('SELECT id FROM '.$table.' WHERE parent_id = :id', ['id' => $id]);
         foreach ($childs as $child) {
-            $count += listUnDeleteAction($table, $child['id'], $count, true);
+            $count += listUndeleteAction($table, $child['id'], $now, $count, true);
         }
     }
 
@@ -324,7 +324,7 @@ function listBulkUndelete($table, $ids, $uri = false, $overwritehastree = false)
     return [false, $translate['cms_list_undeleteerror'], false];
 }
 
-function listBulkUnDeleteAction($table, $ids, $count = 0, $hasTree = false)
+function listBulkUndeleteAction($table, $ids, $count = 0, $hasTree = false)
 {
     [$finalIds, $count] = db_transaction(function () use ($table, $ids, $count, $hasTree) {
         $finalIds = [];
