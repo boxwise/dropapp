@@ -286,13 +286,16 @@ function utf8_decode_array($array)
     return $array;
 }
 
-function simpleSaveChangeHistory($table, $record, $changes, $from = [], $to = [])
+function simpleSaveChangeHistory($table, $record, $changes, $now = null, $from = [], $to = [])
 {
     // from and to variable must be arrays with entry 'int' or 'float'
     if (!db_tableexists('history')) {
         return;
     }
-    db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES (:table,:id,:change,:user_id,:ip,NOW(), :from_int, :from_float, :to_int, :to_float)', ['table' => $table, 'id' => $record, 'change' => $changes, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR'], 'from_int' => $from['int'], 'from_float' => $from['float'], 'to_int' => $to['int'], 'to_float' => $to['float']]);
+    if (null === $now) {
+        $now = date('Y-m-d H:i:s');
+    }
+    db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES (:table,:id,:change,:user_id,:ip,:now, :from_int, :from_float, :to_int, :to_float)', ['table' => $table, 'id' => $record, 'change' => $changes, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR'], 'now' => $now, 'from_int' => $from['int'], 'from_float' => $from['float'], 'to_int' => $to['int'], 'to_float' => $to['float']]);
 }
 
 function simpleBulkSaveChangeHistory($table, $records, $changes, $from = [], $to = [])
