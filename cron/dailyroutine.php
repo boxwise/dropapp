@@ -25,6 +25,9 @@ if ('db' === $_GET['action']) {
     FROM people AS p 
     LEFT OUTER JOIN camps AS c ON c.id = p.camp_id 
     WHERE (NOT p.deleted OR p.deleted IS NULL) AND p.parent_id IS NULL');
+
+    // All deletions are logged with the same timestamp
+    $now = date('Y-m-d H:i:s');
     while ($row = db_fetch($result)) {
         $row['touch'] = db_value('
         SELECT GREATEST(COALESCE((
@@ -48,8 +51,8 @@ if ('db' === $_GET['action']) {
             $row['diff'] = $date2->diff($date1)->format('%a');
 
             if ($row['diff'] > $row['treshold']) {
-                db_query('UPDATE people SET deleted = NOW() WHERE id = :id', ['id' => $row['id']]);
-                simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine');
+                db_query('UPDATE people SET deleted = :now WHERE id = :id', ['id' => $row['id'], 'now' => $now]);
+                simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine', $now);
                 db_touch('people', $row['id']);
             }
         }
@@ -61,8 +64,8 @@ if ('db' === $_GET['action']) {
     FROM people AS p1, people AS p2 
     WHERE p2.parent_id = p1.id AND p1.deleted AND (NOT p2.deleted OR p2.deleted IS NULL)');
     while ($row = db_fetch($result)) {
-        db_query('UPDATE people SET deleted = NOW() WHERE id = :id', ['id' => $row['id']]);
-        simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine because head of family/beneficiary was deleted');
+        db_query('UPDATE people SET deleted = :now WHERE id = :id', ['id' => $row['id'], 'now' => $now]);
+        simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine because head of family/beneficiary was deleted', $now);
         db_touch('people', $row['id']);
     }
 

@@ -98,11 +98,12 @@ function listRealDelete($table, $ids, $uri = false)
     $hasPrevent = db_fieldexists($table, 'preventdelete');
     $hasTree = db_fieldexists($table, 'parent_id');
     $count = 0;
+    $now = date('Y-m-d H:i:s');
     foreach ($ids as $id) {
         $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
         $count += $result->rowCount();
         if ($result->rowCount()) {
-            simpleSaveChangeHistory($table, $id, 'Record deleted without undelete');
+            simpleSaveChangeHistory($table, $id, 'Record deleted without undelete', $now);
         }
     }
 
@@ -232,16 +233,18 @@ function listDeleteAction($table, $id, $count = 0, $recursive = false)
     // prevent deletion of deleted records
     $hasDeleted = db_fieldexists($table, 'deleted');
 
-    $query = 'UPDATE '.$table.' SET deleted = NOW(), modified = NOW(), modified_by = :user_id WHERE id = :id';
+    $now = date('Y-m-d H:i:s');
+    $query = 'UPDATE '.$table.' SET deleted = :now, modified = :now, modified_by = :user_id WHERE id = :id';
     $query .= ($hasPrevent ? ' AND NOT preventdelete' : '');
     $query .= ($hasDeleted ? ' AND (NOT deleted OR deleted IS NULL)' : '');
     $result = db_query($query, [
+        'now' => $now,
         'id' => $id,
         'user_id' => $_SESSION['user']['id'],
     ]);
     $count += $result->rowCount();
     if (1 === $result->rowCount()) {
-        simpleSaveChangeHistory($table, $id, 'Record deleted');
+        simpleSaveChangeHistory($table, $id, 'Record deleted', $now);
     }
 
     if ($recursive) {
@@ -283,10 +286,11 @@ function listUndelete($table, $ids, $uri = false, $overwritehastree = false)
 
 function listUnDeleteAction($table, $id, $count = 0, $recursive = false, $null = true)
 {
-    $result = db_query('UPDATE '.$table.' SET deleted = '.($null ? 'NULL' : '0').', modified = NOW(), modified_by = :user_id WHERE id = :id', ['id' => $id, 'user_id' => $_SESSION['user']['id']]);
+    $now = date('Y-m-d H:i:s');
+    $result = db_query('UPDATE '.$table.' SET deleted = '.($null ? 'NULL' : '0').', modified = :now, modified_by = :user_id WHERE id = :id', ['now' => $now, 'id' => $id, 'user_id' => $_SESSION['user']['id']]);
     $count += $result->rowCount();
     if ($result->rowCount()) {
-        simpleSaveChangeHistory($table, $id, 'Record recovered');
+        simpleSaveChangeHistory($table, $id, 'Record recovered', $now);
     }
 
     if ($recursive) {
@@ -387,9 +391,10 @@ function listExtendAction($table, $id, $period)
     };
     $result = db_query($extendQuery, ['id' => $id]);
 
+    $now = date('Y-m-d H:i:s');
     $count += $result->rowCount();
     if ($count) {
-        simpleSaveChangeHistory($table, $id, 'Record extended');
+        simpleSaveChangeHistory($table, $id, 'Record extended', $now);
     }
 
     return $count;
