@@ -326,10 +326,11 @@ function listBulkUndelete($table, $ids, $uri = false, $overwritehastree = false)
 
 function listBulkUndeleteAction($table, $ids, $count = 0, $hasTree = false)
 {
-    [$finalIds, $count] = db_transaction(function () use ($table, $ids, $count, $hasTree) {
+    $now = date('Y-m-d H:i:s');
+    [$finalIds, $count] = db_transaction(function () use ($table, $ids, $count, $hasTree, $now) {
         $finalIds = [];
         foreach ($ids as $id) {
-            $result = db_query('UPDATE '.$table.' SET deleted = 0, modified = NOW(), modified_by = :user_id WHERE id = :id', ['id' => $id, 'user_id' => $_SESSION['user']['id']]);
+            $result = db_query('UPDATE '.$table.' SET deleted = 0, modified = :now, modified_by = :user_id WHERE id = :id', ['id' => $id, 'user_id' => $_SESSION['user']['id'], 'now' => $now]);
             $count += $result->rowCount();
             if ($result->rowCount()) {
                 $finalIds[] = $id;
@@ -338,7 +339,7 @@ function listBulkUndeleteAction($table, $ids, $count = 0, $hasTree = false)
             if ($hasTree) {
                 $childs = db_array('SELECT id FROM '.$table.' WHERE parent_id = :id', ['id' => $id]);
                 foreach ($childs as $child) {
-                    $result = db_query('UPDATE '.$table.' SET deleted = 0, modified = NOW(), modified_by = :user_id WHERE id = :id', ['id' => $child['id'], 'user_id' => $_SESSION['user']['id']]);
+                    $result = db_query('UPDATE '.$table.' SET deleted = 0, modified = :now, modified_by = :user_id WHERE id = :id', ['id' => $child['id'], 'user_id' => $_SESSION['user']['id'], 'now' => $now]);
                     $count += $result->rowCount();
                     if ($result->rowCount()) {
                         $finalIds[] = $child['id'];
@@ -350,7 +351,7 @@ function listBulkUndeleteAction($table, $ids, $count = 0, $hasTree = false)
         return [$finalIds, $count];
     });
 
-    simpleBulkSaveChangeHistory($table, $finalIds, 'Record recovered');
+    simpleBulkSaveChangeHistory($table, $finalIds, 'Record recovered', $now);
 
     return $count;
 }

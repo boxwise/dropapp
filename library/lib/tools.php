@@ -298,16 +298,19 @@ function simpleSaveChangeHistory($table, $record, $changes, $now = null, $from =
     db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES (:table,:id,:change,:user_id,:ip,:now, :from_int, :from_float, :to_int, :to_float)', ['table' => $table, 'id' => $record, 'change' => $changes, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR'], 'now' => $now, 'from_int' => $from['int'], 'from_float' => $from['float'], 'to_int' => $to['int'], 'to_float' => $to['float']]);
 }
 
-function simpleBulkSaveChangeHistory($table, $records, $changes)
+function simpleBulkSaveChangeHistory($table, $records, $changes, $now = null)
 {
     if (!db_tableexists('history')) {
         return;
     }
+    if (null === $now) {
+        $now = date('Y-m-d H:i:s');
+    }
     $query = '';
-    $params = [];
+    $params = ['now' => $now];
     if (is_iterable($records)) {
         for ($i = 0; $i < sizeof($records); ++$i) {
-            $query .= "(:table{$i},:id{$i},:change{$i},:user_id{$i},:ip{$i},NOW())";
+            $query .= "(:table{$i},:id{$i},:change{$i},:user_id{$i},:ip{$i},:now)";
             $params = array_merge($params, ['table'.$i => $table, 'id'.$i => $records[$i], 'change'.$i => $changes, 'user_id'.$i => $_SESSION['user']['id'], 'ip'.$i => $_SERVER['REMOTE_ADDR']]);
             if ($i !== sizeof($records) - 1) {
                 $query .= ',';

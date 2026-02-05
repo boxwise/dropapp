@@ -514,14 +514,15 @@ Tracer::inSpan(
                     case 'touch':
                         $ids = explode(',', (string) $_POST['ids']);
                         $userId = $_SESSION['user']['id'];
+                        $now = date('Y-m-d H:i:s');
                         // Query speed optimised for 500 records from 6.2 seconds to 0.54 seconds using  transaction blocks over UPDATE and bulk inserts
-                        db_transaction(function () use ($ids, $userId) {
+                        db_transaction(function () use ($ids, $userId, $now) {
                             foreach ($ids as $id) {
-                                db_query('UPDATE people SET modified = NOW(), modified_by = :user WHERE id = :id', ['id' => $id, 'user' => $userId]);
+                                db_query('UPDATE people SET modified = :now, modified_by = :user WHERE id = :id', ['id' => $id, 'user' => $userId, 'now' => $now]);
                             }
                         });
                         // Bulk insert used to insert into history table
-                        simpleBulkSaveChangeHistory('people', $ids, 'Touched');
+                        simpleBulkSaveChangeHistory('people', $ids, 'Touched', $now);
 
                         $success = true;
                         $message = 'Selected people have been touched';
