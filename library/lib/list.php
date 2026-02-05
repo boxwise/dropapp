@@ -91,29 +91,6 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetra
     return [true, $return, false, $aftermove];
 }
 
-function listRealDelete($table, $ids, $uri = false)
-{
-    global $translate, $action;
-
-    $hasPrevent = db_fieldexists($table, 'preventdelete');
-    $hasTree = db_fieldexists($table, 'parent_id');
-    $count = 0;
-    $now = date('Y-m-d H:i:s');
-    foreach ($ids as $id) {
-        $result = db_query('DELETE FROM '.$table.' WHERE id = :id'.($hasPrevent ? ' AND NOT preventdelete' : ''), ['id' => $id]);
-        $count += $result->rowCount();
-        if ($result->rowCount()) {
-            simpleSaveChangeHistory($table, $id, 'Record deleted without undelete', $now);
-        }
-    }
-
-    if ($count) {
-        return [true, $translate['cms_list_deletesuccess'], true];
-    }
-
-    return [false, $translate['cms_list_deleteerror'], false];
-}
-
 function listBulkRealDelete($table, $ids, $uri = false)
 {
     global $translate, $action;
