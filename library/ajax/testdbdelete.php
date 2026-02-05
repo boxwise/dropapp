@@ -62,7 +62,7 @@ if (!(in_array($settings['db_database'], $devdbs) && in_array($_SESSION['user'][
 
         if ('true' == $return) {
             db_transaction(function () use ($ids, $return) {
-                [$return, $msg, $redirect] = listRealDelete($_POST['table'], $ids);
+                [$return, $msg, $redirect] = listBulkRealDelete($_POST['table'], $ids);
                 foreach ($ids as $id) {
                     deleteAuth0User($id);
                 }
