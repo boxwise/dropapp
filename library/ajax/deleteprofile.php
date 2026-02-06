@@ -7,7 +7,7 @@ db_transaction(function () {
     // Pattern checks for .deleted.<digits> after the @ symbol (e.g., user@domain.com.deleted.123)
     db_query('UPDATE cms_users SET deleted = NOW(), email = CONCAT(email,".deleted.",id) WHERE id = :id AND (NOT deleted OR deleted IS NULL) AND email NOT REGEXP "@.*\.deleted\.[0-9]+$"', ['id' => $user_id]);
     updateAuth0UserFromDb($user_id);
-    simpleSaveChangeHistory('cms_users', $user_id, 'Record deleted without undelete');
+    simpleSaveChangeHistory('cms_users', $user_id, 'Record deleted');
 });
 
 // when a user deactive its account we need to ensure that user logged out immediately and then redirected to Auth0 login page
