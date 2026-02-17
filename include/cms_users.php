@@ -46,13 +46,14 @@ if ($ajax) {
     // Do not forget to specify :userGroupLevel and :user in the db call later
     // related to this trello card https://trello.com/c/KI47eGPI
     $cms_users_same_or_upper_level_query = '
-			SELECT u.*, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 1 as disableifistrue
+			SELECT u.*, IF(u.id = :user, 1, 0) AS visible, g.label AS usergroup, 1 AS preventdelete, 1 as disableifistrue
 			FROM cms_users AS u
 			INNER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
 			INNER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
 			INNER JOIN cms_usergroups_levels AS l ON l.id = g.userlevel
-			WHERE (l.level >= :userGroupLevel AND u.id != :user)
-            AND uc.camp_id IN ('.($_SESSION['camp']['id'] ?: 0).')
+            WHERE l.level >= :userGroupLevel
+            AND (u.id != :user OR :userGroupLevel = 100)
+            AND uc.camp_id IN ('.(intval($_SESSION['camp']['id']) ?: 0).')
 			AND NOT (u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0)
 			AND UNIX_TIMESTAMP(u.deleted) = 0
             GROUP BY u.id
