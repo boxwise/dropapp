@@ -135,11 +135,14 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     // display admin role in the usergroup - only for user with admin roles
     // related to this trello card https://trello.com/c/YAF3Az4P
     $usergroups = db_array('
-		SELECT ug.id AS value, ug.label 
-		FROM cms_usergroups AS ug
-		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON (ugl.id=ug.userlevel)
-		WHERE ug.organisation_id = :organisation_id AND (ugl.level < :userlevel OR :is_admin OR (ugl.level <= :userlevel AND 100 = :userlevel)) AND (NOT ug.deleted OR ug.deleted IS NULL)
-		ORDER BY ug.label', ['organisation_id' => $_SESSION['organisation']['id'], 'userlevel' => $_SESSION['usergroup']['userlevel'], 'is_admin' => $_SESSION['user']['is_admin']]);
+        SELECT ug.id AS value, ug.label
+        FROM cms_usergroups AS ug
+        LEFT OUTER JOIN cms_usergroups_levels AS ugl ON (ugl.id=ug.userlevel)
+        WHERE ug.organisation_id = :organisation_id
+        AND (:is_admin OR (ugl.level < :userlevel OR (ugl.level <= :userlevel AND 100 = :userlevel)))
+        AND (:is_admin OR ug.label != "Boxtribute God")
+        AND (NOT ug.deleted OR ug.deleted IS NULL)
+        ORDER BY ug.label', ['organisation_id' => $_SESSION['organisation']['id'], 'userlevel' => $_SESSION['usergroup']['userlevel'], 'is_admin' => $_SESSION['user']['is_admin']]);
     addfield('select', 'Select user group', 'cms_usergroups_id', ['required' => true, 'options' => $usergroups, 'testid' => 'user_group']);
 
     addfield('line');
