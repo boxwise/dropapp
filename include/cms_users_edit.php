@@ -74,9 +74,40 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
             WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $_POST['cms_usergroups_id'][0]]);
         $is_admin = $_SESSION['user']['is_admin'];
         $organisation_allowed = ($_SESSION['organisation']['id'] == $posteduser['organisation_id']);
-        // allow admins to create another admin account
+        // allow HoO to create another HoO account
         // related to this trello card https://trello.com/c/YAF3Az4P
         $userlevel_allowed = ($_SESSION['usergroup']['userlevel'] > $posteduser['userlevel']) || ($_SESSION['usergroup']['userlevel'] == $posteduser['userlevel'] && '100' == $_SESSION['usergroup']['userlevel']);
+
+        // Prevent HoO user from downgrading their usergroup if they're the only HoO
+        if (!$is_admin
+            && $_POST['id'] == $_SESSION['user']['id']
+            && 100 == $_SESSION['usergroup']['userlevel']) {
+            // Count how many HoO users exist in this organization
+            $hoo_count = db_value(
+                '
+                SELECT COUNT(DISTINCT u.id)
+                FROM cms_users AS u
+                LEFT JOIN cms_usergroups AS ug ON ug.id = u.cms_usergroups_id
+                LEFT JOIN cms_usergroups_levels AS ugl ON ugl.id = ug.userlevel
+                WHERE ug.organisation_id = :org_id
+                    AND ugl.level = 100
+                    AND (NOT u.deleted OR u.deleted IS NULL)
+                    AND (NOT ug.deleted OR ug.deleted IS NULL)
+                    AND NOT (u.valid_lastday < CURDATE() AND UNIX_TIMESTAMP(u.valid_lastday) != 0)',
+                ['org_id' => $_SESSION['organisation']['id']]
+            );
+
+            // If this is the last HoO, prevent the change
+            if ($hoo_count <= 1) {
+                if ($posteduser['userlevel'] < $_SESSION['usergroup']['userlevel']) {
+                    redirect('?action=cms_users_edit&id='.$_POST['id'].'&origin='.$_POST['_origin'].'&warning=1&message=You cannot downgrade yourself. Your organisation must have at least one Head of Operations user.');
+                    trigger_error('You cannot downgrade yourself. Your organisation must have at least one Head of Operations user.', E_USER_NOTICE);
+                } elseif (('' !== $_POST['valid_firstday']) || ('' !== $_POST['valid_lastday'])) {
+                    redirect('?action=cms_users_edit&id='.$_POST['id'].'&origin='.$_POST['_origin'].'&warning=1&message=You cannot edit yourself. Your organisation must have at least one Head of Operations user.');
+                    trigger_error('You cannot edit yourself. Your organisation must have at least one Head of Operations user.', E_USER_NOTICE);
+                }
+            }
+        }
 
         if ($is_admin || ($organisation_allowed && $userlevel_allowed)) {
             $keys = ['naam', 'email', 'cms_usergroups_id', 'valid_firstday', 'valid_lastday'];
@@ -114,7 +145,12 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 		FROM cms_usergroups AS ug
 		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON ugl.id=ug.userlevel
 		WHERE ug.id = :id AND (NOT ug.deleted OR ug.deleted IS NULL)', ['id' => $data['cms_usergroups_id']]);
-    if (!$_SESSION['user']['is_admin'] && ($data && ($data['is_admin'] || ($_SESSION['organisation']['id'] != $requesteduser['organisation_id']) || ($_SESSION['usergroup']['userlevel'] <= $requesteduser['userlevel'])))) {
+    if (!$_SESSION['user']['is_admin']
+        && $data
+        && $data['id'] != $_SESSION['user']['id']
+        && ($data['is_admin']
+         || $_SESSION['organisation']['id'] != $requesteduser['organisation_id']
+         || $_SESSION['usergroup']['userlevel'] <= $requesteduser['userlevel'])) {
         throw new Exception('You do not have access to this user!', 403);
     }
 
@@ -130,11 +166,14 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
     // display admin role in the usergroup - only for user with admin roles
     // related to this trello card https://trello.com/c/YAF3Az4P
     $usergroups = db_array('
-		SELECT ug.id AS value, ug.label 
-		FROM cms_usergroups AS ug
-		LEFT OUTER JOIN cms_usergroups_levels AS ugl ON (ugl.id=ug.userlevel)
-		WHERE ug.organisation_id = :organisation_id AND (ugl.level < :userlevel OR :is_admin OR (ugl.level <= :userlevel AND 100 = :userlevel)) AND (NOT ug.deleted OR ug.deleted IS NULL)
-		ORDER BY ug.label', ['organisation_id' => $_SESSION['organisation']['id'], 'userlevel' => $_SESSION['usergroup']['userlevel'], 'is_admin' => $_SESSION['user']['is_admin']]);
+        SELECT ug.id AS value, ug.label
+        FROM cms_usergroups AS ug
+        LEFT OUTER JOIN cms_usergroups_levels AS ugl ON (ugl.id=ug.userlevel)
+        WHERE ug.organisation_id = :organisation_id
+        AND (:is_admin OR (ugl.level < :userlevel OR (ugl.level <= :userlevel AND 100 = :userlevel)))
+        AND (:is_admin OR ug.label != "Boxtribute God")
+        AND (NOT ug.deleted OR ug.deleted IS NULL)
+        ORDER BY ug.label', ['organisation_id' => $_SESSION['organisation']['id'], 'userlevel' => $_SESSION['usergroup']['userlevel'], 'is_admin' => $_SESSION['user']['is_admin']]);
     addfield('select', 'Select user group', 'cms_usergroups_id', ['required' => true, 'options' => $usergroups, 'testid' => 'user_group']);
 
     addfield('line');
