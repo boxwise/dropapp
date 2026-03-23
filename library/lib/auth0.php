@@ -145,7 +145,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
 
         // the status code will be 201 if the user created successfully
         if (201 !== $response->getStatusCode()) {
-            throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
         }
     } elseif (200 !== $response->getStatusCode()) {
         throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
@@ -544,6 +544,8 @@ function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
         return $res;
     }
 
+    // If this fails with a 404, it's very likely that some of the submitted
+    // permissions are not actually registered as permissions in Auth0
     throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
 }
 

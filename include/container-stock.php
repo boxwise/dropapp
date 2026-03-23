@@ -76,5 +76,6 @@ if ($container_stock_locations) {
     $cmsmain->assign('listdata', $listdata);
     $cmsmain->assign('include', 'cms_list.tpl');
 } else {
-    throw new Exception('There is no Stockroom warehouse location defined! Ask your coordinator to correct this!');
+    $cmsmain->assign('list_info_text', "You have not set up a stockroom for your free shop. Stockroom is a way to help free shops keep track of items that aren't on display or that always need to be in stock. If you need this functionality, ask your coordinator to enable it.");
+    $cmsmain->assign('include', 'cms_list.tpl');
 }

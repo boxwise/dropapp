@@ -415,6 +415,8 @@ $menusToActions = [
 ];
 
 // This has to be identical to the rolesMapping in the Auth0 dynamic-permissions script
+// WARNING: If you add elements here, you need to make sure they're part of the permissions
+// registered in Auth0!
 $rolesToActions = [
     'boxtribute_god' => [
         'be_god',

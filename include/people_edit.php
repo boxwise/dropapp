@@ -568,7 +568,7 @@ if ($id) {
             'allowedit' => false,
             'allowadd' => true,
             'add' => 'Register Usage',
-            'addaction' => 'use_service',
+            'addaction' => 'use_service&people_id='.intval($id),
             'allowselect' => false,
             'allowselectall' => false,
             'action' => 'people_edit',

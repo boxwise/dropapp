@@ -28,13 +28,14 @@ $serviceoptions = db_array('
     WHERE 
         deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
 addfield('select', 'Service', 'service_id', ['placeholder' => 'Type to search', 'required' => true, 'options' => $serviceoptions]);
+$people_id = $_GET['people_id'] ?? null;
 $beneficiaryoptions = db_array('
     SELECT 
-        id AS value, CONCAT(container, " ",firstname, " ", lastname) AS label
+        id AS value, CONCAT(container, " ",firstname, " ", lastname) AS label, IF(id = :people_id, 1, 0) AS selected
     FROM 
         people
     WHERE 
-        deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id']]);
+        deleted IS NULL AND camp_id = :camp_id', ['camp_id' => $_SESSION['camp']['id'], 'people_id' => $people_id]);
 addfield('select', 'Beneficiaries', 'people_id', ['placeholder' => 'Type to search', 'required' => true, 'multiple' => true, 'options' => $beneficiaryoptions]);
 
 $service_id = $_GET['service_id'];

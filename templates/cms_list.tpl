@@ -100,10 +100,19 @@
 							{/foreach}
 						</div>
 					</li>
-					{if $listconfig['allowadd']}
-					<li>
-						<a class="new-page item-add btn btn-sm btn-default" data-testid = "NewItem" href="?action={if $listconfig['new']}{$listconfig['new']}{else}{$listconfig['edit']}{/if}&origin={$listconfig['origin']}"><i class="fa fa-plus"></i> {$listconfig['add']}</a>
-					</li>
+					{if $listconfig['allowexportall'] && $listconfig['allowadd']}
+						<li class="item-selected-independend">
+							<div class="btn-group">
+								<button data-operation="export_all" data-placement="top" class="start-operation btn btn-sm btn-default" data-testid="exportAllButton">
+									<i class="fa fa-download"></i> Export All Records
+								</button>
+								<a class="new-page item-add btn btn-sm btn-default" data-testid = "NewItem" href="?action={if $listconfig['new']}{$listconfig['new']}{else}{$listconfig['edit']}{/if}&origin={$listconfig['origin']}"><i class="fa fa-plus"></i> {$listconfig['add']}</a>
+							</div>
+						</li>
+					{elseif $listconfig['allowadd']}
+						<li>
+							<a class="new-page item-add btn btn-sm btn-default" data-testid = "NewItem" href="?action={if $listconfig['new']}{$listconfig['new']}{else}{$listconfig['edit']}{/if}&origin={$listconfig['origin']}"><i class="fa fa-plus"></i> {$listconfig['add']}</a>
+						</li>
 					{/if}
 				</ul>
 				<ul class="navigations pull-right list-unstyled">
