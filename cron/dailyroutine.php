@@ -51,7 +51,7 @@ if ('db' === $_GET['action']) {
             $row['diff'] = $date2->diff($date1)->format('%a');
 
             if ($row['diff'] > $row['treshold']) {
-                db_query('UPDATE people SET deleted = :now, modified = :now, modified_by = :user WHERE id = :id', ['user' => $_SESSION['user']['id'], 'id' => $row['id'], 'now' => $now]]);
+                db_query('UPDATE people SET deleted = :now, modified = :now, modified_by = :user WHERE id = :id', ['user' => $_SESSION['user']['id'], 'id' => $row['id'], 'now' => $now]);
                 simpleSaveChangeHistory('people', $row['id'], 'Record deleted by daily routine', $now);
             }
         }
