@@ -118,6 +118,8 @@ if (!$ajax) {
                                 products as b ON upper(a.name)=upper(b.name) 
                             WHERE 
                                 a.camp_id = :camp_id and b.camp_id = :camp_id and a.id<=b.id 
+                                AND (NOT a.deleted OR a.deleted IS NULL)
+                                AND (NOT b.deleted OR b.deleted IS NULL)
                             GROUP BY 
                                 upper(a.name)
                             ) prod_a 
