@@ -81,8 +81,7 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
         // Prevent HoO user from downgrading their usergroup if they're the only HoO
         if (!$is_admin
             && $_POST['id'] == $_SESSION['user']['id']
-            && 100 == $_SESSION['usergroup']['userlevel']
-            && $posteduser['userlevel'] < $_SESSION['usergroup']['userlevel']) {
+            && 100 == $_SESSION['usergroup']['userlevel']) {
             // Count how many HoO users exist in this organization
             $hoo_count = db_value(
                 '
@@ -100,8 +99,13 @@ if ($_SESSION['user']['is_admin'] || $_SESSION['usergroup']['userlevel'] > db_va
 
             // If this is the last HoO, prevent the change
             if ($hoo_count <= 1) {
-                trigger_error('You cannot downgrade yourself. Your organisation must have at least one Head of Operations user.', E_USER_NOTICE);
-                redirect('?action=cms_users_edit&id='.$_POST['id'].'&origin='.$_POST['_origin'].'&warning=1&message=You cannot downgrade yourself. Your organisation must have at least one Head of Operations user.');
+                if ($posteduser['userlevel'] < $_SESSION['usergroup']['userlevel']) {
+                    redirect('?action=cms_users_edit&id='.$_POST['id'].'&origin='.$_POST['_origin'].'&warning=1&message=You cannot downgrade yourself. Your organisation must have at least one Head of Operations user.');
+                    trigger_error('You cannot downgrade yourself. Your organisation must have at least one Head of Operations user.', E_USER_NOTICE);
+                } elseif (('' !== $_POST['valid_firstday']) || ('' !== $_POST['valid_lastday'])) {
+                    redirect('?action=cms_users_edit&id='.$_POST['id'].'&origin='.$_POST['_origin'].'&warning=1&message=You cannot edit yourself. Your organisation must have at least one Head of Operations user.');
+                    trigger_error('You cannot edit yourself. Your organisation must have at least one Head of Operations user.', E_USER_NOTICE);
+                }
             }
         }
 
