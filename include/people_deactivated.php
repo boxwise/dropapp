@@ -161,7 +161,7 @@ if (!$ajax) {
                 }
 
                 // Optimized by using bulk inserts and transactions over delete queries
-                [$success, $message, $redirect] = listBulkRealDelete($table, $ids);
+                [$success, $message, $redirect] = listBulkRealDelete($table, $ids, $now);
 
                 return [$success, $message, $redirect];
             });

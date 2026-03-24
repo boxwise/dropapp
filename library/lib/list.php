@@ -91,7 +91,7 @@ function listBulkMove($table, $ids, $regardparent = true, $hook = '', $updatetra
     return [true, $return, false, $aftermove];
 }
 
-function listBulkRealDelete($table, $ids, $uri = false)
+function listBulkRealDelete($table, $ids, $now = null)
 {
     global $translate, $action;
 
@@ -108,7 +108,7 @@ function listBulkRealDelete($table, $ids, $uri = false)
         }
     }
 
-    simpleBulkSaveChangeHistory($table, $deletedIds, 'Record deleted without undelete');
+    simpleBulkSaveChangeHistory($table, $deletedIds, 'Record deleted without undelete', $now);
 
     if ($count) {
         return [true, $translate['cms_list_deletesuccess'], true];
