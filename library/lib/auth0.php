@@ -145,7 +145,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
 
         // the status code will be 201 if the user created successfully
         if (201 !== $response->getStatusCode()) {
-            throw new Exception($response->getStatusCode(), $response->getReasonPhrase());
+            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
         }
     } elseif (200 !== $response->getStatusCode()) {
         throw new Exception($response->getReasonPhrase(), $response->getStatusCode());

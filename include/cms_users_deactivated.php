@@ -24,7 +24,7 @@ if ($ajax) {
     );
 
     // Execution of queries in cms_users_page.php
-    $cms_users_lower_level_query = 'SELECT u.id, u.naam, SUBSTR(u.email, 1, LENGTH(u.email)-LENGTH(".deleted.")-LENGTH(u.id)) AS email, u.valid_firstday, u.valid_lastday, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete, 1 as disableifistrue
+    $cms_users_lower_level_query = 'SELECT u.id, u.naam, SUBSTR(u.email, 1, LENGTH(u.email)-LENGTH(".deleted.")-LENGTH(u.id)) AS email, u.valid_firstday, u.valid_lastday, NOT u.is_admin AS visible, g.label AS usergroup, 0 AS preventdelete, 1 as disableifistrue, 0 as preventedit
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id 
 			LEFT OUTER JOIN cms_usergroups_camps AS uc ON uc.cms_usergroups_id = g.id
@@ -40,7 +40,7 @@ if ($ajax) {
 
     // Do not forget to specify :usergroup and :user in the db call later
     $cms_users_same_level_query = '
-			SELECT u.id, u.naam, SUBSTR(u.email, 1, LENGTH(u.email)-LENGTH(".deleted.")-LENGTH(u.id)) AS email, u.valid_firstday, u.valid_lastday, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 1 as disableifistrue
+			SELECT u.id, u.naam, SUBSTR(u.email, 1, LENGTH(u.email)-LENGTH(".deleted.")-LENGTH(u.id)) AS email, u.valid_firstday, u.valid_lastday, 0 AS visible, g.label AS usergroup, 1 AS preventdelete, 1 as disableifistrue, 1 AS preventedit
 			FROM cms_users AS u
 			LEFT OUTER JOIN cms_usergroups AS g ON g.id = u.cms_usergroups_id
 			WHERE u.cms_usergroups_id = :usergroup
