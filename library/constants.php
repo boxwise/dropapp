@@ -337,7 +337,7 @@ $menusToActions = [
     [
         'id' => 162,
         'module' => 'Beneficiaries',
-        'menu' => 'Manage tags v2',
+        'menu' => 'Manage Tags v2',
         'action' => 'new_manage_tags',
         'adminonly' => '0',
         'visible' => '1',
