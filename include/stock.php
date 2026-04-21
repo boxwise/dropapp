@@ -85,9 +85,9 @@ Tracer::inSpan(
                             stock.box_state_id IN (3,4,7,8) AS disableifistrue,
                             p.standard_product_id
                         FROM 
-                            stock '
+                            stock '.
                             // Join tags here only if a tag filter is selected and only boxes with a certain tag should be returned
-                            .($listconfig['multiplefilter_selected'] ? '
+                            ($listconfig['multiplefilter_selected'] ? '
                                 LEFT JOIN
                                     tags_relations AS stock_tags_filter ON stock_tags_filter.object_id = stock.id AND stock_tags_filter.object_type = "Stock" AND stock_tags_filter.deleted_on IS NULL
                                 LEFT JOIN
@@ -103,18 +103,18 @@ Tracer::inSpan(
                         WHERE 
                             l.type = "Warehouse" AND
                             (NOT stock.deleted OR stock.deleted IS NULL) AND
-                            l.camp_id = '.$_SESSION['camp']['id']
+                            l.camp_id = '.$_SESSION['camp']['id'].
 
-                            .($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '')
+                            ($listconfig['searchvalue'] ? ' AND (box_id LIKE "%'.$listconfig['searchvalue'].'%" OR l.label LIKE "%'.$listconfig['searchvalue'].'%" OR s.label LIKE "%'.$listconfig['searchvalue'].'%" OR g.label LIKE "%'.$listconfig['searchvalue'].'%" OR p.name LIKE "%'.$listconfig['searchvalue'].'%" OR stock.comments LIKE "%'.$listconfig['searchvalue'].'%")' : '').
 
-                            .$applied_filter2_query
+                            $applied_filter2_query.
 
-                            .($_SESSION['filter3']['stock'] ? ' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')' : '')
+                            ($_SESSION['filter3']['stock'] ? ' AND (p.gender_id = '.intval($_SESSION['filter3']['stock']).')' : '').
 
-                            .($_SESSION['filter']['stock'] ? ' AND (stock.location_id = '.$_SESSION['filter']['stock'].')' : '')
-                            .($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : '')
+                            ($_SESSION['filter']['stock'] ? ' AND (stock.location_id = '.$_SESSION['filter']['stock'].')' : '').
+                            ($_SESSION['filter4']['stock'] ? ' AND (p.category_id = '.$_SESSION['filter4']['stock'].')' : '').
                             // filter for boxes tags
-                            .($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
+                            ($listconfig['multiplefilter_selected'] ? ' AND tags_filter.id IN ('.implode(',', $listconfig['multiplefilter_selected']).') ' : '').'
                         GROUP BY 
                             stock.id ) AS stock_filtered
                     LEFT JOIN 

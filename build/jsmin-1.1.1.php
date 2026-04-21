@@ -83,8 +83,8 @@ class JSMin
                             $this->output .= $this->a;
                             $this->a = $this->get();
                         } elseif (ord($this->a) <= self::ORD_LF) {
-                            throw new JSMinException('Unterminated regular expression '
-                  .'literal.');
+                            throw new JSMinException('Unterminated regular expression '.
+                  'literal.');
                         }
 
                         $this->output .= $this->a;
