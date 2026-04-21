@@ -28,9 +28,9 @@ if ($container_stock_locations) {
                 s3.box_state_id = 1 AND 
                 l2.camp_id='.$_SESSION['camp']['id'].')-IFNULL(COUNT(s2.id),0) AS totalboxes
 	FROM
-		(products AS p,
-		sizes AS s)
-	INNER JOIN sizes_sizegroup AS ss ON ss.size_id = s.id AND ss.sizegroup_id = p.sizegroup_id
+		products AS p
+	INNER JOIN sizes_sizegroup AS ss ON ss.sizegroup_id = p.sizegroup_id
+	INNER JOIN sizes AS s ON ss.size_id = s.id
 	LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
 	LEFT OUTER JOIN 
         stock AS s2 
