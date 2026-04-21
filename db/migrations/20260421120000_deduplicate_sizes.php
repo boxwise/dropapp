@@ -6,9 +6,9 @@ use Phinx\Migration\AbstractMigration;
 
 /**
  * Removes duplicate size labels from the sizes table (keeping the entry with the
- * smallest ID for each label).  All references in the stock, shipment_detail and
- * history tables are updated to point at the surviving size ID before the surplus
- * rows are deleted.
+ * smallest ID for each label).  All references in the stock, shipment_detail,
+ * history, itemsout and distro_events_* tables are updated to point at the
+ * surviving size ID before the surplus rows are deleted.
  *
  * Removed ID → kept ID mapping (grouped by label):
  *   S            53 → 1          M            54 → 2          L            55 → 3
@@ -101,6 +101,29 @@ final class DeduplicateSizes extends AbstractMigration
             SET to_int = {$toCaseExpr}
             WHERE tablename = 'stock' AND changes = 'size_id'
               AND to_int IN ({$ids})");
+
+        // --- itemsout ----------------------------------------------------
+        if ($this->hasTable('itemsout')) {
+            $this->execute("UPDATE itemsout
+                SET size_id = {$case}
+                WHERE size_id IN ({$ids})");
+        }
+
+        // --- distro_events_* (only tables that have size_id) -------------
+        $deTableRows = $this->fetchAll("
+            SELECT TABLE_NAME
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+              AND TABLE_NAME LIKE 'distro\\_events\\_%'
+              AND COLUMN_NAME = 'size_id'
+        ");
+
+        foreach ($deTableRows as $row) {
+            $dTable = $row['TABLE_NAME'];
+            $this->execute("UPDATE `{$dTable}`
+                SET size_id = {$case}
+                WHERE size_id IN ({$ids})");
+        }
 
         // --- delete duplicate sizes --------------------------------------
         $this->execute("DELETE FROM sizes WHERE id IN ({$ids})");

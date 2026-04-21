@@ -6,7 +6,7 @@ $action = 'sizes_edit';
 if ($_POST) {
     $handler = new formHandler($table);
 
-    $savekeys = ['label', 'sizegroup_id'];
+    $savekeys = ['label'];
     $id = $handler->savePost($savekeys);
 
     redirect('?action='.$_POST['_origin']);
@@ -26,7 +26,6 @@ addfield('hidden', '', 'id');
 $cmsmain->assign('title', 'Size');
 
 addfield('text', 'Label', 'label');
-addfield('select', 'Size group', 'sizegroup_id', ['required' => false, 'multiple' => false, 'query' => 'SELECT id AS value, label FROM sizegroup ORDER BY seq']);
 
 // place the form elements and data in the template
 $cmsmain->assign('data', $data);

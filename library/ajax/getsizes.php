@@ -4,7 +4,7 @@ $success = true;
 $product_id = $_POST['product_id'];
 $size_id = intval($_GET['size']);
 
-$result = db_array('SELECT s.* FROM sizes AS s, sizegroup AS sg, products AS p WHERE s.sizegroup_id = sg.id AND p.id = :id AND p.sizegroup_id = sg.id ORDER BY s.seq', ['id' => $product_id]);
+$result = db_array('SELECT s.id, s.label FROM sizes AS s JOIN sizes_sizegroup AS ss ON ss.size_id = s.id JOIN products AS p ON p.sizegroup_id = ss.sizegroup_id AND p.id = :id ORDER BY ss.seq', ['id' => $product_id]);
 $html = '<option></option>';
 
 if (1 == count($result)) {
