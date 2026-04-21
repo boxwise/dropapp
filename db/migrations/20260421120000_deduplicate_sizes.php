@@ -109,20 +109,13 @@ final class DeduplicateSizes extends AbstractMigration
                 WHERE size_id IN ({$ids})");
         }
 
-        // --- distro_events_* (only tables that have size_id) -------------
-        $deTableRows = $this->fetchAll("
-            SELECT TABLE_NAME
-            FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_SCHEMA = DATABASE()
-              AND TABLE_NAME LIKE 'distro\\_events\\_%'
-              AND COLUMN_NAME = 'size_id'
-        ");
-
-        foreach ($deTableRows as $row) {
-            $dTable = $row['TABLE_NAME'];
-            $this->execute("UPDATE `{$dTable}`
-                SET size_id = {$case}
-                WHERE size_id IN ({$ids})");
+        // --- distro_events_* tables with size_id -------------------------
+        foreach (['distro_events_packing_list_entries', 'distro_events_tracking_logs', 'distro_events_unboxed_item_collections'] as $dTable) {
+            if ($this->hasTable($dTable)) {
+                $this->execute("UPDATE `{$dTable}`
+                    SET size_id = {$case}
+                    WHERE size_id IN ({$ids})");
+            }
         }
 
         // --- delete duplicate sizes --------------------------------------
