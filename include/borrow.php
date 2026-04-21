@@ -25,8 +25,8 @@ if (!$ajax) {
 	
 	
 	,"") FROM borrow_transactions AS t WHERE t.bicycle_id = b.id ORDER BY transaction_date DESC LIMIT 1) AS date
-FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted'.
-    ($_SESSION['filter']['borrow'] ? ' AND (b.category_id = '.$_SESSION['filter']['borrow'].')' : '');
+FROM borrow_items AS b LEFT OUTER JOIN borrow_categories AS bc ON bc.id = b.category_id WHERE NOT b.deleted'
+    .($_SESSION['filter']['borrow'] ? ' AND (b.category_id = '.$_SESSION['filter']['borrow'].')' : '');
 
     if ($_SESSION['filter2']['borrow']) {
         $data = getlistdata($query);

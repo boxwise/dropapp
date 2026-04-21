@@ -30,6 +30,7 @@ if ($container_stock_locations) {
 	FROM
 		(products AS p,
 		sizes AS s)
+	INNER JOIN sizes_sizegroup AS ss ON ss.size_id = s.id AND ss.sizegroup_id = p.sizegroup_id
 	LEFT OUTER JOIN genders AS g ON p.gender_id = g.id
 	LEFT OUTER JOIN 
         stock AS s2 
@@ -40,7 +41,6 @@ if ($container_stock_locations) {
         s2.location_id IN ('.$container_stock_locations.')
 	WHERE
 		(NOT p.deleted OR p.deleted IS NULL) AND
-		s.sizegroup_id = p.sizegroup_id AND
 		p.camp_id = '.$_SESSION['camp']['id'].'
 		'.($_SESSION['search']['container-stock'] ? 'AND p.name LIKE "%'.$_SESSION['search']['container-stock'].'%"' : '').'
 	GROUP BY

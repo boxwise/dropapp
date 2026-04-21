@@ -10,13 +10,13 @@ if (!$ajax) {
     [$boxstate, $locationfromfilter, $category, $product, $gender, $size, $location] = explode('-', (string) $_GET['id']);
 
     $productname = ($product ? db_value('SELECT name FROM products WHERE id = :id AND camp_id = :camp_id AND (NOT deleted OR deleted IS NULL)', ['id' => $product, 'camp_id' => $_SESSION['camp']['id']]) : '');
-    $cmsmain->assign('title', ($boxstate ? db_value('SELECT label FROM box_state WHERE id = :id', ['id' => $boxstate]).' ' : '').'Boxes for: '.
-        db_value('SELECT label FROM product_categories WHERE id = :id', ['id' => $category]).
-        ($product ? ', '.$productname : '').
-        ($gender ? ', '.db_value('SELECT label FROM genders WHERE id = :id', ['id' => $gender]) : '').
-        ($size ? ', '.db_value('SELECT label FROM sizes WHERE id = :id', ['id' => $size]) : '').
-        ($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']]) :
-            (0 != $locationfromfilter ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $locationfromfilter, 'camp_id' => $_SESSION['camp']['id']]) : ' ')));
+    $cmsmain->assign('title', ($boxstate ? db_value('SELECT label FROM box_state WHERE id = :id', ['id' => $boxstate]).' ' : '').'Boxes for: '
+        .db_value('SELECT label FROM product_categories WHERE id = :id', ['id' => $category])
+        .($product ? ', '.$productname : '')
+        .($gender ? ', '.db_value('SELECT label FROM genders WHERE id = :id', ['id' => $gender]) : '')
+        .($size ? ', '.db_value('SELECT label FROM sizes WHERE id = :id', ['id' => $size]) : '')
+        .($location ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $location, 'camp_id' => $_SESSION['camp']['id']])
+            : (0 != $locationfromfilter ? ', '.db_value('SELECT label FROM locations WHERE id = :id AND camp_id = :camp_id AND type = "Warehouse"', ['id' => $locationfromfilter, 'camp_id' => $_SESSION['camp']['id']]) : ' ')));
 
     $data = getlistdata('
         SELECT 	
@@ -48,14 +48,14 @@ if (!$ajax) {
         		p.gender_id = g.id AND
                 stock.product_id = p.id AND 
                 stock.location_id = l.id AND
-                pc.id = '.intval($category).' AND '.
-            ($product ? 'UPPER(p.name) = UPPER("'.$productname.'") AND ' : '').
-            ($gender ? 'g.id = '.intval($gender).' AND ' : '').
-            ($size ? 's.id = '.intval($size).' AND ' : '').
-            ($location ? 'l.id = '.intval($location).' AND ' :
-                (0 != $locationfromfilter ? 'l.id = '.intval($locationfromfilter).' AND ' : '')).
-            ($boxstate ? 'stock.box_state_id='.db_value('SELECT id FROM box_state WHERE id = :id', ['id' => $boxstate]).' AND ' : '').
-            '(NOT stock.deleted OR stock.deleted IS NULL)) AS stock_filtered
+                pc.id = '.intval($category).' AND '
+            .($product ? 'UPPER(p.name) = UPPER("'.$productname.'") AND ' : '')
+            .($gender ? 'g.id = '.intval($gender).' AND ' : '')
+            .($size ? 's.id = '.intval($size).' AND ' : '')
+            .($location ? 'l.id = '.intval($location).' AND '
+                : (0 != $locationfromfilter ? 'l.id = '.intval($locationfromfilter).' AND ' : ''))
+            .($boxstate ? 'stock.box_state_id='.db_value('SELECT id FROM box_state WHERE id = :id', ['id' => $boxstate]).' AND ' : '')
+            .'(NOT stock.deleted OR stock.deleted IS NULL)) AS stock_filtered
             LEFT JOIN 
                 tags_relations ON tags_relations.object_id = stock_filtered.id AND tags_relations.object_type = "Stock" AND tags_relations.deleted_on IS NULL
             LEFT JOIN

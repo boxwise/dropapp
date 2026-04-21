@@ -15,7 +15,7 @@ $deploymentRootFolder = '/workspace';
 // the paths of the target deployment system
 
 // v4: The hash was reverse engineered from smarty_internal_resource_file.php
-// v5: The hash was reverse engineered from 
+// v5: The hash was reverse engineered from
 // v5: vendor/smarty/smarty/src/Resource/FilePlugin.php
 // v5: $source->uid = sha1($source->name . $smarty->_joined_template_dir);
 $smarty = new Zmarty();
@@ -55,6 +55,7 @@ function rewriteTemplateHash($templateFileName, $originalJoinedDir, $deployedJoi
     // Extract parts: hash_suffix.file_templatename.tpl.php
     if (!preg_match('/^([a-f0-9]+)_(\d+)\.file_(.+\.tpl)\.php$/', $baseName, $matches)) {
         echo "  Skipping - doesn't match expected pattern\n";
+
         return;
     }
 
@@ -66,13 +67,13 @@ function rewriteTemplateHash($templateFileName, $originalJoinedDir, $deployedJoi
     // if not, the algorithm has somehow changed, so we'll abort
     // Smarty 4 hash: sha1($templatePath . $templateDir)
     // Smarty 5 hash: sha1(templateName . joinedTemplateDirs)
-    $computedHash = sha1($templateName . $originalJoinedDir);
+    $computedHash = sha1($templateName.$originalJoinedDir);
     if ($computedHash !== $originalHash) {
         throw new Exception("Failed to anticipate current hash for {$templateFileName}\nTemplate: {$templateName}\nJoined dirs: {$originalJoinedDir}\nCalculated hash: {$computedHash}\nActual hash: {$originalHash}");
     }
 
     // Calculate new hash for deployment
-    $newHash = sha1($templateName . $deployedJoinedDir);
+    $newHash = sha1($templateName.$deployedJoinedDir);
     // we want to
     // (a) replace the old file name and hash within the contents of the file
     //     with the new hash
