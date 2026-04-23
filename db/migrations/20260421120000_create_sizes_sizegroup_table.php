@@ -48,13 +48,10 @@ final class CreateSizesSizegroupTable extends AbstractMigration
 
         // ----------------------------------------------------------------
         // 3. Drop the now-redundant columns from sizes
-        //    (must drop the FK constraint and its index first)
         // ----------------------------------------------------------------
-        $this->execute('ALTER TABLE `sizes`
-            DROP FOREIGN KEY `sizes_ibfk_4`,
-            DROP INDEX       `sizegroup_id`,
-            DROP COLUMN      `sizegroup_id`,
-            DROP COLUMN      `seq`');
+        $this->table('sizes')->dropForeignKey('sizegroup_id')->save();
+        $this->table('sizes')->removeColumn('sizegroup_id')->save();
+        $this->table('sizes')->removeColumn('seq')->save();
     }
 
     public function down(): void
