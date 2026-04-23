@@ -6,9 +6,14 @@ use Phinx\Migration\AbstractMigration;
 
 /**
  * Removes duplicate size labels from the sizes table (keeping the entry with the
- * smallest ID for each label).  All references in the stock, shipment_detail,
- * history, itemsout and distro_events_* tables are updated to point at the
- * surviving size ID before the surplus rows are deleted.
+ * smallest ID for each label).  The preceding CreateSizesSizegroupTable migration
+ * has already created sizes_sizegroup and populated it with one row per size, so
+ * this migration explicitly removes the sizes_sizegroup rows for the duplicate
+ * sizes before deleting the sizes themselves.
+ *
+ * All references in stock, shipment_detail, history, itemsout and distro_events_*
+ * tables are updated to point at the surviving size ID before the surplus rows
+ * are deleted.
  *
  * Removed ID → kept ID mapping (grouped by label):
  *   S            53 → 1          M            54 → 2          L            55 → 3
@@ -118,6 +123,12 @@ final class DeduplicateSizes extends AbstractMigration
             }
         }
 
+        // --- sizes_sizegroup ---------------------------------------------
+        // Remove cross-reference rows for the duplicate sizes.
+        // (The ON DELETE CASCADE on sizes.id would also handle this when the
+        // sizes rows are deleted below, but we do it explicitly for clarity.)
+        $this->execute("DELETE FROM sizes_sizegroup WHERE size_id IN ({$ids})");
+
         // --- delete duplicate sizes --------------------------------------
         $this->execute("DELETE FROM sizes WHERE id IN ({$ids})");
     }
@@ -125,75 +136,147 @@ final class DeduplicateSizes extends AbstractMigration
     public function down(): void
     {
         // Re-insert the duplicate size rows that were removed by up().
-        // Foreign-key references that were remapped cannot be restored, so this
-        // is only a partial rollback.  Run migration 2's down() first so that
-        // the sizegroup_id and seq columns exist before inserting here.
-        $this->execute("INSERT IGNORE INTO sizes (id, label, sizegroup_id, seq) VALUES
-            (53,'S',5,50),
-            (54,'M',5,51),
-            (55,'L',5,52),
-            (57,'39',8,81),
-            (58,'40',8,82),
-            (59,'41',8,83),
-            (65,'35',9,118),
-            (67,'34',9,117),
-            (70,'Mixed',5,53),
-            (71,'Mixed',1,6),
-            (103,'All ages',4,205),
-            (120,'7-12 months',2,41),
-            (121,'13-18 months',2,42),
-            (122,'19-24 months',2,43),
-            (123,'All ages',2,44),
-            (124,'6-10 years',18,20),
-            (125,'11-15 years',18,21),
-            (130,'2-5 years',20,30),
-            (138,'0-6 months',22,180),
-            (140,'All ages',4,182),
-            (141,'2-3 years',23,200),
-            (142,'4-5 years',23,201),
-            (148,'All ages',23,204),
-            (163,'All ages',24,234),
-            (171,'24',26,251),
-            (172,'25',26,252),
-            (173,'26',26,253),
-            (174,'27',26,254),
-            (175,'28',26,255),
-            (176,'29',26,256),
-            (177,'30',26,257),
-            (178,'31',26,258),
-            (179,'32',26,259),
-            (180,'33',26,260),
-            (181,'34',26,261),
-            (182,'35',26,262),
-            (183,'36',26,263),
-            (184,'37',26,264),
-            (185,'38',26,265),
-            (186,'39',26,266),
-            (187,'40',26,267),
-            (188,'41',26,268),
-            (189,'42',26,269),
-            (190,'43',26,270),
-            (191,'44',26,271),
-            (192,'45',26,272),
-            (204,'Mixed',2,999),
-            (205,'Mixed',3,999),
-            (206,'Mixed',4,999),
-            (207,'Mixed',7,999),
-            (208,'Mixed',8,999),
-            (209,'Mixed',9,999),
-            (210,'Mixed',12,999),
-            (211,'Mixed',13,999),
-            (212,'Mixed',16,999),
-            (213,'Mixed',17,999),
-            (214,'Mixed',18,999),
-            (215,'Mixed',19,999),
-            (216,'Mixed',20,999),
-            (217,'Mixed',21,999),
-            (218,'Mixed',22,999),
-            (219,'Mixed',23,999),
-            (220,'Mixed',24,999),
-            (221,'Mixed',25,999),
-            (222,'Mixed',26,999),
-            (223,'Mixed',27,999)");
+        // Note: sizegroup_id and seq columns no longer exist on sizes (they were
+        // dropped by the preceding CreateSizesSizegroupTable migration), so only
+        // id and label are restored here.  Foreign-key references in stock etc.
+        // that were remapped cannot be reconstructed.
+        $this->execute("INSERT IGNORE INTO sizes (id, label) VALUES
+            (53,'S'),
+            (54,'M'),
+            (55,'L'),
+            (57,'39'),
+            (58,'40'),
+            (59,'41'),
+            (65,'35'),
+            (67,'34'),
+            (70,'Mixed'),
+            (71,'Mixed'),
+            (103,'All ages'),
+            (120,'7-12 months'),
+            (121,'13-18 months'),
+            (122,'19-24 months'),
+            (123,'All ages'),
+            (124,'6-10 years'),
+            (125,'11-15 years'),
+            (130,'2-5 years'),
+            (138,'0-6 months'),
+            (140,'All ages'),
+            (141,'2-3 years'),
+            (142,'4-5 years'),
+            (148,'All ages'),
+            (163,'All ages'),
+            (171,'24'),
+            (172,'25'),
+            (173,'26'),
+            (174,'27'),
+            (175,'28'),
+            (176,'29'),
+            (177,'30'),
+            (178,'31'),
+            (179,'32'),
+            (180,'33'),
+            (181,'34'),
+            (182,'35'),
+            (183,'36'),
+            (184,'37'),
+            (185,'38'),
+            (186,'39'),
+            (187,'40'),
+            (188,'41'),
+            (189,'42'),
+            (190,'43'),
+            (191,'44'),
+            (192,'45'),
+            (204,'Mixed'),
+            (205,'Mixed'),
+            (206,'Mixed'),
+            (207,'Mixed'),
+            (208,'Mixed'),
+            (209,'Mixed'),
+            (210,'Mixed'),
+            (211,'Mixed'),
+            (212,'Mixed'),
+            (213,'Mixed'),
+            (214,'Mixed'),
+            (215,'Mixed'),
+            (216,'Mixed'),
+            (217,'Mixed'),
+            (218,'Mixed'),
+            (219,'Mixed'),
+            (220,'Mixed'),
+            (221,'Mixed'),
+            (222,'Mixed'),
+            (223,'Mixed')");
+
+        // Re-insert the sizes_sizegroup rows for the restored sizes
+        // (one row per size, matching the original sizes.sizegroup_id / sizes.seq values
+        // from init.sql that were inserted by CreateSizesSizegroupTable)
+        $this->execute('INSERT IGNORE INTO sizes_sizegroup (size_id, sizegroup_id, seq) VALUES
+            (53, 5, 50),
+            (54, 5, 51),
+            (55, 5, 52),
+            (57, 8, 81),
+            (58, 8, 82),
+            (59, 8, 83),
+            (65, 9, 118),
+            (67, 9, 117),
+            (70, 5, 53),
+            (71, 1, 6),
+            (103, 4, 205),
+            (120, 2, 41),
+            (121, 2, 42),
+            (122, 2, 43),
+            (123, 2, 44),
+            (124, 18, 20),
+            (125, 18, 21),
+            (130, 20, 30),
+            (138, 22, 180),
+            (140, 4, 182),
+            (141, 23, 200),
+            (142, 23, 201),
+            (148, 23, 204),
+            (163, 24, 234),
+            (171, 26, 251),
+            (172, 26, 252),
+            (173, 26, 253),
+            (174, 26, 254),
+            (175, 26, 255),
+            (176, 26, 256),
+            (177, 26, 257),
+            (178, 26, 258),
+            (179, 26, 259),
+            (180, 26, 260),
+            (181, 26, 261),
+            (182, 26, 262),
+            (183, 26, 263),
+            (184, 26, 264),
+            (185, 26, 265),
+            (186, 26, 266),
+            (187, 26, 267),
+            (188, 26, 268),
+            (189, 26, 269),
+            (190, 26, 270),
+            (191, 26, 271),
+            (192, 26, 272),
+            (204, 2, 999),
+            (205, 3, 999),
+            (206, 4, 999),
+            (207, 7, 999),
+            (208, 8, 999),
+            (209, 9, 999),
+            (210, 12, 999),
+            (211, 13, 999),
+            (212, 16, 999),
+            (213, 17, 999),
+            (214, 18, 999),
+            (215, 19, 999),
+            (216, 20, 999),
+            (217, 21, 999),
+            (218, 22, 999),
+            (219, 23, 999),
+            (220, 24, 999),
+            (221, 25, 999),
+            (222, 26, 999),
+            (223, 27, 999)');
     }
 }
