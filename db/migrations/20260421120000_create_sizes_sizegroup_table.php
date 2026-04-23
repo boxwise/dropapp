@@ -11,9 +11,9 @@ use Phinx\Migration\AbstractMigration;
  *
  * This migration runs BEFORE DeduplicateSizes so that every size – including
  * the duplicates that will later be removed – already has a row in
- * sizes_sizegroup before deduplication happens.  The DeduplicateSizes migration
- * then deletes those rows (via explicit DELETE, though ON DELETE CASCADE would
- * also handle it) when it removes the duplicate sizes.
+ * sizes_sizegroup before deduplication happens. When DeduplicateSizes removes
+ * duplicate rows from sizes, the corresponding sizes_sizegroup rows are removed
+ * automatically via the size_id foreign key's ON DELETE CASCADE behavior.
  */
 final class CreateSizesSizegroupTable extends AbstractMigration
 {
