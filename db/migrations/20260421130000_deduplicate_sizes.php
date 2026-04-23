@@ -8,8 +8,8 @@ use Phinx\Migration\AbstractMigration;
  * Removes duplicate size labels from the sizes table (keeping the entry with the
  * smallest ID for each label).  The preceding CreateSizesSizegroupTable migration
  * has already created sizes_sizegroup and populated it with one row per size, so
- * this migration explicitly removes the sizes_sizegroup rows for the duplicate
- * sizes before deleting the sizes themselves.
+ * this migration remaps the sizes_sizegroup rows for duplicate sizes to their
+ * canonical ID (preserving sizegroup memberships), then deletes the duplicate sizes.
  *
  * All references in stock, shipment_detail, history, itemsout and distro_events_*
  * tables are updated to point at the surviving size ID before the surplus rows
@@ -124,12 +124,18 @@ final class DeduplicateSizes extends AbstractMigration
         }
 
         // --- sizes_sizegroup ---------------------------------------------
-        // Remove cross-reference rows for the duplicate sizes.
-        // (The ON DELETE CASCADE on sizes.id would also handle this when the
-        // sizes rows are deleted below, but we do it explicitly for clarity.)
-        $this->execute("DELETE FROM sizes_sizegroup WHERE size_id IN ({$ids})");
+        // Remap cross-reference rows: canonical sizes inherit all sizegroup
+        // memberships from their duplicates.  INSERT IGNORE handles the rare
+        // case where the canonical already belongs to the same sizegroup.
+        // The ON DELETE CASCADE on fk_ss_size_id then removes the old rows
+        // for the duplicate size IDs when they are deleted below.
+        $ssCaseExpr = str_replace('size_id', 'ss.size_id', $case);
+        $this->execute("INSERT IGNORE INTO `sizes_sizegroup` (`size_id`, `sizegroup_id`, `seq`)
+            SELECT {$ssCaseExpr}, ss.`sizegroup_id`, ss.`seq`
+            FROM `sizes_sizegroup` ss
+            WHERE ss.`size_id` IN ({$ids})");
 
-        // --- delete duplicate sizes --------------------------------------
+        // --- delete duplicate sizes (CASCADE removes their sizes_sizegroup rows) ---
         $this->execute("DELETE FROM sizes WHERE id IN ({$ids})");
     }
 
@@ -278,5 +284,31 @@ final class DeduplicateSizes extends AbstractMigration
             (221, 25, 999),
             (222, 26, 999),
             (223, 27, 999)');
+
+        // Remove the sizegroup memberships that canonical sizes inherited
+        // from their duplicates during up().  Each pair below is
+        // (canonical_size_id, sizegroup_id_of_the_duplicate).
+        $this->execute('DELETE FROM `sizes_sizegroup`
+            WHERE (`size_id`, `sizegroup_id`) IN (
+                ( 1,  5), ( 2,  5), ( 3,  5),
+                (33,  8), (34,  8), (35,  8),
+                (28,  9), (29,  9),
+                (52,  1), (52,  5),
+                (97,  2), (97,  4), (97, 23), (97, 24),
+                (44,  2), (47,  2), (48,  2),
+                (117, 18), (118, 18),
+                (116, 20),
+                (119, 22),
+                (10, 23), (11, 23),
+                (18, 26), (19, 26), (20, 26), (21, 26), (22, 26), (23, 26),
+                (24, 26), (25, 26), (26, 26), (27, 26),
+                (28, 26), (29, 26), (30, 26), (31, 26), (32, 26),
+                (33, 26), (34, 26), (35, 26),
+                (60, 26), (61, 26), (62, 26), (63, 26),
+                (52,  2), (52,  3), (52,  4), (52,  7), (52,  8), (52,  9),
+                (52, 12), (52, 13), (52, 16), (52, 17), (52, 18), (52, 19),
+                (52, 20), (52, 21), (52, 22), (52, 23), (52, 24), (52, 25),
+                (52, 26), (52, 27)
+            )');
     }
 }
