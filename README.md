@@ -19,21 +19,16 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
 - Install [Docker](https://www.docker.com/products/docker-desktop)
 - Install [PHP 8.2 or later](https://www.php.net/downloads.php).
-- Ensure you have the `mbstring`, `curl`, `mysql` and `xdebug` PHP extensions installed. On Ubuntu:
+- Install ['composer'](https://getcomposer.org/doc/00-intro.md) (we suggest making it available globally)
+- Ensure you have the `mbstring`, `curl`, `mysql` and `xdebug` PHP extensions (fiiting the php version you installed) installed. On Ubuntu:
 
        apt install php-curl php-mbstring php-mysql php-xdebug
 
 ### How do I get set up?
 
-0.  Clone this repo. If you're running Ubuntu, you may need to set write permissions to the templates folder for Docker.
+1.  Clone this repo. If you're running Ubuntu, you may need to set write permissions to the templates folder for Docker.
 
     git clone https://github.com/boxwise/dropapp
-    chmod -R 777 dropapp/templates (not generally recommended - ToDo Fix bug for Ubuntu users)
-
-1.  You first need to install 'composer' (we suggest making it available globally)
-
-    curl -s https://getcomposer.org/installer | php
-    mv composer.phar /usr/local/bin/composer
 
 2.  You can install the required dependencies then using
 
@@ -49,13 +44,20 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
         php -S localhost:8000 gcloud-entry.php
 
-5.  To initialize the database for the first time, you should run this command to create the schema:
+5.  Please access the docker container, create the folder for the compiled smarty templates and give access to the container PHP user to write to the folder
+
+        docker compose exec web sh
+        mkdir -p /var/www/html/templates/templates_c
+        chown -R www-data:www-data /var/www/html/templates/templates_c
+        chmod -R 775 /var/www/html/templates/templates_c
+
+6.  To initialize the database for the first time, you should run this command to create the schema:
 
         vendor/bin/phinx migrate -e development
 
     The database seed `db/init.sql` is generated in v2 and copied from there.
 
-6.  If you want to additionally want to connect the users from the seed to auth0 and populate the db table cms_usergroups_roles then open a browser and request `http://localhost:8100/cron/reseed-auth0.php`
+7.  Request `http://localhost:8100/cron/reseed-auth0.php` to populate the `cms_usergroups_roles` db table to have your users in the db in sync with auth0.
 
 ### Accessing the app
 
@@ -127,6 +129,8 @@ Enter the address in `docker-compose.yaml` here:
 
         environment:
             XDEBUG_CONFIG: remote_host=172.19.0.1
+
+You might also check your firewall if the port 9003 is open.
 
 ### Database and migrations
 
