@@ -77,49 +77,56 @@ final class DeduplicateSizes extends AbstractMigration
         $case = self::REMAP_CASE;
 
         // --- stock -------------------------------------------------------
-        $this->execute("UPDATE stock
+        $updated_stock_rows = $this->execute("UPDATE stock
             SET size_id = {$case}
             WHERE size_id IN ({$ids})");
+        $this->output->writeln('Updated stock rows: '.$updated_stock_rows.' . Expected: 0 (0)');
 
         // --- shipment_detail ---------------------------------------------
         $sourceCaseExpr = str_replace('size_id', 'source_size_id', $case);
         $targetCaseExpr = str_replace('size_id', 'target_size_id', $case);
 
-        $this->execute("UPDATE shipment_detail
+        $updated_shipment_detail_rows = $this->execute("UPDATE shipment_detail
             SET source_size_id = {$sourceCaseExpr}
             WHERE source_size_id IN ({$ids})");
+        $this->output->writeln('Updated shipment detail rows: '.$updated_shipment_detail_rows.' . Expected: 0 (0)');
 
-        $this->execute("UPDATE shipment_detail
+        $updated_shipment_detail_rows2 = $this->execute("UPDATE shipment_detail
             SET target_size_id = {$targetCaseExpr}
             WHERE target_size_id IN ({$ids})");
+        $this->output->writeln('Updated shipment detail rows: '.$updated_shipment_detail_rows2.' . Expected: 0 (0)');
 
         // --- history (size_id changes on stock rows) ---------------------
         $fromCaseExpr = str_replace('size_id', 'from_int', $case);
         $toCaseExpr = str_replace('size_id', 'to_int', $case);
 
-        $this->execute("UPDATE history
+        $updated_history_rows = $this->execute("UPDATE history
             SET from_int = {$fromCaseExpr}
             WHERE tablename = 'stock' AND changes = 'size_id'
               AND from_int IN ({$ids})");
+        $this->output->writeln('Updated history rows: '.$updated_history_rows.' . Expected: 0 (0)');
 
-        $this->execute("UPDATE history
+        $updated_history_rows2 = $this->execute("UPDATE history
             SET to_int = {$toCaseExpr}
             WHERE tablename = 'stock' AND changes = 'size_id'
               AND to_int IN ({$ids})");
+        $this->output->writeln('Updated history rows: '.$updated_history_rows2.' . Expected: 0 (0)');
 
         // --- itemsout ----------------------------------------------------
         if ($this->hasTable('itemsout')) {
-            $this->execute("UPDATE itemsout
+            $updated_itemsout_rows = $this->execute("UPDATE itemsout
                 SET size_id = {$case}
                 WHERE size_id IN ({$ids})");
+            $this->output->writeln('Updated itemsout rows: '.$updated_itemsout_rows.' . Expected: 0 (0)');
         }
 
         // --- distro_events_* tables with size_id -------------------------
         foreach (['distro_events_packing_list_entries', 'distro_events_tracking_logs', 'distro_events_unboxed_item_collections'] as $dTable) {
             if ($this->hasTable($dTable)) {
-                $this->execute("UPDATE `{$dTable}`
+                $updated_distro_rows = $this->execute("UPDATE `{$dTable}`
                     SET size_id = {$case}
                     WHERE size_id IN ({$ids})");
+                $this->output->writeln('Updated '.$dTable.' rows: '.$updated_distro_rows.' . Expected: 0 (0)');
             }
         }
 
@@ -136,7 +143,8 @@ final class DeduplicateSizes extends AbstractMigration
             WHERE ss.`size_id` IN ({$ids})");
 
         // --- delete duplicate sizes (CASCADE removes their sizes_sizegroup rows) ---
-        $this->execute("DELETE FROM sizes WHERE id IN ({$ids})");
+        $deleted_sizes_rows = $this->execute("DELETE FROM sizes WHERE id IN ({$ids})");
+        $this->output->writeln('Deleted sizes rows: '.$deleted_sizes_rows.' . Expected: 66 (66)');
     }
 
     public function down(): void
