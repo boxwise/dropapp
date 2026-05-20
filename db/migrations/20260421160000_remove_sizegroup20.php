@@ -38,8 +38,8 @@ final class RemoveSizegroup20 extends AbstractMigration
     public function down(): void
     {
         // --- sizegroup ------------------------------------------------------
-        $this->execute("INSERT INTO `sizegroup` (`id`, `label`) VALUES
-            (20, 'Children by month (2-5)')");
+        $this->execute("INSERT INTO `sizegroup` (`id`, `label`, `seq`) VALUES
+            (20, 'Children by month (2-5)', 100)");
 
         // --- sizes_sizegroup ------------------------------------------------
         // Restore the two size memberships that existed before up() ran.
