@@ -15,6 +15,5 @@ class UnassignDeletedTags extends AbstractMigration
         $this->output->writeln('Updated rows: '.$updated_rows);
     }
 
-    public function down(): void
-    { }
+    public function down(): void {}
 }
