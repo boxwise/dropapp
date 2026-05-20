@@ -20,13 +20,15 @@ final class RemoveSizegroup20 extends AbstractMigration
     public function up(): void
     {
         // --- products -------------------------------------------------------
-        $this->execute('UPDATE `products`
+        $updated_products_rows = $this->execute('UPDATE `products`
             SET `sizegroup_id` = 17
             WHERE `sizegroup_id` = 20');
+        $this->output->writeln('Updated products rows: '.$updated_products_rows.' . Expected: 29 (0)');
 
         // --- sizes_sizegroup ------------------------------------------------
-        $this->execute('DELETE FROM `sizes_sizegroup`
+        $deleted_rows = $this->execute('DELETE FROM `sizes_sizegroup`
             WHERE `sizegroup_id` = 20');
+        $this->output->writeln('Deleted sizes_sizegroup rows: '.$deleted_rows.' . Expected: 2');
 
         // --- sizegroup ------------------------------------------------------
         $this->execute('DELETE FROM `sizegroup`
