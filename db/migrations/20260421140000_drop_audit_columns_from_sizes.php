@@ -35,9 +35,11 @@ final class DropAuditColumnsFromSizes extends AbstractMigration
             ADD KEY `modified_by` (`modified_by`),
             ADD CONSTRAINT `sizes_ibfk_5`
                 FOREIGN KEY (`created_by`)  REFERENCES `cms_users` (`id`)
+                ON DELETE SET NULL
                 ON UPDATE CASCADE,
             ADD CONSTRAINT `sizes_ibfk_6`
                 FOREIGN KEY (`modified_by`) REFERENCES `cms_users` (`id`)
+                ON DELETE SET NULL
                 ON UPDATE CASCADE');
     }
 }
