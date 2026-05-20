@@ -19,7 +19,8 @@ use Phinx\Migration\AbstractMigration;
  *   S            53 → 1          M            54 → 2          L            55 → 3
  *   34           67 → 28        35           65 → 29
  *   39          57,186 → 33    40          58,187 → 34    41          59,188 → 35
- *   Mixed      70,71,204-223 → 52
+ *   Mixed      70,71,204,205,206,208-223 → 52
+ *   Mixed       207 → 68 (remove Mixed in OneSize sizegroup)
  *   All ages   103,123,140,148,163 → 97
  *   7-12 mo     120 → 47       13-18 mo    121 → 48       19-24 mo    122 → 44
  *   6-10 yr     124 → 117      11-15 yr    125 → 118
@@ -62,7 +63,8 @@ final class DeduplicateSizes extends AbstractMigration
         WHEN 189 THEN  60  WHEN 190 THEN  61  WHEN 191 THEN  62
         WHEN 192 THEN  63
         WHEN 204 THEN  52  WHEN 205 THEN  52  WHEN 206 THEN  52
-        WHEN 207 THEN  52  WHEN 208 THEN  52  WHEN 209 THEN  52
+        WHEN 207 THEN  68
+        WHEN 208 THEN  52  WHEN 209 THEN  52
         WHEN 210 THEN  52  WHEN 211 THEN  52  WHEN 212 THEN  52
         WHEN 213 THEN  52  WHEN 214 THEN  52  WHEN 215 THEN  52
         WHEN 216 THEN  52  WHEN 217 THEN  52  WHEN 218 THEN  52
