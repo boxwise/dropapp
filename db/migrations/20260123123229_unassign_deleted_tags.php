@@ -4,7 +4,7 @@ use Phinx\Migration\AbstractMigration;
 
 class UnassignDeletedTags extends AbstractMigration
 {
-    public function change(): void
+    public function up(): void
     {
         $updated_rows = $this->execute('
             UPDATE tags_relations tr
@@ -14,4 +14,7 @@ class UnassignDeletedTags extends AbstractMigration
         ');
         $this->output->writeln('Updated rows: '.$updated_rows);
     }
+
+    public function down(): void
+    { }
 }
