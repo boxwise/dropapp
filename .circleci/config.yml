@@ -52,71 +52,80 @@ jobs:
       - attach_workspace:
           at: workspace
       - gcp-cli/install
-      - run: sudo docker-php-ext-install pdo_mysql
-      - run: |
-          cd workspace
-          # record version
-          echo "CircleCI build number:${CIRCLE_BUILD_NUM}
-          Git hash: ${CIRCLE_SHA1}
-          ${CIRCLE_TAG+Release: ${CIRCLE_TAG}}" > assets/version.txt
-          # generate config file
-          echo "<?php
-            \$settings['version'] = '${CIRCLE_BUILD_NUM}';
-            ${CIRCLE_TAG+\$settings['release'] = '${CIRCLE_TAG}';}
-            \$settings['db_socket'] = '/cloudsql/${BOXWISE_PRIMARYDB_SOCKET}';
-            \$settings['db_database'] = '${<< parameters.envVariablePrefix >>DBNAME}';
-            \$settings['db_user'] = '${<< parameters.envVariablePrefix >>DBNAME}';
-            \$settings['db_pass'] = '${<< parameters.envVariablePrefix >>DBPASS}';
-            \$settings['sentry_key'] = '${BOXWISE_SENTRY}';
-            \$settings['test_pwd'] = '${CYPRESS_TEST_PWD}';
-            \$settings['upload_dir'] = '${UPLOAD_DIR}/<< parameters.serviceName >>';
-            \$settings['auth0_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_DOMAIN}';
-            \$settings['auth0_api_id'] = '${<< parameters.envVariablePrefix >>AUTH0_API_ID}';
-            \$settings['auth0_api_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_API_DOMAIN}';
-            \$settings['auth0_api_audience'] = '${<< parameters.envVariablePrefix >>AUTH0_API_AUDIENCE}';
-            \$settings['auth0_client_id'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_ID}';
-            \$settings['auth0_db_connection_id'] = '${<< parameters.envVariablePrefix >>AUTH0_DB_CONNECTION_ID}';
-            \$settings['auth0_client_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_SECRET}';
-            \$settings['auth0_cookie_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_COOKIE_SECRET}';
-            \$settings['auth0_redirect_uri'] = '${<< parameters.envVariablePrefix >>AUTH0_REDIRECT_URI}';
-            \$settings['v2_base_url'] = '${<< parameters.envVariablePrefix >>V2_BASE_URL}';
-            \$settings['jwt_claim_prefix'] = 'https://www.boxtribute.com';" > library/config.php
-          echo "paths:
-            migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'
-          environments:
-            default_migration_table: phinxlog
-            << parameters.serviceName >>:
-                adapter: mysql
-                host: 127.0.0.1
-                name: ${<< parameters.envVariablePrefix >>DBNAME}
-                user: ${<< parameters.envVariablePrefix >>DBNAME}
-                pass: ${<< parameters.envVariablePrefix >>DBPASS}
-                port: 3306
-                charset: utf8
-                mysql_attr_init_command: SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO'
-          version_order: creation" > phinx.yml
-          # generate google app engine config for target environment
-          sed 's/service: default/service: << parameters.serviceName >>/g' app.yaml > app-<< parameters.serviceName >>.yaml
-          if [ << parameters.serviceName >> == production ]; then echo -e "\ninstance_class: F2" >> app-production.yaml; fi;
-      - run: |
-          # get google credentials
-          echo $GOOGLE_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-          gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-          # download cloud sql proxy to enable db access
-          curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64
-          chmod +x cloud_sql_proxy
       - run:
+          name: Install deploy dependencies
+          command: sudo docker-php-ext-install pdo_mysql
+      - run:
+          name: Generate config.php and phinx.yml files
+          command: |
+            cd workspace
+            # record version
+            echo "CircleCI build number:${CIRCLE_BUILD_NUM}
+            Git hash: ${CIRCLE_SHA1}
+            ${CIRCLE_TAG+Release: ${CIRCLE_TAG}}" > assets/version.txt
+            # generate config file
+            echo "<?php
+              \$settings['version'] = '${CIRCLE_BUILD_NUM}';
+              ${CIRCLE_TAG+\$settings['release'] = '${CIRCLE_TAG}';}
+              \$settings['db_socket'] = '/cloudsql/${BOXWISE_PRIMARYDB_SOCKET}';
+              \$settings['db_database'] = '${<< parameters.envVariablePrefix >>DBNAME}';
+              \$settings['db_user'] = '${<< parameters.envVariablePrefix >>DBNAME}';
+              \$settings['db_pass'] = '${<< parameters.envVariablePrefix >>DBPASS}';
+              \$settings['sentry_key'] = '${BOXWISE_SENTRY}';
+              \$settings['test_pwd'] = '${CYPRESS_TEST_PWD}';
+              \$settings['upload_dir'] = '${UPLOAD_DIR}/<< parameters.serviceName >>';
+              \$settings['auth0_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_DOMAIN}';
+              \$settings['auth0_api_id'] = '${<< parameters.envVariablePrefix >>AUTH0_API_ID}';
+              \$settings['auth0_api_domain'] = '${<< parameters.envVariablePrefix >>AUTH0_API_DOMAIN}';
+              \$settings['auth0_api_audience'] = '${<< parameters.envVariablePrefix >>AUTH0_API_AUDIENCE}';
+              \$settings['auth0_client_id'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_ID}';
+              \$settings['auth0_db_connection_id'] = '${<< parameters.envVariablePrefix >>AUTH0_DB_CONNECTION_ID}';
+              \$settings['auth0_client_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_CLIENT_SECRET}';
+              \$settings['auth0_cookie_secret'] = '${<< parameters.envVariablePrefix >>AUTH0_COOKIE_SECRET}';
+              \$settings['auth0_redirect_uri'] = '${<< parameters.envVariablePrefix >>AUTH0_REDIRECT_URI}';
+              \$settings['v2_base_url'] = '${<< parameters.envVariablePrefix >>V2_BASE_URL}';
+              \$settings['jwt_claim_prefix'] = 'https://www.boxtribute.com';" > library/config.php
+            echo "paths:
+              migrations: '%%PHINX_CONFIG_DIR%%/db/migrations'
+            environments:
+              default_migration_table: phinxlog
+              << parameters.serviceName >>:
+                  adapter: mysql
+                  host: 127.0.0.1
+                  name: ${<< parameters.envVariablePrefix >>DBNAME}
+                  user: ${<< parameters.envVariablePrefix >>DBNAME}
+                  pass: ${<< parameters.envVariablePrefix >>DBPASS}
+                  port: 3306
+                  charset: utf8
+                  mysql_attr_init_command: SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO'
+            version_order: creation" > phinx.yml
+            # generate google app engine config for target environment
+            sed 's/service: default/service: << parameters.serviceName >>/g' app.yaml > app-<< parameters.serviceName >>.yaml
+            if [ << parameters.serviceName >> == production ]; then echo -e "\ninstance_class: F2" >> app-production.yaml; fi;
+      - run:
+          name: Download cloud_sql_proxy
+          command: |
+            # get google credentials
+            echo $GOOGLE_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            # download cloud sql proxy to enable db access
+            curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64
+            chmod +x cloud_sql_proxy
+      - run:
+          name: Launch cloud_sql_proxy
           command: ./cloud_sql_proxy -instances=${BOXWISE_PRIMARYDB_SOCKET}=tcp:3306
           background: true
-      - run: |
-          # wait for cloud sql proxy to initialize
-          sleep 3s
-          cd workspace
-          # apply db changes 
-          echo "Migrating << parameters.serviceName >> database"
-          vendor/bin/phinx migrate -e << parameters.serviceName >>
-          # deploy
-          gcloud app deploy app-<< parameters.serviceName >>.yaml --version ${CIRCLE_BUILD_NUM}
+      - run:
+          name: Run DB migrations and deploy to GCloud
+          command: |
+            # wait for cloud sql proxy to initialize
+            sleep 3s
+            cd workspace
+            # apply db changes
+            echo "Migrating << parameters.serviceName >> database"
+            vendor/bin/phinx migrate -e << parameters.serviceName >>
+            # deploy
+            gcloud app deploy app-<< parameters.serviceName >>.yaml --version ${CIRCLE_BUILD_NUM}
 
   create-sentry-release:
     docker:
