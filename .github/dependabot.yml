@@ -7,3 +7,21 @@ updates:
     assignees:
       - "HaGuesto"
     open-pull-requests-limit: 10
+    # Bundle all dependency updates together
+    groups:
+      composer-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      composer-major:
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+    # Replace old PRs when newer versions are available
+    pull-request-branch-name:
+      separator: "-"
+    # This ensures old PRs are superseded by new ones
+    versioning-strategy: auto
