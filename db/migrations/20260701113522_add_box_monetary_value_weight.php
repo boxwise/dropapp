@@ -44,8 +44,6 @@ class AddBoxMonetaryValueWeight extends AbstractMigration
                 'null' => false,
                 'default' => 'EUR',
                 'limit' => 15,
-                'collation' => 'utf8_general_ci',
-                'encoding' => 'utf8',
                 'after' => 'currencyname',
             ])
             ->save()
