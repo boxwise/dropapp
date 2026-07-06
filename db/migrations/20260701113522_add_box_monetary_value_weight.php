@@ -8,7 +8,7 @@ class AddBoxMonetaryValueWeight extends AbstractMigration
     {
         $this->table('stock')
             ->addColumn('weight_display_unit_id', 'integer', [
-                'null' => true,
+                'null' => false,
                 'default' => 1,  // kilogram
                 'signed' => false,
                 'after' => 'size_id',
@@ -40,7 +40,7 @@ class AddBoxMonetaryValueWeight extends AbstractMigration
             ->save()
         ;
         $this->table('camps')
-            ->addColumn('currency', 'string', [
+            ->addColumn('monetary_currency_code', 'string', [
                 'null' => false,
                 'default' => 'EUR',
                 'limit' => 15,
@@ -62,7 +62,7 @@ class AddBoxMonetaryValueWeight extends AbstractMigration
             ->save()
         ;
         $this->table('camps')
-            ->removeColumn('currency')
+            ->removeColumn('monetary_currency_code')
             ->save()
         ;
     }
