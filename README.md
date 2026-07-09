@@ -15,6 +15,8 @@ We have evolved the app to now be centrally hosted so we can offer the product t
 
 If you are interested in being part of this project, write us at [jointheteam@boxtribute.org](mailto:jointheteam@boxtribute.org)! You can also check out our [website](https://www.boxtribute.org/#join) for more details about the kind of help we need on this project.
 
+## Developer instructions and info
+
 ### Preparation for Installation
 
 - Install [Docker](https://www.docker.com/products/docker-desktop)
@@ -205,8 +207,18 @@ All tests in `cypress/integrations` should be found and can be directly executed
 We experienced before that tests can fail in CircleCI, but not in the local environment. The main reason for it is that Cypress is usually executing the commands slower in a local dev environment.
 Therefore, a few additional guidelines when writing test:
 
-- When you want to execute a redirect, e.g. example by clicking a button or tab, please add an assertion after the click, e.g. of the url `cy.url().should('include', 'people_deactivated')`. Due to this assertion cypress will definitely wait until the redirect is executed.
+- When you want to execute a redirect, e.g. by clicking a button or tab, please add an assertion after the click, e.g. of the url `cy.url().should('include', 'people_deactivated')`. Due to this assertion cypress will definitely wait until the redirect is executed.
 - Only if you use `cy.visit()` you can be sure that the cypress test wait until a page is fully loaded. Therefore, try to navigate as much as possible with `cy.visit()`.
+
+## DevOps
+
+### Release new version
+
+1. `git checkout production`
+1. `git pull origin production`
+1. `git pull origin master --commit`
+1. For the deploy to the demo environment: `git push origin production`
+1. For the deploy to the production environment: `git tag -s v1.X.Y -m v1.X.Y` (bump X if DB migration involved) and `git push origin production --tags`
 
 ### Notes for setting up an Auth0 tenant
 
@@ -215,7 +227,7 @@ If you are setting up a new Auth0 tenant, we require access to the Auth0 Managem
 - Under 'APIs' select Auth0 Management API, go to 'Machine to Machine Applications' and enable access
 - Grant scopes for read/update/delete/create users and users_app_metadata.
 
-### Contribution guidelines
+## Contribution guidelines
 
 You gotta be awesome and kind.
 For everything else, please see our [contribution guidelines](https://github.com/boxwise/dropapp/blob/master/CONTRIBUTING.md)
@@ -224,6 +236,6 @@ For everything else, please see our [contribution guidelines](https://github.com
 
 Drop us an email to hello@boxtribute.org!
 
-### License
+## License
 
 See the [LICENSE](./LICENSE) file for license rights and limitations (Apache 2.0).
