@@ -256,10 +256,10 @@ describe('Manage beneficiaries', () => {
 
         // Verify history logs for merge operation
         cy.getBeneficiaryIdFromRow(TEST_LASTNAME1).then(id1 => {
-            cy.checkHistoryLog('people', id1, 'merged to family');
+            cy.checkHistoryLog('people', id1, 'parent_id; merged to family');
         });
         cy.getBeneficiaryIdFromRow(TEST_LASTNAME2).then(id2 => {
-            cy.checkHistoryLog('people', id2, 'merged to family');
+            cy.checkHistoryLog('people', id2, 'parent_id; merged to family');
         });
 
         //cleanup
@@ -277,7 +277,7 @@ describe('Manage beneficiaries', () => {
 
         // Verify history log for detach operation
         cy.getBeneficiaryIdFromRow(TEST_LASTNAME2).then(id2 => {
-            cy.checkHistoryLog('people', id2, 'detached from family');
+            cy.checkHistoryLog('people', id2, 'parent_id; detached from family');
         });
 
         //cleanup

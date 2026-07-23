@@ -306,7 +306,7 @@ function simpleBulkSaveChangeHistory($table, $records, $changes, $from = [], $to
     if (is_iterable($records)) {
         for ($i = 0; $i < sizeof($records); ++$i) {
             $query .= "(:table{$i},:id{$i},:change{$i},:user_id{$i},:ip{$i},NOW(), :from_int{$i}, :from_float{$i}, :to_int{$i}, :to_float{$i})";
-            $params = array_merge($params, ['table'.$i => $table, 'id'.$i => $records[$i], 'change'.$i => $changes, 'user_id'.$i => $_SESSION['user']['id'], 'ip'.$i => $_SERVER['REMOTE_ADDR'], 'from_int'.$i => $from['int'], 'from_float'.$i => $from['float'], 'to_int'.$i => $to['int'], 'to_float'.$i => $to['float']]);
+            $params = array_merge($params, ['table'.$i => $table, 'id'.$i => $records[$i], 'change'.$i => $changes, 'user_id'.$i => $_SESSION['user']['id'], 'ip'.$i => $_SERVER['REMOTE_ADDR'], 'from_int'.$i => $from['int'] ?? null, 'from_float'.$i => $from['float'] ?? null, 'to_int'.$i => $to['int'] ?? null, 'to_float'.$i => $to['float'] ?? null]);
             if ($i !== sizeof($records) - 1) {
                 $query .= ',';
             }
@@ -314,5 +314,15 @@ function simpleBulkSaveChangeHistory($table, $records, $changes, $from = [], $to
     }
     if (strlen($query) > 0) {
         db_query("INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES {$query}", $params);
+
+        // Update modified timestamp for all affected records
+        if (db_fieldexists($table, 'modified')) {
+            $idPlaceholders = implode(',', array_map(fn ($i) => ":id{$i}", array_keys($records)));
+            $updateParams = ['user' => $_SESSION['user']['id']];
+            foreach ($records as $i => $id) {
+                $updateParams["id{$i}"] = $id;
+            }
+            db_query("UPDATE {$table} SET modified = NOW(), modified_by = :user WHERE id IN ({$idPlaceholders})", $updateParams);
+        }
     }
 }
