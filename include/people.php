@@ -440,6 +440,7 @@ Tracer::inSpan(
                                     }
                                 }
                             });
+                            simpleBulkSaveChangeHistory('people', $ids, 'parent_id; merged to family', null, [], ['int' => $oldest]);
                             $success = true;
                             $message = 'The merge has be successfully applied';
                             $redirect = true;
@@ -450,9 +451,13 @@ Tracer::inSpan(
 
                     case 'detach':
                         $ids = explode(',', (string) $_POST['ids']);
+                        $parentIdsByBeneficiary = [];
                         foreach ($ids as $key => $value) {
-                            if (!db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $value])) {
+                            $parentId = db_value('SELECT parent_id FROM people WHERE id = :id', ['id' => $value]);
+                            if (!$parentId) {
                                 $containsmembers = true;
+                            } else {
+                                $parentIdsByBeneficiary[$value] = $parentId;
                             }
                         }
                         if ($containsmembers) {
@@ -465,6 +470,14 @@ Tracer::inSpan(
                                     db_query('UPDATE people SET parent_id = NULL WHERE id = :id', ['id' => $id]);
                                 }
                             });
+                            // Group beneficiaries by their old parent_id for history logging
+                            $beneficiariesByParent = [];
+                            foreach ($parentIdsByBeneficiary as $beneficiaryId => $parentId) {
+                                $beneficiariesByParent[$parentId][] = $beneficiaryId;
+                            }
+                            foreach ($beneficiariesByParent as $parentId => $beneficiaryIds) {
+                                simpleBulkSaveChangeHistory('people', $beneficiaryIds, 'parent_id; detached from family', null, ['int' => $parentId], []);
+                            }
                             $redirect = true;
                             $success = true;
                             $message = ($success) ? 'Selected people have been detached' : 'Something went wrong';
@@ -483,7 +496,30 @@ Tracer::inSpan(
                         $ids = json_decode((string) $_POST['ids']);
                         // list($success, $message, $redirect, $aftermove) = listMove($table, $ids, true, 'correctdrops');
                         // Refactored list move method to use a transaction block and bulk insert for the correctdrops method
-                        [$success, $message, $redirect, $aftermove] = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
+                        [$success, $message, $redirect, $aftermove, $parentChanges] = listBulkMove($table, $ids, true, 'bulkcorrectdrops', true);
+
+                        // Log history for drag & drop family operations
+                        if (!empty($parentChanges)) {
+                            $addedToFamilyByParent = [];
+                            $removedFromFamilyByParent = [];
+
+                            foreach ($parentChanges as $change) {
+                                if (is_null($change['old_parent_id']) && !is_null($change['new_parent_id'])) {
+                                    // Added to family - group by new parent
+                                    $addedToFamilyByParent[$change['new_parent_id']][] = $change['id'];
+                                } elseif (!is_null($change['old_parent_id']) && is_null($change['new_parent_id'])) {
+                                    // Removed from family - group by old parent
+                                    $removedFromFamilyByParent[$change['old_parent_id']][] = $change['id'];
+                                }
+                            }
+
+                            foreach ($addedToFamilyByParent as $parentId => $beneficiaryIds) {
+                                simpleBulkSaveChangeHistory('people', $beneficiaryIds, 'parent_id; added to family via drag & drop', null, [], ['int' => $parentId]);
+                            }
+                            foreach ($removedFromFamilyByParent as $parentId => $beneficiaryIds) {
+                                simpleBulkSaveChangeHistory('people', $beneficiaryIds, 'parent_id; removed from family via drag & drop', null, ['int' => $parentId], []);
+                            }
+                        }
 
                         break;
 

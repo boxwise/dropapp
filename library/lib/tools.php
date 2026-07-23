@@ -298,8 +298,9 @@ function simpleSaveChangeHistory($table, $record, $changes, $now = null, $from =
     db_query('INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES (:table,:id,:change,:user_id,:ip,:now, :from_int, :from_float, :to_int, :to_float)', ['table' => $table, 'id' => $record, 'change' => $changes, 'user_id' => $_SESSION['user']['id'], 'ip' => $_SERVER['REMOTE_ADDR'], 'now' => $now, 'from_int' => $from['int'], 'from_float' => $from['float'], 'to_int' => $to['int'], 'to_float' => $to['float']]);
 }
 
-function simpleBulkSaveChangeHistory($table, $records, $changes, $now = null)
+function simpleBulkSaveChangeHistory($table, $records, $changes, $now = null, $from = [], $to = [])
 {
+    // from and to variable must be arrays with entry 'int' or 'float'
     if (!db_tableexists('history')) {
         return;
     }
@@ -310,14 +311,24 @@ function simpleBulkSaveChangeHistory($table, $records, $changes, $now = null)
     $params = ['now' => $now];
     if (is_iterable($records)) {
         for ($i = 0; $i < sizeof($records); ++$i) {
-            $query .= "(:table{$i},:id{$i},:change{$i},:user_id{$i},:ip{$i},:now)";
-            $params = array_merge($params, ['table'.$i => $table, 'id'.$i => $records[$i], 'change'.$i => $changes, 'user_id'.$i => $_SESSION['user']['id'], 'ip'.$i => $_SERVER['REMOTE_ADDR']]);
+            $query .= "(:table{$i},:id{$i},:change{$i},:user_id{$i},:ip{$i},:now, :from_int{$i}, :from_float{$i}, :to_int{$i}, :to_float{$i})";
+            $params = array_merge($params, ['table'.$i => $table, 'id'.$i => $records[$i], 'change'.$i => $changes, 'user_id'.$i => $_SESSION['user']['id'], 'ip'.$i => $_SERVER['REMOTE_ADDR'], 'from_int'.$i => $from['int'] ?? null, 'from_float'.$i => $from['float'] ?? null, 'to_int'.$i => $to['int'] ?? null, 'to_float'.$i => $to['float'] ?? null]);
             if ($i !== sizeof($records) - 1) {
                 $query .= ',';
             }
         }
     }
     if (strlen($query) > 0) {
-        db_query("INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate) VALUES {$query}", $params);
+        db_query("INSERT INTO history (tablename, record_id, changes, user_id, ip, changedate, from_int, from_float, to_int, to_float) VALUES {$query}", $params);
+
+        // Update modified timestamp for all affected records
+        if (db_fieldexists($table, 'modified')) {
+            $idPlaceholders = implode(',', array_map(fn ($i) => ":id{$i}", array_keys($records)));
+            $updateParams = ['user' => $_SESSION['user']['id'], 'now' => $now];
+            foreach ($records as $i => $id) {
+                $updateParams["id{$i}"] = $id;
+            }
+            db_query("UPDATE {$table} SET modified = :now, modified_by = :user WHERE id IN ({$idPlaceholders})", $updateParams);
+        }
     }
 }
