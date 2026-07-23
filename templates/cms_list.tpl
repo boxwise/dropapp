@@ -100,10 +100,19 @@
 							{/foreach}
 						</div>
 					</li>
-					{if $listconfig['allowadd']}
-					<li>
-						<a class="new-page item-add btn btn-sm btn-default" data-testid = "NewItem" href="?action={if $listconfig['new']}{$listconfig['new']}{else}{$listconfig['edit']}{/if}&origin={$listconfig['origin']}"><i class="fa fa-plus"></i> {$listconfig['add']}</a>
-					</li>
+					{if $listconfig['allowexportall'] && $listconfig['allowadd']}
+						<li class="item-selected-independend">
+							<div class="btn-group">
+								<button data-operation="export_all" data-placement="top" class="start-operation btn btn-sm btn-default" data-testid="exportAllButton">
+									<i class="fa fa-download"></i> Export All Records
+								</button>
+								<a class="new-page item-add btn btn-sm btn-default" data-testid = "NewItem" href="?action={if $listconfig['new']}{$listconfig['new']}{else}{$listconfig['edit']}{/if}&origin={$listconfig['origin']}"><i class="fa fa-plus"></i> {$listconfig['add']}</a>
+							</div>
+						</li>
+					{elseif $listconfig['allowadd']}
+						<li>
+							<a class="new-page item-add btn btn-sm btn-default" data-testid = "NewItem" href="?action={if $listconfig['new']}{$listconfig['new']}{else}{$listconfig['edit']}{/if}&origin={$listconfig['origin']}"><i class="fa fa-plus"></i> {$listconfig['add']}</a>
+						</li>
 					{/if}
 				</ul>
 				<ul class="navigations pull-right list-unstyled">
@@ -145,7 +154,7 @@
 				    {foreach $listcontentdata as $row}
 						{* prepare parent_array for collapsing *}
 						{if $listconfig['allowcollapse'] && $row['level']}
-							{assign var="parent_array" value="-"|explode:$row['parent_id']}
+							{assign var="parent_array" value=$row['parent_id']|split_string:"-"}
 						{/if}
 				    	{if $prevlevel > $row['level'] && $listconfig['allowmove']}
 				    		{while $prevlevel > $row['level']}
@@ -164,10 +173,10 @@
 								{if $listconfig['allowcollapse'] && isset($row['level'])}overview-level-{$row['level']}{/if}
 								{if $listconfig['allowcollapse'] && $row['level']}collapse{/if}"
 								{* reference classes for collapse button *}
-								{if $listconfig['allowcollapse'] && $row['level']} 
+								{if $listconfig['allowcollapse'] && $row['level']}
 									{foreach $parent_array as $level=>$parent}
 										{assign var="parent_array_slice" value=$parent_array|array_slice:0:($level+3)}
-										data-hidecollapseparent{$level-$counter}={$parent_array_slice|implode:'-'}
+										data-hidecollapseparent{$level-$counter}={$parent_array_slice|join_array:'-'}
 									{/foreach}
 									data-collapseparent={$row['parent_id']}
 								{/if}>

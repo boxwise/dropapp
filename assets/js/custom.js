@@ -631,9 +631,6 @@ $(".delete-user").on("click", function (e) {
         $.ajax({
             type: "post",
             url: "ajax.php?file=deleteprofile",
-            data: {
-                cms_user_id: el.data("id"),
-            },
             dataType: "json",
             success: function (result) {
                 AjaxCheckSuccess(result);

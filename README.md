@@ -1,6 +1,9 @@
-[![CircleCI](https://circleci.com/gh/boxwise/dropapp.svg?style=svg)](https://circleci.com/gh/boxwise/dropapp)
-<a width="105" height="35" href="https://auth0.com/?utm_source=oss&utm_medium=gp&utm_campaign=oss" target="_blank" alt="Single Sign On & Token Based Authentication - Auth0">
-<img width="105" height="35" alt="JWT Auth for open source projects" src="https://cdn.auth0.com/oss/badges/a0-badge-dark.png"></a>
+[![DPG Badge](https://img.shields.io/badge/Verified-DPG%20(Since%20%202022)-3333AB?logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iMzEiIGhlaWdodD0iMzMiIHZpZXdCb3g9IjAgMCAzMSAzMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE0LjIwMDggMjEuMzY3OEwxMC4xNzM2IDE4LjAxMjRMMTEuNTIxOSAxNi40MDAzTDEzLjk5MjggMTguNDU5TDE5LjYyNjkgMTIuMjExMUwyMS4xOTA5IDEzLjYxNkwxNC4yMDA4IDIxLjM2NzhaTTI0LjYyNDEgOS4zNTEyN0wyNC44MDcxIDMuMDcyOTdMMTguODgxIDUuMTg2NjJMMTUuMzMxNCAtMi4zMzA4MmUtMDVMMTEuNzgyMSA1LjE4NjYyTDUuODU2MDEgMy4wNzI5N0w2LjAzOTA2IDkuMzUxMjdMMCAxMS4xMTc3TDMuODQ1MjEgMTYuMDg5NUwwIDIxLjA2MTJMNi4wMzkwNiAyMi44Mjc3TDUuODU2MDEgMjkuMTA2TDExLjc4MjEgMjYuOTkyM0wxNS4zMzE0IDMyLjE3OUwxOC44ODEgMjYuOTkyM0wyNC44MDcxIDI5LjEwNkwyNC42MjQxIDIyLjgyNzdMMzAuNjYzMSAyMS4wNjEyTDI2LjgxNzYgMTYuMDg5NUwzMC42NjMxIDExLjExNzdMMjQuNjI0MSA5LjM1MTI3WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==)](https://www.digitalpublicgoods.net/r/boxtribute)
+
+<p><a width="105" height="35" href="https://auth0.com/?utm_source=oss&utm_medium=gp&utm_campaign=oss" target="_blank" alt="Single Sign On & Token Based Authentication - Auth0">
+<img width="105" height="35" alt="JWT Auth for open source projects" src="https://cdn.auth0.com/oss/badges/a0-badge-dark.png"></a></p>
+
+Build: [![CircleCI](https://circleci.com/gh/boxwise/dropapp.svg?style=svg)](https://circleci.com/gh/boxwise/dropapp)
 
 # Readme
 
@@ -11,6 +14,8 @@ Dropapp was initially developed for [Drop In The Ocean](http://www.drapenihavet.
 We have evolved the app to now be centrally hosted so we can offer the product to many more organisations, and are working constantly to improve the system and connect donor and distributor organisations with each other.
 
 If you are interested in being part of this project, write us at [jointheteam@boxtribute.org](mailto:jointheteam@boxtribute.org)! You can also check out our [website](https://www.boxtribute.org/#join) for more details about the kind of help we need on this project.
+
+## Developer instructions and info
 
 ### Preparation for Installation
 
@@ -159,7 +164,7 @@ It creates an file in `db/migrations`. Please use this file to write your db mig
 
 To rollback the migrations applied last run
 
-        vendor/bin/phinx migrate
+        vendor/bin/phinx rollback
 
 Again, these command can be executed in the Docker container, too. After running `docker compose up` execute
 
@@ -202,8 +207,18 @@ All tests in `cypress/integrations` should be found and can be directly executed
 We experienced before that tests can fail in CircleCI, but not in the local environment. The main reason for it is that Cypress is usually executing the commands slower in a local dev environment.
 Therefore, a few additional guidelines when writing test:
 
-- When you want to execute a redirect, e.g. example by clicking a button or tab, please add an assertion after the click, e.g. of the url `cy.url().should('include', 'people_deactivated')`. Due to this assertion cypress will definitely wait until the redirect is executed.
+- When you want to execute a redirect, e.g. by clicking a button or tab, please add an assertion after the click, e.g. of the url `cy.url().should('include', 'people_deactivated')`. Due to this assertion cypress will definitely wait until the redirect is executed.
 - Only if you use `cy.visit()` you can be sure that the cypress test wait until a page is fully loaded. Therefore, try to navigate as much as possible with `cy.visit()`.
+
+## DevOps
+
+### Release new version
+
+1. `git checkout production`
+1. `git pull origin production`
+1. `git pull origin master --commit`
+1. For the deploy to the demo environment: `git push origin production`
+1. For the deploy to the production environment: `git tag -s v1.X.Y -m v1.X.Y` (bump X if DB migration involved) and `git push origin production --tags`
 
 ### Notes for setting up an Auth0 tenant
 
@@ -212,7 +227,7 @@ If you are setting up a new Auth0 tenant, we require access to the Auth0 Managem
 - Under 'APIs' select Auth0 Management API, go to 'Machine to Machine Applications' and enable access
 - Grant scopes for read/update/delete/create users and users_app_metadata.
 
-### Contribution guidelines
+## Contribution guidelines
 
 You gotta be awesome and kind.
 For everything else, please see our [contribution guidelines](https://github.com/boxwise/dropapp/blob/master/CONTRIBUTING.md)
@@ -221,6 +236,6 @@ For everything else, please see our [contribution guidelines](https://github.com
 
 Drop us an email to hello@boxtribute.org!
 
-### License
+## License
 
 See the [LICENSE](./LICENSE) file for license rights and limitations (Apache 2.0).

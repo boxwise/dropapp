@@ -13,9 +13,11 @@ if ($_POST) {
     $data['fulllabel'] = $_POST['fulllabel'];
 
     if ($_POST['fulllabel']) {
+        // Create big label PDFs
         $labels = explode(',', (string) $_POST['label']);
         redirect('/pdf/qr.php?count='.$_POST['count']);
     } elseif ($_POST['label']) {
+        // internal service for non-PDF QR generation
         $i = 0;
         $labels = explode(',', (string) $_POST['label']);
         foreach ($labels as $l) {
@@ -27,19 +29,14 @@ if ($_POST) {
 				LEFT OUTER JOIN sizes AS s2 ON s2.id = s.size_id
 				LEFT OUTER JOIN qr ON s.qr_id = qr.id
 				WHERE s.id = :id', ['id' => $l]);
-            if ($data['labels'][$i]['legacy']) {
-                [$id, $data['labels'][$i]['hash']] = generateQRIDForDB();
-                db_query('UPDATE stock AS s SET qr_id = :qr_id, modified = NOW() WHERE id = :id', ['id' => $l, 'qr_id' => $id]);
-                simpleBulkSaveChangeHistory('qr', $id, 'New QR-code generated for existing box without QR-code');
-            }
             [$data['labels'][$i]['qrPng'], $data['labels'][$i]['data-testurl']] = generateQrPng($data['labels'][$i]['hash']);
             ++$i;
         }
     } else {
+        // Create label PNGs
         for ($i = 0; $i < $_POST['count']; ++$i) {
             [$id, $data['labels'][$i]['hash']] = generateQRIDForDB();
             [$data['labels'][$i]['qrPng'], $data['labels'][$i]['data-testurl']] = generateQrPng($data['labels'][$i]['hash']);
-            simpleBulkSaveChangeHistory('qr', $id, 'New QR-code generated');
         }
     }
 

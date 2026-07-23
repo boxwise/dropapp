@@ -248,13 +248,6 @@ function db_tableexists($table, $dbid = false)
     return in_array($table, $tables);
 }
 
-function db_touch($table, $id)
-{
-    if (db_fieldexists($table, 'modified')) {
-        db_query('UPDATE '.$table.' SET modified = NOW(), modified_by = :user WHERE id = :id', ['user' => $_SESSION['user']['id'], 'id' => $id]);
-    }
-}
-
 function db_simulate($query, $array = [], $dbid = false)
 {
     global $defaultdbid;

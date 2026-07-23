@@ -2,9 +2,9 @@
 
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelLow;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use OpenCensus\Trace\Tracer;
 
@@ -19,15 +19,16 @@ function generateQrPng($hash, $legacy = false)
                 $writer = new PngWriter();
 
                 // Create QR code
-                $qrCode = QrCode::create('https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash.($legacy ? '&qrlegacy=1' : ''))
-                    ->setEncoding(new Encoding('UTF-8'))
-                    ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow())
-                    ->setSize(150)
-                    ->setMargin(0)
-                    ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-                    ->setForegroundColor(new Color(0, 0, 0))
-                    ->setBackgroundColor(new Color(255, 255, 255))
-                ;
+                $qrCode = new QrCode(
+                    data: 'https://'.$_SERVER['HTTP_HOST'].'/mobile.php?barcode='.$hash.($legacy ? '&qrlegacy=1' : ''),
+                    encoding: new Encoding('UTF-8'),
+                    errorCorrectionLevel: ErrorCorrectionLevel::Low,
+                    size: 150,
+                    margin: 0,
+                    roundBlockSizeMode: RoundBlockSizeMode::Margin,
+                    foregroundColor: new Color(0, 0, 0),
+                    backgroundColor: new Color(255, 255, 255)
+                );
 
                 $result = $writer->write($qrCode);
 
@@ -271,6 +272,7 @@ function move_boxes($ids, $newlocationid, $mobile = false)
 {
     [$count, $action_label, $mobile_message] = db_transaction(function () use ($ids, $newlocationid) {
         $count = 0;
+        $now = date('Y-m-d H:i:s');
         foreach ($ids as $id) {
             $box = db_row('
                 SELECT 
@@ -310,23 +312,24 @@ function move_boxes($ids, $newlocationid, $mobile = false)
                     '
                     UPDATE stock 
                     SET 
-                        modified = NOW(), 
+                        modified = :now,
                         modified_by = :user_id , 
                         location_id = :location 
                     WHERE id = :id',
-                    ['location' => $newlocationid, 'id' => $id, 'user_id' => $_SESSION['user']['id']]
+                    ['location' => $newlocationid, 'id' => $id, 'now' => $now, 'user_id' => $_SESSION['user']['id']]
                 );
 
                 $from['int'] = $box['location_id'];
                 $to['int'] = $newlocationid;
-                simpleSaveChangeHistory('stock', $id, 'location_id', $from, $to);
+                simpleSaveChangeHistory('stock', $id, 'location_id', $now, $from, $to);
                 db_query(
                     '
                     INSERT INTO itemsout (product_id, size_id, count, movedate, from_location, to_location) 
-                        VALUES (:product_id, :size_id, :count, NOW(), :from_location, :to_location)',
+                        VALUES (:product_id, :size_id, :count, :now, :from_location, :to_location)',
                     ['product_id' => $box['product_id'],
                         'size_id' => $box['size_id'],
                         'count' => $box['items'],
+                        'now' => $now,
                         'from_location' => $box['location_id'],
                         'to_location' => $newlocationid, ]
                 );
@@ -342,12 +345,12 @@ function move_boxes($ids, $newlocationid, $mobile = false)
                     UPDATE stock 
                     SET 
                         box_state_id = :box_state_id, 
-                        modified = NOW(), 
+                        modified = :now,
                         modified_by = :user_id 
                     WHERE id = :id',
-                    ['box_state_id' => $newlocation['box_state_id'], 'id' => $id, 'user_id' => $_SESSION['user']['id']]
+                    ['box_state_id' => $newlocation['box_state_id'], 'id' => $id, 'now' => $now, 'user_id' => $_SESSION['user']['id']]
                 );
-                simpleSaveChangeHistory('stock', $id, 'box_state_id', $from, $to);
+                simpleSaveChangeHistory('stock', $id, 'box_state_id', $now, $from, $to);
                 $mobile_message .= ' and its state changed to '.$newlocation['box_state_name'];
             }
 

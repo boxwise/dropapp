@@ -1,0 +1,3 @@
+name: "CodeQL configuration for boxwise/dropapp"
+paths-ignore:
+  - assets/**

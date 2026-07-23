@@ -13,13 +13,7 @@
 			<tr>
 			{foreach $element['listdata'] as $key => $column}
 				<td>
-					<select id="field_{$column['field']}" name="dist[{$column['field']}]" 
-					class="select2 form-control"
-					value = "{$data[$column['field']]}"
-					data-placeholder="{if isset($element['placeholder'])}{$element['placeholder']}{else}{$translate['cms_form_selectplaceholder']}{/if}"
-					{if $column['required']}required{/if} 
-					{if isset($element['onchange'])}onchange="{$element['onchange']};"{/if}
-					>
+					<select id="field_{$column['field']}" name="dist[{$column['field']}]" class="select2 form-control" value = "{$data[$column['field']]}" data-placeholder="{if isset($element['placeholder'])}{$element['placeholder']}{else}{$translate['cms_form_selectplaceholder']}{/if}" {if $column['required']}required{/if} {if isset($element['onchange'])}onchange="{$element['onchange']};"{/if}>
 						<option></option>
 						{foreach $element['options'] as $option}
 							<option 
