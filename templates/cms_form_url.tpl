@@ -8,7 +8,7 @@
 				<span class="input-group-btn"><button class="btn btn-default unlock" type="button"><span class="fa"></span></button></span></div>
 			{/if}
 			
-			{if $element['maxlength']}<p class="counter-parent safe"><span class="counter">{$element['maxlength']}</span> tekens over van {$element['maxlength']}</p>{/if}
+			{if $element['maxlength']}<p class="counter-parent safe"><span class="counter">{$element['maxlength']}</span> {$translate['cms_form_charactersleft']|replace:'%n':$element['maxlength']}</p>{/if}
 			{if $element['tooltip']}{include file="cms_tooltip.tpl" valign=" middle"}{/if}
 			</div>
 		</div>

@@ -3,10 +3,15 @@
 $table = 'locations';
 $action = 'locations_edit';
 $is_admin = $_SESSION['user']['is_admin'];
+$labelMaxLength = 50;
 
 if ($_POST) {
     // check if you have access to the location you want to update
     verify_campaccess_location($_POST['id']);
+
+    if (mb_strlen((string) $_POST['label']) > $labelMaxLength) {
+        throw new Exception("Location name is too long. Please use {$labelMaxLength} characters or fewer.");
+    }
 
     if (in_array($_POST['box_state_id'][0], ['3', '4', '7', '8'])) {
         throw new Exception('You cannot create Locations with this box state!');
@@ -42,7 +47,7 @@ $cmsmain->assign('include', 'cms_form.tpl');
 $cmsmain->assign('title', 'Warehouse Location');
 
 addfield('hidden', '', 'id');
-addfield('text', 'Label', 'label', ['required' => true]);
+addfield('text', 'Label', 'label', ['required' => true, 'maxlength' => $labelMaxLength, 'tooltip' => 'Keeping location names short (max '.$labelMaxLength.' characters) keeps navigation fast for warehouse and distribution teams on mobile.']);
 addfield('select', 'Default Status of Boxes', 'box_state_id', ['required' => true, 'tooltip' => 'If a box is moved to this location it will be assigned this status by default.', 'query' => 'SELECT id AS value, label FROM box_state WHERE id in (1,5,6) ORDER BY id']);
 addfield('html', 'About Locations', '<p>Locations are physical areas that hold stock. Giving locations a default status for Boxes will help you track of where your stock is going.
                                         <ul>
