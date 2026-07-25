@@ -254,10 +254,12 @@ describe('Manage beneficiaries', () => {
         verifyBeneficiaryRowLevel(TEST_LASTNAME1,0);
         verifyBeneficiaryRowLevel(TEST_LASTNAME2,1);
 
-        // Verify history logs for merge operation
+        // Verify history logs for merge operation.
+        // TEST_LASTNAME1 is the family head (level 0) - its parent_id does not change, so it must NOT be logged.
         cy.getBeneficiaryIdFromRow(TEST_LASTNAME1).then(id1 => {
-            cy.checkHistoryLog('people', id1, 'parent_id; merged to family');
+            cy.checkHistoryLogAbsent('people', id1, 'parent_id; merged to family');
         });
+        // TEST_LASTNAME2 is a member (level 1) - it was merged into the family, so it must be logged.
         cy.getBeneficiaryIdFromRow(TEST_LASTNAME2).then(id2 => {
             cy.checkHistoryLog('people', id2, 'parent_id; merged to family');
         });

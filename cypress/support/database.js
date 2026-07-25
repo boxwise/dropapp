@@ -46,6 +46,23 @@ Cypress.Commands.add("checkHistoryLog", (tablename, recordId, expectedChange) =>
     });
 });
 
+Cypress.Commands.add("checkHistoryLogAbsent", (tablename, recordId, expectedChange) => {
+    cy.request({
+        method: "POST",
+        url: "/ajax.php?file=testhistorycheck",
+        body: {
+            tablename: tablename,
+            record_id: recordId,
+            expected_change: expectedChange
+        },
+        form: true
+    }).then(response => {
+        expect(response.status).to.eq(200);
+        const body = typeof response.body === 'string' ? JSON.parse(response.body) : response.body;
+        expect(body.found).to.eq(false);
+    });
+});
+
 Cypress.Commands.add("getBeneficiaryIdFromRow", (lastname) => {
     return cy.getRowWithText(lastname).then($row => {
         const id = $row.closest('tr').attr('data-id');

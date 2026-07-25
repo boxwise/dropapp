@@ -440,7 +440,9 @@ Tracer::inSpan(
                                     }
                                 }
                             });
-                            simpleBulkSaveChangeHistory('people', $ids, 'parent_id; merged to family', null, [], ['int' => $oldest]);
+                            // Only log the members whose parent_id actually changed, not the family head itself
+                            $mergedIds = array_values(array_filter($ids, fn ($id) => $id != $oldest));
+                            simpleBulkSaveChangeHistory('people', $mergedIds, 'parent_id; merged to family', null, [], ['int' => $oldest]);
                             $success = true;
                             $message = 'The merge has be successfully applied';
                             $redirect = true;
