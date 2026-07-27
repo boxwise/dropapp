@@ -188,19 +188,6 @@ $menusToActions = [
         ],
     ],
     [
-        'id' => 102,
-        'module' => 'Report',
-        'menu' => 'Fancy graphs (<span>beta</span>)',
-        'action' => 'fancygraphs',
-        'adminonly' => '0',
-        'visible' => '1',
-        'allusers' => '0',
-        'allcamps' => '0',
-        'action_permission' => [
-            'view_beneficiary_graph',
-        ],
-    ],
-    [
         'id' => 167,
         'module' => 'Report',
         'menu' => 'Dashboard v2 (<span>beta</span>)',
