@@ -20,7 +20,6 @@ context("6_1_Warehouse_Locations_Test", () => {
                 cy.checkGridCheckboxByText(label);
                 cy.get("button[data-testid='reactivate-cms-user']").click();
                 cy.getConfirmActionButton().click();
-                cy.waitForAjaxAction("do=archive", "Item deleted");
             }
         });
     }
