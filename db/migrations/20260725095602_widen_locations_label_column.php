@@ -10,12 +10,26 @@ final class WidenLocationsLabelColumn extends AbstractMigration
      * Widens locations.label from varchar(20) to varchar(50) so that
      * location names are no longer silently truncated by MySQL on save.
      */
-    public function change(): void
+    public function up(): void
     {
         $this->table('locations')
             ->changeColumn('label', 'string', [
                 'null' => false,
                 'limit' => 50,
+            ])
+            ->update()
+        ;
+    }
+
+    /**
+     * This will truncate labels that exceed the character limit.
+     */
+    public function down(): void
+    {
+        $this->table('locations')
+            ->changeColumn('label', 'string', [
+                'null' => false,
+                'limit' => 20,
             ])
             ->update()
         ;
