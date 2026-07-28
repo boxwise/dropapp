@@ -5,8 +5,9 @@
     <script src="/assets/js/jquery.tablesorter.widgets.js"></script>
     <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
     <script src="/assets/jsignature/jquery.signature.js"></script>
+    <script src="/assets/js/jquery.simplyCountable.js"></script>
 
-    <script src="/assets/js/magic.js?v=14"></script>
+    <script src="/assets/js/magic.js?v=15"></script>
     <script src="/assets/js/custom.js?v=14"></script> 
     <script src="/assets/js/shoppingCart.js?v=2"></script>    
 

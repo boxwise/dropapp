@@ -566,6 +566,19 @@ $(function() {
             },
             ignoreTitle: true
         });
+
+        // Block submission when a data-max-count field is over its limit,
+        // instead of letting the value silently get truncated on save.
+        el.find("[data-max-count]").each(function() {
+            var field = $(this);
+            var max = field.data("max-count");
+            field.rules("add", {
+                maxlength: max,
+                messages: {
+                    maxlength: "Please use " + max + " characters or fewer."
+                }
+            });
+        });
     });
 
     // Dirty forms check, voor meer info: https://github.com/codedance/jquery.AreYouSure
