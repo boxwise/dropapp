@@ -215,8 +215,8 @@ Therefore, a few additional guidelines when writing test:
 ### Release new version
 
 1. `git checkout production`
-1. `git pull origin production`
-1. `git pull origin master --commit`
+1. `git pull origin production --tags`
+1. `git pull origin master --no-rebase`
 1. For the deploy to the demo environment: `git push origin production`
 1. For the deploy to the production environment: `git tag -s v1.X.Y -m v1.X.Y` (bump X if DB migration involved) and `git push origin production --tags`
 
