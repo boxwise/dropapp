@@ -21,6 +21,8 @@ services:
       - ./.docker/php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
     ports:
       - "8100:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       # set to empty, so we don't initialize GCP specific config
       # as we have no auth set locally
