@@ -57,13 +57,13 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
     The database seed `db/init.sql` is generated in v2 and copied from there.
 
-6.  If you want to additionally want to connect the users from the seed to auth0 and populate the db table cms_usergroups_roles then open a browser and request `http://localhost:8100/cron/reseed-auth0.php`
+6.  If you want to connect new bases and organisations from the seed to Auth0 and populate the `cms_*` db tables, open a browser and request `http://localhost:8100/cron/reseed-auth0.php` (`init.sql` must contain the new bases)
 
 ### Accessing the app
 
 Once the docker containers are running the app is accessible at http://localhost:8100/
 
-After this you should be able to login to the app using the password Browser_tests and one of the following emails:
+After this you should be able to login to the app using the password `Browser_tests` and one of the following emails:
 
 - some.admin@boxtribute.org (God User)
 
