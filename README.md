@@ -57,7 +57,7 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
     The database seed `db/init.sql` is generated in v2 and copied from there.
 
-6.  If you want to connect new bases and organisations from the seed to Auth0 and populate the `cms_*` db tables, open a browser and request `http://localhost:8100/cron/reseed-auth0.php` (`init.sql` must contain the new bases)
+6.  If you want to connect new bases and organisations from the seed to Auth0 and populate the `cms_*` db tables, open a browser and request `http://localhost:8100/cron/reseed-auth0.php` (`init.sql` must contain the new bases; make sure you have the DB docker image reset before)
 
 ### Accessing the app
 
