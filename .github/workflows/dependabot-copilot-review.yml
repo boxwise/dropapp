@@ -1,0 +1,137 @@
+name: Dependabot Copilot Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  copilot-review:
+    # Only run on Dependabot PRs
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Get PR diff
+        id: pr-diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          echo "Getting diff between base and head..."
+          git diff origin/${{ github.event.pull_request.base.ref }}...HEAD > pr_diff.txt
+
+      - name: Analyze dependency changes
+        id: analyze
+        run: |
+          echo "## Dependency Update Analysis" > analysis.md
+          echo "" >> analysis.md
+
+          # Extract changed files from PR
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
+          echo "**Changed Files:**" >> analysis.md
+          echo '```' >> analysis.md
+          echo "$CHANGED_FILES" >> analysis.md
+          echo '```' >> analysis.md
+          echo "" >> analysis.md
+
+          # Check if composer.json changed
+          if echo "$CHANGED_FILES" | grep -q "composer.json"; then
+            echo "**Composer dependencies updated**" >> analysis.md
+            echo "" >> analysis.md
+            
+            # Show composer.json diff
+            echo "<details><summary>View composer.json changes</summary>" >> analysis.md
+            echo "" >> analysis.md
+            echo '```diff' >> analysis.md
+            git diff origin/${{ github.event.pull_request.base.ref }}...HEAD -- composer.json >> analysis.md || true
+            echo '```' >> analysis.md
+            echo "</details>" >> analysis.md
+            echo "" >> analysis.md
+          fi
+
+          # Check if composer.lock changed
+          if echo "$CHANGED_FILES" | grep -q "composer.lock"; then
+            echo "**Composer lock file updated**" >> analysis.md
+            echo "" >> analysis.md
+          fi
+
+      - name: Request Copilot Review
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const analysis = fs.readFileSync('analysis.md', 'utf8');
+
+            // Create a review request comment
+            const comment = `## 🤖 Automated Dependency Review Request
+
+            ${analysis}
+
+            ### Review Checklist
+
+            Please review the following aspects:
+
+            - [ ] **Breaking Changes**: Are there any breaking changes in the updated dependencies?
+            - [ ] **Code Compatibility**: Does our codebase need updates to work with new versions?
+            - [ ] **Security**: Are there security fixes in these updates?
+            - [ ] **Testing**: Do we need to update or add tests?
+            - [ ] **Configuration**: Are there new configuration requirements?
+
+            ### Testing Recommendations
+
+            Based on the dropapp codebase, please test:
+
+            1. **PHP Syntax Check**: \`vendor/bin/parallel-lint --exclude vendor .\`
+            2. **Code Formatting**: \`php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix . --dry-run --rules @PhpCsFixer\`
+            3. **Application Startup**: \`php -S localhost:8000 gcloud-entry.php\`
+            4. **Database Connectivity**: Verify the app connects to MySQL on localhost:9906
+            5. **Basic Page Load**: Test http://localhost:8000/
+
+            ### GitHub Copilot Review
+
+            @github-copilot Please review this dependency update and provide:
+
+            1. **Impact Analysis**: What are the potential impacts of these dependency updates on the dropapp codebase?
+            2. **Code Changes Needed**: Are there any code changes required in the PHP application to accommodate these updates?
+            3. **Risk Assessment**: What are the risks of merging these updates?
+            4. **Compatibility Concerns**: Are there any known compatibility issues with PHP 8.2+ or our current tech stack?
+            5. **Testing Strategy**: What specific areas of the application should be tested thoroughly?
+
+            Please reference:
+            - The current PHP version requirement (PHP 8.2+)
+            - Smarty template compatibility
+            - Auth0 authentication integration
+            - MySQL database compatibility
+            - CircleCI build process
+
+            ---
+
+            *This is an automated analysis. A human review is still required before merging.*`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+
+      - name: Add labels
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['dependencies', 'needs-copilot-review']
+            });
