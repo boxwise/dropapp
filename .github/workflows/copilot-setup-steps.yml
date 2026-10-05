@@ -63,7 +63,7 @@ jobs:
       - name: Start MySQL database
         run: |
           docker compose up -d db_mysql
-          sleep 10
+          sleep 20
 
       - name: Run DB migrations
         run: |
