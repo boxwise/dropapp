@@ -17,13 +17,11 @@
         "nyholm/psr7": "^1.4",
         "steampixel/simple-php-router": "^0.7.0",
         "guzzlehttp/guzzle": "^7.3",
-        "endroid/qr-code": "^6.1",
+        "endroid/qr-code": "6.0.9",
         "sentry/sentry": "^4.32",
         "php-http/curl-client": "^2.4",
         "google/cloud-error-reporting": "^0.22",
         "google/cloud-datastore": "^1.32",
-        "open-telemetry/exporter-otlp": "^1.4",
-        "open-telemetry/sdk": "^1.0",
         "symfony/yaml": "^7.3"
     },
     "config": {
