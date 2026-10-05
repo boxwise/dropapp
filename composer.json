@@ -1,8 +1,8 @@
 {
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.86",
+        "friendsofphp/php-cs-fixer": "^3.95",
         "php-parallel-lint/php-parallel-lint": "^1.3",
-        "rector/rector": "^2.1"
+        "rector/rector": "^2.6"
     },
     "require": {
         "robmorgan/phinx": "^0.14",
