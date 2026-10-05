@@ -7,3 +7,18 @@ updates:
     assignees:
       - "HaGuesto"
     open-pull-requests-limit: 10
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "major"
+          - "minor"
+          - "patch"
+      prod-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+    pull-request-branch-name:
+      separator: "-"
+    versioning-strategy: increase
