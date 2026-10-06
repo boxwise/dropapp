@@ -16,7 +16,7 @@
         "kriswallsmith/buzz": "^1.4",
         "nyholm/psr7": "^1.4",
         "steampixel/simple-php-router": "^0.7.0",
-        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/guzzle": "^7.15",
         "endroid/qr-code": "6.0.9",
         "sentry/sentry": "^4.32",
         "php-http/curl-client": "^2.4",
