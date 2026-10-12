@@ -27,6 +27,8 @@ jobs:
           # least-privilege PAT as COPILOT_TRIGGER_TOKEN, never inline credentials.
           # Dependabot-triggered runs may need it as a Dependabot secret as well
           # as an Actions secret. See README for restrictions and manual fallback.
+          # The documented Dependabot pull_request_target exception can withhold
+          # all secrets and keep GITHUB_TOKEN read-only; a PAT cannot bypass that.
           github-token: ${{ secrets.COPILOT_TRIGGER_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
             const marker = '<!-- dependabot-copilot-review -->';

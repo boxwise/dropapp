@@ -137,12 +137,19 @@ Use only the permissions needed to read/post PR comments (for a fine-grained PAT
 Pull requests: read and write), scoped to this repository, and never put the token
 in a file or comment. Dependabot-triggered runs cannot rely on ordinary Actions
 secrets: configure the token as a **Dependabot secret** too if required by the run's
-secret restrictions. `pull_request_target` can still be read-only when its base ref
-was created by Dependabot. See [GitHub's Dependabot Actions guidance](https://docs.github.com/en/code-security/reference/supply-chain-security/troubleshoot-dependabot/dependabot-on-actions).
+secret restrictions. GitHub also documents a `pull_request_target` exception
+described as a Dependabot-created base ref, identified by
+`github.event.pull_request.user.login == 'dependabot[bot]'`: the token is read-only
+and secrets are unavailable, even on reruns. If that restriction applies, neither
+explicit permissions nor a PAT secret can bypass it; use the manual request
+instead. See [Dependabot event restrictions](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-on-actions#restrictions-when-dependabot-triggers-events)
+and [secret guidance](https://docs.github.com/en/code-security/reference/supply-chain-security/troubleshoot-dependabot/dependabot-on-actions).
 
 Posting a request does not guarantee a Copilot session: repository/organization
-access policies and Copilot's support for the PR apply. If no session starts, use a
-manual mention or select the custom agent with the PR URL. Neither the workflow
+access policies and Copilot's support for the PR apply. The initiating account
+needs repository write access; look for Copilot's eyes reaction and session
+timeline event to confirm it started. If no session starts, use a manual mention
+or select the custom agent with the PR URL. Neither the workflow
 nor the reviewer merges or deploys changes; CI changes require maintainer approval.
 
 ### Debugging
