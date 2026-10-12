@@ -1,11 +1,26 @@
 <?php
 
 require 'vendor/autoload.php';
+use Auth0\SDK\API\Management\Exceptions\Auth0ApiException;
+use Auth0\SDK\API\Management\ResourceServers\Requests\UpdateResourceServerRequestContent;
+use Auth0\SDK\API\Management\Roles\Permissions\Requests\AddRolePermissionsRequestContent;
+use Auth0\SDK\API\Management\Roles\Requests\CreateRoleRequestContent;
+use Auth0\SDK\API\Management\Roles\Requests\ListRolesRequestParameters;
+use Auth0\SDK\API\Management\Roles\Requests\UpdateRoleRequestContent;
+use Auth0\SDK\API\Management\Types\PermissionRequestPayload;
+use Auth0\SDK\API\Management\Types\ResourceServerScope;
+use Auth0\SDK\API\Management\Users\Requests\CreateUserRequestContent;
+use Auth0\SDK\API\Management\Users\Requests\ListUsersByEmailRequestParameters;
+use Auth0\SDK\API\Management\Users\Requests\ListUsersRequestParameters;
+use Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent;
+use Auth0\SDK\API\Management\Users\Roles\Requests\AssignUserRolesRequestContent;
+use Auth0\SDK\API\Management\Users\Roles\Requests\DeleteUserRolesRequestContent;
+use Auth0\SDK\API\Management\Users\Roles\Requests\ListUserRolesRequestParameters;
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
+use Auth0\SDK\API\Management\Wrapper\ManagementClientOptions;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Exception\Auth0Exception;
 use Auth0\SDK\Store\SessionStore;
-use Auth0\SDK\Utility\HttpResponse;
 use Buzz\Client\MultiCurl;
 use Nyholm\Psr7\Factory\Psr17Factory;
 
@@ -51,14 +66,44 @@ function getAuth0(mixed $settings)
 
 /**
  * Getting Auth0 API Management instance.
+ *
+ * Since auth0-php 9 the Management API is no longer reachable via Auth0::management().
+ * The ManagementClient wrapper fetches (client credentials) and caches the management token itself.
+ * Note: the management API does not work with a custom domain, so auth0_api_domain is used.
  */
-function getAuth0Management(mixed $settings)
+function getAuth0Management(mixed $settings): ManagementClient
 {
-    $configuration = getAuth0SdkConfiguration($settings, true);
+    return new ManagementClient(new ManagementClientOptions(
+        domain: $settings['auth0_api_domain'],
+        clientId: $settings['auth0_client_id'],
+        clientSecret: $settings['auth0_client_secret'],
+        httpClient: new MultiCurl(new Psr17Factory()),
+    ));
+}
 
-    $auth0 = new Auth0($configuration);
+/**
+ * Converting a typed Management API response (or a list of them) into the plain associative
+ * array (snake_case keys, as returned by the Auth0 API) that the rest of the application expects.
+ */
+function auth0ToArray(mixed $value): mixed
+{
+    return json_decode(json_encode($value, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
+}
 
-    return $auth0->management(); // new Management($configuration);
+/**
+ * Collecting all items of a paginated Management API result as plain arrays.
+ *
+ * Note: always pass includeTotals=true in the list requests. The v9 request classes do not send the
+ * parameter by default, while the Pager response types expect the {items, start, limit, total} shape.
+ */
+function auth0PagerToArray(iterable $pager): array
+{
+    $items = [];
+    foreach ($pager as $item) {
+        $items[] = auth0ToArray($item);
+    }
+
+    return $items;
 }
 
 /**
@@ -81,7 +126,7 @@ function deleteAuth0User($userId)
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
     $auth0UserId = 'auth0|'.intval($userId);
-    $mgmtAPI->users()->delete($auth0UserId);
+    $mgmtAPI->users->delete($auth0UserId);
 }
 
 // because users are updated in all kinds of ways and the
@@ -112,7 +157,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
         'email' => $dbUserData['email'],
         'name' => $dbUserData['naam'],
         'blocked' => '0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted']),
-        'app_metadata' => [
+        'appMetadata' => [
             'usergroup_id' => $dbUserData['cms_usergroups_id'],
             'organisation_id' => $dbUserData['organisation_id'],
             'base_ids' => $dbUserData['base_ids'],
@@ -120,37 +165,36 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
         'connection' => 'Username-Password-Authentication',
     ];
     if ('0000-00-00 00:00:00' != $dbUserData['deleted'] && !is_null($dbUserData['deleted'])) {
-        $auth0UserData['app_metadata']['last_blocked_date'] = $dbUserData['deleted'];
+        $auth0UserData['appMetadata']['last_blocked_date'] = $dbUserData['deleted'];
         $auth0UserData['email'] = preg_replace('/\.deleted\.\d+/', '', (string) $dbUserData['email']);
     }
     if ($dbUserData['valid_firstday'] && '0000-00-00' != $dbUserData['valid_firstday']) {
-        $auth0UserData['app_metadata']['valid_firstday'] = $dbUserData['valid_firstday'];
+        $auth0UserData['appMetadata']['valid_firstday'] = $dbUserData['valid_firstday'];
     } else {
-        $auth0UserData['app_metadata']['valid_firstday'] = null;
+        $auth0UserData['appMetadata']['valid_firstday'] = null;
     }
 
     if ($dbUserData['valid_lastday'] && '0000-00-00' != $dbUserData['valid_lastday']) {
-        $auth0UserData['app_metadata']['valid_lastday'] = $dbUserData['valid_lastday'];
+        $auth0UserData['appMetadata']['valid_lastday'] = $dbUserData['valid_lastday'];
     } else {
-        $auth0UserData['app_metadata']['valid_lastday'] = null;
+        $auth0UserData['appMetadata']['valid_lastday'] = null;
     }
 
-    $response = $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
-    usleep(200000);
-
-    // user doesn't exist, so try creating it instead
-    if (404 === $response->getStatusCode()) {
-        $auth0UserData['user_id'] = preg_replace('/auth0\|/', '', $auth0UserId);
-        $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
-        $response = $mgmtAPI->users()->create($settings['auth0_db_connection_id'], $auth0UserData);
+    // since auth0-php 9 a non-2XX response throws an Auth0ApiException instead of being returned
+    try {
+        $mgmtAPI->users->update($auth0UserId, new UpdateUserRequestContent($auth0UserData));
         usleep(200000);
-
-        // the status code will be 201 if the user created successfully
-        if (201 !== $response->getStatusCode()) {
-            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    } catch (Auth0ApiException $e) {
+        if (404 !== $e->getCode()) {
+            throw $e;
         }
-    } elseif (200 !== $response->getStatusCode()) {
-        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+
+        // user doesn't exist, so try creating it instead
+        $auth0UserData['userId'] = preg_replace('/auth0\|/', '', $auth0UserId);
+        $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
+        $auth0UserData['connection'] = $settings['auth0_db_connection_id'];
+        $mgmtAPI->users->create(new CreateUserRequestContent($auth0UserData));
+        usleep(200000);
     }
 
     // set user roles in auth0
@@ -173,7 +217,7 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
 
     if ($setPwd) {
         // needed for reseeding test env
-        $mgmtAPI->users()->update($auth0UserId, ['password' => $setPwd]);
+        $mgmtAPI->users->update($auth0UserId, new UpdateUserRequestContent(['password' => $setPwd]));
     }
 }
 
@@ -187,7 +231,7 @@ function updateAuth0Password($userId, $password)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
-    $mgmtAPI->users()->update('auth0|'.intval($userId), ['password' => $password, 'connection' => 'Username-Password-Authentication']);
+    $mgmtAPI->users->update('auth0|'.intval($userId), new UpdateUserRequestContent(['password' => $password, 'connection' => 'Username-Password-Authentication']));
 }
 
 /**
@@ -379,18 +423,17 @@ function getAuth0UserByEmail($email)
         try {
             global $settings;
             $mgmtAPI = getAuth0Management($settings);
-            $response = $mgmtAPI->usersByEmail()->get($email);
+            // usersByEmail() was merged into users->listUsersByEmail() in auth0-php 9
+            $users = $mgmtAPI->users->listUsersByEmail(new ListUsersByEmailRequestParameters(['email' => $email]));
 
-            if (HttpResponse::wasSuccessful($response)) {
-                return HttpResponse::decodeContent($response);
-            }
-
-            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
-        } catch (Auth0Exception $e) {
+            return auth0ToArray($users ?? []);
+        } catch (Auth0ApiException $e) {
             // user doesn't exist in auth0
             if (404 == $e->getCode()) {
                 return null;
             }
+
+            throw $e;
         }
     } else {
         return null;
@@ -406,13 +449,8 @@ function getAuth0User($userId)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
-    $response = $mgmtAPI->users()->get('auth0|'.intval($userId));
 
-    if (HttpResponse::wasSuccessful($response)) {
-        return HttpResponse::decodeContent($response);
-    }
-
-    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    return auth0ToArray($mgmtAPI->users->get('auth0|'.intval($userId)));
 }
 
 /**
@@ -426,23 +464,13 @@ function getRolesByBaseIds(array $baseIds)
     $roles = [];
 
     foreach ($baseIds as $baseId) {
-        $body = [
-            'name_filter' => "base_{$baseId}_",
-        ];
-
-        $response = $mgmtAPI->roles()->getAll($body);
-
-        if (HttpResponse::wasSuccessful($response)) {
-            $res = HttpResponse::decodeContent($response);
-            foreach ($res as $role) {
-                if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', (string) $role['name'])) {
-                    array_push($roles, $role);
-                }
+        $res = auth0PagerToArray($mgmtAPI->roles->list(new ListRolesRequestParameters(['nameFilter' => "base_{$baseId}_", 'includeTotals' => true])));
+        foreach ($res as $role) {
+            if (!empty($role) && preg_match('/base_'.$baseId.'_.*/', (string) $role['name'])) {
+                array_push($roles, $role);
             }
-            usleep(2000);
-        } else {
-            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
         }
+        usleep(2000);
     }
 
     return $roles;
@@ -458,19 +486,9 @@ function getRolesByName($roleName)
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
 
-    $body = [
-        'name_filter' => $roleName,
-    ];
+    $res = auth0PagerToArray($mgmtAPI->roles->list(new ListRolesRequestParameters(['nameFilter' => $roleName, 'includeTotals' => true])));
 
-    $response = $mgmtAPI->roles()->getAll($body);
-
-    if (HttpResponse::wasSuccessful($response)) {
-        $res = HttpResponse::decodeContent($response);
-
-        return $res[0] ?? null;
-    }
-
-    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    return $res[0] ?? null;
 }
 
 /**
@@ -482,15 +500,8 @@ function createRole($roleName)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
-    $response = $mgmtAPI->roles()->create($roleName);
 
-    if (HttpResponse::wasSuccessful($response)) {
-        $res = HttpResponse::decodeContent($response);
-
-        return $res;
-    }
-
-    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    return auth0ToArray($mgmtAPI->roles->create(new CreateRoleRequestContent(['name' => $roleName])));
 }
 
 /**
@@ -504,18 +515,12 @@ function updateRole($roleId, $roleName, $roleDescription)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
-    $response = $mgmtAPI->roles()->update($roleId, [
+
+    // https://auth0.com/docs/api/management/v2#!/Roles/post_roles
+    return auth0ToArray($mgmtAPI->roles->update($roleId, new UpdateRoleRequestContent([
         'name' => $roleName,
         'description' => $roleDescription,
-    ]);
-    // https://auth0.com/docs/api/management/v2#!/Roles/post_roles
-    if (HttpResponse::wasSuccessful($response)) {
-        $res = HttpResponse::decodeContent($response);
-
-        return $res;
-    }
-
-    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    ])));
 }
 
 /**
@@ -533,22 +538,15 @@ function updateRolePermissions($roleId, $resourseServerIdentifier, $methods)
     $permissions = [];
 
     foreach ($methods as $method) {
-        $permissions[] = [
-            'resource_server_identifier' => $resourseServerIdentifier,
-            'permission_name' => $method,
-        ];
-    }
-    $response = $mgmtAPI->roles()->addPermissions($roleId, $permissions);
-
-    if (HttpResponse::wasSuccessful($response, 201)) {
-        $res = HttpResponse::decodeContent($response);
-
-        return $res;
+        $permissions[] = new PermissionRequestPayload([
+            'resourceServerIdentifier' => $resourseServerIdentifier,
+            'permissionName' => $method,
+        ]);
     }
 
-    // If this fails with a 404, it's very likely that some of the submitted
+    // If this fails with a 404 (Auth0ApiException), it's very likely that some of the submitted
     // permissions are not actually registered as permissions in Auth0
-    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    $mgmtAPI->roles->permissions->add($roleId, new AddRolePermissionsRequestContent(['permissions' => $permissions]));
 }
 
 /**
@@ -559,15 +557,7 @@ function getRoles()
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
 
-    $response = $mgmtAPI->roles()->getAll();
-
-    if (HttpResponse::wasSuccessful($response)) {
-        $res = HttpResponse::decodeContent($response);
-
-        return $res;
-    }
-
-    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    return auth0PagerToArray($mgmtAPI->roles->list(new ListRolesRequestParameters(['includeTotals' => true])));
 }
 
 /**
@@ -586,19 +576,13 @@ function updateResources($resourseServerIdentifier, $methods)
     ];
 
     foreach ($methods as $method) {
-        $body['scopes'][] = [
+        $body['scopes'][] = new ResourceServerScope([
             'value' => $method,
             'description' => $method,
-        ];
+        ]);
     }
 
-    $response = $mgmtAPI->resourceServers()->update($resourseServerIdentifier, $body);
-
-    if (HttpResponse::wasSuccessful($response)) {
-        $res = HttpResponse::decodeContent($response);
-    } else {
-        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
-    }
+    $mgmtAPI->resourceServers->update($resourseServerIdentifier, new UpdateResourceServerRequestContent($body));
 }
 
 /**
@@ -823,37 +807,22 @@ function assignRolesToUser($userId, array $roleIds)
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
     // getting current roles for thr users
-    $response = $mgmtAPI->users()->getRoles($userId);
+    $res = auth0PagerToArray($mgmtAPI->users->roles->list($userId, new ListUserRolesRequestParameters(['includeTotals' => true])));
     usleep(200000);
 
-    $removeRolesIds = [];
-
-    if (HttpResponse::wasSuccessful($response)) {
-        $res = HttpResponse::decodeContent($response);
-        // preprering the role ids to be removed
-        foreach ($res as $role) {
-            $removeRolesIds[] = $role['id'];
-        }
-    } else {
-        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
-    }
+    // preprering the role ids to be removed
+    $removeRolesIds = array_column($res, 'id');
 
     if (sizeof($removeRolesIds) > 0) {
         // removing current roles
         // https://auth0.com/docs/api/management/v2#!/Users/delete_user_roles
-        $response = $mgmtAPI->users()->removeRoles($userId, $removeRolesIds);
-        if (!HttpResponse::wasSuccessful($response, 204)) {
-            throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
-        }
+        $mgmtAPI->users->roles->delete($userId, new DeleteUserRolesRequestContent(['roles' => $removeRolesIds]));
         usleep(200000);
     }
 
     // assigning the new roles to the users
-    $response = $mgmtAPI->users()->addRoles($userId, $roleIds);
     // refer to docs: https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
-    if (!HttpResponse::wasSuccessful($response, 204)) {
-        throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
-    }
+    $mgmtAPI->users->roles->assign($userId, new AssignUserRolesRequestContent(['roles' => $roleIds]));
     usleep(200000);
 }
 
@@ -864,15 +833,8 @@ function getUserAssignedRoles(mixed $userId)
 {
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
-    $response = $mgmtAPI->users()->getRoles('auth0|'.intval($userId));
 
-    if (HttpResponse::wasSuccessful($response)) {
-        $res = HttpResponse::decodeContent($response);
-
-        return $res;
-    }
-
-    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    return auth0PagerToArray($mgmtAPI->users->roles->list('auth0|'.intval($userId), new ListUserRolesRequestParameters(['includeTotals' => true])));
 }
 
 /**
@@ -883,17 +845,5 @@ function getAllUsers(mixed $query)
     global $settings;
     $mgmtAPI = getAuth0Management($settings);
 
-    $params = [
-        'q' => $query,
-    ];
-
-    $response = $mgmtAPI->users()->getAll($params);
-
-    if (HttpResponse::wasSuccessful($response)) {
-        $res = HttpResponse::decodeContent($response);
-
-        return $res;
-    }
-
-    throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
+    return auth0PagerToArray($mgmtAPI->users->list(new ListUsersRequestParameters(['q' => $query, 'includeTotals' => true])));
 }
