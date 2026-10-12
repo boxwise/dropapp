@@ -110,6 +110,34 @@ Alternatively, you can run
 
 in the root manually.
 
+### Copilot reviews for dependency updates
+
+On a dependency-update PR, comment:
+
+```text
+@copilot use the review-dependabot-update skill on this PR
+```
+
+The [skill](.github/skills/review-dependabot-update/SKILL.md) checks full upstream
+release notes against Dropapp usages and reports risks, required fixes and
+validation results. Alternatively, select the `dependabot-reviewer` custom agent
+in Copilot's agent picker and give it the PR URL. Skills and custom agents become
+available after merging these files into the default branch.
+
+The `dependabot-copilot-review.yml` workflow automatically posts this request on
+Dependabot `opened`/`reopened` PR events, skipping PRs with an existing request.
+It uses `pull_request_target` only for GitHub API comments: no checkout, PR-code
+execution or deployment. Synchronizing an existing PR does not request another
+review; use the manual comment to review later updates.
+
+Comments posted with `GITHUB_TOKEN` may not trigger Copilot. If necessary, a
+maintainer must create a repository-scoped PAT for a Copilot-enabled user with
+write access and issues/pull-requests write permissions, and store it as the
+**Dependabot secret** `COPILOT_TRIGGER_TOKEN` in repository settings (not just a
+regular Actions secret). The workflow falls back to `GITHUB_TOKEN` when absent.
+If automatic invocation is unavailable, post the manual request as an authorized
+user. See GitHub's [Dependabot token/secrets restrictions](https://docs.github.com/en/code-security/reference/supply-chain-security/troubleshoot-dependabot/dependabot-on-actions).
+
 ### Debugging
 
 We have enabled XDebug remote debugging in the default Docker configuration, so you can step through your code. Please run `docker compose up --build` next time you start up your server to update your docker image.
