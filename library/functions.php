@@ -248,7 +248,7 @@ function mobile_distro_check($locationType, $mobile = true)
         $userMessage = 'You cannot access this box. Please report this to your coordinator.';
         $sentryMessage = 'The user tries to edit a box belonging to a distribution event through dropapp.';
         if ($mobile) {
-            trigger_error($sentryMessage, E_USER_ERROR);
+            trigger_error($sentryMessage, E_USER_WARNING);
             redirect('?warning=1&message='.$userMessage);
         } else {
             throw new Exception($userMessage, 403);

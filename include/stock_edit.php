@@ -14,7 +14,7 @@ if ($_POST) {
             } while (0 !== $limit && db_value('SELECT COUNT(id) FROM stock WHERE box_id = :box_id', ['box_id' => $_POST['box_id']]));
 
             if (0 === $limit) {
-                trigger_error('Lookup failed in 10 attempts to find a unique box identifier', E_USER_ERROR);
+                trigger_error('Lookup failed in 10 attempts to find a unique box identifier', E_USER_WARNING);
 
                 throw new Exception('There is an issue creating box identifier. Please try again in a few minutes', 409);
             }

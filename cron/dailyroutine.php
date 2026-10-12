@@ -104,7 +104,7 @@ if ('auth0_check_synk' === $_GET['action']) {
     $users = getAllUsers($query);
     foreach ($users as $user) {
         if (!in_array($user['email'], $db_users)) {
-            trigger_error('Not-Blocked User with id '.$user['user_id'].' exists in Auth0, but not in DB.', E_USER_ERROR);
+            trigger_error('Not-Blocked User with id '.$user['user_id'].' exists in Auth0, but not in DB.', E_USER_WARNING);
         }
     }
 }
