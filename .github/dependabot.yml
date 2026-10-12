@@ -3,9 +3,9 @@ updates:
   - package-ecosystem: "composer"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     assignees:
-      - "HaGuesto"
+      - "pylipp"
     open-pull-requests-limit: 10
     groups:
       dev-dependencies:
