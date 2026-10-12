@@ -110,6 +110,41 @@ Alternatively, you can run
 
 in the root manually.
 
+### Copilot reviews of Dependabot updates
+
+On a dependency-update PR, comment:
+
+```text
+@copilot use the review-dependabot-update skill on this PR
+```
+
+The [review skill](.github/skills/review-dependabot-update/SKILL.md) checks full
+release notes against Dropapp usages, proposes minimal fixes, and reports risks,
+code locations, validation results and a merge recommendation. You can also select
+the `dependabot-reviewer` custom agent in Copilot's agent picker and supply the PR
+URL. The skill and agent should be merged into the default branch first.
+
+The `dependabot-copilot-review.yml` workflow requests this review on Dependabot
+`opened`/`reopened` events, only when the actor and PR author are `dependabot[bot]`.
+It uses `pull_request_target` solely to list/post API comments: it never checks out
+or executes PR code. A marker check (including paginated comments) prevents duplicate
+requests on reopening or reruns; synchronize events do not request another review.
+
+Comments made with `GITHUB_TOKEN` may not trigger Copilot. If necessary, a maintainer
+can store a PAT from a Copilot-enabled account with repository access as
+`COPILOT_TRIGGER_TOKEN`; the workflow falls back to `GITHUB_TOKEN` when absent.
+Use only the permissions needed to read/post PR comments (for a fine-grained PAT,
+Pull requests: read and write), scoped to this repository, and never put the token
+in a file or comment. Dependabot-triggered runs cannot rely on ordinary Actions
+secrets: configure the token as a **Dependabot secret** too if required by the run's
+secret restrictions. `pull_request_target` can still be read-only when its base ref
+was created by Dependabot. See [GitHub's Dependabot Actions guidance](https://docs.github.com/en/code-security/reference/supply-chain-security/troubleshoot-dependabot/dependabot-on-actions).
+
+Posting a request does not guarantee a Copilot session: repository/organization
+access policies and Copilot's support for the PR apply. If no session starts, use a
+manual mention or select the custom agent with the PR URL. Neither the workflow
+nor the reviewer merges or deploys changes; CI changes require maintainer approval.
+
 ### Debugging
 
 We have enabled XDebug remote debugging in the default Docker configuration, so you can step through your code. Please run `docker compose up --build` next time you start up your server to update your docker image.
