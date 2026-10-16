@@ -11014,8 +11014,7 @@ return [
                     'SRS_ID' => null,
                 ],
             ],
-            'indexes' => [
-            ],
+            'indexes' => [],
             'foreign_keys' => null,
         ],
     ],
