@@ -2,7 +2,7 @@
 
 Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
-Dropapp is a PHP web application for managing donated goods distribution to refugees and people in need. It uses PHP 8.2+, MySQL, Smarty templates, Auth0 authentication, Docker for local development, and Cypress for browser testing.
+Dropapp is a PHP web application for managing donated goods distribution to refugees and people in need. It uses PHP 8.4+, MySQL, Smarty templates, Auth0 authentication, Docker for local development, and Cypress for browser testing.
 
 ## General Instructions
 

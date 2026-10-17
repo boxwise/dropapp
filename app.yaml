@@ -1,4 +1,4 @@
-runtime: php82
+runtime: php84
 service: default
 
 automatic_scaling:

@@ -57,8 +57,8 @@ while ($row = db_fetch($result)) {
 // store result in the csv file
 $fp = fopen($settings['upload_dir'].'/auth0-roles.csv', 'a');
 
-fputcsv($fp, ['organisation_id', 'organization', 'base_id', 'base', 'auth0_role_label', 'auth0_role_label', 'auth0_role_id', 'created_at']);
+fputcsv($fp, ['organisation_id', 'organization', 'base_id', 'base', 'auth0_role_label', 'auth0_role_label', 'auth0_role_id', 'created_at'], ',', '"', '');
 foreach ($finalRoles as $role) {
-    fputcsv($fp, array_values($role));
+    fputcsv($fp, array_values($role), ',', '"', '');
 }
 fclose($fp);
