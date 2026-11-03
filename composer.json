@@ -22,7 +22,7 @@
         "php-http/curl-client": "^2.4",
         "google/cloud-error-reporting": "^0.22",
         "google/cloud-datastore": "^1.32",
-        "symfony/yaml": "^7.3"
+        "symfony/yaml": "^7.4"
     },
     "config": {
         "allow-plugins": {
