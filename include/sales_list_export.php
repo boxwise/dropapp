@@ -19,7 +19,7 @@ $query = db_query('
           SELECT GROUP_CONCAT(t.label)
           FROM tags t
           INNER JOIN tags_relations tr ON t.id = tr.tag_id
-          WHERE tr.object_id = p.id AND tr.object_type = "People" AND tr.deleted_on IS NULL
+          WHERE tr.object_id = pp.id AND tr.object_type = "People" AND tr.deleted_on IS NULL
       ) AS tags,
       (SELECT COUNT(people.id)+1
         FROM people
