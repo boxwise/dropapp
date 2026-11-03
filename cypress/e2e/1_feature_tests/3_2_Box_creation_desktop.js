@@ -1,7 +1,7 @@
 context("Box_creation_tests", () => {
     let Test_location = "TestWarehouse";
     let Test_number = "100";
-    let Test_product = "Jeans Female";
+    let Test_product = "Jeans Women";
     let Product_name  = "Jeans"; //in the box creation product name is automatically concatenated with gender-info, therefore we use this variable to store a processed version for checks in the boxes menu
     let Test_size = "S";  
 
