@@ -825,8 +825,8 @@ CREATE TABLE `genders` (
 
 LOCK TABLES `genders` WRITE;
 /*!40000 ALTER TABLE `genders` DISABLE KEYS */;
-INSERT INTO `genders` VALUES (1,'Female','Female',1,NULL,NULL,NULL,NULL,0,1,1,0,0,'0'),
-  (2,'Male','Male',2,NULL,NULL,NULL,NULL,1,0,1,0,0,'0'),
+INSERT INTO `genders` VALUES (1,'Women','Women',1,NULL,NULL,NULL,NULL,0,1,1,0,0,'0'),
+  (2,'Men','Men',2,NULL,NULL,NULL,NULL,1,0,1,0,0,'0'),
   (3,'Unisex Adult','Unisex',3,NULL,NULL,NULL,NULL,1,1,1,0,0,'0'),
   (4,'Girl','Girl',4,NULL,NULL,NULL,NULL,0,1,0,1,0,'0'),
   (5,'Boy','Boy',5,NULL,NULL,NULL,NULL,1,0,0,1,0,'0'),
