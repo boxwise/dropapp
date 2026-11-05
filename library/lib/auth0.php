@@ -136,12 +136,14 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
     }
 
     $response = $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
+    usleep(200000);
 
     // user doesn't exist, so try creating it instead
     if (404 === $response->getStatusCode()) {
         $auth0UserData['user_id'] = preg_replace('/auth0\|/', '', $auth0UserId);
         $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
         $response = $mgmtAPI->users()->create($settings['auth0_db_connection_id'], $auth0UserData);
+        usleep(200000);
 
         // the status code will be 201 if the user created successfully
         if (201 !== $response->getStatusCode()) {
@@ -231,7 +233,7 @@ function isUserInSyncWithAuth0($userId)
         // deleted user no longer has name/email/usergroup/organisation/base
         // ref. trello card: https://trello.com/c/68xRRHny
         if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
-            $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
+            // $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
             $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
         } else {
             $validationResult['email'] = ($auth0User['email'] == (preg_match('/\.deleted\.\d+/', (string) $dbUser['email']) ? preg_replace('/\.deleted\.\d+/', '', (string) $dbUser['email']) : $dbUser['email'])) ? 'true' : 'false';
@@ -264,7 +266,7 @@ function isUserInSyncWithAuth0($userId)
     } elseif ($dbUser && $auth0User && !$hasActiveBase) {
         // check if deleted user without active base is in sync with Auth0
         if ('0000-00-00 00:00:00' != $dbUser['deleted'] && !is_null($dbUser['deleted'])) {
-            $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
+            // $validationResult['last_blocked_date'] = (!empty($auth0User['app_metadata']['last_blocked_date']) && $auth0User['app_metadata']['last_blocked_date'] == $dbUser['deleted']) ? 'true' : 'false';
             $validationResult['deleted'] = (!empty($auth0User['blocked']) && $auth0User['blocked']) ? 'true' : 'false';
         } else {
             // God user, and users without active base but not deleted
@@ -822,6 +824,7 @@ function assignRolesToUser($userId, array $roleIds)
     $mgmtAPI = getAuth0Management($settings);
     // getting current roles for thr users
     $response = $mgmtAPI->users()->getRoles($userId);
+    usleep(200000);
 
     $removeRolesIds = [];
 
@@ -842,6 +845,7 @@ function assignRolesToUser($userId, array $roleIds)
         if (!HttpResponse::wasSuccessful($response, 204)) {
             throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
         }
+        usleep(200000);
     }
 
     // assigning the new roles to the users
@@ -850,6 +854,7 @@ function assignRolesToUser($userId, array $roleIds)
     if (!HttpResponse::wasSuccessful($response, 204)) {
         throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
+    usleep(200000);
 }
 
 /**

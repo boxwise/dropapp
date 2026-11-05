@@ -57,13 +57,13 @@ If you are interested in being part of this project, write us at [jointheteam@bo
 
     The database seed `db/init.sql` is generated in v2 and copied from there.
 
-6.  If you want to additionally want to connect the users from the seed to auth0 and populate the db table cms_usergroups_roles then open a browser and request `http://localhost:8100/cron/reseed-auth0.php`
+6.  If you want to connect new bases and organisations from the seed to Auth0 and populate the `cms_*` db tables, open a browser and request `http://localhost:8100/cron/reseed-auth0.php` (`init.sql` must contain the new bases; make sure you have the DB docker image reset before)
 
 ### Accessing the app
 
 Once the docker containers are running the app is accessible at http://localhost:8100/
 
-After this you should be able to login to the app using the password Browser_tests and one of the following emails:
+After this you should be able to login to the app using the password `Browser_tests` and one of the following emails:
 
 - some.admin@boxtribute.org (God User)
 
@@ -215,8 +215,8 @@ Therefore, a few additional guidelines when writing test:
 ### Release new version
 
 1. `git checkout production`
-1. `git pull origin production`
-1. `git pull origin master --commit`
+1. `git pull origin production --tags`
+1. `git pull origin master --no-rebase`
 1. For the deploy to the demo environment: `git push origin production`
 1. For the deploy to the production environment: `git tag -s v1.X.Y -m v1.X.Y` (bump X if DB migration involved) and `git push origin production --tags`
 

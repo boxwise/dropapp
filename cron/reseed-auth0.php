@@ -35,6 +35,7 @@ db_transaction(function () use ($settings, $rolesToActions, $menusToActions) {
     while ($row = db_fetch($result)) {
         $role = getRolesByName($row['auth0_role_name']);
         db_query('UPDATE cms_usergroups_roles SET auth0_role_id = :id WHERE auth0_role_name = :rolename', ['id' => $role['id'], 'rolename' => $row['auth0_role_name']]);
+        usleep(200000);
     }
 
     $db_users = db_query('SELECT id FROM cms_users;');

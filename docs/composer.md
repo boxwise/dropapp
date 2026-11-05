@@ -135,7 +135,7 @@ needed to lock down this version. Otherwise, this error happens:
 
 #### **open-telemetry/exporter-otlp** - `^1.0`
 
-- **Status**: ❓ **NO USAGE FOUND**
+- **Status**: ❓ **NO USAGE FOUND - REMOVED IN https://github.com/boxwise/dropapp/pull/842**
 - **Purpose**: OpenTelemetry OTLP exporter
 - **Usage**: No evidence of usage found
 - **Evidence**: No imports found
@@ -143,7 +143,7 @@ needed to lock down this version. Otherwise, this error happens:
 
 #### **open-telemetry/sdk** - `^1.0`
 
-- **Status**: ❓ **NO USAGE FOUND**
+- **Status**: ❓ **NO USAGE FOUND - REMOVED IN https://github.com/boxwise/dropapp/pull/842**
 - **Purpose**: OpenTelemetry SDK
 - **Usage**: No evidence of usage found
 - **Evidence**: No imports found
