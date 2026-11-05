@@ -10,7 +10,7 @@ $return = 'true';
 // Test if user is a testusers and the database is a dev database
 if (!(in_array($settings['db_database'], $devdbs) && in_array($_SESSION['user']['email'], $testusers))) {
     $msg = 'You do not have access to delete test data!';
-    trigger_error($msg, E_USER_ERROR);
+    trigger_error($msg, E_USER_WARNING);
 
     $return = 'false';
 } else {
@@ -54,7 +54,7 @@ if (!(in_array($settings['db_database'], $devdbs) && in_array($_SESSION['user'][
         foreach ($ids as $id) {
             $permission = isset($allowed[$_POST['table']]) && in_array($id, $allowed[$_POST['table']]);
             if (!$permission) {
-                trigger_error('No permission to delete this data', E_USER_ERROR);
+                trigger_error('No permission to delete this data', E_USER_WARNING);
 
                 $return = 'false';
             }

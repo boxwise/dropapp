@@ -281,7 +281,7 @@ function isUserInSyncWithAuth0($userId)
     }
 
     if (!$return_value) {
-        trigger_error('User with id '.$userId.' is out of sync between DB and Auth0 '.($false_key ? 'at '.$false_key : ''), E_USER_ERROR);
+        trigger_error('User with id '.$userId.' is out of sync between DB and Auth0 '.($false_key ? 'at '.$false_key : ''), E_USER_WARNING);
     }
 
     $dbUserRoles = db_array('
@@ -362,7 +362,7 @@ function isUserInSyncWithAuth0($userId)
     }
 
     if (!$return_value) {
-        trigger_error('Roles of user with id '.$userId.' is out of sync between DB and Auth0.'.$messageAppendix, E_USER_ERROR);
+        trigger_error('Roles of user with id '.$userId.' is out of sync between DB and Auth0.'.$messageAppendix, E_USER_WARNING);
     }
 
     return $return_value;

@@ -411,7 +411,7 @@ Tracer::inSpan(
             $delta = array_diff($ids, $valid_ids);
             if (0 != count($delta)) {
                 $message = 'You do not have access to this beneficiary record!';
-                trigger_error($message, E_USER_ERROR);
+                trigger_error($message, E_USER_WARNING);
                 $success = false;
             } else {
                 switch ($_POST['do']) {
