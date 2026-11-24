@@ -212,6 +212,7 @@
             <li>Nationality (in some cases)</li>
             <li>Address (e.g. container number in the refugee camp)</li>
             <li>Telephone number (in some cases)</li>
+            <li>Email address (in some cases)</li>
             <li>Gender</li>
             </ul>
             <p>You do on your own provide us with your personal information in conversation with representatives from {$currentOrg['label']}. We need this information to ensure that you are part of our distribution and/or other services provided by the organisation, and to make sure that we have enough equipment for our beneficiaries.</p>
