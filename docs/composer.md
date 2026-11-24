@@ -25,7 +25,7 @@
 
 #### **sendgrid/sendgrid** - `^8.1`
 
-- **Status**: ✅ **REMOVED**
+- **Status**: **REMOVED IN https://github.com/boxwise/dropapp/pull/862**
 - **Purpose**: Email sending service
 - **Usage**: Email functionality (currently limited)
 - **Evidence**:
