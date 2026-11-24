@@ -25,13 +25,13 @@
 
 #### **sendgrid/sendgrid** - `^8.1`
 
-- **Status**: ✅ **PARTIALLY USED**
+- **Status**: **REMOVED IN https://github.com/boxwise/dropapp/pull/862**
 - **Purpose**: Email sending service
 - **Usage**: Email functionality (currently limited)
 - **Evidence**:
   - Implemented in `library/lib/mail.php`
   - Configuration key in `library/config.php`
-  - Comment indicates most emails are handled by Auth0+SendGrid integration
+  - Comment indicates most emails are handled by Auth0 integration
 - **Note**: Not heavily used directly, mostly through Auth0 integration
 
 #### **auth0/auth0-php** - `^8.0.5`

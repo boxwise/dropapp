@@ -69,10 +69,6 @@ if ('db' === $_GET['action']) {
 
     // this notifies us when a new installation of the Drop App is made
     if (!isset($settings['installed'])) {
-        foreach ($_SERVER as $key => $value) {
-            $mail .= $key.' -> '.$value.'<br />';
-        }
-        $result = sendmail('admin@boxtribute.org', 'admin@boxtribute.org', 'New installation of Boxtribute', $mail);
         db_query('INSERT INTO settings (category_id, type, code, description_en, value) VALUES (1,"text","installed","Date and time of installation and first run",NOW())');
     }
 
