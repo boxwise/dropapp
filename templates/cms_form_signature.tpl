@@ -1,5 +1,5 @@
 <div class="col-md-8 col-sm-12 col-md-offset-2 signature-text">
-  {if {$currentOrg['id']}==3}
+  {if {$currentOrg['id']}==2}
     <div id="IHA">
       <ul class="nav nav-tabs">
         <li class = "active"><a href="#languagetab_en" data-toggle="tab">English</a></li>
