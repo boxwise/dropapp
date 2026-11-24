@@ -198,7 +198,6 @@
         <li class = "active"><a href="#languagetab_en" data-toggle="tab">English</a></li>
         <li><a href="#languagetab_fr" data-toggle="tab">Français</a></li>
         <li><a href="#languagetab_ar" data-toggle="tab">العربية</a></li>
-        <!-- <li><a href="#languagetab_so" data-toggle="tab">سۆرانی</a></li> -->
         <li><a href="#languagetab_fa" data-toggle="tab">فارسی</a></li>
         <li><a href="#languagetab_som" data-toggle="tab">Somali</a></li>
       </ul>
@@ -284,9 +283,6 @@
             أوافق على أن معلوماتي الشخصية يتم تخزينها ومعالجتها كما هو موضح في سياسة الخصوصية الخاصة {$currentOrg['label']}. <br />
             أوافق أيضًا على أن المعلومات الشخصية لعائلتي يتم تخزينها ومعالجتها كما هو موضح أعلاه.
           </p>
-        </div>
-
-        <div class="tab-pane fade" id="languagetab_so">
         </div>
 
         <div class="tab-pane fade" id="languagetab_fa" style="text-align:right" dir="rtl">
