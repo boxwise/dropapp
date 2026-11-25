@@ -8,7 +8,7 @@
 				<li>
 					<div class="people-info">
 					{if !$data['hideprivatedata']}
-						<a href="?action=people_edit&amp;id={$person['id']}" data-testid="familyMember">{if !$person['parent_id']}FH: {/if}{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
+						<a href="{$data['v2url']}/{$person['id']}/edit" data-testid="familyMember">{if !$person['parent_id']}FH: {/if}{$person['firstname']} {$person['lastname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</a>
 					{else}
 						<div data-testid="familyMember">{if !$person['parent_id']}FH: {/if}{$person['firstname']} ({if $person['age']}{$person['age']} yr,{/if} {$person['gender']})</div>
 					{/if}

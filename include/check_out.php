@@ -267,6 +267,7 @@ if (!$ajax) {
     $lasttransactiondbvalue = db_value('SELECT transaction_date FROM transactions WHERE product_id > 0 AND people_id = :id ORDER BY transaction_date DESC LIMIT 1', ['id' => $data['people_id']]);
     $data['lasttransaction'] = $lasttransactiondbvalue ? (new DateTime($lasttransactiondbvalue))->format('d F Y, H:i') : null;
 
+    $data['v2url'] = $settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/beneficiaries';
     $ajaxaside->assign('data', $data);
     $ajaxaside->assign('currency', $camp['currencyname']);
     $htmlaside = $ajaxaside->fetch('info_aside_purchase.tpl');

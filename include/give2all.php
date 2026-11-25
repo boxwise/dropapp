@@ -71,7 +71,7 @@ if ($_POST) {
         }
     }
 
-    redirect('?action=people');
+    redirect($settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/beneficiaries');
 }
 
 $nodob_count = db_value('SELECT COUNT(*) FROM people WHERE camp_id = :camp_id AND (date_of_birth IS NULL OR NOT date_of_birth) AND NOT deleted', ['camp_id' => $_SESSION['camp']['id']]);
