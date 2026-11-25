@@ -136,14 +136,14 @@ function updateAuth0UserFromDb($userId, $setPwd = false)
     }
 
     $response = $mgmtAPI->users()->update($auth0UserId, $auth0UserData);
-    usleep(200000);
+    usleep(50000);
 
     // user doesn't exist, so try creating it instead
     if (404 === $response->getStatusCode()) {
         $auth0UserData['user_id'] = preg_replace('/auth0\|/', '', $auth0UserId);
         $auth0UserData['password'] = generateSecureRandomString(); // user will need to reset password anyway
         $response = $mgmtAPI->users()->create($settings['auth0_db_connection_id'], $auth0UserData);
-        usleep(200000);
+        usleep(50000);
 
         // the status code will be 201 if the user created successfully
         if (201 !== $response->getStatusCode()) {
@@ -824,7 +824,7 @@ function assignRolesToUser($userId, array $roleIds)
     $mgmtAPI = getAuth0Management($settings);
     // getting current roles for thr users
     $response = $mgmtAPI->users()->getRoles($userId);
-    usleep(200000);
+    usleep(50000);
 
     $removeRolesIds = [];
 
@@ -845,7 +845,7 @@ function assignRolesToUser($userId, array $roleIds)
         if (!HttpResponse::wasSuccessful($response, 204)) {
             throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
         }
-        usleep(200000);
+        usleep(50000);
     }
 
     // assigning the new roles to the users
@@ -854,7 +854,7 @@ function assignRolesToUser($userId, array $roleIds)
     if (!HttpResponse::wasSuccessful($response, 204)) {
         throw new Exception($response->getReasonPhrase(), $response->getStatusCode());
     }
-    usleep(200000);
+    usleep(50000);
 }
 
 /**
