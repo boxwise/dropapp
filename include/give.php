@@ -30,7 +30,7 @@ if ($_POST) {
     if ('check_out' === $source) {
         redirect('?action=check_out&people_id='.$personId);
     }
-    redirect('?action=people');
+    redirect($settings['v2_base_url'].'/bases/'.$_SESSION['camp']['id'].'/beneficiaries');
 }
 
 $data['people'] = $_GET['ids'];
