@@ -53,8 +53,6 @@ Tracer::inSpan(
 
         require_once 'lib/tools.php';
 
-        require_once 'lib/mail.php';
-
         require_once 'lib/csvexport.php';
 
         // load CMS specific libraries
